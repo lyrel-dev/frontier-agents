@@ -1,5 +1,5 @@
 {
-  "revision": "2026-10-21-three-agent-scope",
+  "revision": "2026-10-21-platform-reference-1",
   "scope": "Three AWS agents and proposed shared operating patterns; no live execution or measured benefit.",
   "agents": {
     "devops": {
