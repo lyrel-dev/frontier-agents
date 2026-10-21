@@ -1,15 +1,11 @@
 {
-  "revision": "2026-10-21-mechanisms-v2",
-  "build": 2,
-  "purpose": "Publish 32 documented platform mechanisms, including corrective-feedback reflections, verified enablement guidance, mobile layout and portable-package fixes, and the scoped continuation validation record.",
-  "commit_policy": "One generated document per commit; preserve existing history and archive original reports.",
-  "repository_visibility": "Leave unchanged.",
-  "workflow_files": "Leave unchanged.",
-  "live_aws_execution": false,
-  "editorial_standard": "EDITORIAL_STANDARD.md",
-  "reference_slides": "Untimed; outside the existing 160-minute core programme",
-  "optional_prepared_result_exercises_minutes": 44,
-  "source_review_date": "2026-10-21",
-  "source_review_scope": "Two added official references plus selected critical source rechecks; not a new audit of every historical claim.",
-  "validation_record": "mechanisms/CONTINUATION_VALIDATION.md"
+  "revision": "2026-10-21-three-agent-scope",
+  "scope": [
+    "AWS DevOps Agent",
+    "AWS Security Agent",
+    "AWS FinOps Agent"
+  ],
+  "shared_architecture": true,
+  "history_policy": "Git history only; no snapshot directories or committed ZIP distributions",
+  "live_aws_execution": false
 }
