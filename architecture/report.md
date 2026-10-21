@@ -497,3 +497,8 @@ stop_owner: named-operator
 ## Validation boundary
 
 Documentation synthesis and proposed workflows only. No live AWS execution or measured engineering outcome. The original audit snapshot and the selected narrative rechecks are distinct.
+
+
+## Mechanism comparison
+
+See [product-specific storage, configuration and verification mechanisms](../mechanisms/overview.md). No shared runtime or memory store is implied.
