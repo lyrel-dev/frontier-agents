@@ -1,26 +1,751 @@
 {
-"key":"security","title":"AWS Security Agent","subtitle":"Authorized assessment → verified repair","minutes":30,"demo":8,"scenario":"Authorized staging test, evidence triage and finding revalidation",
-"slides":[
-{"title":"AWS Security Agent","takeaway":"Application-security evidence from design review to deployed-fix revalidation.","kind":"hero","seconds":45,"phase":"Position","refs":["S04","S03","S05"],"caps":["C01"],"notes":"This deck remains scoped to the application-security capabilities in the original report. On-demand penetration testing is generally available; design review, code review, threat modeling and CI/CD integration have their own preview status. The demonstration uses an authorized staging application and a prepared evidence package, not an unapproved real-world target.","metrics":[["30 min","session, including demo"],["8 min","controlled demo walkthrough"],["1 app","recommended first scope"]],"outcome":"Authorize → assess → triage → repair → revalidate","label":"Application security / Software engineering / Security architecture"},
-{"title":"Lifecycle coverage is not uniform availability","takeaway":"Use the feature’s own maturity and execution boundary.","kind":"cards","seconds":75,"phase":"Capabilities","refs":["S03","S05","S28","S29"],"caps":["C01","C10","C12","C13","C18"],"notes":"The lifecycle view explains why a single “security agent” label is insufficient. A design review examines documents, a threat model proposes attack scenarios, source review examines code, and penetration testing exercises a running target. They produce different evidence and have different potential side effects. Availability is also feature-specific, so an organization can adopt the GA testing path without making the same approval decision for every preview capability.","items":[{"title":"Design review","body":"Assess architecture documents against security requirements.","tag":"PREVIEW"},{"title":"Threat model","body":"Map system context, threats and mitigation recommendations.","tag":"PREVIEW"},{"title":"Code review","body":"Review repositories, changes and proposed code fixes.","tag":"PREVIEW"},{"title":"Penetration test","body":"Exercise a configured, authorized running application.","tag":"GA"},{"title":"Delivery integration","body":"Run a scoped post-deployment test as a pipeline gate.","tag":"PREVIEW"},{"title":"Fix verification","body":"Reassess a known finding after a deployed repair.","tag":"PENTEST WORKFLOW"}]},
-{"title":"Use case · prove a tenant boundary holds","takeaway":"The unit of success is an accepted finding and verified repair—not a severity count.","kind":"flow","seconds":75,"phase":"Use case","refs":["S08","S12","S14"],"caps":["C01","C05","C07"],"notes":"The illustrative application has tenant-specific administration endpoints. The team wants to know whether an ordinary test identity can affect another tenant. No actual vulnerability is asserted here. Define dedicated tenants and identities, use synthetic data and keep all actions within the authorized staging scope. A useful result contains evidence and a clear affected path; closure requires a deployed fix and a focused reassessment.","items":[{"title":"Authorize","body":"One owned staging application and test window.","tag":"SCOPE"},{"title":"Assess","body":"Exercise the approved authenticated paths.","tag":"NATIVE"},{"title":"Triage","body":"Inspect impact, confidence and reproduction evidence.","tag":"APPSEC"},{"title":"Close","body":"Review the fix, deploy safely, and revalidate.","tag":"ENGINEERING"}]},
-{"title":"Authorization and target safety come first","takeaway":"Domain verification does not authorize every reachable dependency.","kind":"matrix","seconds":90,"phase":"Controls","refs":["S08","S09","S10"],"caps":["C01","C02"],"notes":"Domain verification is a product prerequisite, not a substitute for organizational authorization. Scope must cover the target, identities and any third-party or downstream services that might be exercised. A sandboxed worker can still mutate the application it reaches. Isolate the target data and disable payment, notification and other irreversible side effects. Assign a human stop owner with independent visibility of target health.","headers":["Boundary","Required preparation","Owner check"],"rows":[["Target","Owned non-production domain and permitted paths","Written scope and dependency exclusions"],["Identity","Dedicated low-privilege test accounts","No real customer or production credentials"],["State","Disposable data and disabled business side effects","Recovery plan and health monitoring"],["Execution","Task budget, test window and stop owner","Operator can observe and stop the run"]]},
-{"title":"Choose test scope and supply current context","takeaway":"Acceptance: context and credentials match the deployed version under test.","kind":"lens","seconds":75,"phase":"Capabilities","refs":["S08","S09","S10"],"caps":["C02","C03"],"notes":"Choose the risk model deliberately: the default Web application scope covers web and API risks; Gen AI application focuses on LLM-backed surfaces. Gen AI scope uses a fixed set of risk types rather than the web scope’s risk exclusions. Match source and API context to the deployed revision. Test dedicated credentials before the assessment and review discovered domains. Target domains may be tested, accessible domains support navigation without attack, and out-of-scope domains must not be accessed. Private deployments require the configured VPC path.","inputs":["Authorized target, dedicated test credentials and network scope","Current source/API context; optional private VPC reachability"],"actions":["Select Web application or focused Gen AI application scope","Confirm sign-in and classify target, accessible and excluded domains"],"outputs":["A scoped assessment matched to the deployed version","Explicit coverage assumptions and reachable paths"]},
-{"title":"Bound the run and observe its effects","takeaway":"Acceptance: task hours are not wall-clock minutes; the operator owns the stop decision.","kind":"lens","seconds":75,"phase":"Capabilities","refs":["S08","S12","S05"],"caps":["C04"],"notes":"Task hours measure cumulative agent work, including parallel activity; they are not wall-clock minutes. A configured maximum task-hours limit stops work and preserves findings, whereas a service quota is not the same spending control. Reaching the run limit can still yield a Completed status, so inspect coverage rather than treating that label as a complete assessment. Monitor target health and define a stop owner before starting. The presentation reviews a prepared run rather than waiting for a full test.","inputs":["Configured penetration test and authorized scope","A work budget and a monitored staging deployment"],"actions":["Set a maximum task-hours limit and monitor the run","Inspect progress, execution logs and emerging findings"],"outputs":["Findings retained when the configured work limit is reached","Run state and consumed task hours—not a coverage guarantee"]},
-{"title":"Demo · authorized staging assessment","takeaway":"Inspect a safe configuration, an active run view and one evidence-backed finding.","kind":"demo","seconds":480,"phase":"Demonstration","refs":["S08","S09","S10","S12"],"caps":["C01","C02","C03","C04","C05"],"notes":"The eight-minute slot cannot be treated as a guarantee of a complete penetration test. Walk through setup and a completed result rather than waiting for a new scan. A prompt asking the agent to stop at a health threshold is not an independent circuit breaker; the operator and environment controls enforce the safety plan. Do not execute reproduction material against any target outside the authorized scope.","prompt":"Prepare the approved staging assessment with dedicated test accounts, explicit target and network scope, and the agreed work budget. Exclude payment and notification side effects through environment controls. The operator will monitor health and stop the job if the agreed threshold is crossed.","steps":[[60,"Verify authorization","Show target ownership, test window and dedicated identities."],[90,"Inspect context","Match source/deployment version, credentials and private reachability."],[90,"Inspect limits","Show work budget, exclusions and the stop procedure."],[120,"Observe a run","Use the prepared run view; correlate logs with target health."],[120,"Review one finding","Read impact, reproduction evidence, coverage and the next engineering action."]],"success":"An authorized, bounded run and one inspectable evidence package; no claim of complete coverage.","preflight":"Prepare a disposable staging app, independent health monitoring, a completed test and a named stop owner.","fallback":"Use a sanitized completed run if setup or job latency prevents a live view. Label illustrative findings clearly."},
-{"title":"Read a finding as an evidence package","takeaway":"Severity without impact, confidence and coverage is not enough for a decision.","kind":"cards","seconds":90,"phase":"Outputs","refs":["S12","S10"],"caps":["C05"],"notes":"A finding should let a reviewer understand the affected behavior, the identity used, the observed result and the conditions needed to reproduce it. Inspect the action trace and the reported impact. Coverage matters: a clean result on an authenticated path does not establish that all other paths were tested. Accept or reject the finding on its evidence and business context, not on the severity label alone.","items":[{"title":"Affected path","body":"Which endpoint, role, tenant and deployed version?","tag":"IDENTITY"},{"title":"Observed impact","body":"What did the test actually demonstrate?","tag":"EVIDENCE"},{"title":"Reproduction","body":"Preconditions and a reviewable action trace.","tag":"REPEATABILITY"},{"title":"Confidence","body":"What is confirmed, inferred or still uncertain?","tag":"QUALITY"},{"title":"Coverage","body":"Which relevant routes were or were not exercised?","tag":"SCOPE"},{"title":"Next action","body":"Owner, proposed fix and a closure check.","tag":"HANDOFF"}]},
-{"title":"Remediation produces a proposal—not closure","takeaway":"Acceptance: provider, repository visibility and source type determine delivery; the team reviews every fix.","kind":"lens","seconds":90,"phase":"Capabilities","refs":["S13","S25","S32","S10"],"caps":["C06","C15"],"notes":"Automatic or requested remediation creates code for review. Delivery depends on the source and provider: a connected private repository can receive a pull or merge request, while an S3 source can receive a diff. Public repository handling has disclosure restrictions, so do not promise a universal remediation PR. Test the change, preserve unrelated behavior and use normal deployment controls. A generated patch does not establish that the vulnerability is resolved.","inputs":["An accepted finding and connected source","Explicit remediation enablement and repository access"],"actions":["Generate a proposed code repair","Deliver a PR/MR or downloadable diff as supported by the source"],"outputs":["Reviewable changes with finding context","A link between the security issue and proposed repair"]},
-{"title":"Revalidate after the fix is deployed","takeaway":"Acceptance: “not reproduced” concerns this finding and this run—not a complete security certification.","kind":"lens","seconds":75,"phase":"Capabilities","refs":["S14"],"caps":["C07"],"notes":"Revalidation is a focused reassessment, not a new broad discovery scan. The fix must already be deployed to the original target for the result to be meaningful. The result does not overwrite the historical finding. Preserve the original evidence and the linked revalidation attempt. Broad architectural or application changes may justify a full new penetration test instead of relying only on selected findings.","inputs":["An existing finding and a deployed repair","The original reachable target and current test authentication"],"actions":["Repeat the selected finding’s validation path","Record whether the vulnerability can be reproduced"],"outputs":["A linked revalidation job and result","An auditable history of reassessment attempts"]},
-{"title":"Export evidence and hand work to the right owner","takeaway":"Sharing a report or ticket must preserve scope, revision and finding identity.","kind":"compare","seconds":60,"phase":"Outputs","refs":["S15","S16","S14"],"caps":["C08","C09"],"notes":"Generate the report from the selected penetration-test run and choose the severity, confidence, status and finding-type filters. Optional compliance-oriented sections and annotations preserve useful context, but do not establish certification. A completed run and an interim export have different evidence boundaries. Jira handoff requires a configured supported project. Keep finding identity, remediation links and reassessment status attached to the work item; ticket creation is not closure. Protect vulnerability details according to the intended audience.","left":{"title":"Evidence package","body":"Generate a filtered PDF with scope, test evidence and optional reviewer annotations. Record whether the run is complete or interim.","tag":"POINT IN TIME"},"right":{"title":"Jira handoff","body":"Create tracked work from selected findings; retain links to remediation and reassessment.","tag":"CONFIGURED INTEGRATION"},"callout":"Team rule: the ticket owner is accountable for closure; an exported report is not certification."},
-{"title":"Design review applies reusable requirements","takeaway":"Acceptance: review requirements and input assumptions before interpreting a finding.","kind":"lens","seconds":75,"phase":"Capabilities","refs":["S17","S18"],"caps":["C10","C11"],"notes":"Security requirements make the review specific to the organization, such as approved authentication patterns or data-access expectations. Treat them as review criteria rather than an infrastructure enforcement policy. A design assessment is only as complete as its inputs; missing interfaces and trust boundaries should become explicit questions. This capability remains a separately evaluated preview workflow.","inputs":["Architecture/design documents","Enabled organizational security requirements"],"actions":["Assess the design against configured criteria","Return requirement-linked findings and recommendations"],"outputs":["A reviewable design assessment","Explicit issues to resolve before implementation"]},
-{"title":"Threat modeling connects design and code context","takeaway":"Acceptance: validate the agent’s system model before accepting its threat analysis.","kind":"lens","seconds":60,"phase":"Capabilities","refs":["S31","S05"],"caps":["C12"],"notes":"A threat model is useful when the team recognizes its assets, data flows and trust boundaries. Provide both design scope and current source when that helps focus the assessment. The reviewer should correct the system overview before treating the resulting threats as exhaustive. Keep threat-model recommendations distinct from observed exploitable findings in a running penetration test.","inputs":["Design scope documents, source code or both","The application context and security objective"],"actions":["Build an overview of the system","Identify threats with severity, STRIDE classification and recommendations"],"outputs":["A structured threat model","Evidence and mitigation work for architectural review"]},
-{"title":"Code review has several entry points","takeaway":"Full-repository, change review and remediation share context—not identical triggers.","kind":"matrix","seconds":90,"phase":"Capabilities","refs":["S21","S24","S25","S05"],"caps":["C13","C14","C15"],"notes":"Repository review, change-triggered review and remediation answer different questions. PR/MR trigger filters can use target branches, events and provider-supported labels; filter groups replace the default trigger. Review comments and remediation are separate capabilities. The documented manual review comment is @AWS-Continuum-Pentesting review. Do not copy another agent’s review command or assume provider parity. Inspect findings, supported source paths and normal CI evidence before accepting a proposed repair. The code-review workflow remains preview.","headers":[Workflow","Primary input","Reviewable result"],"rows":[["Repository review","Connected repository or S3 source","Code findings and affected locations"],["PR / MR review","Ready-for-review event; configured branch, label or draft filters","Change-specific review feedback"],["Remediation","Accepted finding and enabled source path","Provider-supported PR/MR or downloadable diff"]]},
-{"title":"IDE and build workflows still call a service","takeaway":"A local entry point does not make the assessment a local-only operation.","kind":"compare","seconds":75,"phase":"Capabilities","refs":["S26","S27"],"caps":["C16","C17"],"notes":"The IDE integration is an entry point into the service workflow. Review source upload, credentials, permissions and the destination Region before enabling it. A differential scan submitted from a build workflow uses the codebase as context and focuses findings on the supplied changes. Preserve the base and head revisions so the result can be tied to the intended diff. Neither path is a guarantee that every build is automatically gated.","left":{"title":"IDE access","body":"Use the documented MCP or Kiro integration to submit work with the required service setup and source context.","tag":"PREVIEW"},"right":{"title":"Differential build scan","body":"Upload the supported source/diff artifacts and submit the documented API/SDK workflow.","tag":"PREVIEW"},"callout":"Acceptance: confirm what left the workstation or runner, which revision was scanned, and what checks actually ran."},
-{"title":"A green delivery gate can mean different things","takeaway":"Read scope, errors and baseline behavior—not just the pipeline color.","kind":"matrix","seconds":90,"phase":"Controls","refs":["S28","S29"],"caps":["C18"],"notes":"The pipeline integration is a post-deployment test, not a pre-merge code scan. It assesses the configured deployed change. A scoped-out result can pass without exercising a new attack surface, and infrastructure errors can be configured fail-open. The documented defaults therefore need explicit review. A passing run can also advance the baseline, so tightening the policy later does not necessarily revisit earlier accepted commits. This is a reason to verify the exact gate contract before using it for production sign-off.","headers":["Outcome","Interpretation","Recommended team treatment"],"rows":[["Findings exceed threshold","Test returned blocking evidence","Block and triage"],["Scoped out","No relevant changed attack surface was tested","Record scope decision; do not call it a clean full test"],["Error / scope conflict","Coverage may be absent or outside scope","Use fail-closed for required sign-off"],["Runner stopped","Server-side job may still need cleanup","Verify terminal job state and consumption"]]},
-{"title":"Pilot one complete evidence-to-closure loop","takeaway":"A safe test, an accepted finding and a verified fix are more useful than broad unreviewed coverage.","kind":"matrix","seconds":90,"phase":"Adoption","refs":["S10","S12","S14","S30"],"caps":[],"notes":"Use one owned application to establish the entire operating loop. Check Region and inference behavior separately from feature availability. Measure confirmed findings, rejected or unsupported claims, reviewer effort, task consumption and successful fix closure. Track which critical paths were exercised and what remains unknown. Do not report a finding count as a security improvement unless the team has assessed and acted on it.","headers":["Phase","Team work","Evidence to keep"],"rows":[["Authorize","Isolate target and identities; approve data boundary","Scope, owner, recovery and stop record"],["Assess","Run one bounded test and inspect evidence","Run ID, coverage and accepted findings"],["Repair","Review and deploy one justified fix","Change revision, tests and deployment"],["Revalidate","Retest and decide whether to expand","Linked result, effort and cost"]]},
-{"title":"Make security work an accountable closure loop","takeaway":"Authorize the target. Inspect the evidence. Revalidate the deployed repair.","kind":"close","seconds":90,"phase":"Close","refs":["S10","S14","S05"],"caps":[],"notes":"Close by distinguishing four things: a design concern, a source-code finding, an observed penetration-test finding and a verified repair. Each has a different evidence requirement. The team should adopt the first workflow it can operate safely and measure end to end, not every available preview at once. Questions come after the timed close. The feature crosswalk retains all 18 capability entries and their original qualifications for deeper reference.","items":[{"title":"Authorize","body":"Scope includes reachable systems and real application effects.","tag":""},{"title":"Inspect","body":"Severity is accompanied by evidence, impact and coverage.","tag":""},{"title":"Close","body":"A deployed fix is reassessed; original evidence remains traceable.","tag":""}]}
-],
-"sources":{
-"S03":{"title":"On-demand penetration testing generally available","url":"https://aws.amazon.com/about-aws/whats-new/2026/03/aws-security-agent-ondemand-penetration/"},"S04":{"title":"What is AWS Security Agent?","url":"https://docs.aws.amazon.com/securityagent/latest/userguide/what-is.html"},"S05":{"title":"Pricing and billing","url":"https://docs.aws.amazon.com/securityagent/latest/userguide/pricing.html"},"S08":{"title":"Create a penetration test","url":"https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html"},"S09":{"title":"Provide testing credentials","url":"https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html"},"S10":{"title":"Security best practices","url":"https://docs.aws.amazon.com/securityagent/latest/userguide/security-best-practices.html"},"S12":{"title":"Review penetration-test findings","url":"https://docs.aws.amazon.com/securityagent/latest/userguide/review-penetration-findings.html"},"S13":{"title":"Enable finding remediation","url":"https://docs.aws.amazon.com/securityagent/latest/userguide/enable-remediate-findings.html"},"S14":{"title":"Revalidate findings","url":"https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html"},"S16":{"title":"Create Jira issues for findings","url":"https://docs.aws.amazon.com/securityagent/latest/userguide/export-findings-to-issue-tracker.html"},"S17":{"title":"Perform a design review","url":"https://docs.aws.amazon.com/securityagent/latest/userguide/perform-design-review.html"},"S18":{"title":"Security requirements","url":"https://docs.aws.amazon.com/securityagent/latest/userguide/security-requirements.html"},"S21":{"title":"Perform a full code review","url":"https://docs.aws.amazon.com/securityagent/latest/userguide/perform-code-review-scan.html"},"S24":{"title":"Configure code-review triggers","url":"https://docs.aws.amazon.com/securityagent/latest/userguide/configure-code-review-triggers.html"},"S25":{"title":"Remediate code-review findings","url":"https://docs.aws.amazon.com/securityagent/latest/userguide/remediate-code-scan-findings.html"},"S26":{"title":"Code review from an IDE","url":"https://docs.aws.amazon.com/securityagent/latest/userguide/code-review-ide-integration.html"},"S27":{"title":"Run a differential code scan with S3","url":"https://docs.aws.amazon.com/securityagent/latest/userguide/run-diff-scan-s3.html"},"S28":{"title":"Run penetration tests from CI/CD","url":"https://docs.aws.amazon.com/securityagent/latest/userguide/cicd-pentest.html"},"S29":{"title":"GitHub Actions scoped-pentest tutorial","url":"https://docs.aws.amazon.com/securityagent/latest/userguide/sample-cicd-github.html"},"S30":{"title":"Resilience and regional availability","url":"https://docs.aws.amazon.com/securityagent/latest/userguide/resilience.html"},"S31":{"title":"Threat modeling quickstart","url":"https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-threat-model.html"},"S32":{"title":"Remediate a penetration-test finding","url":"https://docs.aws.amazon.com/securityagent/latest/userguide/remediate-finding.html"},"S15":{"title":"Export a penetration-test report","url":"https://docs.aws.amazon.com/securityagent/latest/userguide/export-penetration-report.html"}
-}
+  "key": "security",
+  "title": "AWS Security Agent",
+  "subtitle": "Authorized assessment → verified repair",
+  "minutes": 30,
+  "demo": 8,
+  "scenario": "Authorized staging test, evidence triage and finding revalidation",
+  "slides": [
+    {
+      "title": "AWS Security Agent",
+      "takeaway": "Application-security evidence from design review to deployed-fix revalidation.",
+      "kind": "hero",
+      "seconds": 45,
+      "phase": "Position",
+      "refs": [
+        "S04",
+        "S03",
+        "S05"
+      ],
+      "caps": [
+        "C01"
+      ],
+      "notes": "This deck remains scoped to the application-security capabilities in the original report. On-demand penetration testing is generally available; design review, code review, threat modeling and CI/CD integration have their own preview status. The demonstration uses an authorized staging application and a prepared evidence package, not an unapproved real-world target.",
+      "metrics": [
+        [
+          "30 min",
+          "session, including demo"
+        ],
+        [
+          "8 min",
+          "controlled demo walkthrough"
+        ],
+        [
+          "1 app",
+          "recommended first scope"
+        ]
+      ],
+      "outcome": "Authorize → assess → triage → repair → revalidate",
+      "label": "Application security / Software engineering / Security architecture"
+    },
+    {
+      "title": "Lifecycle coverage is not uniform availability",
+      "takeaway": "Use the feature’s own maturity and execution boundary.",
+      "kind": "cards",
+      "seconds": 75,
+      "phase": "Capabilities",
+      "refs": [
+        "S03",
+        "S05",
+        "S28",
+        "S29"
+      ],
+      "caps": [
+        "C01",
+        "C10",
+        "C12",
+        "C13",
+        "C18"
+      ],
+      "notes": "The lifecycle view explains why a single “security agent” label is insufficient. A design review examines documents, a threat model proposes attack scenarios, source review examines code, and penetration testing exercises a running target. They produce different evidence and have different potential side effects. Availability is also feature-specific, so an organization can adopt the GA testing path without making the same approval decision for every preview capability.",
+      "items": [
+        {
+          "title": "Design review",
+          "body": "Assess architecture documents against security requirements.",
+          "tag": "PREVIEW"
+        },
+        {
+          "title": "Threat model",
+          "body": "Map system context, threats and mitigation recommendations.",
+          "tag": "PREVIEW"
+        },
+        {
+          "title": "Code review",
+          "body": "Review repositories, changes and proposed code fixes.",
+          "tag": "PREVIEW"
+        },
+        {
+          "title": "Penetration test",
+          "body": "Exercise a configured, authorized running application.",
+          "tag": "GA"
+        },
+        {
+          "title": "Delivery integration",
+          "body": "Run a scoped post-deployment test as a pipeline gate.",
+          "tag": "PREVIEW"
+        },
+        {
+          "title": "Fix verification",
+          "body": "Reassess a known finding after a deployed repair.",
+          "tag": "PENTEST WORKFLOW"
+        }
+      ]
+    },
+    {
+      "title": "Use case · prove a tenant boundary holds",
+      "takeaway": "The unit of success is an accepted finding and verified repair—not a severity count.",
+      "kind": "flow",
+      "seconds": 75,
+      "phase": "Use case",
+      "refs": [
+        "S08",
+        "S12",
+        "S14"
+      ],
+      "caps": [
+        "C01",
+        "C05",
+        "C07"
+      ],
+      "notes": "The illustrative application has tenant-specific administration endpoints. The team wants to know whether an ordinary test identity can affect another tenant. No actual vulnerability is asserted here. Define dedicated tenants and identities, use synthetic data and keep all actions within the authorized staging scope. A useful result contains evidence and a clear affected path; closure requires a deployed fix and a focused reassessment.",
+      "items": [
+        {
+          "title": "Authorize",
+          "body": "One owned staging application and test window.",
+          "tag": "SCOPE"
+        },
+        {
+          "title": "Assess",
+          "body": "Exercise the approved authenticated paths.",
+          "tag": "NATIVE"
+        },
+        {
+          "title": "Triage",
+          "body": "Inspect impact, confidence and reproduction evidence.",
+          "tag": "APPSEC"
+        },
+        {
+          "title": "Close",
+          "body": "Review the fix, deploy safely, and revalidate.",
+          "tag": "ENGINEERING"
+        }
+      ]
+    },
+    {
+      "title": "Authorization and target safety come first",
+      "takeaway": "Domain verification does not authorize every reachable dependency.",
+      "kind": "matrix",
+      "seconds": 90,
+      "phase": "Controls",
+      "refs": [
+        "S08",
+        "S09",
+        "S10"
+      ],
+      "caps": [
+        "C01",
+        "C02"
+      ],
+      "notes": "Domain verification is a product prerequisite, not a substitute for organizational authorization. Scope must cover the target, identities and any third-party or downstream services that might be exercised. A sandboxed worker can still mutate the application it reaches. Isolate the target data and disable payment, notification and other irreversible side effects. Assign a human stop owner with independent visibility of target health.",
+      "headers": [
+        "Boundary",
+        "Required preparation",
+        "Owner check"
+      ],
+      "rows": [
+        [
+          "Target",
+          "Owned non-production domain and permitted paths",
+          "Written scope and dependency exclusions"
+        ],
+        [
+          "Identity",
+          "Dedicated low-privilege test accounts",
+          "No real customer or production credentials"
+        ],
+        [
+          "State",
+          "Disposable data and disabled business side effects",
+          "Recovery plan and health monitoring"
+        ],
+        [
+          "Execution",
+          "Task budget, test window and stop owner",
+          "Operator can observe and stop the run"
+        ]
+      ]
+    },
+    {
+      "title": "Choose test scope and supply current context",
+      "takeaway": "Acceptance: context and credentials match the deployed version under test.",
+      "kind": "lens",
+      "seconds": 75,
+      "phase": "Capabilities",
+      "refs": [
+        "S08",
+        "S09",
+        "S10"
+      ],
+      "caps": [
+        "C02",
+        "C03"
+      ],
+      "notes": "Choose the risk model deliberately: the default Web application scope covers web and API risks; Gen AI application focuses on LLM-backed surfaces. Gen AI scope uses a fixed set of risk types rather than the web scope’s risk exclusions. Match source and API context to the deployed revision. Test dedicated credentials before the assessment and review discovered domains. Target domains may be tested, accessible domains support navigation without attack, and out-of-scope domains must not be accessed. Private deployments require the configured VPC path.",
+      "inputs": [
+        "Authorized target, dedicated test credentials and network scope",
+        "Current source/API context; optional private VPC reachability"
+      ],
+      "actions": [
+        "Select Web application or focused Gen AI application scope",
+        "Confirm sign-in and classify target, accessible and excluded domains"
+      ],
+      "outputs": [
+        "A scoped assessment matched to the deployed version",
+        "Explicit coverage assumptions and reachable paths"
+      ]
+    },
+    {
+      "title": "Bound the run and observe its effects",
+      "takeaway": "Acceptance: task hours are not wall-clock minutes; the operator owns the stop decision.",
+      "kind": "lens",
+      "seconds": 75,
+      "phase": "Capabilities",
+      "refs": [
+        "S08",
+        "S12",
+        "S05"
+      ],
+      "caps": [
+        "C04"
+      ],
+      "notes": "Task hours measure cumulative agent work, including parallel activity; they are not wall-clock minutes. A configured maximum task-hours limit stops work and preserves findings, whereas a service quota is not the same spending control. Reaching the run limit can still yield a Completed status, so inspect coverage rather than treating that label as a complete assessment. Monitor target health and define a stop owner before starting. The presentation reviews a prepared run rather than waiting for a full test.",
+      "inputs": [
+        "Configured penetration test and authorized scope",
+        "A work budget and a monitored staging deployment"
+      ],
+      "actions": [
+        "Set a maximum task-hours limit and monitor the run",
+        "Inspect progress, execution logs and emerging findings"
+      ],
+      "outputs": [
+        "Findings retained when the configured work limit is reached",
+        "Run state and consumed task hours—not a coverage guarantee"
+      ]
+    },
+    {
+      "title": "Demo · authorized staging assessment",
+      "takeaway": "Inspect a safe configuration, an active run view and one evidence-backed finding.",
+      "kind": "demo",
+      "seconds": 480,
+      "phase": "Demonstration",
+      "refs": [
+        "S08",
+        "S09",
+        "S10",
+        "S12"
+      ],
+      "caps": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05"
+      ],
+      "notes": "The eight-minute slot cannot be treated as a guarantee of a complete penetration test. Walk through setup and a completed result rather than waiting for a new scan. A prompt asking the agent to stop at a health threshold is not an independent circuit breaker; the operator and environment controls enforce the safety plan. Do not execute reproduction material against any target outside the authorized scope.",
+      "prompt": "Prepare the approved staging assessment with dedicated test accounts, explicit target and network scope, and the agreed work budget. Exclude payment and notification side effects through environment controls. The operator will monitor health and stop the job if the agreed threshold is crossed.",
+      "steps": [
+        [
+          60,
+          "Verify authorization",
+          "Show target ownership, test window and dedicated identities."
+        ],
+        [
+          90,
+          "Inspect context",
+          "Match source/deployment version, credentials and private reachability."
+        ],
+        [
+          90,
+          "Inspect limits",
+          "Show work budget, exclusions and the stop procedure."
+        ],
+        [
+          120,
+          "Observe a run",
+          "Use the prepared run view; correlate logs with target health."
+        ],
+        [
+          120,
+          "Review one finding",
+          "Read impact, reproduction evidence, coverage and the next engineering action."
+        ]
+      ],
+      "success": "An authorized, bounded run and one inspectable evidence package; no claim of complete coverage.",
+      "preflight": "Prepare a disposable staging app, independent health monitoring, a completed test and a named stop owner.",
+      "fallback": "Use a sanitized completed run if setup or job latency prevents a live view. Label illustrative findings clearly."
+    },
+    {
+      "title": "Read a finding as an evidence package",
+      "takeaway": "Severity without impact, confidence and coverage is not enough for a decision.",
+      "kind": "cards",
+      "seconds": 90,
+      "phase": "Outputs",
+      "refs": [
+        "S12",
+        "S10"
+      ],
+      "caps": [
+        "C05"
+      ],
+      "notes": "A finding should let a reviewer understand the affected behavior, the identity used, the observed result and the conditions needed to reproduce it. Inspect the action trace and the reported impact. Coverage matters: a clean result on an authenticated path does not establish that all other paths were tested. Accept or reject the finding on its evidence and business context, not on the severity label alone.",
+      "items": [
+        {
+          "title": "Affected path",
+          "body": "Which endpoint, role, tenant and deployed version?",
+          "tag": "IDENTITY"
+        },
+        {
+          "title": "Observed impact",
+          "body": "What did the test actually demonstrate?",
+          "tag": "EVIDENCE"
+        },
+        {
+          "title": "Reproduction",
+          "body": "Preconditions and a reviewable action trace.",
+          "tag": "REPEATABILITY"
+        },
+        {
+          "title": "Confidence",
+          "body": "What is confirmed, inferred or still uncertain?",
+          "tag": "QUALITY"
+        },
+        {
+          "title": "Coverage",
+          "body": "Which relevant routes were or were not exercised?",
+          "tag": "SCOPE"
+        },
+        {
+          "title": "Next action",
+          "body": "Owner, proposed fix and a closure check.",
+          "tag": "HANDOFF"
+        }
+      ]
+    },
+    {
+      "title": "Remediation produces a proposal—not closure",
+      "takeaway": "Acceptance: provider, repository visibility and source type determine delivery; the team reviews every fix.",
+      "kind": "lens",
+      "seconds": 90,
+      "phase": "Capabilities",
+      "refs": [
+        "S13",
+        "S25",
+        "S32",
+        "S10"
+      ],
+      "caps": [
+        "C06",
+        "C15"
+      ],
+      "notes": "Automatic or requested remediation creates code for review. Delivery depends on the source and provider: a connected private repository can receive a pull or merge request, while an S3 source can receive a diff. Public repository handling has disclosure restrictions, so do not promise a universal remediation PR. Test the change, preserve unrelated behavior and use normal deployment controls. A generated patch does not establish that the vulnerability is resolved.",
+      "inputs": [
+        "An accepted finding and connected source",
+        "Explicit remediation enablement and repository access"
+      ],
+      "actions": [
+        "Generate a proposed code repair",
+        "Deliver a PR/MR or downloadable diff as supported by the source"
+      ],
+      "outputs": [
+        "Reviewable changes with finding context",
+        "A link between the security issue and proposed repair"
+      ]
+    },
+    {
+      "title": "Revalidate after the fix is deployed",
+      "takeaway": "Acceptance: “not reproduced” concerns this finding and this run—not a complete security certification.",
+      "kind": "lens",
+      "seconds": 75,
+      "phase": "Capabilities",
+      "refs": [
+        "S14"
+      ],
+      "caps": [
+        "C07"
+      ],
+      "notes": "Revalidation is a focused reassessment, not a new broad discovery scan. The fix must already be deployed to the original target for the result to be meaningful. The result does not overwrite the historical finding. Preserve the original evidence and the linked revalidation attempt. Broad architectural or application changes may justify a full new penetration test instead of relying only on selected findings.",
+      "inputs": [
+        "An existing finding and a deployed repair",
+        "The original reachable target and current test authentication"
+      ],
+      "actions": [
+        "Repeat the selected finding’s validation path",
+        "Record whether the vulnerability can be reproduced"
+      ],
+      "outputs": [
+        "A linked revalidation job and result",
+        "An auditable history of reassessment attempts"
+      ]
+    },
+    {
+      "title": "Export evidence and hand work to the right owner",
+      "takeaway": "Sharing a report or ticket must preserve scope, revision and finding identity.",
+      "kind": "compare",
+      "seconds": 60,
+      "phase": "Outputs",
+      "refs": [
+        "S15",
+        "S16",
+        "S14"
+      ],
+      "caps": [
+        "C08",
+        "C09"
+      ],
+      "notes": "Generate the report from the selected penetration-test run and choose the severity, confidence, status and finding-type filters. Optional compliance-oriented sections and annotations preserve useful context, but do not establish certification. A completed run and an interim export have different evidence boundaries. Jira handoff requires a configured supported project. Keep finding identity, remediation links and reassessment status attached to the work item; ticket creation is not closure. Protect vulnerability details according to the intended audience.",
+      "left": {
+        "title": "Evidence package",
+        "body": "Generate a filtered PDF with scope, test evidence and optional reviewer annotations. Record whether the run is complete or interim.",
+        "tag": "POINT IN TIME"
+      },
+      "right": {
+        "title": "Jira handoff",
+        "body": "Create tracked work from selected findings; retain links to remediation and reassessment.",
+        "tag": "CONFIGURED INTEGRATION"
+      },
+      "callout": "Team rule: the ticket owner is accountable for closure; an exported report is not certification."
+    },
+    {
+      "title": "Design review applies reusable requirements",
+      "takeaway": "Acceptance: review requirements and input assumptions before interpreting a finding.",
+      "kind": "lens",
+      "seconds": 75,
+      "phase": "Capabilities",
+      "refs": [
+        "S17",
+        "S18"
+      ],
+      "caps": [
+        "C10",
+        "C11"
+      ],
+      "notes": "Security requirements make the review specific to the organization, such as approved authentication patterns or data-access expectations. Treat them as review criteria rather than an infrastructure enforcement policy. A design assessment is only as complete as its inputs; missing interfaces and trust boundaries should become explicit questions. This capability remains a separately evaluated preview workflow.",
+      "inputs": [
+        "Architecture/design documents",
+        "Enabled organizational security requirements"
+      ],
+      "actions": [
+        "Assess the design against configured criteria",
+        "Return requirement-linked findings and recommendations"
+      ],
+      "outputs": [
+        "A reviewable design assessment",
+        "Explicit issues to resolve before implementation"
+      ]
+    },
+    {
+      "title": "Threat modeling connects design and code context",
+      "takeaway": "Acceptance: validate the agent’s system model before accepting its threat analysis.",
+      "kind": "lens",
+      "seconds": 60,
+      "phase": "Capabilities",
+      "refs": [
+        "S31",
+        "S05"
+      ],
+      "caps": [
+        "C12"
+      ],
+      "notes": "A threat model is useful when the team recognizes its assets, data flows and trust boundaries. Provide both design scope and current source when that helps focus the assessment. The reviewer should correct the system overview before treating the resulting threats as exhaustive. Keep threat-model recommendations distinct from observed exploitable findings in a running penetration test.",
+      "inputs": [
+        "Design scope documents, source code or both",
+        "The application context and security objective"
+      ],
+      "actions": [
+        "Build an overview of the system",
+        "Identify threats with severity, STRIDE classification and recommendations"
+      ],
+      "outputs": [
+        "A structured threat model",
+        "Evidence and mitigation work for architectural review"
+      ]
+    },
+    {
+      "title": "Code review has several entry points",
+      "takeaway": "Full-repository, change review and remediation share context—not identical triggers.",
+      "kind": "matrix",
+      "seconds": 90,
+      "phase": "Capabilities",
+      "refs": [
+        "S21",
+        "S24",
+        "S25",
+        "S05"
+      ],
+      "caps": [
+        "C13",
+        "C14",
+        "C15"
+      ],
+      "notes": "Repository review, change-triggered review and remediation answer different questions. PR/MR trigger filters can use target branches, events and provider-supported labels; filter groups replace the default trigger. Review comments and remediation are separate capabilities. The documented manual review comment is @AWS-Continuum-Pentesting review. Do not copy another agent’s review command or assume provider parity. Inspect findings, supported source paths and normal CI evidence before accepting a proposed repair. The code-review workflow remains preview.",
+      "headers": [
+        "Workflow",
+        "Primary input",
+        "Reviewable result"
+      ],
+      "rows": [
+        [
+          "Repository review",
+          "Connected repository or S3 source",
+          "Code findings and affected locations"
+        ],
+        [
+          "PR / MR review",
+          "Ready-for-review event; configured branch, label or draft filters",
+          "Change-specific review feedback"
+        ],
+        [
+          "Remediation",
+          "Accepted finding and enabled source path",
+          "Provider-supported PR/MR or downloadable diff"
+        ]
+      ]
+    },
+    {
+      "title": "IDE and build workflows still call a service",
+      "takeaway": "A local entry point does not make the assessment a local-only operation.",
+      "kind": "compare",
+      "seconds": 75,
+      "phase": "Capabilities",
+      "refs": [
+        "S26",
+        "S27"
+      ],
+      "caps": [
+        "C16",
+        "C17"
+      ],
+      "notes": "The IDE integration is an entry point into the service workflow. Review source upload, credentials, permissions and the destination Region before enabling it. A differential scan submitted from a build workflow uses the codebase as context and focuses findings on the supplied changes. Preserve the base and head revisions so the result can be tied to the intended diff. Neither path is a guarantee that every build is automatically gated.",
+      "left": {
+        "title": "IDE access",
+        "body": "Use the documented MCP or Kiro integration to submit work with the required service setup and source context.",
+        "tag": "PREVIEW"
+      },
+      "right": {
+        "title": "Differential build scan",
+        "body": "Upload the supported source/diff artifacts and submit the documented API/SDK workflow.",
+        "tag": "PREVIEW"
+      },
+      "callout": "Acceptance: confirm what left the workstation or runner, which revision was scanned, and what checks actually ran."
+    },
+    {
+      "title": "A green delivery gate can mean different things",
+      "takeaway": "Read scope, errors and baseline behavior—not just the pipeline color.",
+      "kind": "matrix",
+      "seconds": 90,
+      "phase": "Controls",
+      "refs": [
+        "S28",
+        "S29"
+      ],
+      "caps": [
+        "C18"
+      ],
+      "notes": "The pipeline integration is a post-deployment test, not a pre-merge code scan. It assesses the configured deployed change. A scoped-out result can pass without exercising a new attack surface, and infrastructure errors can be configured fail-open. The documented defaults therefore need explicit review. A passing run can also advance the baseline, so tightening the policy later does not necessarily revisit earlier accepted commits. This is a reason to verify the exact gate contract before using it for production sign-off.",
+      "headers": [
+        "Outcome",
+        "Interpretation",
+        "Recommended team treatment"
+      ],
+      "rows": [
+        [
+          "Findings exceed threshold",
+          "Test returned blocking evidence",
+          "Block and triage"
+        ],
+        [
+          "Scoped out",
+          "No relevant changed attack surface was tested",
+          "Record scope decision; do not call it a clean full test"
+        ],
+        [
+          "Error / scope conflict",
+          "Coverage may be absent or outside scope",
+          "Use fail-closed for required sign-off"
+        ],
+        [
+          "Runner stopped",
+          "Server-side job may still need cleanup",
+          "Verify terminal job state and consumption"
+        ]
+      ]
+    },
+    {
+      "title": "Pilot one complete evidence-to-closure loop",
+      "takeaway": "A safe test, an accepted finding and a verified fix are more useful than broad unreviewed coverage.",
+      "kind": "matrix",
+      "seconds": 90,
+      "phase": "Adoption",
+      "refs": [
+        "S10",
+        "S12",
+        "S14",
+        "S30"
+      ],
+      "caps": [],
+      "notes": "Use one owned application to establish the entire operating loop. Check Region and inference behavior separately from feature availability. Measure confirmed findings, rejected or unsupported claims, reviewer effort, task consumption and successful fix closure. Track which critical paths were exercised and what remains unknown. Do not report a finding count as a security improvement unless the team has assessed and acted on it.",
+      "headers": [
+        "Phase",
+        "Team work",
+        "Evidence to keep"
+      ],
+      "rows": [
+        [
+          "Authorize",
+          "Isolate target and identities; approve data boundary",
+          "Scope, owner, recovery and stop record"
+        ],
+        [
+          "Assess",
+          "Run one bounded test and inspect evidence",
+          "Run ID, coverage and accepted findings"
+        ],
+        [
+          "Repair",
+          "Review and deploy one justified fix",
+          "Change revision, tests and deployment"
+        ],
+        [
+          "Revalidate",
+          "Retest and decide whether to expand",
+          "Linked result, effort and cost"
+        ]
+      ]
+    },
+    {
+      "title": "Make security work an accountable closure loop",
+      "takeaway": "Authorize the target. Inspect the evidence. Revalidate the deployed repair.",
+      "kind": "close",
+      "seconds": 90,
+      "phase": "Close",
+      "refs": [
+        "S10",
+        "S14",
+        "S05"
+      ],
+      "caps": [],
+      "notes": "Close by distinguishing four things: a design concern, a source-code finding, an observed penetration-test finding and a verified repair. Each has a different evidence requirement. The team should adopt the first workflow it can operate safely and measure end to end, not every available preview at once. Questions come after the timed close. The feature crosswalk retains all 18 capability entries and their original qualifications for deeper reference.",
+      "items": [
+        {
+          "title": "Authorize",
+          "body": "Scope includes reachable systems and real application effects.",
+          "tag": ""
+        },
+        {
+          "title": "Inspect",
+          "body": "Severity is accompanied by evidence, impact and coverage.",
+          "tag": ""
+        },
+        {
+          "title": "Close",
+          "body": "A deployed fix is reassessed; original evidence remains traceable.",
+          "tag": ""
+        }
+      ]
+    }
+  ],
+  "sources": {
+    "S03": {
+      "title": "On-demand penetration testing generally available",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/03/aws-security-agent-ondemand-penetration/"
+    },
+    "S04": {
+      "title": "What is AWS Security Agent?",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/what-is.html"
+    },
+    "S05": {
+      "title": "Pricing and billing",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/pricing.html"
+    },
+    "S08": {
+      "title": "Create a penetration test",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html"
+    },
+    "S09": {
+      "title": "Provide testing credentials",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html"
+    },
+    "S10": {
+      "title": "Security best practices",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/security-best-practices.html"
+    },
+    "S12": {
+      "title": "Review penetration-test findings",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/review-penetration-findings.html"
+    },
+    "S13": {
+      "title": "Enable finding remediation",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/enable-remediate-findings.html"
+    },
+    "S14": {
+      "title": "Revalidate findings",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html"
+    },
+    "S16": {
+      "title": "Create Jira issues for findings",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/export-findings-to-issue-tracker.html"
+    },
+    "S17": {
+      "title": "Perform a design review",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/perform-design-review.html"
+    },
+    "S18": {
+      "title": "Security requirements",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/security-requirements.html"
+    },
+    "S21": {
+      "title": "Perform a full code review",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/perform-code-review-scan.html"
+    },
+    "S24": {
+      "title": "Configure code-review triggers",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/configure-code-review-triggers.html"
+    },
+    "S25": {
+      "title": "Remediate code-review findings",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/remediate-code-scan-findings.html"
+    },
+    "S26": {
+      "title": "Code review from an IDE",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/code-review-ide-integration.html"
+    },
+    "S27": {
+      "title": "Run a differential code scan with S3",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/run-diff-scan-s3.html"
+    },
+    "S28": {
+      "title": "Run penetration tests from CI/CD",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/cicd-pentest.html"
+    },
+    "S29": {
+      "title": "GitHub Actions scoped-pentest tutorial",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/sample-cicd-github.html"
+    },
+    "S30": {
+      "title": "Resilience and regional availability",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/resilience.html"
+    },
+    "S31": {
+      "title": "Threat modeling quickstart",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-threat-model.html"
+    },
+    "S32": {
+      "title": "Remediate a penetration-test finding",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/remediate-finding.html"
+    },
+    "S15": {
+      "title": "Export a penetration-test report",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/export-penetration-report.html"
+    }
+  }
 }
