@@ -611,5 +611,6 @@
       "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/cross-region-inference.html"
     }
   },
-  "editorial_classification": "Technical documentation; documented features and proposed team workflows are explicitly distinguished."
+  "editorial_classification": "Technical documentation; documented features and proposed team workflows are explicitly distinguished.",
+  "scope_revision": "2026-10-21-three-agent-scope"
 }
