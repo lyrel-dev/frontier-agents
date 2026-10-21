@@ -1,18 +1,8 @@
 {
-  "slug": "aws_security_agent",
   "title": "AWS Security Agent",
-  "subtitle": "Day-to-day application security · now part of AWS Continuum",
+  "slug": "aws_security_agent",
   "validated": "2026-10-20",
-  "scope": "Authorized application penetration testing, finding triage, remediation handoff, and explicitly labeled preview design/code workflows. This is the frontier agent formerly branded AWS Security Agent, not the separate gated-preview Continuum for code vulnerabilities offering.",
-  "overview": "Start with the established on-demand penetration-testing workflow on an authorized non-production application. Review evidence, route findings, propose fixes, and revalidate. Evaluate preview design, code, and CI/CD workflows separately rather than treating service-level GA as a blanket feature status.",
-  "alert": "Penetration testing is GA, but code review, design review, threat modeling, and the documented CI/CD pipeline integration remain preview. Tests can alter application state. Use an authorized non-production target, narrow scope, and test-only credentials.",
-  "alert_refs": [
-    "S03",
-    "S05",
-    "S29",
-    "S10"
-  ],
-  "default_preview": false,
+  "scope": "Day-to-day application-security workflows with AWS Security Agent.",
   "capabilities": [
     {
       "id": "C01",
@@ -320,26 +310,6 @@
       "note": "Core behavior is documented; the example task and acceptance check are author recommendations, not executed demonstrations."
     },
     {
-      "id": "C16",
-      "number": 16,
-      "title": "Start a code review from the developer’s IDE",
-      "product": "Preview design and code",
-      "verdict": "Qualified",
-      "availability": "Preview · MCP or Kiro Power integration",
-      "delivery": "Configured client integration with cloud scan",
-      "claim": "The IDE integration packages source for a service-backed code review and returns findings through the configured client.",
-      "limit": "This is not an offline local-only scan: source is uploaded to S3. Initial setup can provision an Agent Space, role, and bucket and requires corresponding IAM permissions.",
-      "setup": "Install the supported integration, review first-use provisioning permissions, and approve the code/data handling boundary.",
-      "prompt": "Run a review of this approved repository through the configured security integration and show the submitted source scope.",
-      "check": "Check upload contents, resource ownership, retention settings, and returned scan revision before accepting the result.",
-      "refs": [
-        "S26",
-        "S05"
-      ],
-      "preview": true,
-      "note": "Core behavior is documented; the example task and acceptance check are author recommendations, not executed demonstrations."
-    },
-    {
       "id": "C17",
       "number": 17,
       "title": "Submit a differential source review from a build workflow",
@@ -380,234 +350,7 @@
       "note": "Core behavior is documented; the example task and acceptance check are author recommendations, not executed demonstrations."
     }
   ],
-  "general_audit": [
-    {
-      "id": "G01",
-      "title": "Current name and excluded adjacent product",
-      "text": "AWS positions the frontier agent as part of AWS Continuum. This report covers its pentest, design, code, and threat-model workflows, not the separate gated-preview Continuum for code vulnerabilities product.",
-      "refs": [
-        "S02",
-        "S04"
-      ],
-      "verdict": "Qualified"
-    },
-    {
-      "id": "G02",
-      "title": "GA is capability-specific",
-      "text": "The 31 March 2026 GA announcement establishes on-demand pentesting. Pricing documentation continues to label code review, design review, and threat modeling preview; the CI/CD tutorial explicitly labels its integration preview.",
-      "refs": [
-        "S03",
-        "S05",
-        "S29"
-      ],
-      "verdict": "Qualified"
-    },
-    {
-      "id": "G03",
-      "title": "Authorized testing can still have side effects",
-      "text": "Use non-production data and test-only credentials. Scope exclusions and network controls reduce exposure but do not establish that every business-logic side effect is impossible.",
-      "refs": [
-        "S10",
-        "S09"
-      ],
-      "verdict": "Qualified"
-    },
-    {
-      "id": "G04",
-      "title": "Coverage and certainty are separate from completion",
-      "text": "AI-assisted testing does not guarantee discovery of every critical path. A completed or work-capped run and a Resolved revalidation status each require interpretation against scope and evidence.",
-      "refs": [
-        "S11",
-        "S08",
-        "S14"
-      ],
-      "verdict": "Qualified"
-    },
-    {
-      "id": "G05",
-      "title": "Documentation conflict: older FAQ versus newer procedures",
-      "text": "The security FAQ still says there are no public APIs or CI/CD integrations. The dedicated CI/CD procedure and preview tutorial document an integration, and the differential-review page documents an API path. This report uses the specific procedures for those workflows and retains the preview and setup restrictions.",
-      "refs": [
-        "S11",
-        "S28",
-        "S29",
-        "S27"
-      ],
-      "verdict": "Qualified"
-    },
-    {
-      "id": "G06",
-      "title": "Region and inference must be checked separately",
-      "text": "Consult current regional availability and the feature-specific cross-region inference table before sending source or application data. Geographic and global routing differ, with feature exceptions; do not assume single-region processing or Zurich-local residency. Regional inference listings are not a universal feature-availability promise.",
-      "refs": [
-        "S30",
-        "S10"
-      ],
-      "verdict": "Qualified"
-    },
-    {
-      "id": "G07",
-      "title": "Evidence export is not certification",
-      "text": "PDF reports can support an assurance workflow but do not constitute certification or replace independently required assessments. Review audience, confidentiality, and the report’s documented limitations.",
-      "refs": [
-        "S15"
-      ],
-      "verdict": "Qualified"
-    },
-    {
-      "id": "G08",
-      "title": "Costs and generated fixes need human controls",
-      "text": "Task hours are cumulative active work; quotas are not budget caps. Repository remediation proposes changes for engineering review and should not bypass test, approval, or deployment procedures.",
-      "refs": [
-        "S05",
-        "S13",
-        "S25"
-      ],
-      "verdict": "Qualified"
-    }
-  ],
-  "transcript": [
-    {
-      "n": 1,
-      "title": "Position the agent correctly",
-      "message": "Application-security assistance, not a universal security sign-off.",
-      "speaker": "The current documentation places AWS Security Agent under AWS Continuum. For this presentation, the core routine-use path is on-demand penetration testing of an application we are authorized to test. The report also covers code, design, threat modeling, and delivery integration, but labels their preview status explicitly. Do not transfer the pentesting GA label to those features or to the separate gated-preview Continuum vulnerability-management offering. Our operating model keeps security and engineering accountable for scope, evidence, remediation priority, and acceptance.",
-      "demo": "Show the capability filter with preview excluded, then enable preview to explain the separate evaluation track.",
-      "refs": [
-        "S04",
-        "S02",
-        "S03",
-        "S05",
-        "S29"
-      ]
-    },
-    {
-      "n": 2,
-      "title": "Set a safe and meaningful test scope",
-      "message": "Authorization, staging isolation, and access are prerequisites.",
-      "speaker": "Start from an application and a specific test purpose. Verify the target domain, identify an operator, and prepare a non-production environment without live customer data. Authentication and private-network access can make testing more representative, but also increase the reachable surface. Our recommendation is to use realistic test identities and review every supporting domain after login. Check that excluded administrative and destructive paths remain excluded. Technical domain verification alone does not settle whether the organization is authorized to test every dependency involved in a user journey.",
-      "demo": "Review a proposed staging test configuration and reject any credential or route that reaches production.",
-      "refs": [
-        "S07",
-        "S09",
-        "S10",
-        "S08"
-      ]
-    },
-    {
-      "n": 3,
-      "title": "Supply context and observe the run",
-      "message": "Measure coverage and task effort, not just a completion badge.",
-      "speaker": "Source and architecture context can make a test more relevant to the deployed application. Ensure the branch, API description, and target build agree. The agent’s exact exploration develops during execution, so the operator needs logs and a stop criterion rather than a promise of a fully predetermined sequence. Limit work using the available task-hour control and monitor application health separately. Task hours and elapsed time measure different things. When a run stops or reaches a limit, inspect what it actually tested and retain explicit gaps for the next assessment.",
-      "demo": "Compare attached source with the deployed commit, then inspect a sample run’s log, task-hours field, and coverage evidence.",
-      "refs": [
-        "S08",
-        "S05",
-        "S11"
-      ]
-    },
-    {
-      "n": 4,
-      "title": "Triage and route verified engineering work",
-      "message": "Finding evidence and business impact determine the next step.",
-      "speaker": "Use severity as a starting point, then review affected behavior, confidence, and supporting evidence. Be aware of hidden or filtered results. A reproduction artifact can be useful when available, but no script should be run outside the authorized environment without review. After validating a finding, create a clear remediation item with the original evidence attached. Jira export is a handoff mechanism, not a replacement for the team’s ownership process. Avoid duplicate tickets and keep the link to the tested application version.",
-      "demo": "Walk through one reviewed finding, its evidence and filters, then the fields required in its Jira issue.",
-      "refs": [
-        "S12",
-        "S16",
-        "S10"
-      ]
-    },
-    {
-      "n": 5,
-      "title": "Close the loop on a fix",
-      "message": "A proposed patch, a deployment, and a revalidation are distinct events.",
-      "speaker": "When repository remediation is enabled, the agent can propose a finding-specific code change. An engineer must still review its logic and run the project’s checks. After the accepted fix is deployed to the tested environment, a focused revalidation can assess whether the existing finding is reproduced. That result is narrower than a new full assessment. Our closure record should include the original finding, patch revision, deployed revision, verification evidence, and any residual uncertainty. Larger behavioral changes justify a broader assessment rather than relying only on a targeted retest.",
-      "demo": "Trace one finding through a proposed PR, normal review, staging deployment, and a separate revalidation job.",
-      "refs": [
-        "S13",
-        "S25",
-        "S14",
-        "S10"
-      ]
-    },
-    {
-      "n": 6,
-      "title": "Evaluate preview design and code workflows deliberately",
-      "message": "Preview feedback supplements—not replaces—established review.",
-      "speaker": "Design reviews use organizational requirements; threat models examine architecture and threats; source reviews inspect code. They answer different questions. A team should define input quality and review ownership before enabling any of them broadly. For repository-triggered feedback, verify that a scan actually ran on the intended revision. An absent comment may indicate that a filter excluded the change. The IDE path is cloud-backed and uploads source, so data handling and first-use provisioning need approval. Treat imported requirements and proposed fixes as reviewable work, not automatic policy truth.",
-      "demo": "Compare a design finding, a threat-model assumption, and a code finding; show the evidence needed to validate each.",
-      "refs": [
-        "S17",
-        "S18",
-        "S20",
-        "S24",
-        "S26",
-        "S05"
-      ]
-    },
-    {
-      "n": 7,
-      "title": "Understand the exact meaning of a delivery gate",
-      "message": "A scoped-out pass is not a completed dynamic security test.",
-      "speaker": "The documented preview CI/CD integration operates after deployment to a testable target. Its result depends on change scoping and the configured gate behavior. A pipeline can pass because the change was out of scope without executing dynamic testing, while an unresolved scope decision requires a deliberate policy. Authentication uses configured trust and permissions; the pipeline must also manage the server-side job lifecycle. Our recommendation is to test dry-run, failure, scope-conflict, and cancellation cases before allowing a gate to influence promotion decisions.",
-      "demo": "Review four hypothetical outcomes—tested, finding detected, scoped out, and scope conflict—and define their promotion and cleanup behavior.",
-      "refs": [
-        "S28",
-        "S29"
-      ]
-    },
-    {
-      "n": 8,
-      "title": "Use evidence to decide whether to expand",
-      "message": "Count validated findings and reviewer effort, not security claims.",
-      "speaker": "The proposed pilot evaluates whether this workflow produces actionable engineering work at an acceptable cost and review burden. Record confirmed findings, rejected findings, uncovered critical paths, accepted fixes, revalidation outcomes, and task expenditure. No productivity or detection-rate result is assumed. Export reports when useful for handoff, but retain their scope and qualification. Expansion should depend on repeated evidence that the test configuration, reviewers, and remediation process work together. Keep preview adoption separate from the baseline so a useful established workflow is not blocked by an immature optional integration.",
-      "demo": "Review the pilot evidence register and distinguish assessed scope, verified fixes, outstanding gaps, and items requiring professional review.",
-      "refs": [
-        "S15",
-        "S05",
-        "S12",
-        "S14"
-      ]
-    }
-  ],
-  "pilot": [
-    {
-      "days": "Days 1–3",
-      "title": "Authorize and isolate",
-      "description": "Select one owned staging application, approve scope and test identities, establish an Agent Space, and nominate security and service owners."
-    },
-    {
-      "days": "Days 4–7",
-      "title": "Establish a baseline",
-      "description": "Run a bounded assessment with matching source/context. Record task hours, tested paths, health impact, and evidence quality."
-    },
-    {
-      "days": "Days 8–14",
-      "title": "Triage and repair",
-      "description": "Review findings, export accepted work to the existing backlog, and trial one repository fix proposal under normal review controls."
-    },
-    {
-      "days": "Days 15–21",
-      "title": "Revalidate and compare",
-      "description": "Deploy accepted fixes to staging and revalidate the original findings. Repeat a comparable assessment where broader changes justify it."
-    },
-    {
-      "days": "Days 22–30",
-      "title": "Optional preview track",
-      "description": "Only after separate approval, evaluate one design/code or pipeline-preview workflow. Decide expansion from verified outcomes, costs, and uncovered scope."
-    }
-  ],
   "sources": [
-    {
-      "id": "S01",
-      "title": "AWS frontier agents",
-      "url": "https://aws.amazon.com/ai/frontier-agents/",
-      "locator": "Meet the frontier agents",
-      "note": "Portfolio membership.",
-      "kind": "Official product page",
-      "checked": "2026-10-20"
-    },
     {
       "id": "S02",
       "title": "AWS Continuum",
@@ -825,15 +568,6 @@
       "checked": "2026-10-20"
     },
     {
-      "id": "S26",
-      "title": "Code review from an IDE",
-      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/code-review-ide-integration.html",
-      "locator": "MCP/Power setup; first-use resources",
-      "note": "Source is uploaded to S3/service infrastructure; initial IAM provisioning matters.",
-      "kind": "Product documentation",
-      "checked": "2026-10-20"
-    },
-    {
       "id": "S27",
       "title": "Run a differential code scan with S3",
       "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/run-diff-scan-s3.html",
@@ -870,16 +604,36 @@
       "checked": "2026-10-20"
     }
   ],
-  "quickstart": [
-    "Create an Agent Space and authorize one verified, isolated staging target.",
-    "Run a bounded assessment with scoped credentials, current source context, and an operator watching execution.",
-    "Validate findings, review proposed fixes, and revalidate after deployment through the normal change process."
+  "scope_revision": "2026-10-21-three-agent-scope",
+  "pilot": [
+    {
+      "days": "Days 1–3",
+      "title": "Authorize and isolate",
+      "description": "Select one owned staging application, approve scope and test identities, establish an Agent Space, and nominate security and service owners."
+    },
+    {
+      "days": "Days 4–7",
+      "title": "Establish a baseline",
+      "description": "Run a bounded assessment with matching source/context. Record task hours, tested paths, health impact, and evidence quality."
+    },
+    {
+      "days": "Days 8–14",
+      "title": "Triage and repair",
+      "description": "Review findings, export accepted work to the existing backlog, and trial one repository fix proposal under normal review controls."
+    },
+    {
+      "days": "Days 15–21",
+      "title": "Revalidate and compare",
+      "description": "Deploy accepted fixes to staging and revalidate the original findings. Repeat a comparable assessment where broader changes justify it."
+    },
+    {
+      "days": "Days 22–30",
+      "title": "Optional preview track",
+      "description": "Only after separate approval, evaluate one design/code or pipeline-preview workflow. Decide expansion from verified outcomes, costs, and uncovered scope."
+    }
   ],
-  "exclusions": "Production-target testing, unrestricted scanning, unsupported compliance guarantees, enterprise-wide vulnerability management, and the separate gated-preview Continuum for code vulnerabilities offering are outside this first pass. Preview workflows are hidden by default in the explorer.",
-  "measures": "Recommended measures: independently confirmed findings; reviewer time; false-positive/rework rate; critical-path coverage gaps; accepted fixes; reproducibility after deployment; and task hours per comparable scope. These are pilot measures, not measured results or vendor detection guarantees.",
   "counts": {
-    "Confirmed": 2,
-    "Qualified": 16,
-    "Workflow example": 0
+    "Qualified": 15,
+    "Confirmed": 2
   }
 }
