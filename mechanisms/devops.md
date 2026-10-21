@@ -6,7 +6,7 @@ Reviewed 21 October 2026. Independent checks and examples are proposed; no live 
 
 A recurring alarm does not prove that its previous root cause has returned. Use historical context to select hypotheses, then test those hypotheses against current telemetry. The documentation describes retained Markdown knowledge, routing by descriptions, and a managed learning process. It does not document a customer-operated model-training switch.
 
-Historical investigations → managed learning runs → versioned memory → relevance-based retrieval → a new investigation. User instructions, selected skills and tool permissions remain separate controls.
+Historical investigations produce managed context; corrective feedback can produce reflections. Later investigations selectively retrieve relevant memories. Maintained instructions, reusable skills and tool permissions are separate controls.
 
 Documented operational mechanisms; controls and learning schedules are feature-specific. Managed-agent UI availability may vary by rollout.
 
@@ -16,7 +16,7 @@ Documented operational mechanisms; controls and learning schedules are feature-s
 
 **Availability:** Documented managed memory
 
-**Activation:** Automatic learning; inspect and activate stores
+**Activation:** Monitor memory enabled by default; verify store and entry state
 
 ### Documented mechanism
 
@@ -67,6 +67,8 @@ Illustrative: “For this staging alarm, compare current evidence with relevant 
 [DM: DevOps Agent Memories](https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html)
 
 [DG: Managed agents](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-managed-agents.html)
+
+[DN: DevOps Agent dated product changes](https://docs.aws.amazon.com/devopsagent/latest/userguide/whats-new.html)
 
 ## D-M02 — Refresh environment and tool-use knowledge
 
@@ -524,6 +526,66 @@ Illustrative: “Describe the proposed staging change and rollback. Request appr
 
 [DE: Directed actions](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-working-with-directed-actions.html)
 
+## D-M10 — Record a corrected cause through investigation feedback
+
+**Surface:** Completed investigation / Knowledge → Memories
+
+**Availability:** Documented corrective-feedback memory
+
+**Activation:** Submit an incorrect verdict and the actual root cause
+
+### Documented mechanism
+
+Corrective feedback can create a memory in the reflections store for later investigations of the alarm. This is distinct from recurring-cause summaries and does not establish model-weight training.
+
+### Enable and configure
+
+A completed investigation and an independently established cause.
+
+1. Open the completed investigation and choose Add feedback, or provide the correction in Chat.
+
+2. Select an incorrect verdict and supply the actual root cause. Sharing with AWS requires separate confirmation.
+
+3. Inspect Knowledge → Memories → reflections and retain the relevant entry and version.
+
+### Scope and persistence
+
+Reflection context relates to the alarm. Latest submitted feedback replaces previous feedback for that investigation.
+
+### Independent checks — proposed
+
+- Proposed: use a reviewed, non-production incident whose established cause differs from the original result.
+
+- Record feedback and any resulting reflection; check a separate investigation against new evidence.
+
+- Report recall as unverified unless the run exposes evidence that the memory was read.
+
+### Record to retain — proposed
+
+Investigation ID, reviewed cause, feedback, memory version, subsequent read evidence and reviewer decision.
+
+### Stop, correct or remove
+
+Update incorrect feedback. Inspect, correct or deactivate affected memories separately; do not assume feedback replacement removes every historical memory version.
+
+### Limits and fallback
+
+A reflection is retained context, not proof of a future diagnosis or broader execution authority.
+
+Keep the reviewed correction as explicit context when reflection creation or recall cannot be observed.
+
+### Illustrative task — not executed
+
+Illustrative: "The cause was incorrect. The reviewed cause is the staging connection-pool limit; retain the supporting evidence and do not change resources."
+
+### Official guidance
+
+[DF: Provide feedback on investigations](https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-autonomous-incident-response.html#provide-feedback-on-investigations)
+
+[DM: DevOps Agent Memories](https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html)
+
+[DN: DevOps Agent dated product changes](https://docs.aws.amazon.com/devopsagent/latest/userguide/whats-new.html)
+
 ## Proposed use-case exercise
 
 Test recall without assuming the old cause has returned
@@ -572,13 +634,13 @@ Compare proposed cause with telemetry; do not count a matching narrative as proo
 
 **Gate:** Independent evidence supports or rejects the hypothesis.
 
-### 6. Correct or exclude stale knowledge · 10:30–12:00
+### 6. Record a corrected outcome · 10:30–12:00
 
-**Role:** Knowledge owner · **Mechanism:** D-M01
+**Role:** Incident reviewer · **Mechanism:** D-M10
 
-Update or deactivate an incorrect item and retain the review record.
+Submit the reviewed cause using Add feedback; inspect the reflection or a prepared record.
 
-**Gate:** Correction recorded and assessed in a new session.
+**Gate:** Feedback and memory version retained; later recall checked separately.
 
 ### Exit
 
