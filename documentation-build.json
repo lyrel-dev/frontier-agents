@@ -1,11 +1,13 @@
 {
-  "revision": "2026-10-21-three-agent-scope",
-  "scope": [
-    "AWS DevOps Agent",
-    "AWS Security Agent",
-    "AWS FinOps Agent"
-  ],
+  "revision": "2026-10-21-platform-reference-1",
+  "scope": ["AWS DevOps Agent", "AWS Security Agent", "AWS FinOps Agent"],
   "shared_architecture": true,
-  "history_policy": "Git history only; no snapshot directories or committed ZIP distributions",
+  "publication": "Grouped platform capabilities, configuration operations, documented mechanisms, enablement and proposed verification; existing scenario material is explicitly separate.",
+  "platform_capabilities": 30,
+  "mechanism_records": 16,
+  "reference_presentations": "Untimed; optional prepared-result exercises are eight minutes per platform and separate from existing scenario sessions.",
+  "commit_policy": "One generated document per commit",
+  "history_policy": "Git history only; no snapshot directories or archive distributions",
+  "repository_visibility": "Leave unchanged",
   "live_aws_execution": false
 }
