@@ -163,7 +163,7 @@
     },
     "documentation-build.json": {
       "bytes": 383,
-      "sha256": "48e440859e725a52bde99e0f4ba9f5b26fb6650232d635c33bee7916be1eee3d"
+      "sha256": "f0c8e540fddd6f89aabd839b5fc3c5e3f93fa272c06655323380f9d436e28547"
     },
     "finops/presentation-transcript.md": {
       "bytes": 15619,
@@ -202,24 +202,24 @@
       "sha256": "241b5d2161f8bd1acd38b0bc69bb500ea80051a7e695404f43de3e6754047f35"
     },
     "presentations/aws-devops-agent-presentation.pptx": {
-      "bytes": 102431,
-      "sha256": "c3f2e0194229058e299da52f0414df7f22cc460b601032184309d14d9de494be"
+      "bytes": 102370,
+      "sha256": "a54507b80e8f46a9f98584184ed1dd95a59ca5be797d0c8ec899b3bed7ce3bd8"
     },
     "presentations/aws-finops-agent-presentation.pptx": {
-      "bytes": 92374,
-      "sha256": "38468c33267e9542af140ebb1010a05ee51efb7c55437090f28d3df2f29212c0"
+      "bytes": 92342,
+      "sha256": "5d284ed8b603eb290cd36230bce4dd3030773e3672cdc1b19e97a7d0586eb984"
     },
     "presentations/aws-frontier-agents-common-architecture-presentation.pptx": {
-      "bytes": 103126,
-      "sha256": "defdfd514b9f38723eef723894b534d0a325a184e92a1d1d9b33a43ade6b382d"
+      "bytes": 103097,
+      "sha256": "c1fc54d750865fd92c875e29d04d4d811d39c5047081854fce63f3843b96ce1a"
     },
     "presentations/aws-security-agent-presentation.pptx": {
-      "bytes": 100986,
-      "sha256": "e630d07e6d035ce804629dafe95093fdfea6e1c5031b6dbebd2d6d8c6c0402d4"
+      "bytes": 100955,
+      "sha256": "a3baf8eb94f3d390de0c734804fc3c14cd6e94b08c3ef0db2723f675c383cbf3"
     },
     "presentations/kiro-presentation.pptx": {
-      "bytes": 99000,
-      "sha256": "cc2c6be937c43f4656c8f85dfe6281f22d7864da1bbf90bb457036736e8afe02"
+      "bytes": 98940,
+      "sha256": "d93e4128e817b2fd3fa9e21556d49df97cfa77a89ca5284f68883b8335b975b0"
     },
     "qa/browser-validation.json": {
       "bytes": 1893,
@@ -254,8 +254,8 @@
       "sha256": "ef9c74dfda01a2dbd257e991f833e0aaa7fd304eefb799ea6a157f6ebd6aeade"
     },
     "tools/build_presentations.py": {
-      "bytes": 9119,
-      "sha256": "e43555ae3ccf0798989e8f54599987daff7d70dff799c50395b8816ed4250425"
+      "bytes": 9122,
+      "sha256": "3e530d720ed9ccb58cc5157909cb8535913e070a8d6a765752fc6c85c2ee24ab"
     },
     "tools/build_suite.py": {
       "bytes": 40073,
