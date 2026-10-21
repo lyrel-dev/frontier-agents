@@ -86,8 +86,8 @@
       "sha256": "58a8eed162a56276d839e0b3873dacb699641a66447462d8b6c773670b7265cd"
     },
     "content/finops-presentation.json": {
-      "bytes": 24887,
-      "sha256": "faa9b90371a3d5d20232411530d54a2831e44d3cc0e2d03ef3a2f167789f066a"
+      "bytes": 24661,
+      "sha256": "a24702be15afda9effde347fdf97aa977b4fb643eee145180387b2476e24bc50"
     },
     "content/kiro-evidence.json": {
       "bytes": 46670,
@@ -162,16 +162,16 @@
       "sha256": "6f2ad85eae1f593a62b58747c43c253e5bb96529e6de391a47747269c3e8aae4"
     },
     "documentation-build.json": {
-      "bytes": 384,
-      "sha256": "d074b716391ea22bff5625e45389b9922e09dbb97140a6d55da22548b57ce1b2"
+      "bytes": 383,
+      "sha256": "48e440859e725a52bde99e0f4ba9f5b26fb6650232d635c33bee7916be1eee3d"
     },
     "finops/presentation-transcript.md": {
-      "bytes": 15845,
-      "sha256": "d68791ffc3e5b861f22caa9ec65c8311e9ea2853312145b6c6c3a8fea99a5888"
+      "bytes": 15619,
+      "sha256": "ce7d48652a7fde0225cd613a48d04384eb1a21c75d5bb070fc456dfc8814803b"
     },
     "finops/report.html": {
-      "bytes": 123286,
-      "sha256": "12207b3ec4ddb3fbaee6a96e938baba573943019e09b8389c7e1b259fe2b72c6"
+      "bytes": 122834,
+      "sha256": "e5d469af9805baf4abb90cf0d651cfe0b45ffb7161f77b7fd985380f5697b8ee"
     },
     "finops/report.md": {
       "bytes": 22712,
@@ -203,23 +203,23 @@
     },
     "presentations/aws-devops-agent-presentation.pptx": {
       "bytes": 102431,
-      "sha256": "4f79a3eca7bf4583eaa074b431bb6f5c9085b444af5df9aa29165b010a0ec318"
+      "sha256": "c3f2e0194229058e299da52f0414df7f22cc460b601032184309d14d9de494be"
     },
     "presentations/aws-finops-agent-presentation.pptx": {
-      "bytes": 92552,
-      "sha256": "db38a7d3cc9463bb0104a8975a15f9350830d04d93969f4fcf1d95f45bd8f00e"
+      "bytes": 92374,
+      "sha256": "38468c33267e9542af140ebb1010a05ee51efb7c55437090f28d3df2f29212c0"
     },
     "presentations/aws-frontier-agents-common-architecture-presentation.pptx": {
       "bytes": 103126,
-      "sha256": "b018f7f919d33f485dc4b38e278c462f98e8577e000982d48ce096f4b12d50df"
+      "sha256": "defdfd514b9f38723eef723894b534d0a325a184e92a1d1d9b33a43ade6b382d"
     },
     "presentations/aws-security-agent-presentation.pptx": {
       "bytes": 100986,
-      "sha256": "522a09ff2996a486985b5eb69ff6c4409827e0839914e20bde9bb7f6b1872f78"
+      "sha256": "e630d07e6d035ce804629dafe95093fdfea6e1c5031b6dbebd2d6d8c6c0402d4"
     },
     "presentations/kiro-presentation.pptx": {
       "bytes": 99000,
-      "sha256": "2ab0f59ab8202e9666d7dd53336a1ff8d5e710438a6dd1c2e39e6f4722e4e6d1"
+      "sha256": "cc2c6be937c43f4656c8f85dfe6281f22d7864da1bbf90bb457036736e8afe02"
     },
     "qa/browser-validation.json": {
       "bytes": 1893,
@@ -250,8 +250,8 @@
       "sha256": "45a6e6e6424a6ae0c93a0cb901ef5b9cdc136f24393b25c75c5e9742f86b3f62"
     },
     "tools/assemble_content.py": {
-      "bytes": 3037,
-      "sha256": "1639614d10b406f2fec70cff5c2526fcb458b116cf5d9793d0b1e7c16e8893f5"
+      "bytes": 3724,
+      "sha256": "ef9c74dfda01a2dbd257e991f833e0aaa7fd304eefb799ea6a157f6ebd6aeade"
     },
     "tools/build_presentations.py": {
       "bytes": 9119,
