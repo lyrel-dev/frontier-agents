@@ -61,7 +61,7 @@ Do not set `privileged: true`, expose the socket over an unauthenticated network
 Build and run the image using a named local volume:
 
 ```sh
-podman build -t localhost/validation-console:0.1.0 .
+podman build -t localhost/validation-console:0.2.1 .
 podman volume create validation_data
 podman run --name validation-console --rm \
   -p 127.0.0.1:8787:8787 \
@@ -69,7 +69,7 @@ podman run --name validation-console --rm \
   --cap-drop ALL --security-opt no-new-privileges \
   -v validation_data:/data \
   -v "$PWD/config.json:/config/config.json:ro" \
-  localhost/validation-console:0.1.0
+  localhost/validation-console:0.2.1
 ```
 
 On SELinux hosts, use an administrator-approved file label for the configuration mount; adding `:Z` relabels the source and must not be applied casually to shared home directories or sockets. Verify that the named volume is writable by the image's UID. Do not solve ownership problems by switching the whole service to privileged/root mode.
@@ -80,7 +80,7 @@ For rootless Linux Podman inspection, the API socket is normally under the opera
 
 Before applying `deploy/kubernetes.yaml`, confirm the current `kubectl` context is your intended **local** cluster. Inspect the default StorageClass and verify that its backing storage is local, durable and suitable for SQLite. A PVC alone does not establish these facts. Keep one replica; do not scale this deployment horizontally. [Persistent-volume documentation](https://kubernetes.io/docs/concepts/storage/persistent-volumes/)
 
-Build the image and load it into that cluster using the cluster distribution's supported image-loading command. The manifest expects `localhost/validation-console:0.1.0`. It does not contact an image registry to publish the image.
+Build the image and load it into that cluster using the cluster distribution's supported image-loading command. The manifest expects `localhost/validation-console:0.2.1`. It does not contact an image registry to publish the image.
 
 ```sh
 kubectl config current-context

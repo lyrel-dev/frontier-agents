@@ -18,6 +18,13 @@ def main():
         assert condition, name
         results.append({'name': name, 'result': 'pass'})
         print('PASS', name, flush=True)
+    def wait_state(expression):
+        deadline = time.monotonic() + 30
+        while time.monotonic() < deadline:
+            if page.evaluate('() => (' + expression + ')'):
+                return
+            time.sleep(.05)
+        raise AssertionError('Browser state timed out: ' + expression)
     with sync_playwright() as pw:
         browser = pw.chromium.launch(executable_path=os.environ.get('CHROMIUM_PATH') or shutil.which('chromium'), headless=True, args=['--no-sandbox'])
         page = browser.new_page()
@@ -78,17 +85,17 @@ def main():
                     page.wait_for_selector('h1')
                     check('native unauthenticated API call rejected', page.evaluate("async () => (await fetch('/api/workspace')).status") == 401)
                     page.locator('#unlock-button').click(); page.fill('#console-token', token)
-                    page.locator('#unlock-form button[type="submit"]').click(); page.wait_for_function('state.unlocked===true')
+                    page.locator('#unlock-form button[type="submit"]').click(); wait_state('state.unlocked===true')
                     check('native unlock fetches real backend catalogue', page.evaluate("records('scenario').length===37&&records('snapshot').length===0"))
                     page.evaluate('openImport(APP_METRICS.examples)')
-                    page.locator('[data-action="review-import"]').click(); page.wait_for_function("!document.querySelector('#commit-import').disabled")
-                    page.locator('#commit-import').click(); page.wait_for_function("get('scenario:EXAMPLE-METRICS@1')!==undefined")
-                    page.evaluate("location.hash='metrics'"); page.wait_for_selector('.mc-card')
+                    page.locator('[data-action="review-import"]').click(); wait_state("!document.querySelector('#commit-import').disabled")
+                    page.locator('#commit-import').click(); wait_state("get('scenario:EXAMPLE-METRICS@1')!==undefined")
+                    page.evaluate("location.hash='metrics'"); wait_state("document.querySelectorAll('.mc-card').length===32")
                     check('native metrics use imported workspace evidence', page.locator('.mc-card').count() == 32 and page.locator('.mc-card').filter(has=page.locator('.mc-point')).count() == 32)
                     page.evaluate("showDetail('execution_run:example-metric-timeline@1')")
-                    page.locator('#drawer [data-action="evaluate"]').click(); page.wait_for_function("records('validation_run').length===1")
+                    page.locator('#drawer [data-action="evaluate"]').click(); wait_state("records('validation_run').length===1")
                     check('native evaluator preserves measured scalar failure', page.evaluate("records('validation_run')[0].record.data.outcome==='fail'&&records('validation_run')[0].record.data.evaluator_version==='scalar-1.1'"))
-                    page.locator('#drawer [data-action="report"]').click(); page.wait_for_function("records('report').length===1")
+                    page.locator('#drawer [data-action="report"]').click(); wait_state("records('report').length===1")
                     with page.expect_download() as download:
                         page.locator('#drawer [data-action="download-report"]').click()
                     output = Path(directory)/'report.html'; download.value.save_as(output)

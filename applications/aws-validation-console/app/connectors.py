@@ -251,7 +251,7 @@ def inspect_kubernetes(config):
         raise InspectionError('KubernetesTLSVerificationRequired')
     api = client.ApiClient(configuration)
     core, apps = client.CoreV1Api(api), client.AppsV1Api(api)
-    c.identity = {'context': config.get('context', 'in-cluster'), 'api_server': configuration.host}
+    c.identity = {'context': 'in-cluster' if config.get('in_cluster') else config['context'], 'api_server': configuration.host}
     def listing(fn, namespace):
         values = []
         token = None

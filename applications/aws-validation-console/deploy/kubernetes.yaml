@@ -1,4 +1,4 @@
-# Build/load localhost/validation-console:0.1.0 into your LOCAL cluster first.
+# Build/load localhost/validation-console:0.2.1 into your LOCAL cluster first.
 # No Ingress, hostPath, engine socket, or cloud credentials are configured.
 apiVersion: v1
 kind: Namespace
@@ -88,7 +88,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: console
-          image: localhost/validation-console:0.1.0
+          image: localhost/validation-console:0.2.1
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8787

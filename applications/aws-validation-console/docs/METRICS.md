@@ -1,12 +1,12 @@
 # Metric graphs and the proposed Grafana dashboard
 
-Version 0.2.0. The console can now display recorded metric samples. It still does **not** collect workload telemetry, execute a Prometheus/CloudWatch query, inject a fault, or establish operational readiness from a graph.
+Version 0.2.1. The console can now display recorded metric samples. It still does **not** collect workload telemetry, execute a Prometheus/CloudWatch query, inject a fault, or establish operational readiness from a graph.
 
 ## What is graphed
 
 Every catalogue metric and every metric found in imported evidence or scenario assertions receives a chart. The initial catalogue contains 32 metrics across customer impact, incident response/recovery, data/dependencies, capacity/saturation and operational evidence. Custom metric identifiers and units are discovered without modifying the chart code.
 
-Graphs also appear beside workspace counts, in inventory, in numeric resource-fact details, and in scenario, execution, evidence, validation and report details. A count observed once is a **single point**, not a fabricated trend. Numeric configuration facts are labelled as configuration/runtime observations, not performance measurements. A denied collection scope is missing data, not zero resources.
+Graphs also appear beside workspace counts, in inventory, in numeric resource-fact details, and in scenario, execution, evidence, validation and report details. A count observed once is a **single point**, not a fabricated trend. Snapshot graphs are partitioned by connection, scope and simulation status; a reused connection name cannot combine accounts or relabel example observations as measured data. Numeric configuration facts are labelled as configuration/runtime observations, not performance measurements. A denied collection scope is missing data, not zero resources.
 
 Controls: mouse hover, arrow-key sample inspection, Home/End, plus/minus zoom, horizontal drag-selection, reset range, legend isolation, sample tables and raw CSV export. Metric filters select group, text, scope, execution, deployment applicability, evidence presence and an absolute UTC interval. Independent scopes and runs are never averaged together. Deployment filtering uses the scenario's declared applicability, not inferred runtime identity.
 
@@ -47,13 +47,13 @@ Long segments are visually reduced using bucket extrema and endpoints. No points
 
 Validation and report graphs use only explicitly linked evidence whose stored digest matches the validation's pinned input hash. Missing or mismatched inputs are omitted. Hashes detect altered content; they do not authenticate the producer. Graphs cannot upgrade missing or imported evidence into a passing result.
 
-The UI's **Download HTML report** produces a standalone interactive report with pinned charts, embedded data, a restrictive nonce-based CSP and no network calls. The existing backend HTML endpoint remains an inert summary for API consumers. Workspace bundles and report HTML can contain sensitive identifiers and source text; review them before sharing.
+The UI's **Download HTML report** produces a standalone interactive report with pinned charts, embedded data, a restrictive nonce-based CSP and no network calls. The existing backend HTML endpoint remains an inert summary for API consumers. Exported HTML includes the report origin and content hash, the validation origin, and a warning when the report or validation was imported or supplied as an example. Workspace bundles and report HTML can contain sensitive identifiers and source text; review them before sharing.
 
 ## Grafana import
 
 Run `python build_ui.py`, then import `grafana/operational-readiness.json` in your Grafana installation. Select a Prometheus data source using the dashboard's **Prometheus** variable. The file uses Grafana's Classic JSON model, 32 time-series metric panels and an additional source-observation-age panel. It includes no universal passing thresholds or alert rules.
 
-The dashboard filters are `environment`, `service`, `deployment_model`, `scenario`, `run_id`, and `data_kind`. The provenance selector defaults to **measured**; use **synthetic** only with an explicitly separate demonstration source. Metric panels preserve series labels rather than aggregating across selected runs. Grafana supplies zoom, shared crosshair, query inspection, legend isolation and panel-data export.
+The dashboard filters are `environment`, `service`, `deployment_model`, `scenario`, `run_id`, and `data_kind`. The provenance selector defaults to **measured**; use **synthetic** only with an explicitly separate demonstration source. Metric panels preserve series labels rather than aggregating across selected runs. Every panel legend retains all six scope/provenance labels. Grafana supplies zoom, shared crosshair, query inspection, legend isolation and panel-data export.
 
 The datasource and dashboard provisioning examples are under `grafana/provisioning/`. Set `READINESS_PROMETHEUS_URL` to the endpoint reachable **from Grafana**, and mount the generated JSON under `/var/lib/grafana/dashboards/readiness`. Set the datasource scrape interval to the actual interval. Keep service authentication, TLS, volume retention and access controls in your deployment configuration; no credentials are included here. The console neither embeds Grafana nor opens a new unauthenticated metrics endpoint.
 
@@ -79,7 +79,10 @@ Resource metrics may originate in CloudWatch, Container Insights or local export
 
 ## Verification boundary and references
 
-Backend, generator, DOM interaction, export and loopback checks are recorded in `validation/metrics-validation.json`. No Grafana server was available for an actual import/query test, and no AWS/local workload telemetry was collected. Grafana JSON layout and query mapping were checked structurally, not certified against a running server. Browser navigation is blocked in the execution environment; browser checks use DOM injection and a documented API bridge.
+The 0.2.0 baseline is retained in `validation/metrics-validation.json`. Publication acceptance adds native loopback/file browser navigation, an unprivileged container build with persistence across replacement, and Grafana JSON import/readback. Measured results and the tested Grafana version are in `validation/publication-review.json`.
+
+These checks do not inspect an actual AWS account or Docker/Podman/Kubernetes target, execute proposed PromQL, test datasource provisioning against real telemetry, or validate incident recovery. The container test exercises hosting and storage, not runtime inspection. Native navigation is unavailable in the local authoring sandbox; that suite runs without a bridge in GitHub Actions.
+
 
 Primary documentation reviewed on 21 October 2026:
 

@@ -1,0 +1,52 @@
+{
+  "version": "0.2.1",
+  "source_baseline": "9383a159eb1578aa5d69f095cec34a6477c44114",
+  "workflow_revision": "7904992ba7546b28532bfa61ae1f9fd3f6a7197c",
+  "workflow_url": "https://github.com/lyrel-dev/frontier-agents/actions/runs/39633326228",
+  "counts": {
+    "backend_generator": 129,
+    "baseline_browser": 52,
+    "metrics_browser": 58,
+    "publication_browser": 19,
+    "loopback_http": 8,
+    "container": 6,
+    "grafana_import": 5
+  },
+  "native_browser_navigation": true,
+  "grafana": {
+    "image": "grafana/grafana:13.2.4",
+    "server_version": "13.2.4",
+    "passed": 5,
+    "checks": [
+      "Grafana database is healthy",
+      "Grafana accepts generated dashboard JSON",
+      "all 33 graph panels survive import",
+      "queries survive import unchanged",
+      "import retains measured-data default"
+    ],
+    "promql_executed": false,
+    "external_telemetry_tested": false
+  },
+  "reviewed_source_sha256": {
+    "app/connectors.py": "0e68b0f29bf3b516a4b760a837477d870ee31f97be44699bbd07cb8486c64b6a",
+    "app/evaluator.py": "a78a1f66001ff1700f3634ffe85bb8992d641a7ddc79ce55959bbd028e92df94",
+    "static/app.js": "d2870889dc09c2fcd3f3f56e1adddf96bad55f02f0f8a9720ed855a4b6f7748b",
+    "static/metrics.js": "1a82fb8c4ba012b91dde3c93be4efe56f2a9f4996afdbeaecb730f3294649166",
+    "static/metrics-charts.js": "ecb53c0605e8b3af1771131668d4bd81861fddd8793645adad4b050eb494e08c",
+    "build_metrics.py": "fed85804f131299cfb9998f491c0ecc15505e7106c15872816bb905d1d6e7cd1",
+    "tests/publication_browser_checks.py": "3df75eb034468a450e508eef342ffa6193edd25474f5d7d5badbdab224fe1812",
+    "tests/container_acceptance.py": "85ef1e95bc191388909cbda00ba0d00aac87b8a60292597ef420946be31072d3",
+    "tests/grafana_acceptance.py": "9c346d44cd25967eb68eb2bac1819aaa5f12d2842222dc13f5a14bf368a98c01",
+    "Dockerfile": "ce7d3a3261b8d2096c2cbc30f75759c695941b66ce5328cd236f4746c5387101",
+    "requirements.txt": "b14a4a9513d7adf4e2fd7e068af01c70632b5bc1a97631d7a87f44b73a46374c",
+    "requirements-dev.txt": "fd488bf6c16319ba002c525176b94b156013037daebe4c96df19e2850bdbb00d"
+  },
+  "not_verified": [
+    "Live AWS or Docker/Podman/Kubernetes inspection targets",
+    "Credential refresh",
+    "CloudWatch or Prometheus telemetry collection",
+    "PromQL execution and production datasource provisioning",
+    "Fault injection or incident recovery",
+    "Production readiness or independent security certification"
+  ]
+}

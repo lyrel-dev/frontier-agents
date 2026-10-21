@@ -19,7 +19,7 @@ DEFINITIONS = [
  ('mitigation_seconds','Time to mitigation','seconds','Response and recovery','Verified containment of customer impact minus incident start. Specify the containment criterion.',170,170),
  ('recovery_seconds','Time to stable recovery','seconds','Response and recovery','Start of a verified stable-recovery interval minus incident start. Record the stability window; a healthy resource alone is insufficient.',240,240),
  ('rto_seconds','Recovery time objective','seconds','Response and recovery','Service-owned recovery objective for the tested business capability. This is a target, not an observed outcome.',180,180),
- ('data_loss_seconds','Observed recovery-point loss','seconds','Data and dependencies','Age of the newest acknowledged business write missing from the recovered state. Requires transaction reconciliation.',0,0),
+ ('data_loss_seconds','Observed recovery-point loss','seconds','Data and dependencies','Recoverable business-state lag at the disruption cut-off, established from a verified recovery boundary and acknowledged-write reconciliation. Record lost-write counts separately.',0,0),
  ('rpo_seconds','Recovery point objective','seconds','Data and dependencies','Service-owned allowable data-loss interval. Zero is an objective only when explicitly agreed.',0,0),
  ('duplicate_transactions','Duplicate business effects','transactions','Data and dependencies','Duplicate business effects found by reconciliation in the selected execution window, not the count of retried requests.',0,0),
  ('lost_acknowledged_writes','Lost acknowledged writes','transactions','Data and dependencies','Writes acknowledged before disruption but absent after recovery, measured with an independent reconciliation source.',0,0),
@@ -83,13 +83,13 @@ def dashboard(metrics):
         for i,m in enumerate(subset):
             panels.append({'id':pid,'type':'timeseries','title':m['title'],'description':m['description']+' '+m['instrumentation'],
                 'datasource':ds,'gridPos':{'x':(i%2)*12,'y':y+(i//2)*8,'w':12,'h':8},
-                'targets':[{'refId':'A','expr':m['promql'],'legendFormat':'{{service}} · {{deployment_model}} · {{run_id}} · {{data_kind}}','range':True,'instant':False,'editorMode':'code'}],
+                'targets':[{'refId':'A','expr':m['promql'],'legendFormat':'{{environment}} · {{service}} · {{deployment_model}} · {{scenario}} · {{run_id}} · {{data_kind}}','range':True,'instant':False,'editorMode':'code'}],
                 'fieldConfig':{'defaults':{'unit':unit_map.get(m['unit'],'short'),'noValue':'No data','color':{'mode':'palette-classic'},
                     'custom':{'drawStyle':'line','lineInterpolation':'linear','lineWidth':2,'fillOpacity':8,'spanNulls':False,'showPoints':'auto','pointSize':4,'axisPlacement':'auto','axisLabel':m['unit'],'hideFrom':{'legend':False,'tooltip':False,'viz':False}}},'overrides':[]},
                 'options':{'tooltip':{'mode':'multi','sort':'none'},'legend':{'displayMode':'table','placement':'bottom','showLegend':True,'calcs':['lastNotNull','min','max']}}});pid+=1
         y+=math.ceil(len(subset)/2)*8
     panels.append({'id':pid,'type':'timeseries','title':'Age of source observations','description':'time() minus the source window end. Every exporter must emit this companion gauge, labelled with metric. A scraped gauge can remain present after its underlying observation is stale.',
-        'datasource':ds,'gridPos':{'x':0,'y':y,'w':24,'h':8},'targets':[{'refId':'A','expr':f'time() - readiness_observed_timestamp_seconds{{{SELECTOR}}}','legendFormat':'{{metric}} · {{run_id}} · {{data_kind}}','range':True}],
+        'datasource':ds,'gridPos':{'x':0,'y':y,'w':24,'h':8},'targets':[{'refId':'A','expr':f'time() - readiness_observed_timestamp_seconds{{{SELECTOR}}}','legendFormat':'{{metric}} · {{environment}} · {{service}} · {{deployment_model}} · {{scenario}} · {{run_id}} · {{data_kind}}','range':True}],
         'fieldConfig':{'defaults':{'unit':'s','noValue':'No data','custom':{'spanNulls':False,'drawStyle':'line','lineInterpolation':'linear'}},'overrides':[]},'options':{'tooltip':{'mode':'multi'},'legend':{'displayMode':'list','placement':'bottom','showLegend':True}}})
     return {'id':None,'uid':'aws-readiness-metrics-v1','title':'Operational readiness · proposed metrics','tags':['operational-readiness','proposed-contract'],'timezone':'utc','schemaVersion':39,'version':1,'editable':True,'graphTooltip':2,'time':{'from':'now-1h','to':'now'},'refresh':'30s','templating':{'list':variables},'annotations':{'list':[{'builtIn':1,'datasource':{'type':'grafana','uid':'-- Grafana --'},'enable':True,'hide':True,'iconColor':'rgba(0, 211, 255, 1)','name':'Annotations & Alerts','type':'dashboard'}]},'panels':panels}
 

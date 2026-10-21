@@ -1,4 +1,4 @@
-# Local Validation Console — 0.2.0
+# Local Validation Console — 0.2.1
 
 A local single-page workspace for AWS, Docker, Podman and Kubernetes inspection, versioned scenarios, execution records, evidence, validation results and reports.
 
@@ -60,12 +60,18 @@ python -m pytest -q
 python tests/browser_checks.py
 python tests/metrics_browser_checks.py
 python tests/http_smoke.py
+python tests/publication_browser_checks.py --native
+# Requires Docker; isolated test containers and synthetic records only:
+python tests/container_acceptance.py
+python tests/grafana_acceptance.py
 ```
 
-Chromium is required for browser checks; set `CHROMIUM_PATH` when necessary. The execution environment blocks browser navigation, so browser checks use DOM injection. The metrics harness supplies SHA-256 for its insecure test page and bridges UI API calls to real loopback HTTP. It checks served script/style hashes through meta CSP; native browser navigation, fetch/CORS and `connect-src` are not established by that harness. See `validation/metrics-validation.json` for measured results.
+Chromium is required for browser checks; set `CHROMIUM_PATH` when necessary. The two baseline browser suites use DOM injection and documented API bridges. The publication suite's `--native` mode requires real loopback HTTP and local-file navigation and fails rather than falling back to injection. Container acceptance builds the image and checks persistence across container replacement. Grafana acceptance imports and reads back the proposal in an isolated server; it does not execute PromQL.
+
+See `validation/publication-review.json` for measured publication checks and the tested server version. The older `validation/metrics-validation.json` describes the 0.2.0 baseline, not this release's acceptance results. No AWS credentials or runtime sockets are used by these tests.
 
 ## Documentation and boundaries
 
 [Metric design](docs/METRICS.md), [deployment](docs/DEPLOYMENT.md), [API](docs/API.md), [security](docs/SECURITY.md), [value-ranked roadmap](docs/ROADMAP.md). The version 0.1 [design baseline](docs/DESIGN.md) remains historical context; the metrics document specifies the 0.2 additions.
 
-This is a single-operator local tool, not an internet-facing multi-tenant service. It has no scheduler, fault worker, general command executor, signed provenance or encrypted database. Protect local volumes and exports. Engine-socket access remains powerful even when the application chooses read endpoints. No live AWS/runtime or Grafana acceptance is claimed.
+This is a single-operator local tool, not an internet-facing multi-tenant service. It has no scheduler, fault worker, general command executor, signed provenance or encrypted database. Protect local volumes and exports. Engine-socket access remains powerful even when the application chooses read endpoints. Live account/runtime inspection, PromQL execution and production Grafana datasource provisioning remain unverified.

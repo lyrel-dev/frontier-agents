@@ -119,7 +119,8 @@ def test_missing_engine_socket_produces_explicit_gaps(tmp_path):
     assert not r['data']['resources']
 
 
-def test_kubernetes_scope_and_methods_with_sdk_double(monkeypatch):
+@pytest.mark.parametrize('normalized',[False,True])
+def test_kubernetes_scope_and_methods_with_sdk_double(monkeypatch,normalized):
     calls=[]
     class Configuration:
         verify_ssl=True
@@ -136,7 +137,12 @@ def test_kubernetes_scope_and_methods_with_sdk_double(monkeypatch):
     fake.client=NS(Configuration=Configuration,ApiClient=API,CoreV1Api=Core,AppsV1Api=Core)
     fake.config=NS(load_incluster_config=lambda **kwargs:None,load_kube_config=lambda **kwargs:None)
     monkeypatch.setitem(sys.modules,'kubernetes',fake)
-    r=m.inspect_kubernetes({'id':'k','kind':'kubernetes','in_cluster':True,'namespaces':['team-a']})
+    connection={'id':'k','name':'test','kind':'kubernetes','in_cluster':True,'namespaces':['team-a']}
+    if normalized:
+        from app.server import Configuration
+        connection=Configuration.model_validate({'connections':[connection]}).model_dump(mode='json')['connections'][0]
+    r=m.inspect_kubernetes(connection)
+    assert r['data']['identity']['context']=='in-cluster'
     actual=[x for x in calls if x[0]!='close']
     assert len(actual)==6
     assert all(x[1]['namespace']=='team-a' for x in actual)

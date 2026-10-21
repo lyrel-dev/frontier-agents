@@ -3,7 +3,7 @@ from __future__ import annotations
 from datetime import datetime
 from uuid import uuid4
 from .store import now, ref
-VERSION = 'scalar-1.0'
+VERSION = 'scalar-1.1'
 
 def dt(value):
     return datetime.fromisoformat(value.replace('Z', '+00:00'))
@@ -96,7 +96,9 @@ def evaluate(store, run_reference, evidence_refs=None):
                 item['reason'] = 'The supplied value satisfies the assertion.' if passed else 'The supplied value exceeds or differs from the accepted limit.'
         checks.append(item)
     required = [c['outcome'] for c in checks if c['required']]
-    outcome = 'inconclusive' if gates else aggregate(required)
+    # Execution gates prevent a pass, but do not erase an established requirement failure.
+    required_outcome = aggregate(required)
+    outcome = required_outcome if required_outcome == 'fail' or not gates else 'inconclusive'
     limitations = ['This result covers only the stated assertions and time interval; it is not a deployment-readiness certificate.', 'Scalar measurements and sample counts are supplied by collectors or importers; this evaluator does not independently reconstruct them from raw telemetry.', 'Content hashes support consistency checks, not proof of who produced the evidence.']
     if any(e['meta']['origin'] in ('imported', 'derived-from-import') for e in provenance):
         limitations.append('One or more inputs were imported. Source authenticity has not been verified.')

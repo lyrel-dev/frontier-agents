@@ -13,11 +13,11 @@
     const x = unit === 'ratio' ? v * 100 : v;
     return new Intl.NumberFormat('en-GB', {maximumFractionDigits: Math.abs(x) < 1 ? 4 : 2}).format(x) + (unit === 'ratio' ? '%' : '');
   };
-  function allPoints(spec) { return spec.traces.flatMap(t => t.points.map(p => ({...p, trace:t.label, source:t.source, ref:t.ref, unit:spec.unit}))).sort((a,b) => a.t-b.t); }
+  function allPoints(spec) { return spec.traces.flatMap(t => t.points.map(p => ({...p, trace:t.label, source:t.source, ref:p.ref || t.ref, unit:spec.unit}))).sort((a,b) => a.t-b.t); }
   function extent(spec) {
-    const times = allPoints(spec).map(p=>p.t).filter(Number.isFinite);
-    if (!times.length) return null;
-    const lo = Math.min(...times), hi = Math.max(...times);
+    let lo=Infinity,hi=-Infinity;
+    for(const trace of spec.traces)for(const p of trace.points)if(Number.isFinite(p.t)){if(p.t<lo)lo=p.t;if(p.t>hi)hi=p.t;}
+    if(lo===Infinity)return null;
     return hi === lo ? [lo-30000, hi+30000] : [lo,hi];
   }
   function visible(entry) { return entry.spec.traces.filter((_,i) => !entry.hidden.has(i)); }
@@ -25,9 +25,11 @@
     const mini=entry.mini, width=mini?260:640, height=mini?86:240;
     const pad=mini?{l:10,r:10,t:10,b:15}:{l:65,r:18,t:20,b:38};
     const range=entry.range || extent(entry.spec) || [0,1];
-    const values=visible(entry).flatMap(t=>t.points.filter(p=>p.t>=range[0]&&p.t<=range[1]).map(p=>numeric(p.value))).filter(v=>v!==null);
-    if (!mini) for (const limit of entry.spec.limits || []) { const n=numeric(limit.value); if(n!==null)values.push(n); }
-    let low=values.length?Math.min(...values):0, high=values.length?Math.max(...values):1;
+    let low=Infinity,high=-Infinity;
+    const include=v=>{const n=numeric(v);if(n!==null){if(n<low)low=n;if(n>high)high=n;}};
+    for(const trace of visible(entry))for(const p of trace.points)if(p.t>=range[0]&&p.t<=range[1])include(p.value);
+    if(!mini)for(const limit of entry.spec.limits||[])include(limit.value);
+    if(low===Infinity){low=0;high=1;}
     if (low === high) { const gap=Math.abs(low)*.1 || 1; low-=gap; high+=gap; }
     else { const gap=(high-low)*.12; low-=gap; high+=gap; }
     const x=t=>pad.l+(t-range[0])/(range[1]-range[0])*(width-pad.l-pad.r);

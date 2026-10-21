@@ -123,7 +123,7 @@ with sync_playwright() as pw:
             page.evaluate("showDetail('execution_run:example-run-1@1')")
             page.locator('#drawer [data-action="evaluate"]').click()
             page.wait_for_function("records('validation_run').length===3")
-            check('live evaluation computed by Python evaluator',page.evaluate("records('validation_run').at(-1).record.data.evaluator_version==='scalar-1.0'"))
+            check('live evaluation computed by Python evaluator',page.evaluate("records('validation_run').at(-1).record.data.evaluator_version==='scalar-1.1'"))
             page.locator('#drawer [data-action="report"]').click();page.wait_for_function("records('report').length===2")
             check('live report persisted',len(client.get('/api/workspace',headers={'Authorization':'Bearer '+TOKEN}).json()['records'])>37)
             close(page);page.locator('#unlock-button').click()

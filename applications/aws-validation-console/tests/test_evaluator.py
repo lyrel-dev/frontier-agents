@@ -75,10 +75,11 @@ def test_duplicate_metrics_do_not_silently_choose_latest(tmp_path,examples):
 
 
 @pytest.mark.parametrize('change',[{'fault_confirmed':None},{'fault_confirmed':False},{'execution_state':'failed'},{'execution_state':'aborted'},{'execution_state':'planned'}])
-def test_invalid_execution_gates(tmp_path,examples,change):
+def test_invalid_execution_gates_preserve_known_failure(tmp_path,examples,change):
     def mutate(rs):next(r for r in rs if ref(r)==RUN)['data'].update(change)
     r=evaluate(changed_store(tmp_path,examples,mutate),RUN)
-    assert r['data']['outcome']=='inconclusive' and r['data']['gates']
+    assert r['data']['outcome']=='fail' and r['data']['gates']
+    assert check(r,'restore')['outcome']=='fail'
 
 
 def test_future_completed_run_is_gated(tmp_path,examples):
@@ -120,3 +121,15 @@ def test_each_evaluation_has_new_id_but_same_input_hashes(store):
 def test_imported_inputs_remain_unverified(tmp_path,examples):
     s=Store(tmp_path/'imported');s.import_bundle(examples)
     assert any('authenticity' in x for x in evaluate(s,RUN)['data']['limitations'])
+
+
+def test_execution_gate_prevents_pass_when_all_assertions_pass(tmp_path,examples):
+    def mutate(records):
+        next(r for r in records if ref(r)==RUN)['data']['fault_confirmed']=False
+        metric(records,'recovery_seconds')['data']['value']=150
+        e=deepcopy(metric(records,'request_error_ratio'));e['id']='gate-duplicates'
+        e['data'].update(metric='duplicate_transactions',value=0,unit='transactions')
+        records.append(e)
+    result=evaluate(changed_store(tmp_path,examples,mutate),RUN)['data']
+    assert all(c['outcome']=='pass' for c in result['checks'])
+    assert result['outcome']=='inconclusive' and result['gates']
