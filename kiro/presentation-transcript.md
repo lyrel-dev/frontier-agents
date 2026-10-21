@@ -7,7 +7,7 @@
 
 **00:00–00:45 · 00:45 allocated**
 
-**Takeaway:** Turn a bounded engineering outcome into a reviewable change.
+**Takeaway:** A delegated task can produce a change proposal for repository review.
 
 This presentation follows a request-ID propagation change in checkout-api and a small scheduled maintenance job. It separates Kiro Web’s cloud work from local IDE and CLI controls. Access depends on plan, administrator enablement and feature rollout; current documentation also labels Web as preview in some pages. Do not apply a blanket general-availability statement across every client. The merge decision stays with the team.
 
@@ -16,7 +16,7 @@ This presentation follows a request-ID propagation change in checkout-api and a 
 [K04 — Autonomous mode](https://kiro.dev/docs/web/autonomous-mode/)
 
 
-## 02. Choose the interaction model by uncertainty
+## 02. Select interactive and delegated modes by task definition
 
 **00:45–01:45 · 01:00 allocated**
 
@@ -46,7 +46,7 @@ The example asks for an inbound request ID to be preserved on outbound calls. Th
 [K08 — Specifications](https://kiro.dev/docs/specs/)
 
 
-## 04. Specs make intended behavior inspectable
+## 04. Specifications record expected behavior and non-goals
 
 **03:15–04:30 · 01:15 allocated**
 
@@ -141,7 +141,7 @@ Plan request-ID propagation in checkout-api. Preserve public APIs and unrelated 
 [K09 — Built-in tools](https://kiro.dev/docs/tools/)
 
 
-## 09. Review feedback is a new work item
+## 09. Review feedback requires a new validated change
 
 **15:30–16:45 · 01:15 allocated**
 
@@ -154,11 +154,11 @@ Use code review to refine the task rather than as a formality after generation. 
 [K06 — GitHub integration](https://kiro.dev/docs/web/github/)
 
 
-## 10. Automations handle repeatable repository work
+## 10. Scheduled tasks require repository scope and review
 
 **16:45–17:45 · 01:00 allocated**
 
-**Takeaway:** Acceptance: recurring work should reduce toil without creating uncontrolled PR noise.
+**Takeaway:** Acceptance: review recurring changes and prevent unbounded pull-request creation.
 
 Start with a narrow task: one dependency group, a changelog or documentation drift. Keep the update policy explicit, including whether major versions are excluded and which checks must pass. Review the first runs and disable the automation if outputs become noisy or misleading. Scheduling execution does not authorize automatic merging.
 
@@ -213,7 +213,7 @@ Put stable, explicit conventions in steering. Learned memory helps avoid redisco
 [K14 — Memory](https://kiro.dev/docs/memory/)
 
 
-## 13. Extend capabilities deliberately
+## 13. Evaluate tool integrations for a defined task
 
 **23:45–24:45 · 01:00 allocated**
 
@@ -245,7 +245,7 @@ The dedicated hooks and permissions pages document IDE and CLI support and do no
 [K19 — Sandbox internet access](https://kiro.dev/docs/web/sandbox/internet-access/)
 
 
-## 15. Workflows make multi-step delegation explicit
+## 15. Workflow definitions specify steps and handoffs
 
 **25:45–27:15 · 01:30 allocated**
 
@@ -288,11 +288,11 @@ The supplied-log diagnosis and infrastructure examples are not separate native g
 [K17 — Hooks](https://kiro.dev/docs/hooks/)
 
 
-## 18. Pilot for accepted changes, not generated volume
+## 18. Measure accepted changes, review effort and rework
 
 **30:00–32:00 · 02:00 allocated**
 
-**Takeaway:** Scale only when review effort, correctness and operational risk improve together.
+**Takeaway:** Expand scope only if acceptance, review effort and failure metrics support it.
 
 Start with one repository and one reproducible change. Record review effort before the pilot, then compare similar work produced with Kiro. Track accepted changes, failed checks, reviewer corrections and scope drift; include tool and model consumption. Add recurring maintenance only after the interactive workflow is reliable. Every outcome must remain reviewable. The detailed capability crosswalk maps all 21 entries below to this presentation, including the local and cloud distinctions.
 
