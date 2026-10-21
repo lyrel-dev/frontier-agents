@@ -1,14 +1,13 @@
 {
-  "revision": "2026-10-21-mechanisms-v2",
-  "records": 32,
-  "official_sources": 46,
-  "core_minutes_unchanged": 160,
-  "core_demo_minutes_unchanged": 48,
-  "optional_exercise_minutes": 44,
+  "revision": "2026-10-21-three-agent-scope",
+  "records": 23,
+  "official_sources": 32,
+  "core_minutes": 128,
+  "core_demo_minutes": 35,
+  "optional_exercise_minutes": 34,
   "reference_pptx_slides": {
     "devops": 14,
-    "kiro": 12,
-    "security": 11,
+    "security": 10,
     "finops": 11,
     "overview": 8
   },
