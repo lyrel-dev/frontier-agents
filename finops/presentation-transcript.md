@@ -118,13 +118,13 @@ The bundled synthetic fixture has fourteen baseline rows at $100 each, totaling 
 
 ```text
 
-For authorized real data, compare storage costs for the selected accounts over two complete 14-day windows using the same unblended basis. Identify leading drivers only where breakdown evidence is available, separate usage from rate effects, and label correlated CloudTrail changes as hypotheses. For the bundled synthetic fixture, reconcile the $1,400 and $1,974 totals only; do not invent drivers. Do not modify infrastructure.
+Reconcile synthetic totals of $1,400 and $1,974 (41% higher). This fixture cannot establish drivers. For authorized real data, match periods and cost basis before testing usage, rate and change hypotheses. Do not modify infrastructure.
 
 ```
 
 - 01:00 — **Set the query contract:** Fix complete periods, account scope, service grouping and basis.
 
-- 01:30 — **Reconcile the totals:** Use the synthetic period totals for arithmetic; inspect driver breakdowns only with matching authorized data.
+- 01:30 — **Reconcile the totals:** Reconcile the fixture totals; require source breakdowns for any driver claim.
 
 - 01:30 — **Separate effects:** Inspect usage and rate evidence instead of inferring from spend alone.
 
