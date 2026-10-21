@@ -1,501 +1,506 @@
 # AWS FinOps Agent
 
-Cost analysis, anomaly investigation, reporting and engineering follow-up.
+Cost-data access, investigation, recommendation retrieval and reporting
 
+Reviewed: 2026-10-21
 
-Revision: 21 October 2026. Independent engineering field guide.
+A technical reference for cloud-cost engineers and application owners. The agent is an interface over billing and optimization services, with its own tasks, context and publishing actions. It does not become the source of billing truth, independently generate every optimization recommendation, or execute infrastructure rightsizing.
 
+## Availability
 
-**Audience:** FinOps practitioners, platform engineers and service owners
+The whole service is in preview. The cited guidance places the agent and stored data in us-east-1 and permits inference processing within the US geography. Storage location, inference location and the regions of analyzed resources are different concepts.
 
-**Availability:** The entire service is preview. Review the documented US storage and inference boundary before supplying organizational data.
+Official documentation: [What is AWS FinOps Agent](https://docs.aws.amazon.com/finops-agent/latest/userguide/what-is.html) · [Storage and cross-region inference](https://docs.aws.amazon.com/finops-agent/latest/userguide/cross-region-inference.html)
 
-**Recommended starting decision:** Start with one cost question whose total can be independently reproduced. Keep infrastructure changes and financial commitments outside the analysis authority.
 
+## Product objects
 
-## Decision brief
+### Agent instance
 
-The first question after a cost increase is not which resource to delete. It is whether the compared figures use the same period, account scope, currency and cost basis. Only then can the team decide whether the movement reflects usage, pricing, allocation, a change in workload behavior or incomplete data.
+An independently configured instance with its own IAM access, conversations, context, memory, tasks and artifacts. Registering an integration at account level does not share these contents between agents.
 
-This report follows a synthetic storage-cost increase from reconciliation to a service-owned action. FinOps Agent can support inquiry, anomaly investigation, recommendation triage and reporting through permitted cost services. The analysis does not authorize a capacity change or purchase. Potential savings remain estimates until an implemented change is measured on a comparable basis.
+Official documentation: [Creating an agent](https://docs.aws.amazon.com/finops-agent/latest/userguide/creating-an-agent.html)
 
 
-## Running use case
+### Query scope
 
-**Name:** Explain a synthetic storage-cost increase
+The accounts, time range, granularity, cost metric, currency and dimension filters used for a billing request. Two answers cannot be reconciled until these inputs match.
 
-**Trigger:** A teaching dataset compares two complete 14-day periods and shows approximately 41% higher cost.
+Official documentation: [Action-specific guardrails and accuracy limits](https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html)
 
-**Scope:** Explicit accounts, Regions, currency, date boundaries, tags and cost metric; synthetic figures are not an AWS account result.
 
-**Deliverable:** A reconciled explanation, confidence and gaps, an engineering owner and a controlled follow-up.
+### Task and automation
 
-**Not Done:** An attractive savings estimate is quoted without matching totals or checking operational constraints.
+A task is one execution with instructions, activities, state and outputs. An automation defines a schedule or event trigger that creates tasks; cancelling one task does not disable the automation.
 
-**Done:** The source total is reproducible, the driver is supported by evidence, and an owner accepts the next action and measurement plan.
+Official documentation: [Task management](https://docs.aws.amazon.com/finops-agent/latest/userguide/task-management.html)
 
 
-## 1. Define the comparison before asking for an explanation
+### Context file and memory
 
-Write down the cost metric, currency, account group, Region filters and complete date windows. Clarify whether the comparison includes credits, refunds, amortization or allocation rules. Organizational context can identify owners and services, but it does not repair inconsistent billing filters.
+A file supplied by a user is read-only to the agent and can define owners or reporting rules. Memory retains preferences or corrections. Neither changes source billing records or IAM scope.
 
-Approve preview use and the documented processing boundary before uploading internal context. IAM and permitted cost services determine accessible data. Start with an account group whose owner can validate a material total rather than granting broad access to make every possible question answerable.
+Official documentation: [Context files and memory](https://docs.aws.amazon.com/finops-agent/latest/userguide/context-files-and-memory.html)
 
-**Capability crosswalk:** C01, C09
 
-**Responsible role (team recommendation):** FinOps analyst and cost owner
+### Integration and connection
 
-**Input:** Comparison contract, approved data scope and current ownership context.
+OAuth registration is account-level; the agent-level connection selects a particular Jira project or Slack channel. An installed app alone does not establish a valid destination for a task.
 
-**Artifact:** A reproducible cost-query definition with explicit exclusions.
+Official documentation: [Jira connection and supported actions](https://docs.aws.amazon.com/finops-agent/latest/userguide/jira-integration.html)
 
-**Gate:** The same query can be expressed in the underlying source service.
 
-**Fallback:** Resolve metric or date mismatches before discussing causes or savings.
+## Product functions
 
+### Billing-data inquiry
 
-## 2. Reconcile the total and identify material contributors
+Retrieve measured spend, predictions and commitment metrics without confusing their meanings.
 
-Ask the agent to group the cost by useful dimensions and show the arithmetic behind the movement. Reproduce at least one material total in the source system using the same filters. A convincing explanation based on a different cost basis is not acceptable evidence.
+#### F01 — Retrieve and group historical costs and usage
 
-Forecasts and commitment coverage can provide additional context, but they answer different questions from historical reconciliation. Separate observed spend from forecast values and contractual estimates. The synthetic demo illustrates this distinction; it is not evidence of a real account anomaly.
+Availability: Preview. Activation: See invocation and prerequisites.
 
-**Capability crosswalk:** C01, C02
+The agent queries Cost Explorer and related permitted billing tools, then presents the selected data as totals and breakdowns. It can translate a natural-language request into source queries, but the underlying billing services remain the authority for the amounts.
 
-**Responsible role (team recommendation):** FinOps analyst
+**Input.** A billing question with account scope, period, granularity, cost metric and requested dimensions such as service, region or tag.
 
-**Input:** Matching cost queries for both comparison periods.
+**Output.** A scoped cost or usage result, often with a table or chart. Missing permissions can make a source unavailable; that is not equivalent to zero spend.
 
-**Artifact:** A reconciled delta and a ranked set of contributing services or usage dimensions.
+**Invocation and prerequisites.** Ask in Chat for a specific interval and breakdown. Inspect the query/tool activity and restate the chosen scope in any resulting report.
 
-**Gate:** Totals, scope and arithmetic agree with an independent source check.
+**Limitations and effects.** Different cost metrics, date boundaries, currencies or filters can produce different totals. Tags and owner mappings do not guarantee that all spend is attributable.
 
-**Fallback:** Label unresolved discrepancies and withhold a causal conclusion until the totals are understood.
+**Proposed operator verification — not executed.** Reconcile the aggregate and at least one material group against Cost Explorer with identical settings. Require an explicit unallocated or unknown category rather than silently excluding unmatched accounts.
 
+Official documentation: [Cost inquiry](https://docs.aws.amazon.com/finops-agent/latest/userguide/cost-inquiry.html) · [Action-specific guardrails and accuracy limits](https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html)
 
-## 3. Investigate drivers without mistaking correlation for cause
 
-An anomaly investigation can combine cost evidence with permitted operational context, including relevant change records. Ask which observations support a likely driver, which alternatives remain plausible, and which evidence is missing. A deployment occurring near the increase is a lead, not proof of causation.
+#### F02 — Retrieve a cost forecast
 
-Event-triggered investigation is a configured workflow. Confirm the anomaly event source, permissions and output destination, and decide how duplicate or incomplete events are handled. The team still needs an owner who reviews the result and can stop a noisy automation.
+Availability: Preview. Activation: See invocation and prerequisites.
 
-**Capability crosswalk:** C03, C08
+The agent exposes forecasting data available from Cost Explorer. A forecast is a modeled estimate for a future interval, not a bill or a measured saving. The report must retain the forecast's horizon and source assumptions rather than presenting a single number as a guaranteed outcome.
 
-**Responsible role (team recommendation):** Engineering and FinOps owners
+**Input.** The account and cost scope, forecast horizon and requested comparison with measured spend.
 
-**Input:** Reconciled movement, anomaly details and permitted change context.
+**Output.** Forecast values and available uncertainty information from the underlying source, distinct from actual cost observations.
 
-**Artifact:** A driver analysis that separates observations, hypotheses and gaps.
+**Invocation and prerequisites.** Request the forecast for the named scope and period in Chat, then inspect the source response and how it is represented in a chart or report.
 
-**Gate:** The proposed explanation accounts for a material part of the observed change.
+**Limitations and effects.** A forecast does not authorize a budget or a commitment purchase. A changed workload can make a historical pattern a poor guide to the next period.
 
-**Fallback:** Route an unresolved question to the workload owner instead of inventing a definitive cause.
+**Proposed operator verification — not executed.** Label actuals and forecast separately; verify the boundary between completed and future periods. Do not manufacture an uncertainty range when the returned source result does not supply one.
 
+Official documentation: [Cost inquiry](https://docs.aws.amazon.com/finops-agent/latest/userguide/cost-inquiry.html) · [Action-specific guardrails and accuracy limits](https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html)
 
-## 4. Evaluate recommendations against operational constraints
 
-Existing optimization recommendations can help prioritize investigation, but their projected savings are not an instruction to implement. Review utilization, resilience, performance and recovery requirements with the service owner. Avoid adding overlapping estimates as though every action can deliver its full saving independently.
+#### F03 — Inspect commitment coverage, utilization and purchase recommendations
 
-For a storage recommendation, clarify whether the action changes retention, retrieval latency, durability assumptions or recovery procedures. The authorized change belongs in normal infrastructure and financial processes. The agent's useful output is a justified candidate with constraints and evidence.
+Availability: Preview. Activation: See invocation and prerequisites.
 
-**Capability crosswalk:** C04, C13
+The agent retrieves commitment-related data available through the permitted billing tools. Coverage asks how much eligible usage is covered; utilization asks how much purchased commitment was used. A purchase recommendation is a separate proposed financial decision based on the source service's assumptions.
 
-**Responsible role (team recommendation):** Service owner and FinOps reviewer
+**Input.** The relevant Savings Plans or Reserved Instances scope and period, plus the requested coverage, utilization or recommendation view.
 
-**Input:** Recommendation source, utilization evidence, service constraints and estimated benefit.
+**Output.** Source-derived commitment metrics or recommendation details. The guide does not equate a low coverage number with a requirement to buy more commitment.
 
-**Artifact:** A prioritized candidate with operational risks, owner and acceptance criteria.
+**Invocation and prerequisites.** State which metric is required and request its scope and period with the answer. Review purchase recommendations separately from historical coverage and utilization.
 
-**Gate:** The service owner accepts the trade-offs and the change is approved separately.
+**Limitations and effects.** The same purchase can increase coverage while creating underutilization if demand falls. The agent's answer is not a purchase execution or proof that future usage will match the assumed baseline.
 
-**Fallback:** Reject or defer recommendations that conflict with the service's reliability or data obligations.
+**Proposed operator verification — not executed.** Have the responsible cost owner verify commitment term, payment option, eligible usage and demand assumptions in the source tool before any purchase process proceeds.
 
+Official documentation: [Cost inquiry](https://docs.aws.amazon.com/finops-agent/latest/userguide/cost-inquiry.html)
 
-## 5. Publish the result to the right audience
 
-Turn the analysis into a report or tracked task with the comparison basis, important figures, uncertainty and next owner. Recurring reporting is useful when its schedule and audience are explicit. Context files and remembered preferences should be reviewed when ownership or reporting rules change.
+### Change and anomaly investigation
 
-Jira and Slack are external publication effects, not merely read-only analysis. Interactive Jira confirmation, automated-task behavior and Slack posting controls differ. Review the documented path and the destination audience before scheduling a task or sharing commercially sensitive cost information.
+Explain a selected comparison or a detector-generated event while preserving uncertainty about cause.
 
-**Capability crosswalk:** C05, C06, C07, C10, C11, C12
+#### F04 — Compare periods and investigate cost drivers
 
-**Responsible role (team recommendation):** Report owner
+Availability: Preview. Activation: See invocation and prerequisites.
 
-**Input:** Reviewed analysis, approved destination and named action owner.
+The agent retrieves scoped data and investigates which dimensions account for a cost change. Usage quantity, effective rate, resource mix and billing adjustments are different candidate explanations. A percentage increase in an aggregate is not itself a cause.
 
-**Artifact:** A report or ticket with evidence links and a concrete next step.
+**Input.** Two explicitly comparable periods and the service/account/region or usage-type breakdown needed to explain their difference.
 
-**Gate:** Audience, automatic-posting behavior and approval expectations match the chosen integration.
+**Output.** A comparison and candidate drivers linked to the retrieved data. A defensible analysis retains an unexplained residual when available dimensions cannot reconcile the full difference.
 
-**Fallback:** Keep the result in a local report until the publication path and audience are approved.
+**Invocation and prerequisites.** Ask for the absolute and relative change, the contribution of each returned dimension and the remaining unexplained amount. Request usage and rate evidence before attributing the change to either.
 
+**Limitations and effects.** Unequal periods, cost-basis changes and incomplete attribution can create misleading comparisons. A cost increase near a deployment is temporal correlation until the relevant resource or usage effect is shown.
 
-## 6. Measure an implemented change on a comparable basis
+**Proposed operator verification — not executed.** Recalculate totals and contributions independently. If quantity/rate fields are unavailable, report that the split cannot be established instead of inferring it from total cost alone.
 
-After an independently authorized engineering change, compare the relevant cost and service indicators using a consistent measurement basis. Separate savings caused by the change from lower traffic, different prices or changed allocation. A smaller invoice alone does not establish that the recommendation delivered the estimated benefit.
+Official documentation: [Cost inquiry](https://docs.aws.amazon.com/finops-agent/latest/userguide/cost-inquiry.html) · [Cost anomaly detection and investigation](https://docs.aws.amazon.com/finops-agent/latest/userguide/cost-anomaly-detection.html) · [Action-specific guardrails and accuracy limits](https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html)
 
-Close the task only when the owner has reviewed both cost and operational outcomes. Capture rejected recommendations and analysis effort as well as accepted work. That gives the pilot a more meaningful scorecard than the number of reports produced or the sum of potential savings shown.
 
-**Capability crosswalk:** C13
+#### F05 — Investigate a Cost Anomaly Detection event
 
-**Responsible role (team recommendation):** Engineering owner and cost owner
+Availability: Preview. Activation: See invocation and prerequisites.
 
-**Input:** Implemented change record, comparable observation windows and service-health evidence.
+The agent retrieves anomaly details, ranks contributing dimensions and investigates likely drivers. It can correlate cost data with CloudTrail activity when permitted. Detection originates in AWS Cost Anomaly Detection; the agent does not replace the monitor or guarantee the causal explanation.
 
-**Artifact:** A measured outcome with attribution limits and an owner-approved disposition.
+**Input.** An existing cost anomaly or a matching detector event, the monitor identity and accessible billing evidence; CloudTrail access is optional supporting context.
 
-**Gate:** Benefit and reliability implications are checked independently of the original recommendation.
+**Output.** An investigation linked to the anomaly, affected scope and candidate causes, with task history when run asynchronously.
 
-**Fallback:** Leave benefit unclaimed when the comparison cannot isolate the effect or required data is incomplete.
+**Invocation and prerequisites.** Request analysis of a specific anomaly, or configure a cost-anomaly event automation for selected monitors and thresholds.
 
+**Limitations and effects.** An absent or inaccessible CloudTrail event cannot prove that no change occurred. A correlated API event does not by itself prove that it produced the measured cost.
 
-## Detailed capability reference
+**Proposed operator verification — not executed.** Validate the anomaly's scope and compare the suspected change with the actual resource and usage increase. Preserve counter-evidence and indicate which causal links remain unconfirmed.
 
+Official documentation: [Cost anomaly detection and investigation](https://docs.aws.amazon.com/finops-agent/latest/userguide/cost-anomaly-detection.html) · [Event-triggered anomaly investigation](https://docs.aws.amazon.com/finops-agent/latest/userguide/automated-anomaly-response.html) · [Action-specific guardrails and accuracy limits](https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html)
 
-### C01 — Explain cost changes by service, account, Region, or tag
 
-**Claim:** Ask for cost breakdowns, comparisons, and trends using the supported dimensions available through the agent’s data sources.
+### Optimization-recommendation access
 
-**Availability:** Preview · us-east-1
+Retrieve and contextualize recommendations generated by the underlying optimization services.
 
-**Delivery:** Native cost inquiry; permitted AWS sources
+#### F06 — Retrieve and filter source-service optimization recommendations
 
-**Setup:** Create the agent and operator roles, enable relevant cost services, and establish the account scope you intend to analyze.
+Availability: Preview. Activation: See invocation and prerequisites.
 
-**Limit:** Results depend on source access and the chosen time range, granularity, filters, and cost basis. An inaccessible data source cannot be inferred from a fluent answer.
+The agent summarizes and contextualizes recommendations produced by those underlying services. It can filter and rank candidates and present current versus proposed configuration and implementation guidance. It does not generate its own independent optimization analysis or perform the resource change.
 
-**Check:** Reproduce one material total in the source console with matching dates and filters before using the explanation.
+**Input.** Permitted Cost Optimization Hub and Compute Optimizer recommendation data, filtered by account, region, service, action type, effort or estimated savings.
 
-**Prompt:** Compare this service’s cost for the last two complete weeks, grouped by account and Region. State filters and the cost basis used.
+**Output.** A shortlist of source recommendations with estimated savings, implementation considerations and source context. Rightsizing, idle-resource and commitment items are recommendation categories, not separate agent optimization engines.
 
-**Review record to retain (team recommendation):** Reproducible cost query, dimensioned totals, filters, and data-source cross-check.
+**Invocation and prerequisites.** Ask for a specific recommendation scope and the original recommendation identifiers. Inspect source-service enrollment, data availability and permissions when expected items are missing.
 
-Official documentation references: S06, S03, S04
+**Limitations and effects.** Savings are estimates, not realized reductions. Alternative recommendations may overlap; summing them can double-count benefits. Performance, resilience and licensing constraints require owner review.
 
+**Proposed operator verification — not executed.** Open the source recommendation, check its freshness and assumptions, identify mutually exclusive alternatives, and obtain workload-owner evidence before raising a change.
 
-### C02 — Inspect forecasts and commitment coverage
+Official documentation: [Optimization recommendations](https://docs.aws.amazon.com/finops-agent/latest/userguide/optimization-recommendations.html) · [Action-specific guardrails and accuracy limits](https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html)
 
-**Claim:** Cost inquiry includes forecasts and Savings Plans or Reserved Instance coverage, utilization, and recommendation questions.
 
-**Availability:** Preview · us-east-1
+### Reports and task execution
 
-**Delivery:** Native analysis; underlying billing APIs
+Create reviewable artifacts and manage discrete asynchronous work.
 
-**Setup:** Grant the relevant billing-data permissions and identify the accounts, period, and workload assumptions.
+#### F07 — Generate and revise cost-report artifacts
 
-**Limit:** A forecast is not a budget guarantee or a purchase instruction. Commitment decisions need independent workload and financial review.
+Availability: Preview. Activation: See invocation and prerequisites.
 
-**Check:** Check forecast assumptions, coverage definitions, and workload stability; do not purchase based only on the generated summary.
+The agent constructs a report with narrative, tables and charts from the retrieved cost or anomaly data. HTML is the documented default, with PDF and editable PowerPoint outputs also supported. A later request can revise an artifact; presentation formatting does not increase the evidential strength of its numbers.
 
-**Prompt:** Summarize current commitment coverage and the next-period forecast for these accounts. Separate observed data from projections.
+**Input.** A defined report scope, source data, audience, layout instructions and optionally a reviewed template or organization context.
 
-**Review record to retain (team recommendation):** Forecast/coverage figures with stated source, time horizon, and commitment assumptions.
+**Output.** A downloadable artifact associated with its originating task or conversation.
 
-Official documentation references: S06, S04
+**Invocation and prerequisites.** Specify the period, metric, dimensions, required reconciliation table and output format. Inspect the resulting file in Artifacts and its source task before distributing it.
 
+**Limitations and effects.** Charts can omit dimensions, mislabel periods or represent incomplete data. A professional-looking artifact is not an independently validated financial record.
 
-### C03 — Investigate a cost anomaly with operational context
+**Proposed operator verification — not executed.** Reconcile every headline total, verify axes and units, and show the query scope and data cutoff in the report. Keep estimated savings and forecasts visibly separate from actuals.
 
-**Claim:** Analyze cost drivers and distinguish likely usage or rate changes; CloudTrail access can add evidence about relevant operational events.
+Official documentation: [Custom cost reporting](https://docs.aws.amazon.com/finops-agent/latest/userguide/custom-cost-reporting.html) · [Web application and feedback](https://docs.aws.amazon.com/finops-agent/latest/userguide/how-do-i-interact-with-the-agent.html) · [Action-specific guardrails and accuracy limits](https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html)
 
-**Availability:** Preview · us-east-1
 
-**Delivery:** Native investigation; optional CloudTrail access
+#### F08 — Execute and inspect an asynchronous task
 
-**Setup:** Provide the anomaly or precise account/service/time window and grant only the additional read access needed.
+Availability: Preview. Activation: See invocation and prerequisites.
 
-**Limit:** Correlation is investigative, not proof of causation. Missing audit access or mismatched timestamps can limit the explanation.
+The service runs the task through its task queue while the conversation can continue. Task details expose instructions, activities, artifacts and state. Ordinary Chat requests remain conversational unless task creation is requested; an automation is the reusable trigger, not the individual run.
 
-**Check:** Validate the leading explanation against usage metrics, the deployment record, and the same billing interval.
+**Input.** Explicit instructions to create a task, or a scheduled/event automation that instantiates one.
 
-**Prompt:** Investigate this storage-cost increase. Rank evidence-backed drivers, identify relevant changes, and state what remains uncertain.
+**Output.** A task record with execution activity, status and any artifacts or publishing results.
 
-**Review record to retain (team recommendation):** Anomaly investigation separating observed variance, supporting drivers, and uncertainty.
+**Invocation and prerequisites.** Ask Chat to create a task or use Tasks → Create tasks. Inspect the task detail page and any pending approvals; cancel a running task there when required.
 
-Official documentation references: S07, S15
+**Limitations and effects.** Cancelling a task does not disable future scheduled runs. Deleting an automation does not delete prior task records. A finished task can still contain incomplete analysis that needs review.
 
+**Proposed operator verification — not executed.** Trace one report or published message back to its task instructions and activity. Confirm that the task's time range was resolved as intended rather than carrying a stale interval from an earlier run.
 
-### C04 — Prioritize existing optimization recommendations
+Official documentation: [Task management](https://docs.aws.amazon.com/finops-agent/latest/userguide/task-management.html) · [Web application and feedback](https://docs.aws.amazon.com/finops-agent/latest/userguide/how-do-i-interact-with-the-agent.html) · [Data protection and deletion lifecycle](https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html)
 
-**Claim:** Retrieve and filter recommendations from Cost Optimization Hub and Compute Optimizer by useful engineering criteria such as service, account, effort, or estimated savings.
 
-**Availability:** Preview · us-east-1
+### External publishing
 
-**Delivery:** Native retrieval and contextualization
+Treat Jira and Slack actions as destination-specific writes with different approval behavior.
 
-**Setup:** Enable and authorize the relevant recommendation sources; provide workload ownership and operational constraints.
+#### F09 — Create a Jira issue in a connected project
 
-**Limit:** The agent summarizes those systems’ recommendations; it is not a separate optimizer and does not implement resource changes.
+Availability: Preview. Activation: See invocation and prerequisites.
 
-**Check:** Check utilization, reliability constraints, overlapping savings estimates, and the recommendation’s source date.
+The agent creates an issue in the selected project. Interactive and on-demand task creation requires approval; scheduled or event-based automation can pre-authorize this action at setup. Project routing does not include changing an assignee, priority or workflow status.
 
-**Prompt:** List low-effort non-production recommendations for our team. Include source, resource, estimated benefit, and the checks required before changing it.
+**Input.** A connected Jira Cloud project and proposed summary/description containing an anomaly or recommendation.
 
-**Review record to retain (team recommendation):** Ranked optimization recommendations with resource IDs and operational constraints.
+**Output.** A Jira issue and link to the originating agent task. Assignment and priority come from Jira project configuration rather than an owner-map command to the agent.
 
-Official documentation references: S09, S15
+**Invocation and prerequisites.** Register the Jira integration, add the agent's project connection, then request the issue and inspect project, summary and description before approving an interactive action.
 
+**Limitations and effects.** Jira Cloud only in the cited guidance. The agent cannot update issue fields, delete issues or administer workflows. A recommendation written into a ticket remains an unimplemented proposal.
 
-### C05 — Generate a report for engineering or leadership
+**Proposed operator verification — not executed.** Use a test project to verify destination, default assignment and evidence links. Reject any claim that a named engineer was assigned unless Jira itself records that action.
 
-**Claim:** Create cost reports with charts and narrative in HTML, PDF, or editable PowerPoint format, then request revisions.
+Official documentation: [Jira connection and supported actions](https://docs.aws.amazon.com/finops-agent/latest/userguide/jira-integration.html) · [Action-specific guardrails and accuracy limits](https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html) · [Task management](https://docs.aws.amazon.com/finops-agent/latest/userguide/task-management.html)
 
-**Availability:** Preview · us-east-1
 
-**Delivery:** Native artifact generation
+#### F10 — Read Jira issue state and append follow-up comments
 
-**Setup:** Define the audience, period, cost basis, dimensions, and output format. Provide a template only in a supported context format.
+Availability: Preview. Activation: See invocation and prerequisites.
 
-**Limit:** Generated charts and interpretation need review. Output formats do not imply that PDF or PowerPoint files are accepted as context uploads.
+The agent can read issue metadata to follow disposition and append a comment with updated analysis. Comment addition follows the same interactive versus pre-authorized automation distinction as issue creation. Reading a status is not authority to transition it.
 
-**Check:** Reconcile totals, chart labels, periods, and ownership; distinguish estimated savings from realized savings.
+**Input.** An accessible issue in a connected project, such as an issue created for a previous anomaly or recommendation.
 
-**Prompt:** Create an HTML report for the platform review: spend by team, significant changes, unresolved anomalies, and a source-backed action list.
+**Output.** Retrieved issue metadata or a new comment linked to the ongoing task context.
 
-**Review record to retain (team recommendation):** Dated cost report recording query definition, charts, narrative, and unverified assumptions.
+**Invocation and prerequisites.** Specify the exact issue key and the proposed comment content. Inspect the approval for interactive or on-demand writes and the task history for automated writes.
 
-Official documentation references: S10, S12
+**Limitations and effects.** The documented integration describes follow-up comments on issues the agent previously created. Do not generalize it into unrestricted project editing or automatic remediation-state transitions.
 
+**Proposed operator verification — not executed.** Confirm the issue key, project connection and previous task relationship. Compare the actual Jira comment with the approved or pre-authorized content and avoid duplicate updates.
 
-### C06 — Turn a request into a tracked on-demand task
+Official documentation: [Jira connection and supported actions](https://docs.aws.amazon.com/finops-agent/latest/userguide/jira-integration.html) · [Action-specific guardrails and accuracy limits](https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html)
 
-**Claim:** Explicitly requested on-demand tasks appear in the task queue alongside scheduled and event-driven work, with execution history.
 
-**Availability:** Preview · us-east-1
+#### F11 — Post results and artifacts to a connected Slack channel
 
-**Delivery:** Native task queue and history
+Availability: Preview. Activation: See invocation and prerequisites.
 
-**Setup:** Specify that the request should become a task and define the expected output and connected destination.
+The agent posts messages and artifacts to connected channels. During preview this is one-way: it does not read messages, accept commands, respond to mentions or continue a thread. Posting does not request per-message approval, even from an interactive task.
 
-**Limit:** An ordinary chat question does not automatically become a tracked task. External actions have their own approval rules.
+**Input.** An agent-level Slack channel connection and the result or supported artifact to publish.
 
-**Check:** Confirm task creation and output, and inspect the history for failed tools, missing data, and external actions.
+**Output.** A Slack message or uploaded artifact with source context and task linkage.
 
-**Prompt:** Create an on-demand task to investigate the selected anomaly and produce a written evidence summary for review.
+**Invocation and prerequisites.** Register the workspace integration, add the app to the intended channel, create that channel's agent connection, then explicitly select the destination in the task or automation.
 
-**Review record to retain (team recommendation):** Tracked on-demand task with owner, input scope, result, and completion status.
+**Limitations and effects.** The agent cannot edit/delete the post or manage channel membership. A connected channel can expose cost data to a broader audience; a pending Jira approval does not hold back a separate Slack post.
 
-Official documentation references: S11
+**Proposed operator verification — not executed.** Test with non-sensitive content and verify audience, channel ID, artifact and source link. Restrict connections before creating unattended publishing workflows.
 
+Official documentation: [One-way Slack publishing](https://docs.aws.amazon.com/finops-agent/latest/userguide/slack-integration.html) · [Action-specific guardrails and accuracy limits](https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html)
 
-### C07 — Schedule recurring cost reports and reviews
 
-**Claim:** Create recurring tasks in natural language and manage their configuration, status, and recorded runs through Automations.
+## Configuration mechanisms
 
-**Availability:** Preview · us-east-1
+### FM1 — Configure source access, operator access and publishing connections separately
 
-**Delivery:** Native scheduled automations
+The agent role reads the configured AWS data and supports required integrations; the operator role supports the web application. A user's access to the web application does not by itself prove the agent can query every desired billing source. OAuth registration and per-agent destination connections are additional boundaries.
 
-**Setup:** Agree on a report owner, cadence, recipient scope, and stop conditions before enabling the automation.
+1. In the creation wizard, choose or create the agent role and operator role. The official setup guide defines separate policies; both service roles trust finops-agent.amazonaws.com.
+2. Enable and authorize the billing/optimization sources required for the intended functions. Verify Cost Explorer, Cost Anomaly Detection and source recommendation availability independently.
+3. Sign in as the intended operator and test a minimal permitted query. Record the account scope and sources that are unavailable.
+4. Register Jira or Slack at account level only when needed, then create agent-level connections for specific projects or channels. Do not infer a working destination from a registered integration alone.
 
-**Limit:** Scheduled external actions can be pre-authorized. Recurrence does not establish that a report’s recipients or data remain appropriate over time.
+**Lifecycle.** Each agent has isolated content and task data, although account-level integrations can be reused. Disconnecting a destination and deleting the agent are separate operations.
 
-**Check:** Inspect the stored schedule and first output, then disable or revise jobs that produce noise or outdated context.
+**Proposed verification.** Proposed check: verify one permitted query and one intentionally out-of-scope query; inspect actual role/tool errors. Validate a non-sensitive publishing action in a dedicated destination.
 
-**Prompt:** Prepare a weekly platform cost review with anomaly follow-up and a clearly separated list of unverified recommendations.
+Official documentation: [Creating an agent](https://docs.aws.amazon.com/finops-agent/latest/userguide/creating-an-agent.html) · [Setup and role policies](https://docs.aws.amazon.com/finops-agent/latest/userguide/setting-up.html) · [Jira connection and supported actions](https://docs.aws.amazon.com/finops-agent/latest/userguide/jira-integration.html) · [One-way Slack publishing](https://docs.aws.amazon.com/finops-agent/latest/userguide/slack-integration.html) · [Data protection and deletion lifecycle](https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html)
 
-**Review record to retain (team recommendation):** Scheduled task definition, run history, output report, and reviewer.
 
-Official documentation references: S11, S10, S15
+### FM2 — Use organization context and retained preferences without changing source facts
 
+Context files supply account-owner mappings, category definitions and report rules. The agent reads these files but cannot edit them in conversation. Memory can retain preferences and corrections across sessions; long-conversation summarization is a separate context-management mechanism. Neither modifies Cost Explorer or proves that a previous causal conclusion was correct.
 
-### C08 — Trigger a workflow from a cost-anomaly event
+1. Upload a small reviewed account-owner mapping in Context files, with effective date and an explicit unknown-owner policy. Do not include sensitive personal data; users with access to the agent can see its context.
+2. Ask Chat to remember a specific reporting preference or correction. Keep a record of the intended rule outside the agent as well.
+3. Run a new session and inspect whether the requested attribution and report convention are applied. Check contradictory or stale mappings before assuming memory is authoritative.
+4. Use Context files to soft-delete or restore uploaded content; ask Chat to forget a memory item. Do not expect deleting a context file to erase conversations or task records.
 
-**Claim:** An event-based automation can investigate a matching Cost Anomaly Detection event and produce configured outputs or handoffs.
+**Lifecycle.** Context files and memory are per-agent. Conversations and task records cannot be individually deleted during the documented preview; deleting an automation stops future runs but preserves prior tasks. Removing all interaction data requires deleting the agent after disconnecting integrations.
 
-**Availability:** Preview · us-east-1
+**Proposed verification.** Proposed check: include one mapped and one unmapped account, then correct the mapping and test a new session. Verify both attribution and totals; an owner label must not change the measured amount.
 
-**Delivery:** Native event automation; AWS prerequisites
+Official documentation: [Context files and memory](https://docs.aws.amazon.com/finops-agent/latest/userguide/context-files-and-memory.html) · [Data protection and deletion lifecycle](https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html) · [Web application and feedback](https://docs.aws.amazon.com/finops-agent/latest/userguide/how-do-i-interact-with-the-agent.html)
 
-**Setup:** Configure a cost-anomaly monitor, suitable trigger conditions, and approved output destinations; scope the automation role.
 
-**Limit:** During preview the supported event type is cost anomaly, not arbitrary deployment or custom events. Existing monitors and EventBridge permissions are required.
+### FM3 — Configure recurring and anomaly-event automations
 
-**Check:** Validate event matching, duplicate handling, output visibility, and the automation’s disabled state before broader rollout.
+An automation stores the trigger and instructions and creates a new task for each matching occurrence. A scheduled report and an anomaly investigation use the same task facility but different trigger semantics. The current event mechanism is cost-anomaly-specific, not a general subscription to any AWS event.
 
-**Prompt:** When a qualifying anomaly is detected in our non-production account group, investigate it and prepare a concise evidence summary.
+1. First execute the intended instructions as an on-demand task and validate its scope, incomplete-data behavior and output.
+2. For a recurring workflow, define the schedule in Chat and inspect the resulting automation's schedule, enabled state and resolved time basis in Automations.
+3. For an anomaly workflow, select an existing Cost Anomaly Detection monitor, qualifying conditions and the required response. The service provisions an EventBridge managed rule; its role must allow the documented event configuration.
+4. Connect the intended Slack channel before using the documented anomaly-to-Slack workflow. Review any automatic Jira creation as pre-authorization, not as a future approval prompt.
+5. Inspect last-triggered time, task history and destination delivery. Disable the automation to stop future runs; cancel already-running tasks separately.
 
-**Review record to retain (team recommendation):** Event-trigger definition, source anomaly reference, investigation record, and notification log.
+**Lifecycle.** A trigger arriving does not guarantee a complete analysis or successful publication. Expired OAuth credentials, missing sources and invalid destinations are task failures that require ownership.
 
-Official documentation references: S08, S04
+**Proposed verification.** Proposed check: use a controlled permitted event or a prepared event record; verify monitor matching and task creation. Do not manufacture a billing anomaly and claim the live detector was tested.
 
+Official documentation: [Task management](https://docs.aws.amazon.com/finops-agent/latest/userguide/task-management.html) · [Event-triggered anomaly investigation](https://docs.aws.amazon.com/finops-agent/latest/userguide/automated-anomaly-response.html) · [Action-specific guardrails and accuracy limits](https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html) · [One-way Slack publishing](https://docs.aws.amazon.com/finops-agent/latest/userguide/slack-integration.html)
 
-### C09 — Supply account ownership and reporting context
 
-**Claim:** Upload account-to-team mappings, cost categories, instructions, and report-format guidance using the documented text-based file types.
+### FM4 — Apply action-specific approval and data-location controls
 
-**Availability:** Preview · us-east-1
+Read-only queries and report generation do not require approval. Jira creation/comments require approval for interactive and on-demand work, but not when pre-authorized in a schedule or event automation. Slack posting requires no per-message approval. These controls do not grant permission to resize infrastructure or purchase commitments.
 
-**Delivery:** Native context-file workspace
+1. Before deployment, evaluate us-east-1 storage and US-geography inference against the organization's requirements; do not confuse workload region with agent-data location.
+2. Inventory each external write in the task: issue creation, comment addition and Slack posting. Record the destination and whether setup pre-authorizes unattended execution.
+3. Restrict connections to approved destinations. Keep an analysis-only task separate from a publishing task during initial validation.
+4. Review task history for actual tool calls and publish results. Treat a generated draft, an approved action and a delivered external message as distinct states.
 
-**Setup:** Use reviewed TXT, CSV, JSON, Markdown, HTML, or YAML files; prefer team identifiers over personal details.
+**Lifecycle.** Changing automation instructions or destination connections can change future effects. Cancelling or deleting one object does not undo a message already posted or an issue already created.
 
-**Limit:** Files are visible to everyone with agent access and should not contain sensitive or personal information. PDF and PPTX are not accepted context-file types.
+**Proposed verification.** Proposed check: reject a proposed Jira action and confirm no issue/comment appears; test Slack separately with non-sensitive content because it does not wait for the same gate.
 
-**Check:** Check mappings against the authoritative inventory and review who can access the agent before uploading.
+Official documentation: [Action-specific guardrails and accuracy limits](https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html) · [Task management](https://docs.aws.amazon.com/finops-agent/latest/userguide/task-management.html) · [Storage and cross-region inference](https://docs.aws.amazon.com/finops-agent/latest/userguide/cross-region-inference.html) · [Jira connection and supported actions](https://docs.aws.amazon.com/finops-agent/latest/userguide/jira-integration.html) · [One-way Slack publishing](https://docs.aws.amazon.com/finops-agent/latest/userguide/slack-integration.html)
 
-**Prompt:** Use this account-to-team map for reporting, identify unmapped accounts, and do not invent an owner for missing entries.
 
-**Review record to retain (team recommendation):** Versioned ownership/cost-allocation context and an exception list for unmapped resources.
+## Proposed operational procedures
 
-Official documentation references: S12, S17
+### FU1 — Explain a cost increase without inventing a cause
 
+Reconcile a selected cost delta and distinguish measured contributors from unconfirmed explanations.
 
-### C10 — Correct recurring preferences through memory
+**Use when:** An application owner reports higher spend or a detector identifies an anomaly in a known account/service scope.
 
-**Claim:** Tell the agent to remember, update, or forget preferences and corrections that affect later work.
+**Not for:** Inferring a deployment's effect from temporal coincidence, comparing unequal billing scopes, or assigning a usage/rate split when the underlying fields are missing.
 
-**Availability:** Preview · us-east-1
+**Functions used:** F01, F04, F05, F07
 
-**Delivery:** Native conversational memory
+**Inputs**
 
-**Setup:** Keep authoritative ownership and policy in maintained sources and review remembered preferences after organizational changes.
+- Baseline and comparison intervals of known length; same cost metric, currency, accounts and filters.
+- Totals plus a breakdown sufficient to reconcile the change; quantities and effective rates when a usage/rate explanation is required.
+- Anomaly ID and monitor if applicable; deployment/resource events as optional causal evidence.
+- Data cutoff, known credits/adjustments and an owner for unexplained residuals.
 
-**Limit:** Memory is distinct from uploaded files; the agent cannot modify or delete context files through conversation. Long conversations can be summarized.
+1. **Cost engineer — Lock the comparison contract.** Write the two periods and scope before querying. If the reported dashboard used a different metric or filter, reproduce that view first.
 
-**Check:** Ask a fresh scoped question to confirm the correction took effect without overwriting the authoritative context source.
+2. **Agent and engineer — Reconcile the difference.** Retrieve totals and contributors; recalculate absolute and percentage changes. Require the dimension contributions plus residual to equal the total difference.
 
-**Prompt:** Update the reporting preference to show account and service first, and stop applying the old team grouping.
+3. **Engineer — Separate arithmetic from causality.** Where quantity and rate exist, explain the chosen decomposition convention. Where they do not, label the driver unresolved. Do not use a smooth chart as evidence.
 
-**Review record to retain (team recommendation):** Stored reporting preferences with corrections and a check for current applicability.
+4. **Agent and owner — Test a candidate operational cause.** Correlate any CloudTrail or deployment event with the specific resource and changed usage. Seek a counterexample, such as increased cost preceding the change.
 
-Official documentation references: S12
+5. **Cost engineer — Publish a bounded conclusion.** Report reconciled totals, supported contributors, uncertain causes and next required evidence. Review the artifact before choosing a publishing action.
 
+**Acceptance:** The total delta reconciles to explained components plus residual, and every causal claim points to more than temporal coincidence. The report states the exact scope and cutoff.
 
-### C11 — Create Jira Cloud issues and follow-up comments
+**Stop:** Stop comparison if period, currency or cost basis cannot be matched. Stop driver attribution if the supporting quantity, rate or resource evidence is absent.
 
-**Claim:** Create Jira issues, add comments to agent-created issues, and read supported issue fields through a connected project.
+**Example instruction**
 
-**Availability:** Preview · us-east-1
-
-**Delivery:** Native Jira Cloud integration
-
-**Setup:** Connect Jira Cloud and the intended project to the agent, then review project defaults, permissions, and issue visibility.
-
-**Limit:** Jira Server/Data Center is not supported. The agent does not set assignee, priority, or status; ownership relies on Jira defaults or rules. Interactive/on-demand writes require approval; automated writes are pre-authorized.
-
-**Check:** Confirm the approval behavior for the chosen path and inspect the actual issue assignment and contents in Jira.
-
-**Prompt:** Prepare a Jira issue summarizing this verified cost concern, its account and resource, evidence, and the team’s required validation steps.
-
-**Review record to retain (team recommendation):** Linked Jira work item with recommendation evidence, assignee, and follow-up status.
-
-Official documentation references: S13, S15
-
-
-### C12 — Post cost updates to a connected Slack channel
-
-**Claim:** Post analysis or reporting updates to an authorized connected Slack channel.
-
-**Availability:** Preview · us-east-1
-
-**Delivery:** Native outbound Slack integration
-
-**Setup:** Install and connect the app, join the destination channel as required, and verify the account/workspace and per-agent channel configuration.
-
-**Limit:** The integration is one-way: it does not read channel conversations or accept mentions as commands. Posting does not require per-message approval.
-
-**Check:** Confirm the destination and audience first; inspect task history and the delivered message afterward.
-
-**Prompt:** Post the reviewed platform cost summary to the approved internal channel without account-owner personal details or sensitive attachments.
-
-**Review record to retain (team recommendation):** Approved Slack message with cost context, scope, and source-report link.
-
-Official documentation references: S14, S15
-
-
-### C13 — Turn a recommendation into a controlled engineering change
-
-**Claim:** A practical engineering workflow is to turn a reviewed recommendation into a normal change ticket, validate the change, and compare later costs.
-
-**Availability:** Preview · us-east-1 · team-owned follow-through
-
-**Delivery:** Suggested process around documented analysis and Jira handoff
-
-**Setup:** Choose one low-risk opportunity with an owner, baseline, operational acceptance tests, approval, and a recovery plan.
-
-**Limit:** The agent is not documented as autonomously resizing resources, deleting assets, or buying commitments. Implementation and rollback remain team responsibilities.
-
-**Check:** Compare matched periods and workload levels after the independently approved change; account for regressions and implementation cost.
-
-**Prompt:** Summarize this opportunity as a proposed change with assumptions and measurement criteria; do not describe estimated savings as achieved.
-
-**Review record to retain (team recommendation):** Change ticket with proposed action, approvals, deployment evidence, and comparable post-change cost.
-
-Official documentation references: S09, S13, S15
-
-
-## Illustrative handoff
-
-```yaml
-
-analysis: COST-DEMO-001
-data_kind: synthetic-teaching-fixture
-periods: two-complete-14-day-windows
-metric: stated-cost-basis
-owner: service-owner
-allowed_effects: [analyze-cost, draft-recommendation]
-change_authority: separate-approval
-benefit: estimate-until-independently-measured
-
+```text
+Compare <baseline> and <current> using <metric/currency/account filters>. Reconcile the absolute delta by <dimensions> and retain any residual. Distinguish quantity, rate and mix only where source data supports the split. Treat correlated events as hypotheses. Do not publish externally or modify resources.
 ```
 
+**Demonstration allocation:** 5 minutes.
 
-## Readiness checklist
+- 1 min: Show the comparison contract and clearly labeled synthetic input table.
+- 1 min: Recalculate baseline/current totals and the absolute and percentage delta.
+- 1 min: Compute a quantity/rate decomposition and state its convention.
+- 1 min: Contrast the arithmetic with the additional evidence needed for a deployment-cause claim.
+- 1 min: Inspect a prepared report for scope, residual and uncertainty labels.
 
-- [ ] Preview use and data-location boundaries are approved.
+**Fallback:** Use the supplied arithmetic fixture. It demonstrates reconciliation only; it is not AWS billing data, service pricing or a live agent result.
 
-- [ ] Periods, currency, filters and cost basis are explicit.
-
-- [ ] A material total reconciles to the source service.
-
-- [ ] Observed movement is separated from causal hypotheses.
-
-- [ ] Publication destinations and automation behavior are reviewed.
-
-- [ ] Changes and purchases require separate approval; savings are not pre-claimed.
+Official documentation: [Cost inquiry](https://docs.aws.amazon.com/finops-agent/latest/userguide/cost-inquiry.html) · [Cost anomaly detection and investigation](https://docs.aws.amazon.com/finops-agent/latest/userguide/cost-anomaly-detection.html) · [Action-specific guardrails and accuracy limits](https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html)
 
 
-## Sources
+### FU2 — Turn one optimization recommendation into reviewable engineering work
 
-- S02: [What is AWS FinOps Agent?](https://docs.aws.amazon.com/finops-agent/latest/userguide/what-is.html)
+Select a feasible source recommendation and create a bounded work item without claiming that savings are realized or that infrastructure was changed.
 
-- S03: [Create an agent](https://docs.aws.amazon.com/finops-agent/latest/userguide/creating-an-agent.html)
+**Use when:** Cost Optimization Hub or Compute Optimizer has a current recommendation for a resource with an accountable owner.
 
-- S04: [IAM setup guide](https://docs.aws.amazon.com/finops-agent/latest/userguide/setting-up.html)
+**Not for:** Summing mutually exclusive alternatives, applying rightsizing without workload evidence, or expecting an owner-map file to set Jira assignee fields.
 
-- S05: [Chatting with the agent](https://docs.aws.amazon.com/finops-agent/latest/userguide/chatting-with-finops-agent.html)
+**Functions used:** F06, F09, F10
 
-- S06: [Cost inquiry](https://docs.aws.amazon.com/finops-agent/latest/userguide/cost-inquiry.html)
+**Inputs**
 
-- S07: [Cost anomaly investigation](https://docs.aws.amazon.com/finops-agent/latest/userguide/cost-anomaly-detection.html)
+- Original recommendation ID, source service, observation period and current/proposed configuration.
+- Estimated savings and assumptions; alternatives affecting the same resource or commitment.
+- Performance/resilience constraints and recent workload demand information from the resource owner.
+- A connected Jira project and explicit interactive approval or reviewed automation authorization.
 
-- S08: [Automated anomaly response](https://docs.aws.amazon.com/finops-agent/latest/userguide/automated-anomaly-response.html)
+1. **Cost engineer — Retrieve the original recommendation.** Open the source record, confirm freshness and identify overlapping alternatives before creating a savings total.
 
-- S09: [Optimization recommendations](https://docs.aws.amazon.com/finops-agent/latest/userguide/optimization-recommendations.html)
+2. **Workload owner — Decide whether the change is feasible.** Review peaks, latency, redundancy, compatibility and rollback. Reject or defer if source utilization is not representative of the intended workload.
 
-- S10: [Custom cost reporting](https://docs.aws.amazon.com/finops-agent/latest/userguide/custom-cost-reporting.html)
+3. **Agent and operator — Prepare the issue.** Include resource identity, source recommendation, estimate assumptions, verification plan and owner contact in the description. Select the connected project; do not claim to set assignee or priority.
 
-- S11: [Task management](https://docs.aws.amazon.com/finops-agent/latest/userguide/task-management.html)
+4. **Operator — Approve and verify publication.** Approve the interactive issue creation, then inspect the actual Jira issue and its defaults. Keep deployment approval outside this action.
 
-- S12: [Context files and memory](https://docs.aws.amazon.com/finops-agent/latest/userguide/context-files-and-memory.html)
+5. **Cost engineer — Measure after a separate approved change.** Once engineering deploys a change, compare a representative matched period and document workload differences. Read issue state or add a follow-up comment; do not imply the agent transitioned the workflow.
 
-- S13: [Jira integration](https://docs.aws.amazon.com/finops-agent/latest/userguide/jira-integration.html)
+**Acceptance:** The issue points to a current source recommendation and records feasibility, implementation and measurement requirements. Estimated and realized savings remain separate fields.
 
-- S14: [Slack integration](https://docs.aws.amazon.com/finops-agent/latest/userguide/slack-integration.html)
+**Stop:** Do not create an implementation commitment when the owner, source assumptions or rollback are unknown. Do not publish to an unapproved project or audience.
 
-- S15: [Agent guardrail controls](https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html)
+**Example instruction**
 
-- S16: [Cross-region inference](https://docs.aws.amazon.com/finops-agent/latest/userguide/cross-region-inference.html)
+```text
+Retrieve recommendation <id> and summarize its source, current/proposed configuration, estimate assumptions and overlapping alternatives. Draft a Jira issue in <connected project> with an independent verification plan. Request approval before creating it. Do not change resources or issue fields.
+```
 
-- S17: [Quotas](https://docs.aws.amazon.com/finops-agent/latest/userguide/quotas.html)
+**Demonstration allocation:** 3 minutes.
+
+- 1 min: Inspect a prepared recommendation and identify one overlapping alternative.
+- 1 min: Review a draft issue, project defaults and the interactive approval boundary.
+- 1 min: Contrast estimated savings with the future measurement required after an independently approved deployment.
+
+**Fallback:** Use a prepared recommendation and draft issue; do not create a real ticket unless the connected project and operator authorization are explicitly available.
+
+Official documentation: [Optimization recommendations](https://docs.aws.amazon.com/finops-agent/latest/userguide/optimization-recommendations.html) · [Jira connection and supported actions](https://docs.aws.amazon.com/finops-agent/latest/userguide/jira-integration.html) · [Action-specific guardrails and accuracy limits](https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html)
 
 
-## Validation boundary
+## Synthetic reconciliation: a 22% increase is arithmetic, not a diagnosis
 
-Documentation synthesis and proposed workflows only. No live AWS execution or measured engineering outcome. The original audit snapshot and the selected narrative rechecks are distinct.
+Invented quantities and unit rates for a teaching example. Not AWS prices, billing data or measured agent output.
 
+| Component | Baseline quantity | Baseline rate | Current quantity | Current rate | Baseline cost | Current cost |
+|---|---|---|---|---|---|---|
+| Compute | 1000 | 0.1 | 1200 | 0.12 | 100 | 144 |
+| Storage | 5000 | 0.02 | 5000 | 0.02 | 100 | 100 |
 
-## Mechanisms and enablement extension
+Baseline total = 200; current total = 244; delta = 44; relative change = 44/200 = 22%. Under a quantity-first decomposition, quantity contribution = (1200-1000) × 0.10 = 20; rate contribution = 1200 × (0.12-0.10) = 24. Contributions sum to 44. A different decomposition convention can allocate the interaction term differently; state the convention. These calculations do not explain why quantity or rate changed. A deployment, discount change or billing adjustment needs separate evidence.
 
-See the [detailed source-linked setup and verification guide](../mechanisms/finops.md). It contains 7 records, a proposed six-step exercise and lifecycle controls. Existing presentation timing is unchanged.
+## Documentation qualifications
+
+Optimization recommendations are attributed to their source services; this guide does not present retrieval as an independent agent optimization engine.
+
+The interaction guide's general approval wording is qualified by the action-specific guardrail page: Jira automations are pre-authorized, and Slack posting has no per-message approval.
+
+No undocumented general event subscription, Slack conversation listener, Jira workflow editor, infrastructure mutator or commitment-purchase action is inferred from the available integrations.
+
+The worked example tests reconciliation logic only. There is no live billing-data reconciliation, agent-run benchmark or measured savings result in this deliverable.
+
+## Official source register
+
+- [What is AWS FinOps Agent](https://docs.aws.amazon.com/finops-agent/latest/userguide/what-is.html)
+
+- [Creating an agent](https://docs.aws.amazon.com/finops-agent/latest/userguide/creating-an-agent.html)
+
+- [Setup and role policies](https://docs.aws.amazon.com/finops-agent/latest/userguide/setting-up.html)
+
+- [Cost inquiry](https://docs.aws.amazon.com/finops-agent/latest/userguide/cost-inquiry.html)
+
+- [Cost anomaly detection and investigation](https://docs.aws.amazon.com/finops-agent/latest/userguide/cost-anomaly-detection.html)
+
+- [Optimization recommendations](https://docs.aws.amazon.com/finops-agent/latest/userguide/optimization-recommendations.html)
+
+- [Custom cost reporting](https://docs.aws.amazon.com/finops-agent/latest/userguide/custom-cost-reporting.html)
+
+- [Task management](https://docs.aws.amazon.com/finops-agent/latest/userguide/task-management.html)
+
+- [Event-triggered anomaly investigation](https://docs.aws.amazon.com/finops-agent/latest/userguide/automated-anomaly-response.html)
+
+- [Context files and memory](https://docs.aws.amazon.com/finops-agent/latest/userguide/context-files-and-memory.html)
+
+- [Action-specific guardrails and accuracy limits](https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html)
+
+- [Jira connection and supported actions](https://docs.aws.amazon.com/finops-agent/latest/userguide/jira-integration.html)
+
+- [One-way Slack publishing](https://docs.aws.amazon.com/finops-agent/latest/userguide/slack-integration.html)
+
+- [Data protection and deletion lifecycle](https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html)
+
+- [Web application and feedback](https://docs.aws.amazon.com/finops-agent/latest/userguide/how-do-i-interact-with-the-agent.html)
+
+- [Storage and cross-region inference](https://docs.aws.amazon.com/finops-agent/latest/userguide/cross-region-inference.html)
+
+No live product execution or measured operational benefit is claimed.
