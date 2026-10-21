@@ -17,116 +17,41 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.sha }}
-          fetch-depth: 2
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: '3.13'
-      - name: Apply the reviewed source corrections
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          R=Path('applications/aws-validation-console')
-          def replace(file,old,new):
-              p=R/file;s=p.read_text();assert old in s,(file,old[:100]);p.write_text(s.replace(old,new))
-          replace('app/connectors.py',"{'context': config.get('context', 'in-cluster'), 'api_server': configuration.host}","{'context': 'in-cluster' if config.get('in_cluster') else config['context'], 'api_server': configuration.host}")
-          replace('static/metrics-charts.js',"ref:t.ref, unit:spec.unit","ref:p.ref || t.ref, unit:spec.unit")
-          replace('static/metrics-charts.js',"    const times = allPoints(spec).map(p=>p.t).filter(Number.isFinite);\n    if (!times.length) return null;\n    const lo = Math.min(...times), hi = Math.max(...times);", "    let lo=Infinity,hi=-Infinity;\n    for(const trace of spec.traces)for(const p of trace.points)if(Number.isFinite(p.t)){if(p.t<lo)lo=p.t;if(p.t>hi)hi=p.t;}\n    if(lo===Infinity)return null;")
-          replace('static/metrics-charts.js',"    const values=visible(entry).flatMap(t=>t.points.filter(p=>p.t>=range[0]&&p.t<=range[1]).map(p=>numeric(p.value))).filter(v=>v!==null);\n    if (!mini) for (const limit of entry.spec.limits || []) { const n=numeric(limit.value); if(n!==null)values.push(n); }\n    let low=values.length?Math.min(...values):0, high=values.length?Math.max(...values):1;", "    let low=Infinity,high=-Infinity;\n    const include=v=>{const n=numeric(v);if(n!==null){if(n<low)low=n;if(n>high)high=n;}};\n    for(const trace of visible(entry))for(const p of trace.points)if(p.t>=range[0]&&p.t<=range[1])include(p.value);\n    if(!mini)for(const limit of entry.spec.limits||[])include(limit.value);\n    if(low===Infinity){low=0;high=1;}")
-          replace('static/metrics.js', "  const byConnection=new Map();for(const e of entries){const id=e.record.data.connection_id;if(!byConnection.has(id))byConnection.set(id,[]);byConnection.get(id).push(e);}\n  const out=[];\n  for(const [id,rows] of byConnection){", "  const byScope=new Map();for(const e of entries){const d=e.record.data,key=JSON.stringify([d.connection_id,d.scope_id,e.record.simulated]);if(!byScope.has(key))byScope.set(key,[]);byScope.get(key).push(e);}\n  const out=[];\n  for(const rows of byScope.values()){\n    const d=rows[0].record.data,id=d.connection_id+' · '+d.scope_id+' · '+(rows[0].record.simulated?'Synthetic':'Recorded');")
-          replace('static/metrics.js',"points:rows.map(e=>({t:Date.parse(e.record.data.ended_at),value:fn(e)}))", "points:rows.map(e=>({t:Date.parse(e.record.data.ended_at),value:fn(e),ref:e.meta.ref}))")
-          replace('static/metrics.js', "  const nonce=Array.from(crypto.getRandomValues(new Uint8Array(16)))", "  const validationEntry=get(r.data.validation_ref),unverified=e.meta.origin!=='reported'||validationEntry?.meta.origin!=='evaluated';\n  const provenance=`<p>Report origin: ${esc(e.meta.origin)} · Record SHA-256: ${esc(e.meta.sha256)}</p><p>Validation origin: ${esc(validationEntry?.meta.origin||'not loaded')}. Hashes check content consistency, not source identity.</p>${unverified?'<p><strong>IMPORTED OR EXAMPLE RESULT — not independently recomputed by this workspace.</strong></p>':''}`;\n  const nonce=Array.from(crypto.getRandomValues(new Uint8Array(16)))")
-          replace('static/metrics.js',"${esc(shortDate(r.data.generated_at))}</p><div class=\"warning\">", "${esc(shortDate(r.data.generated_at))}</p>${provenance}<div class=\"warning\">")
-          replace('app/evaluator.py',"VERSION = 'scalar-1.0'","VERSION = 'scalar-1.1'")
-          replace('app/evaluator.py',"    outcome = 'inconclusive' if gates else aggregate(required)", "    # Execution gates prevent a pass, but do not erase an established requirement failure.\n    required_outcome = aggregate(required)\n    outcome = required_outcome if required_outcome == 'fail' or not gates else 'inconclusive'")
-          replace('static/app.js',"evaluator_version:'browser-preview-1.0'", "evaluator_version:'browser-preview-1.1'")
-          replace('static/app.js',"outcome:gates.length?'inconclusive':aggregate(checks.filter(c=>c.required).map(c=>c.outcome))", "outcome:aggregate(checks.filter(c=>c.required).map(c=>c.outcome))==='fail'?'fail':gates.length?'inconclusive':aggregate(checks.filter(c=>c.required).map(c=>c.outcome))")
-          replace('tests/browser_checks.py',"evaluator_version==='scalar-1.0'", "evaluator_version==='scalar-1.1'")
-          replace('tests/test_evaluator.py',"def test_invalid_execution_gates(tmp_path,examples,change):", "def test_invalid_execution_gates_preserve_known_failure(tmp_path,examples,change):")
-          replace('tests/test_evaluator.py',"    assert r['data']['outcome']=='inconclusive' and r['data']['gates']", "    assert r['data']['outcome']=='fail' and r['data']['gates']\n    assert check(r,'restore')['outcome']=='fail'")
-          p=R/'tests/test_evaluator.py';p.write_text(p.read_text()+'''
-
-          def test_execution_gate_prevents_pass_when_all_assertions_pass(tmp_path,examples):
-              def mutate(records):
-                  next(r for r in records if ref(r)==RUN)['data']['fault_confirmed']=False
-                  metric(records,'recovery_seconds')['data']['value']=150
-                  e=deepcopy(metric(records,'request_error_ratio'));e['id']='gate-duplicates'
-                  e['data'].update(metric='duplicate_transactions',value=0,unit='transactions')
-                  records.append(e)
-              result=evaluate(changed_store(tmp_path,examples,mutate),RUN)['data']
-              assert all(c['outcome']=='pass' for c in result['checks'])
-              assert result['outcome']=='inconclusive' and result['gates']
-          ''')
-          replace('tests/test_connectors.py',"def test_kubernetes_scope_and_methods_with_sdk_double(monkeypatch):", "@pytest.mark.parametrize('normalized',[False,True])\ndef test_kubernetes_scope_and_methods_with_sdk_double(monkeypatch,normalized):")
-          replace('tests/test_connectors.py',"    r=m.inspect_kubernetes({'id':'k','kind':'kubernetes','in_cluster':True,'namespaces':['team-a']})", "    connection={'id':'k','name':'test','kind':'kubernetes','in_cluster':True,'namespaces':['team-a']}\n    if normalized:\n        from app.server import Configuration\n        connection=Configuration.model_validate({'connections':[connection]}).model_dump(mode='json')['connections'][0]\n    r=m.inspect_kubernetes(connection)\n    assert r['data']['identity']['context']=='in-cluster'")
-          replace('build_metrics.py', "Age of the newest acknowledged business write missing from the recovered state. Requires transaction reconciliation.", "Recoverable business-state lag at the disruption cut-off, established from a verified recovery boundary and acknowledged-write reconciliation. Record lost-write counts separately.")
-          replace('build_metrics.py', "'legendFormat':'{{service}} · {{deployment_model}} · {{run_id}} · {{data_kind}}'", "'legendFormat':'{{environment}} · {{service}} · {{deployment_model}} · {{scenario}} · {{run_id}} · {{data_kind}}'")
-          replace('build_metrics.py', "'legendFormat':'{{metric}} · {{run_id}} · {{data_kind}}'", "'legendFormat':'{{metric}} · {{environment}} · {{service}} · {{deployment_model}} · {{scenario}} · {{run_id}} · {{data_kind}}'")
-          # Playwright's string-predicate polling uses eval inside the page, which CSP correctly rejects.
-          # Poll via the test driver's normal evaluation API; do not relax CSP or enable bypassCSP.
-          replace('tests/publication_browser_checks.py',"    with sync_playwright() as pw:","    def wait_state(expression):\n        deadline = time.monotonic() + 30\n        while time.monotonic() < deadline:\n            if page.evaluate('() => (' + expression + ')'):\n                return\n            time.sleep(.05)\n        raise AssertionError('Browser state timed out: ' + expression)\n    with sync_playwright() as pw:")
-          replace('tests/publication_browser_checks.py','page.wait_for_function(', 'wait_state(')
-          replace('tests/publication_browser_checks.py',"page.evaluate(\"location.hash='metrics'\"); page.wait_for_selector('.mc-card')", "page.evaluate(\"location.hash='metrics'\"); wait_state(\"document.querySelectorAll('.mc-card').length===32\")")
-          for f in ['app/__init__.py','README.md','static/shell.html']:
-              replace(f,'0.2.0','0.2.1')
-          for f in ['compose.yaml','deploy/kubernetes.yaml','docs/DEPLOYMENT.md']:
-              replace(f,'validation-console:0.1.0','validation-console:0.2.1')
-          p=R/'.gitignore';p.write_text(p.read_text()+'\n# Publication test outputs; the curated review record is tracked.\nvalidation/publication-browser.json\nvalidation/publication-pytest.xml\nvalidation/container-acceptance.json\nvalidation/grafana-acceptance.json\nvalidation/metrics-browser-checks.json\nvalidation/interactive-report.html\n')
-          p=R/'README.md';s=p.read_text().replace('python tests/http_smoke.py\n','python tests/http_smoke.py\npython tests/publication_browser_checks.py --native\n# Requires Docker; isolated test containers and synthetic records only:\npython tests/container_acceptance.py\npython tests/grafana_acceptance.py\n')
-          start=s.index('Chromium is required for browser checks;');end=s.index('\n## Documentation',start)
-          s=s[:start]+'''Chromium is required for browser checks; set `CHROMIUM_PATH` when necessary. The two baseline browser suites use DOM injection and documented API bridges. The publication suite's `--native` mode requires real loopback HTTP and local-file navigation and fails rather than falling back to injection. Container acceptance builds the image and checks persistence across container replacement. Grafana acceptance imports and reads back the proposal in an isolated server; it does not execute PromQL.
-
-          See `validation/publication-review.json` for measured publication checks and the tested server version. The older `validation/metrics-validation.json` describes the 0.2.0 baseline, not this release's acceptance results. No AWS credentials or runtime sockets are used by these tests.
-          '''+s[end:];p.write_text(s)
-          p=R/'docs/METRICS.md';s=p.read_text().replace('Version 0.2.0.','Version 0.2.1.')
-          s=s.replace('A count observed once is a **single point**, not a fabricated trend.', 'A count observed once is a **single point**, not a fabricated trend. Snapshot graphs are partitioned by connection, scope and simulation status; a reused connection name cannot combine accounts or relabel example observations as measured data.')
-          s=s.replace('Workspace bundles and report HTML can contain sensitive identifiers and source text; review them before sharing.', 'Exported HTML includes the report origin and content hash, the validation origin, and a warning when the report or validation was imported or supplied as an example. Workspace bundles and report HTML can contain sensitive identifiers and source text; review them before sharing.')
-          s=s.replace('Grafana supplies zoom, shared crosshair, query inspection, legend isolation and panel-data export.', 'Every panel legend retains all six scope/provenance labels. Grafana supplies zoom, shared crosshair, query inspection, legend isolation and panel-data export.')
-          start=s.index('Backend, generator, DOM interaction, export and loopback checks are recorded');end=s.index('\n\nPrimary documentation',start)
-          s=s[:start]+'''The 0.2.0 baseline is retained in `validation/metrics-validation.json`. Publication acceptance adds native loopback/file browser navigation, an unprivileged container build with persistence across replacement, and Grafana JSON import/readback. Measured results and the tested Grafana version are in `validation/publication-review.json`.
-
-          These checks do not inspect an actual AWS account or Docker/Podman/Kubernetes target, execute proposed PromQL, test datasource provisioning against real telemetry, or validate incident recovery. The container test exercises hosting and storage, not runtime inspection. Native navigation is unavailable in the local authoring sandbox; that suite runs without a bridge in GitHub Actions.
-          '''+s[end:];p.write_text(s)
-          p=R/'CHANGELOG.md';p.write_text('''# Changelog
-
-          ## 0.2.1 — publication review
-
-          - Fixed in-cluster Kubernetes identity serialization after configuration normalization.
-          - Removed argument-spread limits from chart extent/range calculations; added a 200,000-sample regression.
-          - Separated snapshot graphs by connection, scope and simulation status; retained each point reference in CSV.
-          - Preserved report/validation origin and content hashes in standalone HTML, with imported/example warnings.
-          - Preserved required-check failures when execution gates remain. Gates still prevent a pass. Evaluators are `scalar-1.1` and `browser-preview-1.1`; saved results are not rewritten.
-          - Included all scope/provenance labels in Grafana legends and corrected the recovery-point-loss definition.
-          - Updated image tags and added native-browser, container-persistence and Grafana-import publication checks. See `validation/publication-review.json`.
-
-          '''+p.read_text().removeprefix('# Changelog\n').lstrip())
-          (R/'docs/PUBLICATION_REVIEW.md').write_text('''# Publication review — 0.2.1
-
-          Scope: application code, contracts, evaluation, persistence, read-only inspectors, graph rendering/exports, Grafana generation, deployment, tests and documentation. Baseline: `9383a159eb1578aa5d69f095cec34a6477c44114`.
-
-          Reproduced and corrected: normalized in-cluster context failed snapshot validation; aggregate chart extrema overflowed the JavaScript argument stack; snapshot series combined distinct scopes and simulation labels; HTML reports omitted provenance; execution gates masked established requirement failures; Grafana legends omitted environment/scenario labels. Deployment versions and the recovery-point-loss definition were also corrected.
-
-          Publication requires backend/generator, baseline browser, native publication browser, HTTP, container-persistence and Grafana import/readback checks. Measured counts, tested server version, workflow URL and reviewed source hashes are in `validation/publication-review.json`. No existing account, runtime, database or incident data is used.
-
-          This is a read-only local validation workspace and graph viewer, not a fault runner or readiness certificate. Live AWS/runtime inspection, credential refresh, telemetry collection, PromQL execution, production datasource provisioning, fault injection, disaster recovery, supply-chain certification and independent security review remain outside acceptance. The Grafana version is a compatibility-test target, not a production upgrade recommendation.
-          ''')
-          p=Path('.github/workflows/validation-console.yml');s=p.read_text();assert 'python tests/http_smoke.py' in s
-          s=s.replace('python -m pytest -q\n','python -m pytest -q --junitxml=validation/publication-pytest.xml\n')
-          s=s.replace('          python tests/http_smoke.py\n','          python tests/http_smoke.py\n          python tests/publication_browser_checks.py --native\n          python tests/container_acceptance.py\n          python tests/grafana_acceptance.py\n')
-          p.write_text(s)
-          PY
       - name: Install test dependencies
         working-directory: applications/aws-validation-console
         run: |
           python -m pip install -r requirements-dev.txt
           python -m playwright install --with-deps chromium
           python -c 'from playwright.sync_api import sync_playwright; p=sync_playwright().start(); print("CHROMIUM_PATH="+p.chromium.executable_path); p.stop()' >> "$GITHUB_ENV"
+      - name: Apply the exact corrections already tested at e4054ce4
+        run: |
+          python - <<'PY'
+          import subprocess, yaml
+          from pathlib import Path
+          # Reuse the explicit source transforms from the completed acceptance run.
+          # This pinned revision is repository history, not an external script.
+          source = subprocess.check_output(['git','show','e4054ce4b7322002681ef8dde47133fdd3f5cc24:.github/workflows/console-publication-review.yml'],text=True)
+          steps = yaml.safe_load(source)['jobs']['review']['steps']
+          script = next(s['run'] for s in steps if s.get('name')=='Apply the reviewed source corrections')
+          assert script.startswith("python - <<'PY'\n") and script.rstrip().endswith('\nPY')
+          code = script.split('\n',1)[1].rsplit('\nPY',1)[0]
+          exec(compile(code,'reviewed-corrections-e4054ce4','exec'),{'__name__':'__main__'})
+          workflow=Path('.github/workflows/validation-console.yml')
+          text=workflow.read_text()
+          text=text.replace('          python tests/metrics_browser_checks.py\n','          METRICS_TEST_OUTPUT=validation python tests/metrics_browser_checks.py\n')
+          workflow.write_text(text)
+          PY
       - name: Require complete publication acceptance
         working-directory: applications/aws-validation-console
         run: |
           python build_ui.py
           python -m pytest -q --junitxml=validation/publication-pytest.xml
           python tests/browser_checks.py
-          python tests/metrics_browser_checks.py
+          METRICS_TEST_OUTPUT=validation python tests/metrics_browser_checks.py
           python tests/http_smoke.py
           python tests/publication_browser_checks.py --native
           python tests/container_acceptance.py
@@ -146,16 +71,18 @@ jobs:
           report={'version':'0.2.1','source_baseline':'9383a159eb1578aa5d69f095cec34a6477c44114','workflow_revision':os.environ['GITHUB_SHA'],'workflow_url':'https://github.com/'+os.environ['GITHUB_REPOSITORY']+'/actions/runs/'+os.environ['GITHUB_RUN_ID'],'counts':counts,'native_browser_navigation':load('publication-browser.json')['native_navigation'],'grafana':load('grafana-acceptance.json'),'reviewed_source_sha256':{f:hashlib.sha256((R/f).read_bytes()).hexdigest() for f in files},'not_verified':['Live AWS or Docker/Podman/Kubernetes inspection targets','Credential refresh','CloudWatch or Prometheus telemetry collection','PromQL execution and production datasource provisioning','Fault injection or incident recovery','Production readiness or independent security certification']}
           (V/'publication-review.json').write_text(json.dumps(report,indent=2)+'\n')
           PY
-      - name: Retain review evidence
+      - name: Retain review evidence and exact patched sources
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: console-publication-review
           path: |
-            applications/aws-validation-console/validation/
-            applications/aws-validation-console/grafana/
-            applications/aws-validation-console/static/console.html
+            applications/aws-validation-console/
+            .github/workflows/validation-console.yml
+            !applications/aws-validation-console/**/__pycache__/**
+            !applications/aws-validation-console/.pytest_cache/**
           retention-days: 14
+          include-hidden-files: true
       - name: Commit only reviewed files to the feature branch and remove this one-time workflow
         run: |
           git config user.name 'github-actions[bot]'
