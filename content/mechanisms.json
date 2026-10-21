@@ -1,5 +1,5 @@
 {
-  "revision": "2026-10-21-mechanisms-v1",
+  "revision": "2026-10-21-mechanisms-v2",
   "reviewed": "21 October 2026",
   "scope": "Documented configuration and observable behavior, not undisclosed implementation. Independent checks and example prompts are proposed exercises; none was executed against a live AWS account.",
   "sources": {
@@ -266,6 +266,18 @@
       "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/cross-region-inference.html",
       "reviewed": "2026-10-21",
       "note": ""
+    },
+    "DF": {
+      "title": "Provide feedback on investigations",
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-autonomous-incident-response.html#provide-feedback-on-investigations",
+      "reviewed": "2026-10-21",
+      "note": "Corrective verdict plus actual root cause creates a reflections memory. Sharing feedback with AWS is a separate, explicit confirmation."
+    },
+    "DN": {
+      "title": "DevOps Agent dated product changes",
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/whats-new.html",
+      "reviewed": "2026-10-21",
+      "note": "Dated entries document monitor memory enabled by default (19 June), learned knowledge moved to memory (27 August), and reflections (4 September 2026)."
     }
   },
   "agents": {
@@ -275,11 +287,13 @@
       "report": "devops/validated-report.html",
       "status": "Documented operational mechanisms; controls and learning schedules are feature-specific. Managed-agent UI availability may vary by rollout.",
       "opening": "A recurring alarm does not prove that its previous root cause has returned. Use historical context to select hypotheses, then test those hypotheses against current telemetry. The documentation describes retained Markdown knowledge, routing by descriptions, and a managed learning process. It does not document a customer-operated model-training switch.",
-      "learning": "Historical investigations → managed learning runs → versioned memory → relevance-based retrieval → a new investigation. User instructions, selected skills and tool permissions remain separate controls.",
+      "learning": "Historical investigations produce managed context; corrective feedback can produce reflections. Later investigations selectively retrieve relevant memories. Maintained instructions, reusable skills and tool permissions are separate controls.",
       "learning_refs": [
         "DM",
         "DG",
-        "DI"
+        "DI",
+        "DF",
+        "DN"
       ],
       "records": [
         {
@@ -288,7 +302,7 @@
           "family": "Memory",
           "surface": "Agent Space / Operator Web App",
           "availability": "Documented managed memory",
-          "activation": "Automatic learning; inspect and activate stores",
+          "activation": "Monitor memory enabled by default; verify store and entry state",
           "mechanism": "The learning agent summarizes earlier investigations into monitor-specific memory. At a new session, store descriptions are exposed first; relevant entries are fetched selectively rather than injecting every incident. Memory versions retain change history.",
           "prerequisites": "An Agent Space with investigation history and connected evidence sources.",
           "steps": [
@@ -301,7 +315,8 @@
           "limits": "A previous cause is a hypothesis, not a finding about the current incident. The guide does not describe model-weight training.",
           "refs": [
             "DM",
-            "DG"
+            "DG",
+            "DN"
           ],
           "checks": [
             "In a non-production Agent Space, select a resolved incident whose cause was independently confirmed.",
@@ -664,6 +679,50 @@
           ],
           "slide_mechanism": "Directed actions require an enabled Agent Space, an elevated account role or tool configuration, and operator approval for the specific mutation.",
           "slide_boundary": "Remembered context grants no authority. Disable directed actions at the Agent Space to remove elevated capability."
+        },
+        {
+          "id": "D-M10",
+          "title": "Record a corrected cause through investigation feedback",
+          "family": "Memory",
+          "surface": "Completed investigation / Knowledge → Memories",
+          "availability": "Documented corrective-feedback memory",
+          "activation": "Submit an incorrect verdict and the actual root cause",
+          "mechanism": "Corrective feedback can create a memory in the reflections store for later investigations of the alarm. This is distinct from recurring-cause summaries and does not establish model-weight training.",
+          "prerequisites": "A completed investigation and an independently established cause.",
+          "steps": [
+            "Open the completed investigation and choose Add feedback, or provide the correction in Chat.",
+            "Select an incorrect verdict and supply the actual root cause. Sharing with AWS requires separate confirmation.",
+            "Inspect Knowledge → Memories → reflections and retain the relevant entry and version."
+          ],
+          "scope": "Reflection context relates to the alarm. Latest submitted feedback replaces previous feedback for that investigation.",
+          "control": "Update incorrect feedback. Inspect, correct or deactivate affected memories separately; do not assume feedback replacement removes every historical memory version.",
+          "limits": "A reflection is retained context, not proof of a future diagnosis or broader execution authority.",
+          "refs": [
+            "DF",
+            "DM",
+            "DN"
+          ],
+          "checks": [
+            "Proposed: use a reviewed, non-production incident whose established cause differs from the original result.",
+            "Record feedback and any resulting reflection; check a separate investigation against new evidence.",
+            "Report recall as unverified unless the run exposes evidence that the memory was read."
+          ],
+          "artifact": "Investigation ID, reviewed cause, feedback, memory version, subsequent read evidence and reviewer decision.",
+          "fallback": "Keep the reviewed correction as explicit context when reflection creation or recall cannot be observed.",
+          "example": "Illustrative: \"The cause was incorrect. The reviewed cause is the staging connection-pool limit; retain the supporting evidence and do not change resources.\"",
+          "slide": [
+            "Correct the investigation result",
+            "Inspect the reflections store",
+            "Verify reuse in a separate run",
+            "Treat retained causes as context"
+          ],
+          "slide_setup": [
+            "Open a completed investigation.",
+            "Submit incorrect verdict and actual cause.",
+            "Inspect the reflections entry and version."
+          ],
+          "slide_mechanism": "Corrective feedback creates alarm-related reflection context for later investigations.",
+          "slide_boundary": "No diagnosis guarantee. Sharing feedback with AWS requires separate confirmation."
         }
       ],
       "use_case": {
@@ -712,11 +771,11 @@
             150
           ],
           [
-            "Correct or exclude stale knowledge",
-            "Update or deactivate an incorrect item and retain the review record.",
-            "Knowledge owner",
-            "Correction recorded and assessed in a new session.",
-            "D-M01",
+            "Record a corrected outcome",
+            "Submit the reviewed cause using Add feedback; inspect the reflection or a prepared record.",
+            "Incident reviewer",
+            "Feedback and memory version retained; later recall checked separately.",
+            "D-M10",
             90
           ]
         ],
@@ -725,7 +784,9 @@
         "refs": [
           "DM",
           "DC",
-          "DA"
+          "DA",
+          "DF",
+          "DN"
         ]
       }
     },
@@ -1898,7 +1959,7 @@
   "comparison": [
     [
       "DevOps Agent",
-      "Managed investigation/environment memory; attached custom stores",
+      "Managed recurring-cause context, corrective-feedback reflections and explicitly attached custom stores",
       "Managed learning plus explicit store controls",
       "Knowledge → Memories; custom-agent attachments",
       "Current investigation evidence; inspect versions",
@@ -1993,10 +2054,11 @@
   ],
   "evidence_notes": [
     "Incident learning is used here only for the documented retention and reuse of knowledge. It is not a claim that tenant incidents fine-tune model weights. Service-improvement data use is a separate policy question.",
-    "DevOps learned-skills guidance is migrating to managed memory. Current and cached official pages differ; confirm the live UI and avoid relying on historical numeric refresh thresholds.",
+    "DevOps dated changes identify migration of learned knowledge to memory and monitor memory enabled by default. Older cached pages differ; verify the current UI and do not treat refresh cadence as a completion guarantee.",
     "Kiro local memory is documented in the dated 20 October 2026 release. Older cached pages describing IDE support as forthcoming must not override that dated release.",
     "The Security Agent IDE guide and current Kiro guide differ on manual MCP paths. This guide uses the supported Power installation and requires inspection of the actual client configuration.",
     "Executable DevOps skills have a preview exception alongside older restrictive wording. Only document-only DevOps skills are prescribed here.",
-    "Feature-specific Region, plan, role and preview constraints must be checked in the linked guide before enabling a mechanism. This extension is not a new audit of every historical capability record."
+    "Feature-specific Region, plan, role and preview constraints must be checked in the linked guide before enabling a mechanism. This extension is not a new audit of every historical capability record.",
+    "Follow-up validation rechecked selected memory, feedback, lifecycle and setup sources, not all historical claims. A missing guide in a cached retrieval is not evidence that a feature is absent. See mechanisms/CONTINUATION_VALIDATION.md."
   ]
 }
