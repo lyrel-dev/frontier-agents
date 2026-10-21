@@ -1,11 +1,9 @@
 {
-  "revision": "2026-10-21-three-agent-scope",
-  "scope": [
-    "AWS DevOps Agent",
-    "AWS Security Agent",
-    "AWS FinOps Agent"
-  ],
-  "shared_architecture": true,
-  "history_policy": "Git history only; no snapshot directories or committed ZIP distributions",
-  "live_aws_execution": false
+  "revision": "2026-10-21-product-reference-rebuild",
+  "scope": ["AWS DevOps Agent", "AWS Security Agent", "AWS FinOps Agent"],
+  "structure": ["Product functions", "Configuration mechanisms", "Proposed operational procedures"],
+  "history_policy": "Git history only; no manual archives or committed ZIP distributions",
+  "publication_gate": "Structural, browser and rendered inspection before main is advanced",
+  "live_aws_execution": false,
+  "build": 1
 }
