@@ -1,12 +1,12 @@
 # Mechanism review boundary
 
-Reviewed 21 October 2026 against 44 official AWS/Kiro pages. These guides document visible behavior, configuration and data lifecycle; they do not infer undisclosed internals or claim customer-controlled model training.
+Source register: 46 official AWS/Kiro pages. Original 44-source mechanism review dated 21 October 2026; this follow-up adds two references and rechecks selected critical mechanisms, not every historical claim. These guides document visible behavior, configuration and data lifecycle; they do not infer undisclosed internals or claim customer-controlled model training.
 
 ## Source qualifications
 
 Incident learning is used here only for the documented retention and reuse of knowledge. It is not a claim that tenant incidents fine-tune model weights. Service-improvement data use is a separate policy question.
 
-DevOps learned-skills guidance is migrating to managed memory. Current and cached official pages differ; confirm the live UI and avoid relying on historical numeric refresh thresholds.
+DevOps dated changes identify migration of learned knowledge to memory and monitor memory enabled by default. Older cached pages differ; verify the current UI and do not treat refresh cadence as a completion guarantee.
 
 Kiro local memory is documented in the dated 20 October 2026 release. Older cached pages describing IDE support as forthcoming must not override that dated release.
 
@@ -15,6 +15,8 @@ The Security Agent IDE guide and current Kiro guide differ on manual MCP paths. 
 Executable DevOps skills have a preview exception alongside older restrictive wording. Only document-only DevOps skills are prescribed here.
 
 Feature-specific Region, plan, role and preview constraints must be checked in the linked guide before enabling a mechanism. This extension is not a new audit of every historical capability record.
+
+Follow-up validation rechecked selected memory, feedback, lifecycle and setup sources, not all historical claims. A missing guide in a cached retrieval is not evidence that a feature is absent. See mechanisms/CONTINUATION_VALIDATION.md.
 
 ## Verification
 
