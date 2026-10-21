@@ -1,0 +1,13 @@
+{
+  "date": "2026-10-21",
+  "environment": "Local Chromium via Playwright set_content; URL navigation and persistent storage were not tested because of environment policy",
+  "reports": [
+    {"report":"devops","narrative_stages":6,"slides_checked":18,"mobile_horizontal_overflow":false,"presentation_horizontal_overflow":[],"checks":["story focus","feature filters","expand/collapse","manual worksheet","JSON export","timer start/pause/reset","keyboard navigation","speaker notes","mobile layout"]},
+    {"report":"kiro","narrative_stages":6,"slides_checked":18,"mobile_horizontal_overflow":false,"presentation_horizontal_overflow":[],"checks":["story focus","feature filters","expand/collapse","manual worksheet","JSON export","timer start/pause/reset","keyboard navigation","speaker notes","mobile layout"]},
+    {"report":"security","narrative_stages":6,"slides_checked":18,"mobile_horizontal_overflow":false,"presentation_horizontal_overflow":[],"checks":["story focus","feature filters","expand/collapse","manual worksheet","JSON export","timer start/pause/reset","keyboard navigation","speaker notes","mobile layout"]},
+    {"report":"finops","narrative_stages":6,"slides_checked":16,"mobile_horizontal_overflow":false,"presentation_horizontal_overflow":[],"checks":["story focus","feature filters","expand/collapse","manual worksheet","JSON export","timer start/pause/reset","keyboard navigation","speaker notes","mobile layout"]},
+    {"report":"architecture","narrative_stages":6,"slides_checked":18,"mobile_horizontal_overflow":false,"presentation_horizontal_overflow":[],"checks":["story focus","feature filters","expand/collapse","manual worksheet","JSON export","timer start/pause/reset","keyboard navigation","speaker notes","mobile layout"]}
+  ],
+  "javascript_errors": [],
+  "boundary": "UI behavior and layout checks, not external-link availability or live AWS execution."
+}
