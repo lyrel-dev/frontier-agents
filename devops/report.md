@@ -1,6 +1,6 @@
 # AWS DevOps Agent
 
-From a production symptom to a decision you can defend.
+Incident investigation, service-status analysis and release-readiness workflows.
 
 
 Revision: 21 October 2026. Independent engineering field guide.
@@ -43,6 +43,8 @@ Connect a known-good deployment reference and the telemetry needed to challenge 
 
 **Capability crosswalk:** C01, C06
 
+**Responsible role (team recommendation):** Platform/on-call owner
+
 **Input:** Service identity, environment, incident window, deployed revision, relevant telemetry and repository access.
 
 **Artifact:** A scope record and a short inventory of available and missing evidence.
@@ -59,6 +61,8 @@ An alert, ticket or on-demand question can start the operational workflow. Ask t
 Use follow-up questions to test alternatives: an upstream timeout, a capacity limit, or an unrelated configuration change. A confident answer does not eliminate competing causes. The engineer compares material claims with the source systems and preserves the evidence links for the incident record.
 
 **Capability crosswalk:** C01, C03
+
+**Responsible role (team recommendation):** Incident investigator
 
 **Input:** Incident signal and scoped operational context.
 
@@ -77,6 +81,8 @@ Directed actions have their own enablement, access and approval controls. Keep t
 
 **Capability crosswalk:** C02
 
+**Responsible role (team recommendation):** Incident commander or change approver
+
 **Input:** Reviewed hypothesis and a specific mitigation candidate.
 
 **Artifact:** An action decision with owner, target, allowed effect, rollback and verification criteria.
@@ -93,6 +99,8 @@ After recovery, recurring incident patterns can inform observability, resilience
 Daily health summaries are configured custom-agent workflows. Specify the question, tools, skills, schedule and audience explicitly. A scheduled prompt cannot see a database or monitoring system that has not been connected, and an automated summary still needs an owner who handles missing or stale data.
 
 **Capability crosswalk:** C04, C05
+
+**Responsible role (team recommendation):** Service owner and SRE
 
 **Input:** Validated incident record, historical incidents and a named follow-up owner.
 
@@ -111,6 +119,8 @@ Active release testing instead interacts with a running application. Browser or 
 
 **Capability crosswalk:** C07, C08
 
+**Responsible role (team recommendation):** Release owner
+
 **Input:** Candidate revision, application context, and an authorized staging target where active testing is used.
 
 **Artifact:** Release findings, reproduction details and explicit residual risks.
@@ -127,6 +137,8 @@ An investigation can hand a bounded implementation task to a coding workflow. Ki
 Close the loop with a reviewed change, the normal delivery process and an independent check of the original service symptom. IaC drafts, build-log diagnoses and runbooks remain team-composed uses of coding tools. Measure accepted investigations and completed follow-ups, not the number of agent responses.
 
 **Capability crosswalk:** C06, C09, C10, C11, C12, C13, C14, C15, C16, C17, C18, C19
+
+**Responsible role (team recommendation):** Development reviewer and SRE
 
 **Input:** Evidence-linked issue with affected repository, constraints, test expectations and reviewer.
 
@@ -156,7 +168,9 @@ Close the loop with a reviewed change, the normal delivery process and an indepe
 
 **Prompt:** Investigate the checkout 5xx increase after the last deployment. Separate observed evidence, competing hypotheses, and missing data.
 
-Evidence: S02, S03
+**Review record to retain (team recommendation):** Incident timeline linked to deployed changes, telemetry, alternative hypotheses, and missing data.
+
+Official documentation references: S02, S03
 
 
 ### C02 — Mitigation recommendations and approved actions
@@ -175,7 +189,9 @@ Evidence: S02, S03
 
 **Prompt:** Propose a low-risk mitigation for the queue backlog. Include risk, verification, and rollback steps; do not execute changes.
 
-Evidence: S03, S13
+**Review record to retain (team recommendation):** Mitigation proposal, affected resources, operator approval record, and observed change effects.
+
+Official documentation references: S03, S13
 
 
 ### C03 — On-demand service health
@@ -194,7 +210,9 @@ Evidence: S03, S13
 
 **Prompt:** Summarize checkout health for the last 24 hours using available error, latency, utilization, and alarm data. State any missing signals.
 
-Evidence: S05
+**Review record to retain (team recommendation):** Timestamped service-status response with the identifiers and data windows queried.
+
+Official documentation references: S05
 
 
 ### C04 — Recurring incident prevention
@@ -213,7 +231,9 @@ Evidence: S05
 
 **Prompt:** Review recurring checkout timeouts and propose the three most actionable prevention items, linked to the investigations that support them.
 
-Evidence: S04
+**Review record to retain (team recommendation):** Prevention backlog item linked to repeated incidents and a named technical owner.
+
+Official documentation references: S04
 
 
 ### C05 — Scheduled SRE health summaries
@@ -232,7 +252,9 @@ Evidence: S04
 
 **Prompt:** Create a daily checkout database health report from the connected sources. Report slow-query evidence only when available and flag gaps explicitly.
 
-Evidence: S06
+**Review record to retain (team recommendation):** Dated scheduled health report with configured data sources and exceptions.
+
+Official documentation references: S06
 
 
 ### C06 — Production context from a coding environment
@@ -251,7 +273,9 @@ Evidence: S06
 
 **Prompt:** Using the configured DevOps Agent connection, inspect the production health of checkout and return the supporting investigation links.
 
-Evidence: S07, S08
+**Review record to retain (team recommendation):** Operational query response with service, time window, and referenced source evidence.
+
+Official documentation references: S07, S08
 
 
 ### C07 — Release risk and readiness review
@@ -270,7 +294,9 @@ Evidence: S07, S08
 
 **Prompt:** Review this release candidate for dependency and policy risks. Identify evidence, affected code, missing permissions, and unresolved uncertainty.
 
-Evidence: S09, S10, S12, S15
+**Review record to retain (team recommendation):** Release-readiness findings, reviewed changes, and disposition by the release owner.
+
+Official documentation references: S09, S10, S12, S15
 
 
 ### C08 — Release QA and integration testing
@@ -289,7 +315,9 @@ Evidence: S09, S10, S12, S15
 
 **Prompt:** Against the isolated staging checkout endpoint, test the payment flow using non-production credentials and test data; report actions and findings.
 
-Evidence: S11, S15
+**Review record to retain (team recommendation):** Test scope, executed requests, recorded side effects, findings, and application build identifier.
+
+Official documentation references: S11, S15
 
 
 ### C09 — Repository understanding
@@ -308,7 +336,9 @@ Evidence: S11, S15
 
 **Prompt:** Trace the checkout request from HTTP handler to persistence. Cite file paths and symbols, and identify uncertain steps.
 
-Evidence: S16, S22
+**Review record to retain (team recommendation):** Code-path explanation with repository revision and source references.
+
+Official documentation references: S16, S22
 
 
 ### C10 — Scoped features and bug fixes
@@ -327,7 +357,9 @@ Evidence: S16, S22
 
 **Prompt:** Add request-ID propagation to checkout only. Propose a plan, implement the bounded change, and show the diff and test results.
 
-Evidence: S16, S17
+**Review record to retain (team recommendation):** Reviewable code diff, scoped acceptance tests, and reviewer disposition.
+
+Official documentation references: S16, S17
 
 
 ### C11 — Unit-test creation
@@ -346,7 +378,9 @@ Evidence: S16, S17
 
 **Prompt:** Add tests for checkout retry limits, timeouts, and empty inputs using the existing framework. Do not weaken assertions to make tests pass.
 
-Evidence: S18, S19
+**Review record to retain (team recommendation):** Generated test changes, execution results, and any failing assertions.
+
+Official documentation references: S18, S19
 
 
 ### C12 — IaC drafting and explanation
@@ -365,7 +399,9 @@ Evidence: S18, S19
 
 **Prompt:** Explain this IaC diff and flag suspected destructive changes or broad permissions. Distinguish observations from assumptions; do not apply it.
 
-Evidence: S20, S21
+**Review record to retain (team recommendation):** IaC diff with relevant plan, validation, or synthesis results produced by the team.
+
+Official documentation references: S20, S21
 
 
 ### C13 — CI build-log diagnosis
@@ -384,7 +420,9 @@ Evidence: S20, S21
 
 **Prompt:** Analyze the supplied CI log. Find the earliest causal failure, propose a minimal patch, and list what still needs reproduction.
 
-Evidence: S20, S19
+**Review record to retain (team recommendation):** Build-log excerpts, stated failure hypothesis, and reproducible local or CI check.
+
+Official documentation references: S20, S19
 
 
 ### C14 — README and runbook drafting
@@ -403,7 +441,9 @@ Evidence: S20, S19
 
 **Prompt:** Draft a checkout deployment and rollback runbook from these inputs. Mark every command or assumption that needs operator confirmation.
 
-Evidence: S18, S20
+**Review record to retain (team recommendation):** Documentation diff with technical-owner review and a reproducible procedure.
+
+Official documentation references: S18, S20
 
 
 ### C15 — AWS guidance and resource troubleshooting
@@ -422,7 +462,9 @@ Evidence: S18, S20
 
 **Prompt:** Explain this S3 access-denied error. State which policies and resource facts you actually inspected and what remains unverified.
 
-Evidence: S23, S33
+**Review record to retain (team recommendation):** AWS implementation guidance with documentation references or scoped resource diagnostics.
+
+Official documentation references: S23, S33
 
 
 ### C16 — IDE security and quality review
@@ -441,7 +483,9 @@ Evidence: S23, S33
 
 **Prompt:** Review this change for security and correctness. Identify what was actually scanned, excluded, and left unresolved.
 
-Evidence: S24, S31
+**Review record to retain (team recommendation):** Code finding records with severity, affected lines, and reviewer disposition.
+
+Official documentation references: S24, S31
 
 
 ### C17 — GitHub pull-request review
@@ -460,7 +504,9 @@ Evidence: S24, S31
 
 **Prompt:** /q review
 
-Evidence: S25, S26
+**Review record to retain (team recommendation):** PR review comments, changed-file context, and any explicitly requested re-review.
+
+Official documentation references: S25, S26
 
 
 ### C18 — GitHub issue-to-pull-request development
@@ -479,7 +525,9 @@ Evidence: S25, S26
 
 **Prompt:** /q dev
 
-Evidence: S25, S27
+**Review record to retain (team recommendation):** Issue-linked pull request with diff, test output, and CI/review status.
+
+Official documentation references: S25, S27
 
 
 ### C19 — Supported Java and .NET transformations
@@ -498,7 +546,9 @@ Evidence: S25, S27
 
 **Prompt:** Check this project against the documented transformation prerequisites before proposing an upgrade. List unsupported components and manual steps.
 
-Evidence: S28, S29, S30, S31
+**Review record to retain (team recommendation):** Transformation diff, compatibility checklist, and independent build/test results.
+
+Official documentation references: S28, S29, S30, S31
 
 
 ## Illustrative handoff
