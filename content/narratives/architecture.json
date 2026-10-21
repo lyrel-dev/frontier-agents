@@ -1,13 +1,13 @@
 {
-  "number": "05",
+  "number": "04",
   "accent": "#285d9c",
   "title": "Common architectural patterns",
-  "strapline": "Common work contracts, evidence, authorization and verification patterns across four products.",
+  "strapline": "Common work contracts, evidence, authorization and verification patterns across three products.",
   "audience": "Platform architects, engineering leads, security governance and service owners",
   "availability": "Team-level synthesis of documented mechanisms. Not an AWS shared runtime, unified permission model or implemented multi-agent orchestrator.",
   "decision": "Standardize scope, evidence, ownership and acceptance first. Automate a handoff only after its specialist boundaries work reliably without automation.",
   "summary": [
-    "The four agents do different jobs and expose different execution surfaces. A useful common architecture does not hide those differences. It defines what a task means, where evidence comes from, which effects are permitted, who owns the decision and how the result is verified.",
+    "The three agents do different jobs and expose different execution surfaces. A useful common architecture does not hide those differences. It defines what a task means, where evidence comes from, which effects are permitted, who owns the decision and how the result is verified.",
     "The running tabletop begins with a checkout incident and ends with a reviewed implementation and independent verification. Security and cost assessments are conditional branches, not mandatory calls to every agent. The connecting artifact is an existing incident, issue or change record. Credentials and approvals are deliberately not passed along with it."
   ],
   "use_case": {
@@ -26,7 +26,7 @@
         "P04"
       ],
       "paragraphs": [
-        "Start with the evidence and outcome required. DevOps Agent supports operational investigations; Kiro supports reviewable code work; Security Agent supports authorized application assessments; FinOps Agent supports cost analysis. Calling every agent on every task adds complexity without necessarily adding useful evidence.",
+        "Start with the evidence and outcome required. DevOps Agent supports operational investigations, Security Agent supports authorized application assessments, and FinOps Agent supports cost analysis. Select only the specialist needed for the task. Code implementation, merge and deployment remain assigned engineering responsibilities rather than an additional agent role in this collection.",
         "The proposed common contract records the workload, owner, task, allowed effects, exclusions, completion checks and stop responsibility. A product workspace or prompt is not proof that access is enforced. Test the actual IAM, repository and integration boundaries used by the chosen specialist."
       ],
       "input": "An owned engineering problem and the smallest useful specialist task.",
