@@ -1,3 +1,11 @@
+<!-- PLATFORM-REFERENCE-NAV -->
+## Platform capability and mechanism references
+
+Start with the [platform reference collection](platforms/index.html). The new layer separates 30 reusable platform capabilities from 16 implementation mechanisms and from operational use cases. [AWS DevOps Agent](platforms/devops.md) | [AWS Security Agent](platforms/security.md) | [AWS FinOps Agent](platforms/finops.md).
+
+Reference slides are untimed. Three optional prepared-result exercises have an eight-minute budget each; they are not added to the existing timed scenario programme. The earlier reports and presentations remain scenario material, not the authority for platform classification. See [publication validation](platforms/VALIDATION.md).
+<!-- /PLATFORM-REFERENCE-NAV -->
+
 # Frontier agents — engineering field guides
 
 Detailed, source-linked interactive reports and timed presentations. Download or clone the repository and open `index.html` in a browser. No server, build step or external JavaScript is needed to read the generated reports. GitHub file previews do not execute the report HTML; repository publication is not a GitHub Pages deployment.
