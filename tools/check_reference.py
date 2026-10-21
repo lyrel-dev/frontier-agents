@@ -3,6 +3,7 @@
 from __future__ import annotations
 import hashlib
 import json
+import os
 from decimal import Decimal
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
@@ -15,6 +16,12 @@ KEYS=('devops','security','finops')
 REPORT={'devops':'validated-report.html','security':'report.html','finops':'report.html'}
 errors=[]
 checks=[]
+
+def navigate(page,path):
+    if os.environ.get('HTML_LOAD_MODE')=='content':
+        page.set_content(path.read_text(encoding='utf-8'),wait_until='load')
+    else:
+        page.goto(path.as_uri())
 
 def require(condition,message):
     if not condition:errors.append(message)
@@ -58,6 +65,8 @@ for row in w['rows']:
 require(base==200 and current==244 and (current-base)/base==Decimal('0.22'),'fixture aggregate mismatch')
 require((Decimal(1200)-1000)*Decimal('.10')+Decimal(1200)*(Decimal('.12')-Decimal('.10'))==44,'fixture decomposition mismatch')
 
+(ROOT/'VALIDATION.md').write_text('# Validation in progress\n\nThe checker has started; this record is replaced with its actual result on completion.\n', encoding='utf-8')
+
 htmls=list(ROOT.glob('*.html'))+list(ROOT.glob('*/*.html'))
 soups={p:BeautifulSoup(p.read_text(), 'html.parser') for p in htmls};link_count=0
 for path,soup in soups.items():
@@ -81,10 +90,10 @@ for path in sorted((ROOT/'presentations').glob('*.pptx')):
 
 browser_checks=[]
 with sync_playwright() as p:
-    browser=p.chromium.launch(headless=True,args=['--no-sandbox'])
+    browser=p.chromium.launch(headless=True,args=['--no-sandbox'],executable_path=os.environ.get('CHROMIUM_EXECUTABLE'))
     for key in KEYS:
         page=browser.new_page(viewport={'width':1440,'height':1000});js_errors=[];page.on('pageerror',lambda e:js_errors.append(str(e)))
-        page.goto((ROOT/key/REPORT[key]).as_uri());page.wait_for_timeout(100)
+        navigate(page,ROOT/key/REPORT[key]);page.wait_for_timeout(100)
         total=len(docs[key]['functions']);require(page.locator('.function:visible').count()==total,key+' function visibility')
         page.locator('#function-search').fill('zzzz-no-matching-function');require(page.locator('.function:visible').count()==0,key+' empty search')
         page.locator('#reset-filter').click();require(page.locator('.function:visible').count()==total,key+' reset search')
@@ -92,19 +101,19 @@ with sync_playwright() as p:
         page.locator('#reset-filter').click();page.locator('#function-availability').select_option('Preview');require(page.locator('.function:visible').count()==sum(f['availability']=='Preview' for f in docs[key]['functions']),key+' preview filter')
         page.locator('#reset-filter').click();page.locator('#expand-all').click();require(page.locator('main details:not([open])').count()==0,key+' expand disclosures')
         page.locator('#collapse-all').click();before=page.locator('details[open]').count();page.evaluate("window.dispatchEvent(new Event('beforeprint'))");require(page.locator('main details:not([open])').count()==0,key+' print expansion');page.evaluate("window.dispatchEvent(new Event('afterprint'))");require(page.locator('details[open]').count()==before,key+' print restoration')
-        screens=ROOT/'qa/screens';screens.mkdir(parents=True,exist_ok=True);page.screenshot(path=str(screens/(key+'-desktop.png')),full_page=False)
+        screens=ROOT/'qa/screens';screens.mkdir(parents=True,exist_ok=True);page.locator('.function').first.scroll_into_view_if_needed();page.screenshot(path=str(screens/(key+'-desktop.png')),full_page=False)
         page.set_viewport_size({'width':390,'height':844});page.wait_for_timeout(80)
         require(page.evaluate('document.documentElement.scrollWidth<=innerWidth+1'),key+' mobile document overflow')
         page.locator('.function').first.scroll_into_view_if_needed();page.screenshot(path=str(screens/(key+'-mobile.png')),full_page=False)
         require(not js_errors,key+' report JavaScript errors '+str(js_errors));page.close()
-        page=browser.new_page(viewport={'width':1440,'height':1000});page.on('pageerror',lambda e:js_errors.append(str(e)));page.goto((ROOT/key/'presentation.html').as_uri())
+        page=browser.new_page(viewport={'width':1440,'height':1000});page.on('pageerror',lambda e:js_errors.append(str(e)));navigate(page,ROOT/key/'presentation.html')
         require(page.locator('.slide:visible').count()==1,key+' deck initial state');page.locator('#next').click();require(page.locator('#counter').inner_text().startswith('2 /'),key+' next slide');page.keyboard.press('ArrowLeft');require(page.locator('#counter').inner_text().startswith('1 /'),key+' keyboard navigation');page.locator('#notes').click();require(page.locator('.slide:visible .speaker-notes').is_visible(),key+' notes toggle');page.locator('#timer-toggle').click();page.wait_for_timeout(1150);require(page.locator('#clock').inner_text()!='00:00',key+' timer');page.locator('#timer-toggle').click();page.locator('#timer-reset').click();require(page.locator('#clock').inner_text()=='00:00',key+' timer reset');page.locator('#all-slides').click();require(page.locator('.slide:visible').count()==len(teaching[key]['slides']),key+' all slides')
         require(not js_errors,key+' deck JavaScript errors '+str(js_errors));page.close();browser_checks.append({'product':key,'report_filters':True,'disclosures_and_print_restoration':True,'mobile_page_overflow':False,'deck_navigation_notes_timer':True,'javascript_errors':js_errors})
     for name in ('index.html','comparison.html'):
-        page=browser.new_page(viewport={'width':390,'height':844});page.goto((ROOT/name).as_uri());require(page.evaluate('document.documentElement.scrollWidth<=innerWidth+1'),name+' mobile overflow');page.screenshot(path=str(ROOT/'qa/screens'/(name.replace('.html','')+'-mobile.png')));page.close()
+        page=browser.new_page(viewport={'width':390,'height':844});navigate(page,ROOT/name);require(page.evaluate('document.documentElement.scrollWidth<=innerWidth+1'),name+' mobile overflow');page.screenshot(path=str(ROOT/'qa/screens'/(name.replace('.html','')+'-mobile.png')));page.close()
     browser.close()
 
-result={'review_date':'2026-10-21','reference_checks':checks,'html_files':len(htmls),'local_links_checked':link_count,'browser_checks':browser_checks,'presentation_checks':ppt_checks,'synthetic_arithmetic':'passed' if not any('fixture' in e for e in errors) else 'failed','errors':errors,'boundary':'Structural, arithmetic and browser checks only. Presentation shape bounds do not prove absence of text overflow; visual rendering is recorded separately. No live AWS execution.'}
+result={'browser_loading':os.environ.get('HTML_LOAD_MODE','file'),'review_date':'2026-10-21','reference_checks':checks,'html_files':len(htmls),'local_links_checked':link_count,'browser_checks':browser_checks,'presentation_checks':ppt_checks,'synthetic_arithmetic':'passed' if not any('fixture' in e for e in errors) else 'failed','errors':errors,'boundary':'Structural, arithmetic and browser checks only. Presentation shape bounds do not prove absence of text overflow; visual rendering is recorded separately. No live AWS execution.'}
 (ROOT/'qa').mkdir(exist_ok=True);(ROOT/'qa/validation.json').write_text(json.dumps(result,indent=2)+'\n')
 status='passed' if not errors else 'FAILED'
 (ROOT/'VALIDATION.md').write_text(f'''# Validation record
