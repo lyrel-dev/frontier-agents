@@ -1,0 +1,23 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [{
+    "Sid": "OnlyImplementedMetadataReads",
+    "Effect": "Allow",
+    "Action": [
+      "ec2:DescribeInstances",
+      "autoscaling:DescribeAutoScalingGroups",
+      "eks:ListClusters", "eks:DescribeCluster",
+      "eks:ListNodegroups", "eks:DescribeNodegroup",
+      "eks:ListFargateProfiles", "eks:DescribeFargateProfile",
+      "ecs:ListClusters", "ecs:ListServices", "ecs:DescribeServices",
+      "ecs:ListTasks", "ecs:DescribeTasks",
+      "lambda:ListFunctions",
+      "rds:DescribeDBInstances", "rds:DescribeDBClusters",
+      "elasticloadbalancing:DescribeLoadBalancers",
+      "cloudwatch:DescribeAlarms",
+      "fis:ListActions", "fis:ListExperimentTemplates"
+    ],
+    "Resource": "*",
+    "Condition": {"StringEquals": {"aws:RequestedRegion": ["eu-central-1"]}}
+  }]
+}

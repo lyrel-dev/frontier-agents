@@ -1,0 +1,23 @@
+name: validation-console
+services:
+  console:
+    build: .
+    image: localhost/validation-console:0.1.0
+    ports:
+      - "127.0.0.1:8787:8787"
+    environment:
+      CONSOLE_DATA: /data
+      CONSOLE_CONFIG: /config/config.json
+      CONSOLE_BIND: 0.0.0.0
+      AWS_EC2_METADATA_DISABLED: "true"
+    volumes:
+      - validation_data:/data
+      - ./config.json:/config/config.json:ro
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    restart: "no"
+volumes:
+  validation_data:

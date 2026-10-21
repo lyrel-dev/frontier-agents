@@ -1,0 +1,1203 @@
+{
+  "$defs": {
+    "Assertion": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,99}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "title": {
+          "maxLength": 300,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "metric": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,99}$",
+          "title": "Metric",
+          "type": "string"
+        },
+        "operator": {
+          "enum": [
+            "lte",
+            "gte",
+            "eq"
+          ],
+          "title": "Operator",
+          "type": "string"
+        },
+        "threshold": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "maximum": 9007199254740991,
+              "minimum": -9007199254740991,
+              "type": "integer"
+            },
+            {
+              "maximum": 9007199254740991,
+              "minimum": -9007199254740991,
+              "type": "number"
+            }
+          ],
+          "title": "Threshold"
+        },
+        "unit": {
+          "maxLength": 40,
+          "minLength": 1,
+          "title": "Unit",
+          "type": "string"
+        },
+        "category": {
+          "enum": [
+            "collection",
+            "application",
+            "recovery",
+            "data",
+            "detection",
+            "response",
+            "safety"
+          ],
+          "title": "Category",
+          "type": "string"
+        },
+        "required": {
+          "default": true,
+          "title": "Required",
+          "type": "boolean"
+        },
+        "min_samples": {
+          "default": 1,
+          "maximum": 1000000000,
+          "minimum": 1,
+          "title": "Min Samples",
+          "type": "integer"
+        },
+        "max_collection_lag_seconds": {
+          "default": 300,
+          "maximum": 604800,
+          "minimum": 0,
+          "title": "Max Collection Lag Seconds",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "metric",
+        "operator",
+        "threshold",
+        "unit",
+        "category"
+      ],
+      "title": "Assertion",
+      "type": "object"
+    },
+    "CheckResult": {
+      "additionalProperties": false,
+      "properties": {
+        "assertion_id": {
+          "title": "Assertion Id",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "category": {
+          "title": "Category",
+          "type": "string"
+        },
+        "required": {
+          "title": "Required",
+          "type": "boolean"
+        },
+        "outcome": {
+          "enum": [
+            "pass",
+            "fail",
+            "inconclusive",
+            "not_assessed"
+          ],
+          "title": "Outcome",
+          "type": "string"
+        },
+        "reason": {
+          "title": "Reason",
+          "type": "string"
+        },
+        "expected": {
+          "title": "Expected",
+          "type": "string"
+        },
+        "observed": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "maximum": 9007199254740991,
+              "minimum": -9007199254740991,
+              "type": "integer"
+            },
+            {
+              "maximum": 9007199254740991,
+              "minimum": -9007199254740991,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Observed"
+        },
+        "evidence_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Evidence Ref"
+        }
+      },
+      "required": [
+        "assertion_id",
+        "title",
+        "category",
+        "required",
+        "outcome",
+        "reason",
+        "expected"
+      ],
+      "title": "CheckResult",
+      "type": "object"
+    },
+    "Coverage": {
+      "additionalProperties": false,
+      "properties": {
+        "scope": {
+          "maxLength": 300,
+          "title": "Scope",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "complete",
+            "denied",
+            "error",
+            "truncated",
+            "not_requested"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "resource_count": {
+          "minimum": 0,
+          "title": "Resource Count",
+          "type": "integer"
+        },
+        "error_code": {
+          "default": "",
+          "maxLength": 200,
+          "title": "Error Code",
+          "type": "string"
+        },
+        "detail": {
+          "default": "",
+          "maxLength": 3000,
+          "title": "Detail",
+          "type": "string"
+        }
+      },
+      "required": [
+        "scope",
+        "status",
+        "resource_count"
+      ],
+      "title": "Coverage",
+      "type": "object"
+    },
+    "EvidenceData": {
+      "additionalProperties": false,
+      "properties": {
+        "run_ref": {
+          "pattern": "^(scenario|execution_run|evidence|snapshot|validation_run|report):[A-Za-z0-9][A-Za-z0-9_.-]{0,99}@[1-9][0-9]*$",
+          "title": "Run Ref",
+          "type": "string"
+        },
+        "scope_id": {
+          "maxLength": 300,
+          "minLength": 1,
+          "title": "Scope Id",
+          "type": "string"
+        },
+        "metric": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,99}$",
+          "title": "Metric",
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "maximum": 9007199254740991,
+              "minimum": -9007199254740991,
+              "type": "integer"
+            },
+            {
+              "maximum": 9007199254740991,
+              "minimum": -9007199254740991,
+              "type": "number"
+            }
+          ],
+          "title": "Value"
+        },
+        "unit": {
+          "maxLength": 40,
+          "minLength": 1,
+          "title": "Unit",
+          "type": "string"
+        },
+        "sample_count": {
+          "maximum": 1000000000,
+          "minimum": 1,
+          "title": "Sample Count",
+          "type": "integer"
+        },
+        "window_start": {
+          "format": "date-time",
+          "title": "Window Start",
+          "type": "string"
+        },
+        "window_end": {
+          "format": "date-time",
+          "title": "Window End",
+          "type": "string"
+        },
+        "collected_at": {
+          "format": "date-time",
+          "title": "Collected At",
+          "type": "string"
+        },
+        "source": {
+          "maxLength": 2000,
+          "minLength": 1,
+          "title": "Source",
+          "type": "string"
+        },
+        "notes": {
+          "default": "",
+          "maxLength": 6000,
+          "title": "Notes",
+          "type": "string"
+        }
+      },
+      "required": [
+        "run_ref",
+        "scope_id",
+        "metric",
+        "value",
+        "unit",
+        "sample_count",
+        "window_start",
+        "window_end",
+        "collected_at",
+        "source"
+      ],
+      "title": "EvidenceData",
+      "type": "object"
+    },
+    "EvidenceRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,99}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "revision": {
+          "default": 1,
+          "maximum": 1000000,
+          "minimum": 1,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "title": {
+          "maxLength": 300,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "simulated": {
+          "default": false,
+          "title": "Simulated",
+          "type": "boolean"
+        },
+        "kind": {
+          "const": "evidence",
+          "title": "Kind",
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/$defs/EvidenceData"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "kind",
+        "data"
+      ],
+      "title": "EvidenceRecord",
+      "type": "object"
+    },
+    "ReportData": {
+      "additionalProperties": false,
+      "properties": {
+        "validation_ref": {
+          "anyOf": [
+            {
+              "pattern": "^(scenario|execution_run|evidence|snapshot|validation_run|report):[A-Za-z0-9][A-Za-z0-9_.-]{0,99}@[1-9][0-9]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Validation Ref"
+        },
+        "outcome": {
+          "enum": [
+            "pass",
+            "fail",
+            "inconclusive",
+            "not_assessed"
+          ],
+          "title": "Outcome",
+          "type": "string"
+        },
+        "body": {
+          "maxLength": 40000,
+          "title": "Body",
+          "type": "string"
+        },
+        "limitations": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 50,
+          "title": "Limitations",
+          "type": "array"
+        },
+        "generated_at": {
+          "format": "date-time",
+          "title": "Generated At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "outcome",
+        "body",
+        "generated_at"
+      ],
+      "title": "ReportData",
+      "type": "object"
+    },
+    "ReportRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,99}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "revision": {
+          "default": 1,
+          "maximum": 1000000,
+          "minimum": 1,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "title": {
+          "maxLength": 300,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "simulated": {
+          "default": false,
+          "title": "Simulated",
+          "type": "boolean"
+        },
+        "kind": {
+          "const": "report",
+          "title": "Kind",
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/$defs/ReportData"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "kind",
+        "data"
+      ],
+      "title": "ReportRecord",
+      "type": "object"
+    },
+    "Resource": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "maxLength": 2000,
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "maxLength": 1000,
+          "title": "Name",
+          "type": "string"
+        },
+        "provider": {
+          "enum": [
+            "aws",
+            "docker",
+            "podman",
+            "kubernetes"
+          ],
+          "title": "Provider",
+          "type": "string"
+        },
+        "model": {
+          "enum": [
+            "ec2",
+            "eks-ec2",
+            "eks-fargate",
+            "ecs-ec2",
+            "ecs-fargate",
+            "lambda",
+            "docker",
+            "podman",
+            "kubernetes",
+            "shared"
+          ],
+          "title": "Model",
+          "type": "string"
+        },
+        "kind": {
+          "maxLength": 100,
+          "title": "Kind",
+          "type": "string"
+        },
+        "location": {
+          "default": "",
+          "maxLength": 500,
+          "title": "Location",
+          "type": "string"
+        },
+        "state": {
+          "default": "unknown",
+          "maxLength": 150,
+          "title": "State",
+          "type": "string"
+        },
+        "facts": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "title": "Facts",
+          "type": "object"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "provider",
+        "model",
+        "kind"
+      ],
+      "title": "Resource",
+      "type": "object"
+    },
+    "RunData": {
+      "additionalProperties": false,
+      "properties": {
+        "scenario_ref": {
+          "pattern": "^(scenario|execution_run|evidence|snapshot|validation_run|report):[A-Za-z0-9][A-Za-z0-9_.-]{0,99}@[1-9][0-9]*$",
+          "title": "Scenario Ref",
+          "type": "string"
+        },
+        "snapshot_ref": {
+          "anyOf": [
+            {
+              "pattern": "^(scenario|execution_run|evidence|snapshot|validation_run|report):[A-Za-z0-9][A-Za-z0-9_.-]{0,99}@[1-9][0-9]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Snapshot Ref"
+        },
+        "execution_type": {
+          "enum": [
+            "observation",
+            "external",
+            "simulated"
+          ],
+          "title": "Execution Type",
+          "type": "string"
+        },
+        "execution_state": {
+          "enum": [
+            "planned",
+            "running",
+            "completed",
+            "failed",
+            "aborted"
+          ],
+          "title": "Execution State",
+          "type": "string"
+        },
+        "scope_id": {
+          "maxLength": 300,
+          "minLength": 1,
+          "title": "Scope Id",
+          "type": "string"
+        },
+        "targets": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 1000,
+          "title": "Targets",
+          "type": "array"
+        },
+        "started_at": {
+          "format": "date-time",
+          "title": "Started At",
+          "type": "string"
+        },
+        "ended_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Ended At"
+        },
+        "fault_confirmed": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fault Confirmed"
+        },
+        "external_id": {
+          "anyOf": [
+            {
+              "maxLength": 300,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "External Id"
+        },
+        "notes": {
+          "default": "",
+          "maxLength": 12000,
+          "title": "Notes",
+          "type": "string"
+        }
+      },
+      "required": [
+        "scenario_ref",
+        "execution_type",
+        "execution_state",
+        "scope_id",
+        "started_at"
+      ],
+      "title": "RunData",
+      "type": "object"
+    },
+    "RunRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,99}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "revision": {
+          "default": 1,
+          "maximum": 1000000,
+          "minimum": 1,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "title": {
+          "maxLength": 300,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "simulated": {
+          "default": false,
+          "title": "Simulated",
+          "type": "boolean"
+        },
+        "kind": {
+          "const": "execution_run",
+          "title": "Kind",
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/$defs/RunData"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "kind",
+        "data"
+      ],
+      "title": "RunRecord",
+      "type": "object"
+    },
+    "ScenarioData": {
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "default": "draft",
+          "enum": [
+            "draft",
+            "specified"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "models": {
+          "items": {
+            "enum": [
+              "ec2",
+              "eks-ec2",
+              "eks-fargate",
+              "ecs-ec2",
+              "ecs-fargate",
+              "lambda",
+              "docker",
+              "podman",
+              "kubernetes",
+              "shared"
+            ],
+            "type": "string"
+          },
+          "maxItems": 10,
+          "minItems": 1,
+          "title": "Models",
+          "type": "array"
+        },
+        "domain": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Domain",
+          "type": "string"
+        },
+        "hypothesis": {
+          "maxLength": 3000,
+          "minLength": 1,
+          "title": "Hypothesis",
+          "type": "string"
+        },
+        "procedure": {
+          "maxLength": 12000,
+          "minLength": 1,
+          "title": "Procedure",
+          "type": "string"
+        },
+        "fault_mode": {
+          "default": "external",
+          "enum": [
+            "none",
+            "fis",
+            "external",
+            "local"
+          ],
+          "title": "Fault Mode",
+          "type": "string"
+        },
+        "action": {
+          "default": "",
+          "maxLength": 500,
+          "title": "Action",
+          "type": "string"
+        },
+        "evidence_required": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 50,
+          "title": "Evidence Required",
+          "type": "array"
+        },
+        "acceptance": {
+          "default": "",
+          "maxLength": 6000,
+          "title": "Acceptance",
+          "type": "string"
+        },
+        "recovery": {
+          "default": "",
+          "maxLength": 6000,
+          "title": "Recovery",
+          "type": "string"
+        },
+        "limitations": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 50,
+          "title": "Limitations",
+          "type": "array"
+        },
+        "source_urls": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 20,
+          "title": "Source Urls",
+          "type": "array"
+        },
+        "assertions": {
+          "items": {
+            "$ref": "#/$defs/Assertion"
+          },
+          "maxItems": 50,
+          "title": "Assertions",
+          "type": "array"
+        }
+      },
+      "required": [
+        "models",
+        "domain",
+        "hypothesis",
+        "procedure"
+      ],
+      "title": "ScenarioData",
+      "type": "object"
+    },
+    "ScenarioRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,99}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "revision": {
+          "default": 1,
+          "maximum": 1000000,
+          "minimum": 1,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "title": {
+          "maxLength": 300,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "simulated": {
+          "default": false,
+          "title": "Simulated",
+          "type": "boolean"
+        },
+        "kind": {
+          "const": "scenario",
+          "title": "Kind",
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/$defs/ScenarioData"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "kind",
+        "data"
+      ],
+      "title": "ScenarioRecord",
+      "type": "object"
+    },
+    "SnapshotData": {
+      "additionalProperties": false,
+      "properties": {
+        "connection_id": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,99}$",
+          "title": "Connection Id",
+          "type": "string"
+        },
+        "connector": {
+          "enum": [
+            "aws",
+            "docker",
+            "podman",
+            "kubernetes"
+          ],
+          "title": "Connector",
+          "type": "string"
+        },
+        "scope_id": {
+          "maxLength": 300,
+          "minLength": 1,
+          "title": "Scope Id",
+          "type": "string"
+        },
+        "identity": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Identity",
+          "type": "object"
+        },
+        "started_at": {
+          "format": "date-time",
+          "title": "Started At",
+          "type": "string"
+        },
+        "ended_at": {
+          "format": "date-time",
+          "title": "Ended At",
+          "type": "string"
+        },
+        "requested_scope": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 100,
+          "title": "Requested Scope",
+          "type": "array"
+        },
+        "coverage": {
+          "items": {
+            "$ref": "#/$defs/Coverage"
+          },
+          "maxItems": 500,
+          "title": "Coverage",
+          "type": "array"
+        },
+        "resources": {
+          "items": {
+            "$ref": "#/$defs/Resource"
+          },
+          "maxItems": 20000,
+          "title": "Resources",
+          "type": "array"
+        },
+        "limitations": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 50,
+          "title": "Limitations",
+          "type": "array"
+        }
+      },
+      "required": [
+        "connection_id",
+        "connector",
+        "scope_id",
+        "started_at",
+        "ended_at"
+      ],
+      "title": "SnapshotData",
+      "type": "object"
+    },
+    "SnapshotRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,99}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "revision": {
+          "default": 1,
+          "maximum": 1000000,
+          "minimum": 1,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "title": {
+          "maxLength": 300,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "simulated": {
+          "default": false,
+          "title": "Simulated",
+          "type": "boolean"
+        },
+        "kind": {
+          "const": "snapshot",
+          "title": "Kind",
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/$defs/SnapshotData"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "kind",
+        "data"
+      ],
+      "title": "SnapshotRecord",
+      "type": "object"
+    },
+    "ValidationData": {
+      "additionalProperties": false,
+      "properties": {
+        "run_ref": {
+          "pattern": "^(scenario|execution_run|evidence|snapshot|validation_run|report):[A-Za-z0-9][A-Za-z0-9_.-]{0,99}@[1-9][0-9]*$",
+          "title": "Run Ref",
+          "type": "string"
+        },
+        "scenario_ref": {
+          "pattern": "^(scenario|execution_run|evidence|snapshot|validation_run|report):[A-Za-z0-9][A-Za-z0-9_.-]{0,99}@[1-9][0-9]*$",
+          "title": "Scenario Ref",
+          "type": "string"
+        },
+        "evaluator_version": {
+          "maxLength": 80,
+          "title": "Evaluator Version",
+          "type": "string"
+        },
+        "evaluated_at": {
+          "format": "date-time",
+          "title": "Evaluated At",
+          "type": "string"
+        },
+        "outcome": {
+          "enum": [
+            "pass",
+            "fail",
+            "inconclusive",
+            "not_assessed"
+          ],
+          "title": "Outcome",
+          "type": "string"
+        },
+        "checks": {
+          "items": {
+            "$ref": "#/$defs/CheckResult"
+          },
+          "maxItems": 50,
+          "title": "Checks",
+          "type": "array"
+        },
+        "gates": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 50,
+          "title": "Gates",
+          "type": "array"
+        },
+        "input_hashes": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Input Hashes",
+          "type": "object"
+        },
+        "limitations": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 50,
+          "title": "Limitations",
+          "type": "array"
+        }
+      },
+      "required": [
+        "run_ref",
+        "scenario_ref",
+        "evaluator_version",
+        "evaluated_at",
+        "outcome"
+      ],
+      "title": "ValidationData",
+      "type": "object"
+    },
+    "ValidationRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,99}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "revision": {
+          "default": 1,
+          "maximum": 1000000,
+          "minimum": 1,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "title": {
+          "maxLength": 300,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "simulated": {
+          "default": false,
+          "title": "Simulated",
+          "type": "boolean"
+        },
+        "kind": {
+          "const": "validation_run",
+          "title": "Kind",
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/$defs/ValidationData"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "kind",
+        "data"
+      ],
+      "title": "ValidationRecord",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "kind": {
+      "const": "validation_bundle",
+      "default": "validation_bundle",
+      "title": "Kind",
+      "type": "string"
+    },
+    "records": {
+      "items": {
+        "discriminator": {
+          "mapping": {
+            "evidence": "#/$defs/EvidenceRecord",
+            "execution_run": "#/$defs/RunRecord",
+            "report": "#/$defs/ReportRecord",
+            "scenario": "#/$defs/ScenarioRecord",
+            "snapshot": "#/$defs/SnapshotRecord",
+            "validation_run": "#/$defs/ValidationRecord"
+          },
+          "propertyName": "kind"
+        },
+        "oneOf": [
+          {
+            "$ref": "#/$defs/ScenarioRecord"
+          },
+          {
+            "$ref": "#/$defs/RunRecord"
+          },
+          {
+            "$ref": "#/$defs/EvidenceRecord"
+          },
+          {
+            "$ref": "#/$defs/SnapshotRecord"
+          },
+          {
+            "$ref": "#/$defs/ValidationRecord"
+          },
+          {
+            "$ref": "#/$defs/ReportRecord"
+          }
+        ]
+      },
+      "maxItems": 5000,
+      "minItems": 1,
+      "title": "Records",
+      "type": "array"
+    },
+    "manifest": {
+      "anyOf": [
+        {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Manifest"
+    }
+  },
+  "required": [
+    "records"
+  ],
+  "title": "Bundle",
+  "type": "object"
+}

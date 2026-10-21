@@ -1,0 +1,673 @@
+{
+  "schema_version": "1.0",
+  "kind": "validation_bundle",
+  "records": [
+    {
+      "id": "EXAMPLE-RECOVERY",
+      "revision": 1,
+      "title": "Example only \u00b7 interrupted checkout worker",
+      "simulated": true,
+      "kind": "scenario",
+      "data": {
+        "status": "specified",
+        "models": [
+          "ecs-fargate"
+        ],
+        "domain": "Illustrative incident",
+        "hypothesis": "During this fictional test, error ratio, detection time and recovery time stay within the example limits, and transaction reconciliation finds no duplicates.",
+        "procedure": "This fixture contains invented measurements for UI and evaluator testing. It is not an executable experiment or a recommendation for production thresholds.",
+        "fault_mode": "external",
+        "action": "Illustrative task interruption; no API call is performed.",
+        "evidence_required": [
+          "Requests and errors over the declared interval.",
+          "Detection and recovery timestamps.",
+          "Transaction reconciliation."
+        ],
+        "acceptance": "All four required assertions must pass. Missing evidence makes the affected assertion inconclusive.",
+        "recovery": "No real resources were changed.",
+        "limitations": [
+          "All limits and observations in this scenario are synthetic."
+        ],
+        "source_urls": [],
+        "assertions": [
+          {
+            "id": "request-errors",
+            "title": "Request error ratio",
+            "metric": "request_error_ratio",
+            "operator": "lte",
+            "threshold": 0.01,
+            "unit": "ratio",
+            "category": "application",
+            "required": true,
+            "min_samples": 100,
+            "max_collection_lag_seconds": 300
+          },
+          {
+            "id": "detect",
+            "title": "Time to detection",
+            "metric": "detection_seconds",
+            "operator": "lte",
+            "threshold": 60,
+            "unit": "seconds",
+            "category": "detection",
+            "required": true,
+            "min_samples": 1,
+            "max_collection_lag_seconds": 300
+          },
+          {
+            "id": "restore",
+            "title": "Time to stable recovery",
+            "metric": "recovery_seconds",
+            "operator": "lte",
+            "threshold": 180,
+            "unit": "seconds",
+            "category": "recovery",
+            "required": true,
+            "min_samples": 1,
+            "max_collection_lag_seconds": 300
+          },
+          {
+            "id": "duplicates",
+            "title": "Duplicate business effects",
+            "metric": "duplicate_transactions",
+            "operator": "eq",
+            "threshold": 0,
+            "unit": "transactions",
+            "category": "data",
+            "required": true,
+            "min_samples": 100,
+            "max_collection_lag_seconds": 300
+          }
+        ]
+      }
+    },
+    {
+      "id": "example-run-1",
+      "revision": 1,
+      "title": "Example 1 \u00b7 checkout interruption",
+      "simulated": true,
+      "kind": "execution_run",
+      "data": {
+        "scenario_ref": "scenario:EXAMPLE-RECOVERY@1",
+        "snapshot_ref": null,
+        "execution_type": "simulated",
+        "execution_state": "completed",
+        "scope_id": "example:checkout",
+        "targets": [
+          "fictional-worker-1"
+        ],
+        "started_at": "2026-10-21T08:00:00Z",
+        "ended_at": "2026-10-21T08:05:00Z",
+        "fault_confirmed": true,
+        "external_id": "fixture-1",
+        "notes": "Synthetic fixture. No account, runtime or responder was tested."
+      }
+    },
+    {
+      "id": "example-1-request_error_ratio",
+      "revision": 1,
+      "title": "Request error ratio \u00b7 example 1",
+      "simulated": true,
+      "kind": "evidence",
+      "data": {
+        "run_ref": "execution_run:example-run-1@1",
+        "scope_id": "example:checkout",
+        "metric": "request_error_ratio",
+        "value": 0.006,
+        "unit": "ratio",
+        "sample_count": 10000,
+        "window_start": "2026-10-21T08:00:00Z",
+        "window_end": "2026-10-21T08:05:00Z",
+        "collected_at": "2026-10-21T08:05:00Z",
+        "source": "synthetic fixture, not telemetry",
+        "notes": "Invented data for interface and evaluation tests."
+      }
+    },
+    {
+      "id": "example-1-detection_seconds",
+      "revision": 1,
+      "title": "Time to detection \u00b7 example 1",
+      "simulated": true,
+      "kind": "evidence",
+      "data": {
+        "run_ref": "execution_run:example-run-1@1",
+        "scope_id": "example:checkout",
+        "metric": "detection_seconds",
+        "value": 42,
+        "unit": "seconds",
+        "sample_count": 1,
+        "window_start": "2026-10-21T08:00:00Z",
+        "window_end": "2026-10-21T08:05:00Z",
+        "collected_at": "2026-10-21T08:05:00Z",
+        "source": "synthetic fixture, not telemetry",
+        "notes": "Invented data for interface and evaluation tests."
+      }
+    },
+    {
+      "id": "example-1-recovery_seconds",
+      "revision": 1,
+      "title": "Time to stable recovery \u00b7 example 1",
+      "simulated": true,
+      "kind": "evidence",
+      "data": {
+        "run_ref": "execution_run:example-run-1@1",
+        "scope_id": "example:checkout",
+        "metric": "recovery_seconds",
+        "value": 240,
+        "unit": "seconds",
+        "sample_count": 1,
+        "window_start": "2026-10-21T08:00:00Z",
+        "window_end": "2026-10-21T08:05:00Z",
+        "collected_at": "2026-10-21T08:05:00Z",
+        "source": "synthetic fixture, not telemetry",
+        "notes": "Invented data for interface and evaluation tests."
+      }
+    },
+    {
+      "id": "example-run-2",
+      "revision": 1,
+      "title": "Example 2 \u00b7 checkout interruption",
+      "simulated": true,
+      "kind": "execution_run",
+      "data": {
+        "scenario_ref": "scenario:EXAMPLE-RECOVERY@1",
+        "snapshot_ref": null,
+        "execution_type": "simulated",
+        "execution_state": "completed",
+        "scope_id": "example:checkout",
+        "targets": [
+          "fictional-worker-1"
+        ],
+        "started_at": "2026-10-21T09:00:00Z",
+        "ended_at": "2026-10-21T09:05:00Z",
+        "fault_confirmed": true,
+        "external_id": "fixture-2",
+        "notes": "Synthetic fixture. No account, runtime or responder was tested."
+      }
+    },
+    {
+      "id": "example-2-request_error_ratio",
+      "revision": 1,
+      "title": "Request error ratio \u00b7 example 2",
+      "simulated": true,
+      "kind": "evidence",
+      "data": {
+        "run_ref": "execution_run:example-run-2@1",
+        "scope_id": "example:checkout",
+        "metric": "request_error_ratio",
+        "value": 0.004,
+        "unit": "ratio",
+        "sample_count": 10000,
+        "window_start": "2026-10-21T09:00:00Z",
+        "window_end": "2026-10-21T09:05:00Z",
+        "collected_at": "2026-10-21T09:05:00Z",
+        "source": "synthetic fixture, not telemetry",
+        "notes": "Invented data for interface and evaluation tests."
+      }
+    },
+    {
+      "id": "example-2-recovery_seconds",
+      "revision": 1,
+      "title": "Time to stable recovery \u00b7 example 2",
+      "simulated": true,
+      "kind": "evidence",
+      "data": {
+        "run_ref": "execution_run:example-run-2@1",
+        "scope_id": "example:checkout",
+        "metric": "recovery_seconds",
+        "value": 150,
+        "unit": "seconds",
+        "sample_count": 1,
+        "window_start": "2026-10-21T09:00:00Z",
+        "window_end": "2026-10-21T09:05:00Z",
+        "collected_at": "2026-10-21T09:05:00Z",
+        "source": "synthetic fixture, not telemetry",
+        "notes": "Invented data for interface and evaluation tests."
+      }
+    },
+    {
+      "id": "example-2-duplicate_transactions",
+      "revision": 1,
+      "title": "Duplicate business effects \u00b7 example 2",
+      "simulated": true,
+      "kind": "evidence",
+      "data": {
+        "run_ref": "execution_run:example-run-2@1",
+        "scope_id": "example:checkout",
+        "metric": "duplicate_transactions",
+        "value": 0,
+        "unit": "transactions",
+        "sample_count": 10000,
+        "window_start": "2026-10-21T09:00:00Z",
+        "window_end": "2026-10-21T09:05:00Z",
+        "collected_at": "2026-10-21T09:05:00Z",
+        "source": "synthetic fixture, not telemetry",
+        "notes": "Invented data for interface and evaluation tests."
+      }
+    },
+    {
+      "id": "example-aws",
+      "revision": 1,
+      "title": "Example AWS inspection \u00b7 synthetic",
+      "simulated": true,
+      "kind": "snapshot",
+      "data": {
+        "connection_id": "example-aws",
+        "connector": "aws",
+        "scope_id": "example:aws",
+        "identity": {
+          "account_id": "123456789012",
+          "principal_arn": "arn:aws:iam::123456789012:role/EXAMPLE-NOT-CONNECTED"
+        },
+        "started_at": "2026-10-21T07:50:00Z",
+        "ended_at": "2026-10-21T07:50:10Z",
+        "requested_scope": [
+          "eu-central-1/compute",
+          "eu-central-1/rds",
+          "eu-central-1/cloudwatch"
+        ],
+        "coverage": [
+          {
+            "scope": "eu-central-1/compute",
+            "status": "complete",
+            "resource_count": 6,
+            "error_code": "",
+            "detail": "Synthetic example."
+          },
+          {
+            "scope": "eu-central-1/rds",
+            "status": "complete",
+            "resource_count": 1,
+            "error_code": "",
+            "detail": "Synthetic example."
+          },
+          {
+            "scope": "eu-central-1/cloudwatch",
+            "status": "denied",
+            "resource_count": 0,
+            "error_code": "AccessDenied",
+            "detail": "Example of a visible collection gap; no real API was called."
+          }
+        ],
+        "resources": [
+          {
+            "id": "i-example01",
+            "name": "Example API host",
+            "provider": "aws",
+            "model": "ec2",
+            "kind": "EC2 instance",
+            "location": "eu-central-1",
+            "state": "running",
+            "facts": {
+              "zone": "eu-central-1a",
+              "instance_type": "example"
+            }
+          },
+          {
+            "id": "example-ng",
+            "name": "Example EKS node group",
+            "provider": "aws",
+            "model": "eks-ec2",
+            "kind": "EKS managed node group",
+            "location": "eu-central-1",
+            "state": "ACTIVE",
+            "facts": {
+              "desired": 3
+            }
+          },
+          {
+            "id": "example-fp",
+            "name": "Example EKS Fargate profile",
+            "provider": "aws",
+            "model": "eks-fargate",
+            "kind": "EKS Fargate profile",
+            "location": "eu-central-1",
+            "state": "ACTIVE",
+            "facts": {
+              "namespaces": [
+                "example"
+              ]
+            }
+          },
+          {
+            "id": "example-ecs-ec2",
+            "name": "Example queue worker",
+            "provider": "aws",
+            "model": "ecs-ec2",
+            "kind": "ECS running task",
+            "location": "eu-central-1",
+            "state": "RUNNING",
+            "facts": {
+              "launch_type": "EC2"
+            }
+          },
+          {
+            "id": "example-ecs-fargate",
+            "name": "Example checkout service",
+            "provider": "aws",
+            "model": "ecs-fargate",
+            "kind": "ECS service",
+            "location": "eu-central-1",
+            "state": "ACTIVE",
+            "facts": {
+              "desired": 3,
+              "running": 3
+            }
+          },
+          {
+            "id": "example-lambda",
+            "name": "Example receipt handler",
+            "provider": "aws",
+            "model": "lambda",
+            "kind": "Lambda function",
+            "location": "eu-central-1",
+            "state": "listed",
+            "facts": {
+              "memory_mb": 256
+            }
+          },
+          {
+            "id": "example-rds",
+            "name": "Example orders database",
+            "provider": "aws",
+            "model": "shared",
+            "kind": "RDS instance",
+            "location": "eu-central-1",
+            "state": "available",
+            "facts": {
+              "multi_az": true
+            }
+          }
+        ],
+        "limitations": [
+          "All resource identifiers and statuses are invented."
+        ]
+      }
+    },
+    {
+      "id": "example-docker",
+      "revision": 1,
+      "title": "Example docker inspection \u00b7 synthetic",
+      "simulated": true,
+      "kind": "snapshot",
+      "data": {
+        "connection_id": "example-docker",
+        "connector": "docker",
+        "scope_id": "example:docker",
+        "identity": {
+          "engine": "docker"
+        },
+        "started_at": "2026-10-21T07:55:00Z",
+        "ended_at": "2026-10-21T07:55:01Z",
+        "requested_scope": [
+          "example-resources"
+        ],
+        "coverage": [
+          {
+            "scope": "example-resources",
+            "status": "complete",
+            "resource_count": 2,
+            "error_code": "",
+            "detail": "Synthetic example."
+          }
+        ],
+        "resources": [
+          {
+            "id": "example-docker-1",
+            "name": "Example validation service",
+            "provider": "docker",
+            "model": "docker",
+            "kind": "Container",
+            "location": "local example",
+            "state": "running",
+            "facts": {
+              "image": "validation-console:example"
+            }
+          },
+          {
+            "id": "example-docker-data",
+            "name": "Example evidence volume",
+            "provider": "docker",
+            "model": "docker",
+            "kind": "Volume",
+            "location": "local example",
+            "state": "listed",
+            "facts": {
+              "driver": "local"
+            }
+          }
+        ],
+        "limitations": [
+          "No local runtime was inspected."
+        ]
+      }
+    },
+    {
+      "id": "example-kubernetes",
+      "revision": 1,
+      "title": "Example kubernetes inspection \u00b7 synthetic",
+      "simulated": true,
+      "kind": "snapshot",
+      "data": {
+        "connection_id": "example-kubernetes",
+        "connector": "kubernetes",
+        "scope_id": "example:kubernetes",
+        "identity": {
+          "engine": "kubernetes"
+        },
+        "started_at": "2026-10-21T07:55:00Z",
+        "ended_at": "2026-10-21T07:55:01Z",
+        "requested_scope": [
+          "example-resources"
+        ],
+        "coverage": [
+          {
+            "scope": "example-resources",
+            "status": "complete",
+            "resource_count": 2,
+            "error_code": "",
+            "detail": "Synthetic example."
+          }
+        ],
+        "resources": [
+          {
+            "id": "example-kubernetes-1",
+            "name": "Example validation service",
+            "provider": "kubernetes",
+            "model": "kubernetes",
+            "kind": "Deployment",
+            "location": "local example",
+            "state": "observed",
+            "facts": {
+              "desired": 1,
+              "ready": 1
+            }
+          },
+          {
+            "id": "example-kubernetes-data",
+            "name": "Example evidence volume",
+            "provider": "kubernetes",
+            "model": "kubernetes",
+            "kind": "PersistentVolumeClaim",
+            "location": "local example",
+            "state": "Bound",
+            "facts": {
+              "access_modes": [
+                "ReadWriteOnce"
+              ]
+            }
+          }
+        ],
+        "limitations": [
+          "No local runtime was inspected."
+        ]
+      }
+    },
+    {
+      "id": "example-validation-1",
+      "revision": 1,
+      "title": "Validation \u00b7 Example 1 \u00b7 checkout interruption",
+      "simulated": true,
+      "kind": "validation_run",
+      "data": {
+        "run_ref": "execution_run:example-run-1@1",
+        "scenario_ref": "scenario:EXAMPLE-RECOVERY@1",
+        "evaluator_version": "scalar-1.0",
+        "evaluated_at": "2026-10-21T10:00:00Z",
+        "outcome": "fail",
+        "checks": [
+          {
+            "assertion_id": "request-errors",
+            "title": "Request error ratio",
+            "category": "application",
+            "required": true,
+            "outcome": "pass",
+            "reason": "The supplied value satisfies the assertion.",
+            "expected": "lte 0.01 ratio; at least 100 samples",
+            "observed": 0.006,
+            "evidence_ref": "evidence:example-1-request_error_ratio@1"
+          },
+          {
+            "assertion_id": "detect",
+            "title": "Time to detection",
+            "category": "detection",
+            "required": true,
+            "outcome": "pass",
+            "reason": "The supplied value satisfies the assertion.",
+            "expected": "lte 60 seconds; at least 1 samples",
+            "observed": 42,
+            "evidence_ref": "evidence:example-1-detection_seconds@1"
+          },
+          {
+            "assertion_id": "restore",
+            "title": "Time to stable recovery",
+            "category": "recovery",
+            "required": true,
+            "outcome": "fail",
+            "reason": "The supplied value exceeds or differs from the accepted limit.",
+            "expected": "lte 180 seconds; at least 1 samples",
+            "observed": 240,
+            "evidence_ref": "evidence:example-1-recovery_seconds@1"
+          },
+          {
+            "assertion_id": "duplicates",
+            "title": "Duplicate business effects",
+            "category": "data",
+            "required": true,
+            "outcome": "inconclusive",
+            "reason": "No evidence for this metric.",
+            "expected": "eq 0 transactions; at least 100 samples",
+            "observed": null,
+            "evidence_ref": null
+          }
+        ],
+        "gates": [],
+        "input_hashes": {
+          "execution_run:example-run-1@1": "d1d1495fb8d746e3ab5530b6145362338ed75cc3ec327a01c8a10ad2b9211f5d",
+          "scenario:EXAMPLE-RECOVERY@1": "5171ea37e9f377998302d701bc239e3c7ea8d433d748906b28a68e2bce16aded",
+          "evidence:example-1-detection_seconds@1": "5b29ce74726fc59d12c21a969e2624e9213ecebb2ec6f7cb66447c47e52095fa",
+          "evidence:example-1-recovery_seconds@1": "45d86849c21ddc9c198144cc1e8f7bea87002a84e99a206db2e3c7497f3aadb7",
+          "evidence:example-1-request_error_ratio@1": "6fd422cccdd6b1793285782e2832725846f7b5d7fd452cbea49388cea8c81a06"
+        },
+        "limitations": [
+          "This result covers only the stated assertions and time interval; it is not a deployment-readiness certificate.",
+          "Scalar measurements and sample counts are supplied by collectors or importers; this evaluator does not independently reconstruct them from raw telemetry.",
+          "Content hashes support consistency checks, not proof of who produced the evidence.",
+          "SIMULATED DATA. This validation says nothing about an actual AWS account or local runtime."
+        ]
+      }
+    },
+    {
+      "id": "example-validation-2",
+      "revision": 1,
+      "title": "Validation \u00b7 Example 2 \u00b7 checkout interruption",
+      "simulated": true,
+      "kind": "validation_run",
+      "data": {
+        "run_ref": "execution_run:example-run-2@1",
+        "scenario_ref": "scenario:EXAMPLE-RECOVERY@1",
+        "evaluator_version": "scalar-1.0",
+        "evaluated_at": "2026-10-21T10:00:00Z",
+        "outcome": "inconclusive",
+        "checks": [
+          {
+            "assertion_id": "request-errors",
+            "title": "Request error ratio",
+            "category": "application",
+            "required": true,
+            "outcome": "pass",
+            "reason": "The supplied value satisfies the assertion.",
+            "expected": "lte 0.01 ratio; at least 100 samples",
+            "observed": 0.004,
+            "evidence_ref": "evidence:example-2-request_error_ratio@1"
+          },
+          {
+            "assertion_id": "detect",
+            "title": "Time to detection",
+            "category": "detection",
+            "required": true,
+            "outcome": "inconclusive",
+            "reason": "No evidence for this metric.",
+            "expected": "lte 60 seconds; at least 1 samples",
+            "observed": null,
+            "evidence_ref": null
+          },
+          {
+            "assertion_id": "restore",
+            "title": "Time to stable recovery",
+            "category": "recovery",
+            "required": true,
+            "outcome": "pass",
+            "reason": "The supplied value satisfies the assertion.",
+            "expected": "lte 180 seconds; at least 1 samples",
+            "observed": 150,
+            "evidence_ref": "evidence:example-2-recovery_seconds@1"
+          },
+          {
+            "assertion_id": "duplicates",
+            "title": "Duplicate business effects",
+            "category": "data",
+            "required": true,
+            "outcome": "pass",
+            "reason": "The supplied value satisfies the assertion.",
+            "expected": "eq 0 transactions; at least 100 samples",
+            "observed": 0,
+            "evidence_ref": "evidence:example-2-duplicate_transactions@1"
+          }
+        ],
+        "gates": [],
+        "input_hashes": {
+          "execution_run:example-run-2@1": "4e0447b61678a3cf5983ad4df0d9c08fe540788e876095d147a030df95d0c517",
+          "scenario:EXAMPLE-RECOVERY@1": "5171ea37e9f377998302d701bc239e3c7ea8d433d748906b28a68e2bce16aded",
+          "evidence:example-2-duplicate_transactions@1": "8261f7770b2f2c4821c1f25dfe8e93fbada09c08930286d83d4d4f4b7fe5cc9d",
+          "evidence:example-2-recovery_seconds@1": "990ea4891d455cda793bdee0aa001abef97d003d1347599ead824a19763bbd34",
+          "evidence:example-2-request_error_ratio@1": "0a82254416b1baa55acb6df4f83969695440092b74c8673f18aeb0f65805e7f3"
+        },
+        "limitations": [
+          "This result covers only the stated assertions and time interval; it is not a deployment-readiness certificate.",
+          "Scalar measurements and sample counts are supplied by collectors or importers; this evaluator does not independently reconstruct them from raw telemetry.",
+          "Content hashes support consistency checks, not proof of who produced the evidence.",
+          "SIMULATED DATA. This validation says nothing about an actual AWS account or local runtime."
+        ]
+      }
+    },
+    {
+      "id": "example-report",
+      "revision": 1,
+      "title": "Example report \u00b7 incomplete recovery evidence",
+      "simulated": true,
+      "kind": "report",
+      "data": {
+        "validation_ref": "validation_run:example-validation-1@1",
+        "outcome": "fail",
+        "body": "Synthetic test: recovery took 240 seconds against the illustrative limit of 180. The request-error and detection assertions passed. Transaction-reconciliation evidence was absent. The known recovery failure is retained; missing data is not treated as a pass.",
+        "limitations": [
+          "All measurements are synthetic. No deployment or incident team was evaluated.",
+          "A failed assertion and an inconclusive assertion are different findings."
+        ],
+        "generated_at": "2026-10-21T10:01:00Z"
+      }
+    }
+  ],
+  "manifest": null
+}

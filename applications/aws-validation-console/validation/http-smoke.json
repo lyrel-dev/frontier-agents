@@ -1,0 +1,39 @@
+{
+  "checks": 8,
+  "passed": 8,
+  "scope": "Real uvicorn process and loopback HTTP; temporary local database. No AWS, engine or Kubernetes access.",
+  "results": [
+    {
+      "name": "actual HTTP serves single-file page",
+      "result": "pass"
+    },
+    {
+      "name": "actual HTTP sends hashed CSP",
+      "result": "pass"
+    },
+    {
+      "name": "actual HTTP rejects unauthenticated workspace",
+      "result": "pass"
+    },
+    {
+      "name": "actual HTTP starts with catalogue",
+      "result": "pass"
+    },
+    {
+      "name": "actual HTTP imports synthetic records",
+      "result": "pass"
+    },
+    {
+      "name": "actual HTTP exports integrity manifest",
+      "result": "pass"
+    },
+    {
+      "name": "record hashes survive real process restart",
+      "result": "pass"
+    },
+    {
+      "name": "actual HTTP serves SQLite backup",
+      "result": "pass"
+    }
+  ]
+}
