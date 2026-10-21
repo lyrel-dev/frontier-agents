@@ -1,46 +1,32 @@
-# Frontier agents — engineering field guides
+# AWS agents — engineering reference
 
-Detailed, source-linked interactive reports and timed presentations. Download or clone the repository and open `index.html` in a browser. No server, build step or external JavaScript is needed to read the generated reports. GitHub file previews do not execute the report HTML; repository publication is not a GitHub Pages deployment.
+This is a replacement of the earlier narrative-led collection, not a format patch. The current scope is AWS DevOps Agent, AWS Security Agent and AWS FinOps Agent.
 
-| Guide | Interactive report | Presentation | Timing |
-|---|---|---|---|
-| AWS DevOps Agent | [Report](devops/validated-report.html) | [PowerPoint](presentations/aws-devops-agent-presentation.pptx) | 35 min / 12 min demo |
-| AWS Security Agent | [Report](security/report.html) | [PowerPoint](presentations/aws-security-agent-presentation.pptx) | 30 min / 8 min demo |
-| AWS FinOps Agent | [Report](finops/report.html) | [PowerPoint](presentations/aws-finops-agent-presentation.pptx) | 27 min / 7 min demo |
-| Common architectural patterns | [Report](architecture/common-patterns.html) | [PowerPoint](presentations/aws-frontier-agents-common-architecture-presentation.pptx) | 36 min / 8 min demo |
+Open `index.html` after cloning the repository. The reports and browser presentations are self-contained and require no server. GitHub previews display source; this is not a GitHub Pages deployment.
 
-Each guide includes a six-step narrative, use-case scope, a detailed capability inventory, controls, examples, timed demos, readiness worksheet and official sources. The entire programme is 128 minutes including 35 minutes of demonstrations; questions and breaks are additional.
+| Product | Total allocation | Demo included | Reference | Editable deck |
+|---|---|---|---|---|
+| AWS DevOps Agent | [35:00 presentation](devops/presentation.html) | 8:00 | [Report](devops/validated-report.html) | [PowerPoint](presentations/aws-devops-agent-presentation.pptx) |
+| AWS Security Agent | [33:30 presentation](security/presentation.html) | 10:00 | [Report](security/report.html) | [PowerPoint](presentations/aws-security-agent-presentation.pptx) |
+| AWS FinOps Agent | [31:30 presentation](finops/presentation.html) | 8:00 | [Report](finops/report.html) | [PowerPoint](presentations/aws-finops-agent-presentation.pptx) |
 
-## Format and editorial standard
+## Structure
 
-See [EDITORIAL_STANDARD.md](EDITORIAL_STANDARD.md) and [FORMAT_IMPLEMENTATION.md](FORMAT_IMPLEMENTATION.md). Every capability now has an untimed reference slide for detailed discussion; timing applies only to the core.
+`reference/` holds the canonical product descriptions and teaching material. Each product directory contains a grouped function reference, configuration mechanisms, proposed procedures, browser presentation and Markdown transcript. `comparison.html` compares concrete product boundaries; it does not invent a common agent runtime.
 
-## Documents
+The function catalogue is organized by product responsibility. Setup mechanisms are not counted as capabilities, and operational examples are not presented as executed results. Each material product assertion links to an official source; proposed checks, synthetic arithmetic and documentation qualifications are labeled separately. See [METHOD.md](METHOD.md).
 
-- `*/report.md`: narrative and capability report in Markdown.
-- `*/presentation-transcript.md`: speaker transcript, timing and demo runbooks.
-- `presentations/`: four editable PowerPoint decks generated from the same slide source as the HTML presentations; one untimed evidence appendix per deck.
-- `*/validation-record.md`: scope-filtered capability evidence records.
-- `content/`: versioned narrative, presentation and evidence source data.
-- `demo-assets/`: product-neutral contract and explicitly synthetic cost fixture.
-- `MANIFEST.json`, `VALIDATION.md`: file integrity and validation scope.
-
-## Rebuild
+## Build and validate
 
 ```sh
-python -m pip install beautifulsoup4==4.13.4 python-pptx==1.0.2
-python tools/build_suite.py
-python tools/build_suite.py --check
+python -m pip install python-pptx==1.0.2 beautifulsoup4==4.13.4 playwright==1.57.0
+python -m playwright install chromium
+python tools/build_reference.py
+python tools/check_reference.py
 ```
 
-The documentation workflow builds and checks the suite and commits each generated file separately. Existing Git history and unrelated repository files are not replaced. The historical PowerPoint edition is superseded by the report-aligned, editable publication edition; it is not a byte-for-byte copy of the earlier image-led decks.
+The publication workflow validates before committing each changed file or deletion separately. Earlier revisions remain in Git history. No archive directory, distribution ZIP, encoded import package or historical copy is generated.
 
 ## Evidence boundary
 
-Independent analysis, not an AWS publication. The original audits are 20 October 2026 snapshots; the presentation source and narrative revision are dated 21 October. Selected critical product boundaries were rechecked, not every source page. Examples and gates are recommendations. No live AWS account or agent workflow was exercised, and no productivity, diagnostic accuracy, security coverage or cost savings are claimed.
-
-## Mechanisms and enablement
-
-[Open the mechanism guide index](mechanisms/index.html), or read the [comparison](mechanisms/overview.md). Three platform guides contain 23 documented mechanism records, official enablement procedures, proposed checks and lifecycle controls. Four reference PowerPoints are untimed. Optional prepared-result exercises total 34 minutes, separate from the unchanged 128-minute core programme.
-
-Build source: `content/mechanisms.json` and `tools/build_mechanisms.py`. See [mechanism validation](mechanisms/VALIDATION.md) for source qualifications and test boundaries.
+Source review: 21 October 2026. Documents can change after that date. The references state what the official pages document, not an independently observed service implementation. No live product execution or measured accuracy, security coverage, cost saving or productivity benefit is claimed. Browser and presentation checks are recorded in [VALIDATION.md](VALIDATION.md); they do not establish factual or operational correctness.
