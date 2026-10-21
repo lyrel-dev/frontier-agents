@@ -1,0 +1,17 @@
+{
+  "revision": "2026-10-21-mechanisms-v1",
+  "records": 31,
+  "official_sources": 44,
+  "core_minutes_unchanged": 160,
+  "core_demo_minutes_unchanged": 48,
+  "optional_exercise_minutes": 44,
+  "reference_pptx_slides": {
+    "devops": 13,
+    "kiro": 12,
+    "security": 11,
+    "finops": 11,
+    "overview": 8
+  },
+  "errors": [],
+  "boundary": "Structural checks, not live product tests or measured outcomes."
+}
