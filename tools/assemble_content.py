@@ -13,6 +13,8 @@ def write_json(path: Path, data: dict) -> None:
 
 
 def main() -> None:
+    from migrations.apply_mechanisms import apply
+    apply()
     agents = {}
     results = []
     # Correct transcription errors in the initial source import. Once the
