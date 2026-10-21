@@ -1,0 +1,32 @@
+{
+  "revision": "2026-10-21-mechanisms-v1",
+  "checks": [
+    {
+      "file": "presentations/devops-mechanisms-reference.pptx",
+      "slides": 13,
+      "shape_bounds_errors": []
+    },
+    {
+      "file": "presentations/finops-mechanisms-reference.pptx",
+      "slides": 11,
+      "shape_bounds_errors": []
+    },
+    {
+      "file": "presentations/kiro-mechanisms-reference.pptx",
+      "slides": 12,
+      "shape_bounds_errors": []
+    },
+    {
+      "file": "presentations/overview-mechanisms-reference.pptx",
+      "slides": 8,
+      "shape_bounds_errors": []
+    },
+    {
+      "file": "presentations/security-mechanisms-reference.pptx",
+      "slides": 11,
+      "shape_bounds_errors": []
+    }
+  ],
+  "visual_review": "Representative mechanism slides from all five reference decks and a DevOps use-case slide. Source-driven mechanism boxes were shortened after detecting and correcting text overflow. Not a pixel-level review of every slide.",
+  "live_aws_execution": false
+}
