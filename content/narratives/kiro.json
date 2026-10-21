@@ -1,16 +1,134 @@
 {
-"number":"02","accent":"#7046a3","title":"Kiro","strapline":"Give the agent an engineering outcome—not an unlimited mandate.","audience":"Software engineers, technical leads and developer-platform teams","availability":"Kiro Web is preview, requires eligible paid access, and has documented Region and administrator controls. IDE, CLI and Web features are not interchangeable.","decision":"Delegate a small reviewable change with a concrete regression test. Keep merge, release and production credentials outside the task.",
-"summary":["A useful coding agent does more than generate lines of code. It turns an understood requirement into a reviewable change, with enough implementation and test evidence for another engineer to decide whether to accept it. That requires a bounded repository context, clear behavior and an environment that can run the relevant checks.","The running example adds request-ID propagation to checkout-api without changing public behavior elsewhere. It begins with repository understanding, uses specifications when the expected behavior needs agreement, and ends at a pull request. A second example schedules a tightly scoped maintenance task. Web autonomy, local hooks and cloud sandbox controls are kept separate throughout."],
-"use_case":{"name":"Propagate request IDs through checkout-api","trigger":"A developer cannot correlate an incoming checkout request with its downstream calls.","scope":"Selected repository and branch; no schema change, production access or unrelated dependency upgrades.","deliverable":"A PR/MR containing the change, meaningful tests and a review explanation.","not_done":"Code was generated, but the relevant tests were not run or the diff exceeds the agreed scope.","done":"A reviewer verifies propagation and failure behavior, confirms the tests, and makes the merge decision."},
-"stages":[
-{"title":"Understand the code before choosing the mode","caps":["C01","C04","C10"],"paragraphs":["Use an interactive session while the problem is still ambiguous. Ask for the request path, the relevant symbols and the boundaries where request IDs disappear. The repository gives the agent evidence about the implementation; it does not prove how a deployed service behaves.","Move to autonomous work only after the desired outcome and exclusions are clear. Web sessions, local IDE/CLI work and cloud-session continuation have different entry points and controls. Verify the plan, client and administrator configuration rather than assuming a feature described for one surface exists on every other surface."],"input":"Repository, branch, reproduced problem and a named reviewer.","artifact":"A cited code-path explanation and a bounded task statement.","gate":"The owner can describe the intended behavior and what must not change.","fallback":"Stay interactive and investigate missing runtime evidence instead of delegating an ambiguous outcome."},
-{"title":"Make the intended behavior inspectable","caps":["C02","C03","C11","C12"],"paragraphs":["For the request-ID change, define what happens when the header is present, absent or invalid, which outbound calls receive it, and which logging fields must not contain sensitive data. Specifications make requirements, design choices and implementation tasks reviewable before the patch grows.","Steering can carry coding conventions; memory can retain useful working context. Neither changes authorization or turns a remembered assumption into verified fact. Keep the task's acceptance criteria explicit and correct stale context before it influences implementation."],"input":"Observed gap, compatibility constraints, team conventions and expected failure cases.","artifact":"An agreed feature or bug-fix specification with tests linked to behavior.","gate":"A reviewer can tell an acceptable implementation from a plausible but incompatible one.","fallback":"Reduce the task to one contract boundary and resolve open questions before adding more repositories."},
-{"title":"Configure the environment that will execute the work","caps":["C08","C13","C14","C15","C16"],"paragraphs":["The sandbox needs the dependencies and access required to run the chosen checks. Configure setup commands, permitted network access and narrowly scoped test secrets deliberately. A failed test caused by a missing dependency is not evidence that the implementation itself is wrong or right.","MCP and Powers extend the tools available to the agent. Review their credential scope and side effects. Local permissions and hooks do not automatically govern Web execution; local file-save checks and cloud recurring jobs are different mechanisms. Keep production credentials out of the coding task."],"input":"Known setup commands, test configuration, approved tools and minimal test credentials.","artifact":"An executable task environment with documented access and known limitations.","gate":"The same meaningful checks can run under the intended execution surface.","fallback":"Record the environment failure and move verification to approved CI; do not mark an unexecuted test as passed."},
-{"title":"Implement within the contract and inspect the evidence","caps":["C04","C05","C06","C08"],"paragraphs":["A bounded autonomous task can plan the change, edit code and open a reviewable PR. When several repositories are involved, identify each affected contract and the evidence required in each repository. The issue or prompt should name the target branch and exclude unrelated refactoring.","For the example, inspect the request-header handling, downstream propagation and tests for both existing and generated IDs. Generated tests only help when their assertions exercise the requirement and their execution result is available. A screenshot or passing command is not a substitute for reviewing what was actually checked."],"input":"Approved task, repository scope and runnable verification commands.","artifact":"A focused diff with test source, execution results and residual limitations.","gate":"Every changed area can be justified by the stated outcome.","fallback":"Split an oversized change into reviewable units rather than accepting a cross-repository patch on faith."},
-{"title":"Treat review feedback as new constrained work","caps":["C07","C17","C18"],"paragraphs":["The PR is the start of independent acceptance, not the end of responsibility. Check the diff, test meaningful negative cases and provide precise feedback. Supplied CI failures can guide another iteration, but a coding workflow is not automatically a connected CI-monitoring service.","Use the correct recovery mechanism for the client. Local file checkpoints and conversation rewind are not general production rollback. IaC drafts, pipeline diagnosis and runbook writing are composed uses of coding tools; validate them with the relevant provider tooling, CI job or safe rehearsal."],"input":"PR/MR, review comments and the actual failing check where applicable.","artifact":"An updated change and a documented reviewer decision.","gate":"The reviewer, not the agent, decides whether the change meets the contract and can merge.","fallback":"Reject or revert the branch change using normal source-control practice when acceptance fails."},
-{"title":"Automate only the maintenance that is already understood","caps":["C09","C19","C20","C21"],"paragraphs":["A recurring dependency-maintenance job should define allowed version changes, prohibited packages, required tests and the reviewer. Kiro automations can run recurring repository tasks and propose changes; the schedule does not authorize an automatic production release.","Custom agents, skills and workflows can package repeated procedures, but their surface support and rollout conditions differ. Start with one job whose result is easy to inspect. Measure accepted changes, review effort and escaped defects before expanding the task or repository scope."],"input":"A repeatable procedure, precise schedule, repository boundary and stop owner.","artifact":"A recurring reviewable change with an audit trail and test evidence.","gate":"Every run remains bounded, independently reviewed and easy to pause.","fallback":"Disable or narrow the automation when it produces noisy, unreviewed or out-of-scope changes."}
-],
-"checks":["Target client, paid access and administrator enablement are confirmed.","Repository and branch are explicitly selected.","Behavior, exclusions and regression tests are written down.","Sandbox tools, egress and secrets have been reviewed.","The diff and actual test execution are independently checked.","Merge and deployment remain separate team decisions."],
-"handoff":"task: request-id-propagation\nrepository: checkout-api\nbranch: feature/request-id-demo\nallowed_effects: [read-code, edit-branch, run-test-suite, propose-pr]\nconstraints: [no-schema-change, no-production-access]\nacceptance: [existing-id-preserved, missing-id-created, outbound-id-propagated]\nreviewer: service-maintainer\nmerge: human-decision",
-"related":"Use the DevOps report for incident context, the Security report for an authorized assessment, and the architecture report for cross-agent evidence handoff."
+  "number": "02",
+  "accent": "#7046a3",
+  "title": "Kiro",
+  "strapline": "Repository-scoped planning, implementation, testing and review workflows.",
+  "audience": "Software engineers, technical leads and developer-platform teams",
+  "availability": "Kiro Web is preview, requires eligible paid access, and has documented Region and administrator controls. IDE, CLI and Web features are not interchangeable.",
+  "decision": "Delegate a small reviewable change with a concrete regression test. Keep merge, release and production credentials outside the task.",
+  "summary": [
+    "A useful coding agent does more than generate lines of code. It turns an understood requirement into a reviewable change, with enough implementation and test evidence for another engineer to decide whether to accept it. That requires a bounded repository context, clear behavior and an environment that can run the relevant checks.",
+    "The running example adds request-ID propagation to checkout-api without changing public behavior elsewhere. It begins with repository understanding, uses specifications when the expected behavior needs agreement, and ends at a pull request. A second example schedules a tightly scoped maintenance task. Web autonomy, local hooks and cloud sandbox controls are kept separate throughout."
+  ],
+  "use_case": {
+    "name": "Propagate request IDs through checkout-api",
+    "trigger": "A developer cannot correlate an incoming checkout request with its downstream calls.",
+    "scope": "Selected repository and branch; no schema change, production access or unrelated dependency upgrades.",
+    "deliverable": "A PR/MR containing the change, meaningful tests and a review explanation.",
+    "not_done": "Code was generated, but the relevant tests were not run or the diff exceeds the agreed scope.",
+    "done": "A reviewer verifies propagation and failure behavior, confirms the tests, and makes the merge decision."
+  },
+  "stages": [
+    {
+      "title": "Understand the code before choosing the mode",
+      "caps": [
+        "C01",
+        "C04",
+        "C10"
+      ],
+      "paragraphs": [
+        "Use an interactive session while the problem is still ambiguous. Ask for the request path, the relevant symbols and the boundaries where request IDs disappear. The repository gives the agent evidence about the implementation; it does not prove how a deployed service behaves.",
+        "Move to autonomous work only after the desired outcome and exclusions are clear. Web sessions, local IDE/CLI work and cloud-session continuation have different entry points and controls. Verify the plan, client and administrator configuration rather than assuming a feature described for one surface exists on every other surface."
+      ],
+      "input": "Repository, branch, reproduced problem and a named reviewer.",
+      "artifact": "A cited code-path explanation and a bounded task statement.",
+      "gate": "The owner can describe the intended behavior and what must not change.",
+      "fallback": "Stay interactive and investigate missing runtime evidence instead of delegating an ambiguous outcome."
+    },
+    {
+      "title": "Make the intended behavior inspectable",
+      "caps": [
+        "C02",
+        "C03",
+        "C11",
+        "C12"
+      ],
+      "paragraphs": [
+        "For the request-ID change, define what happens when the header is present, absent or invalid, which outbound calls receive it, and which logging fields must not contain sensitive data. Specifications make requirements, design choices and implementation tasks reviewable before the patch grows.",
+        "Steering can carry coding conventions; memory can retain useful working context. Neither changes authorization or turns a remembered assumption into verified fact. Keep the task's acceptance criteria explicit and correct stale context before it influences implementation."
+      ],
+      "input": "Observed gap, compatibility constraints, team conventions and expected failure cases.",
+      "artifact": "An agreed feature or bug-fix specification with tests linked to behavior.",
+      "gate": "A reviewer can tell an acceptable implementation from a plausible but incompatible one.",
+      "fallback": "Reduce the task to one contract boundary and resolve open questions before adding more repositories."
+    },
+    {
+      "title": "Configure the environment that will execute the work",
+      "caps": [
+        "C08",
+        "C13",
+        "C14",
+        "C15",
+        "C16"
+      ],
+      "paragraphs": [
+        "The sandbox needs the dependencies and access required to run the chosen checks. Configure setup commands, permitted network access and narrowly scoped test secrets deliberately. A failed test caused by a missing dependency is not evidence that the implementation itself is wrong or right.",
+        "MCP and Powers extend the tools available to the agent. Review their credential scope and side effects. Local permissions and hooks do not automatically govern Web execution; local file-save checks and cloud recurring jobs are different mechanisms. Keep production credentials out of the coding task."
+      ],
+      "input": "Known setup commands, test configuration, approved tools and minimal test credentials.",
+      "artifact": "An executable task environment with documented access and known limitations.",
+      "gate": "The same meaningful checks can run under the intended execution surface.",
+      "fallback": "Record the environment failure and move verification to approved CI; do not mark an unexecuted test as passed."
+    },
+    {
+      "title": "Implement within the contract and inspect the evidence",
+      "caps": [
+        "C04",
+        "C05",
+        "C06",
+        "C08"
+      ],
+      "paragraphs": [
+        "A bounded autonomous task can plan the change, edit code and open a reviewable PR. When several repositories are involved, identify each affected contract and the evidence required in each repository. The issue or prompt should name the target branch and exclude unrelated refactoring.",
+        "For the example, inspect the request-header handling, downstream propagation and tests for both existing and generated IDs. Generated tests only help when their assertions exercise the requirement and their execution result is available. A screenshot or passing command is not a substitute for reviewing what was actually checked."
+      ],
+      "input": "Approved task, repository scope and runnable verification commands.",
+      "artifact": "A focused diff with test source, execution results and residual limitations.",
+      "gate": "Every changed area can be justified by the stated outcome.",
+      "fallback": "Split an oversized change into reviewable units rather than accepting a cross-repository patch on faith."
+    },
+    {
+      "title": "Treat review feedback as new constrained work",
+      "caps": [
+        "C07",
+        "C17",
+        "C18"
+      ],
+      "paragraphs": [
+        "The PR is the start of independent acceptance, not the end of responsibility. Check the diff, test meaningful negative cases and provide precise feedback. Supplied CI failures can guide another iteration, but a coding workflow is not automatically a connected CI-monitoring service.",
+        "Use the correct recovery mechanism for the client. Local file checkpoints and conversation rewind are not general production rollback. IaC drafts, pipeline diagnosis and runbook writing are composed uses of coding tools; validate them with the relevant provider tooling, CI job or safe rehearsal."
+      ],
+      "input": "PR/MR, review comments and the actual failing check where applicable.",
+      "artifact": "An updated change and a documented reviewer decision.",
+      "gate": "The reviewer, not the agent, decides whether the change meets the contract and can merge.",
+      "fallback": "Reject or revert the branch change using normal source-control practice when acceptance fails."
+    },
+    {
+      "title": "Automate only the maintenance that is already understood",
+      "caps": [
+        "C09",
+        "C19",
+        "C20",
+        "C21"
+      ],
+      "paragraphs": [
+        "A recurring dependency-maintenance job should define allowed version changes, prohibited packages, required tests and the reviewer. Kiro automations can run recurring repository tasks and propose changes; the schedule does not authorize an automatic production release.",
+        "Custom agents, skills and workflows can package repeated procedures, but their surface support and rollout conditions differ. Start with one job whose result is easy to inspect. Measure accepted changes, review effort and escaped defects before expanding the task or repository scope."
+      ],
+      "input": "A repeatable procedure, precise schedule, repository boundary and stop owner.",
+      "artifact": "A recurring reviewable change with an audit trail and test evidence.",
+      "gate": "Every run remains bounded, independently reviewed and easy to pause.",
+      "fallback": "Disable or narrow the automation when it produces noisy, unreviewed or out-of-scope changes."
+    }
+  ],
+  "checks": [
+    "Target client, paid access and administrator enablement are confirmed.",
+    "Repository and branch are explicitly selected.",
+    "Behavior, exclusions and regression tests are written down.",
+    "Sandbox tools, egress and secrets have been reviewed.",
+    "The diff and actual test execution are independently checked.",
+    "Merge and deployment remain separate team decisions."
+  ],
+  "handoff": "task: request-id-propagation\nrepository: checkout-api\nbranch: feature/request-id-demo\nallowed_effects: [read-code, edit-branch, run-test-suite, propose-pr]\nconstraints: [no-schema-change, no-production-access]\nacceptance: [existing-id-preserved, missing-id-created, outbound-id-propagated]\nreviewer: service-maintainer\nmerge: human-decision",
+  "related": "Use the DevOps report for incident context, the Security report for an authorized assessment, and the architecture report for cross-agent evidence handoff."
 }
