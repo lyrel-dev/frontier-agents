@@ -1,5 +1,5 @@
 {
-  "revision": "2026-10-21-editorial-v2",
+  "revision": "2026-10-21-three-agent-scope",
   "status": "Proposed documentation fields and ownership roles; not asserted native AWS outputs.",
   "capability_records": {
     "devops": {
@@ -26,104 +26,6 @@
       },
       "C08": {
         "record": "Test scope, executed requests, recorded side effects, findings, and application build identifier."
-      },
-      "C09": {
-        "record": "Code-path explanation with repository revision and source references."
-      },
-      "C10": {
-        "record": "Reviewable code diff, scoped acceptance tests, and reviewer disposition."
-      },
-      "C11": {
-        "record": "Generated test changes, execution results, and any failing assertions."
-      },
-      "C12": {
-        "record": "IaC diff with relevant plan, validation, or synthesis results produced by the team."
-      },
-      "C13": {
-        "record": "Build-log excerpts, stated failure hypothesis, and reproducible local or CI check."
-      },
-      "C14": {
-        "record": "Documentation diff with technical-owner review and a reproducible procedure."
-      },
-      "C15": {
-        "record": "AWS implementation guidance with documentation references or scoped resource diagnostics."
-      },
-      "C16": {
-        "record": "Code finding records with severity, affected lines, and reviewer disposition."
-      },
-      "C17": {
-        "record": "PR review comments, changed-file context, and any explicitly requested re-review."
-      },
-      "C18": {
-        "record": "Issue-linked pull request with diff, test output, and CI/review status."
-      },
-      "C19": {
-        "record": "Transformation diff, compatibility checklist, and independent build/test results."
-      }
-    },
-    "kiro": {
-      "C01": {
-        "record": "Repository map and file/symbol references for the investigated path."
-      },
-      "C02": {
-        "record": "Versioned requirements, design decisions, implementation tasks, and open questions."
-      },
-      "C03": {
-        "record": "Current/expected behavior specification with preservation constraints and regression cases."
-      },
-      "C04": {
-        "record": "Pull request with scoped diff, execution output, and unresolved review points."
-      },
-      "C05": {
-        "record": "Repository-specific diffs with a cross-repository dependency and review checklist."
-      },
-      "C06": {
-        "record": "GitHub issue, delegated task, resulting change proposal, and reviewer decision."
-      },
-      "C07": {
-        "record": "Updated PR diff with link to comments, failing checks, and verification reruns."
-      },
-      "C08": {
-        "record": "Test source, runner output, and UI/browser evidence when applicable."
-      },
-      "C09": {
-        "record": "Scheduled task record, proposed maintenance diff, and assigned reviewer."
-      },
-      "C10": {
-        "record": "Cloud-session record, applied changes, and the final reviewed artifact."
-      },
-      "C11": {
-        "record": "Versioned steering file with documented conventions and a change-review record."
-      },
-      "C12": {
-        "record": "Inspectable stored context and a correction record when recalled information is wrong."
-      },
-      "C13": {
-        "record": "Named MCP/Powers integration scope and records of calls affecting external systems."
-      },
-      "C14": {
-        "record": "Hook configuration, invoked commands, exit status, and repository changes."
-      },
-      "C15": {
-        "record": "Permission rules and negative test showing blocked out-of-scope operations."
-      },
-      "C16": {
-        "record": "Sandbox configuration including approved egress, injected settings, and secret-handling checks."
-      },
-      "C17": {
-        "record": "Restoration record or new branch/fork demonstrating which work state was recovered."
-      },
-      "C18": {
-        "record": "Evidence-backed failure analysis, proposed file change, and independent command output."
-      },
-      "C19": {
-        "record": "Custom-agent configuration, scoped task result, and approval of its output."
-      },
-      "C20": {
-        "record": "Versioned skill instructions and a reproducibility review for included scripts."
-      },
-      "C21": {
-        "record": "Workflow definition, per-step artifacts, failures, handoffs, and completion status."
       }
     },
     "security": {
@@ -171,9 +73,6 @@
       },
       "C15": {
         "record": "Proposed PR/MR or patch/diff and independent implementation tests."
-      },
-      "C16": {
-        "record": "IDE-submitted review task and code findings linked to the reviewed revision."
       },
       "C17": {
         "record": "Build-submitted differential review record with full source baseline and unified diff."
@@ -270,14 +169,6 @@
       "Service owner and SRE",
       "Release owner",
       "Development reviewer and SRE"
-    ],
-    "kiro": [
-      "Developer/repository owner",
-      "Developer and reviewer",
-      "Platform or repository administrator",
-      "Implementing engineer and reviewer",
-      "PR reviewer",
-      "Maintenance workflow owner"
     ],
     "security": [
       "Application owner and security operator",
