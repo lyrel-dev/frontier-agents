@@ -61,6 +61,11 @@ jobs:
           replace('build_metrics.py', "Age of the newest acknowledged business write missing from the recovered state. Requires transaction reconciliation.", "Recoverable business-state lag at the disruption cut-off, established from a verified recovery boundary and acknowledged-write reconciliation. Record lost-write counts separately.")
           replace('build_metrics.py', "'legendFormat':'{{service}} · {{deployment_model}} · {{run_id}} · {{data_kind}}'", "'legendFormat':'{{environment}} · {{service}} · {{deployment_model}} · {{scenario}} · {{run_id}} · {{data_kind}}'")
           replace('build_metrics.py', "'legendFormat':'{{metric}} · {{run_id}} · {{data_kind}}'", "'legendFormat':'{{metric}} · {{environment}} · {{service}} · {{deployment_model}} · {{scenario}} · {{run_id}} · {{data_kind}}'")
+          # Playwright's string-predicate polling uses eval inside the page, which CSP correctly rejects.
+          # Poll via the test driver's normal evaluation API; do not relax CSP or enable bypassCSP.
+          replace('tests/publication_browser_checks.py',"    with sync_playwright() as pw:","    def wait_state(expression):\n        deadline = time.monotonic() + 30\n        while time.monotonic() < deadline:\n            if page.evaluate('() => (' + expression + ')'):\n                return\n            time.sleep(.05)\n        raise AssertionError('Browser state timed out: ' + expression)\n    with sync_playwright() as pw:")
+          replace('tests/publication_browser_checks.py','page.wait_for_function(', 'wait_state(')
+          replace('tests/publication_browser_checks.py',"page.evaluate(\"location.hash='metrics'\"); page.wait_for_selector('.mc-card')", "page.evaluate(\"location.hash='metrics'\"); wait_state(\"document.querySelectorAll('.mc-card').length===32\")")
           for f in ['app/__init__.py','README.md','static/shell.html']:
               replace(f,'0.2.0','0.2.1')
           for f in ['compose.yaml','deploy/kubernetes.yaml','docs/DEPLOYMENT.md']:
@@ -157,7 +162,7 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add .github/workflows/validation-console.yml
           cd applications/aws-validation-console
-          git add .gitignore app/__init__.py app/connectors.py app/evaluator.py static/app.js static/metrics.js static/metrics-charts.js static/shell.html build_metrics.py tests/test_evaluator.py tests/test_connectors.py tests/browser_checks.py compose.yaml deploy/kubernetes.yaml docs/DEPLOYMENT.md README.md docs/METRICS.md CHANGELOG.md docs/PUBLICATION_REVIEW.md validation/publication-review.json
+          git add .gitignore app/__init__.py app/connectors.py app/evaluator.py static/app.js static/metrics.js static/metrics-charts.js static/shell.html build_metrics.py tests/test_evaluator.py tests/test_connectors.py tests/browser_checks.py tests/publication_browser_checks.py compose.yaml deploy/kubernetes.yaml docs/DEPLOYMENT.md README.md docs/METRICS.md CHANGELOG.md docs/PUBLICATION_REVIEW.md validation/publication-review.json
           cd ../..
           git rm .github/workflows/console-publication-review.yml
           git diff --cached --check
