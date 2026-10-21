@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Apply the reviewed editorial source revision with before/after integrity checks."""
+"""Apply the reviewed editorial source revision; leave workflow permissions unchanged."""
 from pathlib import Path
 import base64, hashlib, json, lzma
 ROOT = Path(__file__).resolve().parents[2]
@@ -9,6 +9,9 @@ def main():
     patch = json.loads(payload)
     changes = {}
     for name, record in patch.items():
+        if name.startswith('.github/'):
+            print(f'Preserving existing workflow: {name}')
+            continue
         path = (ROOT/name).resolve()
         if not path.is_relative_to(ROOT): raise ValueError('Unsafe path')
         before = path.read_bytes() if path.exists() else b''
