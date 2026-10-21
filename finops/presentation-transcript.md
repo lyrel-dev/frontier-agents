@@ -7,7 +7,7 @@
 
 **00:00–00:45 · 00:45 allocated**
 
-**Takeaway:** Turn a cost question into reproducible evidence and owned engineering work.
+**Takeaway:** Cost queries and recommendation follow-up require source reconciliation and ownership.
 
 The entire FinOps Agent service remains preview. This presentation focuses on the daily engineering value: cost explanation, anomaly investigation, recommendation triage and reporting. It does not grant infrastructure or purchasing authority. The illustrative storage-cost demo uses synthetic numbers to teach reconciliation; it is not an account result or a measured saving.
 
@@ -33,7 +33,7 @@ Use two complete 14-day periods and the same account, Region and cost basis. The
 [F09 — Optimization recommendations](https://docs.aws.amazon.com/finops-agent/latest/userguide/optimization-recommendations.html)
 
 
-## 03. Six practical capability families
+## 03. FinOps capability groups and output types
 
 **02:00–03:30 · 01:30 allocated**
 
@@ -71,7 +71,7 @@ Create the agent and operator access paths and activate the cost services needed
 [F07 — Cost anomaly investigation](https://docs.aws.amazon.com/finops-agent/latest/userguide/cost-anomaly-detection.html)
 
 
-## 05. Cost inquiry needs a reproducible question
+## 05. Record comparable cost-query definitions
 
 **05:00–06:30 · 01:30 allocated**
 
@@ -95,7 +95,7 @@ This capability helps the team understand expected spend and current commitment 
 [F09 — Optimization recommendations](https://docs.aws.amazon.com/finops-agent/latest/userguide/optimization-recommendations.html)
 
 
-## 07. Investigate an anomaly without overstating cause
+## 07. Separate observed cost changes from causal hypotheses
 
 **07:45–09:15 · 01:30 allocated**
 
@@ -232,11 +232,11 @@ The preview stores agent data in us-east-1 and can use inference within the orig
 [F16 — Cross-region inference](https://docs.aws.amazon.com/finops-agent/latest/userguide/cross-region-inference.html)
 
 
-## 16. Measure reconciled analysis and verified follow-through
+## 16. Verify cost totals and implemented follow-up
 
 **25:45–27:00 · 01:15 allocated**
 
-**Takeaway:** Accepted cost work is the outcome; estimated savings are only an input.
+**Takeaway:** Record implemented engineering actions and verify resulting costs.
 
 Begin with one account group and a known owner. Reconcile an analysis before automating it, investigate a representative anomaly, and send one approved recommendation through the team’s normal change process. Measure reviewer effort, accepted explanations, duplicate or noisy tickets and any independently observed post-change result. The presentation contains all 13 capability entries through the crosswalk below. Questions follow the timed close.
 
