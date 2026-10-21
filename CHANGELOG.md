@@ -9,4 +9,4 @@ PowerPoint publication decks contain the 88 timed slides plus 83 untimed capabil
 
 ## Mechanisms and enablement extension
 
-Added 31 mechanism records, four platform setup guides, a comparison guide, five untimed reference decks, six-step optional exercises and a dated source register. Retained all core presentation budgets.
+Added 32 mechanism records, four platform setup guides, a comparison guide, five untimed reference decks, six-step optional exercises and a dated source register. Retained all core presentation budgets.
