@@ -228,42 +228,34 @@ The documented remote MCP interface brings operational questions into a developm
 [D38 — Accessing DevOps Agent](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-accessing-devops-agent-index.html)
 
 
-## 14. Kiro capabilities are separate from DevOps Agent
+## 14. Translate investigation findings into owned work
 
 **28:00–29:30 · 01:30 allocated**
 
-**Takeaway:** Kiro supports code work; the team still owns CI, IaC and operational correctness.
+**Takeaway:** A proposed engineering handoff does not transfer production authorization.
 
-The original report included related developer tasks, so keep them visible without attributing them to the wrong product. Repository explanation, scoped code changes and test creation fit Kiro’s documented coding tools. IaC drafting, supplied-build-log diagnosis and runbook writing are composed uses of those tools. They are not native promises of complete infrastructure validation or an automatically connected CI monitor. Validate with the repository’s own tests, linters and infrastructure tooling.
+This is a proposed team procedure using the documented investigation, mitigation and prevention outputs. It is not a native implementation or deployment feature. The receiving engineers decide whether a change is justified and use their existing repository, test and release controls. Preserve the distinction between an observed symptom, a hypothesis, a recommended action and a verified result.
 
-[K03 — Working with the agent](https://kiro.dev/docs/web/using-the-agent/)
+[D03 — Autonomous incident response](https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-autonomous-incident-response.html)
 
-[K08 — Specifications](https://kiro.dev/docs/specs/)
+[D04 — Proactive incident prevention](https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-proactive-incident-prevention.html)
 
-[K09 — Built-in tools](https://kiro.dev/docs/tools/)
-
-[K17 — Hooks](https://kiro.dev/docs/hooks/)
+[D13 — Working with directed actions](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-working-with-directed-actions.html)
 
 
-## 15. Amazon Q Developer is a companion product
+## 15. Verify recovery before closing the incident
 
 **29:30–31:00 · 01:30 allocated**
 
-**Takeaway:** Existing guidance, review and transformation workflows are companion services—not DevOps Agent features.
+**Takeaway:** Completion is a service-owner decision supported by current telemetry.
 
-For teams already using Amazon Q Developer, the relevant distinctions are AWS guidance, IDE reviews, GitHub preview workflows and supported transformations. GitHub review triggers differ from other products: subsequent commits do not automatically retrigger a Q review; a new review can be requested explicitly. A language transformation is constrained by its supported source versions, build prerequisites and IDE. These are compatibility decisions, not reasons to represent Q as part of the DevOps Agent runtime.
+Retain a small closure record with the deployed revision, verification window, observed result and owner. These are proposed team acceptance criteria, not guaranteed product-generated fields. When evidence is missing or the symptom persists, keep the incident open and continue the investigation. The walkthrough does not demonstrate an automated code-change workflow.
 
-[D23 — What is Amazon Q Developer?](https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/what-is.html)
+[D03 — Autonomous incident response](https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-autonomous-incident-response.html)
 
-[D24 — Reviewing code with Amazon Q Developer](https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/code-reviews.html)
+[D04 — Proactive incident prevention](https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-proactive-incident-prevention.html)
 
-[D26 — Reviewing code in GitHub](https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/github-code-reviews.html)
-
-[D27 — Developing features in GitHub](https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/github-feature-development.html)
-
-[D28 — Upgrading Java versions](https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/code-transformation.html)
-
-[D29 — Transforming .NET applications](https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/transform-dotnet-IDE.html)
+[D05 — On Demand DevOps Tasks](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-on-demand-devops-tasks.html)
 
 
 ## 16. Pilot a single service with scoped read access
@@ -302,7 +294,7 @@ The scorecard is a proposal, not an AWS performance claim. Use the same small se
 
 **Takeaway:** Investigate with context. Gate the effect. Close with independent verification.
 
-Close by asking the team to choose one read-heavy operational workflow and its owner. The agent can help connect evidence and produce useful recommendations, but the engineer remains responsible for the decision and its consequences. Release preview, directed actions and active tests should each be evaluated on their own terms. Questions follow the timed close. The detailed inventory below maps every original capability to the new presentation so no feature disappears during the restructuring.
+Close by asking the team to choose one read-heavy operational workflow and its owner. The agent can help connect evidence and produce useful recommendations, but the engineer remains responsible for the decision and its consequences. Release preview, directed actions and active tests should each be evaluated on their own terms. Questions follow the timed close. The detailed inventory below maps every retained capability to the new presentation so no feature disappears during the restructuring.
 
 [D03 — Autonomous incident response](https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-autonomous-incident-response.html)
 
