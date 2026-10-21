@@ -1,6 +1,6 @@
 # AWS Security Agent
 
-Move from an authorized assessment to a verified repair.
+Authorized application assessments, findings, remediation proposals and revalidation.
 
 
 Revision: 21 October 2026. Independent engineering field guide.
@@ -43,6 +43,8 @@ Penetration testing sends real requests and can change application state. Use sy
 
 **Capability crosswalk:** C01, C02, C04
 
+**Responsible role (team recommendation):** Application owner and security operator
+
 **Input:** Written scope, verified target, test identities, approved network path and operational stop procedure.
 
 **Artifact:** An assessment authorization and preflight record.
@@ -59,6 +61,8 @@ Source code, architecture documents and authentication details help the assessme
 Use the documented credential and private-connectivity paths rather than pasting secrets into example prompts or reports. Record what was reachable and authenticated. A test that did not reach a protected workflow cannot provide evidence that the workflow is safe.
 
 **Capability crosswalk:** C02, C03
+
+**Responsible role (team recommendation):** Application owner and security operator
 
 **Input:** Current code and design context, revision identity, approved credentials and reachable test routes.
 
@@ -77,6 +81,8 @@ Preserve the path from the observation to the affected revision and identity. A 
 
 **Capability crosswalk:** C01, C04, C05
 
+**Responsible role (team recommendation):** Security analyst
+
 **Input:** Assessment execution details and finding evidence.
 
 **Artifact:** A triaged finding with owner, affected scope, reproduction context and disposition.
@@ -93,6 +99,8 @@ With the appropriate repository configuration, a finding can lead to a proposed 
 Track the finding and repair in the team's existing issue system. A Jira handoff is useful only when the audience is appropriate and the ticket links the evidence, affected revision and acceptance test. Do not publish sensitive assessment details to a broader channel simply because an integration is connected.
 
 **Capability crosswalk:** C06, C09
+
+**Responsible role (team recommendation):** Development owner and code reviewer
 
 **Input:** Accepted finding, permitted repository access and a repair owner.
 
@@ -111,6 +119,8 @@ Export a point-in-time report that preserves the scope, results and unresolved l
 
 **Capability crosswalk:** C07, C08
 
+**Responsible role (team recommendation):** Security operator and application owner
+
 **Input:** Reviewed repair deployed to the approved target and linked to the original finding.
 
 **Artifact:** Revalidation outcome and point-in-time evidence report.
@@ -127,6 +137,8 @@ Design reviews, organizational security requirements and threat models can make 
 Treat IDE, S3 differential-scan and CI/CD integrations as separate preview adoption decisions. A promotion gate needs explicit thresholds, timeout behavior and a policy for missing or inconclusive evidence. The team owns that release policy; an unavailable or unfinished scan should not silently become a green gate.
 
 **Capability crosswalk:** C10, C11, C12, C13, C14, C15, C16, C17, C18
+
+**Responsible role (team recommendation):** Security programme owner
 
 **Input:** Approved preview use, provider-specific integration and an explicit review or promotion policy.
 
@@ -156,7 +168,9 @@ Treat IDE, S3 differential-scan and CI/CD integrations as separate preview adopt
 
 **Prompt:** Prepare a scoped test of our staging application with written authorization, explicit excluded paths, and a named operator.
 
-Evidence: S03, S06, S07, S10
+**Review record to retain (team recommendation):** Assessment scope, run identifier, target version, request evidence, and prioritized findings.
+
+Official documentation references: S03, S06, S07, S10
 
 
 ### C02 — Test authenticated and private application paths
@@ -175,7 +189,9 @@ Evidence: S03, S06, S07, S10
 
 **Prompt:** Configure a typical staging-user identity, confirm its login, and exclude production, billing, and destructive administration paths.
 
-Evidence: S09, S08, S10
+**Review record to retain (team recommendation):** Authenticated test scope, identity configuration, private connectivity, and affected endpoint record.
+
+Official documentation references: S09, S08, S10
 
 
 ### C03 — Give a test current source and architecture context
@@ -194,7 +210,9 @@ Evidence: S09, S08, S10
 
 **Prompt:** Attach the deployed branch and current API description, and identify which user journeys matter most for this test.
 
-Evidence: S08, S11
+**Review record to retain (team recommendation):** Input document/source-version inventory and findings tied to that context.
+
+Official documentation references: S08, S11
 
 
 ### C04 — Control task expenditure and monitor execution
@@ -213,7 +231,9 @@ Evidence: S08, S11
 
 **Prompt:** Set a bounded task-hour limit and inspect progress for scope drift or application instability before allowing further runs.
 
-Evidence: S08, S05, S11
+**Review record to retain (team recommendation):** Task execution record with limits, elapsed use, relevant logs, and stop decision.
+
+Official documentation references: S08, S05, S11
 
 
 ### C05 — Triage evidence rather than severity alone
@@ -232,7 +252,9 @@ Evidence: S08, S05, S11
 
 **Prompt:** Review the highest-impact findings, separate confirmed evidence from assumptions, and inspect what the default filters exclude.
 
-Evidence: S12, S10
+**Review record to retain (team recommendation):** Finding record with affected endpoint, reproduction evidence, confidence, and owner.
+
+Official documentation references: S12, S10
 
 
 ### C06 — Request a proposed code fix for a pentest finding
@@ -251,7 +273,9 @@ Evidence: S12, S10
 
 **Prompt:** Request a minimal fix for this confirmed finding. Keep unrelated behavior unchanged and require regression coverage.
 
-Evidence: S13, S10
+**Review record to retain (team recommendation):** Remediation code proposal linked to one finding and pending review/test evidence.
+
+Official documentation references: S13, S10
 
 
 ### C07 — Revalidate a previously reported finding
@@ -270,7 +294,9 @@ Evidence: S13, S10
 
 **Prompt:** Revalidate this finding after the patch reaches the same staging target. Record the deployed commit and any authentication changes.
 
-Evidence: S14
+**Review record to retain (team recommendation):** Finding revalidation run and observed current behavior on the patched target.
+
+Official documentation references: S14
 
 
 ### C08 — Export a point-in-time evidence report
@@ -289,7 +315,9 @@ Evidence: S14
 
 **Prompt:** Export the completed staging assessment with high-priority findings and reviewer notes, including scope and known omissions.
 
-Evidence: S15
+**Review record to retain (team recommendation):** Point-in-time exported report with applied filters, revision, and recorded annotations.
+
+Official documentation references: S15
 
 
 ### C09 — Create tracked Jira work from findings
@@ -308,7 +336,9 @@ Evidence: S15
 
 **Prompt:** Export these reviewed findings to the security-remediation project, then let the normal team workflow assign owners.
 
-Evidence: S16
+**Review record to retain (team recommendation):** Jira finding issue with assignment, reproduction evidence, and disposition.
+
+Official documentation references: S16
 
 
 ### C10 — Review a design against organizational requirements
@@ -327,7 +357,9 @@ Evidence: S16
 
 **Prompt:** Review the proposed service-to-service authentication design against our enabled controls, and identify missing information explicitly.
 
-Evidence: S17, S05
+**Review record to retain (team recommendation):** Design-review findings mapped to versioned security requirements and source documents.
+
+Official documentation references: S17, S05
 
 
 ### C11 — Maintain reusable organizational security criteria
@@ -346,7 +378,9 @@ Evidence: S17, S05
 
 **Prompt:** Translate the approved logging standard into precise review criteria; flag obligations that cannot be assessed from design or source alone.
 
-Evidence: S18, S19, S05
+**Review record to retain (team recommendation):** Versioned requirement pack, change rationale, and review evidence.
+
+Official documentation references: S18, S19, S05
 
 
 ### C12 — Generate a reusable STRIDE threat model
@@ -365,7 +399,9 @@ Evidence: S18, S19, S05
 
 **Prompt:** Model threats for the proposed webhook ingestion flow, using the existing service as context and stating uncertain assumptions.
 
-Evidence: S20, S05
+**Review record to retain (team recommendation):** STRIDE model with trust boundaries, assumptions, threats, and unresolved mitigations.
+
+Official documentation references: S20, S05
 
 
 ### C13 — Scan a full codebase for security findings
@@ -384,7 +420,9 @@ Evidence: S20, S05
 
 **Prompt:** Review the release-candidate source for security risks and explain the evidence for each high-priority finding.
 
-Evidence: S21, S22, S04, S05
+**Review record to retain (team recommendation):** Code-review findings associated with exact repository/source revision.
+
+Official documentation references: S21, S22, S04, S05
 
 
 ### C14 — Review pull requests or merge requests on configured triggers
@@ -403,7 +441,9 @@ Evidence: S21, S22, S04, S05
 
 **Prompt:** Configure review for release-bound changes and verify that both an included and an excluded change produce the expected invocation behavior.
 
-Evidence: S23, S24, S05
+**Review record to retain (team recommendation):** PR or MR finding comments with trigger event, build revision, and reviewer disposition.
+
+Official documentation references: S23, S24, S05
 
 
 ### C15 — Receive a code-review fix as a PR, MR, or diff
@@ -422,7 +462,9 @@ Evidence: S23, S24, S05
 
 **Prompt:** Generate a narrow remediation for this validated source finding and identify tests required to show that behavior is preserved.
 
-Evidence: S25, S05
+**Review record to retain (team recommendation):** Proposed PR/MR or patch/diff and independent implementation tests.
+
+Official documentation references: S25, S05
 
 
 ### C16 — Start a code review from the developer’s IDE
@@ -441,7 +483,9 @@ Evidence: S25, S05
 
 **Prompt:** Run a review of this approved repository through the configured security integration and show the submitted source scope.
 
-Evidence: S26, S05
+**Review record to retain (team recommendation):** IDE-submitted review task and code findings linked to the reviewed revision.
+
+Official documentation references: S26, S05
 
 
 ### C17 — Submit a differential source review from a build workflow
@@ -460,7 +504,9 @@ Evidence: S26, S05
 
 **Prompt:** Construct a review input from the current commit and its approved base, then fail setup checks when the diff does not match the uploaded source.
 
-Evidence: S27, S05
+**Review record to retain (team recommendation):** Build-submitted differential review record with full source baseline and unified diff.
+
+Official documentation references: S27, S05
 
 
 ### C18 — Gate promotion using a scoped post-deployment pentest
@@ -479,7 +525,9 @@ Evidence: S27, S05
 
 **Prompt:** Add a staging-only gate that records whether the change was tested, scoped out, or unresolved, and stops server work during abort handling.
 
-Evidence: S28, S29
+**Review record to retain (team recommendation):** Post-deployment assessment result and separately recorded promotion decision.
+
+Official documentation references: S28, S29
 
 
 ## Illustrative handoff
