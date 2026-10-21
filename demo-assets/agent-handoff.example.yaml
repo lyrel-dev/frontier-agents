@@ -1,0 +1,11 @@
+# Illustrative team contract; not an AWS configuration or authorization.
+work_item: INC-DEMO-001
+kind: illustrative-team-contract
+owner: checkout-service-owner
+scope: {service: checkout-api, environment: staging, revision: DEMO-A}
+evidence: [source-observation, affected-diff]
+allowed_effects: [read-evidence, propose-branch-change]
+exclusions: [production-write, credential-transfer]
+receiver_authorization: establish-separately
+acceptance: independent-test-and-owner-review
+stop_owner: named-operator
