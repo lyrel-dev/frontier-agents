@@ -458,8 +458,6 @@ benefit: estimate-until-independently-measured
 
 ## Sources
 
-- S01: [AWS frontier agents](https://aws.amazon.com/ai/frontier-agents/)
-
 - S02: [What is AWS FinOps Agent?](https://docs.aws.amazon.com/finops-agent/latest/userguide/what-is.html)
 
 - S03: [Create an agent](https://docs.aws.amazon.com/finops-agent/latest/userguide/creating-an-agent.html)
