@@ -1,0 +1,44 @@
+name: Publish approved editorial revision
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: [.github/workflows/editorial-import.yml]
+permissions:
+  contents: write
+concurrency:
+  group: frontier-document-suite
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Import approved source with integrity checks
+        run: python tools/migrations/apply_standardized.py
+      - name: Install build dependencies
+        run: python -m pip install beautifulsoup4==4.13.4 python-pptx==1.0.2
+      - name: Build and validate
+        run: |
+          python tools/assemble_content.py
+          python tools/build_suite.py
+          python tools/build_suite.py --check
+          python tools/editorial_lint.py
+      - name: Commit one changed document per commit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          python tools/build_suite.py --commit
+          git push origin HEAD:main
+      - uses: actions/upload-artifact@v4
+        with:
+          name: frontier-agents-standardized
+          path: dist/frontier-agents-document-suite.zip
+          if-no-files-found: error
