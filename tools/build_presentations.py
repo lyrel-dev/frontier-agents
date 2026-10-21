@@ -102,13 +102,13 @@ def build_deck(deck:dict,story:dict,path:Path):
             for j,(a,b) in enumerate(s['fields']):
                 y=2.8+j*.61;text(slide,a,.82,y,2.8,.4,16,'AFCBE8',True,minimum=14);text(slide,b,3.7,y,8.75,.45,18,WHITE,minimum=14)
         elif kind=='demo':
-            box(slide,.55,2.51,12.23,.87,NAVY,None,True);text(slide,s['prompt'],.77,2.68,11.8,.52,16,WHITE,minimum=14)
-            yy=3.57
+            box(slide,.55,2.51,12.23,1.06,NAVY,None,True);text(slide,s['prompt'],.77,2.66,11.8,.78,15,WHITE,minimum=13)
+            yy=3.75
             for label,field in [('PREFLIGHT','preflight'),('SUCCESS','success'),('FALLBACK','fallback')]:
                 text(slide,label,.55,yy,3.5,.22,10.5,accent,True,minimum=10.5);text(slide,s[field],.55,yy+.28,3.65,.67,14,INK,minimum=13);yy+=1.05
-            steps=s['steps'];rowh=3.22/max(1,len(steps))
+            steps=s['steps'];rowh=3.04/max(1,len(steps))
             for j,(seconds,title,body) in enumerate(steps):
-                y=3.55+j*rowh;box(slide,4.48,y,8.3,rowh-.06,SOFT,None,True);text(slide,stamp(seconds),4.63,y+.12,.65,.28,13,accent,True,minimum=12);text(slide,title,5.4,y+.08,7.15,.24,15,INK,True,minimum=13);text(slide,body,5.4,y+.34,7.15,rowh-.39,14,INK,minimum=12)
+                y=3.73+j*rowh;box(slide,4.48,y,8.3,rowh-.06,SOFT,None,True);text(slide,stamp(seconds),4.63,y+.12,.65,.28,13,accent,True,minimum=12);text(slide,title,5.4,y+.08,7.15,.24,15,INK,True,minimum=13);text(slide,body,5.4,y+.30,7.15,rowh-.32,13.5,INK,minimum=12)
         else:raise ValueError('Unsupported slide type '+kind)
         elapsed+=s['seconds']
     assert elapsed==deck['minutes']*60
