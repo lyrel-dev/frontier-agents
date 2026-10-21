@@ -15,7 +15,7 @@ def write_json(path: Path, data: dict) -> None:
 def main() -> None:
     agents = {}
     results = []
-    # Correct two transcription errors in the initial source import. Once the
+    # Correct transcription errors in the initial source import. Once the
     # canonical JSON is committed, these exact-match repairs are no-ops.
     repairs = {
         'security': [ ('"headers":[Workflow"', '"headers":["Workflow"') ],
@@ -34,6 +34,11 @@ def main() -> None:
         for slide in deck['slides']:
             if slide['takeaway'] == 'Pilot success is less verified work—not more generated text.':
                 slide['takeaway'] = 'Pilot success is less effort per verified outcome—not more generated text.'
+            # One-time editorial repair after rendered-slide review. The detailed
+            # reconciliation limits remain in the speaker notes and report.
+            if key == 'finops' and slide['kind'] == 'demo' and slide['prompt'].startswith('For authorized real data, compare storage costs'):
+                slide['prompt'] = 'Reconcile synthetic totals of $1,400 and $1,974 (41% higher). This fixture cannot establish drivers. For authorized real data, match periods and cost basis before testing usage, rate and change hypotheses. Do not modify infrastructure.'
+                slide['steps'][1][2] = 'Reconcile the fixture totals; require source breakdowns for any driver claim.'
             assert slide['notes'].strip(), (key, slide['title'])
             assert all(ref in deck['sources'] for ref in slide.get('refs', [])), (key, slide['title'])
             if slide['kind'] == 'demo':
