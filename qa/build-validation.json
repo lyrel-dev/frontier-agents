@@ -1,6 +1,6 @@
 {
-  "html_files": 8,
-  "local_links_checked": 1505,
+  "html_files": 14,
+  "local_links_checked": 2080,
   "errors": [],
   "timing_checks": "all five sessions and demo allocations",
   "boundary": "Structural checks only. External links, rendered layout and live AWS behavior require separate checks."
