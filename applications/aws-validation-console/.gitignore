@@ -6,3 +6,15 @@ __pycache__/
 *.sqlite3-*
 config.local.json
 .env
+
+# Reproducible build outputs (included in distribution bundles)
+static/console.html
+schemas/validation-bundle.schema.json
+grafana/operational-readiness.json
+grafana/metric-catalogue.json
+examples/metrics-series.json
+MANIFEST.sha256
+validation-output/
+
+# Local browser output
+validation/*.png

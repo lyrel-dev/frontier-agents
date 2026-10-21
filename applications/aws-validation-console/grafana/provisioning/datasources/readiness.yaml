@@ -1,0 +1,12 @@
+apiVersion: 1
+datasources:
+  - name: Readiness Prometheus
+    uid: readiness-prometheus
+    type: prometheus
+    access: proxy
+    url: ${READINESS_PROMETHEUS_URL}
+    isDefault: false
+    editable: true
+    jsonData:
+      httpMethod: POST
+      timeInterval: 15s # Replace with the actual scrape interval.

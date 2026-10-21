@@ -1,6 +1,7 @@
 """Versioned, non-executable interchange contracts. Unknown fields are rejected."""
 from __future__ import annotations
 from typing import Annotated, Literal, Union
+from .series import SeriesEvidenceMixin
 from pydantic import (BaseModel, ConfigDict, Field, AwareDatetime, StrictBool,
                       StrictInt, StrictStr, model_validator)
 
@@ -72,7 +73,7 @@ class RunData(StrictModel):
             raise ValueError('ended_at precedes started_at')
         return self
 
-class EvidenceData(StrictModel):
+class EvidenceData(SeriesEvidenceMixin, StrictModel):
     run_ref: REF
     scope_id: str = Field(min_length=1, max_length=300)
     metric: ID

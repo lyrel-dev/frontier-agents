@@ -1,104 +1,71 @@
-# Local Validation Console — 0.1.0
+# Local Validation Console — 0.2.0
 
-A local-first, single-page workspace for inspecting an AWS account and a local Docker, Podman or Kubernetes environment, then keeping scenario definitions, execution records, evidence, validation results and reports together.
+A local single-page workspace for AWS, Docker, Podman and Kubernetes inspection, versioned scenarios, execution records, evidence, validation results and reports.
 
-**This release performs read-only metadata inspection. It does not inject faults, generate load, collect incident telemetry or certify operational readiness.** It provides a runnable foundation and the design for those next stages.
+**Collectors are read-only. This release does not inject faults, generate load, collect incident telemetry, query Prometheus or certify operational readiness.** It can now graph supplied evidence, including timestamped samples, and generate a proposed Grafana dashboard.
 
-## Goal and current position
+## Build and run
 
-The original goal remains: measure customer impact, detection, response and recovery during controlled incidents across EC2/Auto Scaling, EKS on EC2, EKS on Fargate, ECS on EC2, ECS on Fargate and Lambda. A running resource, a completed FIS action or a successful inventory read is not proof of that outcome.
-
-The earlier report supplied 36 research scenarios and six unexecuted FIS template starters. The 36 scenarios are retained here as **draft definitions**. This application adds persistent records and read-only collectors; it does not convert the earlier examples into approved executable tests.
-
-The next acceptance milestone is one real AWS account plus one local runtime: verify identity, inspect bounded scope, retain denied/truncated reads, restart without losing data, and restore a backup with matching record hashes.
-
-## Start with the interface
-
-Open `static/console.html` directly in a browser. This **preview** uses marked synthetic fixtures in memory. It has no backend, credentials or persistent database. Export records before closing the page. Preview import checks are deliberately narrower than backend validation; preview results are not acceptance evidence.
-
-For actual inspection and persistence, run the local service below. Its web interface starts locked and contains the draft catalogue, not synthetic deployment data. The console does not silently switch a failed live connection into a demonstration.
-
-## Run the local service
-
-### Native Python — simplest route to existing profiles and local sockets
-
-Use Python 3.13, the version used for local tests. From the extracted project directory:
+Use Python 3.13, the version used for local tests:
 
 ```sh
-python3.13 -m venv .venv
+python -m venv .venv
 . .venv/bin/activate
 python -m pip install -r requirements.txt
-export CONSOLE_CONFIG="$PWD/config.json"
-export CONSOLE_DATA="$PWD/data"
+python build_ui.py
 python run.py
 ```
 
-Open `http://127.0.0.1:8787`. Unlock with the token printed in the terminal. This token is **not** an AWS key. It is held only in browser memory. Reloading the page locks the interface. A new token is generated on service restart unless `CONSOLE_TOKEN` is set to a private value of at least 32 characters.
+Open `http://127.0.0.1:8787` and unlock with the private startup token. `config.json` starts with no connections. Configure approved AWS profiles, expected account identity, local socket paths or Kubernetes context in the administrator configuration before inspection. The browser accepts no AWS access keys or connection paths.
 
-`config.json` initially has no connections. Copy the relevant entries from `config.example.json`, replace every placeholder, remove unused entries, and restart. Paths and profiles must be usable by the **service process**. Do not put access keys in connection JSON or imported records.
-
-### Docker
+To inspect the UI without a backend, open the generated `static/console.html`. It is self-contained and works offline. Preview records and the separate graph demonstration are explicitly synthetic. Preview changes stay in memory unless exported.
 
 ```sh
+# Build and run in Docker; only loopback port 8787 is published.
 docker compose up --build
 ```
 
-The supplied Compose file exposes only loopback port 8787 and stores the database in the named `validation_data` volume. Read the startup token in the container logs. `docker compose down` preserves the volume; **`docker compose down -v` deletes it**. The image defaults to a non-root user, a read-only root filesystem and no added capabilities.
+The Docker build generates the UI from source. The default image mounts no credentials, engine socket or kubeconfig. The database resides in a persistent local volume. `docker compose down -v` deletes that volume. See [DEPLOYMENT.md](docs/DEPLOYMENT.md) for Docker/Podman/Kubernetes access, storage and restore procedures.
 
-The default deployment intentionally mounts **no AWS credentials, engine socket or kubeconfig**. Configure required access explicitly using [the deployment runbook](docs/DEPLOYMENT.md). A containerized console cannot inspect its host engine merely because it runs inside that engine.
+## Metrics and Grafana
 
-### Podman or a local Kubernetes cluster
+The **Metrics** view gives every catalogue/imported metric an interactive graph, including explicit missing-data states. Charts also appear beside overview counts, inventory counts, numeric resource facts and scenario/run/evidence/validation/report details. Hover or use arrow keys to inspect samples; drag or use zoom controls to select a range; toggle series, inspect provenance and export CSV.
 
-The same image can run with a named Podman volume. `deploy/kubernetes.yaml` supplies a one-replica Deployment, namespace-scoped read permissions, a PVC and a ClusterIP Service. Neither deployment is claimed to have been exercised against a real runtime here. Exact commands, image loading, permissions and persistence checks are in [DEPLOYMENT.md](docs/DEPLOYMENT.md).
+The **Grafana design** view includes the 32-metric measurement catalogue and a downloadable dashboard proposal. Build outputs:
 
-## What works in this release
-
-| Capability | Implemented behavior |
+| Output | Purpose |
 |---|---|
-| AWS inspection | Check the effective account first; reject mismatch/root; read configured services and Regions; record partial coverage. |
-| Local inspection | Fixed read endpoints for Docker/Podman Unix sockets; namespaced Kubernetes metadata reads. |
-| Scenario catalogue | Six AWS deployment models, local models, search/filter, draft/specification status, JSON creation and revision. |
-| Import/export | Versioned JSON bundles; backend schema checks; immutable revisions; atomic imports; dependency checks; hash manifests. |
-| Execution records | Import or define observation/external run records. No command or fault execution. |
-| Validation | Evaluate scalar assertions against explicitly linked evidence; keep failed and inconclusive checks distinct. |
-| Reports | Freeze a validation summary; export JSON or inert standalone HTML. Imported reports remain unverified. |
-| Storage | Local SQLite, additive audit events, consistent database backup, restart persistence. |
-| Interface | Nine views, responsive navigation, searchable tables, detail drawers, import preview, visible provenance and synthetic labels. |
+| `static/console.html` | Offline preview and served SPA. |
+| `grafana/operational-readiness.json` | Importable proposed Grafana dashboard: 32 metric panels plus observation age. |
+| `grafana/metric-catalogue.json` | Units, definitions and proposed queries. |
+| `examples/metrics-series.json` | Explicitly synthetic, importable timeline examples. |
+| `schemas/validation-bundle.schema.json` | Interchange schema, including optional chart samples. |
 
-Missing incident evidence is never turned into a pass. A pass concerns only the assertions actually evaluated. Checksums detect changed content; they do not establish who supplied it.
+Generated outputs are built from tracked sources rather than committed as stale copies. Distribution bundles include them. `python run.py` builds missing outputs automatically; rebuild explicitly after source edits. No network is used by the build.
 
-## Files worth reading
+Read [METRICS.md](docs/METRICS.md) for sample semantics, source labels, Grafana setup, proposed recording rules and limitations. **The `readiness_*` Prometheus names are a proposed contract, not metrics already emitted by AWS FIS or this console.** A real source adapter remains necessary.
 
-- [Design and scope](docs/DESIGN.md): architecture, data model, evaluation semantics, deployment coverage and future execution design.
-- [Value-ranked roadmap](docs/ROADMAP.md): acceptance gates rather than invented completion percentages.
-- [Deployment and restore runbook](docs/DEPLOYMENT.md): local setup, credentials, socket risk, Kubernetes storage and first live acceptance.
-- [API and data contract](docs/API.md): endpoints, import format, references and errors.
-- [Security boundaries](docs/SECURITY.md): implemented controls and remaining risks.
-- `schemas/validation-bundle.schema.json`: authoritative generated interchange schema.
-- `examples/catalogue.json`: 36 research drafts plus the collection-coverage definition.
-- `examples/synthetic-workflow.json`: deliberately failing and incomplete test fixtures.
-- `VALIDATION.json`: what was tested, what was mocked and what remains unverified.
+## Evidence and decisions
 
-## Development checks
+The requirement, execution, evidence, validation and report are separate immutable records. Import review precedes atomic commit. Existing revisions cannot be overwritten. Scalar values remain the evaluator inputs: an attractive graph cannot turn missing evidence into a pass. Optional chart samples are stored in local SQLite with their evidence record; report charts use only pinned inputs with matching hashes.
+
+A successful inventory read is not resilience validation. All nine deployment models remain in scope: EC2/Auto Scaling, EKS on EC2/Fargate, ECS on EC2/Fargate, Lambda, Docker, Podman and Kubernetes. Live collector acceptance, controlled workload telemetry and supervised fault execution remain outstanding.
+
+## Checks
 
 ```sh
 python -m pip install -r requirements-dev.txt
 python build_ui.py
 python -m pytest -q
-```
-
-`static/console.html` is generated from `static/shell.html`, `static/style.css`, `static/app.js` and `static/ui-data.json`. Do not edit the generated file without rebuilding the other deliverables. Frontend assets have no CDN dependency. Installing Python dependencies or building the image normally requires network access; inspecting AWS requires AWS connectivity.
-
-## Boundaries
-
-This is a single-operator local tool, not an internet-facing multi-tenant service. It has no scheduler, managed fault worker, arbitrary query executor, attachment/object store, user accounts, signed provenance, automatic retention or database encryption. All application records are local; AWS resources and AWS-side audit records remain in AWS. Source names and free-text imports can still contain sensitive information: review exports and protect the volume and backups.
-
-For the optional browser and real-process HTTP checks:
-
-```sh
-# Use an installed Chromium via CHROMIUM_PATH, or Playwright's installed browser.
 python tests/browser_checks.py
+python tests/metrics_browser_checks.py
 python tests/http_smoke.py
 ```
 
-The browser harness uses injected page content and a TestClient bridge because native browser navigation was restricted in the delivery environment. The separate HTTP smoke test starts the real service on loopback, checks authentication/export/backup and verifies record hashes after process restart. Neither test connects to your AWS account or runtime.
+Chromium is required for browser checks; set `CHROMIUM_PATH` when necessary. The execution environment blocks browser navigation, so browser checks use DOM injection. The metrics harness supplies SHA-256 for its insecure test page and bridges UI API calls to real loopback HTTP. It checks served script/style hashes through meta CSP; native browser navigation, fetch/CORS and `connect-src` are not established by that harness. See `validation/metrics-validation.json` for measured results.
+
+## Documentation and boundaries
+
+[Metric design](docs/METRICS.md), [deployment](docs/DEPLOYMENT.md), [API](docs/API.md), [security](docs/SECURITY.md), [value-ranked roadmap](docs/ROADMAP.md). The version 0.1 [design baseline](docs/DESIGN.md) remains historical context; the metrics document specifies the 0.2 additions.
+
+This is a single-operator local tool, not an internet-facing multi-tenant service. It has no scheduler, fault worker, general command executor, signed provenance or encrypted database. Protect local volumes and exports. Engine-socket access remains powerful even when the application chooses read endpoints. No live AWS/runtime or Grafana acceptance is claimed.

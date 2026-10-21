@@ -10,9 +10,10 @@ RUN pip install --no-cache-dir -r requirements.txt \
  && mkdir -p /data /config \
  && chown 10001:10001 /data
 COPY app ./app
-COPY run.py ./
-COPY static/console.html ./static/console.html
-COPY examples/catalogue.json ./examples/catalogue.json
+COPY run.py build_ui.py build_metrics.py ./
+COPY static ./static
+COPY examples ./examples
+RUN python build_ui.py
 COPY config.json /config/config.json
 USER 10001:10001
 EXPOSE 8787

@@ -1,0 +1,51 @@
+{
+  "version": "0.2.0",
+  "date": "2026-10-21",
+  "parent_commit": "93dce62f426ba298720f2fd027d88f5717459367",
+  "results": {
+    "backend_and_generator_tests": {
+      "passed": 127,
+      "command": "python -m pytest -q"
+    },
+    "baseline_browser_checks": {
+      "passed": 52,
+      "command": "python tests/browser_checks.py"
+    },
+    "metrics_browser_checks": {
+      "passed": 57,
+      "command": "python tests/metrics_browser_checks.py"
+    },
+    "loopback_http_smoke_checks": {
+      "passed": 8,
+      "command": "python tests/http_smoke.py"
+    }
+  },
+  "grafana": {
+    "catalogue_metrics": 32,
+    "time_series_panels": 33,
+    "structural_checks": [
+      "One graph per metric plus source observation age",
+      "Unique panel IDs and non-overlapping grid",
+      "All six scope/provenance filters in every measurement query",
+      "Missing series are not replaced with zero",
+      "Data kind defaults to measured",
+      "No interpolation across null values"
+    ],
+    "server_import_or_query_test": false
+  },
+  "data_integrity": [
+    "Legacy evidence canonical hashes unchanged when series absent",
+    "Optional samples persist through SQLite export/import with manifest",
+    "Scalar evaluator verdict does not depend on chart samples",
+    "Frozen report graphs omit mismatched input hashes"
+  ],
+  "browser_harness": "Navigation is blocked by the execution environment. Tests use DOM injection. The metrics preview harness supplies SHA-256 for its insecure about:blank page. Live UI API requests are bridged to a real loopback HTTP server; served script/style hashes are enforced via meta CSP. Native browser navigation, fetch/CORS and CSP connect-src are not tested.",
+  "not_verified": [
+    "No real AWS account or Docker/Podman/Kubernetes runtime connected",
+    "No CloudWatch or Prometheus telemetry queried",
+    "No Grafana server import, provisioning or PromQL execution",
+    "No container image built or started",
+    "No fault injection or production-readiness certification"
+  ],
+  "reproduction": "Install requirements-dev.txt; run python build_ui.py; execute the commands above. Browser tests require Chromium. Generated UI, schema, demo bundle and Grafana JSON are build outputs."
+}
