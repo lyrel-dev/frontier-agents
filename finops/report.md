@@ -1,6 +1,6 @@
 # AWS FinOps Agent
 
-Turn a cost question into reproducible evidence and owned work.
+Cost analysis, anomaly investigation, reporting and engineering follow-up.
 
 
 Revision: 21 October 2026. Independent engineering field guide.
@@ -43,6 +43,8 @@ Approve preview use and the documented processing boundary before uploading inte
 
 **Capability crosswalk:** C01, C09
 
+**Responsible role (team recommendation):** FinOps analyst and cost owner
+
 **Input:** Comparison contract, approved data scope and current ownership context.
 
 **Artifact:** A reproducible cost-query definition with explicit exclusions.
@@ -59,6 +61,8 @@ Ask the agent to group the cost by useful dimensions and show the arithmetic beh
 Forecasts and commitment coverage can provide additional context, but they answer different questions from historical reconciliation. Separate observed spend from forecast values and contractual estimates. The synthetic demo illustrates this distinction; it is not evidence of a real account anomaly.
 
 **Capability crosswalk:** C01, C02
+
+**Responsible role (team recommendation):** FinOps analyst
 
 **Input:** Matching cost queries for both comparison periods.
 
@@ -77,6 +81,8 @@ Event-triggered investigation is a configured workflow. Confirm the anomaly even
 
 **Capability crosswalk:** C03, C08
 
+**Responsible role (team recommendation):** Engineering and FinOps owners
+
 **Input:** Reconciled movement, anomaly details and permitted change context.
 
 **Artifact:** A driver analysis that separates observations, hypotheses and gaps.
@@ -93,6 +99,8 @@ Existing optimization recommendations can help prioritize investigation, but the
 For a storage recommendation, clarify whether the action changes retention, retrieval latency, durability assumptions or recovery procedures. The authorized change belongs in normal infrastructure and financial processes. The agent's useful output is a justified candidate with constraints and evidence.
 
 **Capability crosswalk:** C04, C13
+
+**Responsible role (team recommendation):** Service owner and FinOps reviewer
 
 **Input:** Recommendation source, utilization evidence, service constraints and estimated benefit.
 
@@ -111,6 +119,8 @@ Jira and Slack are external publication effects, not merely read-only analysis. 
 
 **Capability crosswalk:** C05, C06, C07, C10, C11, C12
 
+**Responsible role (team recommendation):** Report owner
+
 **Input:** Reviewed analysis, approved destination and named action owner.
 
 **Artifact:** A report or ticket with evidence links and a concrete next step.
@@ -127,6 +137,8 @@ After an independently authorized engineering change, compare the relevant cost 
 Close the task only when the owner has reviewed both cost and operational outcomes. Capture rejected recommendations and analysis effort as well as accepted work. That gives the pilot a more meaningful scorecard than the number of reports produced or the sum of potential savings shown.
 
 **Capability crosswalk:** C13
+
+**Responsible role (team recommendation):** Engineering owner and cost owner
 
 **Input:** Implemented change record, comparable observation windows and service-health evidence.
 
@@ -156,7 +168,9 @@ Close the task only when the owner has reviewed both cost and operational outcom
 
 **Prompt:** Compare this service’s cost for the last two complete weeks, grouped by account and Region. State filters and the cost basis used.
 
-Evidence: S06, S03, S04
+**Review record to retain (team recommendation):** Reproducible cost query, dimensioned totals, filters, and data-source cross-check.
+
+Official documentation references: S06, S03, S04
 
 
 ### C02 — Inspect forecasts and commitment coverage
@@ -175,7 +189,9 @@ Evidence: S06, S03, S04
 
 **Prompt:** Summarize current commitment coverage and the next-period forecast for these accounts. Separate observed data from projections.
 
-Evidence: S06, S04
+**Review record to retain (team recommendation):** Forecast/coverage figures with stated source, time horizon, and commitment assumptions.
+
+Official documentation references: S06, S04
 
 
 ### C03 — Investigate a cost anomaly with operational context
@@ -194,7 +210,9 @@ Evidence: S06, S04
 
 **Prompt:** Investigate this storage-cost increase. Rank evidence-backed drivers, identify relevant changes, and state what remains uncertain.
 
-Evidence: S07, S15
+**Review record to retain (team recommendation):** Anomaly investigation separating observed variance, supporting drivers, and uncertainty.
+
+Official documentation references: S07, S15
 
 
 ### C04 — Prioritize existing optimization recommendations
@@ -213,7 +231,9 @@ Evidence: S07, S15
 
 **Prompt:** List low-effort non-production recommendations for our team. Include source, resource, estimated benefit, and the checks required before changing it.
 
-Evidence: S09, S15
+**Review record to retain (team recommendation):** Ranked optimization recommendations with resource IDs and operational constraints.
+
+Official documentation references: S09, S15
 
 
 ### C05 — Generate a report for engineering or leadership
@@ -232,7 +252,9 @@ Evidence: S09, S15
 
 **Prompt:** Create an HTML report for the platform review: spend by team, significant changes, unresolved anomalies, and a source-backed action list.
 
-Evidence: S10, S12
+**Review record to retain (team recommendation):** Dated cost report recording query definition, charts, narrative, and unverified assumptions.
+
+Official documentation references: S10, S12
 
 
 ### C06 — Turn a request into a tracked on-demand task
@@ -251,7 +273,9 @@ Evidence: S10, S12
 
 **Prompt:** Create an on-demand task to investigate the selected anomaly and produce a written evidence summary for review.
 
-Evidence: S11
+**Review record to retain (team recommendation):** Tracked on-demand task with owner, input scope, result, and completion status.
+
+Official documentation references: S11
 
 
 ### C07 — Schedule recurring cost reports and reviews
@@ -270,7 +294,9 @@ Evidence: S11
 
 **Prompt:** Prepare a weekly platform cost review with anomaly follow-up and a clearly separated list of unverified recommendations.
 
-Evidence: S11, S10, S15
+**Review record to retain (team recommendation):** Scheduled task definition, run history, output report, and reviewer.
+
+Official documentation references: S11, S10, S15
 
 
 ### C08 — Trigger a workflow from a cost-anomaly event
@@ -289,7 +315,9 @@ Evidence: S11, S10, S15
 
 **Prompt:** When a qualifying anomaly is detected in our non-production account group, investigate it and prepare a concise evidence summary.
 
-Evidence: S08, S04
+**Review record to retain (team recommendation):** Event-trigger definition, source anomaly reference, investigation record, and notification log.
+
+Official documentation references: S08, S04
 
 
 ### C09 — Supply account ownership and reporting context
@@ -308,7 +336,9 @@ Evidence: S08, S04
 
 **Prompt:** Use this account-to-team map for reporting, identify unmapped accounts, and do not invent an owner for missing entries.
 
-Evidence: S12, S17
+**Review record to retain (team recommendation):** Versioned ownership/cost-allocation context and an exception list for unmapped resources.
+
+Official documentation references: S12, S17
 
 
 ### C10 — Correct recurring preferences through memory
@@ -327,7 +357,9 @@ Evidence: S12, S17
 
 **Prompt:** Update the reporting preference to show account and service first, and stop applying the old team grouping.
 
-Evidence: S12
+**Review record to retain (team recommendation):** Stored reporting preferences with corrections and a check for current applicability.
+
+Official documentation references: S12
 
 
 ### C11 — Create Jira Cloud issues and follow-up comments
@@ -346,7 +378,9 @@ Evidence: S12
 
 **Prompt:** Prepare a Jira issue summarizing this verified cost concern, its account and resource, evidence, and the team’s required validation steps.
 
-Evidence: S13, S15
+**Review record to retain (team recommendation):** Linked Jira work item with recommendation evidence, assignee, and follow-up status.
+
+Official documentation references: S13, S15
 
 
 ### C12 — Post cost updates to a connected Slack channel
@@ -365,7 +399,9 @@ Evidence: S13, S15
 
 **Prompt:** Post the reviewed platform cost summary to the approved internal channel without account-owner personal details or sensitive attachments.
 
-Evidence: S14, S15
+**Review record to retain (team recommendation):** Approved Slack message with cost context, scope, and source-report link.
+
+Official documentation references: S14, S15
 
 
 ### C13 — Turn a recommendation into a controlled engineering change
@@ -384,7 +420,9 @@ Evidence: S14, S15
 
 **Prompt:** Summarize this opportunity as a proposed change with assumptions and measurement criteria; do not describe estimated savings as achieved.
 
-Evidence: S09, S13, S15
+**Review record to retain (team recommendation):** Change ticket with proposed action, approvals, deployment evidence, and comparable post-change cost.
+
+Official documentation references: S09, S13, S15
 
 
 ## Illustrative handoff
