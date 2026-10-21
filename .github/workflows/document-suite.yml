@@ -1,0 +1,46 @@
+name: Build and publish documentation suite
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: [documentation-build.json]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: frontier-document-suite
+  cancel-in-progress: false
+
+jobs:
+  documents:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install document tooling
+        run: python -m pip install beautifulsoup4==4.13.4 python-pptx==1.0.2
+      - name: Build reports, transcripts, and presentation decks
+        run: python tools/build_suite.py
+      - name: Validate generated documents
+        run: python tools/build_suite.py --check
+      - name: Commit each generated document separately
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          python tools/build_suite.py --commit
+          git push origin HEAD:main
+      - name: Retain downloadable document package
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontier-agents-document-suite
+          path: dist/frontier-agents-document-suite.zip
+          if-no-files-found: error
+          retention-days: 30
