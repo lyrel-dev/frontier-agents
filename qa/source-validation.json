@@ -1,0 +1,46 @@
+{
+  "revision": "2026-10-21-narrative-1",
+  "checks": [
+    {
+      "agent": "devops",
+      "stages": 6,
+      "slides": 18,
+      "minutes": 35,
+      "demo_minutes": 12,
+      "source_references_valid": true
+    },
+    {
+      "agent": "kiro",
+      "stages": 6,
+      "slides": 18,
+      "minutes": 32,
+      "demo_minutes": 13,
+      "source_references_valid": true
+    },
+    {
+      "agent": "security",
+      "stages": 6,
+      "slides": 18,
+      "minutes": 30,
+      "demo_minutes": 8,
+      "source_references_valid": true
+    },
+    {
+      "agent": "finops",
+      "stages": 6,
+      "slides": 16,
+      "minutes": 27,
+      "demo_minutes": 7,
+      "source_references_valid": true
+    },
+    {
+      "agent": "architecture",
+      "stages": 6,
+      "slides": 18,
+      "minutes": 36,
+      "demo_minutes": 8,
+      "source_references_valid": true
+    }
+  ],
+  "boundary": "Structural and timing validation of source files, not verification of external source content or live AWS behavior."
+}
