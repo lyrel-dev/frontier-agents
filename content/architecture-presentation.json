@@ -14,12 +14,11 @@
       "phase": "Position",
       "refs": [
         "D01",
-        "K02",
         "S04",
         "F03"
       ],
       "caps": [],
-      "notes": "This is a team-level reference design assembled from the documented behavior of four products. It is not an AWS internal architecture or a shared four-agent runtime. The common unit is a bounded engineering work item with an owner, evidence, allowed effects and completion checks. Each product retains its own identity, execution and approval model. The demo is a tabletop handoff walkthrough, not an implemented orchestrator.",
+      "notes": "This is a team-level reference design assembled from the documented behavior of three products. It is not an AWS internal architecture or a shared three-agent runtime. The common unit is a bounded engineering work item with an owner, evidence, allowed effects and completion checks. Each product retains its own identity, execution and approval model. The demo is a tabletop handoff walkthrough, not an implemented orchestrator.",
       "metrics": [
         [
           "36 min",
@@ -30,7 +29,7 @@
           "handoff tabletop demo"
         ],
         [
-          "4 agents",
+          "3 agents",
           "distinct execution boundaries"
         ]
       ],
@@ -45,12 +44,11 @@
       "phase": "Position",
       "refs": [
         "D03",
-        "K04",
         "S12",
         "F07"
       ],
       "caps": [],
-      "notes": "DevOps Agent is the operational investigator, Kiro produces repository work, Security Agent supplies application-security assessment evidence, and FinOps Agent explains and routes cost work. These roles can overlap, but their output artifacts are different. A shared work-item schema makes the handoff legible without claiming shared sessions or permissions. The table is a recommended allocation of responsibility based on documented capabilities.",
+      "notes": "DevOps Agent provides operational evidence, Security Agent provides application-security assessment evidence, and FinOps Agent provides cost-analysis evidence. Their permissions and output records remain distinct. A shared work-item format is a proposed team convention, not a shared execution runtime. The engineering team retains implementation, review, merge and deployment responsibilities.",
       "headers": [
         "Specialist",
         "Useful daily input",
@@ -61,11 +59,6 @@
           "DevOps Agent",
           "Incident window and operational context",
           "Investigation, mitigation or prevention evidence"
-        ],
-        [
-          "Kiro",
-          "Bounded change and repository context",
-          "Spec, diff, tests and PR/MR"
         ],
         [
           "Security Agent",
@@ -87,7 +80,6 @@
       "phase": "Use case",
       "refs": [
         "D03",
-        "K08",
         "S08",
         "F11"
       ],
@@ -126,7 +118,6 @@
       "phase": "Use case",
       "refs": [
         "D04",
-        "K04",
         "S14",
         "F09",
         "F11"
@@ -135,7 +126,7 @@
         "P04",
         "P08"
       ],
-      "notes": "An incident can lead to a code change, a security finding to a repair, or a cost anomaly to an infrastructure work item. The daily review aggregates accepted evidence into an owned backlog. Do not force all four agents into every task. Manual artifact handoffs are often sufficient to prove the operating model before building automation. Each row is a proposed team workflow, not a turnkey integration supplied by AWS.",
+      "notes": "An incident can lead to a code change, a security finding to a repair, or a cost anomaly to an infrastructure work item. The daily review aggregates accepted evidence into an owned backlog. Do not force all three agents into every task. Manual artifact handoffs are often sufficient to prove the operating model before building automation. Each row is a proposed team workflow, not a turnkey integration supplied by AWS.",
       "headers": [
         "Daily workflow",
         "Useful specialist output",
@@ -144,7 +135,7 @@
       "rows": [
         [
           "Incident → fix",
-          "DevOps evidence → Kiro reviewable change",
+          "DevOps evidence → team-owned change request",
           "Owner verifies recovery after approved delivery"
         ],
         [
@@ -172,7 +163,6 @@
       "phase": "Controls",
       "refs": [
         "D34",
-        "K06",
         "S08",
         "F03"
       ],
@@ -190,11 +180,6 @@
           "DevOps",
           "AWS role and connected integrations",
           "Allowed source read; harmless out-of-scope read denied"
-        ],
-        [
-          "Kiro",
-          "Repository authorization and client/sandbox controls",
-          "Only selected repository/task access"
         ],
         [
           "Security",
@@ -216,7 +201,6 @@
       "phase": "Evidence",
       "refs": [
         "D03",
-        "K03",
         "S12",
         "F06"
       ],
@@ -229,11 +213,6 @@
           "title": "Operational",
           "body": "Incident window, resource IDs, telemetry and deployment reference.",
           "tag": "DEVOPS"
-        },
-        {
-          "title": "Repository",
-          "body": "Commit, file/symbol, requirement and check result.",
-          "tag": "KIRO"
         },
         {
           "title": "Assessment",
@@ -254,18 +233,16 @@
       "seconds": 90,
       "phase": "Controls",
       "refs": [
-        "K13",
-        "K14",
         "D06",
         "F12"
       ],
       "caps": [
         "P03"
       ],
-      "notes": "Steering, skills, memory and context files improve relevance. They must not be treated as permission boundaries or proof of policy enforcement. Treat source content as evidence, not as authority to ignore the task’s restrictions. Keep secrets out of context artifacts unless the approved workflow specifically requires them. When stable policy and learned context conflict, verify current policy and correct the context.",
+      "notes": "Instructions, skills, memory and context files improve relevance. They must not be treated as permission boundaries or proof of policy enforcement. Treat source content as evidence, not as authority to ignore the task’s restrictions. Keep secrets out of context artifacts unless the approved workflow specifically requires them. When stable policy and learned context conflict, verify current policy and correct the context.",
       "left": {
         "title": "Instruction plane",
-        "body": "Prompts, steering, skills, memory and context explain the task and preferred procedure.",
+        "body": "Prompts, instructions, skills, memory and context explain the task and preferred procedure.",
         "tag": "GUIDANCE"
       },
       "right": {
@@ -284,13 +261,12 @@
       "refs": [
         "D13",
         "D11",
-        "K02",
         "F15"
       ],
       "caps": [
         "P05"
       ],
-      "notes": "A single “human in the loop” box hides important differences. DevOps directed actions require explicit enablement and approval. Active release tests can mutate a target through application requests. Kiro’s output reaches a reviewable branch, with merging under team control. FinOps collaboration writes have trigger-dependent approval rules. Model the real effect and apply the correct gate; do not assume a prompt before every mutation.",
+      "notes": "Approval must match the actual effect. DevOps directed actions require explicit enablement and approval. Active application tests can change the target through real requests. FinOps collaboration writes have trigger-dependent approval rules. Code implementation and release remain team-owned responsibilities. Do not infer a prompt before every mutation.",
       "headers": [
         "Effect path",
         "Documented native behavior",
@@ -308,11 +284,6 @@
           "Isolate data, dependencies and stop controls"
         ],
         [
-          "Kiro code change",
-          "Reviewable repository output; no automatic merge",
-          "Repository checks and merge ownership"
-        ],
-        [
           "FinOps external post",
           "Jira and Slack approval differ by trigger",
           "Review destination scope and pre-authorization"
@@ -326,9 +297,6 @@
       "seconds": 90,
       "phase": "Controls",
       "refs": [
-        "K10",
-        "K19",
-        "K20",
         "D11",
         "S10"
       ],
@@ -368,15 +336,14 @@
       "refs": [
         "D37",
         "D38",
-        "K15",
-        "S26",
+        "S28",
         "F13",
         "F14"
       ],
       "caps": [
         "P07"
       ],
-      "notes": "MCP and the documented DevOps remote protocols can expose useful capabilities to clients. Repository and collaboration integrations provide other handoff paths. They still require their own identities, scopes and supported actions. There is no basis here to claim an out-of-the-box orchestrator across all four products. Start with a link or exported artifact, and automate only a documented interface whose failure modes the team can operate.",
+      "notes": "MCP and the documented DevOps remote protocols can expose useful capabilities to clients. Repository and collaboration integrations provide other handoff paths. They still require their own identities, scopes and supported actions. There is no basis here to claim an out-of-the-box orchestrator across all three products. Start with a link or exported artifact, and automate only a documented interface whose failure modes the team can operate.",
       "headers": [
         "Interface",
         "Useful purpose",
@@ -385,22 +352,17 @@
       "rows": [
         [
           "DevOps remote servers",
-          "Client/agent access to an Agent Space",
-          "Shared credentials with other specialists"
+          "Scoped client access to an Agent Space",
+          "Shared credentials across specialists"
         ],
         [
-          "Kiro MCP / tools",
-          "Extend the coding workflow",
-          "Universal provider or client parity"
-        ],
-        [
-          "Security IDE / pipeline",
-          "Submit assessment work from developer tooling",
-          "Local-only execution or blanket coverage"
+          "Security CI/CD integration",
+          "Submit scoped assessment work and inspect results",
+          "Blanket coverage or automatic release authority"
         ],
         [
           "FinOps Jira / Slack",
-          "Route approved outputs",
+          "Route outputs through configured destinations",
           "General Jira administration or inbound Slack commands"
         ]
       ]
@@ -413,7 +375,6 @@
       "phase": "Integration",
       "refs": [
         "D03",
-        "K08",
         "S12",
         "F09"
       ],
@@ -457,7 +418,6 @@
       "phase": "Controls",
       "refs": [
         "D06",
-        "K24",
         "S28",
         "F11"
       ],
@@ -496,7 +456,6 @@
       "phase": "Evidence",
       "refs": [
         "D03",
-        "K09",
         "S14",
         "F06"
       ],
@@ -540,7 +499,6 @@
       "phase": "Evidence",
       "refs": [
         "D03",
-        "K06",
         "S14",
         "F11"
       ],
@@ -579,7 +537,6 @@
       "phase": "Controls",
       "refs": [
         "D15",
-        "K02",
         "S05",
         "S30",
         "F16"
@@ -587,7 +544,7 @@
       "caps": [
         "P12"
       ],
-      "notes": "The team should record the product surface, feature maturity, service Region, inference behavior, retention and output destinations for the workflow it actually deploys. DevOps release preview has a more limited Region footprint than production operations. Kiro client capabilities and account rollout differ. Security capability maturity is mixed. FinOps remains preview with its documented US storage and inference boundaries. Do not use an organization-wide “AWS approved” label as a substitute for this feature-level review.",
+      "notes": "Record the exact feature, maturity, service Region, inference behavior and output destination. DevOps production operations and release preview have different availability. Security features have different maturity and source/target requirements. FinOps remains a separately qualified preview workflow. Review these boundaries for each use case rather than applying a portfolio-wide approval.",
       "headers": [
         "Solution",
         "Availability distinction",
@@ -598,11 +555,6 @@
           "DevOps",
           "Production operations vs release preview",
           "Is the selected feature supported in this Agent Space Region?"
-        ],
-        [
-          "Kiro",
-          "Web, IDE and CLI differ; account rollout matters",
-          "Does this client actually support the required control?"
         ],
         [
           "Security",
@@ -624,7 +576,6 @@
       "phase": "Demonstration",
       "refs": [
         "D03",
-        "K04",
         "S14",
         "F09"
       ],
@@ -649,7 +600,7 @@
         ],
         [
           120,
-          "Inspect the coding handoff",
+          "Inspect the team-owned change handoff",
           "Show the task contract, scoped diff and independent checks."
         ],
         [
@@ -675,7 +626,6 @@
       "phase": "Adoption",
       "refs": [
         "D13",
-        "K06",
         "S10",
         "F15"
       ],
@@ -717,7 +667,6 @@
       "phase": "Close",
       "refs": [
         "D13",
-        "K02",
         "S10",
         "F15"
       ],
@@ -823,58 +772,6 @@
       "title": "Cross-region inference",
       "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/cross-region-inference.html"
     },
-    "K02": {
-      "title": "Kiro Web",
-      "url": "https://kiro.dev/docs/web/"
-    },
-    "K03": {
-      "title": "Working with the agent",
-      "url": "https://kiro.dev/docs/web/using-the-agent/"
-    },
-    "K04": {
-      "title": "Autonomous mode",
-      "url": "https://kiro.dev/docs/web/autonomous-mode/"
-    },
-    "K06": {
-      "title": "GitHub integration",
-      "url": "https://kiro.dev/docs/web/github/"
-    },
-    "K08": {
-      "title": "Specifications",
-      "url": "https://kiro.dev/docs/specs/"
-    },
-    "K09": {
-      "title": "Built-in tools",
-      "url": "https://kiro.dev/docs/tools/"
-    },
-    "K10": {
-      "title": "Cloud sandbox",
-      "url": "https://kiro.dev/docs/web/sandbox/"
-    },
-    "K13": {
-      "title": "Steering",
-      "url": "https://kiro.dev/docs/steering/"
-    },
-    "K14": {
-      "title": "Memory",
-      "url": "https://kiro.dev/docs/memory/"
-    },
-    "K15": {
-      "title": "Model Context Protocol",
-      "url": "https://kiro.dev/docs/mcp/"
-    },
-    "K19": {
-      "title": "Sandbox internet access",
-      "url": "https://kiro.dev/docs/web/sandbox/internet-access/"
-    },
-    "K20": {
-      "title": "Environment variables and secrets",
-      "url": "https://kiro.dev/docs/web/sandbox/environment-variables/"
-    },
-    "K24": {
-      "title": "Workflows",
-      "url": "https://kiro.dev/docs/workflows/"
-    },
     "S04": {
       "title": "What is AWS Security Agent?",
       "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/what-is.html"
@@ -899,10 +796,6 @@
       "title": "Revalidate findings",
       "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html"
     },
-    "S26": {
-      "title": "Code review from an IDE",
-      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/code-review-ide-integration.html"
-    },
     "S28": {
       "title": "Run penetration tests from CI/CD",
       "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/cicd-pentest.html"
@@ -912,5 +805,6 @@
       "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/resilience.html"
     }
   },
-  "editorial_classification": "Technical documentation; documented features and proposed team workflows are explicitly distinguished."
+  "editorial_classification": "Technical documentation; documented features and proposed team workflows are explicitly distinguished.",
+  "scope_revision": "2026-10-21-three-agent-scope"
 }
