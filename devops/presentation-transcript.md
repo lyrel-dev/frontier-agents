@@ -1,303 +1,262 @@
-# AWS DevOps Agent — presentation transcript
+# AWS DevOps Agent: presentation transcript
 
-35 minutes including 12 minutes of demonstrations. Questions and breaks are additional. Demo budgets are walkthrough allocations, not agent completion guarantees.
+Total 35:00, including 8:00 prepared-result demonstrations. No service-completion-time guarantee. Questions, preparation and live setup are additional.
 
+## 1. Investigate, propose, authorize
 
-## 01. AWS DevOps Agent
+0:00–1:00; allocation 1:00
 
-**00:00–01:00 · 01:00 allocated**
+These are separate operations, not stages that imply automatic permission to change production.
 
-**Takeaway:** Investigations produce hypotheses and evidence for operational review.
+| Investigate | Propose | Authorize |
+|---|---|---|
+| Read connected telemetry and change context. | Produce a diagnosis and mitigation proposal. | Use the separate directed-action gate for an eligible mutation. |
 
-Open with the operational job, not a claim of full autonomy. A checkout service is failing after a deployment. We want a coherent investigation, a defensible mitigation decision, and a follow-up item that prevents recurrence. Production operations are generally available; release-management features are preview. The examples in this deck are proposed exercises. The demo slots include the operator walkthrough and a prepared-result fallback, not a promise that an agent run completes within the allotted minutes.
+### Presenter notes
 
-[D01 — About AWS DevOps Agent](https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent.html)
+Open with the distinction the team must preserve during an incident: analysis can run with read access, a proposal remains advice, and execution needs the appropriate configured and approved path. The guide covers environment inspection, incident operations, reliability recommendations, custom automation and preview release assessment. It does not claim that every account or source is connected, or that the agent replaces the incident commander.
 
-[D14 — AWS DevOps Agent is now generally available](https://aws.amazon.com/about-aws/whats-new/2026/03/aws-devops-agent-generally-available/)
+Official documentation: [Autonomous incident response](https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-autonomous-incident-response.html) · [Working with directed actions](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-working-with-directed-actions.html)
 
-[D15 — Supported Regions](https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-supported-regions.html)
 
+## 2. Know which object you are configuring
 
-## 02. Define the incident scope and evidence window
+1:00–3:00; allocation 2:00
 
-**01:00–02:30 · 01:30 allocated**
+Scope, work, context and execution are not the same object.
 
-**Takeaway:** A time window, a service boundary, and a change reference make the question answerable.
+| Object | Contains or represents | Operator decision |
+|---|---|---|
+| Agent Space | Associated accounts, tools and knowledge | Which environment is accessible? |
+| Investigation | Incident timeline, evidence and conclusions | Which problem and interval are being analyzed? |
+| Custom agent / invocation | Reusable definition / one run | Which tools and context can this run use? |
+| Instructions / skill / memory | Standing rules / procedure / retained context | What is always loaded, selected or recalled? |
 
-Use the checkout incident as the thread through this presentation. Supply an incident window and the deployment identity before asking for a cause. A production symptom, an agent hypothesis, a mitigation plan, and a verified recovery are different artifacts. The example does not assert that a real incident occurred. The on-call engineer remains responsible for triage and for comparing conclusions with the source systems.
+### Presenter notes
 
-[D02 — Production operations](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-production-operations-index.html)
+Use the object model to prevent configuration errors. Registering an integration is not the same as associating it with the operational space. A Chat exchange is not necessarily a formal investigation. A custom agent definition is not an execution result. When someone says the agent knows the environment, ask which retained representation is involved, how recently it was refreshed, and whether the current run could actually read it.
 
-[D03 — Autonomous incident response](https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-autonomous-incident-response.html)
+Official documentation: [Create an Agent Space](https://docs.aws.amazon.com/devopsagent/latest/userguide/getting-started-with-aws-devops-agent-creating-an-agent-space.html) · [Custom agents](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html) · [Agent instructions](https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-agent-instructions.html) · [Memories: current stores, refresh and lifecycle](https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html)
 
 
-## 03. Operational capability groups and their dependencies
+## 3. The functional map
 
-**02:30–04:00 · 01:30 allocated**
+3:00–5:00; allocation 2:00
 
-**Takeaway:** Choose an operational job first; enable its data and action paths second.
+Group by product responsibility; do not label an example incident as a capability.
 
-The capability map separates incident work, on-demand operational questions, prevention, configured recurring tasks, and release validation. They share application context but differ in invocation and output. A daily summary is a custom-agent configuration, not an automatically provisioned SRE dashboard. Release management is a separate preview track and should not inherit the availability label of production operations.
+| Area | Documented operations | Result to inspect |
+|---|---|---|
+| Environment | Discover topology; query connected sources | Resource mapping and tool results |
+| Incident | Open; triage; investigate; steer/fork; Review | Incident record and separate quality assessment |
+| Response | Propose mitigation; approve action; prevention | Proposal, execution record or recommendation |
+| Automation | Run a configured custom agent; channel delivery | Invocation trajectory or delivered message |
+| Release — preview | Review code; test a running UI/API | Readiness report or executed test evidence |
 
-[D03 — Autonomous incident response](https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-autonomous-incident-response.html)
+### Presenter notes
 
-[D04 — Proactive incident prevention](https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-proactive-incident-prevention.html)
+Explain why these areas are separate. Querying a metric is not an incident diagnosis. Creating a recommendation is not deploying it. A recurring health report is a configured task using selected functions, not a universal built-in report. Release readiness examines a change; release testing exercises a running application. The full report provides operation-level inputs and boundaries, so this slide is a map rather than the whole reference.
 
-[D05 — On Demand DevOps Tasks](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-on-demand-devops-tasks.html)
+Official documentation: [Autonomous incident response](https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-autonomous-incident-response.html) · [Reviewing investigations](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-reviewing-investigations.html) · [Working with directed actions](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-working-with-directed-actions.html) · [Proactive incident prevention](https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-proactive-incident-prevention.html) · [Custom agents](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html) · [Release management](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-release-management-index.html)
 
-[D06 — Custom Agents](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html)
 
-[D09 — Release management](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-release-management-index.html)
+## 4. Accessible evidence is not necessarily inspected evidence
 
+5:00–7:30; allocation 2:30
 
-## 04. Configure Agent Space data access and scope
+Trace a material conclusion back through the query, source and permission boundary.
 
-**04:00–05:30 · 01:30 allocated**
+| Scope | Access | Observation | Conclusion |
+|---|---|---|---|
+| Alarm/resource ID; account; region; UTC interval | Associated integration and effective role permissions | Actual tool query, returned timestamps and identifiers | Hypothesis supported by the current result |
 
-**Takeaway:** Acceptance: one known resource is visible; an out-of-scope test resource is denied.
+Denied access, missing data and a genuine empty query result must remain distinct.
 
-An Agent Space groups the context and integrations used for operational work. It is not an authorization boundary merely because it has a service name. IAM roles and integration permissions establish actual access. For the initial pilot, connect one service and inspect whether its deployment events, logs, and metrics can be read. Do not grant broad writes to compensate for missing read evidence. Private integrations need an explicit network connection; they are not reachable simply because a repository or tool is named in chat.
+### Presenter notes
 
-[D01 — About AWS DevOps Agent](https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent.html)
+Take one claimed cause and work backwards. Was the right log group queried? Was the interval correct? Did the result contain the affected resource? Did the source return no records, or did the call fail? Only after those checks should the conclusion be weighed. This is a proposed evidence-review discipline, not a guarantee of how every agent response is formatted. The same discipline applies to a topology map: inspect freshness and identifiers before assuming it describes the current deployment.
 
-[D02 — Production operations](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-production-operations-index.html)
+Official documentation: [On-demand DevOps tasks](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-on-demand-devops-tasks.html) · [Autonomous incident response](https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-autonomous-incident-response.html) · [Connect MCP servers](https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-connecting-mcp-servers.html)
 
-[D34 — Limiting Agent Access in an AWS Account](https://docs.aws.amazon.com/devopsagent/latest/userguide/aws-devops-agent-security-limiting-agent-access-in-an-aws-account.html)
 
-[D39 — Private connections for integrations](https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-connecting-to-privately-hosted-tools.html)
+## 5. Triage and investigation controls have different effects
 
+7:30–9:30; allocation 2:00
 
-## 05. Investigate a service incident and review hypotheses
+Choose the control that changes the intended object, not merely the visible conversation.
 
-**05:30–07:00 · 01:30 allocated**
+| Control | Effect | Failure to avoid |
+|---|---|---|
+| Proceed | Start a new investigation | Assuming a repeated alarm always has the old cause |
+| Link / unlink | Combine with, or separate from, related work | Treating temporal proximity as proof of common cause |
+| Skip / unskip | Suppress, or restore, investigation of an event | Suppressing critical alerts with a broad maintenance rule |
+| Steer / resume / fork | Redirect, continue or branch the analysis | Losing the original hypothesis and evidence trail |
 
-**Takeaway:** Acceptance: distinguish observed facts, hypotheses, and missing telemetry.
+### Presenter notes
 
-The agent can start from a manual request or a configured external trigger. As evidence arrives, the operator can steer the investigation toward a hypothesis or data source. That is useful when a dashboard and a deployment suggest different explanations. Ask for the evidence behind a conclusion and for alternatives that remain unresolved. A confident root-cause statement is not sufficient to close an incident.
+The operator should be able to explain why an event was linked or skipped. A maintenance exception is an operational policy that needs exact scope, not a generic request to ignore noise. For an investigation already underway, steering adds information; for an alternative line, a fork preserves the original. These controls manage the analysis lifecycle. They neither silence the originating monitoring system nor confer authority to change resources.
 
-[D03 — Autonomous incident response](https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-autonomous-incident-response.html)
+Official documentation: [Autonomous incident response](https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-autonomous-incident-response.html) · [What's new: dated behavior and UI changes](https://docs.aws.amazon.com/devopsagent/latest/userguide/whats-new.html)
 
-[D05 — On Demand DevOps Tasks](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-on-demand-devops-tasks.html)
 
+## 6. Diagnosis, Review and feedback are different evidence
 
-## 06. Demo 1 · investigate checkout 5xx errors
+9:30–12:00; allocation 2:30
 
-**07:00–14:00 · 07:00 allocated**
+A quality assessment reads the record; it does not rerun the incident against the environment.
 
-**Takeaway:** Use a controlled incident snapshot; keep the investigation read-focused.
+| Operation | Produces | Does not establish |
+|---|---|---|
+| Investigation | Findings and a root-cause explanation | Correctness without source evidence |
+| Review | Helpful/not-helpful and criterion-level assessments | Independent runtime verification |
+| Corrective feedback | A recorded correction; documented reflections | A measured accuracy improvement from one submission |
 
-This seven-minute slot demonstrates the investigation workflow and the engineer’s judgment. It does not measure incident-response speed. Start a fresh request only if the environment is ready. The completed-run fallback must contain genuine, sanitized evidence from an authorized rehearsal; a schematic illustration must be labeled as such. No production mutation is required for this demo.
+Review Accuracy can be not applicable when no reference diagnosis exists on the linked incident.
 
-**Preflight:** Prepare a sanitized incident snapshot, read access and a completed investigation before presenting.
+### Presenter notes
 
-```text
+A review can assess grounding and completeness, but it is constrained by the same recorded evidence. Explain the special case where Accuracy is not applicable: the grader has no established root cause to compare with. Corrective feedback is a separate operator input. Current documentation connects it to reflections for later investigations, but seeing a reflection is not evidence that a later run retrieved it or reached the right conclusion.
 
-Investigate the checkout 5xx increase in the supplied UTC window after the deployment. Cite telemetry and the deployed diff. Separate observed facts, competing hypotheses, and missing data. Propose a mitigation; do not change resources.
+Official documentation: [Autonomous incident response](https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-autonomous-incident-response.html) · [Reviewing investigations](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-reviewing-investigations.html) · [What's new: dated behavior and UI changes](https://docs.aws.amazon.com/devopsagent/latest/userguide/whats-new.html) · [Document history: reflections and memory changes](https://docs.aws.amazon.com/devopsagent/latest/userguide/document-history.html)
 
-```
 
-- 01:00 — **Confirm scope:** Open the Agent Space, incident window and deployment reference.
+## 7. A proposed mitigation has no execution authority
 
-- 01:30 — **Inspect the investigation:** Start or open a pre-run investigation; check source coverage.
+12:00–14:30; allocation 2:30
 
-- 02:00 — **Challenge the leading hypothesis:** Compare two source observations and inspect a competing explanation.
+Directed actions add a controlled mutation path; they do not remove the need to verify recovery.
 
-- 01:30 — **Review mitigation:** Check blast radius, rollback assumptions and missing evidence.
+| Enable | Scope | Approve | Observe |
+|---|---|---|---|
+| Agent Space directed-action opt-in | Registered elevated account role or allowed mutating tool | Individual operation, parameters and target in Chat | API result, audit event and independent service state |
 
-- 01:00 — **Record the handoff:** Capture owner, evidence links, next action and verification check.
+Release testing sends application writes through a different execution path.
 
-**Success:** One source-backed hypothesis and one reviewable next action—not an asserted diagnosis.
+### Presenter notes
 
-**Fallback:** After 60 seconds without usable output, use the completed run and inspect its evidence; do not wait for a fresh run.
+Walk through the gates in order. A broad role is not permission to skip the Chat approval, and a Chat approval does not override service-level prohibitions. A custom MCP classification is metadata; inspect the backend's real privileges. For the demonstration, do not perform a production change. Show a prepared approval and rejected-action case, then explain the additional recovery metric needed after any actual approved mutation.
 
-[D03 — Autonomous incident response](https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-autonomous-incident-response.html)
+Official documentation: [Working with directed actions](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-working-with-directed-actions.html) · [Release testing](https://docs.aws.amazon.com/devopsagent/latest/userguide/release-management-release-testing.html)
 
-[D05 — On Demand DevOps Tasks](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-on-demand-devops-tasks.html)
 
+## 8. What persists after an incident?
 
-## 07. Daily service-health and incident queries
+14:30–17:30; allocation 3:00
 
-**14:00–15:15 · 01:15 allocated**
+Retained context, generated environment knowledge and correction records have distinct lifecycles.
 
-**Takeaway:** Acceptance: inspect one cited alarm or resource before sharing the summary.
+| Knowledge | Origin | Meaning for a later run |
+|---|---|---|
+| Monitor memory | Recurring causes from recent investigations | A historical hypothesis to test against current telemetry |
+| Reflections | Corrective feedback on a failed investigation | A lesson associated with the monitor, not proof of recall |
+| Environment/tool-use knowledge | Managed learning and refresh | Derived context with a timestamp and update conditions |
+| Custom store | Operator or permitted custom-agent writes | Only useful when described, active and attached as needed |
 
-Not every operational task is an incident. The on-demand interface can answer focused questions about service health, resource configuration, recent alarms and investigation history. Ask for a specific period rather than “is everything healthy.” The value is an evidence-linked summary that reduces console navigation. Where a source is unavailable, the answer should state the gap rather than imply coverage.
+### Presenter notes
 
-[D05 — On Demand DevOps Tasks](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-on-demand-devops-tasks.html)
+Avoid the phrase learns from everything. Describe an inspectable object instead: its store, content, version and last update. Current documentation maintains learned environment knowledge as memory, while older cached pages describe learned skills. Monitor and tool-use stores have different update cadences. The underlying model-training implementation is not established by these documents. The practical question is whether relevant, accurate context was available and actually used in the later task.
 
+Official documentation: [Memories: current stores, refresh and lifecycle](https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html) · [Learned skills: migration to memory](https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-learned-skills.html) · [Managed agents and Learning history](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-managed-agents.html) · [What's new: dated behavior and UI changes](https://docs.aws.amazon.com/devopsagent/latest/userguide/whats-new.html) · [Custom agents](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html)
 
-## 08. Create prevention tasks from investigation history
 
-**15:15–16:30 · 01:15 allocated**
+## 9. Enable and verify memory deliberately
 
-**Takeaway:** Acceptance: an owner and a measurable recurrence or detection check accompany each accepted item.
+17:30–20:00; allocation 2:30
 
-Prevention analyzes investigation history and produces recommendations. It is not a guarantee that failures will disappear. Keep recommendations separate from accepted engineering work: a team must assess relevance, assign ownership and decide how to validate an improvement. Use a known repeat incident to show how the suggested change would make detection earlier or the service more resilient.
+Presence, activation, retrieval and correctness are four different checks.
 
-[D04 — Proactive incident prevention](https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-proactive-incident-prevention.html)
+| Inspect | Configure | Observe | Challenge |
+|---|---|---|---|
+| Knowledge → Memories: content, version and timestamp | Activate the intended store; attach it to the custom agent | Learning History/Triggers and available run read evidence | Compare the recalled cause with present telemetry |
 
+Managed stores are read-only to custom agents; attached custom stores can be written.
 
-## 09. Configure scheduled operational reports
+### Presenter notes
 
-**16:30–17:45 · 01:15 allocated**
+A new custom agent has no memory access until stores are attached. The built-in incident behavior and custom-agent attachments should not be conflated. Demonstrate the proposed verification process with a prepared store: identify what should be recalled, inspect the later run where evidence is visible, and state unverified when the interface does not expose that read. Deactivate misleading context while correcting it; do not delete the incident's source record.
 
-**Takeaway:** Acceptance: the selected tools—not the prompt alone—bound access and side effects.
+Official documentation: [Memories: current stores, refresh and lifecycle](https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html) · [Managed agents and Learning history](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-managed-agents.html) · [Creating a custom agent](https://docs.aws.amazon.com/devopsagent/latest/userguide/custom-agents-creating-a-custom-agent.html)
 
-A custom agent is a configured workflow. For example, a team can define a daily summary that reads alarms and recent investigations and returns an actionable report. Select only the tools needed for that job. A prompt that says “read only” does not neutralize a write-capable integration. Review the output and invocation record before enabling a recurring schedule.
 
-[D06 — Custom Agents](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html)
+## 10. A scheduled report is a configured program of work
 
+20:00–22:30; allocation 2:30
 
-## 10. Mitigation recommendations and action authorization
+The custom-agent facility provides execution; the team supplies the task definition and acceptance rule.
 
-**17:45–19:45 · 02:00 allocated**
+| Configuration | Required precision | Observable failure |
+|---|---|---|
+| Prompt | Resource scope, rule and output contract | Vague analysis with no resource-level result |
+| Tools | Actual assigned read functions | Missing source reported as compliant |
+| Memory/skills | Relevant attachments and procedures | Old context silently reused |
+| Trigger | Schedule and invocation ownership | Future runs continue after one task is cancelled |
 
-**Takeaway:** Directed actions have their own enablement, role, tool and approval path.
+### Presenter notes
 
-Keep the read-oriented investigation path separate from directed actions. Directed actions are disabled by default. Enabling them is only one layer: the relevant account role or third-party tool configuration must also permit the operation, and the operator must approve the concrete action. Review the target, parameters, blast radius and rollback plan. The release-testing write path is a different mechanism; do not assume this approval model protects application endpoints exercised by a test.
+Use the report's configuration-check procedure as an example. A reliable check needs an explicit comparison against an observed field and three possible results: compliant, non-compliant or unknown. Test the unknown case intentionally. Do not create a schedule merely because the agent can produce a plausible report once. Review the selected toolbox and run history; pausing a trigger and cancelling an invocation are separate controls.
 
-[D13 — Working with directed actions](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-working-with-directed-actions.html)
+Official documentation: [Custom agents](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html) · [Creating a custom agent](https://docs.aws.amazon.com/devopsagent/latest/userguide/custom-agents-creating-a-custom-agent.html) · [Executing custom agents](https://docs.aws.amazon.com/devopsagent/latest/userguide/custom-agents-executing-custom-agents.html) · [Custom-agent outputs](https://docs.aws.amazon.com/devopsagent/latest/userguide/custom-agents-custom-agent-outputs.html)
 
-[D34 — Limiting Agent Access in an AWS Account](https://docs.aws.amazon.com/devopsagent/latest/userguide/aws-devops-agent-security-limiting-agent-access-in-an-aws-account.html)
 
+## 11. Source review and application testing differ
 
-## 11. Release-review and deployed-application testing differ
+22:30–25:00; allocation 2:30
 
-**19:45–21:45 · 02:00 allocated**
+One analyzes the change; the other interacts with the deployed application.
 
-**Takeaway:** Managed code verification is not the same as active testing against a deployed application.
+|  | Readiness review — preview | Release testing — preview |
+|---|---|---|
+| Input | Repository change and dependency context | Target profile, test intent and credentials |
+| Operation | Inspect operational risk in the change | Explore UI/API behavior with real requests |
+| Output | Findings and advisory release recommendation | Executed test results and reproduction evidence |
+| Boundary | Not a deployment gate without integration | Can create, modify or delete application data |
 
-Readiness review evaluates a change and can build and test it in a managed verification environment. Active release testing sends traffic to a running application and may perform POST, PUT and DELETE requests. Those operations can trigger real business effects. Use a disposable staging deployment, test identities and disabled external side effects. Both features remain a preview track in the documented Region. A positive review is evidence for the release owner, not a production deployment authorization.
+### Presenter notes
 
-[D09 — Release management](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-release-management-index.html)
+Both require feature-level availability checks and are documented in us-east-1 during preview. A report saying Block does not automatically stop a pipeline. An application test may send notifications or process payments if the environment allows those effects. Require safe staging data and explicit target authorization. Do not reuse the directed-action approval model as a claim that every application request needs operator confirmation.
 
-[D10 — Release readiness code reviews](https://docs.aws.amazon.com/devopsagent/latest/userguide/release-management-release-readiness-code-review.html)
+Official documentation: [Release management](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-release-management-index.html) · [Release readiness code review](https://docs.aws.amazon.com/devopsagent/latest/userguide/release-management-release-readiness-code-review.html) · [Release testing](https://docs.aws.amazon.com/devopsagent/latest/userguide/release-management-release-testing.html) · [Feature availability by Region](https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-supported-regions.html)
 
-[D11 — Release testing](https://docs.aws.amazon.com/devopsagent/latest/userguide/release-management-release-testing.html)
 
-[D15 — Supported Regions](https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-supported-regions.html)
+## 12. Demonstration: challenge a recurring diagnosis
 
+25:00–33:00; allocation 8:00
 
-## 12. Demo 2 · review a risky release
+Use prepared evidence to show the decisions; do not promise an eight-minute end-to-end investigation.
 
-**21:45–26:45 · 05:00 allocated**
+| Minutes | Action |
+|---|---|
+| 1 | Show the prepared event, build and scope; identify unavailable sources. |
+| 2 | Inspect the stored memory and the current investigation's evidence side by side. |
+| 2 | Challenge one causal claim with a source query; show an alternative explanation. |
+| 2 | Review a mitigation proposal and explain the separate execution approval. |
+| 1 | Show corrective feedback and the evidence needed to claim later recall. |
 
-**Takeaway:** A proposed retry-policy and database-timeout change must produce inspectable release evidence.
+Fallback: Use a clearly labeled prepared investigation export and source-query results. Do not invent a completed agent run during the demonstration.
 
-This five-minute walkthrough demonstrates interpretation rather than a fresh end-to-end run. The reviewed revision must match the displayed diff. Build failures caused by missing private dependencies are setup failures, not proof that the proposed application change is unsafe. Conversely, a skipped verification step is not a pass. Keep the production release decision with the existing owner.
+### Presenter notes
 
-**Preflight:** Use a connected test repository and a pre-completed readiness review; do not point a test profile at production.
+Follow the five timed steps in the report. The presenter needs a permission-cleared incident record, prior memory, actual source-query output and a prepared mitigation proposal. No live AWS work has been executed for this documentation. If a live environment is available, retain the same decision sequence and switch to prepared evidence rather than waiting for an unbounded run. The audience should see a material claim challenged, not only a successful agent response.
 
-```text
+Official documentation: [Autonomous incident response](https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-autonomous-incident-response.html) · [Reviewing investigations](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-reviewing-investigations.html) · [Memories: current stores, refresh and lifecycle](https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html) · [Working with directed actions](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-working-with-directed-actions.html)
 
-Review this change for dependency impact, retry amplification, database saturation and rollback viability. Cite affected code and verification evidence. Return risks and missing checks. Do not deploy or promote.
 
-```
+## 13. Operational acceptance is evidence, not fluency
 
-- 00:45 — **Select the change:** Show the PR/MR and its exact commit.
+33:00–35:00; allocation 2:00
 
-- 01:15 — **Start or open review:** Confirm preview Region and enabled review/verification settings.
+Start with a bounded service and retain unresolved gaps explicitly.
 
-- 01:15 — **Inspect risk evidence:** Trace a finding to changed code and a dependency.
+| Accept only when… | Keep separate | Stop when… |
+|---|---|---|
+| Scope and source queries match | Diagnosis versus historical memory | Required telemetry is denied or missing |
+| Target and recovery test are explicit | Proposal versus approved execution | Rollback assumptions are unknown |
+| Unknown results remain visible | One run versus its recurring trigger | The report fabricates an all-clear result |
+| Tests use a safe staging target | Code review versus application testing | Real external side effects are possible |
 
-- 01:00 — **Read verification:** Separate a passed check, an unrun check and a failure.
+### Presenter notes
 
-- 00:45 — **Decide the next step:** Release owner accepts, requests work or blocks promotion.
+Close with decisions the team can make immediately: one service scope, one useful investigation procedure, one source-reconciliation check and a separate mutation approval policy. These are proposed adoption controls, not measured outcomes. The detailed report includes configuration, evidence sources and known documentation differences. Questions and any live setup work are outside the timed programme.
 
-**Success:** Findings are tied to the exact change, and unexecuted checks are visible.
+Official documentation: [Autonomous incident response](https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-autonomous-incident-response.html) · [Working with directed actions](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-working-with-directed-actions.html) · [Executing custom agents](https://docs.aws.amazon.com/devopsagent/latest/userguide/custom-agents-executing-custom-agents.html) · [Release testing](https://docs.aws.amazon.com/devopsagent/latest/userguide/release-management-release-testing.html)
 
-**Fallback:** Use the prepared review and code diff if the preview or verification environment is unavailable.
-
-[D09 — Release management](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-release-management-index.html)
-
-[D10 — Release readiness code reviews](https://docs.aws.amazon.com/devopsagent/latest/userguide/release-management-release-readiness-code-review.html)
-
-[D15 — Supported Regions](https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-supported-regions.html)
-
-
-## 13. Access operational context from coding clients
-
-**26:45–28:00 · 01:15 allocated**
-
-**Takeaway:** Acceptance: client connectivity does not widen the Agent Space’s permissions.
-
-The documented remote MCP interface brings operational questions into a development environment. This can reduce the copy-and-paste handoff between an on-call engineer and a developer. It does not mean every AWS frontier agent shares one session or identity. Authenticate the client, scope access and preserve links to the original investigation. A2A and other access methods are integration building blocks, not a turnkey four-product orchestrator.
-
-[D37 — DevOps Agent remote servers](https://docs.aws.amazon.com/devopsagent/latest/userguide/accessing-devops-agent-connecting-to-devops-agent-remote-servers-index.html)
-
-[D38 — Accessing DevOps Agent](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-accessing-devops-agent-index.html)
-
-
-## 14. Translate investigation findings into owned work
-
-**28:00–29:30 · 01:30 allocated**
-
-**Takeaway:** A proposed engineering handoff does not transfer production authorization.
-
-This is a proposed team procedure using the documented investigation, mitigation and prevention outputs. It is not a native implementation or deployment feature. The receiving engineers decide whether a change is justified and use their existing repository, test and release controls. Preserve the distinction between an observed symptom, a hypothesis, a recommended action and a verified result.
-
-[D03 — Autonomous incident response](https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-autonomous-incident-response.html)
-
-[D04 — Proactive incident prevention](https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-proactive-incident-prevention.html)
-
-[D13 — Working with directed actions](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-working-with-directed-actions.html)
-
-
-## 15. Verify recovery before closing the incident
-
-**29:30–31:00 · 01:30 allocated**
-
-**Takeaway:** Completion is a service-owner decision supported by current telemetry.
-
-Retain a small closure record with the deployed revision, verification window, observed result and owner. These are proposed team acceptance criteria, not guaranteed product-generated fields. When evidence is missing or the symptom persists, keep the incident open and continue the investigation. The walkthrough does not demonstrate an automated code-change workflow.
-
-[D03 — Autonomous incident response](https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-autonomous-incident-response.html)
-
-[D04 — Proactive incident prevention](https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-proactive-incident-prevention.html)
-
-[D05 — On Demand DevOps Tasks](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-on-demand-devops-tasks.html)
-
-
-## 16. Pilot a single service with scoped read access
-
-**31:00–32:30 · 01:30 allocated**
-
-**Takeaway:** Prove the read path before expanding automated effects.
-
-Treat deployment readiness as a team decision. Record the feature’s availability, Agent Space Region, data-source access, mutation paths and stop responsibility. For the first service, leave directed actions off unless a separately reviewed experiment requires them. Put release-preview work in a different pilot lane. The documentation specifies behavior; this checklist is the recommended operating design for the team.
-
-[D13 — Working with directed actions](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-working-with-directed-actions.html)
-
-[D15 — Supported Regions](https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-supported-regions.html)
-
-[D34 — Limiting Agent Access in an AWS Account](https://docs.aws.amazon.com/devopsagent/latest/userguide/aws-devops-agent-security-limiting-agent-access-in-an-aws-account.html)
-
-
-## 17. Pilot metrics require verified engineering results
-
-**32:30–34:00 · 01:30 allocated**
-
-**Takeaway:** Measure review effort and rework for independently accepted outcomes.
-
-The scorecard is a proposal, not an AWS performance claim. Use the same small set of representative tasks before and during the pilot. Measure how much time an engineer spends reaching an evidence-supported hypothesis, how often conclusions need correction, and whether recommended prevention work is accepted. Count service and integration consumption as well as human review effort. Do not infer production MTTR improvement from a staged demo.
-
-[D03 — Autonomous incident response](https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-autonomous-incident-response.html)
-
-[D04 — Proactive incident prevention](https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-proactive-incident-prevention.html)
-
-[D06 — Custom Agents](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html)
-
-
-## 18. Accept outcomes only after verification and authorization
-
-**34:00–35:00 · 01:00 allocated**
-
-**Takeaway:** Investigate with context. Gate the effect. Close with independent verification.
-
-Close by asking the team to choose one read-heavy operational workflow and its owner. The agent can help connect evidence and produce useful recommendations, but the engineer remains responsible for the decision and its consequences. Release preview, directed actions and active tests should each be evaluated on their own terms. Questions follow the timed close. The detailed inventory below maps every retained capability to the new presentation so no feature disappears during the restructuring.
-
-[D03 — Autonomous incident response](https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-autonomous-incident-response.html)
-
-[D13 — Working with directed actions](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-working-with-directed-actions.html)
-
-[D11 — Release testing](https://docs.aws.amazon.com/devopsagent/latest/userguide/release-management-release-testing.html)
