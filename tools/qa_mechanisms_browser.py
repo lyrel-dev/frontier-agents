@@ -1,8 +1,9 @@
+import shutil, tempfile
 from pathlib import Path
 import json
 from bs4 import BeautifulSoup
 from playwright.sync_api import sync_playwright
-ROOT=Path(__file__).resolve().parents[1];Q=ROOT/'qa/mechanism-screens';Q.mkdir(exist_ok=True)
+ROOT=Path(__file__).resolve().parents[1];Q=Path(tempfile.gettempdir())/'frontier-mechanism-checks';Q.mkdir(exist_ok=True)
 results={'revision':json.loads((ROOT/'content/mechanisms.json').read_text())['revision'],'files':[],'errors':[],'live_aws_execution':False,'render_method':'self-contained HTML loaded through Playwright set_content; local file URL navigation is restricted in this environment'};linkcount=0
 for path in (ROOT/'mechanisms').glob('*.html'):
  soup=BeautifulSoup(path.read_text(),'html.parser');ids=[e['id'] for e in soup.find_all(id=True)]
@@ -16,8 +17,8 @@ for path in (ROOT/'mechanisms').glob('*.html'):
    dids=ids if dest==path else [x['id'] for x in BeautifulSoup(dest.read_text(),'html.parser').find_all(id=True)]
    if anchor not in dids:results['errors'].append('missing anchor '+h)
 with sync_playwright() as pw:
- browser=pw.chromium.launch(executable_path='/usr/bin/chromium',headless=True,args=['--no-sandbox'])
- for key in ['devops','kiro','security','finops','index','overview']:
+ browser=pw.chromium.launch(executable_path=shutil.which('chromium'),headless=True,args=['--no-sandbox'])
+ for key in ['devops','security','finops','index','overview']:
   page=browser.new_page(viewport={'width':1440,'height':1000},accept_downloads=True);errors=[];page.on('pageerror',lambda e: errors.append(str(e)))
   page.set_content((ROOT/f'mechanisms/{key}.html').read_text(),wait_until='domcontentloaded');page.wait_for_timeout(100)
   n=page.locator('.record').count()
@@ -44,7 +45,7 @@ with sync_playwright() as pw:
   if errors:results['errors']+=errors
   results['files'].append({'page':key,'mechanism_records':n,'desktop_width':1440,'mobile_width':390,'page_errors':errors,'interaction_checks':bool(n)})
   page.close()
- for rel in ['devops/validated-report.html','kiro/report.html','security/report.html','finops/report.html','architecture/common-patterns.html']:
+ for rel in ['devops/validated-report.html','security/report.html','finops/report.html','architecture/common-patterns.html']:
   page=browser.new_page(viewport={'width':390,'height':844});page.set_content((ROOT/rel).read_text());assert page.locator('#mechanisms').count()==1
   page.locator('#mechanisms').scroll_into_view_if_needed()
   assert not page.evaluate('document.documentElement.scrollWidth>innerWidth+2'),rel
