@@ -1,0 +1,67 @@
+{
+  "revision": "2026-10-21-three-agent-scope",
+  "scope": [
+    "AWS DevOps Agent",
+    "AWS Security Agent",
+    "AWS FinOps Agent"
+  ],
+  "shared_architecture": true,
+  "baseline_commit": "c1c810b48e2349d3fb2479402c767a2834c76b9a",
+  "text_files_and_presentations_checked": 86,
+  "presentation_xml_parts_checked": 964,
+  "capability_and_pattern_counts": {
+    "architecture": 12,
+    "devops": 8,
+    "finops": 13,
+    "security": 17
+  },
+  "mechanism_records": 23,
+  "mechanism_source_references": 32,
+  "core_minutes": 128,
+  "core_demo_minutes": 35,
+  "presentations": [
+    {
+      "file": "presentations/aws-devops-agent-presentation.pptx",
+      "slides": 27,
+      "errors": []
+    },
+    {
+      "file": "presentations/aws-finops-agent-presentation.pptx",
+      "slides": 30,
+      "errors": []
+    },
+    {
+      "file": "presentations/aws-frontier-agents-common-architecture-presentation.pptx",
+      "slides": 31,
+      "errors": []
+    },
+    {
+      "file": "presentations/aws-security-agent-presentation.pptx",
+      "slides": 36,
+      "errors": []
+    },
+    {
+      "file": "presentations/devops-mechanisms-reference.pptx",
+      "slides": 14,
+      "errors": []
+    },
+    {
+      "file": "presentations/finops-mechanisms-reference.pptx",
+      "slides": 11,
+      "errors": []
+    },
+    {
+      "file": "presentations/overview-mechanisms-reference.pptx",
+      "slides": 8,
+      "errors": []
+    },
+    {
+      "file": "presentations/security-mechanisms-reference.pptx",
+      "slides": 10,
+      "errors": []
+    }
+  ],
+  "removed_scope_matches": 0,
+  "errors": [],
+  "boundary": "Content, links, timing, notes and shape bounds are checked separately from runtime product behavior. No new external documentation audit or live AWS run."
+}
