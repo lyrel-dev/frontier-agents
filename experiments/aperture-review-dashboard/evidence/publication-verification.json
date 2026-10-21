@@ -1,0 +1,41 @@
+{
+  "schema": "aperture-repository-publication-verification-v1",
+  "date": "2026-10-21",
+  "repository": "lyrel-dev/frontier-agents",
+  "branch": "feature/aperture-review-dashboard-d1",
+  "verified_content_commit": "31d8e3fc4da52c95f36e773f9c33b5e0ad3a42a7",
+  "base_commit": "3c6f52b137c6ee56c611ba6d8596e6549983d0a8",
+  "scope": "Experimental dashboard publication, not the complete C2 archive or a runtime release",
+  "artifact_sha256": "0eaf3ef562a3657ed0e33deb864b0755d5209ec084a01b3ae751f47336b2b931",
+  "local_inputs": "Files reconstructed from mounted D1 artifacts and fetched helper text; exact Git blob identity checked against GitHub for each listed file",
+  "commands": [
+    {"command": "python tools/build_dashboard.py --check", "status": "passed"},
+    {"command": "python tools/check_dashboard.py", "status": "passed"},
+    {"command": "node --check src/dashboard.js", "status": "passed"}
+  ],
+  "browser_smoke": {
+    "mode": "unchanged-html-injection",
+    "passed_checks": 15,
+    "navigation_views": 10,
+    "additional_checks": ["dark mode", "search opens and Escape closes", "mobile navigation closes after selection", "no JavaScript page errors", "no external HTTP/HTTPS requests"],
+    "native_file_navigation": "Blocked by managed Chromium with ERR_BLOCKED_BY_ADMINISTRATOR; unchanged HTML injected into a fresh page instead",
+    "full_D1_browser_suite_rerun": false
+  },
+  "files": {
+    "index.html": {"bytes": 3114728, "git_blob_sha": "4f39276c6c3543f68143703d034479cbef2b0194", "sha256": "0eaf3ef562a3657ed0e33deb864b0755d5209ec084a01b3ae751f47336b2b931"},
+    "src/dashboard.js": {"bytes": 77351, "git_blob_sha": "0d06039afb61b6125e5b7c11b2771f1fa8c5e4e1", "sha256": "35fdf232e6560c008b3f8962fa7c21b3cd4c798a5398991c8d9582e172a0813b"},
+    "src/shell.html": {"bytes": 32446, "git_blob_sha": "f05748ba354efc424f4720094c7e307b6e1867e2", "sha256": "716b4a47654db916a2dc87b65df482f9cdf7264a4ac505fe0f3addffdd1cdbd6"},
+    "data/snapshot.json": {"bytes": 2710064, "git_blob_sha": "93fb16f34d1c1d564eb857ea0dfcd1bde8975e82", "sha256": "6807f0656522929e3e69935780cd1453054415c5703defec3014997bb554b554"},
+    "documentation/Aperture-Consolidated-Documentation.html": {"bytes": 87278, "git_blob_sha": "82587d6df682f63c22e88fb7d234e68f5e9f0488", "sha256": "45ab346b66aa301de4c7fc64e1817150fc19dae43f03570be4810c24c181720d"},
+    "documentation/Aperture-Operational-Review.html": {"bytes": 959636, "git_blob_sha": "f317305abf1e8cbed6805e4699cbc84290d0ae84", "sha256": "1a987786e3968985a473ef81771f47a3859d707f67c3cdf3d4a08dbbf26abc28"},
+    "documentation/Decision-Register.html": {"bytes": 2172792, "git_blob_sha": "ce4452539f3e47bbd655259ed8a967dc3e4947e1", "sha256": "ccdb3a62f0ebe171fa35b9a61cc6c96be7cb567c6b4acef042d9efb7a54e2daa"},
+    "tools/build_dashboard.py": {"bytes": 1632, "git_blob_sha": "13b1c62c4d5eb3631ad1ab37721ab66f2c2ccc22", "sha256": "6984bd44c908a820254ebe43aaeb06420f98f89bffdf85f23a220e01be21d15b"},
+    "tools/check_dashboard.py": {"bytes": 1793, "git_blob_sha": "80c9c7a9b6a467032d96c7558ffacf417868a4a8", "sha256": "5e82c0121740c8dad445de37eda55649b5d5c3bd0cf902b9475e5348f01b5769"}
+  },
+  "limitations": [
+    "Supporting documents are limited to the consolidated handbook, operational review and decision register. Other linked files require the full D1 package.",
+    "Historical validation-results.json describes the full original D1 distribution, not this reduced repository tree.",
+    "No full application regression, accessibility conformance, native storage, multi-tab correctness, backend or provider qualification was performed.",
+    "No GitHub Pages deployment or production service was created."
+  ]
+}

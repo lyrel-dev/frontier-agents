@@ -14,9 +14,10 @@ For a stable local origin, from this directory use `python -m http.server 8765 -
 - `src/dashboard.js`, `src/shell.html`, `data/snapshot.json`: readable source, template and embedded C2-derived dataset.
 - `documentation/`: current C2 handbook, operational review and unchanged full proposed-decision register.
 - `evidence/validation-results.json`: the original D1 validation receipt, tied to the full D1 distribution and its stated testing limitations.
+- `evidence/publication-verification.json`: new, separately scoped checks for this repository publication.
 - `tools/`: reproducible offline build and source-integrity checks.
 
-**Source-document coverage:** The full D1 distribution has hundreds of historical files from the C2 archive. This Git branch intentionally excludes those historical assets and does not commit distribution ZIP files, consistent with frontier-agents publishing policy. Some historical source links inside the dashboard therefore will not resolve in this branch. Their metadata and embedded record content remain searchable. Obtain the full C2 distribution separately to open every original source file. This branch is not a full C2 mirror.
+**Source-document coverage:** This Git branch contains the dashboard's complete embedded catalogs and three supporting reports, not the complete D1 distribution. Other current supporting files and historical assets are not included. No distribution ZIP files are committed, consistent with frontier-agents publishing policy. Some source and download links inside the dashboard and reports therefore will not resolve in this branch. Their metadata and embedded record content remain searchable. Use the separately delivered full D1 package to open every original source file. This branch is not a full C2 mirror.
 
 ## Rebuild and check
 
@@ -26,6 +27,12 @@ python tools/check_dashboard.py
 ```
 
 Running `python tools/build_dashboard.py` regenerates `index.html` from the tracked source and recomputes its inline-script CSP hash. Do not edit compiled source manually. The dashboard uses no external connections.
+
+## Publication verification
+
+The dashboard HTML, its three source inputs, both Python helpers and the three included reports were matched to their Git blob identities. Both commands above and `node --check src/dashboard.js` passed. Fifteen browser smoke checks covered all ten views, appearance, search, mobile navigation, page errors and external requests.
+
+Native file navigation was blocked by managed Chromium. The browser checks used unchanged HTML injection, not native file-origin behavior. These are publication checks, not a rerun of the full D1 suite or the historical runtime suites. See the [publication receipt](evidence/publication-verification.json) for hashes and boundaries.
 
 ## Evidence boundary
 
