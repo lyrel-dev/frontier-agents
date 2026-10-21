@@ -512,31 +512,29 @@
       ]
     },
     {
-      "title": "IDE and build workflows still call a service",
-      "takeaway": "A local entry point does not make the assessment a local-only operation.",
+      "title": "Submit and verify a differential source review",
+      "takeaway": "A build submission calls a service; retain the source revision and scan evidence.",
       "kind": "compare",
       "seconds": 75,
       "phase": "Capabilities",
       "refs": [
-        "S26",
         "S27"
       ],
       "caps": [
-        "C16",
         "C17"
       ],
-      "notes": "The IDE integration is an entry point into the service workflow. Review source upload, credentials, permissions and the destination Region before enabling it. A differential scan submitted from a build workflow uses the codebase as context and focuses findings on the supplied changes. Preserve the base and head revisions so the result can be tied to the intended diff. Neither path is a guarantee that every build is automatically gated.",
+      "notes": "The documented S3 differential-review workflow uses uploaded source and diff context. Record the base and head revisions, approved bucket and role, scan identifier and returned findings. Review the source payload for secrets and unnecessary content before submission. A scan result is not itself authorization to merge or deploy; the promotion rule is a separately proposed team control.",
       "left": {
-        "title": "IDE access",
-        "body": "Use the documented MCP or Kiro integration to submit work with the required service setup and source context.",
+        "title": "Prepare source context",
+        "body": "Prepare the supported source and diff artifacts; retain base and head revisions and check the payload before upload.",
         "tag": "PREVIEW"
       },
       "right": {
-        "title": "Differential build scan",
-        "body": "Upload the supported source/diff artifacts and submit the documented API/SDK workflow.",
+        "title": "Submit and inspect findings",
+        "body": "Use the documented S3/API workflow. Retain the scan result and determine which findings apply to the proposed change.",
         "tag": "PREVIEW"
       },
-      "callout": "Acceptance: confirm what left the workstation or runner, which revision was scanned, and what checks actually ran."
+      "callout": "Acceptance: confirm the uploaded scope, analyzed revisions and finding disposition before applying a team-owned release rule."
     },
     {
       "title": "A passing delivery gate has limited assessment scope",
@@ -715,10 +713,6 @@
       "title": "Remediate code-review findings",
       "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/remediate-code-scan-findings.html"
     },
-    "S26": {
-      "title": "Code review from an IDE",
-      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/code-review-ide-integration.html"
-    },
     "S27": {
       "title": "Run a differential code scan with S3",
       "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/run-diff-scan-s3.html"
@@ -748,5 +742,6 @@
       "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/export-penetration-report.html"
     }
   },
-  "editorial_classification": "Technical documentation; documented features and proposed team workflows are explicitly distinguished."
+  "editorial_classification": "Technical documentation; documented features and proposed team workflows are explicitly distinguished.",
+  "scope_revision": "2026-10-21-three-agent-scope"
 }
