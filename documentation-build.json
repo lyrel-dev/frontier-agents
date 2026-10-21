@@ -1,8 +1,10 @@
 {
-  "revision": "2026-10-21-narrative-1",
+  "revision": "2026-10-21-editorial-v2",
   "build": 3,
-  "purpose": "Publish the final layout-checked reports, aligned presentations, transcripts, source records and supporting documents.",
+  "purpose": "Build detailed interactive reports and PowerPoints using factual capability and use-case records, official source references, and an untimed capability appendix.",
   "commit_policy": "One generated document per commit; preserve existing history and archive original reports.",
   "repository_visibility": "Leave unchanged.",
-  "live_aws_execution": false
+  "live_aws_execution": false,
+  "editorial_standard": "EDITORIAL_STANDARD.md",
+  "reference_slides": "Outside the core presentation budgets"
 }
