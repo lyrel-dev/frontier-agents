@@ -1,14 +1,14 @@
 # Frontier agents — editorial and information-design standard
 
 **Revision:** 21 October 2026  
-**Scope:** AWS DevOps Agent, Kiro, AWS Security Agent, AWS FinOps Agent, and their proposed common architecture patterns.  
+**Scope:** AWS DevOps Agent, AWS Security Agent, AWS FinOps Agent, and their proposed common architecture patterns.  
 **Purpose:** Provide an auditable engineering reference and a presentation that can be delivered without marketing claims, unverified product promises, or ambiguity about who authorizes an action.
 
 ## 1. Editorial rules
 
 Use **observable behaviors** rather than adjectives. Write a short, testable statement in the form **actor + operation + bounded object + observable result**. Name the product or acting team. Do not substitute “the agent automates DevOps” for “a configured DevOps Agent investigation correlates the connected data sources and returns an incident analysis.”
 
-Every externally verifiable product claim needs a link to an official AWS or Kiro product source and, where relevant, a feature-level availability label. A hypothetical workflow, process gate, prompt, output to retain, metric, or team role is explicitly marked **proposed**. A link documents product functionality; it does not establish that a proposed sequence was run or that an outcome was measured.
+Every externally verifiable product claim needs a link to an official AWS product source and, where relevant, a feature-level availability label. A hypothetical workflow, process gate, prompt, output to retain, metric, or team role is explicitly marked **proposed**. A link documents product functionality; it does not establish that a proposed sequence was run or that an outcome was measured.
 
 Use consistent classifications:
 
@@ -97,7 +97,7 @@ Every demonstration has a single observable result and a **fixed walkthrough all
 | Fallback | Pre-captured or schematic walkthrough clearly labeled not live. |
 | Measurement | Only actual measured observations; otherwise state “not measured.” |
 
-The existing session budgets are retained: DevOps **35m / 12m demo**; Kiro **32m / 13m**; Security **30m / 8m**; FinOps **27m / 7m**; architecture **36m / 8m**. Total **160m / 48m demo**, excluding questions and breaks.
+The existing session budgets are retained: DevOps **35m / 12m demo**; Security **30m / 8m**; FinOps **27m / 7m**; architecture **36m / 8m**. Total **128m / 35m demo**, excluding questions and breaks.
 
 ## 6. Wording policy
 
