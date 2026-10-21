@@ -1,6 +1,6 @@
 # Common architectural patterns
 
-Share the work contract. Keep authority local.
+Common work contracts, evidence, authorization and verification patterns across four products.
 
 
 Revision: 21 October 2026. Independent engineering field guide.
@@ -43,6 +43,8 @@ The proposed common contract records the workload, owner, task, allowed effects,
 
 **Capability crosswalk:** P01, P04
 
+**Responsible role (team recommendation):** Request owner and specialist lead
+
 **Input:** An owned engineering problem and the smallest useful specialist task.
 
 **Artifact:** A bounded work contract with exact accounts, repositories or targets.
@@ -59,6 +61,8 @@ Collect the source references needed to evaluate the task: incident window, depl
 Steering, skills, instructions and memory can guide work, but they are not authorization grants or substitutes for current evidence. Treat external documents, tool outputs and repository content as potentially untrusted input. Separate what the agent is told from what its identity is allowed to do.
 
 **Capability crosswalk:** P02, P03
+
+**Responsible role (team recommendation):** Source-system custodian
 
 **Input:** Relevant source records and clearly labeled instructions or organizational context.
 
@@ -77,6 +81,8 @@ Evaluate availability, entitlement, Region, data handling and target safety for 
 
 **Capability crosswalk:** P05, P06, P12
 
+**Responsible role (team recommendation):** Change approver
+
 **Input:** Intended effect, target, product surface and data-location requirements.
 
 **Artifact:** An effect-specific authorization and isolation decision.
@@ -93,6 +99,8 @@ A documented API, integration or remote protocol can be an adapter between syste
 Bound the job's time, spend, retries and concurrency where the product provides controls, and add team procedures where it does not. A recurring schedule needs a recipient, duplicate-work policy and stop owner. Record partial and failed outcomes rather than treating lack of a response as success.
 
 **Capability crosswalk:** P07, P09
+
+**Responsible role (team recommendation):** Execution owner
 
 **Input:** Authorized task, explicit adapter and operational limits.
 
@@ -111,6 +119,8 @@ Keep work-item IDs, source revisions and reviewer decisions stable across system
 
 **Capability crosswalk:** P08, P11
 
+**Responsible role (team recommendation):** Receiving specialist and reviewer
+
 **Input:** Accepted specialist output with scope, evidence and unresolved limitations.
 
 **Artifact:** A linked implementation, assessment or optimization task with a new accountable owner.
@@ -127,6 +137,8 @@ Verification must be independent of the claim being accepted. Compare an inciden
 Pilot one workflow before building a broad orchestrator. Measure acceptance, rework, boundary failures, time spent reviewing and the quality of retained evidence. Expand only where the operating process is understood and the chosen interfaces and feature availability support it.
 
 **Capability crosswalk:** P10, P11, P12
+
+**Responsible role (team recommendation):** Independent reviewer
 
 **Input:** Specialist output and an independent acceptance method.
 
@@ -152,7 +164,9 @@ Pilot one workflow before building a broad orchestrator. Measure acceptance, rew
 
 **Anti:** One organization-wide identity and a prompt saying “only touch checkout.”
 
-Evidence: D01, D05, K02, K03, S02, S03, F01, F02
+**Review record to retain (team recommendation):** Workload scope record with named owners and tested authorization boundary.
+
+Official documentation references: D01, D05, K02, K03, S02, S03, F01, F02
 
 
 ### P02 — Source-grounded context, with provenance
@@ -167,7 +181,9 @@ Evidence: D01, D05, K02, K03, S02, S03, F01, F02
 
 **Anti:** A copied chat summary becomes the authoritative incident, security, or billing record.
 
-Evidence: D02, K11, K02, S03, F09, F04
+**Review record to retain (team recommendation):** Source inventory with timestamps, versions, query filters, and known omissions.
+
+Official documentation references: D02, K11, K02, S03, F09, F04
 
 
 ### P03 — Instructions and memory are not authorization
@@ -182,7 +198,9 @@ Evidence: D02, K11, K02, S03, F09, F04
 
 **Anti:** “Never change production” in a steering file is the only safeguard protecting production credentials.
 
-Evidence: D03, K07, K08, K04, S09, S13, S02, F04
+**Review record to retain (team recommendation):** Versioned instruction record plus independently enforced IAM and tool permissions.
+
+Official documentation references: D03, K07, K08, K04, S09, S13, S02, F04
 
 
 ### P04 — Explicit task contracts and trigger ownership
@@ -197,7 +215,9 @@ Evidence: D03, K07, K08, K04, S09, S13, S02, F04
 
 **Anti:** Every alert automatically starts every agent, with no owner, suppression window, or action boundary.
 
-Evidence: D02, D03, K09, K02, S03, S11, F05, F08
+**Review record to retain (team recommendation):** Task contract with objective, trigger, allowed effects, stop owner, and checks.
+
+Official documentation references: D02, D03, K09, K02, S03, S11, F05, F08
 
 
 ### P05 — Authorize effects, not product labels
@@ -212,7 +232,9 @@ Evidence: D02, D03, K09, K02, S03, S11, F05, F08
 
 **Anti:** A reviewer approves an investigation summary and the integration treats it as authorization for arbitrary changes.
 
-Evidence: D04, D05, K04, S03, S04, F03, F05
+**Review record to retain (team recommendation):** Action classification and the applicable human or system approval record.
+
+Official documentation references: D04, D05, K04, S03, S04, F03, F05
 
 
 ### P06 — Isolate both execution and its targets
@@ -227,7 +249,9 @@ Evidence: D04, D05, K04, S03, S04, F03, F05
 
 **Anti:** A sandbox is given production credentials and unrestricted network access, then treated as harmless.
 
-Evidence: D08, D09, K03, K05, K06, S04, F01, F03
+**Review record to retain (team recommendation):** Sandbox/target isolation evidence including blocked effects and cleanup ownership.
+
+Official documentation references: D08, D09, K03, K05, K06, S04, F01, F03
 
 
 ### P07 — Integrate through explicit adapters
@@ -242,7 +266,9 @@ Evidence: D08, D09, K03, K05, K06, S04, F01, F03
 
 **Anti:** One universal connector forwards every tool and credential to every agent.
 
-Evidence: D06, D07, K10, S08, S13, F10, F11
+**Review record to retain (team recommendation):** Integration inventory showing adapter, credentials boundary, and supported actions.
+
+Official documentation references: D06, D07, K10, S08, S13, F10, F11
 
 
 ### P08 — Artifact-first handoff between specialists
@@ -257,7 +283,9 @@ Evidence: D06, D07, K10, S08, S13, F10, F11
 
 **Anti:** A generated narrative is sent to another agent with “implement everything,” including unverified assumptions.
 
-Evidence: D10, K12, K11, S05, S07, F07, F10
+**Review record to retain (team recommendation):** Handoff packet with referenced source evidence, exclusions, owner, and pending approvals.
+
+Official documentation references: D10, K12, K11, S05, S07, F07, F10
 
 
 ### P09 — Bounded asynchronous work and stop responsibility
@@ -272,7 +300,9 @@ Evidence: D10, K12, K11, S05, S07, F07, F10
 
 **Anti:** A CI job is cancelled, so everyone assumes the billable agent job has also ended.
 
-Evidence: D03, K12, K02, S03, S10, S13, F05
+**Review record to retain (team recommendation):** Job record with lifecycle transitions, time/cost budget, and stop/retry decisions.
+
+Official documentation references: D03, K12, K02, S03, S10, S13, F05
 
 
 ### P10 — Independent verification before promotion
@@ -287,7 +317,9 @@ Evidence: D03, K12, K02, S03, S10, S13, F05
 
 **Anti:** A fluent root-cause explanation, green job, or projected saving becomes a production approval.
 
-Evidence: D11, K01, K02, S04, S06, F03, F07, F09
+**Review record to retain (team recommendation):** Acceptance test evidence independent of the agent-generated assertion.
+
+Official documentation references: D11, K01, K02, S04, S06, F03, F07, F09
 
 
 ### P11 — Evidence lineage and separate systems of record
@@ -302,7 +334,9 @@ Evidence: D11, K01, K02, S04, S06, F03, F07, F09
 
 **Anti:** Store only the final summary and lose the source version, tool call, and approval history.
 
-Evidence: D04, D03, K12, K02, S05, S06, F05, F09
+**Review record to retain (team recommendation):** Linked identifiers across source, run, finding, change, approval, and observed result.
+
+Official documentation references: D04, D03, K12, K02, S05, S06, F05, F09
 
 
 ### P12 — Feature-level availability and data-location gates
@@ -317,7 +351,9 @@ Evidence: D04, D03, K12, K02, S05, S06, F05, F09
 
 **Anti:** “It runs on AWS” is used as proof that all data stays in the workload’s Region.
 
-Evidence: D09, K01, S12, F06
+**Review record to retain (team recommendation):** Feature-specific availability and data-route decision with approved target and Region.
+
+Official documentation references: D09, K01, S12, F06
 
 
 ## Illustrative handoff
