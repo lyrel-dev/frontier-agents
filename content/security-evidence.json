@@ -1,0 +1,885 @@
+{
+  "slug": "aws_security_agent",
+  "title": "AWS Security Agent",
+  "subtitle": "Day-to-day application security · now part of AWS Continuum",
+  "validated": "2026-10-20",
+  "scope": "Authorized application penetration testing, finding triage, remediation handoff, and explicitly labeled preview design/code workflows. This is the frontier agent formerly branded AWS Security Agent, not the separate gated-preview Continuum for code vulnerabilities offering.",
+  "overview": "Start with the established on-demand penetration-testing workflow on an authorized non-production application. Review evidence, route findings, propose fixes, and revalidate. Evaluate preview design, code, and CI/CD workflows separately rather than treating service-level GA as a blanket feature status.",
+  "alert": "Penetration testing is GA, but code review, design review, threat modeling, and the documented CI/CD pipeline integration remain preview. Tests can alter application state. Use an authorized non-production target, narrow scope, and test-only credentials.",
+  "alert_refs": [
+    "S03",
+    "S05",
+    "S29",
+    "S10"
+  ],
+  "default_preview": false,
+  "capabilities": [
+    {
+      "id": "C01",
+      "number": 1,
+      "title": "Run an authorized application penetration test",
+      "product": "Penetration testing",
+      "verdict": "Qualified",
+      "availability": "GA · on-demand penetration testing",
+      "delivery": "Native; Agent Space and verified target",
+      "claim": "Launch an application-focused penetration test against configured targets and inspect discovered security findings.",
+      "limit": "Testing can change data or application state. Domain verification is a technical prerequisite, not a substitute for authorization covering every affected system.",
+      "setup": "Create an Agent Space, choose access and service roles, verify the target, and use a disposable non-production environment.",
+      "prompt": "Prepare a scoped test of our staging application with written authorization, explicit excluded paths, and a named operator.",
+      "check": "Confirm ownership, authorization, test-data isolation, stop responsibility, and environment recovery before launching.",
+      "refs": [
+        "S03",
+        "S06",
+        "S07",
+        "S10"
+      ],
+      "preview": false,
+      "note": "Core behavior is documented; the example task and acceptance check are author recommendations, not executed demonstrations."
+    },
+    {
+      "id": "C02",
+      "number": 2,
+      "title": "Test authenticated and private application paths",
+      "product": "Penetration testing",
+      "verdict": "Qualified",
+      "availability": "GA pentest workflow · optional configuration",
+      "delivery": "Native credential and VPC configuration",
+      "claim": "Authenticated testing and VPC connectivity let the agent exercise protected application routes when correctly configured.",
+      "limit": "Credentials may expose additional application paths and supporting domains. A private network does not make testing harmless or remove scope obligations.",
+      "setup": "Use test-only identities, validate login, configure the service role/network, and classify discovered domains before the test.",
+      "prompt": "Configure a typical staging-user identity, confirm its login, and exclude production, billing, and destructive administration paths.",
+      "check": "Verify the identity has no production access and that every reachable dependency has the intended scope classification.",
+      "refs": [
+        "S09",
+        "S08",
+        "S10"
+      ],
+      "preview": false,
+      "note": "Core behavior is documented; the example task and acceptance check are author recommendations, not executed demonstrations."
+    },
+    {
+      "id": "C03",
+      "number": 3,
+      "title": "Give a test current source and architecture context",
+      "product": "Penetration testing",
+      "verdict": "Confirmed",
+      "availability": "Documented pentest configuration",
+      "delivery": "Native; connected repositories or uploaded resources",
+      "claim": "Attach code, API documentation, and design material to guide application understanding. Connected resources can supply updated source for later runs.",
+      "limit": "Context does not guarantee complete endpoint coverage. Match the selected branch and documentation to the deployed target.",
+      "setup": "Connect relevant resources or upload sanitized documentation; verify repository reachability from a private test network.",
+      "prompt": "Attach the deployed branch and current API description, and identify which user journeys matter most for this test.",
+      "check": "Compare the deployed commit and API inventory with attached context; record untested critical paths for separate review.",
+      "refs": [
+        "S08",
+        "S11"
+      ],
+      "preview": false,
+      "note": "Core behavior is documented; the example task and acceptance check are author recommendations, not executed demonstrations."
+    },
+    {
+      "id": "C04",
+      "number": 4,
+      "title": "Control task expenditure and monitor execution",
+      "product": "Penetration testing",
+      "verdict": "Qualified",
+      "availability": "Documented pentest run controls",
+      "delivery": "Native task-hour cap, logs, and stop controls",
+      "claim": "Configure a maximum task-hours limit and monitor the run’s logs; stop work that takes an undesirable direction.",
+      "limit": "Task hours accumulate across parallel work and differ from wall-clock duration. Service quotas are not spending limits. A capped run can finish with partial coverage.",
+      "setup": "Agree on a per-run work budget, excluded risk areas, an operator, and criteria for stopping the test.",
+      "prompt": "Set a bounded task-hour limit and inspect progress for scope drift or application instability before allowing further runs.",
+      "check": "Reconcile task hours with billing data and assess coverage separately from the run’s Completed status.",
+      "refs": [
+        "S08",
+        "S05",
+        "S11"
+      ],
+      "preview": false,
+      "note": "Core behavior is documented; the example task and acceptance check are author recommendations, not executed demonstrations."
+    },
+    {
+      "id": "C05",
+      "number": 5,
+      "title": "Triage evidence rather than severity alone",
+      "product": "Findings and remediation",
+      "verdict": "Qualified",
+      "availability": "Documented pentest findings workflow",
+      "delivery": "Native finding and log views",
+      "claim": "Inspect risk, confidence, affected endpoints, execution evidence, and reproduction details. Verification scripts are available when successfully generated and validated.",
+      "limit": "Not every finding has a script. Default filters can hide lower-confidence or unverified items; the visible count is not the complete security picture.",
+      "setup": "Give a reviewer access to the run, logs, deployed build, and permitted reproduction environment.",
+      "prompt": "Review the highest-impact findings, separate confirmed evidence from assumptions, and inspect what the default filters exclude.",
+      "check": "Validate impact and reproducibility in the authorized test environment before assigning urgency or closing a finding.",
+      "refs": [
+        "S12",
+        "S10"
+      ],
+      "preview": false,
+      "note": "Core behavior is documented; the example task and acceptance check are author recommendations, not executed demonstrations."
+    },
+    {
+      "id": "C06",
+      "number": 6,
+      "title": "Request a proposed code fix for a pentest finding",
+      "product": "Findings and remediation",
+      "verdict": "Qualified",
+      "availability": "Documented pentest remediation · repository setup required",
+      "delivery": "Native GitHub PR proposal",
+      "claim": "With remediation enabled for a connected repository, users can request a finding-specific fix delivered as a GitHub pull request.",
+      "limit": "Enabling remediation is not approval to merge or deploy. Generated changes can be incomplete, wrong, or visible to repository readers.",
+      "setup": "Authorize the GitHub app, enable remediation per repository in the Agent Space, and assign a human reviewer.",
+      "prompt": "Request a minimal fix for this confirmed finding. Keep unrelated behavior unchanged and require regression coverage.",
+      "check": "Review the diff and test it normally, then deploy only through the existing change process.",
+      "refs": [
+        "S13",
+        "S10"
+      ],
+      "preview": false,
+      "note": "Core behavior is documented; the example task and acceptance check are author recommendations, not executed demonstrations."
+    },
+    {
+      "id": "C07",
+      "number": 7,
+      "title": "Revalidate a previously reported finding",
+      "product": "Findings and remediation",
+      "verdict": "Qualified",
+      "availability": "Documented pentest revalidation",
+      "delivery": "Native focused verification run",
+      "claim": "Revalidation checks selected existing findings against the application’s current reachable state.",
+      "limit": "It does not search for new vulnerabilities. Resolved means the issue was not reproduced in this run, not that the application is globally secure.",
+      "setup": "Deploy the intended fix to the tested environment, retain working authentication, and select the completed run’s relevant findings.",
+      "prompt": "Revalidate this finding after the patch reaches the same staging target. Record the deployed commit and any authentication changes.",
+      "check": "Inspect the separate revalidation job and evidence; use a broader test for substantial application changes.",
+      "refs": [
+        "S14"
+      ],
+      "preview": false,
+      "note": "Core behavior is documented; the example task and acceptance check are author recommendations, not executed demonstrations."
+    },
+    {
+      "id": "C08",
+      "number": 8,
+      "title": "Export a point-in-time evidence report",
+      "product": "Findings and remediation",
+      "verdict": "Qualified",
+      "availability": "Documented pentest reporting",
+      "delivery": "Native PDF export",
+      "claim": "Export a filtered penetration-test report with finding evidence and optional annotations for engineering or assurance review.",
+      "limit": "A compliance-oriented report layout is not a certification or a replacement for a required professional assessment. An interim report remains incomplete.",
+      "setup": "Choose the run, finding filters, annotations, and intended audience; handle the resulting vulnerability details as sensitive.",
+      "prompt": "Export the completed staging assessment with high-priority findings and reviewer notes, including scope and known omissions.",
+      "check": "Confirm report filters, run status, target version, and unresolved findings before sharing.",
+      "refs": [
+        "S15"
+      ],
+      "preview": false,
+      "note": "Core behavior is documented; the example task and acceptance check are author recommendations, not executed demonstrations."
+    },
+    {
+      "id": "C09",
+      "number": 9,
+      "title": "Create tracked Jira work from findings",
+      "product": "Findings and remediation",
+      "verdict": "Confirmed",
+      "availability": "Documented integration · pentest path; code path inherits preview",
+      "delivery": "Native issue export; connected Jira project",
+      "claim": "Create one Jira issue for each selected finding, carrying finding details and suggested remediation into a connected project.",
+      "limit": "The project must support Task issues. Unlinking removes the association, not the Jira issue; the workflow is not documented here as full bidirectional synchronization.",
+      "setup": "Connect a Jira project to the Agent Space and agree on the project’s ownership and prioritization process.",
+      "prompt": "Export these reviewed findings to the security-remediation project, then let the normal team workflow assign owners.",
+      "check": "Check issue content, duplicate creation, project visibility, and the link back to the original finding.",
+      "refs": [
+        "S16"
+      ],
+      "preview": false,
+      "note": "Core behavior is documented; the example task and acceptance check are author recommendations, not executed demonstrations."
+    },
+    {
+      "id": "C10",
+      "number": 10,
+      "title": "Review a design against organizational requirements",
+      "product": "Preview design and code",
+      "verdict": "Qualified",
+      "availability": "Preview · design review",
+      "delivery": "Native document review",
+      "claim": "Analyze design documents against enabled security requirements and return findings with remediation guidance.",
+      "limit": "The result depends on document quality and the active requirement set; it is not an exhaustive architecture approval.",
+      "setup": "Enable the relevant requirements and provide a sanitized, current design with clear trust boundaries.",
+      "prompt": "Review the proposed service-to-service authentication design against our enabled controls, and identify missing information explicitly.",
+      "check": "Have an architect check assumptions and requirement applicability before treating a finding as a design decision.",
+      "refs": [
+        "S17",
+        "S05"
+      ],
+      "preview": true,
+      "note": "Core behavior is documented; the example task and acceptance check are author recommendations, not executed demonstrations."
+    },
+    {
+      "id": "C11",
+      "number": 11,
+      "title": "Maintain reusable organizational security criteria",
+      "product": "Preview design and code",
+      "verdict": "Qualified",
+      "availability": "Supports preview design and code reviews",
+      "delivery": "Native requirement packs and document import",
+      "claim": "Security requirement packs provide reusable evaluation criteria; document import can help draft requirements for review.",
+      "limit": "An enabled pack is review configuration, not a guarantee of compliance. Imported statements need human checking for ambiguity and applicability.",
+      "setup": "Choose managed or custom requirements, review any generated items, and enable the intended packs for subsequent reviews.",
+      "prompt": "Translate the approved logging standard into precise review criteria; flag obligations that cannot be assessed from design or source alone.",
+      "check": "Test the criteria on known acceptable and unacceptable examples before relying on the findings.",
+      "refs": [
+        "S18",
+        "S19",
+        "S05"
+      ],
+      "preview": true,
+      "note": "Core behavior is documented; the example task and acceptance check are author recommendations, not executed demonstrations."
+    },
+    {
+      "id": "C12",
+      "number": 12,
+      "title": "Generate a reusable STRIDE threat model",
+      "product": "Preview design and code",
+      "verdict": "Qualified",
+      "availability": "Preview · threat modeling",
+      "delivery": "Native model generation and reruns",
+      "claim": "Use design scope documents, source context, or both to produce a system overview and STRIDE-classified threats with recommendations.",
+      "limit": "The model’s scope depends on the inputs: proposed-design documents and existing code serve different roles. It is not proof that every threat has been identified.",
+      "setup": "Provide current architecture, trust boundaries, and relevant repositories or documents; define what is in scope.",
+      "prompt": "Model threats for the proposed webhook ingestion flow, using the existing service as context and stating uncertain assumptions.",
+      "check": "Review assets, identities, data flows, boundaries, and omitted dependencies with an engineer familiar with the system.",
+      "refs": [
+        "S20",
+        "S05"
+      ],
+      "preview": true,
+      "note": "Core behavior is documented; the example task and acceptance check are author recommendations, not executed demonstrations."
+    },
+    {
+      "id": "C13",
+      "number": 13,
+      "title": "Scan a full codebase for security findings",
+      "product": "Preview design and code",
+      "verdict": "Qualified",
+      "availability": "Preview · code review",
+      "delivery": "Native repository or S3-source review",
+      "claim": "Run a full-code review against a connected supported repository or S3-hosted source and inspect file-level findings.",
+      "limit": "Provider setup and source support vary. A successful job is not assurance that all vulnerabilities or policy violations were found.",
+      "setup": "Connect the chosen source, select the branch or source package, configure access, and choose the intended review criteria.",
+      "prompt": "Review the release-candidate source for security risks and explain the evidence for each high-priority finding.",
+      "check": "Confirm the scanned revision, inspect finding context, and retain independent testing and code review.",
+      "refs": [
+        "S21",
+        "S22",
+        "S04",
+        "S05"
+      ],
+      "preview": true,
+      "note": "Core behavior is documented; the example task and acceptance check are author recommendations, not executed demonstrations."
+    },
+    {
+      "id": "C14",
+      "number": 14,
+      "title": "Review pull requests or merge requests on configured triggers",
+      "product": "Preview design and code",
+      "verdict": "Qualified",
+      "availability": "Preview · provider-specific PR/MR integration",
+      "delivery": "Native code-change feedback",
+      "claim": "Configured repository reviews post security findings on qualifying pull requests or merge requests, using the documented provider flow.",
+      "limit": "Branch, label, draft, and filter settings affect invocation. No comment can mean no trigger matched—not that a security scan passed.",
+      "setup": "Enable code-review comments, select supported repositories, and test trigger/filter behavior on a controlled change.",
+      "prompt": "Configure review for release-bound changes and verify that both an included and an excluded change produce the expected invocation behavior.",
+      "check": "Inspect review execution and the exact commit; never use comment absence as a pass signal.",
+      "refs": [
+        "S23",
+        "S24",
+        "S05"
+      ],
+      "preview": true,
+      "note": "Core behavior is documented; the example task and acceptance check are author recommendations, not executed demonstrations."
+    },
+    {
+      "id": "C15",
+      "number": 15,
+      "title": "Receive a code-review fix as a PR, MR, or diff",
+      "product": "Preview design and code",
+      "verdict": "Qualified",
+      "availability": "Preview · remediation depends on source provider",
+      "delivery": "Native fix proposal; delivery varies",
+      "claim": "Supported connected private repositories can receive a PR or MR; S3 source and public GitHub paths use downloadable diffs.",
+      "limit": "Automated remediation is not supported for public GitLab or Bitbucket repositories in the documented matrix. Some findings require manual work.",
+      "setup": "Enable the appropriate remediation capability and preserve the exact source revision used by the scan.",
+      "prompt": "Generate a narrow remediation for this validated source finding and identify tests required to show that behavior is preserved.",
+      "check": "Apply and review through the normal repository process; verify the original finding and new regressions independently.",
+      "refs": [
+        "S25",
+        "S05"
+      ],
+      "preview": true,
+      "note": "Core behavior is documented; the example task and acceptance check are author recommendations, not executed demonstrations."
+    },
+    {
+      "id": "C16",
+      "number": 16,
+      "title": "Start a code review from the developer’s IDE",
+      "product": "Preview design and code",
+      "verdict": "Qualified",
+      "availability": "Preview · MCP or Kiro Power integration",
+      "delivery": "Configured client integration with cloud scan",
+      "claim": "The IDE integration packages source for a service-backed code review and returns findings through the configured client.",
+      "limit": "This is not an offline local-only scan: source is uploaded to S3. Initial setup can provision an Agent Space, role, and bucket and requires corresponding IAM permissions.",
+      "setup": "Install the supported integration, review first-use provisioning permissions, and approve the code/data handling boundary.",
+      "prompt": "Run a review of this approved repository through the configured security integration and show the submitted source scope.",
+      "check": "Check upload contents, resource ownership, retention settings, and returned scan revision before accepting the result.",
+      "refs": [
+        "S26",
+        "S05"
+      ],
+      "preview": true,
+      "note": "Core behavior is documented; the example task and acceptance check are author recommendations, not executed demonstrations."
+    },
+    {
+      "id": "C17",
+      "number": 17,
+      "title": "Submit a differential source review from a build workflow",
+      "product": "Preview design and code",
+      "verdict": "Qualified",
+      "availability": "Preview · S3/API code-review path",
+      "delivery": "Native API; pipeline wiring is team-owned",
+      "claim": "The documented API path accepts full source context in S3 together with a unified diff to focus a review on changed code.",
+      "limit": "It is not automatic discovery of your CI provider. The team must supply the correct source snapshot, diff base, permissions, and job handling.",
+      "setup": "Prepare approved S3 inputs and invoke the documented code-review job API from a suitably scoped build identity.",
+      "prompt": "Construct a review input from the current commit and its approved base, then fail setup checks when the diff does not match the uploaded source.",
+      "check": "Validate source/diff consistency and handle failed or skipped jobs distinctly from a clean review.",
+      "refs": [
+        "S27",
+        "S05"
+      ],
+      "preview": true,
+      "note": "Core behavior is documented; the example task and acceptance check are author recommendations, not executed demonstrations."
+    },
+    {
+      "id": "C18",
+      "number": 18,
+      "title": "Gate promotion using a scoped post-deployment pentest",
+      "product": "Preview delivery integration",
+      "verdict": "Qualified",
+      "availability": "Public preview · CI/CD pipeline integration",
+      "delivery": "Native service job; configured pipeline integration",
+      "claim": "The documented integration tests a deployed change and can gate subsequent promotion using scoped findings and thresholds.",
+      "limit": "It is not a pre-merge static check. Scoped-out changes can pass without dynamic testing; cancellation of the runner can leave a server-side job running.",
+      "setup": "Configure a staging target, existing test setup, trusted OIDC role, diff baseline, thresholds, and explicit untested/error handling; begin with a dry run.",
+      "prompt": "Add a staging-only gate that records whether the change was tested, scoped out, or unresolved, and stops server work during abort handling.",
+      "check": "Validate every gate outcome and cancellation path. A passing pipeline must not be represented as a complete application assessment.",
+      "refs": [
+        "S28",
+        "S29"
+      ],
+      "preview": true,
+      "note": "Core behavior is documented; the example task and acceptance check are author recommendations, not executed demonstrations."
+    }
+  ],
+  "general_audit": [
+    {
+      "id": "G01",
+      "title": "Current name and excluded adjacent product",
+      "text": "AWS positions the frontier agent as part of AWS Continuum. This report covers its pentest, design, code, and threat-model workflows, not the separate gated-preview Continuum for code vulnerabilities product.",
+      "refs": [
+        "S02",
+        "S04"
+      ],
+      "verdict": "Qualified"
+    },
+    {
+      "id": "G02",
+      "title": "GA is capability-specific",
+      "text": "The 31 March 2026 GA announcement establishes on-demand pentesting. Pricing documentation continues to label code review, design review, and threat modeling preview; the CI/CD tutorial explicitly labels its integration preview.",
+      "refs": [
+        "S03",
+        "S05",
+        "S29"
+      ],
+      "verdict": "Qualified"
+    },
+    {
+      "id": "G03",
+      "title": "Authorized testing can still have side effects",
+      "text": "Use non-production data and test-only credentials. Scope exclusions and network controls reduce exposure but do not establish that every business-logic side effect is impossible.",
+      "refs": [
+        "S10",
+        "S09"
+      ],
+      "verdict": "Qualified"
+    },
+    {
+      "id": "G04",
+      "title": "Coverage and certainty are separate from completion",
+      "text": "AI-assisted testing does not guarantee discovery of every critical path. A completed or work-capped run and a Resolved revalidation status each require interpretation against scope and evidence.",
+      "refs": [
+        "S11",
+        "S08",
+        "S14"
+      ],
+      "verdict": "Qualified"
+    },
+    {
+      "id": "G05",
+      "title": "Documentation conflict: older FAQ versus newer procedures",
+      "text": "The security FAQ still says there are no public APIs or CI/CD integrations. The dedicated CI/CD procedure and preview tutorial document an integration, and the differential-review page documents an API path. This report uses the specific procedures for those workflows and retains the preview and setup restrictions.",
+      "refs": [
+        "S11",
+        "S28",
+        "S29",
+        "S27"
+      ],
+      "verdict": "Qualified"
+    },
+    {
+      "id": "G06",
+      "title": "Region and inference must be checked separately",
+      "text": "Consult current regional availability and the feature-specific cross-region inference table before sending source or application data. Geographic and global routing differ, with feature exceptions; do not assume single-region processing or Zurich-local residency. Regional inference listings are not a universal feature-availability promise.",
+      "refs": [
+        "S30",
+        "S10"
+      ],
+      "verdict": "Qualified"
+    },
+    {
+      "id": "G07",
+      "title": "Evidence export is not certification",
+      "text": "PDF reports can support an assurance workflow but do not constitute certification or replace independently required assessments. Review audience, confidentiality, and the report’s documented limitations.",
+      "refs": [
+        "S15"
+      ],
+      "verdict": "Qualified"
+    },
+    {
+      "id": "G08",
+      "title": "Costs and generated fixes need human controls",
+      "text": "Task hours are cumulative active work; quotas are not budget caps. Repository remediation proposes changes for engineering review and should not bypass test, approval, or deployment procedures.",
+      "refs": [
+        "S05",
+        "S13",
+        "S25"
+      ],
+      "verdict": "Qualified"
+    }
+  ],
+  "transcript": [
+    {
+      "n": 1,
+      "title": "Position the agent correctly",
+      "message": "Application-security assistance, not a universal security sign-off.",
+      "speaker": "The current documentation places AWS Security Agent under AWS Continuum. For this presentation, the core routine-use path is on-demand penetration testing of an application we are authorized to test. The report also covers code, design, threat modeling, and delivery integration, but labels their preview status explicitly. Do not transfer the pentesting GA label to those features or to the separate gated-preview Continuum vulnerability-management offering. Our operating model keeps security and engineering accountable for scope, evidence, remediation priority, and acceptance.",
+      "demo": "Show the capability filter with preview excluded, then enable preview to explain the separate evaluation track.",
+      "refs": [
+        "S04",
+        "S02",
+        "S03",
+        "S05",
+        "S29"
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Set a safe and meaningful test scope",
+      "message": "Authorization, staging isolation, and access are prerequisites.",
+      "speaker": "Start from an application and a specific test purpose. Verify the target domain, identify an operator, and prepare a non-production environment without live customer data. Authentication and private-network access can make testing more representative, but also increase the reachable surface. Our recommendation is to use realistic test identities and review every supporting domain after login. Check that excluded administrative and destructive paths remain excluded. Technical domain verification alone does not settle whether the organization is authorized to test every dependency involved in a user journey.",
+      "demo": "Review a proposed staging test configuration and reject any credential or route that reaches production.",
+      "refs": [
+        "S07",
+        "S09",
+        "S10",
+        "S08"
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Supply context and observe the run",
+      "message": "Measure coverage and task effort, not just a completion badge.",
+      "speaker": "Source and architecture context can make a test more relevant to the deployed application. Ensure the branch, API description, and target build agree. The agent’s exact exploration develops during execution, so the operator needs logs and a stop criterion rather than a promise of a fully predetermined sequence. Limit work using the available task-hour control and monitor application health separately. Task hours and elapsed time measure different things. When a run stops or reaches a limit, inspect what it actually tested and retain explicit gaps for the next assessment.",
+      "demo": "Compare attached source with the deployed commit, then inspect a sample run’s log, task-hours field, and coverage evidence.",
+      "refs": [
+        "S08",
+        "S05",
+        "S11"
+      ]
+    },
+    {
+      "n": 4,
+      "title": "Triage and route verified engineering work",
+      "message": "Finding evidence and business impact determine the next step.",
+      "speaker": "Use severity as a starting point, then review affected behavior, confidence, and supporting evidence. Be aware of hidden or filtered results. A reproduction artifact can be useful when available, but no script should be run outside the authorized environment without review. After validating a finding, create a clear remediation item with the original evidence attached. Jira export is a handoff mechanism, not a replacement for the team’s ownership process. Avoid duplicate tickets and keep the link to the tested application version.",
+      "demo": "Walk through one reviewed finding, its evidence and filters, then the fields required in its Jira issue.",
+      "refs": [
+        "S12",
+        "S16",
+        "S10"
+      ]
+    },
+    {
+      "n": 5,
+      "title": "Close the loop on a fix",
+      "message": "A proposed patch, a deployment, and a revalidation are distinct events.",
+      "speaker": "When repository remediation is enabled, the agent can propose a finding-specific code change. An engineer must still review its logic and run the project’s checks. After the accepted fix is deployed to the tested environment, a focused revalidation can assess whether the existing finding is reproduced. That result is narrower than a new full assessment. Our closure record should include the original finding, patch revision, deployed revision, verification evidence, and any residual uncertainty. Larger behavioral changes justify a broader assessment rather than relying only on a targeted retest.",
+      "demo": "Trace one finding through a proposed PR, normal review, staging deployment, and a separate revalidation job.",
+      "refs": [
+        "S13",
+        "S25",
+        "S14",
+        "S10"
+      ]
+    },
+    {
+      "n": 6,
+      "title": "Evaluate preview design and code workflows deliberately",
+      "message": "Preview feedback supplements—not replaces—established review.",
+      "speaker": "Design reviews use organizational requirements; threat models examine architecture and threats; source reviews inspect code. They answer different questions. A team should define input quality and review ownership before enabling any of them broadly. For repository-triggered feedback, verify that a scan actually ran on the intended revision. An absent comment may indicate that a filter excluded the change. The IDE path is cloud-backed and uploads source, so data handling and first-use provisioning need approval. Treat imported requirements and proposed fixes as reviewable work, not automatic policy truth.",
+      "demo": "Compare a design finding, a threat-model assumption, and a code finding; show the evidence needed to validate each.",
+      "refs": [
+        "S17",
+        "S18",
+        "S20",
+        "S24",
+        "S26",
+        "S05"
+      ]
+    },
+    {
+      "n": 7,
+      "title": "Understand the exact meaning of a delivery gate",
+      "message": "A scoped-out pass is not a completed dynamic security test.",
+      "speaker": "The documented preview CI/CD integration operates after deployment to a testable target. Its result depends on change scoping and the configured gate behavior. A pipeline can pass because the change was out of scope without executing dynamic testing, while an unresolved scope decision requires a deliberate policy. Authentication uses configured trust and permissions; the pipeline must also manage the server-side job lifecycle. Our recommendation is to test dry-run, failure, scope-conflict, and cancellation cases before allowing a gate to influence promotion decisions.",
+      "demo": "Review four hypothetical outcomes—tested, finding detected, scoped out, and scope conflict—and define their promotion and cleanup behavior.",
+      "refs": [
+        "S28",
+        "S29"
+      ]
+    },
+    {
+      "n": 8,
+      "title": "Use evidence to decide whether to expand",
+      "message": "Count validated findings and reviewer effort, not security claims.",
+      "speaker": "The proposed pilot evaluates whether this workflow produces actionable engineering work at an acceptable cost and review burden. Record confirmed findings, rejected findings, uncovered critical paths, accepted fixes, revalidation outcomes, and task expenditure. No productivity or detection-rate result is assumed. Export reports when useful for handoff, but retain their scope and qualification. Expansion should depend on repeated evidence that the test configuration, reviewers, and remediation process work together. Keep preview adoption separate from the baseline so a useful established workflow is not blocked by an immature optional integration.",
+      "demo": "Review the pilot evidence register and distinguish assessed scope, verified fixes, outstanding gaps, and items requiring professional review.",
+      "refs": [
+        "S15",
+        "S05",
+        "S12",
+        "S14"
+      ]
+    }
+  ],
+  "pilot": [
+    {
+      "days": "Days 1–3",
+      "title": "Authorize and isolate",
+      "description": "Select one owned staging application, approve scope and test identities, establish an Agent Space, and nominate security and service owners."
+    },
+    {
+      "days": "Days 4–7",
+      "title": "Establish a baseline",
+      "description": "Run a bounded assessment with matching source/context. Record task hours, tested paths, health impact, and evidence quality."
+    },
+    {
+      "days": "Days 8–14",
+      "title": "Triage and repair",
+      "description": "Review findings, export accepted work to the existing backlog, and trial one repository fix proposal under normal review controls."
+    },
+    {
+      "days": "Days 15–21",
+      "title": "Revalidate and compare",
+      "description": "Deploy accepted fixes to staging and revalidate the original findings. Repeat a comparable assessment where broader changes justify it."
+    },
+    {
+      "days": "Days 22–30",
+      "title": "Optional preview track",
+      "description": "Only after separate approval, evaluate one design/code or pipeline-preview workflow. Decide expansion from verified outcomes, costs, and uncovered scope."
+    }
+  ],
+  "sources": [
+    {
+      "id": "S01",
+      "title": "AWS frontier agents",
+      "url": "https://aws.amazon.com/ai/frontier-agents/",
+      "locator": "Meet the frontier agents",
+      "note": "Portfolio membership.",
+      "kind": "Official product page",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "S02",
+      "title": "AWS Continuum",
+      "url": "https://aws.amazon.com/continuum/",
+      "locator": "Frontier agent; capability availability",
+      "note": "Current umbrella naming and separation from gated-preview code-vulnerability management.",
+      "kind": "Official product page",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "S03",
+      "title": "On-demand penetration testing generally available",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/03/aws-security-agent-ondemand-penetration/",
+      "locator": "Announcement dated 31 March 2026",
+      "note": "Establishes GA for on-demand penetration testing, not every related feature.",
+      "kind": "Official release announcement",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "S04",
+      "title": "What is AWS Security Agent?",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/what-is.html",
+      "locator": "Key capabilities",
+      "note": "Current product naming and lifecycle scope.",
+      "kind": "Product documentation",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "S05",
+      "title": "Pricing and billing",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/pricing.html",
+      "locator": "Billable capabilities; task hours; quotas",
+      "note": "Preview status for code/design/threat-model features; task time differs from elapsed time.",
+      "kind": "Product documentation",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "S06",
+      "title": "Set up AWS Security Agent",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/setup-security-agent.html",
+      "locator": "Access methods; first Agent Space",
+      "note": "IAM Identity Center or IAM-only access and administrative setup.",
+      "kind": "Product documentation",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "S07",
+      "title": "Enable a target domain",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/enable-test-domain.html",
+      "locator": "Verification methods",
+      "note": "Domain verification and private-VPC verification distinctions.",
+      "kind": "Product documentation",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "S08",
+      "title": "Create a penetration test",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html",
+      "locator": "Scope; VPC; context; maximum task hours",
+      "note": "Configuration and execution boundaries.",
+      "kind": "Product documentation",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "S09",
+      "title": "Provide testing credentials",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html",
+      "locator": "Authentication configuration",
+      "note": "Authenticated access setup; credentials must be scoped to the test.",
+      "kind": "Product documentation",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "S10",
+      "title": "Security best practices",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/security-best-practices.html",
+      "locator": "Non-production testing; validation; cross-region inference",
+      "note": "Side effects, generated-code review, and processing-location considerations.",
+      "kind": "Product documentation",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "S11",
+      "title": "Security considerations and FAQs",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/security-guidance.html",
+      "locator": "Coverage; dynamic test plan; operational impact",
+      "note": "Used for coverage and monitoring caveats. Older no-API/no-CI statements conflict with newer procedure pages.",
+      "kind": "Product documentation",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "S12",
+      "title": "Review penetration-test findings",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/review-penetration-findings.html",
+      "locator": "Findings; logs; evidence; verification scripts",
+      "note": "Finding confidence and evidence availability.",
+      "kind": "Product documentation",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "S13",
+      "title": "Enable finding remediation",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/enable-remediate-findings.html",
+      "locator": "Prerequisites; enable per repository",
+      "note": "GitHub-based user-requested fixes require repository configuration.",
+      "kind": "Product documentation",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "S14",
+      "title": "Revalidate findings",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html",
+      "locator": "Prerequisites; interpretation of results",
+      "note": "Focused checks on existing findings, not new-vulnerability discovery.",
+      "kind": "Product documentation",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "S15",
+      "title": "Export a penetration-test report",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/export-penetration-report.html",
+      "locator": "Report options; compliance limitations",
+      "note": "PDF evidence exports are not compliance certification.",
+      "kind": "Product documentation",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "S16",
+      "title": "Create Jira issues for findings",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/export-findings-to-issue-tracker.html",
+      "locator": "Issue creation; unlinking",
+      "note": "Connected project must permit Task issue type; unlinking does not delete.",
+      "kind": "Product documentation",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "S17",
+      "title": "Perform a design review",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/perform-design-review.html",
+      "locator": "Upload and review",
+      "note": "Design documents evaluated against configured requirements.",
+      "kind": "Product documentation",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "S18",
+      "title": "Security requirements",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/security-requirements.html",
+      "locator": "Requirement packs; enabled requirements",
+      "note": "Shared organizational review criteria.",
+      "kind": "Product documentation",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "S19",
+      "title": "Import security requirements",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/import-security-requirements.html",
+      "locator": "Generate and review requirements",
+      "note": "Document-derived requirements need administrative review.",
+      "kind": "Product documentation",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "S20",
+      "title": "Perform threat modeling",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/perform-threat-model.html",
+      "locator": "Scope and context; model output",
+      "note": "STRIDE threats and architecture context; reusable runs.",
+      "kind": "Product documentation",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "S21",
+      "title": "Perform a full code review",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/perform-code-review-scan.html",
+      "locator": "Source configuration; scan creation",
+      "note": "Repository or S3-hosted source review.",
+      "kind": "Product documentation",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "S22",
+      "title": "Review code-scan findings",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/review-code-scan-findings.html",
+      "locator": "Finding details; statuses",
+      "note": "Location, severity, risk, and remediation context.",
+      "kind": "Product documentation",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "S23",
+      "title": "Review findings in pull requests",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/review-code-findings-github.html",
+      "locator": "PR/MR review findings",
+      "note": "Provider-specific code-change feedback.",
+      "kind": "Product documentation",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "S24",
+      "title": "Configure code-review triggers",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/configure-code-review-triggers.html",
+      "locator": "Filter groups; matching behavior",
+      "note": "No matching trigger means no review comment; remediation settings are separate.",
+      "kind": "Product documentation",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "S25",
+      "title": "Remediate code-review findings",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/remediate-code-scan-findings.html",
+      "locator": "Source-specific remediation",
+      "note": "PR/MR versus downloadable diff; public-provider restrictions.",
+      "kind": "Product documentation",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "S26",
+      "title": "Code review from an IDE",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/code-review-ide-integration.html",
+      "locator": "MCP/Power setup; first-use resources",
+      "note": "Source is uploaded to S3/service infrastructure; initial IAM provisioning matters.",
+      "kind": "Product documentation",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "S27",
+      "title": "Run a differential code scan with S3",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/run-diff-scan-s3.html",
+      "locator": "Source and diff inputs; API job",
+      "note": "Full source context and unified diff supplied to a review API.",
+      "kind": "Product documentation",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "S28",
+      "title": "Run penetration tests from CI/CD",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/cicd-pentest.html",
+      "locator": "Post-deployment gate; scoping; OIDC; cancellation",
+      "note": "Scoped-out and scope-conflict outcomes; server job lifecycle.",
+      "kind": "Product documentation",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "S29",
+      "title": "GitHub Actions scoped-pentest tutorial",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/sample-cicd-github.html",
+      "locator": "Public preview notice; post-deployment setup",
+      "note": "Explicit preview status for the pipeline integration.",
+      "kind": "Product documentation",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "S30",
+      "title": "Resilience and regional availability",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/resilience.html",
+      "locator": "Regional availability; inference",
+      "note": "Regional access and cross-region inference are separate checks.",
+      "kind": "Product documentation",
+      "checked": "2026-10-20"
+    }
+  ],
+  "quickstart": [
+    "Create an Agent Space and authorize one verified, isolated staging target.",
+    "Run a bounded assessment with scoped credentials, current source context, and an operator watching execution.",
+    "Validate findings, review proposed fixes, and revalidate after deployment through the normal change process."
+  ],
+  "exclusions": "Production-target testing, unrestricted scanning, unsupported compliance guarantees, enterprise-wide vulnerability management, and the separate gated-preview Continuum for code vulnerabilities offering are outside this first pass. Preview workflows are hidden by default in the explorer.",
+  "measures": "Recommended measures: independently confirmed findings; reviewer time; false-positive/rework rate; critical-path coverage gaps; accepted fixes; reproducibility after deployment; and task hours per comparable scope. These are pilot measures, not measured results or vendor detection guarantees.",
+  "counts": {
+    "Confirmed": 2,
+    "Qualified": 16,
+    "Workflow example": 0
+  }
+}
