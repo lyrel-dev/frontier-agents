@@ -65,84 +65,6 @@
     "reviewed": "2026-10-21",
     "note": ""
   },
-  "KM": {
-    "title": "Memory",
-    "url": "https://kiro.dev/docs/memory/",
-    "reviewed": "2026-10-21",
-    "note": ""
-  },
-  "KL": {
-    "title": "Introducing memory in Kiro IDE and CLI — 20 October 2026",
-    "url": "https://kiro.dev/blog/memory-in-ide-cli/",
-    "reviewed": "2026-10-21",
-    "note": "Dated launch announcement resolves the older memory page that listed IDE support as forthcoming. Local storage and default-off statements apply to this release."
-  },
-  "KS": {
-    "title": "Steering",
-    "url": "https://kiro.dev/docs/steering/",
-    "reviewed": "2026-10-21",
-    "note": ""
-  },
-  "KW": {
-    "title": "Working with the agent on Web",
-    "url": "https://kiro.dev/docs/web/using-the-agent/",
-    "reviewed": "2026-10-21",
-    "note": ""
-  },
-  "KG": {
-    "title": "GitHub integration",
-    "url": "https://kiro.dev/docs/web/github/",
-    "reviewed": "2026-10-21",
-    "note": ""
-  },
-  "KK": {
-    "title": "Agent Skills",
-    "url": "https://kiro.dev/docs/skills/",
-    "reviewed": "2026-10-21",
-    "note": ""
-  },
-  "KH": {
-    "title": "Hooks",
-    "url": "https://kiro.dev/docs/hooks/",
-    "reviewed": "2026-10-21",
-    "note": ""
-  },
-  "KJ": {
-    "title": "Hooks migration in CLI V3",
-    "url": "https://kiro.dev/docs/cli/v3/hooks-migration/",
-    "reviewed": "2026-10-21",
-    "note": ""
-  },
-  "KC": {
-    "title": "MCP configuration",
-    "url": "https://kiro.dev/docs/mcp/configuration/",
-    "reviewed": "2026-10-21",
-    "note": ""
-  },
-  "KP": {
-    "title": "MCP tool approval",
-    "url": "https://kiro.dev/docs/mcp/usage/",
-    "reviewed": "2026-10-21",
-    "note": ""
-  },
-  "KA": {
-    "title": "Automations",
-    "url": "https://kiro.dev/docs/web/automations/",
-    "reviewed": "2026-10-21",
-    "note": ""
-  },
-  "KR": {
-    "title": "Custom-agent configuration reference",
-    "url": "https://kiro.dev/docs/custom-agents/configuration-reference/",
-    "reviewed": "2026-10-21",
-    "note": ""
-  },
-  "KQ": {
-    "title": "CLI slash commands",
-    "url": "https://kiro.dev/docs/cli/reference/slash-commands/",
-    "reviewed": "2026-10-21",
-    "note": ""
-  },
   "SC": {
     "title": "Create a penetration test",
     "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html",
@@ -188,12 +110,6 @@
   "ST": {
     "title": "Revalidate penetration-test findings",
     "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html",
-    "reviewed": "2026-10-21",
-    "note": ""
-  },
-  "SI": {
-    "title": "Run code security scans from an IDE",
-    "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/code-review-ide-integration.html",
     "reviewed": "2026-10-21",
     "note": ""
   },
