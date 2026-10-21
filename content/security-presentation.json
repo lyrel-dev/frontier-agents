@@ -39,7 +39,7 @@
       "label": "Application security / Software engineering / Security architecture"
     },
     {
-      "title": "Lifecycle coverage is not uniform availability",
+      "title": "Feature availability differs by security workflow",
       "takeaway": "Use the feature’s own maturity and execution boundary.",
       "kind": "cards",
       "seconds": 75,
@@ -92,7 +92,7 @@
       ]
     },
     {
-      "title": "Use case · prove a tenant boundary holds",
+      "title": "Use case · assess a tenant-isolation control",
       "takeaway": "The unit of success is an accepted finding and verified repair—not a severity count.",
       "kind": "flow",
       "seconds": 75,
@@ -132,7 +132,7 @@
       ]
     },
     {
-      "title": "Authorization and target safety come first",
+      "title": "Specify authorization and target effects before testing",
       "takeaway": "Domain verification does not authorize every reachable dependency.",
       "kind": "matrix",
       "seconds": 90,
@@ -205,7 +205,7 @@
       ]
     },
     {
-      "title": "Bound the run and observe its effects",
+      "title": "Configure run limits and inspect test effects",
       "takeaway": "Acceptance: task hours are not wall-clock minutes; the operator owns the stop decision.",
       "kind": "lens",
       "seconds": 75,
@@ -285,7 +285,7 @@
       "fallback": "Use a sanitized completed run if setup or job latency prevents a live view. Label illustrative findings clearly."
     },
     {
-      "title": "Read a finding as an evidence package",
+      "title": "Examine finding evidence, impact and confidence",
       "takeaway": "Severity without impact, confidence and coverage is not enough for a decision.",
       "kind": "cards",
       "seconds": 90,
@@ -332,7 +332,7 @@
       ]
     },
     {
-      "title": "Remediation produces a proposal—not closure",
+      "title": "A remediation proposal requires review and retesting",
       "takeaway": "Acceptance: provider, repository visibility and source type determine delivery; the team reviews every fix.",
       "kind": "lens",
       "seconds": 90,
@@ -539,7 +539,7 @@
       "callout": "Acceptance: confirm what left the workstation or runner, which revision was scanned, and what checks actually ran."
     },
     {
-      "title": "A green delivery gate can mean different things",
+      "title": "A passing delivery gate has limited assessment scope",
       "takeaway": "Read scope, errors and baseline behavior—not just the pipeline color.",
       "kind": "matrix",
       "seconds": 90,
@@ -581,8 +581,8 @@
       ]
     },
     {
-      "title": "Pilot one complete evidence-to-closure loop",
-      "takeaway": "A safe test, an accepted finding and a verified fix are more useful than broad unreviewed coverage.",
+      "title": "Pilot one authorized finding-to-revalidation cycle",
+      "takeaway": "Assess one authorized target, review a finding and revalidate the repaired application.",
       "kind": "matrix",
       "seconds": 90,
       "phase": "Adoption",
@@ -623,7 +623,7 @@
       ]
     },
     {
-      "title": "Make security work an accountable closure loop",
+      "title": "Record authorization, findings and revalidation",
       "takeaway": "Authorize the target. Inspect the evidence. Revalidate the deployed repair.",
       "kind": "close",
       "seconds": 90,
@@ -747,5 +747,6 @@
       "title": "Export a penetration-test report",
       "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/export-penetration-report.html"
     }
-  }
+  },
+  "editorial_classification": "Technical documentation; documented features and proposed team workflows are explicitly distinguished."
 }
