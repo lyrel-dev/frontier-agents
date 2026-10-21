@@ -1,0 +1,17 @@
+{
+  "devops": {
+    "seconds": 2100,
+    "demo_seconds": 480,
+    "slides": 13
+  },
+  "security": {
+    "seconds": 2010,
+    "demo_seconds": 600,
+    "slides": 13
+  },
+  "finops": {
+    "seconds": 1890,
+    "demo_seconds": 480,
+    "slides": 13
+  }
+}
