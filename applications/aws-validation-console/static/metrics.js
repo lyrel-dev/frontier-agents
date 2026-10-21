@@ -140,7 +140,7 @@ document.addEventListener('click',event=>{
   if(action==='grafana')download('operational-readiness-grafana.json',JSON.stringify(APP_METRICS.dashboard,null,2));
   if(action==='contract')download('readiness-metric-catalogue.json',JSON.stringify(APP_METRICS.catalogue,null,2));
   if(action==='download-example')download('synthetic-metrics-bundle.json',JSON.stringify(APP_METRICS.examples,null,2));
-  if(action==='example-view'){metricView.source='synthetic';location.hash='metrics';}
+  if(action==='example-view'){Object.assign(metricView,{source:'synthetic',group:'all',query:'',run:'all',scope:'all',model:'all',from:'',to:'',presence:'all'});location.hash='metrics';}
   if(action==='reset'){Object.assign(metricView,{group:'all',query:'',run:'all',scope:'all',model:'all',from:'',to:'',presence:'all'});render();}
   if(action==='definition'){const m=metricMeta(el.dataset.metric,el.dataset.unit);showDrawer(m.title,'Measurement contract · '+m.metric,`<p>${esc(m.description)}</p><p>Unit: <strong>${esc(m.unit)}</strong></p>${m.promql?`<h3>Proposed PromQL</h3><pre class="metric-query">${esc(m.promql)}</pre><p>${esc(m.instrumentation)}</p>`:'<p>No Grafana query is proposed for this imported custom metric. Map it explicitly before use.</p>'}`);}
 });

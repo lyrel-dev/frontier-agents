@@ -124,6 +124,7 @@ with sync_playwright() as pw:
     dash=json.loads(Path(result.value.path()).read_text())
     check('downloaded Grafana JSON has 33 graph panels',len([p for p in dash['panels'] if p['type']=='timeseries'])==33)
     page.locator('[data-metrics-action="example-view"]').click();page.wait_for_timeout(120)
+    check('Grafana example resets incompatible workspace filters',page.locator('.mc-card').count()==32 and page.locator('.mc-card').filter(has=page.locator('.mc-point')).count()==32)
     page.locator('[data-metrics-field="query"]').fill('latency · p95')
     page.screenshot(path=str(OUT/'metrics-desktop.png'))
     page.set_viewport_size({'width':390,'height':844});page.wait_for_timeout(100)

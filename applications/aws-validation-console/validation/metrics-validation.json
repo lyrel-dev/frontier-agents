@@ -12,7 +12,7 @@
       "command": "python tests/browser_checks.py"
     },
     "metrics_browser_checks": {
-      "passed": 57,
+      "passed": 58,
       "command": "python tests/metrics_browser_checks.py"
     },
     "loopback_http_smoke_checks": {
