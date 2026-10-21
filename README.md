@@ -12,6 +12,10 @@ Detailed, source-linked interactive reports and timed presentations. Download or
 
 Each guide includes a six-step narrative, use-case scope, a detailed capability inventory, controls, examples, timed demos, readiness worksheet and official sources. The entire programme is 160 minutes including 48 minutes of demonstrations; questions and breaks are additional.
 
+## Format and editorial standard
+
+See [EDITORIAL_STANDARD.md](EDITORIAL_STANDARD.md) and [FORMAT_IMPLEMENTATION.md](FORMAT_IMPLEMENTATION.md). Every capability now has an untimed reference slide for detailed discussion; timing applies only to the core.
+
 ## Documents
 
 - `*/report.md`: narrative and capability report in Markdown.
