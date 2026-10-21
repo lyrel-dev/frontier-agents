@@ -1,12 +1,12 @@
 {
-  "revision": "2026-10-21-mechanisms-v1",
-  "records": 31,
-  "official_sources": 44,
+  "revision": "2026-10-21-mechanisms-v2",
+  "records": 32,
+  "official_sources": 46,
   "core_minutes_unchanged": 160,
   "core_demo_minutes_unchanged": 48,
   "optional_exercise_minutes": 44,
   "reference_pptx_slides": {
-    "devops": 13,
+    "devops": 14,
     "kiro": 12,
     "security": 11,
     "finops": 11,
