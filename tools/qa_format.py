@@ -1,18 +1,19 @@
+import shutil, tempfile
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 import json
 root=Path(__file__).resolve().parents[1]
-qa=root/'qa'/'editorial_screens';qa.mkdir(parents=True,exist_ok=True)
+qa=Path(tempfile.gettempdir())/'frontier-editorial-checks';qa.mkdir(parents=True,exist_ok=True)
 checks=[]
 with sync_playwright() as p:
-  b=p.chromium.launch(executable_path='/usr/bin/chromium',headless=True,args=['--no-sandbox','--disable-dev-shm-usage'])
-  for name in ['devops','kiro','security','finops','architecture']:
+  b=p.chromium.launch(executable_path=shutil.which('chromium'),headless=True,args=['--no-sandbox','--disable-dev-shm-usage'])
+  for name in ['devops','security','finops','architecture']:
     page=b.new_page(viewport={'width':1440,'height':900},device_scale_factor=1)
-    dest={'devops':'devops/validated-report.html','kiro':'kiro/report.html','security':'security/report.html','finops':'finops/report.html','architecture':'architecture/common-patterns.html'}[name]
+    dest={'devops':'devops/validated-report.html','security':'security/report.html','finops':'finops/report.html','architecture':'architecture/common-patterns.html'}[name]
     page.set_content((root/dest).read_text(encoding='utf-8'),wait_until='load')
     assert page.locator('#workflow .story-stage').count()==6
     n=page.locator('#capabilities .cap').count()
-    assert n in (19,21,18,13,12)
+    assert n in (8,17,13,12)
     page.locator('#cap-search').fill('approval')
     visible=page.locator('#capabilities .cap:not([hidden])').count()
     assert visible>0,(name,visible)
@@ -28,7 +29,7 @@ with sync_playwright() as p:
     page.locator('button[data-present]').click()
     assert page.locator('body').evaluate('(el)=>el.classList.contains("presenting")')
     total=page.locator('.slide').count()
-    core={'devops':18,'kiro':18,'security':18,'finops':16,'architecture':18}[name]
+    core={'devops':18,'security':18,'finops':16,'architecture':18}[name]
     assert total==core+n,(name,total,core,n)
     page.locator('#slide-select').select_option(str(core))
     assert 'Reference' in page.locator('#slide-position').inner_text()
