@@ -8,7 +8,7 @@
   "slides": [
     {
       "title": "AWS FinOps Agent",
-      "takeaway": "Turn a cost question into reproducible evidence and owned engineering work.",
+      "takeaway": "Cost queries and recommendation follow-up require source reconciliation and ownership.",
       "kind": "hero",
       "seconds": 45,
       "phase": "Position",
@@ -79,7 +79,7 @@
       ]
     },
     {
-      "title": "Six practical capability families",
+      "title": "FinOps capability groups and output types",
       "takeaway": "The service helps analyze and route work; it does not apply resource changes.",
       "kind": "cards",
       "seconds": 90,
@@ -185,7 +185,7 @@
       ]
     },
     {
-      "title": "Cost inquiry needs a reproducible question",
+      "title": "Record comparable cost-query definitions",
       "takeaway": "Acceptance: reconcile one material total using identical source filters.",
       "kind": "lens",
       "seconds": 90,
@@ -238,7 +238,7 @@
       ]
     },
     {
-      "title": "Investigate an anomaly without overstating cause",
+      "title": "Separate observed cost changes from causal hypotheses",
       "takeaway": "Acceptance: label correlated changes as hypotheses until the causal mechanism is verified.",
       "kind": "lens",
       "seconds": 90,
@@ -522,8 +522,8 @@
       ]
     },
     {
-      "title": "Measure reconciled analysis and verified follow-through",
-      "takeaway": "Accepted cost work is the outcome; estimated savings are only an input.",
+      "title": "Verify cost totals and implemented follow-up",
+      "takeaway": "Record implemented engineering actions and verify resulting costs.",
       "kind": "close",
       "seconds": 75,
       "phase": "Close",
@@ -610,5 +610,6 @@
       "title": "Cross-region inference",
       "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/cross-region-inference.html"
     }
-  }
+  },
+  "editorial_classification": "Technical documentation; documented features and proposed team workflows are explicitly distinguished."
 }
