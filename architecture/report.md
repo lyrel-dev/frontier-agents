@@ -1,6 +1,6 @@
 # Common architectural patterns
 
-Common work contracts, evidence, authorization and verification patterns across four products.
+Common work contracts, evidence, authorization and verification patterns across three products.
 
 
 Revision: 21 October 2026. Independent engineering field guide.
@@ -15,7 +15,7 @@ Revision: 21 October 2026. Independent engineering field guide.
 
 ## Decision brief
 
-The four agents do different jobs and expose different execution surfaces. A useful common architecture does not hide those differences. It defines what a task means, where evidence comes from, which effects are permitted, who owns the decision and how the result is verified.
+The three agents do different jobs and expose different execution surfaces. A useful common architecture does not hide those differences. It defines what a task means, where evidence comes from, which effects are permitted, who owns the decision and how the result is verified.
 
 The running tabletop begins with a checkout incident and ends with a reviewed implementation and independent verification. Security and cost assessments are conditional branches, not mandatory calls to every agent. The connecting artifact is an existing incident, issue or change record. Credentials and approvals are deliberately not passed along with it.
 
@@ -37,7 +37,7 @@ The running tabletop begins with a checkout incident and ends with a reviewed im
 
 ## 1. Choose a specialist and write the work contract
 
-Start with the evidence and outcome required. DevOps Agent supports operational investigations; Kiro supports reviewable code work; Security Agent supports authorized application assessments; FinOps Agent supports cost analysis. Calling every agent on every task adds complexity without necessarily adding useful evidence.
+Start with the evidence and outcome required. DevOps Agent supports operational investigations, Security Agent supports authorized application assessments, and FinOps Agent supports cost analysis. Select only the specialist needed for the task. Code implementation, merge and deployment remain assigned engineering responsibilities rather than an additional agent role in this collection.
 
 The proposed common contract records the workload, owner, task, allowed effects, exclusions, completion checks and stop responsibility. A product workspace or prompt is not proof that access is enforced. Test the actual IAM, repository and integration boundaries used by the chosen specialist.
 
@@ -166,7 +166,7 @@ Pilot one workflow before building a broad orchestrator. Measure acceptance, rew
 
 **Review record to retain (team recommendation):** Workload scope record with named owners and tested authorization boundary.
 
-Official documentation references: D01, D05, K02, K03, S02, S03, F01, F02
+Official documentation references: D01, D05, S02, S03, F01, F02
 
 
 ### P02 — Source-grounded context, with provenance
@@ -183,7 +183,7 @@ Official documentation references: D01, D05, K02, K03, S02, S03, F01, F02
 
 **Review record to retain (team recommendation):** Source inventory with timestamps, versions, query filters, and known omissions.
 
-Official documentation references: D02, K11, K02, S03, F09, F04
+Official documentation references: D02, S03, F09, F04
 
 
 ### P03 — Instructions and memory are not authorization
@@ -200,7 +200,7 @@ Official documentation references: D02, K11, K02, S03, F09, F04
 
 **Review record to retain (team recommendation):** Versioned instruction record plus independently enforced IAM and tool permissions.
 
-Official documentation references: D03, K07, K08, K04, S09, S13, S02, F04
+Official documentation references: D03, S09, S13, S02, F04
 
 
 ### P04 — Explicit task contracts and trigger ownership
@@ -217,7 +217,7 @@ Official documentation references: D03, K07, K08, K04, S09, S13, S02, F04
 
 **Review record to retain (team recommendation):** Task contract with objective, trigger, allowed effects, stop owner, and checks.
 
-Official documentation references: D02, D03, K09, K02, S03, S11, F05, F08
+Official documentation references: D02, D03, S03, S11, F05, F08
 
 
 ### P05 — Authorize effects, not product labels
@@ -234,7 +234,7 @@ Official documentation references: D02, D03, K09, K02, S03, S11, F05, F08
 
 **Review record to retain (team recommendation):** Action classification and the applicable human or system approval record.
 
-Official documentation references: D04, D05, K04, S03, S04, F03, F05
+Official documentation references: D04, D05, S03, S04, F03, F05
 
 
 ### P06 — Isolate both execution and its targets
@@ -251,7 +251,7 @@ Official documentation references: D04, D05, K04, S03, S04, F03, F05
 
 **Review record to retain (team recommendation):** Sandbox/target isolation evidence including blocked effects and cleanup ownership.
 
-Official documentation references: D08, D09, K03, K05, K06, S04, F01, F03
+Official documentation references: D08, D09, S04, F01, F03
 
 
 ### P07 — Integrate through explicit adapters
@@ -260,7 +260,7 @@ Official documentation references: D08, D09, K03, K05, K06, S04, F01, F03
 
 **Setup:** For each proposed connection, record client, server, protocol, authentication, enabled tools, data transferred, feature status, and failure behavior. A manual artifact handoff is a valid first implementation.
 
-**Boundary:** MCP compatibility is not a shared authorization domain. This report does not establish a generic FinOps MCP endpoint, common cross-agent API, or built-in four-agent orchestration service.
+**Boundary:** MCP compatibility is not a shared authorization domain. This report does not establish a generic FinOps MCP endpoint, common cross-agent API, or built-in three-agent orchestration service.
 
 **Check:** Demonstrate one permitted call with a narrow identity. Remove the connection and verify access stops without breaking unrelated agents.
 
@@ -268,7 +268,7 @@ Official documentation references: D08, D09, K03, K05, K06, S04, F01, F03
 
 **Review record to retain (team recommendation):** Integration inventory showing adapter, credentials boundary, and supported actions.
 
-Official documentation references: D06, D07, K10, S08, S13, F10, F11
+Official documentation references: D06, D07, S10, S11, F10, F11
 
 
 ### P08 — Artifact-first handoff between specialists
@@ -285,7 +285,7 @@ Official documentation references: D06, D07, K10, S08, S13, F10, F11
 
 **Review record to retain (team recommendation):** Handoff packet with referenced source evidence, exclusions, owner, and pending approvals.
 
-Official documentation references: D10, K12, K11, S05, S07, F07, F10
+Official documentation references: D10, S05, S07, F07, F10
 
 
 ### P09 — Bounded asynchronous work and stop responsibility
@@ -302,7 +302,7 @@ Official documentation references: D10, K12, K11, S05, S07, F07, F10
 
 **Review record to retain (team recommendation):** Job record with lifecycle transitions, time/cost budget, and stop/retry decisions.
 
-Official documentation references: D03, K12, K02, S03, S10, S13, F05
+Official documentation references: D03, S03, S10, S13, F05
 
 
 ### P10 — Independent verification before promotion
@@ -319,7 +319,7 @@ Official documentation references: D03, K12, K02, S03, S10, S13, F05
 
 **Review record to retain (team recommendation):** Acceptance test evidence independent of the agent-generated assertion.
 
-Official documentation references: D11, K01, K02, S04, S06, F03, F07, F09
+Official documentation references: D11, S04, S06, F03, F07, F09
 
 
 ### P11 — Evidence lineage and separate systems of record
@@ -336,7 +336,7 @@ Official documentation references: D11, K01, K02, S04, S06, F03, F07, F09
 
 **Review record to retain (team recommendation):** Linked identifiers across source, run, finding, change, approval, and observed result.
 
-Official documentation references: D04, D03, K12, K02, S05, S06, F05, F09
+Official documentation references: D04, D03, S05, S06, F05, F09
 
 
 ### P12 — Feature-level availability and data-location gates
@@ -353,7 +353,7 @@ Official documentation references: D04, D03, K12, K02, S05, S06, F05, F09
 
 **Review record to retain (team recommendation):** Feature-specific availability and data-route decision with approved target and Region.
 
-Official documentation references: D09, K01, S12, F06
+Official documentation references: D09, S12, F06
 
 
 ## Illustrative handoff
@@ -395,8 +395,6 @@ stop_owner: named-operator
 
 ## Sources
 
-- X01: [AWS frontier agents](https://aws.amazon.com/ai/frontier-agents/)
-
 - D01: [About AWS DevOps Agent](https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent.html)
 
 - D02: [Production operations](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-production-operations-index.html)
@@ -419,30 +417,6 @@ stop_owner: named-operator
 
 - D11: [Autonomous incident response](https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-autonomous-incident-response.html)
 
-- K01: [Kiro Web](https://kiro.dev/docs/web/)
-
-- K02: [GitHub integration](https://kiro.dev/docs/web/github/)
-
-- K03: [Cloud sandbox](https://kiro.dev/docs/web/sandbox/)
-
-- K04: [Permissions](https://kiro.dev/docs/permissions/)
-
-- K05: [Sandbox internet access](https://kiro.dev/docs/web/sandbox/internet-access/)
-
-- K06: [Sandbox environment variables and secrets](https://kiro.dev/docs/web/sandbox/environment-variables/)
-
-- K07: [Steering](https://kiro.dev/docs/steering/)
-
-- K08: [Memory](https://kiro.dev/docs/memory/)
-
-- K09: [Automations](https://kiro.dev/docs/web/automations/)
-
-- K10: [Model Context Protocol](https://kiro.dev/docs/mcp/)
-
-- K11: [Specifications](https://kiro.dev/docs/specs/)
-
-- K12: [Autonomous mode](https://kiro.dev/docs/web/autonomous-mode/)
-
 - S01: [What is AWS Security Agent (now part of AWS Continuum)?](https://docs.aws.amazon.com/securityagent/latest/userguide/what-is.html)
 
 - S02: [Set up AWS Security Agent](https://docs.aws.amazon.com/securityagent/latest/userguide/setup-security-agent.html)
@@ -456,8 +430,6 @@ stop_owner: named-operator
 - S06: [Revalidate findings](https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html)
 
 - S07: [Enable finding remediation](https://docs.aws.amazon.com/securityagent/latest/userguide/enable-remediate-findings.html)
-
-- S08: [Run code security scans from your IDE](https://docs.aws.amazon.com/securityagent/latest/userguide/code-review-ide-integration.html)
 
 - S09: [Manage security requirements](https://docs.aws.amazon.com/securityagent/latest/userguide/security-requirements.html)
 
