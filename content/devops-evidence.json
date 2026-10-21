@@ -1,12 +1,7 @@
 {
   "title": "AWS agents in daily engineering — validated report",
   "validated": "2026-10-20",
-  "scope": "Documentation validation of the existing 19-capability first pass",
-  "counts": {
-    "Confirmed": 9,
-    "Qualified": 7,
-    "Workflow example": 3
-  },
+  "scope": "Day-to-day operations with AWS DevOps Agent.",
   "capabilities": [
     {
       "id": "C01",
@@ -26,16 +21,7 @@
         "S03"
       ],
       "change": "Retained; clarified data scope and evidence requirements.",
-      "preview": false,
-      "original": {
-        "title": "Incident triage and root cause",
-        "product": "AWS DevOps Agent",
-        "status": "GA",
-        "claim": "Correlate alarms, metrics, logs, traces, deployment history and code changes.",
-        "prompt": "Investigate the checkout 5xx spike after the last deployment and rank evidence-backed causes.",
-        "validation": "Verify timeline, telemetry and deployment diff.",
-        "prerequisites": "Connected observability, application context and permissions."
-      }
+      "preview": false
     },
     {
       "id": "C02",
@@ -55,16 +41,7 @@
         "S13"
       ],
       "change": "Separated recommendations from execution and removed “runbooks required” as an absolute condition.",
-      "preview": false,
-      "original": {
-        "title": "Mitigation recommendations",
-        "product": "AWS DevOps Agent",
-        "status": "GA",
-        "claim": "Suggest containment, rollback and remediation options for incidents.",
-        "prompt": "Propose low-risk mitigations for queue backlog, with rollback steps.",
-        "validation": "Human approval and blast-radius review.",
-        "prerequisites": "Runbooks and source integrations."
-      }
+      "preview": false
     },
     {
       "id": "C03",
@@ -83,16 +60,7 @@
         "S05"
       ],
       "change": "Retained; made telemetry and older-space permissions explicit.",
-      "preview": false,
-      "original": {
-        "title": "On-demand service health",
-        "product": "AWS DevOps Agent",
-        "status": "GA",
-        "claim": "Ask about latency, errors, saturation and recent changes in natural language.",
-        "prompt": "Summarize the API service health over 24 hours.",
-        "validation": "Cross-check monitoring dashboards.",
-        "prerequisites": "Agent Space and connected telemetry."
-      }
+      "preview": false
     },
     {
       "id": "C04",
@@ -111,16 +79,7 @@
         "S04"
       ],
       "change": "Retained; distinguished recommendations from implementation and added cadence.",
-      "preview": false,
-      "original": {
-        "title": "Recurring incident prevention",
-        "product": "AWS DevOps Agent",
-        "status": "GA",
-        "claim": "Analyze past incidents to recommend reliability improvements.",
-        "prompt": "Identify repeat timeout patterns and preventative changes.",
-        "validation": "Track proposals as owned tickets.",
-        "prerequisites": "Incident history."
-      }
+      "preview": false
     },
     {
       "id": "C05",
@@ -139,16 +98,7 @@
         "S06"
       ],
       "change": "Replaced the vague “Conditional” label with explicit configuration requirements.",
-      "preview": false,
-      "original": {
-        "title": "Daily SRE health summaries",
-        "product": "AWS DevOps Agent",
-        "status": "Conditional",
-        "claim": "Schedule custom SRE agents to inspect slow queries, anomalies and logs.",
-        "prompt": "Produce a daily summary of database health and error spikes.",
-        "validation": "Validate thresholds and source evidence.",
-        "prerequisites": "Custom agent schedule and integrations."
-      }
+      "preview": false
     },
     {
       "id": "C06",
@@ -168,16 +118,7 @@
         "S08"
       ],
       "change": "Separated MCP client/IDE access from A2A and ACP rather than presenting them as interchangeable.",
-      "preview": false,
-      "original": {
-        "title": "Production context inside IDE",
-        "product": "AWS DevOps Agent",
-        "status": "Conditional",
-        "claim": "Connect operational investigations to supported coding assistants via MCP/A2A.",
-        "prompt": "Check production health for the service I am editing.",
-        "validation": "Check identity scope and investigation links.",
-        "prerequisites": "Supported client and MCP/A2A setup."
-      }
+      "preview": false
     },
     {
       "id": "C07",
@@ -199,16 +140,7 @@
         "S15"
       ],
       "change": "Confirmed preview; added the Region restriction and distinguished optional managed verification.",
-      "preview": true,
-      "original": {
-        "title": "Release risk analysis",
-        "product": "AWS DevOps Agent",
-        "status": "Preview",
-        "claim": "Assess code and dependency risk before production deployment.",
-        "prompt": "Assess this release candidate for risky changes.",
-        "validation": "Keep existing CI and release gates.",
-        "prerequisites": "Release management preview."
-      }
+      "preview": true
     },
     {
       "id": "C08",
@@ -228,580 +160,7 @@
         "S15"
       ],
       "change": "Added the missing mutation warning, environment distinction, and regional limit.",
-      "preview": true,
-      "original": {
-        "title": "Release QA and integration testing",
-        "product": "AWS DevOps Agent",
-        "status": "Preview",
-        "claim": "Generate and run verification tests in configured environments.",
-        "prompt": "Test checkout flows for regression before release.",
-        "validation": "Review coverage, environment and flaky tests.",
-        "prerequisites": "Release management preview and test environment."
-      }
-    },
-    {
-      "id": "C09",
-      "number": 9,
-      "title": "Repository understanding",
-      "product": "Kiro",
-      "verdict": "Confirmed",
-      "availability": "GA Kiro IDE; documented capability",
-      "delivery": "Native coding assistance",
-      "claim": "Kiro chat can answer questions about a codebase, explain logic, and request changes with project context.",
-      "limit": "A proposed execution path is an explanation to inspect, not a certified dependency map or runtime trace.",
-      "setup": "Open the relevant repository and provide the files and project context needed for the question.",
-      "prompt": "Trace the checkout request from HTTP handler to persistence. Cite file paths and symbols, and identify uncertain steps.",
-      "check": "Inspect the referenced implementation and compare it with tests or runtime observations.",
-      "refs": [
-        "S16",
-        "S22"
-      ],
-      "change": "Retained; removed any implication that inferred paths are verified runtime behavior.",
-      "preview": false,
-      "original": {
-        "title": "Repository understanding",
-        "product": "Kiro",
-        "status": "GA",
-        "claim": "Explain unfamiliar modules, execution paths and dependencies.",
-        "prompt": "Trace a request from HTTP endpoint to database.",
-        "validation": "Inspect referenced source and tests.",
-        "prerequisites": "Kiro with repository access."
-      }
-    },
-    {
-      "id": "C10",
-      "number": 10,
-      "title": "Scoped features and bug fixes",
-      "product": "Kiro",
-      "verdict": "Confirmed",
-      "availability": "GA Kiro IDE; documented capability",
-      "delivery": "Native chat/spec workflow",
-      "claim": "Kiro supports iterative code changes and structured feature/bugfix specifications with requirements, design, and implementation tasks.",
-      "limit": "A generated plan or completed task does not establish acceptance, correctness, or production readiness.",
-      "setup": "Provide repository access, acceptance criteria, project conventions, and an appropriate tool-permission policy.",
-      "prompt": "Add request-ID propagation to checkout only. Propose a plan, implement the bounded change, and show the diff and test results.",
-      "check": "Review scope and behavior, run tests, and keep the normal pull-request and CI process.",
-      "refs": [
-        "S16",
-        "S17"
-      ],
-      "change": "Retained; kept human acceptance and CI separate from agent task completion.",
-      "preview": false,
-      "original": {
-        "title": "Scoped feature and bug implementation",
-        "product": "Kiro",
-        "status": "GA",
-        "claim": "Plan and implement bounded code changes.",
-        "prompt": "Add request-id propagation and show the diff.",
-        "validation": "Peer review, tests and CI.",
-        "prerequisites": "Repository and project rules."
-      }
-    },
-    {
-      "id": "C11",
-      "number": 11,
-      "title": "Unit-test creation",
-      "product": "Kiro",
-      "verdict": "Confirmed",
-      "availability": "GA Kiro IDE; documented capability",
-      "delivery": "Native generation; optional hooks",
-      "claim": "Kiro can generate tests; its documentation includes configured hooks that create unit tests when the agent changes source files.",
-      "limit": "Generated assertions and edge cases still require review. Hook automation must be configured, and tests must run in a suitable toolchain.",
-      "setup": "Supply the test framework, fixtures, dependencies, and existing test conventions. Hooks are optional.",
-      "prompt": "Add tests for checkout retry limits, timeouts, and empty inputs using the existing framework. Do not weaken assertions to make tests pass.",
-      "check": "Run the tests, inspect assertions, and confirm the new cases fail when the relevant defect is reintroduced.",
-      "refs": [
-        "S18",
-        "S19"
-      ],
-      "change": "Retained; separated test generation from test quality and optional automation.",
-      "preview": false,
-      "original": {
-        "title": "Unit test creation",
-        "product": "Kiro",
-        "status": "GA",
-        "claim": "Generate unit and edge-case tests.",
-        "prompt": "Test timeout, retries and null inputs in this module.",
-        "validation": "Run tests and inspect assertions.",
-        "prerequisites": "Test framework and repo access."
-      }
-    },
-    {
-      "id": "C12",
-      "number": 12,
-      "title": "IaC drafting and explanation",
-      "product": "Kiro",
-      "verdict": "Workflow example",
-      "availability": "GA coding tools; workflow-specific setup",
-      "delivery": "General assistance; optional integration",
-      "claim": "File editing and coding assistance can be applied to Terraform, CDK, or CloudFormation work. Kiro also documents an optional Terraform MCP integration.",
-      "limit": "The reviewed documentation does not substantiate a single built-in validator guaranteeing destructive-change detection and least-privilege analysis across all three IaC frameworks.",
-      "setup": "Supply the IaC files and relevant tooling. Configure additional integrations explicitly when needed.",
-      "prompt": "Explain this IaC diff and flag suspected destructive changes or broad permissions. Distinguish observations from assumptions; do not apply it.",
-      "check": "Use the actual framework’s validation/plan/diff tooling, independent policy checks, and change approval.",
-      "refs": [
-        "S20",
-        "S21"
-      ],
-      "change": "Reclassified as an assisted workflow rather than a separately verified native IaC validation feature.",
-      "preview": false,
-      "original": {
-        "title": "Terraform / CDK / CloudFormation assistance",
-        "product": "Kiro",
-        "status": "GA",
-        "claim": "Author and inspect infrastructure-as-code changes.",
-        "prompt": "Review this Terraform module for destructive changes and broad IAM permissions.",
-        "validation": "Validate, plan, policy scan and approve.",
-        "prerequisites": "IaC repository and tooling."
-      }
-    },
-    {
-      "id": "C13",
-      "number": 13,
-      "title": "CI build-log diagnosis",
-      "product": "Kiro",
-      "verdict": "Workflow example",
-      "availability": "GA coding tools; workflow-specific setup",
-      "delivery": "Supplied logs or explicit integration",
-      "claim": "Kiro’s file, shell, and debugging capabilities can be used to inspect available build logs and propose a patch.",
-      "limit": "This is not evidence of an automatically connected, continuously monitoring CI diagnostic feature. Repository access alone does not supply remote pipeline logs.",
-      "setup": "Provide the failing logs and build context, or configure authorized tooling that can retrieve them.",
-      "prompt": "Analyze the supplied CI log. Find the earliest causal failure, propose a minimal patch, and list what still needs reproduction.",
-      "check": "Reproduce the failure and rerun the same pipeline and environment after the change.",
-      "refs": [
-        "S20",
-        "S19"
-      ],
-      "change": "Reclassified as a workflow example; made CI log access explicit.",
-      "preview": false,
-      "original": {
-        "title": "Build failure diagnosis",
-        "product": "Kiro",
-        "status": "Conditional",
-        "claim": "Interpret supplied CI logs and propose fixes.",
-        "prompt": "Find the first causal error in this pipeline log.",
-        "validation": "Re-run CI after the minimal fix.",
-        "prerequisites": "Build logs supplied or integrated."
-      }
-    },
-    {
-      "id": "C14",
-      "number": 14,
-      "title": "README and runbook drafting",
-      "product": "Kiro",
-      "verdict": "Workflow example",
-      "availability": "GA coding tools; workflow-specific setup",
-      "delivery": "General drafting; optional hooks",
-      "claim": "Kiro can edit repository files; configured hooks can generate companion documentation. A runbook is a practical use of those capabilities.",
-      "limit": "A generated runbook is not a verified operational procedure. Repository context may omit production configuration or recovery dependencies.",
-      "setup": "Provide repository context, existing operational standards, and verified deployment/rollback information.",
-      "prompt": "Draft a checkout deployment and rollback runbook from these inputs. Mark every command or assumption that needs operator confirmation.",
-      "check": "Have a service owner validate commands, permissions, prerequisites, rollback safety, and recovery checks in a safe environment.",
-      "refs": [
-        "S18",
-        "S20"
-      ],
-      "change": "Retained as a clearly labeled drafting workflow, not guaranteed operational validation.",
-      "preview": false,
-      "original": {
-        "title": "Runbook and README drafting",
-        "product": "Kiro",
-        "status": "GA",
-        "claim": "Create and update operational and developer documentation.",
-        "prompt": "Draft deployment and rollback runbook from this repository.",
-        "validation": "Verify every operational command.",
-        "prerequisites": "Repository context."
-      }
-    },
-    {
-      "id": "C15",
-      "number": 15,
-      "title": "AWS guidance and resource troubleshooting",
-      "product": "Amazon Q Developer",
-      "verdict": "Qualified",
-      "availability": "Documented; interface/permissions apply",
-      "delivery": "Native guidance; scoped resource access",
-      "claim": "Amazon Q Developer answers AWS implementation questions. AWS Console resource troubleshooting is separately documented and permission-dependent.",
-      "limit": "General AWS advice is not automatically based on your account’s effective IAM policies, organization controls, or live configuration.",
-      "setup": "Choose the supported interface. For account-specific troubleshooting, grant the documented permissions and provide the relevant resource/error context.",
-      "prompt": "Explain this S3 access-denied error. State which policies and resource facts you actually inspected and what remains unverified.",
-      "check": "Check effective permissions, resource policy, relevant organization controls, and the original error.",
-      "refs": [
-        "S23",
-        "S33"
-      ],
-      "change": "Separated general guidance from authorized live-resource troubleshooting.",
-      "preview": false,
-      "original": {
-        "title": "AWS implementation guidance",
-        "product": "Amazon Q Developer",
-        "status": "GA",
-        "claim": "Answer AWS architecture and implementation questions.",
-        "prompt": "Explain this S3 access-denied failure and IAM evaluation.",
-        "validation": "Verify effective policy and organization controls.",
-        "prerequisites": "Supported AWS interface and IAM access."
-      }
-    },
-    {
-      "id": "C16",
-      "number": 16,
-      "title": "IDE security and quality review",
-      "product": "Amazon Q Developer",
-      "verdict": "Qualified",
-      "availability": "Documented · IDE support ends 30 Apr 2027",
-      "delivery": "Native review; IDE/language limits",
-      "claim": "Amazon Q Developer reviews code for security and quality findings, with review scope and supported-language restrictions.",
-      "limit": "The guide describes filtering out unsupported languages, test code, and open-source code. Review findings are not a security certification; available features vary by IDE.",
-      "setup": "Use a supported IDE/language combination and account entitlement; review quotas and the plugin lifecycle notice.",
-      "prompt": "Review this change for security and correctness. Identify what was actually scanned, excluded, and left unresolved.",
-      "check": "Reproduce findings, review fixes, and retain independent scanners and security review.",
-      "refs": [
-        "S24",
-        "S31"
-      ],
-      "change": "Added review exclusions and the precise IDE-plugin lifecycle scope.",
-      "preview": false,
-      "original": {
-        "title": "IDE security and quality review",
-        "product": "Amazon Q Developer",
-        "status": "GA",
-        "claim": "Review code for quality and security findings in supported IDEs.",
-        "prompt": "Review changed files for security and correctness issues.",
-        "validation": "Reproduce findings and run scanners.",
-        "prerequisites": "IDE plugin; support ends April 2027."
-      }
-    },
-    {
-      "id": "C17",
-      "number": 17,
-      "title": "GitHub pull-request review",
-      "product": "Amazon Q Developer",
-      "verdict": "Confirmed",
-      "availability": "Preview",
-      "delivery": "GitHub app integration",
-      "claim": "Amazon Q Developer can automatically review newly opened or reopened pull requests. Later commits do not automatically trigger another review.",
-      "limit": "Use /q review in a new pull-request comment to request a subsequent review. This is a preview integration with usage and repository-role restrictions.",
-      "setup": "Install the GitHub app, authorize selected repositories, and confirm an eligible repository role and review configuration.",
-      "prompt": "/q review",
-      "check": "Check the reviewed commit/diff, validate findings, and rerun required CI checks before merging.",
-      "refs": [
-        "S25",
-        "S26"
-      ],
-      "change": "Confirmed; added the important no-auto-rerun behavior for subsequent commits.",
-      "preview": true,
-      "original": {
-        "title": "GitHub pull-request review",
-        "product": "Amazon Q Developer",
-        "status": "Preview",
-        "claim": "Automated review of newly opened or reopened PRs.",
-        "prompt": "Review this PR for high-risk defects.",
-        "validation": "Verify findings and rerun checks.",
-        "prerequisites": "GitHub integration in preview."
-      }
-    },
-    {
-      "id": "C18",
-      "number": 18,
-      "title": "GitHub issue-to-pull-request development",
-      "product": "Amazon Q Developer",
-      "verdict": "Confirmed",
-      "availability": "Preview",
-      "delivery": "GitHub app integration",
-      "claim": "The development label or /q dev in an issue can initiate code generation and a pull request using the issue and repository as context.",
-      "limit": "An opened pull request is not an accepted or deployed change. The integration is preview and subject to usage limits.",
-      "setup": "Install and authorize the app; provide a specific issue title, description, and acceptance criteria.",
-      "prompt": "/q dev",
-      "check": "Review the proposed diff, test acceptance criteria, and approve through the normal merge process.",
-      "refs": [
-        "S25",
-        "S27"
-      ],
-      "change": "Confirmed; replaced the generic prompt with the documented trigger and kept merge ownership explicit.",
-      "preview": true,
-      "original": {
-        "title": "GitHub issue-to-PR agent",
-        "product": "Amazon Q Developer",
-        "status": "Preview",
-        "claim": "Implement scoped GitHub issues and propose PRs.",
-        "prompt": "Implement the validation fix described in this issue.",
-        "validation": "Review diff and acceptance criteria.",
-        "prerequisites": "GitHub agent integration in preview."
-      }
-    },
-    {
-      "id": "C19",
-      "number": 19,
-      "title": "Supported Java and .NET transformations",
-      "product": "Amazon Q Developer",
-      "verdict": "Qualified",
-      "availability": "Documented · project/IDE constraints",
-      "delivery": "Specialized transformation workflow",
-      "claim": "Java transformation supports documented version pairs and Maven projects in supported IDEs. .NET transformation is a separate C# workflow in Visual Studio.",
-      "limit": "Java supports 8/11 to 17 or 21, 17 to 17 or 21, and 21 to 21. .NET has project/dependency restrictions and excludes UI layers such as Razor/WebForms.",
-      "setup": "Validate the exact source/target, successful baseline build, supported IDE, dependencies, quotas, and network prerequisites. Review the IDE support end date.",
-      "prompt": "Check this project against the documented transformation prerequisites before proposing an upgrade. List unsupported components and manual steps.",
-      "check": "Review diffs and the readiness summary, then run integration and regression tests in the target runtime.",
-      "refs": [
-        "S28",
-        "S29",
-        "S30",
-        "S31"
-      ],
-      "change": "Replaced the broad legacy-upgrade statement with concrete support boundaries; positioned as backlog work, not a universal daily feature.",
-      "preview": false,
-      "original": {
-        "title": "Supported legacy code transformations",
-        "product": "Amazon Q Developer",
-        "status": "Conditional",
-        "claim": "Assist supported Java and .NET transformations.",
-        "prompt": "Plan and implement a supported runtime upgrade.",
-        "validation": "Integration tests and dependency checks.",
-        "prerequisites": "Supported transformation workflow."
-      }
-    }
-  ],
-  "general_audit": [
-    {
-      "id": "G01",
-      "title": "DevOps Agent general availability",
-      "verdict": "Confirmed",
-      "text": "The service GA announcement is dated 31 March 2026. This is not evidence that every later feature is GA.",
-      "refs": [
-        "S14",
-        "S12"
-      ]
-    },
-    {
-      "id": "G02",
-      "title": "Release-management preview and Region",
-      "verdict": "Qualified",
-      "text": "Readiness reviews and release testing remain preview and are documented for us-east-1 only. They are hidden by default in the day-to-day capability view.",
-      "refs": [
-        "S12",
-        "S15"
-      ]
-    },
-    {
-      "id": "G03",
-      "title": "Kiro availability labels",
-      "verdict": "Qualified",
-      "text": "Kiro IDE/CLI product GA is confirmed. That status is not automatically applied to every surface, model, integration, or experimental feature; coding workflows are labeled separately.",
-      "refs": [
-        "S22",
-        "S20"
-      ]
-    },
-    {
-      "id": "G04",
-      "title": "Amazon Q Developer retirement scope",
-      "verdict": "Confirmed",
-      "text": "The 30 April 2027 end-of-support notice applies to IDE plugins. It must not be rewritten as retirement of the entire Amazon Q Developer service.",
-      "refs": [
-        "S31"
-      ]
-    },
-    {
-      "id": "G05",
-      "title": "Prioritizing Kiro for new adoption",
-      "verdict": "Recommendation",
-      "text": "Evaluating Kiro first for new coding-tool pilots is an advisory recommendation, not universal feature parity. The migration guide documents different routes for JetBrains and no native Kiro plugins for Visual Studio/Eclipse.",
-      "refs": [
-        "S32"
-      ]
-    },
-    {
-      "id": "G06",
-      "title": "Permissions, data handling, and approval",
-      "verdict": "Qualified",
-      "text": "Least-privilege access and review gates are recommended pilot controls. Product behavior differs: DevOps directed actions require explicit approval, whereas release testing can perform exploratory application writes. Review each product’s permissions and data settings.",
-      "refs": [
-        "S13",
-        "S11",
-        "S34",
-        "S35",
-        "S36"
-      ]
-    },
-    {
-      "id": "G07",
-      "title": "Collaboration and handovers",
-      "verdict": "Qualified",
-      "text": "Operational reports and investigation insights are documented. Turning a result into a handover, runbook, or owned corrective-action ticket is a team workflow; universal automatic ticket creation is not asserted.",
-      "refs": [
-        "S05",
-        "S04"
-      ]
-    },
-    {
-      "id": "G08",
-      "title": "Benefits and 30-day pilot",
-      "verdict": "Recommendation",
-      "text": "Cycle time, investigation quality, rework, and cost are proposed measurements, not verified productivity results. The revised pilot covers days 1–30 explicitly rather than treating four weeks as 30 days.",
-      "refs": []
-    },
-    {
-      "id": "G09",
-      "title": "Prompts and validation steps",
-      "verdict": "Recommendation",
-      "text": "Natural-language prompts and engineering acceptance checks are author-created examples, not AWS-prescribed syntax or tested demonstrations. The /q review and /q dev commands are documented exceptions.",
-      "refs": [
-        "S26",
-        "S27"
-      ]
-    },
-    {
-      "id": "G10",
-      "title": "Maturity versus setup effort",
-      "verdict": "Corrected",
-      "text": "The former GA / Preview / Conditional selector mixed release maturity with implementation effort. The report now separates availability, delivery model, and evidence verdict.",
-      "refs": []
-    },
-    {
-      "id": "G11",
-      "title": "Presentation transcript rendering",
-      "verdict": "Corrected",
-      "text": "The original slide arrays had three values, but the renderer read a fourth value for speaker text, producing “undefined.” All eight sections now use explicit title, message, speaker, demonstration, and source fields.",
-      "refs": []
-    },
-    {
-      "id": "G12",
-      "title": "Validation scope",
-      "verdict": "Scope note",
-      "text": "All 19 original capability entries, eight transcript sections, general assertions, pilot recommendations, and source links were reviewed. This is a documentation audit—not an account-access test, deployment assessment, security certification, benchmark, or exhaustive inventory of newly added features.",
-      "refs": []
-    }
-  ],
-  "transcript": [
-    {
-      "n": 1,
-      "title": "Choose by engineering task",
-      "message": "Production operations, coding assistance, and AWS guidance are different jobs.",
-      "speaker": "Start with the task rather than treating every AWS-branded assistant as interchangeable. DevOps Agent supports production investigation and prevention. Its release-management features are preview. Kiro supports coding workflows, while Amazon Q Developer remains relevant to AWS guidance and existing integrations. The IDE-plugin support deadline is specifically 30 April 2027; it is not a retirement notice for the whole service. Our adoption recommendation is to evaluate Kiro for new coding pilots while checking the actual editor and feature requirements.",
-      "demo": "Show the product and evidence filters. Explain that a workflow example is useful, but is not a separately documented product feature.",
-      "refs": [
-        "S01",
-        "S16",
-        "S23",
-        "S31",
-        "S32"
-      ]
-    },
-    {
-      "n": 2,
-      "title": "Make one small, reviewable code change",
-      "message": "Comprehension → bounded change → tests → human review.",
-      "speaker": "Use the development assistant to explain the relevant code, then ask for a small change with explicit acceptance criteria. Kiro supports chat-based changes and structured feature or bugfix specifications. Test generation is documented, but generated assertions are still code that needs review. Our proposed demonstration is a request-ID propagation fix with a narrow diff. Success means the desired behavior is reproduced and verified—not merely that the agent reports completion.",
-      "demo": "Walk through the prompt, relevant files, proposed diff, new tests, and actual CI result. Label an unexecuted demonstration as proposed.",
-      "refs": [
-        "S16",
-        "S17",
-        "S18",
-        "S19"
-      ]
-    },
-    {
-      "n": 3,
-      "title": "Keep CI assistance distinct from release preview",
-      "message": "Supplied-log triage is not an automatic CI connector.",
-      "speaker": "The first-pass CI workflow is to provide a failed build log, identify a plausible causal error, and validate a minimal fix in the original pipeline. That is an application of coding tools, not a claim that Kiro is already watching every build. DevOps Agent has separate preview readiness reviews and managed verification testing. Exploratory release testing targets a deployed application and may change its data. Use a dedicated test environment and do not collapse these different verification modes into one feature.",
-      "demo": "Compare a supplied-log example with the two documented preview testing paths. Identify the target environment before any execution.",
-      "refs": [
-        "S20",
-        "S10",
-        "S11",
-        "S12"
-      ]
-    },
-    {
-      "n": 4,
-      "title": "Investigate before authorizing remediation",
-      "message": "Evidence → hypothesis → mitigation proposal → controlled action.",
-      "speaker": "Begin with the affected service and a precise time window. DevOps Agent can correlate connected operational signals and expose investigation evidence. Ask the operator to distinguish observations from hypotheses and test the proposed explanation. A mitigation recommendation does not automatically authorize a production change. The documented directed-action path is disabled by default and requires explicit setup and approval. The pilot should begin with investigation and recommendation review before considering resource-changing access.",
-      "demo": "Show an investigation timeline and a mitigation proposal. Review affected resources and recovery checks; do not run a production change for the demonstration.",
-      "refs": [
-        "S02",
-        "S03",
-        "S13"
-      ]
-    },
-    {
-      "n": 5,
-      "title": "Turn reliability findings into owned work",
-      "message": "Prevention recommendations and scheduled reports need different setup.",
-      "speaker": "Recurring incident analysis produces recommendations; a scheduled health report is a configured custom-agent workflow. Give either output an owner and a verification criterion. For infrastructure work, use Kiro’s drafting and explanation capabilities without presenting them as a guaranteed Terraform, CDK, and CloudFormation validator. A source-code diff does not by itself establish live production impact. Our proposed operating loop is to review the change with the real infrastructure tooling, deploy through existing controls, and compare the result with operational evidence.",
-      "demo": "Show one prevention item and its acceptance criteria, then an IaC diff alongside the framework’s own validation output.",
-      "refs": [
-        "S04",
-        "S06",
-        "S20",
-        "S21"
-      ]
-    },
-    {
-      "n": 6,
-      "title": "Treat findings as inputs, not certification",
-      "message": "Keep independent security checks and explicit access controls.",
-      "speaker": "Amazon Q Developer code reviews have supported-language, scope, and quota boundaries. A clean review is therefore not a statement that the entire system is secure. Likewise, an AWS explanation should not be described as account-specific analysis unless the relevant access and evidence are present. Retain independent scanners, peer review, least-privilege configuration, and a check of each product’s data handling. For existing Q IDE users, include the plugin support deadline in the transition plan.",
-      "demo": "Inspect a finding, the files actually covered, and an independently reproduced result. Review tool permissions before any agent-run command.",
-      "refs": [
-        "S24",
-        "S33",
-        "S34",
-        "S35",
-        "S36",
-        "S31"
-      ]
-    },
-    {
-      "n": 7,
-      "title": "Make the handover evidence-linked",
-      "message": "A useful output states what happened, what is known, and who acts next.",
-      "speaker": "Operational chat can produce reports and investigation summaries. Our handover template adds the incident window, affected service, evidence links, unresolved questions, mitigation status, and action owners. This template is a team recommendation, not a claim of universal ticket automation. GitHub review and issue-to-PR capabilities are documented but remain preview. For Q’s GitHub reviews, a later commit does not automatically trigger another review; request a new one when needed.",
-      "demo": "Compare an unsupported narrative with a reviewed handover. For the optional GitHub example, identify the reviewed commit and rerun trigger.",
-      "refs": [
-        "S05",
-        "S26",
-        "S27"
-      ]
-    },
-    {
-      "n": 8,
-      "title": "Approve expansion only on measured evidence",
-      "message": "Use a bounded 30-day pilot; treat preview separately.",
-      "speaker": "Choose one repository and one service. Establish a manual baseline, then record time to a verified outcome, factual errors, rework, and cost for the same kinds of tasks. Start with code comprehension, tests, supplied-log triage, and incident investigation. Add scheduled agents only after their data access and first-run outputs are checked. Keep preview evaluation in a separate track and check regional availability. The decision to expand should follow observed results; this report provides no measured productivity or reliability improvement.",
-      "demo": "Use the day-by-day pilot phases below and agree on acceptance thresholds before starting.",
-      "refs": [
-        "S06",
-        "S15"
-      ]
-    }
-  ],
-  "pilot": [
-    {
-      "days": "Days 1–7",
-      "title": "Baseline and access",
-      "description": "Choose one repository and one service. Record manual task outcomes and effort. Check editor fit, entitlements, Region, data handling, and permissions."
-    },
-    {
-      "days": "Days 8–14",
-      "title": "Developer workflows",
-      "description": "Try bounded fixes, test generation, supplied-log triage, and documentation drafts. Record rejected suggestions and rework as well as successful results."
-    },
-    {
-      "days": "Days 15–21",
-      "title": "Operations workflows",
-      "description": "Connect selected evidence sources. Compare incident hypotheses with known outcomes. Start with read-only investigation; test custom reports on demand before scheduling."
-    },
-    {
-      "days": "Days 22–28",
-      "title": "Repeat and compare",
-      "description": "Repeat comparable tasks. Review accuracy, engineering effort, operational risk, and spend. Keep preview testing in an isolated, separately approved track."
-    },
-    {
-      "days": "Days 29–30",
-      "title": "Adoption decision",
-      "description": "Accept, revise, or stop each workflow against the agreed criteria. Assign owners, retain evidence, and define when documentation should be rechecked."
+      "preview": true
     }
   ],
   "sources": [
@@ -941,168 +300,6 @@
       "checked": "2026-10-20"
     },
     {
-      "id": "S16",
-      "title": "Kiro IDE chat",
-      "url": "https://kiro.dev/docs/ide/chat/",
-      "locator": "Key features; Choosing a workflow",
-      "note": "Documents codebase questions, edits, debugging, and workflow selection.",
-      "kind": "Product documentation",
-      "checked": "2026-10-20"
-    },
-    {
-      "id": "S17",
-      "title": "Kiro specs",
-      "url": "https://kiro.dev/docs/specs/",
-      "locator": "Core Structure; Three-Phase Workflow; Task Execution",
-      "note": "Documents requirements, design, implementation tasks, and feature/bugfix workflows.",
-      "kind": "Product documentation",
-      "checked": "2026-10-20"
-    },
-    {
-      "id": "S18",
-      "title": "Kiro hooks",
-      "url": "https://kiro.dev/docs/hooks/",
-      "locator": "What you can do with hooks; Setting up hooks",
-      "note": "Documents configurable event-triggered commands/prompts, companion tests, and documentation generation.",
-      "kind": "Product documentation",
-      "checked": "2026-10-20"
-    },
-    {
-      "id": "S19",
-      "title": "Kiro Java development guide",
-      "url": "https://kiro.dev/docs/guides/languages-and-frameworks/java-guide/",
-      "locator": "Agent hooks; MCP servers",
-      "note": "Provides explicit unit-test generation examples and configured build-tool assistance.",
-      "kind": "Product documentation",
-      "checked": "2026-10-20"
-    },
-    {
-      "id": "S20",
-      "title": "Kiro built-in tools",
-      "url": "https://kiro.dev/docs/tools/",
-      "locator": "Tool catalog; File tools; Shell tools",
-      "note": "Documents file inspection/editing and command execution; availability varies by surface.",
-      "kind": "Product documentation",
-      "checked": "2026-10-20"
-    },
-    {
-      "id": "S21",
-      "title": "Kiro MCP server directory",
-      "url": "https://kiro.dev/docs/mcp/servers/",
-      "locator": "Terraform entry",
-      "note": "Documents optional Terraform integration; it is not automatic built-in IaC validation.",
-      "kind": "Product documentation",
-      "checked": "2026-10-20"
-    },
-    {
-      "id": "S22",
-      "title": "Kiro is generally available",
-      "url": "https://kiro.dev/blog/general-availability/",
-      "locator": "Announcement dated 17 November 2025",
-      "note": "Establishes IDE/CLI product GA; does not make every feature or surface GA.",
-      "kind": "Official release announcement",
-      "checked": "2026-10-20"
-    },
-    {
-      "id": "S23",
-      "title": "What is Amazon Q Developer?",
-      "url": "https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/what-is.html",
-      "locator": "Overview; Get started",
-      "note": "Documents AWS guidance and interface-specific development assistance.",
-      "kind": "Product documentation",
-      "checked": "2026-10-20"
-    },
-    {
-      "id": "S24",
-      "title": "Reviewing code with Amazon Q Developer",
-      "url": "https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/code-reviews.html",
-      "locator": "How it works; Types of code issues; Quotas",
-      "note": "Documents review scope, exclusions, security/quality checks, and quotas.",
-      "kind": "Product documentation",
-      "checked": "2026-10-20"
-    },
-    {
-      "id": "S25",
-      "title": "Amazon Q Developer GitHub quickstart",
-      "url": "https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/github-quickstart.html",
-      "locator": "Preview note; Install and authorize access",
-      "note": "Documents preview status, app installation, repository authorization, and usage limits.",
-      "kind": "Product documentation",
-      "checked": "2026-10-20"
-    },
-    {
-      "id": "S26",
-      "title": "Reviewing code in GitHub",
-      "url": "https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/github-code-reviews.html",
-      "locator": "Overview; Prerequisites; Initiating code reviews",
-      "note": "Documents new/reopened PR triggers, no automatic rerun on later commits, and /q review.",
-      "kind": "Product documentation",
-      "checked": "2026-10-20"
-    },
-    {
-      "id": "S27",
-      "title": "Developing features in GitHub",
-      "url": "https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/github-feature-development.html",
-      "locator": "Feature development; Iterating on generated code",
-      "note": "Documents the development label, /q dev, issue context, and generated pull requests.",
-      "kind": "Product documentation",
-      "checked": "2026-10-20"
-    },
-    {
-      "id": "S28",
-      "title": "Upgrading Java versions",
-      "url": "https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/code-transformation.html",
-      "locator": "Supported Java upgrades and IDEs; Prerequisites",
-      "note": "Documents supported Java version pairs, IDEs, and Maven requirements.",
-      "kind": "Product documentation",
-      "checked": "2026-10-20"
-    },
-    {
-      "id": "S29",
-      "title": "Transforming .NET applications",
-      "url": "https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/transform-dotnet-IDE.html",
-      "locator": "Overview; Quotas",
-      "note": "Documents .NET porting/upgrades and reviewable transformation outputs.",
-      "kind": "Product documentation",
-      "checked": "2026-10-20"
-    },
-    {
-      "id": "S30",
-      "title": "Porting a .NET application in Visual Studio",
-      "url": "https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/port-dotnet-application.html",
-      "locator": "Step 1: Prerequisites",
-      "note": "Documents C# and project/dependency limitations, including excluded UI components.",
-      "kind": "Product documentation",
-      "checked": "2026-10-20"
-    },
-    {
-      "id": "S31",
-      "title": "Amazon Q Developer IDE plugins end of support",
-      "url": "https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/q-developer-ide-end-of-support.html",
-      "locator": "End-of-support notice; Migration",
-      "note": "Confirms 30 April 2027 for IDE plugins, not a retirement notice for all Amazon Q Developer.",
-      "kind": "Product documentation",
-      "checked": "2026-10-20"
-    },
-    {
-      "id": "S32",
-      "title": "Migrating from Amazon Q Developer to Kiro",
-      "url": "https://kiro.dev/docs/upgrade-guides/migrating-from-q-developer/",
-      "locator": "Feature comparison; JetBrains; Visual Studio and Eclipse",
-      "note": "Documents migration options and the absence of native Kiro Visual Studio/Eclipse plugins.",
-      "kind": "Product documentation",
-      "checked": "2026-10-20"
-    },
-    {
-      "id": "S33",
-      "title": "Asking Amazon Q to troubleshoot resources",
-      "url": "https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/chat-actions-troubleshooting.html",
-      "locator": "Resource troubleshooting and permissions",
-      "note": "Distinguishes conversational AWS guidance from permission-dependent resource troubleshooting.",
-      "kind": "Product documentation",
-      "checked": "2026-10-20"
-    },
-    {
       "id": "S34",
       "title": "Limiting Agent Access in an AWS Account",
       "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/aws-devops-agent-security-limiting-agent-access-in-an-aws-account.html",
@@ -1110,25 +307,38 @@
       "note": "Provides product-specific guidance for constraining the agent’s AWS access.",
       "kind": "Product documentation",
       "checked": "2026-10-20"
-    },
-    {
-      "id": "S35",
-      "title": "Kiro permissions",
-      "url": "https://kiro.dev/docs/permissions/",
-      "locator": "Permission configuration",
-      "note": "Documents controls over agent file and tool access.",
-      "kind": "Product documentation",
-      "checked": "2026-10-20"
-    },
-    {
-      "id": "S36",
-      "title": "Kiro data protection",
-      "url": "https://kiro.dev/docs/privacy-and-security/data-protection/",
-      "locator": "Data protection guidance",
-      "note": "Source for reviewing data handling before enabling a developer workflow.",
-      "kind": "Product documentation",
-      "checked": "2026-10-20"
     }
   ],
-  "original_sha256": "e8bcbd70cb9ef42d4834177601fc66a12456ab6d312dca61811239d0b2004819"
+  "scope_revision": "2026-10-21-three-agent-scope",
+  "pilot": [
+    {
+      "days": "Days 1–7",
+      "title": "Baseline and access",
+      "description": "Choose one service, owned accounts and named operators. Record a historical incident baseline and check Region, evidence coverage and least-privilege read access."
+    },
+    {
+      "days": "Days 8–14",
+      "title": "Incident investigation",
+      "description": "Compare a bounded investigation against known telemetry and deployment events. Record rejected hypotheses, missing sources and reviewer effort; do not enable writes for this exercise."
+    },
+    {
+      "days": "Days 15–21",
+      "title": "Operations workflows",
+      "description": "Connect selected evidence sources. Compare incident hypotheses with known outcomes. Start with read-only investigation; test custom reports on demand before scheduling."
+    },
+    {
+      "days": "Days 22–28",
+      "title": "Repeat and compare",
+      "description": "Repeat comparable tasks. Review accuracy, engineering effort, operational risk, and spend. Keep preview testing in an isolated, separately approved track."
+    },
+    {
+      "days": "Days 29–30",
+      "title": "Adoption decision",
+      "description": "Accept, revise, or stop each workflow against the agreed criteria. Assign owners, retain evidence, and define when documentation should be rechecked."
+    }
+  ],
+  "counts": {
+    "Confirmed": 4,
+    "Qualified": 4
+  }
 }
