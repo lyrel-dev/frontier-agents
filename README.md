@@ -43,6 +43,6 @@ Independent analysis, not an AWS publication. The original audits are 20 October
 
 ## Mechanisms and enablement
 
-[Open the mechanism guide index](mechanisms/index.html), or read the [comparison](mechanisms/overview.md). Four platform guides contain 31 documented mechanism records, official enablement procedures, proposed checks and lifecycle controls. Five reference PowerPoints are untimed. Optional prepared-result exercises total 44 minutes, separate from the unchanged 160-minute core programme.
+[Open the mechanism guide index](mechanisms/index.html), or read the [comparison](mechanisms/overview.md). Four platform guides contain 32 documented mechanism records, official enablement procedures, proposed checks and lifecycle controls. Five reference PowerPoints are untimed. Optional prepared-result exercises total 44 minutes, separate from the unchanged 160-minute core programme.
 
 Build source: `content/mechanisms.json` and `tools/build_mechanisms.py`. See [mechanism validation](mechanisms/VALIDATION.md) for source qualifications and test boundaries.
