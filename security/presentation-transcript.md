@@ -18,7 +18,7 @@ This deck remains scoped to the application-security capabilities in the origina
 [S05 — Pricing and billing](https://docs.aws.amazon.com/securityagent/latest/userguide/pricing.html)
 
 
-## 02. Lifecycle coverage is not uniform availability
+## 02. Feature availability differs by security workflow
 
 **00:45–02:00 · 01:15 allocated**
 
@@ -35,7 +35,7 @@ The lifecycle view explains why a single “security agent” label is insuffici
 [S29 — GitHub Actions scoped-pentest tutorial](https://docs.aws.amazon.com/securityagent/latest/userguide/sample-cicd-github.html)
 
 
-## 03. Use case · prove a tenant boundary holds
+## 03. Use case · assess a tenant-isolation control
 
 **02:00–03:15 · 01:15 allocated**
 
@@ -50,7 +50,7 @@ The illustrative application has tenant-specific administration endpoints. The t
 [S14 — Revalidate findings](https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html)
 
 
-## 04. Authorization and target safety come first
+## 04. Specify authorization and target effects before testing
 
 **03:15–04:45 · 01:30 allocated**
 
@@ -80,7 +80,7 @@ Choose the risk model deliberately: the default Web application scope covers web
 [S10 — Security best practices](https://docs.aws.amazon.com/securityagent/latest/userguide/security-best-practices.html)
 
 
-## 06. Bound the run and observe its effects
+## 06. Configure run limits and inspect test effects
 
 **06:00–07:15 · 01:15 allocated**
 
@@ -134,7 +134,7 @@ Prepare the approved staging assessment with dedicated test accounts, explicit t
 [S12 — Review penetration-test findings](https://docs.aws.amazon.com/securityagent/latest/userguide/review-penetration-findings.html)
 
 
-## 08. Read a finding as an evidence package
+## 08. Examine finding evidence, impact and confidence
 
 **15:15–16:45 · 01:30 allocated**
 
@@ -147,7 +147,7 @@ A finding should let a reviewer understand the affected behavior, the identity u
 [S10 — Security best practices](https://docs.aws.amazon.com/securityagent/latest/userguide/security-best-practices.html)
 
 
-## 09. Remediation produces a proposal—not closure
+## 09. A remediation proposal requires review and retesting
 
 **16:45–18:15 · 01:30 allocated**
 
@@ -246,7 +246,7 @@ The IDE integration is an entry point into the service workflow. Review source u
 [S27 — Run a differential code scan with S3](https://docs.aws.amazon.com/securityagent/latest/userguide/run-diff-scan-s3.html)
 
 
-## 16. A green delivery gate can mean different things
+## 16. A passing delivery gate has limited assessment scope
 
 **25:30–27:00 · 01:30 allocated**
 
@@ -259,11 +259,11 @@ The pipeline integration is a post-deployment test, not a pre-merge code scan. I
 [S29 — GitHub Actions scoped-pentest tutorial](https://docs.aws.amazon.com/securityagent/latest/userguide/sample-cicd-github.html)
 
 
-## 17. Pilot one complete evidence-to-closure loop
+## 17. Pilot one authorized finding-to-revalidation cycle
 
 **27:00–28:30 · 01:30 allocated**
 
-**Takeaway:** A safe test, an accepted finding and a verified fix are more useful than broad unreviewed coverage.
+**Takeaway:** Assess one authorized target, review a finding and revalidate the repaired application.
 
 Use one owned application to establish the entire operating loop. Check Region and inference behavior separately from feature availability. Measure confirmed findings, rejected or unsupported claims, reviewer effort, task consumption and successful fix closure. Track which critical paths were exercised and what remains unknown. Do not report a finding count as a security improvement unless the team has assessed and acted on it.
 
@@ -276,7 +276,7 @@ Use one owned application to establish the entire operating loop. Check Region a
 [S30 — Resilience and regional availability](https://docs.aws.amazon.com/securityagent/latest/userguide/resilience.html)
 
 
-## 18. Make security work an accountable closure loop
+## 18. Record authorization, findings and revalidation
 
 **28:30–30:00 · 01:30 allocated**
 
