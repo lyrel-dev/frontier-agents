@@ -1,0 +1,75 @@
+{
+  "reviewed": "2026-10-21",
+  "sources": [
+    {
+      "title": "Boto3 credential providers",
+      "url": "https://docs.aws.amazon.com/boto3/latest/guide/credentials.html",
+      "supports": "Profiles, IAM Identity Center and assumed-role credential handling."
+    },
+    {
+      "title": "STS GetCallerIdentity",
+      "url": "https://docs.aws.amazon.com/STS/latest/APIReference/API_GetCallerIdentity.html",
+      "supports": "Authenticate the effective account and principal; identity success alone does not demonstrate inventory permissions."
+    },
+    {
+      "title": "FIS action reference",
+      "url": "https://docs.aws.amazon.com/fis/latest/userguide/fis-actions-reference.html",
+      "supports": "Action-specific resource, permission and parameter requirements; discover regional definitions before planning."
+    },
+    {
+      "title": "FIS EKS pod actions",
+      "url": "https://docs.aws.amazon.com/fis/latest/userguide/eks-pod-actions.html",
+      "supports": "EKS injector setup and platform limitations; EKS compute profiles are not interchangeable."
+    },
+    {
+      "title": "FIS ECS task actions",
+      "url": "https://docs.aws.amazon.com/fis/latest/userguide/ecs-task-actions.html",
+      "supports": "Task-action SSM sidecar prerequisites differ from StopTask or EC2 host disruption."
+    },
+    {
+      "title": "FIS Lambda actions",
+      "url": "https://docs.aws.amazon.com/fis/latest/userguide/use-lambda-actions.html",
+      "supports": "Extension and S3 communication prerequisites; response-streaming limitation."
+    },
+    {
+      "title": "Stop an FIS experiment",
+      "url": "https://docs.aws.amazon.com/fis/latest/userguide/stop-experiment.html",
+      "supports": "Stopping completes pending post-actions, but does not establish application recovery or restore deleted resources."
+    },
+    {
+      "title": "FIS safety levers",
+      "url": "https://docs.aws.amazon.com/fis/latest/userguide/safety-lever.html",
+      "supports": "Account/Region controls to stop current experiments and prevent new starts."
+    },
+    {
+      "title": "Docker daemon protection",
+      "url": "https://docs.docker.com/engine/security/protect-access/",
+      "supports": "Protect access to the engine; application-side GET allowlists do not reduce socket authority."
+    },
+    {
+      "title": "Podman system service",
+      "url": "https://docs.podman.io/en/latest/markdown/podman-system-service.1.html",
+      "supports": "The API grants full engine access under the service user; Unix-socket permissions matter."
+    },
+    {
+      "title": "Kubernetes kubeconfig trust",
+      "url": "https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/",
+      "supports": "Trusted files and explicit contexts; kubeconfig may execute authentication plugins."
+    },
+    {
+      "title": "Kubernetes RBAC practices",
+      "url": "https://kubernetes.io/docs/concepts/security/rbac-good-practices/",
+      "supports": "Namespace-scoped least privilege and avoiding Secret access."
+    },
+    {
+      "title": "Kubernetes persistent volumes",
+      "url": "https://kubernetes.io/docs/concepts/storage/persistent-volumes/",
+      "supports": "Persistent storage outlives a pod; confirm the actual local-cluster storage provisioner."
+    },
+    {
+      "title": "SQLite online backup API",
+      "url": "https://www.sqlite.org/backup.html",
+      "supports": "A consistent backup through the database API rather than copying an active database file."
+    }
+  ]
+}

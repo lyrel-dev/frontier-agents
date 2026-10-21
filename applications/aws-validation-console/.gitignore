@@ -1,0 +1,28 @@
+.venv/
+data/
+__pycache__/
+.pytest_cache/
+*.sqlite3
+*.sqlite3-*
+config.local.json
+.env
+
+# Reproducible build outputs (included in distribution bundles)
+static/console.html
+schemas/validation-bundle.schema.json
+grafana/operational-readiness.json
+grafana/metric-catalogue.json
+examples/metrics-series.json
+MANIFEST.sha256
+validation-output/
+
+# Local browser output
+validation/*.png
+
+# Publication test outputs; the curated review record is tracked.
+validation/publication-browser.json
+validation/publication-pytest.xml
+validation/container-acceptance.json
+validation/grafana-acceptance.json
+validation/metrics-browser-checks.json
+validation/interactive-report.html

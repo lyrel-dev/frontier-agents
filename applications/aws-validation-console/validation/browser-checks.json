@@ -1,0 +1,215 @@
+{
+  "checks": 52,
+  "passed": 52,
+  "harness": "Chromium set_content; explicit mode override. Service fetch bridged to FastAPI TestClient. No real navigation/TCP/CSP enforcement or external connections tested.",
+  "results": [
+    {
+      "name": "preview starts with 38 scenario revisions",
+      "result": "pass"
+    },
+    {
+      "name": "synthetic mode explicitly labelled",
+      "result": "pass"
+    },
+    {
+      "name": "preview has no authenticated service",
+      "result": "pass"
+    },
+    {
+      "name": "desktop route connections",
+      "result": "pass"
+    },
+    {
+      "name": "desktop route inventory",
+      "result": "pass"
+    },
+    {
+      "name": "desktop route scenarios",
+      "result": "pass"
+    },
+    {
+      "name": "desktop route runs",
+      "result": "pass"
+    },
+    {
+      "name": "desktop route validations",
+      "result": "pass"
+    },
+    {
+      "name": "desktop route reports",
+      "result": "pass"
+    },
+    {
+      "name": "desktop route roadmap",
+      "result": "pass"
+    },
+    {
+      "name": "desktop route data",
+      "result": "pass"
+    },
+    {
+      "name": "desktop route overview",
+      "result": "pass"
+    },
+    {
+      "name": "scenario filter ec2",
+      "result": "pass"
+    },
+    {
+      "name": "scenario filter eks-ec2",
+      "result": "pass"
+    },
+    {
+      "name": "scenario filter eks-fargate",
+      "result": "pass"
+    },
+    {
+      "name": "scenario filter ecs-ec2",
+      "result": "pass"
+    },
+    {
+      "name": "scenario filter ecs-fargate",
+      "result": "pass"
+    },
+    {
+      "name": "scenario filter lambda",
+      "result": "pass"
+    },
+    {
+      "name": "search empty state",
+      "result": "pass"
+    },
+    {
+      "name": "preview evaluates known failure",
+      "result": "pass"
+    },
+    {
+      "name": "failure retains missing evidence check",
+      "result": "pass"
+    },
+    {
+      "name": "report is linked to new validation",
+      "result": "pass"
+    },
+    {
+      "name": "HTML report carries synthetic warning",
+      "result": "pass"
+    },
+    {
+      "name": "immutable revision conflict visible",
+      "result": "pass"
+    },
+    {
+      "name": "conflicting import cannot commit",
+      "result": "pass"
+    },
+    {
+      "name": "new definition can be reviewed",
+      "result": "pass"
+    },
+    {
+      "name": "editing invalidates import preview",
+      "result": "pass"
+    },
+    {
+      "name": "new definition committed to preview memory",
+      "result": "pass"
+    },
+    {
+      "name": "imported title rendered as text",
+      "result": "pass"
+    },
+    {
+      "name": "unsafe source protocol not linked",
+      "result": "pass"
+    },
+    {
+      "name": "workspace export has imported revision",
+      "result": "pass"
+    },
+    {
+      "name": "mobile navigation initially hidden",
+      "result": "pass"
+    },
+    {
+      "name": "mobile menu opens",
+      "result": "pass"
+    },
+    {
+      "name": "Escape closes mobile menu",
+      "result": "pass"
+    },
+    {
+      "name": "mobile no page overflow connections",
+      "result": "pass"
+    },
+    {
+      "name": "mobile no page overflow inventory",
+      "result": "pass"
+    },
+    {
+      "name": "mobile no page overflow scenarios",
+      "result": "pass"
+    },
+    {
+      "name": "mobile no page overflow runs",
+      "result": "pass"
+    },
+    {
+      "name": "mobile no page overflow validations",
+      "result": "pass"
+    },
+    {
+      "name": "mobile no page overflow reports",
+      "result": "pass"
+    },
+    {
+      "name": "mobile no page overflow roadmap",
+      "result": "pass"
+    },
+    {
+      "name": "mobile no page overflow data",
+      "result": "pass"
+    },
+    {
+      "name": "mobile no page overflow overview",
+      "result": "pass"
+    },
+    {
+      "name": "preview no JavaScript errors",
+      "result": "pass"
+    },
+    {
+      "name": "service begins locked without synthetic records",
+      "result": "pass"
+    },
+    {
+      "name": "unlock loads actual catalogue only",
+      "result": "pass"
+    },
+    {
+      "name": "empty configuration remains empty",
+      "result": "pass"
+    },
+    {
+      "name": "live import origin assigned by backend",
+      "result": "pass"
+    },
+    {
+      "name": "live evaluation computed by Python evaluator",
+      "result": "pass"
+    },
+    {
+      "name": "live report persisted",
+      "result": "pass"
+    },
+    {
+      "name": "locking removes token and displayed records",
+      "result": "pass"
+    },
+    {
+      "name": "live UI no JavaScript errors",
+      "result": "pass"
+    }
+  ]
+}

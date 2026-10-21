@@ -1,0 +1,68 @@
+name: Validate operational readiness console
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, feat/aws-operational-readiness-console]
+    paths:
+      - applications/aws-validation-console/**
+      - .github/workflows/validation-console.yml
+  pull_request:
+    paths:
+      - applications/aws-validation-console/**
+      - .github/workflows/validation-console.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validation-console-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: applications/aws-validation-console
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Preserve the exact source under review
+        working-directory: .
+        run: git archive --format=zip HEAD applications/aws-validation-console > console-review-source.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: console-review-source
+          path: console-review-source.zip
+          retention-days: 7
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install test dependencies
+        run: |
+          python -m pip install -r requirements-dev.txt
+          python -m playwright install --with-deps chromium
+          python -c 'from playwright.sync_api import sync_playwright; p=sync_playwright().start(); print("CHROMIUM_PATH="+p.chromium.executable_path); p.stop()' >> "$GITHUB_ENV"
+      - name: Build and validate
+        run: |
+          python build_ui.py
+          python -m pytest -q --junitxml=validation/publication-pytest.xml
+          python tests/browser_checks.py
+          METRICS_TEST_OUTPUT=validation python tests/metrics_browser_checks.py
+          python tests/http_smoke.py
+          python tests/publication_browser_checks.py --native
+          python tests/container_acceptance.py
+          python tests/grafana_acceptance.py
+      - name: Retain generated dashboard and validation output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: console-validation-output
+          path: |
+            applications/aws-validation-console/validation/
+            applications/aws-validation-console/grafana/
+            applications/aws-validation-console/static/console.html
+          retention-days: 14

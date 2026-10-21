@@ -1,0 +1,63 @@
+{
+  "artifact": "Local Validation Console",
+  "version": "0.1.0",
+  "checked_at": "2026-10-21T11:39:34.803032+00:00",
+  "environment": {
+    "python": "3.13.5",
+    "sqlite": "3.46.1",
+    "platform": "Linux",
+    "packages": {
+      "fastapi": "0.128.2",
+      "uvicorn": "0.48.0",
+      "pydantic": "2.13.5",
+      "boto3": "1.43.18",
+      "botocore": "1.43.18",
+      "kubernetes": "not installed; Kubernetes adapter tested with SDK doubles",
+      "pytest": "9.0.2",
+      "httpx": "0.28.1",
+      "playwright": "1.57.0"
+    }
+  },
+  "results": {
+    "backend": {
+      "tests": 100,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "report": "validation/pytest.xml"
+    },
+    "browser": {
+      "checks": 52,
+      "passed": 52,
+      "report": "validation/browser-checks.json",
+      "boundary": "Chromium set_content; explicit mode override. Service fetch bridged to FastAPI TestClient. No real navigation/TCP/CSP enforcement or external connections tested."
+    },
+    "http_smoke": {
+      "checks": 8,
+      "passed": 8,
+      "report": "validation/http-smoke.json",
+      "boundary": "Real uvicorn process and loopback HTTP; temporary local database. No AWS, engine or Kubernetes access."
+    }
+  },
+  "executed": [
+    "Strict bundle validation, atomic import/conflict handling, immutable revisions, checksum export/reimport, database integrity and restore.",
+    "Scalar evaluation with known failures, missing evidence, explicit evidence selection, scope/window/type/sample/collection-lag/future-time gates.",
+    "FastAPI token/Host/Origin controls, request limits, escaped report generation and CSP hash verification.",
+    "Actual boto3/botocore Stubber calls for STS identity and selected EC2 outcomes; method-response doubles for EKS, ECS and Lambda model classification.",
+    "Temporary Unix-domain HTTP server exercising four allowlisted Docker/Podman GET routes; no real engine.",
+    "Kubernetes adapter method/scope/TLS checks with SDK doubles; no installed Kubernetes client or real cluster.",
+    "Chromium preview navigation, six-model filters, immutable import conflicts, editing invalidation, escaped user text, evaluation/report/download, mobile navigation and layout.",
+    "Chromium service-mode unlock/import/evaluate/report/lock via a fetch-to-TestClient bridge.",
+    "Real uvicorn process over loopback HTTP, authentication, import/export, SQLite backup and unchanged record hashes after actual process restart."
+  ],
+  "not_executed": [
+    "No AWS account authentication or live API inventory; no IAM policy attachment or simulation against an account.",
+    "No live Docker/Podman daemon or Kubernetes connection; no image build, Compose start, Podman run or Kubernetes deployment.",
+    "No real credential refresh, runtime API-version compatibility, PVC persistence or cluster storage acceptance.",
+    "Native file/HTTP browser navigation was blocked by environment policy; browser harness used set_content and explicit mode selection. Browser enforcement of served CSP was not exercised.",
+    "No FIS or local fault execution, workload generation, telemetry collection, responder assessment or operational-readiness certification.",
+    "No load/security/penetration/accessibility certification, image or dependency vulnerability scan, encryption, signed provenance or multi-user acceptance."
+  ],
+  "scope": "Code and local behavior validation only. Passing these checks is not live-deployment acceptance.",
+  "first_live_gate": "Inspect one approved AWS account and one local runtime; verify identity, explicit coverage, persistence and offline restore before specifying a real incident test."
+}

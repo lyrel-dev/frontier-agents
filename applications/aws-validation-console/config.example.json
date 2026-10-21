@@ -1,0 +1,8 @@
+{
+  "connections": [
+    {"id":"aws-staging","name":"AWS staging (configure account first)","kind":"aws","profile":"readiness-readonly","expected_account_id":"123456789012","regions":["eu-central-1"],"services":["ec2","autoscaling","eks","ecs","lambda","rds","elbv2","cloudwatch","fis"]},
+    {"id":"docker-local","name":"Local Docker engine","kind":"docker","socket":"/var/run/docker.sock"},
+    {"id":"podman-local","name":"Local rootless Podman","kind":"podman","socket":"/run/user/1000/podman/podman.sock"},
+    {"id":"kubernetes-local","name":"Local Kubernetes namespace","kind":"kubernetes","in_cluster":false,"kubeconfig":"/home/operator/.kube/config","context":"kind-local","namespaces":["default"]}
+  ]
+}

@@ -1,0 +1,65 @@
+[
+  {
+    "rank": 1,
+    "title": "Prove inspection and local persistence",
+    "value": "Establish which account and runtime were actually read, what was missed, and whether evidence survives restart.",
+    "deliverable": "Accept the shipped read-only collectors against one real AWS account and one local runtime; test the storage and restore path.",
+    "exit": "Account mismatch blocks collection; denied and truncated reads remain visible; a snapshot survives service restart; a SQLite backup restores the same record hashes.",
+    "status": "Code delivered \u00b7 live acceptance pending",
+    "depends": "Administrator-provided identity, namespace/socket access and persistent storage."
+  },
+  {
+    "rank": 2,
+    "title": "Turn catalogue entries into scoped test definitions",
+    "value": "Prevent a plausible scenario description from being treated as an executable or applicable test.",
+    "deliverable": "A scenario editor and applicability engine with six AWS deployment profiles, exact targets, dependency proof, concrete limits and evidence queries.",
+    "exit": "Unresolved limits, incompatible actions, empty target sets and stale snapshots block planning. The 36 research scenarios remain drafts until specified.",
+    "status": "Schema delivered \u00b7 applicability engine next",
+    "depends": "Accepted inventory and workload ownership."
+  },
+  {
+    "rank": 3,
+    "title": "Collect incident evidence under a known workload",
+    "value": "Measure customer impact and recovery instead of inferring them from resource state.",
+    "deliverable": "Bounded k6/Locust traffic, CloudWatch/Prometheus collectors, UTC incident events, transaction reconciliation and local raw-evidence retention.",
+    "exit": "Baseline, impairment and recovery windows are reproducible; denominators and missing samples are explicit; evidence links to one run and exact target scope.",
+    "status": "Scalar evaluation delivered \u00b7 collectors planned",
+    "depends": "Specified scenarios and approved observation endpoints."
+  },
+  {
+    "rank": 4,
+    "title": "Execute one supervised non-production fault",
+    "value": "Close the loop from approved plan to observed incident without creating an uncontrolled executor.",
+    "deliverable": "A separate write-capable FIS worker with durable run state, idempotency, target-hash approval, independent stop monitoring and cleanup verification.",
+    "exit": "A single approved low-blast-radius test completes; retries do not duplicate the fault; losing this console does not remove the stop path; incomplete cleanup blocks closure.",
+    "status": "Not implemented",
+    "depends": "Evidence collectors, least-privilege execution role and tested recovery procedure."
+  },
+  {
+    "rank": 5,
+    "title": "Validate responder actions and business recovery",
+    "value": "Distinguish infrastructure restoration from a resolved operational incident.",
+    "deliverable": "Alert-delivery and acknowledgement events, runbook evidence, escalation timestamps, business-transaction checks and repeat-test comparison.",
+    "exit": "Detection, acknowledgement, mitigation, stable recovery and data correctness each have attributable evidence or an explicit inconclusive result.",
+    "status": "Designed \u00b7 not integrated",
+    "depends": "An approved incident drill and access to the incident system."
+  },
+  {
+    "rank": 6,
+    "title": "Run repeatable campaigns and compare regressions",
+    "value": "Show whether releases improve or weaken the same tested behavior.",
+    "deliverable": "Persisted campaign schedules, workload/version pinning, trend views and release gates based on matched scenarios and complete evidence.",
+    "exit": "A campaign resumes after restart without duplicate execution; comparisons reject mismatched scope or scenario revisions; missing evidence cannot satisfy a release gate.",
+    "status": "Planned",
+    "depends": "Reliable single-run execution and reproducible evidence."
+  },
+  {
+    "rank": 7,
+    "title": "Qualify production and multi-account use",
+    "value": "Expand only after identity, failure containment and operational controls have been demonstrated.",
+    "deliverable": "Separate inspection/execution identities, multi-user approvals, signed evidence, retention policy, restore drills and account/Region-specific safety controls.",
+    "exit": "A security review and production game-day acceptance approve each account, Region and fault class; no approval is inherited merely from a non-production pass.",
+    "status": "Not authorized by this release",
+    "depends": "Non-production acceptance and organization change approval."
+  }
+]

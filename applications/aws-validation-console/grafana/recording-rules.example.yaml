@@ -1,0 +1,22 @@
+# Proposed instrument names, not metrics emitted by the console or AWS FIS.
+# The same population and all six labels must exist on both numerator and denominator.
+# Initialize success/error counters at zero; do not manufacture absent data with "or vector(0)".
+groups:
+  - name: readiness-http-example
+    interval: 30s
+    rules:
+      - record: readiness_request_rate
+        expr: sum by (environment, service, deployment_model, scenario, run_id, data_kind) (rate(readiness_http_requests_total[5m]))
+      - record: readiness_request_error_ratio
+        expr: |
+          (
+            sum by (environment, service, deployment_model, scenario, run_id, data_kind) (rate(readiness_http_requests_total{outcome="error"}[5m]))
+            /
+            sum by (environment, service, deployment_model, scenario, run_id, data_kind) (rate(readiness_http_requests_total[5m]))
+          )
+          and on (environment, service, deployment_model, scenario, run_id, data_kind)
+          (sum by (environment, service, deployment_model, scenario, run_id, data_kind) (rate(readiness_http_requests_total[5m])) > 0)
+      - record: readiness_latency_p95_ms
+        expr: 1000 * histogram_quantile(0.95, sum by (environment, service, deployment_model, scenario, run_id, data_kind, le) (rate(readiness_http_request_duration_seconds_bucket[5m])))
+      - record: readiness_latency_p99_ms
+        expr: 1000 * histogram_quantile(0.99, sum by (environment, service, deployment_model, scenario, run_id, data_kind, le) (rate(readiness_http_request_duration_seconds_bucket[5m])))
