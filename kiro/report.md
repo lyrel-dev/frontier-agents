@@ -1,6 +1,6 @@
 # Kiro
 
-Give the agent an engineering outcome—not an unlimited mandate.
+Repository-scoped planning, implementation, testing and review workflows.
 
 
 Revision: 21 October 2026. Independent engineering field guide.
@@ -43,6 +43,8 @@ Move to autonomous work only after the desired outcome and exclusions are clear.
 
 **Capability crosswalk:** C01, C04, C10
 
+**Responsible role (team recommendation):** Developer/repository owner
+
 **Input:** Repository, branch, reproduced problem and a named reviewer.
 
 **Artifact:** A cited code-path explanation and a bounded task statement.
@@ -59,6 +61,8 @@ For the request-ID change, define what happens when the header is present, absen
 Steering can carry coding conventions; memory can retain useful working context. Neither changes authorization or turns a remembered assumption into verified fact. Keep the task's acceptance criteria explicit and correct stale context before it influences implementation.
 
 **Capability crosswalk:** C02, C03, C11, C12
+
+**Responsible role (team recommendation):** Developer and reviewer
 
 **Input:** Observed gap, compatibility constraints, team conventions and expected failure cases.
 
@@ -77,6 +81,8 @@ MCP and Powers extend the tools available to the agent. Review their credential 
 
 **Capability crosswalk:** C08, C13, C14, C15, C16
 
+**Responsible role (team recommendation):** Platform or repository administrator
+
 **Input:** Known setup commands, test configuration, approved tools and minimal test credentials.
 
 **Artifact:** An executable task environment with documented access and known limitations.
@@ -93,6 +99,8 @@ A bounded autonomous task can plan the change, edit code and open a reviewable P
 For the example, inspect the request-header handling, downstream propagation and tests for both existing and generated IDs. Generated tests only help when their assertions exercise the requirement and their execution result is available. A screenshot or passing command is not a substitute for reviewing what was actually checked.
 
 **Capability crosswalk:** C04, C05, C06, C08
+
+**Responsible role (team recommendation):** Implementing engineer and reviewer
 
 **Input:** Approved task, repository scope and runnable verification commands.
 
@@ -111,6 +119,8 @@ Use the correct recovery mechanism for the client. Local file checkpoints and co
 
 **Capability crosswalk:** C07, C17, C18
 
+**Responsible role (team recommendation):** PR reviewer
+
 **Input:** PR/MR, review comments and the actual failing check where applicable.
 
 **Artifact:** An updated change and a documented reviewer decision.
@@ -127,6 +137,8 @@ A recurring dependency-maintenance job should define allowed version changes, pr
 Custom agents, skills and workflows can package repeated procedures, but their surface support and rollout conditions differ. Start with one job whose result is easy to inspect. Measure accepted changes, review effort and escaped defects before expanding the task or repository scope.
 
 **Capability crosswalk:** C09, C19, C20, C21
+
+**Responsible role (team recommendation):** Maintenance workflow owner
 
 **Input:** A repeatable procedure, precise schedule, repository boundary and stop owner.
 
@@ -156,7 +168,9 @@ Custom agents, skills and workflows can package repeated procedures, but their s
 
 **Prompt:** Explain how request IDs pass through this service. Cite files and symbols, identify gaps, and make no changes yet.
 
-Evidence: S03, S09
+**Review record to retain (team recommendation):** Repository map and file/symbol references for the investigated path.
+
+Official documentation references: S03, S09
 
 
 ### C02 — Plan a feature with requirements, design, and tasks
@@ -175,7 +189,9 @@ Evidence: S03, S09
 
 **Prompt:** Plan request-ID propagation. Preserve public APIs, identify affected components, and propose tests before implementation.
 
-Evidence: S08
+**Review record to retain (team recommendation):** Versioned requirements, design decisions, implementation tasks, and open questions.
+
+Official documentation references: S08
 
 
 ### C03 — Specify a bug fix without changing unrelated behavior
@@ -194,7 +210,9 @@ Evidence: S08
 
 **Prompt:** Create a bugfix spec for duplicate webhook handling. Define the failing case and the successful flows that must remain unchanged.
 
-Evidence: S08
+**Review record to retain (team recommendation):** Current/expected behavior specification with preservation constraints and regression cases.
+
+Official documentation references: S08
 
 
 ### C04 — Delegate a bounded outcome through to a pull request
@@ -213,7 +231,9 @@ Evidence: S08
 
 **Prompt:** Fix this reproducible retry defect, add focused tests, and open a small PR explaining evidence and remaining risks. Do not deploy.
 
-Evidence: S04, S02, S12
+**Review record to retain (team recommendation):** Pull request with scoped diff, execution output, and unresolved review points.
+
+Official documentation references: S04, S02, S12
 
 
 ### C05 — Coordinate a change across repositories
@@ -232,7 +252,9 @@ Evidence: S04, S02, S12
 
 **Prompt:** Update the shared client and its consuming service for the new optional header. Open linked changes and describe the safe merge order.
 
-Evidence: S05, S07
+**Review record to retain (team recommendation):** Repository-specific diffs with a cross-repository dependency and review checklist.
+
+Official documentation references: S05, S07
 
 
 ### C06 — Assign a GitHub issue to the agent
@@ -251,7 +273,9 @@ Evidence: S05, S07
 
 **Prompt:** Prepare a small bug issue with expected behavior and test criteria, then assign it using the documented Kiro trigger.
 
-Evidence: S06
+**Review record to retain (team recommendation):** GitHub issue, delegated task, resulting change proposal, and reviewer decision.
+
+Official documentation references: S06
 
 
 ### C07 — Iterate on review feedback and supplied CI failures
@@ -270,7 +294,9 @@ Evidence: S06
 
 **Prompt:** Address this review thread and the linked CI failure. Preserve the test intent; report the exact check you reran.
 
-Evidence: S06
+**Review record to retain (team recommendation):** Updated PR diff with link to comments, failing checks, and verification reruns.
+
+Official documentation references: S06
 
 
 ### C08 — Write tests and verify a UI in the sandbox
@@ -289,7 +315,9 @@ Evidence: S06
 
 **Prompt:** Add a regression test for the empty-state bug, run the affected tests, and inspect the page at a mobile viewport. Report failures honestly.
 
-Evidence: S09, S10
+**Review record to retain (team recommendation):** Test source, runner output, and UI/browser evidence when applicable.
+
+Official documentation references: S09, S10
 
 
 ### C09 — Schedule small repository-maintenance jobs
@@ -308,7 +336,9 @@ Evidence: S09, S10
 
 **Prompt:** Once a week, identify outdated internal API examples and propose corrections only when a concrete mismatch is found. Avoid empty PRs.
 
-Evidence: S11
+**Review record to retain (team recommendation):** Scheduled task record, proposed maintenance diff, and assigned reviewer.
+
+Official documentation references: S11
 
 
 ### C10 — Continue cloud work from another client
@@ -327,7 +357,9 @@ Evidence: S11
 
 **Prompt:** Resume the cloud task for this branch. Summarize completed checks and ask before changing the agreed acceptance criteria.
 
-Evidence: S12
+**Review record to retain (team recommendation):** Cloud-session record, applied changes, and the final reviewed artifact.
+
+Official documentation references: S12
 
 
 ### C11 — Apply team conventions through steering
@@ -346,7 +378,9 @@ Evidence: S12
 
 **Prompt:** Follow the repository’s API-compatibility and testing guidance. Identify conflicts in those instructions before editing.
 
-Evidence: S13
+**Review record to retain (team recommendation):** Versioned steering file with documented conventions and a change-review record.
+
+Official documentation references: S13
 
 
 ### C12 — Reuse learned context without treating it as truth
@@ -365,7 +399,9 @@ Evidence: S13
 
 **Prompt:** Use our known test conventions, but verify them against the current repository before proposing a change.
 
-Evidence: S14
+**Review record to retain (team recommendation):** Inspectable stored context and a correction record when recalled information is wrong.
+
+Official documentation references: S14
 
 
 ### C13 — Connect specialist tools using MCP and Powers
@@ -384,7 +420,9 @@ Evidence: S14
 
 **Prompt:** Use the approved documentation integration to check this SDK call, and cite the retrieved source before proposing a patch.
 
-Evidence: S15, S16
+**Review record to retain (team recommendation):** Named MCP/Powers integration scope and records of calls affecting external systems.
+
+Official documentation references: S15, S16
 
 
 ### C14 — Run repeatable local checks with hooks
@@ -403,7 +441,9 @@ Evidence: S15, S16
 
 **Prompt:** After relevant source edits, run the existing fast test command and report failures without changing test expectations.
 
-Evidence: S17
+**Review record to retain (team recommendation):** Hook configuration, invoked commands, exit status, and repository changes.
+
+Official documentation references: S17
 
 
 ### C15 — Separate local permissions from cloud controls
@@ -422,7 +462,9 @@ Evidence: S17
 
 **Prompt:** Inspect the build configuration without changing files. Request review before any write or resource-changing command.
 
-Evidence: S18
+**Review record to retain (team recommendation):** Permission rules and negative test showing blocked out-of-scope operations.
+
+Official documentation references: S18
 
 
 ### C16 — Configure sandbox dependencies, egress, and secrets
@@ -441,7 +483,9 @@ Evidence: S18
 
 **Prompt:** Run the integration test using the provided staging fixture. Never print credentials and report any unavailable dependency.
 
-Evidence: S19, S20, S10
+**Review record to retain (team recommendation):** Sandbox configuration including approved egress, injected settings, and secret-handling checks.
+
+Official documentation references: S19, S20, S10
 
 
 ### C17 — Recover local work with the correct restore mechanism
@@ -460,7 +504,9 @@ Evidence: S19, S20, S10
 
 **Prompt:** Return to the pre-change discussion, then show the working-tree diff so I can decide which edits to restore.
 
-Evidence: S21
+**Review record to retain (team recommendation):** Restoration record or new branch/fork demonstrating which work state was recovered.
+
+Official documentation references: S21
 
 
 ### C18 — Diagnose IaC or pipeline failures using supplied evidence
@@ -479,7 +525,9 @@ Evidence: S21
 
 **Prompt:** Explain the earliest causal error in this failed infrastructure plan. Propose the smallest correction and do not apply changes.
 
-Evidence: S09, S18
+**Review record to retain (team recommendation):** Evidence-backed failure analysis, proposed file change, and independent command output.
+
+Official documentation references: S09, S18
 
 
 ### C19 — Reuse a specialist custom agent
@@ -498,7 +546,9 @@ Evidence: S09, S18
 
 **Prompt:** Ask our test-review agent to inspect missing regression coverage and return findings without implementing changes.
 
-Evidence: S22, S13
+**Review record to retain (team recommendation):** Custom-agent configuration, scoped task result, and approval of its output.
+
+Official documentation references: S22, S13
 
 
 ### C20 — Package a repeatable team procedure as a skill
@@ -517,7 +567,9 @@ Evidence: S22, S13
 
 **Prompt:** Use the team’s release-note skill to draft a changelog from merged commits. Do not publish or change the release tag.
 
-Evidence: S23
+**Review record to retain (team recommendation):** Versioned skill instructions and a reproducibility review for included scripts.
+
+Official documentation references: S23
 
 
 ### C21 — Orchestrate a repeatable multi-step engineering workflow
@@ -536,7 +588,9 @@ Evidence: S23
 
 **Prompt:** Create a bounded workflow: investigate, propose a fix, independently review, and rerun the regression test. Stop after two unsuccessful repair cycles.
 
-Evidence: S24
+**Review record to retain (team recommendation):** Workflow definition, per-step artifacts, failures, handoffs, and completion status.
+
+Official documentation references: S24
 
 
 ## Illustrative handoff
