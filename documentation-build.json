@@ -5,5 +5,5 @@
   "history_policy": "Git history only; no manual archives or committed ZIP distributions",
   "publication_gate": "Structural, browser and rendered inspection before main is advanced",
   "live_aws_execution": false,
-  "build": 1
+  "build": 2
 }
