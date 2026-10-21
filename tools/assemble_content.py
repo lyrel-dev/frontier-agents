@@ -15,6 +15,8 @@ def write_json(path: Path, data: dict) -> None:
 def main() -> None:
     from migrations.apply_mechanisms import apply
     apply()
+    from migrations.apply_validation_followup import apply as validate_followup
+    validate_followup()
     agents = {}
     results = []
     # Correct transcription errors in the initial source import. Once the
