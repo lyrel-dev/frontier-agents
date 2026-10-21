@@ -348,64 +348,6 @@ Illustrative: revalidate one repaired staging finding after deployment, with no 
 
 [ST: Revalidate penetration-test findings](https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html)
 
-## S-M07 — Connect an IDE scan through the Security Agent MCP server
-
-**Surface:** Kiro Power / supported IDE integration
-
-**Availability:** Code review and threat-model review are preview
-
-**Activation:** Install the supported integration; authorize first-use provisioning
-
-### Documented mechanism
-
-The MCP integration packages code, uploads it to an account S3 bucket, starts a scan and retrieves findings. First use can provision an Agent Space, IAM role and bucket.
-
-### Enable and configure
-
-Configured AWS credentials with the documented setup and scan permissions; supported client and package runtime.
-
-1. Install the AWS Security Agent Power in Kiro, following the official IDE integration procedure.
-
-2. Review the AWS profile, Region and setup permissions before first use.
-
-3. Request a scan of a disposable repository and inspect the created resources and findings.
-
-### Scope and persistence
-
-Source leaves the local machine. A differential scan can still upload full repository context with its diff.
-
-### Independent checks — proposed
-
-- Check the packaged source for secrets and unnecessary content before upload.
-
-- Confirm bucket, role, scan ID and source revision; inspect generated fixes before committing.
-
-### Record to retain — proposed
-
-Redacted integration config, provisioned resources, source manifest, scan result and reviewer decision.
-
-### Stop, correct or remove
-
-Review installed hooks and MCP tools; remove or disable the integration when access is no longer approved.
-
-### Limits and fallback
-
-The AWS integration page and current Kiro configuration guide show different manual config paths. Prefer the supported Power setup and inspect the installed configuration rather than copying an older path. No runtime guarantee is assumed.
-
-Use the documented console or repository review flow while resolving client-version differences.
-
-### Illustrative task — not executed
-
-Illustrative: scan a small synthetic repository containing no credentials or customer data, without requesting fixes.
-
-### Official guidance
-
-[SI: Run code security scans from an IDE](https://docs.aws.amazon.com/securityagent/latest/userguide/code-review-ide-integration.html)
-
-[KC: MCP configuration](https://kiro.dev/docs/mcp/configuration/)
-
-[SB: Pricing and preview capability status](https://docs.aws.amazon.com/securityagent/latest/userguide/pricing.html)
-
 ## Proposed use-case exercise
 
 Carry application evidence through repair and revalidation
