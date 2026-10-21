@@ -1,7 +1,7 @@
 {
-  "revision": "2026-10-21-mechanisms-v2",
+  "revision": "2026-10-21-three-agent-scope",
   "reviewed": "21 October 2026",
-  "scope": "Documented configuration and observable behavior, not undisclosed implementation. Independent checks and example prompts are proposed exercises; none was executed against a live AWS account.",
+  "scope": "Documented mechanisms and enablement for AWS DevOps Agent, AWS Security Agent and AWS FinOps Agent.",
   "sources": {
     "DM": {
       "title": "DevOps Agent Memories",
@@ -69,84 +69,6 @@
       "reviewed": "2026-10-21",
       "note": ""
     },
-    "KM": {
-      "title": "Memory",
-      "url": "https://kiro.dev/docs/memory/",
-      "reviewed": "2026-10-21",
-      "note": ""
-    },
-    "KL": {
-      "title": "Introducing memory in Kiro IDE and CLI — 20 October 2026",
-      "url": "https://kiro.dev/blog/memory-in-ide-cli/",
-      "reviewed": "2026-10-21",
-      "note": "Dated launch announcement resolves the older memory page that listed IDE support as forthcoming. Local storage and default-off statements apply to this release."
-    },
-    "KS": {
-      "title": "Steering",
-      "url": "https://kiro.dev/docs/steering/",
-      "reviewed": "2026-10-21",
-      "note": ""
-    },
-    "KW": {
-      "title": "Working with the agent on Web",
-      "url": "https://kiro.dev/docs/web/using-the-agent/",
-      "reviewed": "2026-10-21",
-      "note": ""
-    },
-    "KG": {
-      "title": "GitHub integration",
-      "url": "https://kiro.dev/docs/web/github/",
-      "reviewed": "2026-10-21",
-      "note": ""
-    },
-    "KK": {
-      "title": "Agent Skills",
-      "url": "https://kiro.dev/docs/skills/",
-      "reviewed": "2026-10-21",
-      "note": ""
-    },
-    "KH": {
-      "title": "Hooks",
-      "url": "https://kiro.dev/docs/hooks/",
-      "reviewed": "2026-10-21",
-      "note": ""
-    },
-    "KJ": {
-      "title": "Hooks migration in CLI V3",
-      "url": "https://kiro.dev/docs/cli/v3/hooks-migration/",
-      "reviewed": "2026-10-21",
-      "note": ""
-    },
-    "KC": {
-      "title": "MCP configuration",
-      "url": "https://kiro.dev/docs/mcp/configuration/",
-      "reviewed": "2026-10-21",
-      "note": ""
-    },
-    "KP": {
-      "title": "MCP tool approval",
-      "url": "https://kiro.dev/docs/mcp/usage/",
-      "reviewed": "2026-10-21",
-      "note": ""
-    },
-    "KA": {
-      "title": "Automations",
-      "url": "https://kiro.dev/docs/web/automations/",
-      "reviewed": "2026-10-21",
-      "note": ""
-    },
-    "KR": {
-      "title": "Custom-agent configuration reference",
-      "url": "https://kiro.dev/docs/custom-agents/configuration-reference/",
-      "reviewed": "2026-10-21",
-      "note": ""
-    },
-    "KQ": {
-      "title": "CLI slash commands",
-      "url": "https://kiro.dev/docs/cli/reference/slash-commands/",
-      "reviewed": "2026-10-21",
-      "note": ""
-    },
     "SC": {
       "title": "Create a penetration test",
       "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html",
@@ -192,12 +114,6 @@
     "ST": {
       "title": "Revalidate penetration-test findings",
       "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html",
-      "reviewed": "2026-10-21",
-      "note": ""
-    },
-    "SI": {
-      "title": "Run code security scans from an IDE",
-      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/code-review-ide-integration.html",
       "reviewed": "2026-10-21",
       "note": ""
     },
@@ -790,421 +706,6 @@
         ]
       }
     },
-    "kiro": {
-      "title": "Kiro",
-      "accent": "#6451a8",
-      "report": "kiro/report.html",
-      "status": "IDE, CLI and Web have different controls. Local memory requires supported versions; Web features retain their own availability and plan restrictions.",
-      "opening": "Separate facts discovered during coding from rules the team intentionally maintains. Local memory can retain a debugging lesson; steering expresses maintained conventions; skills provide procedures; hooks and MCP enable actions. No one control replaces the others.",
-      "learning": "Local IDE/CLI memory retains selected context on the same machine. Web can incorporate the task creator’s review feedback. Neither statement establishes a shared memory store across local clients, cloud agents and teammates.",
-      "learning_refs": [
-        "KL",
-        "KM",
-        "KS"
-      ],
-      "records": [
-        {
-          "id": "K-M01",
-          "title": "Retain debugging context in local memory",
-          "family": "Memory",
-          "surface": "IDE ≥1.4.0; CLI ≥2.29.0 in local V3 sessions",
-          "availability": "Documented 20 October 2026 release; off by default",
-          "activation": "User opt-in",
-          "mechanism": "Kiro can extract and refine selected context, then retrieve it for later tasks. Local memories are shared by IDE and CLI on the same machine and can be repository-scoped or global; they are not full conversation copies.",
-          "prerequisites": "A supported client version and a trusted local workspace for memory changes.",
-          "steps": [
-            "IDE: open Memories in the activity bar, then settings, and choose Use and learn.",
-            "CLI: open /memories → config, select read & write and enable automatic memory updates when desired.",
-            "Start a new CLI session after changing access. Use /memories → list to inspect entries."
-          ],
-          "scope": "Local storage is not documented as automatic synchronization to Kiro Web or other team members.",
-          "control": "IDE supports inspection and deletion; CLI supports read only/off modes and chat-based corrections when writable. Access changes apply to a new CLI session.",
-          "limits": "Recalled text consumes context. Capture and recall do not guarantee correctness or update model weights as a user-controlled operation.",
-          "refs": [
-            "KL",
-            "KM"
-          ],
-          "checks": [
-            "Record a harmless repository-specific prerequisite, then inspect the saved entry and its scope.",
-            "In a new session, ask for the relevant test plan and look for an explicit Memory read in the transcript.",
-            "Correct the fact and test again; check that an unrelated repository does not inherit repository-only advice."
-          ],
-          "artifact": "Client versions, memory mode, repository scope, entry before/after correction and recall evidence.",
-          "fallback": "Keep the approved fact in version-controlled steering when automatic retention is absent or unsuitable; do not enable broad access merely to obtain recall.",
-          "example": "Illustrative: “Remember for this training repository that integration tests require the local test fixture. This is a test convention, not a credential.”",
-          "slide": [
-            "Selected context persists locally",
-            "Enable memory in IDE or CLI",
-            "Inspect scope and later recall",
-            "Not shared cloud/team memory"
-          ],
-          "slide_setup": [
-            "Use supported IDE/CLI versions.",
-            "Select Use and learn or read & write.",
-            "Inspect entries; test a fresh session."
-          ],
-          "slide_mechanism": "Kiro can extract and refine selected context, then retrieve it for later tasks.",
-          "slide_boundary": "Not shared cloud/team memory. IDE supports inspection and deletion; CLI supports read only/off modes and chat-based corrections when writable."
-        },
-        {
-          "id": "K-M02",
-          "title": "Use the task creator’s Web review feedback",
-          "family": "Memory",
-          "surface": "Kiro Web / repository pull requests",
-          "availability": "Web feature; separate from local memory",
-          "activation": "Connected repository and task feedback",
-          "mechanism": "Kiro Web responds to review feedback and can carry the task creator’s guidance into future work. The steering guide limits this learning to the user who created the task, not other reviewers.",
-          "prerequisites": "A connected repository and a Web task created by the reviewing user.",
-          "steps": [
-            "Connect GitHub in Web settings and grant only required repositories.",
-            "Create a bounded task and review its proposed change.",
-            "Add a specific review correction from the task creator’s account; inspect the resulting revision and later behavior."
-          ],
-          "scope": "This is a Web feedback mechanism. The reviewed guides do not establish shared storage with local IDE/CLI memory.",
-          "control": "Use checked-in steering for rules requiring explicit team ownership and version control. A dedicated Web memory-delete control is not established by these pages.",
-          "limits": "Commenting does not authorize merging or deployment. Avoid treating every reviewer’s comment as persistent policy.",
-          "refs": [
-            "KS",
-            "KW",
-            "KG"
-          ],
-          "checks": [
-            "Use a small formatting or error-handling correction in a disposable repository.",
-            "Compare the changed PR and a later task; label a behavioral match as observation, not proof of an undocumented storage implementation."
-          ],
-          "artifact": "Task creator, PR/comment link, revision diff and later task result.",
-          "fallback": "Put the reviewed rule in repository steering and provide it explicitly; record the uncertainty about implicit feedback retention.",
-          "example": "Illustrative: “Use the existing request-ID propagation helper instead of creating a new helper.”",
-          "slide": [
-            "Web can reuse creator feedback",
-            "Review and comment on the task PR",
-            "Inspect revision and later behavior",
-            "No local-memory synchronization assumed"
-          ],
-          "slide_setup": [
-            "Connect the intended GitHub repository.",
-            "Create a bounded Web task.",
-            "Review as the task creator."
-          ],
-          "slide_mechanism": "Kiro Web responds to review feedback and can carry the task creator’s guidance into future work.",
-          "slide_boundary": "No local-memory synchronization assumed. Use checked-in steering for rules requiring explicit team ownership and version control."
-        },
-        {
-          "id": "K-M03",
-          "title": "Maintain explicit project guidance in steering",
-          "family": "Instructions",
-          "surface": "IDE / CLI / Web, with surface-specific scope",
-          "availability": "Documented; custom-agent inclusion must be configured",
-          "activation": "Version-controlled Markdown",
-          "mechanism": "Workspace steering lives in .kiro/steering; local global steering lives in ~/.kiro/steering. Inclusion modes control when guidance is loaded. The cloud cannot read the local global directory.",
-          "prerequisites": "Repository access and an approved guidance file; correct client-specific configuration.",
-          "steps": [
-            "Create a Markdown steering file with a clear applicability statement.",
-            "Choose the documented inclusion mode for the client; use workspace scope for repository-owned conventions.",
-            "For a custom agent, explicitly include steering in its resources configuration. Upload local global guidance through Configuration Sync when it is required in cloud sessions."
-          ],
-          "scope": "Workspace guidance takes priority over conflicting local-global guidance. Steering is explicitly maintained text, unlike inferred memory.",
-          "control": "Edit or remove the file through normal review; verify the new context in a fresh session.",
-          "limits": "Steering content is not a sandbox, access-control policy or substitute for tests.",
-          "refs": [
-            "KS",
-            "KR"
-          ],
-          "checks": [
-            "Check a matching and a nonmatching task for a conditional instruction.",
-            "Inspect the custom-agent resources rather than assuming default-agent behavior carries over."
-          ],
-          "artifact": "Guidance file revision, inclusion mode, client/surface and test transcript.",
-          "fallback": "Attach the approved guidance explicitly while correcting inclusion or sync settings.",
-          "example": "Illustrative: “When changing request-ID handling, preserve the public header contract and add a regression test.”",
-          "slide": [
-            "Explicit, reviewable project rules",
-            "Create and scope steering",
-            "Test inclusion on the actual client",
-            "Text guidance is not authorization"
-          ],
-          "slide_setup": [
-            "Create a workspace steering file.",
-            "Choose its inclusion conditions.",
-            "Configure custom-agent resources."
-          ],
-          "slide_mechanism": "Workspace steering lives in .kiro/steering; local global steering lives in ~/.kiro/steering.",
-          "slide_boundary": "Text guidance is not authorization. Edit or remove the file through normal review; verify the new context in a fresh session."
-        },
-        {
-          "id": "K-M04",
-          "title": "Load a reusable procedure through Agent Skills",
-          "family": "Instructions",
-          "surface": "IDE / CLI / Web",
-          "availability": "Documented; global directories are local-only",
-          "activation": "Task-relevant skill activation",
-          "mechanism": "Kiro first discovers a skill’s name and description, then loads instructions when relevant; scripts and references can be loaded as needed. This is procedure selection, not learned incident memory.",
-          "prerequisites": "A reviewed skill package and appropriate permissions for any actions it describes.",
-          "steps": [
-            "Place a SKILL.md package in .kiro/skills/<name>/ with name and description frontmatter.",
-            "Keep supporting references in the package and describe the tasks that should activate it.",
-            "For global local use, use ~/.kiro/skills; verify cloud availability separately."
-          ],
-          "scope": "Package contents can include executable material. Read the package before enabling it.",
-          "control": "Remove or revise the package through the repository’s change process.",
-          "limits": "Skill activation does not validate its content or authorize every script it references.",
-          "refs": [
-            "KK"
-          ],
-          "checks": [
-            "Choose a read-only procedure and inspect the loaded skill when the task matches.",
-            "Verify any command uses the intended working directory and least required permissions."
-          ],
-          "artifact": "Skill package revision, activation evidence, command log and reviewed result.",
-          "fallback": "Use the reviewed steps manually when activation is uncertain; do not accept a successful-looking narrative without command results.",
-          "example": "Illustrative skill: inspect existing request-ID entry points and report missing propagation tests without changing code.",
-          "slide": [
-            "Description routes to a procedure",
-            "Add a reviewed SKILL.md package",
-            "Inspect activation and tool results",
-            "Scripts need separate review"
-          ],
-          "slide_setup": [
-            "Add a reviewed SKILL.md package.",
-            "Describe its activation conditions.",
-            "Review commands and permissions."
-          ],
-          "slide_mechanism": "Kiro first discovers a skill’s name and description, then loads instructions when relevant; scripts and references can be loaded as needed.",
-          "slide_boundary": "Scripts need separate review. Remove or revise the package through the repository’s change process."
-        },
-        {
-          "id": "K-M05",
-          "title": "Run event-driven hooks with an explicit effect",
-          "family": "Trigger",
-          "surface": "IDE / CLI; not Web or Mobile",
-          "availability": "Documented v1 standalone hooks",
-          "activation": "Event + matcher + command or prompt",
-          "mechanism": "Kiro hooks run a shell command or inject an agent prompt when a configured event occurs. Standalone v1 JSON files allow the same event definition to be used by local IDE and CLI clients.",
-          "prerequisites": "An applicable local client, repository tooling and a reviewed command or prompt.",
-          "steps": [
-            "Create .kiro/hooks/<name>.json using version v1 and the documented hooks array.",
-            "Select a supported trigger and matcher; start with a non-mutating validation command.",
-            "Migrate older formats using the client’s documented migration flow, then inspect the resulting configuration."
-          ],
-          "scope": "An agent-prompt action and a blocking command hook are not equivalent. File patterns and event semantics are client-specific.",
-          "control": "Remove or revise the hook file and confirm it is no longer loaded; avoid broad event matchers.",
-          "limits": "A hook can run code automatically. Do not use unreviewed scripts or commands downloaded at invocation time.",
-          "refs": [
-            "KH",
-            "KJ"
-          ],
-          "checks": [
-            "In a disposable repository, trigger one matching file event and one unrelated event.",
-            "Check the actual command exit result and side effects; guard against repeated-trigger loops."
-          ],
-          "artifact": "Hook JSON revision, matching event, command output, exit status and changed-file list.",
-          "fallback": "Disable the hook and run the validation command manually until trigger behavior is understood.",
-          "example": "Illustrative task: run an already-installed test check after a relevant local file event; do not install dependencies as part of the hook.",
-          "slide": [
-            "Event-driven local automation",
-            "Configure a v1 hook and matcher",
-            "Check exits and actual side effects",
-            "Prompt hooks are not access controls"
-          ],
-          "slide_setup": [
-            "Create a supported v1 hook file.",
-            "Select the event and matcher.",
-            "Begin with a non-mutating check."
-          ],
-          "slide_mechanism": "Kiro hooks run a shell command or inject an agent prompt when a configured event occurs.",
-          "slide_boundary": "Prompt hooks are not access controls. Remove or revise the hook file and confirm it is no longer loaded; avoid broad event matchers."
-        },
-        {
-          "id": "K-M06",
-          "title": "Expose tools through MCP with controlled approval",
-          "family": "Integration",
-          "surface": "Local IDE / CLI configuration; cloud setup differs",
-          "availability": "Documented MCP configuration",
-          "activation": "Explicit server and tool configuration",
-          "mechanism": "MCP adds tool interfaces from a local process or remote server. Configuration and tool approval are separate from the text that tells the agent how to use a tool.",
-          "prerequisites": "A reviewed MCP server, suitable authentication and the installed client’s supported transport.",
-          "steps": [
-            "Use .kiro/settings/mcp.json for workspace configuration or the user-level equivalent.",
-            "Configure the server endpoint/process without hard-coded credentials; leave autoApprove empty for initial evaluation.",
-            "Save, inspect available tools, and approve or deny the requested operation after reviewing its arguments."
-          ],
-          "scope": "Workspace configuration can override user configuration. Local filesystem configuration does not imply that a cloud session has the same credentials.",
-          "control": "Use disabled or disabledTools to remove exposure; review any autoApprove changes as a permission decision.",
-          "limits": "Connecting a server is not proof that its data is trustworthy. Do not auto-approve all tools to fix a failed read.",
-          "refs": [
-            "KC",
-            "KP"
-          ],
-          "checks": [
-            "Choose one read-only tool, record its input and compare its output with the source system.",
-            "Deny a write request and verify the external system did not change."
-          ],
-          "artifact": "Redacted config, server identity, exposed tool list, approval decision and external result.",
-          "fallback": "Disable the server; obtain the evidence through an approved read-only path.",
-          "example": "Illustrative: “Retrieve the documented configuration of this test resource. Do not perform any write operation.”",
-          "slide": [
-            "MCP exposes callable operations",
-            "Configure and inspect one server",
-            "Approve the specific tool call",
-            "Instructions do not confer credentials"
-          ],
-          "slide_setup": [
-            "Configure one reviewed MCP server.",
-            "Keep initial auto-approval disabled.",
-            "Inspect and approve tool arguments."
-          ],
-          "slide_mechanism": "MCP adds tool interfaces from a local process or remote server.",
-          "slide_boundary": "Instructions do not confer credentials. Use disabled or disabledTools to remove exposure; review any autoApprove changes as a permission decision."
-        },
-        {
-          "id": "K-M07",
-          "title": "Run a repository task on a Web schedule",
-          "family": "Trigger",
-          "surface": "Kiro Web Automations",
-          "availability": "Eligible paid plans; Web availability applies",
-          "activation": "User-enabled recurring automation",
-          "mechanism": "A Web automation runs a prompt against selected repositories in autonomous mode on a schedule. When changes are produced, the review artifact can be a pull request.",
-          "prerequisites": "An eligible plan, connected repositories and a prompt with bounded output.",
-          "steps": [
-            "Open Automations in the Web sidebar and create the automation.",
-            "Specify its name, prompt, repositories and schedule; review the configuration.",
-            "Inspect a run and its output; use the row status or Edit screen to disable future runs."
-          ],
-          "scope": "Scheduling is a Web mechanism, separate from local hooks and local memory.",
-          "control": "Disable or delete the automation to stop future scheduled runs.",
-          "limits": "A scheduled task is not permission to merge or deploy. Completion time depends on the work; inspect failures rather than inferring success from a schedule.",
-          "refs": [
-            "KA"
-          ],
-          "checks": [
-            "Start with a report-only task in a test repository.",
-            "Confirm repository selection, schedule interpretation and resulting session.",
-            "Check that a disabled automation does not start a subsequent scheduled run."
-          ],
-          "artifact": "Automation definition, run/session link, output or PR and responsible reviewer.",
-          "fallback": "Perform the same task manually while resolving plan access or execution failures.",
-          "example": "Illustrative: “Summarize merged request-ID changes in the last review window. Do not edit repository files.”",
-          "slide": [
-            "Scheduled cloud invocation",
-            "Set prompt, repos and schedule",
-            "Inspect each run and artifact",
-            "Not a local hook or merge approval"
-          ],
-          "slide_setup": [
-            "Open Web Automations.",
-            "Select repositories, prompt and schedule.",
-            "Inspect a run and its review artifact."
-          ],
-          "slide_mechanism": "A Web automation runs a prompt against selected repositories in autonomous mode on a schedule.",
-          "slide_boundary": "Not a local hook or merge approval. Disable or delete the automation to stop future scheduled runs."
-        },
-        {
-          "id": "K-M08",
-          "title": "Separate reference retrieval from session compaction",
-          "family": "Retrieval",
-          "surface": "CLI knowledge bases / supported session commands",
-          "availability": "Documented; verify current profile schema",
-          "activation": "Explicit indexed sources; automatic or manual summary",
-          "mechanism": "A configured CLI knowledge base indexes selected reference material for retrieval. Compaction instead summarizes older conversation content within an existing task; it is not proof that durable memory was saved.",
-          "prerequisites": "A current custom-agent profile and approved local documents for a knowledge base.",
-          "steps": [
-            "Configure a knowledgeBase resource using the documented source, name and indexing options.",
-            "Use autoUpdate only when re-indexing on agent start is intended.",
-            "Use /compact to summarize a long conversation; preserve critical evidence outside the conversation."
-          ],
-          "scope": "Indexed files, current-session summaries and cross-session memories have different sources and lifecycles.",
-          "control": "Remove the knowledge-base resource to stop offering that index. Correct source files and rebuild rather than editing a summary as if it were source truth.",
-          "limits": "A summary may omit details. Do not use it as the only retained incident record or infer full-text retention.",
-          "refs": [
-            "KR",
-            "KQ",
-            "KM"
-          ],
-          "checks": [
-            "Change one non-sensitive reference fact, refresh the index and ask for its source.",
-            "After compaction, verify the current goal and next action still match the approved task."
-          ],
-          "artifact": "Source revision, profile configuration, retrieval citation and before/after task-state checklist.",
-          "fallback": "Reattach the authoritative document and restate the active task if retrieval or compaction loses essential context.",
-          "example": "Illustrative: “Find the request-ID contract in the indexed project documents and identify the file revision. Do not substitute an older conversation summary.”",
-          "slide": [
-            "Reference index ≠ conversation summary",
-            "Configure sources or use /compact",
-            "Check cited revision and task state",
-            "Compaction is not persistent learning"
-          ],
-          "slide_setup": [
-            "Configure an explicit knowledge source.",
-            "Choose indexing and update behavior.",
-            "Treat compaction as session context."
-          ],
-          "slide_mechanism": "A configured CLI knowledge base indexes selected reference material for retrieval.",
-          "slide_boundary": "Compaction is not persistent learning. Remove the knowledge-base resource to stop offering that index."
-        }
-      ],
-      "use_case": {
-        "title": "Verify opt-in memory on a local development client",
-        "minutes": 10,
-        "preflight": "Use a disposable repository, supported IDE/CLI versions and a harmless preference. Avoid secrets, personal data and production tools.",
-        "steps": [
-          [
-            "Verify client and state",
-            "Check supported version and whether memory is off, read-only or read/write.",
-            "Developer",
-            "Actual client version and state recorded.",
-            "K-M01",
-            90
-          ],
-          [
-            "Enable intentionally",
-            "Select Use and learn in the IDE or set the CLI memory read/write configuration.",
-            "Developer",
-            "The explicit opt-in is recorded.",
-            "K-M01",
-            90
-          ],
-          [
-            "Add a scoped fact",
-            "Ask to retain a non-sensitive debugging lesson for this repository.",
-            "Developer",
-            "Inspectable memory entry with the correct scope.",
-            "K-M01",
-            90
-          ],
-          [
-            "Test a fresh session",
-            "Ask a task that would need the fact without restating it.",
-            "Reviewer",
-            "Separate session and observable entry use where available.",
-            "K-M01",
-            120
-          ],
-          [
-            "Keep policy explicit",
-            "Move mandatory team convention into reviewed steering rather than relying solely on inferred memory.",
-            "Repository owner",
-            "Version-controlled guidance with deliberate inclusion.",
-            "K-M03",
-            120
-          ],
-          [
-            "Correct and disable",
-            "Edit/delete the test entry and disable or restrict future memory use.",
-            "Developer",
-            "New-session behavior agrees with the changed setting.",
-            "K-M01",
-            90
-          ]
-        ],
-        "exit": "Memory scope, inspectability and stop behavior are demonstrated. No claim is made about Web synchronization or teammates’ clients.",
-        "fallback": "Use a prepared memory-settings walkthrough; retain the rule in checked-in steering until the installed client supports the feature.",
-        "refs": [
-          "KL",
-          "KM",
-          "KS"
-        ]
-      }
-    },
     "security": {
       "title": "AWS Security Agent / AWS Continuum",
       "accent": "#24734a",
@@ -1471,49 +972,6 @@
           ],
           "slide_mechanism": "Revalidation repeats checks for selected findings against the running target.",
           "slide_boundary": "Not a fresh discovery scan. Keep the original test record and the subsequent verification record; authorization remains scoped to the target."
-        },
-        {
-          "id": "S-M07",
-          "title": "Connect an IDE scan through the Security Agent MCP server",
-          "family": "Integration",
-          "surface": "Kiro Power / supported IDE integration",
-          "availability": "Code review and threat-model review are preview",
-          "activation": "Install the supported integration; authorize first-use provisioning",
-          "mechanism": "The MCP integration packages code, uploads it to an account S3 bucket, starts a scan and retrieves findings. First use can provision an Agent Space, IAM role and bucket.",
-          "prerequisites": "Configured AWS credentials with the documented setup and scan permissions; supported client and package runtime.",
-          "steps": [
-            "Install the AWS Security Agent Power in Kiro, following the official IDE integration procedure.",
-            "Review the AWS profile, Region and setup permissions before first use.",
-            "Request a scan of a disposable repository and inspect the created resources and findings."
-          ],
-          "scope": "Source leaves the local machine. A differential scan can still upload full repository context with its diff.",
-          "control": "Review installed hooks and MCP tools; remove or disable the integration when access is no longer approved.",
-          "limits": "The AWS integration page and current Kiro configuration guide show different manual config paths. Prefer the supported Power setup and inspect the installed configuration rather than copying an older path. No runtime guarantee is assumed.",
-          "refs": [
-            "SI",
-            "KC",
-            "SB"
-          ],
-          "checks": [
-            "Check the packaged source for secrets and unnecessary content before upload.",
-            "Confirm bucket, role, scan ID and source revision; inspect generated fixes before committing."
-          ],
-          "artifact": "Redacted integration config, provisioned resources, source manifest, scan result and reviewer decision.",
-          "fallback": "Use the documented console or repository review flow while resolving client-version differences.",
-          "example": "Illustrative: scan a small synthetic repository containing no credentials or customer data, without requesting fixes.",
-          "slide": [
-            "MCP orchestrates upload and scanning",
-            "Install Power and review provisioning",
-            "Inspect resources and source payload",
-            "A diff scan can upload full context"
-          ],
-          "slide_setup": [
-            "Install the Security Agent Power.",
-            "Review profile and setup permissions.",
-            "Inspect the provisioned resources."
-          ],
-          "slide_mechanism": "The MCP integration packages code, uploads it to an account S3 bucket, starts a scan and retrieves findings.",
-          "slide_boundary": "A diff scan can upload full context. Review installed hooks and MCP tools; remove or disable the integration when access is no longer approved."
         }
       ],
       "use_case": {
@@ -1966,14 +1424,6 @@
       "No customer model-training switch established"
     ],
     [
-      "Kiro",
-      "Local memory; explicit steering; Web creator feedback",
-      "Local memory opt-in; instructions and tools separately configured",
-      "Memories panel or /memories; repository files; Web settings",
-      "Separate session, scoped entry and code/test evidence",
-      "No assumed local↔Web or team-memory synchronization"
-    ],
-    [
       "Security Agent",
       "Selected application resources; explicit requirements; finding/revalidation records",
       "Per-test inputs; per-pack and repository settings",
@@ -1996,7 +1446,6 @@
       "Record whether context is local-machine, repository, Agent Space, individual agent or task-specific. Never infer a portfolio-wide store.",
       [
         "DM",
-        "KM",
         "SC",
         "FP"
       ]
@@ -2006,7 +1455,6 @@
       "Instructions and memory affect what is considered. IAM, application credentials and tool approvals determine what can be accessed or changed.",
       [
         "DA",
-        "KP",
         "SA",
         "FG"
       ]
@@ -2016,7 +1464,6 @@
       "Record the selected feature, setting, attachment, client version and first new session or job used to test it.",
       [
         "DC",
-        "KM",
         "SP",
         "FT"
       ]
@@ -2026,7 +1473,6 @@
       "Use retained context to form a hypothesis, not to prove it. Reconcile with current telemetry, tests, reproduced findings or billing queries.",
       [
         "DM",
-        "KW",
         "SG",
         "FD"
       ]
@@ -2036,7 +1482,6 @@
       "A disabled trigger, removed attachment, forgotten fact and deleted history are different outcomes. Test the documented control for the actual data category.",
       [
         "DM",
-        "KM",
         "ST",
         "FP"
       ]
@@ -2045,20 +1490,15 @@
       "Track documentation changes",
       "Store official source, review date, surface and unresolved discrepancy. Treat a changed configuration path or migration as a reason to recheck before rollout.",
       [
-        "DL",
-        "KL",
-        "SI",
-        "KC"
+        "DL"
       ]
     ]
   ],
   "evidence_notes": [
     "Incident learning is used here only for the documented retention and reuse of knowledge. It is not a claim that tenant incidents fine-tune model weights. Service-improvement data use is a separate policy question.",
     "DevOps dated changes identify migration of learned knowledge to memory and monitor memory enabled by default. Older cached pages differ; verify the current UI and do not treat refresh cadence as a completion guarantee.",
-    "Kiro local memory is documented in the dated 20 October 2026 release. Older cached pages describing IDE support as forthcoming must not override that dated release.",
-    "The Security Agent IDE guide and current Kiro guide differ on manual MCP paths. This guide uses the supported Power installation and requires inspection of the actual client configuration.",
     "Executable DevOps skills have a preview exception alongside older restrictive wording. Only document-only DevOps skills are prescribed here.",
     "Feature-specific Region, plan, role and preview constraints must be checked in the linked guide before enabling a mechanism. This extension is not a new audit of every historical capability record.",
-    "Follow-up validation rechecked selected memory, feedback, lifecycle and setup sources, not all historical claims. A missing guide in a cached retrieval is not evidence that a feature is absent. See mechanisms/CONTINUATION_VALIDATION.md."
+    "Scope revision retains the existing official evidence for the three included agents. This revision does not constitute a fresh external source audit or a live AWS test."
   ]
 }
