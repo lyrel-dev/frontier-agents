@@ -280,7 +280,7 @@
         "C11"
       ],
       "notes": "The bundled synthetic fixture has fourteen baseline rows at $100 each, totaling $1,400, and fourteen comparison rows at $141 each, totaling $1,974. The difference is $574, or 41%. It deliberately contains no account, usage-type, quantity or rate breakdown, so it supports arithmetic reconciliation only—not driver attribution or a causal conclusion. These figures are invented for instruction. For an authorized real analysis, use matching date windows, filters and cost basis, then obtain the additional breakdown and event evidence. Any real Jira write still requires the configured approval.",
-      "prompt": "For authorized real data, compare storage costs for the selected accounts over two complete 14-day windows using the same unblended basis. Identify leading drivers only where breakdown evidence is available, separate usage from rate effects, and label correlated CloudTrail changes as hypotheses. For the bundled synthetic fixture, reconcile the $1,400 and $1,974 totals only; do not invent drivers. Do not modify infrastructure.",
+      "prompt": "Reconcile synthetic totals of $1,400 and $1,974 (41% higher). This fixture cannot establish drivers. For authorized real data, match periods and cost basis before testing usage, rate and change hypotheses. Do not modify infrastructure.",
       "steps": [
         [
           60,
@@ -290,7 +290,7 @@
         [
           90,
           "Reconcile the totals",
-          "Use the synthetic period totals for arithmetic; inspect driver breakdowns only with matching authorized data."
+          "Reconcile the fixture totals; require source breakdowns for any driver claim."
         ],
         [
           90,
