@@ -1,27 +1,19 @@
 {
-  "revision": "2026-10-21-editorial-v2",
+  "revision": "2026-10-21-three-agent-scope",
   "guides": [
     {
       "guide": "devops",
       "timed_slides": 18,
-      "reference_slides": 19,
-      "pptx_slides": 38,
+      "reference_slides": 8,
+      "pptx_slides": 27,
       "minutes": 35,
       "demo_minutes": 12
     },
     {
-      "guide": "kiro",
-      "timed_slides": 18,
-      "reference_slides": 21,
-      "pptx_slides": 40,
-      "minutes": 32,
-      "demo_minutes": 13
-    },
-    {
       "guide": "security",
       "timed_slides": 18,
-      "reference_slides": 18,
-      "pptx_slides": 37,
+      "reference_slides": 17,
+      "pptx_slides": 36,
       "minutes": 30,
       "demo_minutes": 8
     },
@@ -42,7 +34,7 @@
       "demo_minutes": 8
     }
   ],
-  "review_records": 83,
+  "review_records": 50,
   "errors": [],
   "boundary": "Editorial structure and linked source identifiers verified. No new external documentation verification or live AWS execution."
 }
