@@ -1,610 +1,496 @@
 # AWS Security Agent
 
-Authorized application assessments, findings, remediation proposals and revalidation.
+Design evaluation, source assessment and authorized application testing
 
+Reviewed: 2026-10-21
 
-Revision: 21 October 2026. Independent engineering field guide.
+A technical reference for application developers, security engineers and platform owners. The current official documentation identifies the service as part of AWS Continuum; this collection retains the requested AWS Security Agent name. The assessment modes are not interchangeable: each examines a different object and provides a different kind of evidence.
 
+## Availability
 
-**Audience:** Application-security engineers, software teams and security platform owners
+On-demand penetration testing is generally available. Design review, threat modeling and code review remain preview in the cited documentation. Integration support, source-provider permissions and test-network access must be checked for the selected mode; service availability does not make every mode generally available.
 
-**Availability:** On-demand penetration testing: GA. Design review, threat modeling, code review and CI/CD integration are separate preview capabilities.
+Official documentation: [Pricing: capability status and task-hours semantics](https://docs.aws.amazon.com/securityagent/latest/userguide/pricing.html) · [On-demand penetration testing general availability](https://aws.amazon.com/about-aws/whats-new/2026/03/aws-security-agent-ondemand-penetration/) · [Document history and feature updates](https://docs.aws.amazon.com/securityagent/latest/userguide/doc-history.html)
 
-**Recommended starting decision:** Start with one explicitly authorized staging application. Assess the safety of real requests, then connect findings to reviewed repairs and revalidation.
 
+## Product objects
 
-## Decision brief
+### Agent Space
 
-A security assessment is useful when the finding is understandable, the affected application is known, and the team can act on the evidence. An automatically generated severity label is not enough. The application owner needs a reproducible account of the issue, a repair decision and evidence that the repaired deployment no longer exhibits the tested behavior.
+The application assessment workspace and its configured source, target and access associations. Do not assume that a source connection is also permission to test the deployed application.
 
-The running scenario is an authorized assessment of a staging application with synthetic data and test identities. It follows scope, testing, finding triage, proposed remediation and revalidation. Design and code analysis are presented as complementary preview paths, not as guarantees of complete coverage or interchangeable forms of penetration testing.
+Official documentation: [What is AWS Security Agent](https://docs.aws.amazon.com/securityagent/latest/userguide/what-is.html)
 
 
-## Running use case
+### Requirement pack
 
-**Name:** Assess and repair an owned staging application
+A collection of security criteria evaluated during design and code reviews. Packs are shared across Agent Spaces; enabling a pack affects new reviews, not historical results.
 
-**Trigger:** A team wants evidence about an application change before deciding how to proceed with release.
+Official documentation: [Manage security requirements](https://docs.aws.amazon.com/securityagent/latest/userguide/security-requirements.html)
 
-**Scope:** Verified targets, written authorization, test accounts, synthetic data, explicit exclusions and a stop owner.
 
-**Deliverable:** A triaged finding linked to the tested revision, a reviewed remediation proposal and revalidation evidence.
+### Assessment definition and run
 
-**Not Done:** A generated fix exists, but it has not been reviewed, deployed to the test target or reassessed.
+A reusable review or test configuration versus one execution against particular source or target state. Keep the run ID and source revision; the latest configuration alone cannot describe an earlier result.
 
-**Done:** The authorized test, code review and revalidation records support an owner-approved disposition of the finding.
+Official documentation: [Perform a full code review](https://docs.aws.amazon.com/securityagent/latest/userguide/perform-code-review-scan.html)
 
 
-## 1. Make authorization and target safety explicit
+### Finding and validation result
 
-Define the application, exact target addresses, permitted test window, identities, exclusions and stop authority. Domain verification is a technical prerequisite; it is not permission from every system owner affected by a request. A staging label alone does not prove that payments, emails or other downstream effects are disabled.
+A finding records a potential issue and its evidence. Severity, agent confidence, exploit validation and workflow status are separate attributes. Marking a finding resolved is not the same as executing a successful retest.
 
-Penetration testing sends real requests and can change application state. Use synthetic data and appropriately limited test identities, and understand the configured execution and spend controls. The demo should be possible without touching production or a third party outside the authorization.
+Official documentation: [Code-review findings and validation states](https://docs.aws.amazon.com/securityagent/latest/userguide/review-code-scan-findings.html)
 
-**Capability crosswalk:** C01, C02, C04
 
-**Responsible role (team recommendation):** Application owner and security operator
+### Verified target domain
 
-**Input:** Written scope, verified target, test identities, approved network path and operational stop procedure.
+A domain verified and associated for testing. Domain verification and test credentials solve different problems: control of the destination versus the identity used inside the application.
 
-**Artifact:** An assessment authorization and preflight record.
+Official documentation: [Verify a test domain](https://docs.aws.amazon.com/securityagent/latest/userguide/enable-test-domain.html)
 
-**Gate:** The owner has approved the targets and business effects, not merely a hostname.
 
-**Fallback:** Stop preparation when authority or downstream effects are unclear; use a labeled schematic walkthrough instead.
+## Product functions
 
+### Design and threat assessment
 
-## 2. Give the assessment current application context
+Evaluate intended controls and model threats before interpreting source or runtime observations.
 
-Source code, architecture documents and authentication details help the assessment understand the application. Keep the code revision aligned with the deployed test target. Old design documents or credentials for the wrong role can distort both coverage and interpretation.
+#### S01 — Evaluate design documentation against enabled requirements
 
-Use the documented credential and private-connectivity paths rather than pasting secrets into example prompts or reports. Record what was reachable and authenticated. A test that did not reach a protected workflow cannot provide evidence that the workflow is safe.
+Availability: Preview. Activation: See invocation and prerequisites.
 
-**Capability crosswalk:** C02, C03
+Design review compares the documented design with each applicable requirement. It evaluates what the design states, not what the production system actually enforces. The result can distinguish a demonstrated control, a documented violation, missing information and a requirement that does not apply.
 
-**Responsible role (team recommendation):** Application owner and security operator
+**Input.** Design documents describing the workload and a set of enabled security requirements.
 
-**Input:** Current code and design context, revision identity, approved credentials and reachable test routes.
+**Output.** Requirement-level results: compliant, non-compliant, insufficient data or not applicable, with supporting reasoning. Insufficient data is a request for evidence, not automatically a violation.
 
-**Artifact:** A context and coverage record attached to the assessment.
+**Invocation and prerequisites.** Enable the intended requirement packs, create a design review with the relevant documents, then inspect the findings by requirement.
 
-**Gate:** The team knows which roles, routes and deployed revision were actually in scope.
+**Limitations and effects.** A compliant document does not establish a compliant implementation. A broad policy with vague applicability can create irrelevant findings; requirements and document versions must be recorded together.
 
-**Fallback:** Report inaccessible areas as coverage gaps and resolve setup before drawing broader conclusions.
+**Proposed operator verification — not executed.** Use a document with one explicit control, one deliberate omission and one out-of-scope control. Confirm that missing evidence is distinguished from non-compliance and non-applicability.
 
+Official documentation: [What is AWS Security Agent](https://docs.aws.amazon.com/securityagent/latest/userguide/what-is.html) · [Manage security requirements](https://docs.aws.amazon.com/securityagent/latest/userguide/security-requirements.html) · [Review design findings](https://docs.aws.amazon.com/securityagent/latest/userguide/review-design-findings.html)
 
-## 3. Observe the run and triage the evidence
 
-Monitor the authorized task and inspect findings as evidence about a particular application state. Prioritization should combine the reported impact, reproducibility, affected data or role, and the service owner's business context. Do not equate finding count with assessment quality.
+#### S02 — Generate an application threat model
 
-Preserve the path from the observation to the affected revision and identity. A validated exploit path can be valuable, but a clean result is not proof that every vulnerability class or application route has been covered. Escalate uncertain findings for human review rather than turning uncertainty into a release assurance.
+Availability: Preview. Activation: See invocation and prerequisites.
 
-**Capability crosswalk:** C01, C04, C05
+Threat modeling builds a system overview and identifies possible threats across assets, data flows and trust boundaries. Threats are classified using STRIDE and include prerequisites, actions, impacts and recommendations. This asks how the system could be attacked; it is not the same question as whether a fixed requirement is documented.
 
-**Responsible role (team recommendation):** Security analyst
+**Input.** Scope documents, source repositories, or both. Scope documents define the feature or design under analysis; source code supplies implementation context.
 
-**Input:** Assessment execution details and finding evidence.
+**Output.** A system model and threat records with severity and evidence. Operators can review and edit the model and threats before using them for engineering decisions.
 
-**Artifact:** A triaged finding with owner, affected scope, reproduction context and disposition.
+**Invocation and prerequisites.** Enable threat modeling for the Agent Space, create a threat model with selected scope and sources, then start a run. Review the architecture interpretation before prioritizing the threat list.
 
-**Gate:** The service owner understands the finding and the limits of the assessment.
+**Limitations and effects.** An incorrect trust boundary can invalidate several otherwise plausible threats. A generated threat is not proof that an exploit succeeds on a running deployment.
 
-**Fallback:** Pause or stop on unexpected effects and retain an incomplete-run record instead of treating it as a pass.
+**Proposed operator verification — not executed.** Reconcile identities, entry points, stores and trust boundaries with the system owners. For each selected threat, identify the actual attacker prerequisite and the control that should prevent the action.
 
+Official documentation: [Enable threat modeling](https://docs.aws.amazon.com/securityagent/latest/userguide/enable-threat-model.html) · [Create a threat model](https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-threat-model.html) · [Review threat-model findings](https://docs.aws.amazon.com/securityagent/latest/userguide/review-threat-model-findings.html)
 
-## 4. Review a proposed repair as an engineering change
 
-With the appropriate repository configuration, a finding can lead to a proposed code repair. That proposal needs normal review for correctness, compatibility and test coverage. A patch that blocks the observed path may still create a regression or leave a related path unresolved.
+#### S10 — Generate structured requirements from policy documents
 
-Track the finding and repair in the team's existing issue system. A Jira handoff is useful only when the audience is appropriate and the ticket links the evidence, affected revision and acceptance test. Do not publish sensitive assessment details to a broader channel simply because an integration is connected.
+Availability: Documented. Activation: See invocation and prerequisites.
 
-**Capability crosswalk:** C06, C09
+The service extracts security-relevant content and generates workload-level requirements with applicability, compliance criteria and remediation guidance. The operator reviews, edits or deletes the generated criteria before enabling the pack for new assessments.
 
-**Responsible role (team recommendation):** Development owner and code reviewer
+**Input.** Security policies or standards in supported DOC, DOCX, Markdown, PDF or text files, submitted to a custom requirement pack.
 
-**Input:** Accepted finding, permitted repository access and a repair owner.
+**Output.** A custom pack of reviewable requirements. Generation does not show that an application meets the source policy.
 
-**Artifact:** A reviewed PR/MR or repair plan linked to the original finding.
+**Invocation and prerequisites.** Security requirements → Custom security requirements packs → create or select a pack → Choose files → Generate requirements. Review and enable only after checking the generated criteria.
 
-**Gate:** The proposed change passes independent review and normal delivery controls.
+**Limitations and effects.** A new upload replaces all requirements in that pack, including hand-written entries. Concurrent uploads to the same pack are not allowed while generation is in progress.
 
-**Fallback:** Assign a manual repair when repository support, authorization or generated output is inadequate.
+**Proposed operator verification — not executed.** Map generated criteria back to selected source-policy clauses. Check applicability and observable compliance conditions; reject ambiguous or unsupported interpretations before enabling the pack.
 
+Official documentation: [Generate requirements from documents](https://docs.aws.amazon.com/securityagent/latest/userguide/import-security-requirements.html) · [Manage security requirements](https://docs.aws.amazon.com/securityagent/latest/userguide/security-requirements.html)
 
-## 5. Deploy to the authorized target and revalidate
 
-A code fix is not the same as a repaired deployed application. Record the revision deployed to the authorized test target before requesting revalidation. Compare the result with the original evidence and confirm that the targeted behavior is no longer reproducible under the intended conditions.
+### Source-code assessment
 
-Export a point-in-time report that preserves the scope, results and unresolved limitations. Closing the issue is an owner decision supported by assessment evidence, code review and revalidation. None of those artifacts alone is a certificate that the application is secure.
+Distinguish whole-codebase review, changed-code review and attempted runtime validation of source findings.
 
-**Capability crosswalk:** C07, C08
+#### S03 — Analyze a complete source revision
 
-**Responsible role (team recommendation):** Security operator and application owner
+Availability: Preview. Activation: See invocation and prerequisites.
 
-**Input:** Reviewed repair deployed to the approved target and linked to the original finding.
+Full code review performs context-aware static analysis across the submitted codebase for vulnerabilities and requirement violations. Preflight validates access and the analysis environment before scanning. Optional simulated validation is a later, distinct phase.
 
-**Artifact:** Revalidation outcome and point-in-time evidence report.
+**Input.** A selected branch of a connected repository or a full-source ZIP in an authorized S3 location, plus enabled review settings and requirements.
 
-**Gate:** The closure decision identifies the tested revision and remaining risks.
+**Output.** Findings tied to code locations, risk reasoning, evidence and suggested repairs; run logs and preflight results explain what actually executed.
 
-**Fallback:** Keep the finding open or explicitly risk-accepted if revalidation is inconclusive or fails.
+**Invocation and prerequisites.** Code reviews → Create code review; select the source and service role, configure the review and start it. Inspect Preflight before interpreting the Findings tab.
 
+**Limitations and effects.** A preflight failure means analysis did not proceed; an empty findings view is not an all-clear result. Dependency access, source completeness and filtering affect what is examined.
 
-## 6. Add earlier feedback without overstating availability
+**Proposed operator verification — not executed.** Retain the source commit or S3 object version and run ID. Confirm successful preflight, inspect excluded paths and verify the source lines for one material finding.
 
-Design reviews, organizational security requirements and threat models can make assumptions and trust boundaries inspectable before testing a running application. Code review can analyze full repositories or configured change triggers, with provider-specific remediation paths. These are distinct from the GA on-demand penetration-testing baseline.
+Official documentation: [Perform a full code review](https://docs.aws.amazon.com/securityagent/latest/userguide/perform-code-review-scan.html) · [Enable code reviews](https://docs.aws.amazon.com/securityagent/latest/userguide/enable-code-review-scan.html) · [Code-review findings and validation states](https://docs.aws.amazon.com/securityagent/latest/userguide/review-code-scan-findings.html)
 
-Treat S3 differential-scan and CI/CD integrations as separate preview adoption decisions. A promotion gate needs explicit thresholds, timeout behavior and a policy for missing or inconclusive evidence. The team owns that release policy; an unavailable or unfinished scan should not silently become a green gate.
 
-**Capability crosswalk:** C10, C11, C12, C13, C14, C15, C17, C18
+#### S04 — Analyze changed code in a pull request or supplied diff
 
-**Responsible role (team recommendation):** Security programme owner
+Availability: Preview. Activation: See invocation and prerequisites.
 
-**Input:** Approved preview use, provider-specific integration and an explicit review or promotion policy.
+Differential review focuses findings on changed code while using surrounding source to interpret the change. A repository integration can post review comments; the programmatic S3 path starts a code-review job from submitted artifacts. These are invocation routes for changed-code analysis, not a full penetration test.
 
-**Artifact:** Design, threat-model or code findings and an auditable gate decision where configured.
+**Input.** Changed code with its full source context, provided by an eligible pull request integration or a full-source ZIP plus unified diff in S3.
 
-**Gate:** Availability, source-provider support and failure behavior are checked for the exact workflow.
+**Output.** Findings associated with the change and, when configured, repository review comments. Provider support and publication permissions determine where results appear.
 
-**Fallback:** Retain the existing review and security checks until the preview path is accepted for the intended use.
+**Invocation and prerequisites.** Configure code-review comments and trigger filters for the repository. For the S3 route, provide both source and diff and use the documented StartCodeReviewJob request rather than uploading only the patch.
 
+**Limitations and effects.** A diff-only review is not a complete baseline assessment of unchanged code. A skipped trigger and a successful review with no findings are different states.
 
-## Detailed capability reference
+**Proposed operator verification — not executed.** Use a controlled PR to test branch, draft and label filters. Confirm the job used the intended revision and changed lines; inspect whether a new commit actually caused a new run.
 
+Official documentation: [Run a differential scan from S3](https://docs.aws.amazon.com/securityagent/latest/userguide/run-diff-scan-s3.html) · [Review code findings in GitHub](https://docs.aws.amazon.com/securityagent/latest/userguide/review-code-findings-github.html) · [Configure code-review triggers](https://docs.aws.amazon.com/securityagent/latest/userguide/configure-code-review-triggers.html) · [Enable code reviews](https://docs.aws.amazon.com/securityagent/latest/userguide/enable-code-review-scan.html)
 
-### C01 — Run an authorized application penetration test
 
-**Claim:** Launch an application-focused penetration test against configured targets and inspect discovered security findings.
+#### S05 — Attempt exploit validation of static findings in a simulated environment
 
-**Availability:** GA · on-demand penetration testing
+Availability: Preview. Activation: See invocation and prerequisites.
 
-**Delivery:** Native; Agent Space and verified target
+After static analysis, the service provisions a simulated environment, starts the application and attempts to reproduce selected vulnerabilities. This adds runtime evidence to a source finding. It is not equivalent to testing the real deployed environment, its external services or production identity configuration.
 
-**Setup:** Create an Agent Space, choose access and service roles, verify the target, and use a disposable non-production environment.
+**Input.** A code review with simulated validation enabled and an application that can run in the supported self-contained, containerized setup.
 
-**Limit:** Testing can change data or application state. Domain verification is a technical prerequisite, not a substitute for authorization covering every affected system.
+**Output.** Per-finding states such as confirmed, not reproduced, validation failed or not validated, together with available verification evidence.
 
-**Check:** Confirm ownership, authorization, test-data isolation, stop responsibility, and environment recovery before launching.
+**Invocation and prerequisites.** Enable simulated validation while configuring the code review. Check environment startup and dependency access before interpreting validation outcomes.
 
-**Prompt:** Prepare a scoped test of our staging application with written authorization, explicit excluded paths, and a named operator.
+**Limitations and effects.** Validation failed is inconclusive. Not validated means no completed attempt for that finding. Not reproduced is limited to the attempted environment and conditions; it does not establish absence of the vulnerability.
 
-**Review record to retain (team recommendation):** Assessment scope, run identifier, target version, request evidence, and prioritized findings.
+**Proposed operator verification — not executed.** For a confirmed finding, inspect the executed path and evidence. For a failure or non-reproduction, inspect missing dependencies, authentication, timeouts and environment differences before dismissing the source finding.
 
-Official documentation references: S03, S06, S07, S10
+Official documentation: [Perform a full code review](https://docs.aws.amazon.com/securityagent/latest/userguide/perform-code-review-scan.html) · [Code-review findings and validation states](https://docs.aws.amazon.com/securityagent/latest/userguide/review-code-scan-findings.html)
 
 
-### C02 — Test authenticated and private application paths
+### Deployed-application testing
 
-**Claim:** Authenticated testing and VPC connectivity let the agent exercise protected application routes when correctly configured.
+Test an authorized target, then retest selected findings after a deployed fix.
 
-**Availability:** GA pentest workflow · optional configuration
+#### S06 — Run a scoped penetration test against a deployed application
 
-**Delivery:** Native credential and VPC configuration
+Availability: GA. Activation: See invocation and prerequisites.
 
-**Setup:** Use test-only identities, validate login, configure the service role/network, and classify discovered domains before the test.
+The agent explores the authorized target, plans tests and attempts to validate security issues. The selected scope determines the risk classes: a web-application assessment differs from the generative-AI application scope. This operation sends real traffic to the target and can exercise application behavior.
 
-**Limit:** Credentials may expose additional application paths and supporting domains. A private network does not make testing harmless or remove scope obligations.
+**Input.** Verified and associated target domains, included and excluded paths, application scope, current credentials, network access and optional source/design context.
 
-**Check:** Verify the identity has no production access and that every reachable dependency has the intended scope classification.
+**Output.** A run with executed tasks, findings, evidence and coverage limitations. Run duration and billable task hours measure different things because work can execute concurrently.
 
-**Prompt:** Configure a typical staging-user identity, confirm its login, and exclude production, billing, and destructive administration paths.
+**Invocation and prerequisites.** Enable penetration testing, verify the domain and create a penetration-test configuration. Set target scope, credentials, network access, risk selection and a maximum task-hours limit where appropriate before starting.
 
-**Review record to retain (team recommendation):** Authenticated test scope, identity configuration, private connectivity, and affected endpoint record.
+**Limitations and effects.** Credentials or networking failures can leave authenticated surfaces untested. A budget or run limit can stop work before coverage is complete. A risk class listed in scope does not mean every endpoint was tested for it.
 
-Official documentation references: S09, S08, S10
+**Proposed operator verification — not executed.** Verify the intended build and test identity at the target. Inspect executed tasks and access failures; compare the explored paths with the team's required test surface. Stop if real customer effects or out-of-scope traffic occur.
 
+Official documentation: [Enable penetration testing](https://docs.aws.amazon.com/securityagent/latest/userguide/enable-penetration-test.html) · [Create a penetration test](https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html) · [Verify a test domain](https://docs.aws.amazon.com/securityagent/latest/userguide/enable-test-domain.html) · [Provide test credentials](https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html) · [Security guidance and testing boundaries](https://docs.aws.amazon.com/securityagent/latest/userguide/security-guidance.html) · [Pricing: capability status and task-hours semantics](https://docs.aws.amazon.com/securityagent/latest/userguide/pricing.html) · [Document history and feature updates](https://docs.aws.amazon.com/securityagent/latest/userguide/doc-history.html)
 
-### C03 — Give a test current source and architecture context
 
-**Claim:** Attach code, API documentation, and design material to guide application understanding. Connected resources can supply updated source for later runs.
+#### S07 — Retest selected existing penetration-test findings
 
-**Availability:** Documented pentest configuration
+Availability: Documented. Activation: See invocation and prerequisites.
 
-**Delivery:** Native; connected repositories or uploaded resources
+Revalidation repeats the validation steps for the selected findings as a separate job. It does not discover new vulnerabilities or replace the original finding. The link between original evidence and subsequent attempts supports a remediation history.
 
-**Setup:** Connect relevant resources or upload sanitized documentation; verify repository reachability from a private test network.
+**Input.** One or more findings from a completed run, with a fix already deployed to the same target and valid current authentication.
 
-**Limit:** Context does not guarantee complete endpoint coverage. Match the selected branch and documentation to the deployed target.
+**Output.** Active when the issue is reproduced, or Resolved when it is not reproduced during the retest. A linked Jira issue can receive a result comment.
 
-**Check:** Compare the deployed commit and API inventory with attached context; record untested critical paths for separate review.
+**Invocation and prerequisites.** Open the completed penetration-test run, choose Multiselect findings for revalidation, select the findings and choose Revalidate findings.
 
-**Prompt:** Attach the deployed branch and current API description, and identify which user journeys matter most for this test.
+**Limitations and effects.** A patch existing only in a branch cannot change the running target's result. Resolved is scoped to that retest and is not an assurance that all related paths or regressions were tested.
 
-**Review record to retain (team recommendation):** Input document/source-version inventory and findings tied to that context.
+**Proposed operator verification — not executed.** Confirm deployment identity and authentication before interpreting non-reproduction. Run the application's own regression tests and a broader test when the fix changes other trust boundaries.
 
-Official documentation references: S08, S11
+Official documentation: [Revalidate penetration-test findings](https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html)
 
 
-### C04 — Control task expenditure and monitor execution
+### Remediation and evidence management
 
-**Claim:** Configure a maximum task-hours limit and monitor the run’s logs; stop work that takes an undesirable direction.
+Produce reviewable repair proposals and retain results without turning workflow status into a security guarantee.
 
-**Availability:** Documented pentest run controls
+#### S08 — Generate a code-remediation proposal
 
-**Delivery:** Native task-hour cap, logs, and stop controls
+Availability: Preview. Activation: See invocation and prerequisites.
 
-**Setup:** Agree on a per-run work budget, excluded risk areas, an operator, and criteria for stopping the test.
+Code remediation generates a repair for review. Depending on the supported source route, the result is a pull or merge request or a downloadable diff. The source integration's write permission and remediation setting are separate from the permission to scan.
 
-**Limit:** Task hours accumulate across parallel work and differ from wall-clock duration. Service quotas are not spending limits. A capped run can finish with partial coverage.
+**Input.** A source finding, associated code and a source connection capable of returning the proposed change.
 
-**Check:** Reconcile task hours with billing data and assess coverage separately from the run’s Completed status.
+**Output.** A proposed patch and its explanation, not an accepted, merged, deployed or independently verified fix.
 
-**Prompt:** Set a bounded task-hour limit and inspect progress for scope drift or application instability before allowing further runs.
+**Invocation and prerequisites.** Select Remediate code on an eligible finding and inspect the provider-specific result. For S3 sources, review the downloadable diff before applying it in the team's repository.
 
-**Review record to retain (team recommendation):** Task execution record with limits, elapsed use, relevant logs, and stop decision.
+**Limitations and effects.** The change may remove intended behavior, miss another entry point or introduce a regression. Provider and repository eligibility affect whether an automated PR is available; do not assume universal write support.
 
-Official documentation references: S08, S05, S11
+**Proposed operator verification — not executed.** Review authorization logic and behavior, run positive and negative tests, then deploy through the normal change process. Use code rereview or target revalidation according to the original finding type.
 
+Official documentation: [Remediate code-review findings](https://docs.aws.amazon.com/securityagent/latest/userguide/remediate-code-scan-findings.html) · [Enable code reviews](https://docs.aws.amazon.com/securityagent/latest/userguide/enable-code-review-scan.html) · [Code-review findings and validation states](https://docs.aws.amazon.com/securityagent/latest/userguide/review-code-scan-findings.html)
 
-### C05 — Triage evidence rather than severity alone
 
-**Claim:** Inspect risk, confidence, affected endpoints, execution evidence, and reproduction details. Verification scripts are available when successfully generated and validated.
+#### S09 — Triage findings and export assessment evidence
 
-**Availability:** Documented pentest findings workflow
+Availability: Documented. Activation: See invocation and prerequisites.
 
-**Delivery:** Native finding and log views
+The findings interface supports review of evidence and workflow disposition. Penetration-test report generation exports a selected set of findings and can include organization-authored annotation notes. Filtering controls what is shown or exported; it does not alter the set of tests that actually ran.
 
-**Setup:** Give a reviewer access to the run, logs, deployed build, and permitted reproduction environment.
+**Input.** Assessment findings with severity, confidence, validation evidence and the organization's disposition or annotations.
 
-**Limit:** Not every finding has a script. Default filters can hide lower-confidence or unverified items; the visible count is not the complete security picture.
+**Output.** A reviewable assessment record or PDF report. Organization annotations are distinct from the agent's assessment. Exporting a report does not confer compliance or certification.
 
-**Check:** Validate impact and reproducibility in the authorized test environment before assigning urgency or closing a finding.
+**Invocation and prerequisites.** Inspect finding details and active confidence/status filters. From a penetration-test run, use Generate report and explicitly choose findings and annotation options.
 
-**Prompt:** Review the highest-impact findings, separate confirmed evidence from assumptions, and inspect what the default filters exclude.
+**Limitations and effects.** A high-confidence-only view can hide unresolved findings. A workflow status such as resolved or accepted is not the same as confirmed exploit validation or successful revalidation.
 
-**Review record to retain (team recommendation):** Finding record with affected endpoint, reproduction evidence, confidence, and owner.
+**Proposed operator verification — not executed.** Before sharing a report, record run ID, source/build, target, test window, filters and unresolved coverage gaps. Reconcile exported totals against the selected findings, not the default dashboard alone.
 
-Official documentation references: S12, S10
+Official documentation: [Code-review findings and validation states](https://docs.aws.amazon.com/securityagent/latest/userguide/review-code-scan-findings.html) · [Export penetration-test reports](https://docs.aws.amazon.com/securityagent/latest/userguide/export-penetration-report.html) · [Revalidate penetration-test findings](https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html) · [Security guidance and testing boundaries](https://docs.aws.amazon.com/securityagent/latest/userguide/security-guidance.html)
 
 
-### C06 — Request a proposed code fix for a pentest finding
+## Configuration mechanisms
 
-**Claim:** With remediation enabled for a connected repository, users can request a finding-specific fix delivered as a GitHub pull request.
+### SM1 — Configure criteria independently of the review being run
 
-**Availability:** Documented pentest remediation · repository setup required
+Requirement packs supply explicit evaluation criteria for design and code review. Managed requirements are read-only; custom requirements can be written, cloned or generated from existing policy documents. These criteria are not a learned memory of previous penetration-test incidents.
 
-**Delivery:** Native GitHub PR proposal
+1. In the AWS console, open Security requirements and select the managed or custom packs relevant to the application.
+2. For a custom requirement, specify applicability, observable compliant/non-compliant conditions and remediation guidance. Avoid a criterion such as 'use secure authentication' without a testable meaning.
+3. To generate requirements from existing policies, upload supported documents into a custom pack and review the generated criteria before enabling it.
+4. Enable the pack before a new design or code review. Record the pack version or reviewed definition with the assessment.
+5. Treat a new document upload as replacement: it regenerates all requirements in that pack, including previously hand-written entries.
 
-**Setup:** Authorize the GitHub app, enable remediation per repository in the Agent Space, and assign a human reviewer.
+**Lifecycle.** Pack enablement and edits affect new reviews, not past results. A custom copy of a managed requirement does not automatically inherit later managed updates. Packs are shared across Agent Spaces, so changes need an identified owner.
 
-**Limit:** Enabling remediation is not approval to merge or deploy. Generated changes can be incomplete, wrong, or visible to repository readers.
+**Proposed verification.** Proposed check: evaluate deliberately complete, incomplete and non-applicable design examples and verify that the criterion discriminates between them. Do not equate an enabled framework pack with an audit opinion.
 
-**Check:** Review the diff and test it normally, then deploy only through the existing change process.
+Official documentation: [Manage security requirements](https://docs.aws.amazon.com/securityagent/latest/userguide/security-requirements.html) · [Generate requirements from documents](https://docs.aws.amazon.com/securityagent/latest/userguide/import-security-requirements.html) · [Review design findings](https://docs.aws.amazon.com/securityagent/latest/userguide/review-design-findings.html)
 
-**Prompt:** Request a minimal fix for this confirmed finding. Keep unrelated behavior unchanged and require regression coverage.
 
-**Review record to retain (team recommendation):** Remediation code proposal linked to one finding and pending review/test evidence.
+### SM2 — Configure source access and PR triggers as separate controls
 
-Official documentation references: S13, S10
+Repository or S3 access determines what can be analyzed. Review-comment publication, remediation writes and automated triggers are separate settings. The effective review boundary is the combination of source revision, trigger configuration, analysis settings and file/context filters.
 
+1. Connect the supported source provider or authorize the S3 bucket/prefix. Associate the intended source with the Agent Space and verify the service role's access.
+2. Enable code-review comments and code-remediation writes only where required; do not grant source write access merely to perform static analysis.
+3. Configure repository triggers for target branch, relevant event, draft state and supported labels. The documented branch expressions use RE2 full-name regular expressions, not shell globs.
+4. Test condition groups: conditions within a group combine with AND; groups combine with OR. Label-based conditions are provider-dependent.
+5. For GitHub filtering guidance, review .awssecurityagent/filtering.md on the default branch. Distinguish IgnorePatterns from ContextHints; hints are not an access-control mechanism.
 
-### C07 — Revalidate a previously reported finding
+**Lifecycle.** Changing filters changes future invocation or result selection. A manually requested review may bypass trigger filters; verify the documented provider command and settings before relying on them as a review gate.
 
-**Claim:** Revalidation checks selected existing findings against the application’s current reachable state.
+**Proposed verification.** Proposed check: create matching and non-matching test changes, including a draft and a target-branch mismatch. Record the run IDs or the reason no run occurred. Inspect both review comments and the underlying run state.
 
-**Availability:** Documented pentest revalidation
+Official documentation: [Connect GitHub](https://docs.aws.amazon.com/securityagent/latest/userguide/connect-github.html) · [Configure S3 source access](https://docs.aws.amazon.com/securityagent/latest/userguide/enable-s3-bucket.html) · [Enable code reviews](https://docs.aws.amazon.com/securityagent/latest/userguide/enable-code-review-scan.html) · [Configure code-review triggers](https://docs.aws.amazon.com/securityagent/latest/userguide/configure-code-review-triggers.html) · [Review code findings in GitHub](https://docs.aws.amazon.com/securityagent/latest/userguide/review-code-findings-github.html) · [Run a differential scan from S3](https://docs.aws.amazon.com/securityagent/latest/userguide/run-diff-scan-s3.html)
 
-**Delivery:** Native focused verification run
 
-**Setup:** Deploy the intended fix to the tested environment, retain working authentication, and select the completed run’s relevant findings.
+### SM3 — Authorize the runtime target, identity and test surface
 
-**Limit:** It does not search for new vulnerabilities. Resolved means the issue was not reproduced in this run, not that the application is globally secure.
+Testing authorization requires more than a URL. The registered domain establishes a permitted target; network configuration makes it reachable; credentials determine the authenticated surface. The test scope and exclusions limit what the service should exercise. None makes a production side effect harmless.
 
-**Check:** Inspect the separate revalidation job and evidence; use a broader test for substantial application changes.
+1. Verify domain control using the documented mechanism and associate the domain with the Agent Space. For private targets, follow the private-domain and VPC requirements rather than assuming public DNS verification covers the network path.
+2. Create a test configuration with the intended URLs, excluded paths and selected risk classes. Use the generative-AI scope only when testing that application's LLM-related risks.
+3. Provide dedicated test credentials through the supported credential flow. Check login and any required authentication step against the actual target before starting.
+4. Supply relevant design/source context and network configuration. Restrict the test identity and replace payments, outbound messages and other irreversible effects with safe staging equivalents.
+5. Set a task-hours limit and supervise run logs. Distinguish a graceful limit stop from a complete assessment.
 
-**Prompt:** Revalidate this finding after the patch reaches the same staging target. Record the deployed commit and any authentication changes.
+**Lifecycle.** Changing credentials or a deployment can invalidate comparison with an earlier run. Domain association removal is distinct from deleting a registration. Keep target-side audit records for each test window.
 
-**Review record to retain (team recommendation):** Finding revalidation run and observed current behavior on the patched target.
+**Proposed verification.** Proposed check: prove that the test identity reaches the required surface and cannot access out-of-scope data. Inspect real executed tasks rather than only configured risk categories.
 
-Official documentation references: S14
+Official documentation: [Verify a test domain](https://docs.aws.amazon.com/securityagent/latest/userguide/enable-test-domain.html) · [Enable penetration testing](https://docs.aws.amazon.com/securityagent/latest/userguide/enable-penetration-test.html) · [Create a penetration test](https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html) · [Provide test credentials](https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html) · [Security guidance and testing boundaries](https://docs.aws.amazon.com/securityagent/latest/userguide/security-guidance.html) · [Document history and feature updates](https://docs.aws.amazon.com/securityagent/latest/userguide/doc-history.html) · [Pricing: capability status and task-hours semantics](https://docs.aws.amazon.com/securityagent/latest/userguide/pricing.html)
 
 
-### C08 — Export a point-in-time evidence report
+### SM4 — Interpret severity, confidence, validation and workflow status independently
 
-**Claim:** Export a filtered penetration-test report with finding evidence and optional annotations for engineering or assurance review.
+Severity describes potential impact; confidence describes the agent's confidence in the finding; validation records an exploit attempt; workflow status records disposition. These are four different axes. A low-confidence high-impact issue still requires triage, and a manually resolved finding is not a successful runtime retest.
 
-**Availability:** Documented pentest reporting
+1. Inspect active confidence and status filters before counting findings or exporting a report. The code-review guide documents a high-confidence default; other assessment screens can use different defaults.
+2. Read preflight and task logs before interpreting an empty list. Failed access or startup is an assessment failure, not absence of vulnerabilities.
+3. For simulated validation, retain confirmed, not reproduced, validation failed and not validated distinctly.
+4. For a deployed fix, start a revalidation job and retain its link to the original finding. Keep organization-authored risk acceptance or annotations separate from agent evidence.
 
-**Delivery:** Native PDF export
+**Lifecycle.** Revalidation adds a new result and does not overwrite the original. Findings can be filtered or dispositioned without changing what was tested. No documented general incident-memory retraining mechanism is inferred from these features.
 
-**Setup:** Choose the run, finding filters, annotations, and intended audience; handle the resulting vulnerability details as sensitive.
+**Proposed verification.** Proposed check: review one confirmed finding, one inconclusive validation and one accepted-risk item. The final report should make all three states distinguishable without reading hidden notes.
 
-**Limit:** A compliance-oriented report layout is not a certification or a replacement for a required professional assessment. An interim report remains incomplete.
+Official documentation: [Code-review findings and validation states](https://docs.aws.amazon.com/securityagent/latest/userguide/review-code-scan-findings.html) · [Revalidate penetration-test findings](https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html) · [Export penetration-test reports](https://docs.aws.amazon.com/securityagent/latest/userguide/export-penetration-report.html) · [Security guidance and testing boundaries](https://docs.aws.amazon.com/securityagent/latest/userguide/security-guidance.html)
 
-**Check:** Confirm report filters, run status, target version, and unresolved findings before sharing.
 
-**Prompt:** Export the completed staging assessment with high-priority findings and reviewer notes, including scope and known omissions.
+## Proposed operational procedures
 
-**Review record to retain (team recommendation):** Point-in-time exported report with applied filters, revision, and recorded annotations.
+### SU1 — Assess an authorization change before merging it
 
-Official documentation references: S15
+Determine whether a specific code change weakens an authorization boundary, and identify what still needs runtime testing.
 
+**Use when:** A developer changes ownership checks, tenant scoping or role enforcement in a repository with configured review access.
 
-### C09 — Create tracked Jira work from findings
+**Not for:** Replacing code-owner review, proving production security from a passing diff review, or using a source-only result to claim exploitability.
 
-**Claim:** Create one Jira issue for each selected finding, carrying finding details and suggested remediation into a connected project.
+**Functions used:** S03, S04, S05, S08
 
-**Availability:** Documented integration · pentest path; code path inherits preview
+**Inputs**
 
-**Delivery:** Native issue export; connected Jira project
+- Base/head commit IDs and a complete source revision with the actual changed lines.
+- The intended authorization rule and one allowed and one denied request, specified by the application owner.
+- Relevant enabled requirements, PR trigger settings and excluded paths.
+- A reproducible build and test harness; simulated validation only if the application fits its prerequisites.
 
-**Setup:** Connect a Jira project to the Agent Space and agree on the project’s ownership and prioritization process.
+1. **Developer — Define expected behavior.** State which principal may access which object and under what tenant/role condition. A request being authenticated does not establish that object access is authorized.
 
-**Limit:** The project must support Task issues. Unlinking removes the association, not the Jira issue; the workflow is not documented here as full bidirectional synchronization.
+2. **Operator — Confirm that a review ran.** Check source revision, changed-line scope and preflight. If a filter skipped the PR or source access failed, fix that instead of interpreting no comments as a clean review.
 
-**Check:** Check issue content, duplicate creation, project visibility, and the link back to the original finding.
+3. **Developer and security reviewer — Trace the finding to code.** Follow the request through routing, identity extraction and ownership checks. Determine whether the finding is on an executed path and whether a relevant check exists elsewhere.
 
-**Prompt:** Export these reviewed findings to the security-remediation project, then let the normal team workflow assign owners.
+4. **Operator — Interpret validation separately.** For an optional simulated attempt, inspect runtime setup and evidence. Keep failed or unperformed attempts unresolved; do not downgrade a source issue merely because private dependencies prevented startup.
 
-**Review record to retain (team recommendation):** Jira finding issue with assignment, reproduction evidence, and disposition.
+5. **Developer — Review the proposed repair.** Check that the patch enforces the intended rule without blocking allowed requests. Run positive and negative regression tests; deploy normally and test the runtime boundary when required.
 
-Official documentation references: S16
+**Acceptance:** A decision tied to the exact change, a disposition for each relevant finding and executable allowed/denied regression tests. Remaining runtime assumptions are listed explicitly.
 
+**Stop:** Do not approve based on missing comments, a failed preflight, unknown source revision or a generated patch without behavior tests.
 
-### C10 — Review a design against organizational requirements
+**Example instruction**
 
-**Claim:** Analyze design documents against enabled security requirements and return findings with remediation guidance.
-
-**Availability:** Preview · design review
-
-**Delivery:** Native document review
-
-**Setup:** Enable the relevant requirements and provide a sanitized, current design with clear trust boundaries.
-
-**Limit:** The result depends on document quality and the active requirement set; it is not an exhaustive architecture approval.
-
-**Check:** Have an architect check assumptions and requirement applicability before treating a finding as a design decision.
-
-**Prompt:** Review the proposed service-to-service authentication design against our enabled controls, and identify missing information explicitly.
-
-**Review record to retain (team recommendation):** Design-review findings mapped to versioned security requirements and source documents.
-
-Official documentation references: S17, S05
-
-
-### C11 — Maintain reusable organizational security criteria
-
-**Claim:** Security requirement packs provide reusable evaluation criteria; document import can help draft requirements for review.
-
-**Availability:** Supports preview design and code reviews
-
-**Delivery:** Native requirement packs and document import
-
-**Setup:** Choose managed or custom requirements, review any generated items, and enable the intended packs for subsequent reviews.
-
-**Limit:** An enabled pack is review configuration, not a guarantee of compliance. Imported statements need human checking for ambiguity and applicability.
-
-**Check:** Test the criteria on known acceptable and unacceptable examples before relying on the findings.
-
-**Prompt:** Translate the approved logging standard into precise review criteria; flag obligations that cannot be assessed from design or source alone.
-
-**Review record to retain (team recommendation):** Versioned requirement pack, change rationale, and review evidence.
-
-Official documentation references: S18, S19, S05
-
-
-### C12 — Generate a reusable STRIDE threat model
-
-**Claim:** Use design scope documents, source context, or both to produce a system overview and STRIDE-classified threats with recommendations.
-
-**Availability:** Preview · threat modeling
-
-**Delivery:** Native model generation and reruns
-
-**Setup:** Provide current architecture, trust boundaries, and relevant repositories or documents; define what is in scope.
-
-**Limit:** The model’s scope depends on the inputs: proposed-design documents and existing code serve different roles. It is not proof that every threat has been identified.
-
-**Check:** Review assets, identities, data flows, boundaries, and omitted dependencies with an engineer familiar with the system.
-
-**Prompt:** Model threats for the proposed webhook ingestion flow, using the existing service as context and stating uncertain assumptions.
-
-**Review record to retain (team recommendation):** STRIDE model with trust boundaries, assumptions, threats, and unresolved mitigations.
-
-Official documentation references: S20, S05
-
-
-### C13 — Scan a full codebase for security findings
-
-**Claim:** Run a full-code review against a connected supported repository or S3-hosted source and inspect file-level findings.
-
-**Availability:** Preview · code review
-
-**Delivery:** Native repository or S3-source review
-
-**Setup:** Connect the chosen source, select the branch or source package, configure access, and choose the intended review criteria.
-
-**Limit:** Provider setup and source support vary. A successful job is not assurance that all vulnerabilities or policy violations were found.
-
-**Check:** Confirm the scanned revision, inspect finding context, and retain independent testing and code review.
-
-**Prompt:** Review the release-candidate source for security risks and explain the evidence for each high-priority finding.
-
-**Review record to retain (team recommendation):** Code-review findings associated with exact repository/source revision.
-
-Official documentation references: S21, S22, S04, S05
-
-
-### C14 — Review pull requests or merge requests on configured triggers
-
-**Claim:** Configured repository reviews post security findings on qualifying pull requests or merge requests, using the documented provider flow.
-
-**Availability:** Preview · provider-specific PR/MR integration
-
-**Delivery:** Native code-change feedback
-
-**Setup:** Enable code-review comments, select supported repositories, and test trigger/filter behavior on a controlled change.
-
-**Limit:** Branch, label, draft, and filter settings affect invocation. No comment can mean no trigger matched—not that a security scan passed.
-
-**Check:** Inspect review execution and the exact commit; never use comment absence as a pass signal.
-
-**Prompt:** Configure review for release-bound changes and verify that both an included and an excluded change produce the expected invocation behavior.
-
-**Review record to retain (team recommendation):** PR or MR finding comments with trigger event, build revision, and reviewer disposition.
-
-Official documentation references: S23, S24, S05
-
-
-### C15 — Receive a code-review fix as a PR, MR, or diff
-
-**Claim:** Supported connected private repositories can receive a PR or MR; S3 source and public GitHub paths use downloadable diffs.
-
-**Availability:** Preview · remediation depends on source provider
-
-**Delivery:** Native fix proposal; delivery varies
-
-**Setup:** Enable the appropriate remediation capability and preserve the exact source revision used by the scan.
-
-**Limit:** Automated remediation is not supported for public GitLab or Bitbucket repositories in the documented matrix. Some findings require manual work.
-
-**Check:** Apply and review through the normal repository process; verify the original finding and new regressions independently.
-
-**Prompt:** Generate a narrow remediation for this validated source finding and identify tests required to show that behavior is preserved.
-
-**Review record to retain (team recommendation):** Proposed PR/MR or patch/diff and independent implementation tests.
-
-Official documentation references: S25, S05
-
-
-### C17 — Submit a differential source review from a build workflow
-
-**Claim:** The documented API path accepts full source context in S3 together with a unified diff to focus a review on changed code.
-
-**Availability:** Preview · S3/API code-review path
-
-**Delivery:** Native API; pipeline wiring is team-owned
-
-**Setup:** Prepare approved S3 inputs and invoke the documented code-review job API from a suitably scoped build identity.
-
-**Limit:** It is not automatic discovery of your CI provider. The team must supply the correct source snapshot, diff base, permissions, and job handling.
-
-**Check:** Validate source/diff consistency and handle failed or skipped jobs distinctly from a clean review.
-
-**Prompt:** Construct a review input from the current commit and its approved base, then fail setup checks when the diff does not match the uploaded source.
-
-**Review record to retain (team recommendation):** Build-submitted differential review record with full source baseline and unified diff.
-
-Official documentation references: S27, S05
-
-
-### C18 — Gate promotion using a scoped post-deployment pentest
-
-**Claim:** The documented integration tests a deployed change and can gate subsequent promotion using scoped findings and thresholds.
-
-**Availability:** Public preview · CI/CD pipeline integration
-
-**Delivery:** Native service job; configured pipeline integration
-
-**Setup:** Configure a staging target, existing test setup, trusted OIDC role, diff baseline, thresholds, and explicit untested/error handling; begin with a dry run.
-
-**Limit:** It is not a pre-merge static check. Scoped-out changes can pass without dynamic testing; cancellation of the runner can leave a server-side job running.
-
-**Check:** Validate every gate outcome and cancellation path. A passing pipeline must not be represented as a complete application assessment.
-
-**Prompt:** Add a staging-only gate that records whether the change was tested, scoped out, or unresolved, and stops server work during abort handling.
-
-**Review record to retain (team recommendation):** Post-deployment assessment result and separately recorded promotion decision.
-
-Official documentation references: S28, S29
-
-
-## Illustrative handoff
-
-```yaml
-
-assessment: SEC-DEMO-001
-target: owned-staging-application
-authorization: approved-scope-record
-data: synthetic-only
-revision: DEMO-A
-finding: illustrative-finding-reference
-repair: reviewed-branch-change
-closure: deployed-revision-plus-revalidation
-exclusions: [production, unapproved-third-parties]
-
+```text
+Assess the change from <base> to <head> for the rule <principal/object/tenant condition>. Identify the actual code path and evidence for any bypass. Separate source findings from demonstrated runtime exploitation. Do not merge or deploy a repair.
 ```
 
+**Demonstration allocation:** 5 minutes.
 
-## Readiness checklist
+- 1 min: Show the authorization rule, exact diff and intended allowed/denied cases.
+- 1 min: Confirm the prepared review's revision, preflight and trigger behavior.
+- 1 min: Trace one finding and identify its validation state.
+- 1 min: Review a proposed patch against both allowed and denied tests.
+- 1 min: State the merge decision and remaining runtime evidence gap.
 
-- [ ] Written authorization covers every target and relevant downstream effect.
+**Fallback:** Use a prepared, permission-cleared PR, finding and test output. Label the data as a prepared example; do not simulate a successful live scan.
 
-- [ ] The test uses synthetic data and limited test identities.
-
-- [ ] Source context and deployed revision agree.
-
-- [ ] Execution, budget and stop ownership are configured.
-
-- [ ] Findings and generated repairs receive independent review.
-
-- [ ] Revalidation and closure identify the tested repaired revision.
+Official documentation: [Run a differential scan from S3](https://docs.aws.amazon.com/securityagent/latest/userguide/run-diff-scan-s3.html) · [Configure code-review triggers](https://docs.aws.amazon.com/securityagent/latest/userguide/configure-code-review-triggers.html) · [Code-review findings and validation states](https://docs.aws.amazon.com/securityagent/latest/userguide/review-code-scan-findings.html) · [Remediate code-review findings](https://docs.aws.amazon.com/securityagent/latest/userguide/remediate-code-scan-findings.html)
 
 
-## Sources
+### SU2 — Verify a deployed fix for a cross-user access finding
 
-- S02: [AWS Continuum](https://aws.amazon.com/continuum/)
+Confirm whether a previously observed authorization failure can still be reproduced on the patched staging build.
 
-- S03: [On-demand penetration testing generally available](https://aws.amazon.com/about-aws/whats-new/2026/03/aws-security-agent-ondemand-penetration/)
+**Use when:** A completed authorized penetration test has a relevant finding and the proposed repair is deployed to the original target.
 
-- S04: [What is AWS Security Agent?](https://docs.aws.amazon.com/securityagent/latest/userguide/what-is.html)
+**Not for:** Testing a third-party target, discovering unrelated vulnerabilities through revalidation, or declaring the entire application secure after one non-reproduction.
 
-- S05: [Pricing and billing](https://docs.aws.amazon.com/securityagent/latest/userguide/pricing.html)
+**Functions used:** S06, S07, S09
 
-- S06: [Set up AWS Security Agent](https://docs.aws.amazon.com/securityagent/latest/userguide/setup-security-agent.html)
+**Inputs**
 
-- S07: [Enable a target domain](https://docs.aws.amazon.com/securityagent/latest/userguide/enable-test-domain.html)
+- Original run/finding ID, evidence, target URL and tested path.
+- Patched build identifier and deployment time; proof that the running target uses that build.
+- Two disposable test identities and test records with explicit ownership, where the application supports such testing.
+- Authorization, exclusions, current credentials, target-side logs and a cleanup owner.
 
-- S08: [Create a penetration test](https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html)
+1. **Application owner — Verify the environment.** Confirm the patched build and current test identity. Seed disposable records and disable real outbound effects. Stop if the original finding cannot be mapped to the intended target.
 
-- S09: [Provide testing credentials](https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html)
+2. **Operator — Run targeted revalidation.** Select the existing finding and start its separate revalidation job. Do not describe this as a new full penetration test.
 
-- S10: [Security best practices](https://docs.aws.amazon.com/securityagent/latest/userguide/security-best-practices.html)
+3. **Security reviewer — Inspect the result and prerequisites.** If Active, inspect reproduction evidence and return to remediation. If Resolved, check that authentication and the intended endpoint worked; a login failure must not be accepted as a fixed authorization control.
 
-- S11: [Security considerations and FAQs](https://docs.aws.amazon.com/securityagent/latest/userguide/security-guidance.html)
+4. **Developer — Run independent regressions.** Verify that the legitimate owner can still access its record and a different identity cannot. These are proposed application-specific tests, not a claimed built-in universal test fixture.
 
-- S12: [Review penetration-test findings](https://docs.aws.amazon.com/securityagent/latest/userguide/review-penetration-findings.html)
+5. **Operator — Retain the evidence and decide breadth.** Record original and revalidation IDs, build, test identities' roles and application logs. Run a broader assessment if the fix alters other routes or trust boundaries.
 
-- S13: [Enable finding remediation](https://docs.aws.amazon.com/securityagent/latest/userguide/enable-remediate-findings.html)
+**Acceptance:** Non-reproduction under valid test conditions plus passing allowed/denied application tests. The record states exactly which finding and build were tested and what remains outside scope.
 
-- S14: [Revalidate findings](https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html)
+**Stop:** Stop if the patched build is not deployed, credentials fail, the target differs or the test touches real customer data or external side effects.
 
-- S15: [Export a penetration-test report](https://docs.aws.amazon.com/securityagent/latest/userguide/export-penetration-report.html)
+**Example instruction**
 
-- S16: [Create Jira issues for findings](https://docs.aws.amazon.com/securityagent/latest/userguide/export-findings-to-issue-tracker.html)
+```text
+Revalidate finding <finding-id> on the authorized staging target after build <build-id>. Preserve the link to the original run. Report whether the same issue is reproduced and identify authentication or execution failures separately.
+```
 
-- S17: [Perform a design review](https://docs.aws.amazon.com/securityagent/latest/userguide/perform-design-review.html)
+**Demonstration allocation:** 5 minutes.
 
-- S18: [Security requirements](https://docs.aws.amazon.com/securityagent/latest/userguide/security-requirements.html)
+- 1 min: Show original finding, authorized target and deployed build identity.
+- 1 min: Explain the test identities and safe data boundary.
+- 1 min: Open a prepared revalidation job and inspect execution evidence.
+- 1 min: Contrast Active, valid non-reproduction and authentication failure.
+- 1 min: Show independent regression results and the narrowly scoped conclusion.
 
-- S19: [Import security requirements](https://docs.aws.amazon.com/securityagent/latest/userguide/import-security-requirements.html)
+**Fallback:** Walk through prepared original and retest evidence. Do not start an unbounded penetration test merely to fill a five-minute demonstration slot.
 
-- S20: [Perform threat modeling](https://docs.aws.amazon.com/securityagent/latest/userguide/perform-threat-model.html)
-
-- S21: [Perform a full code review](https://docs.aws.amazon.com/securityagent/latest/userguide/perform-code-review-scan.html)
-
-- S22: [Review code-scan findings](https://docs.aws.amazon.com/securityagent/latest/userguide/review-code-scan-findings.html)
-
-- S23: [Review findings in pull requests](https://docs.aws.amazon.com/securityagent/latest/userguide/review-code-findings-github.html)
-
-- S24: [Configure code-review triggers](https://docs.aws.amazon.com/securityagent/latest/userguide/configure-code-review-triggers.html)
-
-- S25: [Remediate code-review findings](https://docs.aws.amazon.com/securityagent/latest/userguide/remediate-code-scan-findings.html)
-
-- S27: [Run a differential code scan with S3](https://docs.aws.amazon.com/securityagent/latest/userguide/run-diff-scan-s3.html)
-
-- S28: [Run penetration tests from CI/CD](https://docs.aws.amazon.com/securityagent/latest/userguide/cicd-pentest.html)
-
-- S29: [GitHub Actions scoped-pentest tutorial](https://docs.aws.amazon.com/securityagent/latest/userguide/sample-cicd-github.html)
-
-- S30: [Resilience and regional availability](https://docs.aws.amazon.com/securityagent/latest/userguide/resilience.html)
+Official documentation: [Revalidate penetration-test findings](https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html) · [Security guidance and testing boundaries](https://docs.aws.amazon.com/securityagent/latest/userguide/security-guidance.html) · [Export penetration-test reports](https://docs.aws.amazon.com/securityagent/latest/userguide/export-penetration-report.html)
 
 
-## Validation boundary
+## Documentation qualifications
 
-Documentation synthesis and proposed workflows only. No live AWS execution or measured engineering outcome. The original audit snapshot and the selected narrative rechecks are distinct.
+The general security-guidance FAQ has contained older statements about API and CI availability that conflict with newer feature-specific API and pipeline tutorials. This guide follows the documented full-source/diff job and current integration pages, not the older blanket statement.
 
+Default confidence filtering differs between assessment views and documentation revisions. The operating procedure requires inspection of the actual filter instead of asserting one default for every screen.
 
-## Mechanisms and enablement extension
+A requirement evaluation, generated threat, static finding, simulated exploit and deployed-target revalidation are different evidence classes. None alone establishes application-wide security or certification.
 
-See the [detailed source-linked setup and verification guide](../mechanisms/security.md). It contains 6 records, a proposed six-step exercise and lifecycle controls. Existing presentation timing is unchanged.
+This guide does not assume that previous assessments become a general incident-memory store. Reusable source context, requirement packs and linked retest history are the documented mechanisms described here.
+
+## Official source register
+
+- [What is AWS Security Agent](https://docs.aws.amazon.com/securityagent/latest/userguide/what-is.html)
+
+- [Pricing: capability status and task-hours semantics](https://docs.aws.amazon.com/securityagent/latest/userguide/pricing.html)
+
+- [On-demand penetration testing general availability](https://aws.amazon.com/about-aws/whats-new/2026/03/aws-security-agent-ondemand-penetration/)
+
+- [Document history and feature updates](https://docs.aws.amazon.com/securityagent/latest/userguide/doc-history.html)
+
+- [Manage security requirements](https://docs.aws.amazon.com/securityagent/latest/userguide/security-requirements.html)
+
+- [Generate requirements from documents](https://docs.aws.amazon.com/securityagent/latest/userguide/import-security-requirements.html)
+
+- [Review design findings](https://docs.aws.amazon.com/securityagent/latest/userguide/review-design-findings.html)
+
+- [Enable threat modeling](https://docs.aws.amazon.com/securityagent/latest/userguide/enable-threat-model.html)
+
+- [Create a threat model](https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-threat-model.html)
+
+- [Review threat-model findings](https://docs.aws.amazon.com/securityagent/latest/userguide/review-threat-model-findings.html)
+
+- [Perform a full code review](https://docs.aws.amazon.com/securityagent/latest/userguide/perform-code-review-scan.html)
+
+- [Enable code reviews](https://docs.aws.amazon.com/securityagent/latest/userguide/enable-code-review-scan.html)
+
+- [Code-review findings and validation states](https://docs.aws.amazon.com/securityagent/latest/userguide/review-code-scan-findings.html)
+
+- [Run a differential scan from S3](https://docs.aws.amazon.com/securityagent/latest/userguide/run-diff-scan-s3.html)
+
+- [Review code findings in GitHub](https://docs.aws.amazon.com/securityagent/latest/userguide/review-code-findings-github.html)
+
+- [Configure code-review triggers](https://docs.aws.amazon.com/securityagent/latest/userguide/configure-code-review-triggers.html)
+
+- [Connect GitHub](https://docs.aws.amazon.com/securityagent/latest/userguide/connect-github.html)
+
+- [Configure S3 source access](https://docs.aws.amazon.com/securityagent/latest/userguide/enable-s3-bucket.html)
+
+- [Enable penetration testing](https://docs.aws.amazon.com/securityagent/latest/userguide/enable-penetration-test.html)
+
+- [Create a penetration test](https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html)
+
+- [Verify a test domain](https://docs.aws.amazon.com/securityagent/latest/userguide/enable-test-domain.html)
+
+- [Provide test credentials](https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html)
+
+- [Security guidance and testing boundaries](https://docs.aws.amazon.com/securityagent/latest/userguide/security-guidance.html)
+
+- [Revalidate penetration-test findings](https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html)
+
+- [Remediate code-review findings](https://docs.aws.amazon.com/securityagent/latest/userguide/remediate-code-scan-findings.html)
+
+- [Export penetration-test reports](https://docs.aws.amazon.com/securityagent/latest/userguide/export-penetration-report.html)
+
+No live product execution or measured operational benefit is claimed.
