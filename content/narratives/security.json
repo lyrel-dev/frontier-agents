@@ -1,5 +1,5 @@
 {
-  "number": "03",
+  "number": "02",
   "accent": "#167259",
   "title": "AWS Security Agent",
   "strapline": "Authorized application assessments, findings, remediation proposals and revalidation.",
@@ -105,13 +105,12 @@
         "C13",
         "C14",
         "C15",
-        "C16",
         "C17",
         "C18"
       ],
       "paragraphs": [
         "Design reviews, organizational security requirements and threat models can make assumptions and trust boundaries inspectable before testing a running application. Code review can analyze full repositories or configured change triggers, with provider-specific remediation paths. These are distinct from the GA on-demand penetration-testing baseline.",
-        "Treat IDE, S3 differential-scan and CI/CD integrations as separate preview adoption decisions. A promotion gate needs explicit thresholds, timeout behavior and a policy for missing or inconclusive evidence. The team owns that release policy; an unavailable or unfinished scan should not silently become a green gate."
+        "Treat S3 differential-scan and CI/CD integrations as separate preview adoption decisions. A promotion gate needs explicit thresholds, timeout behavior and a policy for missing or inconclusive evidence. The team owns that release policy; an unavailable or unfinished scan should not silently become a green gate."
       ],
       "input": "Approved preview use, provider-specific integration and an explicit review or promotion policy.",
       "artifact": "Design, threat-model or code findings and an auditable gate decision where configured.",
@@ -128,5 +127,5 @@
     "Revalidation and closure identify the tested repaired revision."
   ],
   "handoff": "assessment: SEC-DEMO-001\ntarget: owned-staging-application\nauthorization: approved-scope-record\ndata: synthetic-only\nrevision: DEMO-A\nfinding: illustrative-finding-reference\nrepair: reviewed-branch-change\nclosure: deployed-revision-plus-revalidation\nexclusions: [production, unapproved-third-parties]",
-  "related": "Use Kiro for a bounded repair task and the architecture report to retain finding provenance without transferring assessment authority."
+  "related": "Use the DevOps Agent report for operational investigation and the architecture report to retain finding provenance without transferring assessment authority."
 }
