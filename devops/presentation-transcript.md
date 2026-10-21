@@ -7,7 +7,7 @@
 
 **00:00–01:00 · 01:00 allocated**
 
-**Takeaway:** From a production symptom to an evidence-backed engineering decision.
+**Takeaway:** Investigations produce hypotheses and evidence for operational review.
 
 Open with the operational job, not a claim of full autonomy. A checkout service is failing after a deployment. We want a coherent investigation, a defensible mitigation decision, and a follow-up item that prevents recurrence. Production operations are generally available; release-management features are preview. The examples in this deck are proposed exercises. The demo slots include the operator walkthrough and a prepared-result fallback, not a promise that an agent run completes within the allotted minutes.
 
@@ -18,7 +18,7 @@ Open with the operational job, not a claim of full autonomy. A checkout service 
 [D15 — Supported Regions](https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-supported-regions.html)
 
 
-## 02. Start with the incident, not the tool
+## 02. Define the incident scope and evidence window
 
 **01:00–02:30 · 01:30 allocated**
 
@@ -31,7 +31,7 @@ Use the checkout incident as the thread through this presentation. Supply an inc
 [D03 — Autonomous incident response](https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-autonomous-incident-response.html)
 
 
-## 03. Six useful capability families
+## 03. Operational capability groups and their dependencies
 
 **02:30–04:00 · 01:30 allocated**
 
@@ -50,7 +50,7 @@ The capability map separates incident work, on-demand operational questions, pre
 [D09 — Release management](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-release-management-index.html)
 
 
-## 04. Build an Agent Space with useful context
+## 04. Configure Agent Space data access and scope
 
 **04:00–05:30 · 01:30 allocated**
 
@@ -67,7 +67,7 @@ An Agent Space groups the context and integrations used for operational work. It
 [D39 — Private connections for integrations](https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-connecting-to-privately-hosted-tools.html)
 
 
-## 05. Investigate and steer a live incident
+## 05. Investigate a service incident and review hypotheses
 
 **05:30–07:00 · 01:30 allocated**
 
@@ -115,7 +115,7 @@ Investigate the checkout 5xx increase in the supplied UTC window after the deplo
 [D05 — On Demand DevOps Tasks](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-on-demand-devops-tasks.html)
 
 
-## 07. Answer the daily SRE questions
+## 07. Daily service-health and incident queries
 
 **14:00–15:15 · 01:15 allocated**
 
@@ -126,7 +126,7 @@ Not every operational task is an incident. The on-demand interface can answer fo
 [D05 — On Demand DevOps Tasks](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-on-demand-devops-tasks.html)
 
 
-## 08. Convert repeat incidents into prevention work
+## 08. Create prevention tasks from investigation history
 
 **15:15–16:30 · 01:15 allocated**
 
@@ -137,7 +137,7 @@ Prevention analyzes investigation history and produces recommendations. It is no
 [D04 — Proactive incident prevention](https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-proactive-incident-prevention.html)
 
 
-## 09. Configure a recurring operational assistant
+## 09. Configure scheduled operational reports
 
 **16:30–17:45 · 01:15 allocated**
 
@@ -148,7 +148,7 @@ A custom agent is a configured workflow. For example, a team can define a daily 
 [D06 — Custom Agents](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html)
 
 
-## 10. A recommendation is not permission to act
+## 10. Mitigation recommendations and action authorization
 
 **17:45–19:45 · 02:00 allocated**
 
@@ -161,7 +161,7 @@ Keep the read-oriented investigation path separate from directed actions. Direct
 [D34 — Limiting Agent Access in an AWS Account](https://docs.aws.amazon.com/devopsagent/latest/userguide/aws-devops-agent-security-limiting-agent-access-in-an-aws-account.html)
 
 
-## 11. Release preview has two different execution paths
+## 11. Release-review and deployed-application testing differ
 
 **19:45–21:45 · 02:00 allocated**
 
@@ -215,7 +215,7 @@ Review this change for dependency impact, retry amplification, database saturati
 [D15 — Supported Regions](https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-supported-regions.html)
 
 
-## 13. Bring operational context into the coding workflow
+## 13. Access operational context from coding clients
 
 **26:45–28:00 · 01:15 allocated**
 
@@ -228,7 +228,7 @@ The documented remote MCP interface brings operational questions into a developm
 [D38 — Accessing DevOps Agent](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-accessing-devops-agent-index.html)
 
 
-## 14. Separate companion coding work from DevOps Agent
+## 14. Kiro capabilities are separate from DevOps Agent
 
 **28:00–29:30 · 01:30 allocated**
 
@@ -245,7 +245,7 @@ The original report included related developer tasks, so keep them visible witho
 [K17 — Hooks](https://kiro.dev/docs/hooks/)
 
 
-## 15. Keep Amazon Q Developer in its own lane
+## 15. Amazon Q Developer is a companion product
 
 **29:30–31:00 · 01:30 allocated**
 
@@ -266,7 +266,7 @@ For teams already using Amazon Q Developer, the relevant distinctions are AWS gu
 [D29 — Transforming .NET applications](https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/transform-dotnet-IDE.html)
 
 
-## 16. A safe starting configuration is intentionally small
+## 16. Pilot a single service with scoped read access
 
 **31:00–32:30 · 01:30 allocated**
 
@@ -281,11 +281,11 @@ Treat deployment readiness as a team decision. Record the feature’s availabili
 [D34 — Limiting Agent Access in an AWS Account](https://docs.aws.amazon.com/devopsagent/latest/userguide/aws-devops-agent-security-limiting-agent-access-in-an-aws-account.html)
 
 
-## 17. Measure accepted engineering outcomes
+## 17. Pilot metrics require verified engineering results
 
 **32:30–34:00 · 01:30 allocated**
 
-**Takeaway:** Pilot success is less effort per verified outcome—not more generated text.
+**Takeaway:** Measure review effort and rework for independently accepted outcomes.
 
 The scorecard is a proposal, not an AWS performance claim. Use the same small set of representative tasks before and during the pilot. Measure how much time an engineer spends reaching an evidence-supported hypothesis, how often conclusions need correction, and whether recommended prevention work is accepted. Count service and integration consumption as well as human review effort. Do not infer production MTTR improvement from a staged demo.
 
@@ -296,7 +296,7 @@ The scorecard is a proposal, not an AWS performance claim. Use the same small se
 [D06 — Custom Agents](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html)
 
 
-## 18. Operate an evidence accelerator—not an authority shortcut
+## 18. Accept outcomes only after verification and authorization
 
 **34:00–35:00 · 01:00 allocated**
 
