@@ -5,46 +5,565 @@
   "reviewed": "2026-10-21",
   "scope": "A technical reference for operators and platform engineers. This guide distinguishes the service's functions from the context and permissions that make those functions work. Operational procedures are proposed team practices, not accounts of executed demonstrations.",
   "availability": "Production operations, on-demand tasks and custom agents are documented service functions. Release management and Sandbox are preview features with narrower regional availability. Check the feature-level region table before enabling either; release management is documented in us-east-1 only.",
-  "availability_refs": ["regions"],
+  "availability_refs": [
+    "regions"
+  ],
   "objects": [
-    ["Agent Space", "The configured operational boundary containing associated accounts, integrations, knowledge and investigations. It is not equivalent to an AWS account or an application deployment.", "create"],
-    ["Registration and association", "Register a provider connection, then associate the relevant connection with an Agent Space. A registered provider does not by itself establish that every investigation can reach the intended resource or repository.", "create"],
-    ["Investigation", "A persisted incident analysis with a timeline, collected evidence, conclusions and mitigation proposals. A Chat conversation can initiate or guide one but is not the same object.", "incident"],
-    ["Custom agent and invocation", "A reusable definition of prompt, selected tools, skills and memory stores; an invocation is one execution of that definition. A scheduled report is an application of this facility, not a separately supplied report product.", "custom"],
-    ["Skill, instruction and memory", "A skill is a selectively loaded procedure; an instruction is injected at session start; a memory stores informational context. None substitutes for IAM or tool-side authorization.", "instructions"]
+    [
+      "Agent Space",
+      "The configured operational boundary containing associated accounts, integrations, knowledge and investigations. It is not equivalent to an AWS account or an application deployment.",
+      "create"
+    ],
+    [
+      "Registration and association",
+      "Register a provider connection, then associate the relevant connection with an Agent Space. A registered provider does not by itself establish that every investigation can reach the intended resource or repository.",
+      "create"
+    ],
+    [
+      "Investigation",
+      "A persisted incident analysis with a timeline, collected evidence, conclusions and mitigation proposals. A Chat conversation can initiate or guide one but is not the same object.",
+      "incident"
+    ],
+    [
+      "Custom agent and invocation",
+      "A reusable definition of prompt, selected tools, skills and memory stores; an invocation is one execution of that definition. A scheduled report is an application of this facility, not a separately supplied report product.",
+      "custom"
+    ],
+    [
+      "Skill, instruction and memory",
+      "A skill is a selectively loaded procedure; an instruction is injected at session start; a memory stores informational context. None substitutes for IAM or tool-side authorization.",
+      "instructions"
+    ]
   ],
   "groups": [
-    {"id":"context", "title":"Environment inspection", "purpose":"Inspect the accessible environment and obtain current operational evidence before making an incident claim."},
-    {"id":"incident", "title":"Incident intake and investigation", "purpose":"Create, correlate, investigate and review incident records. These operations have distinct lifecycle effects."},
-    {"id":"response", "title":"Response and reliability improvement", "purpose":"Separate advice, authorized resource changes and longer-term prevention recommendations."},
-    {"id":"automation", "title":"Configurable operational automation", "purpose":"Run user-defined work with explicitly selected tools and context, or use configured communication channels."},
-    {"id":"release", "title":"Release assessment", "purpose":"Assess source changes separately from exploratory testing of a deployed application. Both are preview capabilities."}
+    {
+      "id": "context",
+      "title": "Environment inspection",
+      "purpose": "Inspect the accessible environment and obtain current operational evidence before making an incident claim."
+    },
+    {
+      "id": "incident",
+      "title": "Incident intake and investigation",
+      "purpose": "Create, correlate, investigate and review incident records. These operations have distinct lifecycle effects."
+    },
+    {
+      "id": "response",
+      "title": "Response and reliability improvement",
+      "purpose": "Separate advice, authorized resource changes and longer-term prevention recommendations."
+    },
+    {
+      "id": "automation",
+      "title": "Configurable operational automation",
+      "purpose": "Run user-defined work with explicitly selected tools and context, or use configured communication channels."
+    },
+    {
+      "id": "release",
+      "title": "Release assessment",
+      "purpose": "Assess source changes separately from exploratory testing of a deployed application. Both are preview capabilities."
+    }
   ],
   "functions": [
-    {"id":"D01","group":"context","name":"Discover and inspect application topology","status":"Documented","input":"Associated cloud resources, repositories, deployment pipelines and observability connections.","operation":"The service discovers resources and builds a representation of application components and their relationships. The Topology view exposes that representation; the environment summary and generated understanding reuse the discovered context. This helps locate a service's resources and dependencies before querying live telemetry.","output":"A topology and versioned environment summary. These are derived views, not a guarantee that every resource, dependency or recent deployment has been discovered.","entry":"Associate the required providers with the Agent Space; inspect Topology. Use Regenerate when deliberately refreshing derived understanding.","limits":"Discovery is limited by provider scope and permissions. Scheduled refresh and source changes have different update behavior; check timestamps rather than treating the map as live configuration.","check":"Select one service and reconcile its resource identifiers, repository and critical dependency against the deployment inventory. Record missing mappings before using the map for incident scope.","refs":["create","memory","learned"]},
-    {"id":"D02","group":"context","name":"Query connected resources and telemetry in Chat","status":"Documented","input":"A specific operational question, resource or service identity, time window, and connected data sources.","operation":"On-demand Chat calls available tools to inspect infrastructure and retrieve operational data. It can combine resource configuration, metrics, logs and change information when those integrations are available. It is an interactive query interface, not a replacement collector that creates missing telemetry.","output":"A response supported by tool results, with tables or charts where applicable. Tool access failures and missing data remain limitations of the answer.","entry":"Open Chat in the Agent Space and state the account, region, identifiers and UTC interval. Move a complex issue into a formal investigation when a persistent incident record is needed.","limits":"A successful Chat response does not prove that all intended sources were queried. Source permissions, telemetry retention and query limits still apply.","check":"Inspect the called tool, query window and returned identifiers. Re-run one material query in the source system; distinguish an empty result from denied or unavailable access.","refs":["ondemand","incident"]},
-    {"id":"D03","group":"incident","name":"Open an investigation from an event or operator request","status":"Documented","input":"An alarm, incident or webhook payload, or an operator-specified problem with its occurrence time and starting resource.","operation":"An associated trigger or a manual request creates a formal investigation. Native incident integrations and authenticated webhooks supply entry points; manual creation supplies the problem statement directly. The originating system remains responsible for detecting its own event.","output":"An investigation linked to the submitted problem and its timeline. Creation is not confirmation of the root cause or severity of business impact.","entry":"Use Incident Response to create an investigation, accept the investigation prompt in Chat, or configure a supported incident integration or signed webhook.","limits":"An event without reliable identifiers or timestamps can produce an incorrectly scoped investigation. A generic webhook still requires the documented payload and credential configuration.","check":"Submit a controlled test event and confirm the correct Agent Space, resource, event time and incident linkage. Check duplicate delivery behavior before production routing.","refs":["incident","webhook"]},
-    {"id":"D04","group":"incident","name":"Correlate, link or skip incoming incidents","status":"Documented","input":"A new incident, recent investigation context and applicable triage instructions or skills.","operation":"Triage decides whether the event should proceed as a new investigation, be linked to related work, or be skipped under applicable criteria. Linking supplies context to the existing investigation; skipping avoids starting analysis for that event. Operators can unlink or unskip when the decision is wrong.","output":"A triage decision and its relationship to an investigation, rather than an independently established diagnosis.","entry":"Configure narrowly scoped triage guidance and inspect the incident's triage decision. Use the documented unlink or unskip control to initiate independent analysis when necessary.","limits":"Similarity in time or service is not proof of a shared cause. Broad maintenance-window rules can suppress relevant incidents. Triage configuration should not be mistaken for disabling the originating alarm.","check":"Test an in-window low-priority event, an out-of-window event and a critical event. The proposed policy must not skip the latter two; retain the underlying alerts independently.","refs":["incident","skills"]},
-    {"id":"D05","group":"incident","name":"Investigate evidence and develop a root-cause explanation","status":"Documented","input":"The scoped problem, accessible metrics, logs, traces, deployment history, code and selected historical context.","operation":"The investigation forms and tests hypotheses by collecting evidence from connected tools. It relates symptoms, dependencies and changes and produces findings and a root-cause explanation. A recent change is a candidate explanation, not automatically the cause.","output":"Findings, supporting evidence, an investigation timeline and a conclusion that the operator can inspect. Missing observations may leave the diagnosis incomplete.","entry":"Open the investigation's Summary and Timeline. Supply additional facts through Chat with investigation rather than silently changing the problem in a separate conversation.","limits":"The agent can reason incorrectly or stop with incomplete evidence. Old monitor memories may bias a new diagnosis; they must be checked against the current incident.","check":"For each material hypothesis, retain the observation that supports it, the observation that would refute it, and the unresolved gap. Do not approve mitigation merely because the explanation is fluent.","refs":["incident","memory"]},
-    {"id":"D06","group":"incident","name":"Steer, resume, fork and review an investigation","status":"Documented","input":"A running or completed investigation, a corrective message, or a selected timeline message from which to fork.","operation":"Messages can redirect an investigation; a completed investigation can resume with its prior context. Forking explores another line without changing the original. A separate Review assesses a completed record and returns helpful/not-helpful plus criterion-level results; it does not repeat the investigation's live queries.","output":"Updated or branched investigation work, or a separate quality assessment. Review's Accuracy criterion can be not applicable when the linked incident provides no root cause.","entry":"Use Chat with investigation, Fork on a timeline message, or Review on a completed investigation. Inspect the Review tab for scope, evidence, completeness, impact and accuracy assessments.","limits":"A quality review is not independent runtime verification. Resuming can incur new work; forking creates a separate line of analysis. A passing grader cannot establish facts absent from the underlying record.","check":"Fork a prepared investigation to test a competing hypothesis and compare evidence, not just conclusions. For Review, confirm whether an actual reference diagnosis exists before interpreting Accuracy.","refs":["incident","review","history"]},
-    {"id":"D07","group":"response","name":"Generate and refine mitigation proposals","status":"Documented","input":"Investigation findings, the affected resources and operational constraints.","operation":"The agent proposes actions to reduce impact and can refine those proposals in the investigation context. A proposal explains the intended change and its rationale; it is a planning output. Current documentation describes inline proposals in the investigation flow rather than a mandatory separate handoff.","output":"A mitigation proposal to review. The team must establish exact targets, expected recovery signals and rollback conditions before using it.","entry":"Review the inline mitigation proposal and request changes to scope or assumptions. Move to the directed-action path only when a supported resource mutation is explicitly intended.","limits":"Generating a proposal neither grants permission nor executes it. A technically plausible rollback can still cause data or compatibility problems not represented in the incident evidence.","check":"Compare the proposal with the deployed version, migration state and service runbook. Require a measurable recovery condition and an owner capable of stopping or reversing the change.","refs":["incident","history","actions"]},
-    {"id":"D08","group":"response","name":"Execute an individually approved directed action","status":"Opt-in","input":"A specific mutating operation, parameters and resource scope, requested in Chat.","operation":"After Agent Space enablement and the relevant elevated account role or third-party tool opt-in, the agent presents an approval for the specific operation. The elevated execution path is separate from normal read-only investigation access. Service guardrails can refuse operations even when IAM would otherwise allow them.","output":"An execution result and associated audit evidence. Successful API execution is not proof that the incident recovered.","entry":"Enable directed actions, register the account's elevated role or classify and allow the integration tool, then review the action approval in Chat. Check validation status before attempting the action.","limits":"Disabled by default. Mutating calls outside the supported Chat approval path fail rather than silently queueing approval. Delete-class and other guarded operations can be refused. Tool classification does not repair an overprivileged backend.","check":"In a non-production account, first reject an approval and confirm no change; then approve a narrowly scoped reversible operation and correlate its result with CloudTrail and independent resource state.","refs":["actions"]},
-    {"id":"D09","group":"response","name":"Generate prevention recommendations from incident patterns","status":"Documented","input":"Past incidents, recurring causes and available environmental context.","operation":"Prevention analysis turns incident patterns into proposed reliability changes. Recommendations describe the problem, supporting incident context and implementation guidance; code-related recommendations can include a specification for engineering work. This is a separate output from the immediate mitigation of one incident.","output":"Recommendations in the improvement backlog, with rationale and prioritization. They are proposals, not completed infrastructure changes or measured reductions in incidents.","entry":"Review prevention recommendations and their supporting incidents. Route accepted work through the team's existing engineering change process.","limits":"Incomplete or incorrect historical diagnoses affect recommendation quality. Ranking is not a substitute for reviewing implementation risk, effort and ownership.","check":"Reject a recommendation that cannot identify the recurring failure it addresses. For an accepted item, define the operational metric to compare after deployment and record the observation window.","refs":["prevention"]},
-    {"id":"D10","group":"automation","name":"Execute a configured custom agent","status":"Documented","input":"A reusable definition containing a system prompt, assigned tools, skills and attached memory stores; optional invocation-specific instructions.","operation":"A custom agent executes the defined task using its selected toolbox and context. It records an invocation trajectory and can produce text, artifacts or recommendations. Runtime subagent delegation can continue long work with the same tools and skills; it is not permission escalation or a documented orchestrator for the three products in this collection.","output":"An invocation record and its outputs. A daily configuration report is a team-defined application of this function, not an independently supplied monitoring feature.","entry":"Agents → Custom Agents → Create agent. Use the form for the definition and optional skills/memory; use Chat to assign MCP tools. Test with Run Now before adding a trigger.","limits":"A new custom agent has no memory access until stores are attached. It reads attached managed stores but writes only attached custom stores. Required integrations must already exist.","check":"Compare the configured toolbox and memory attachments with the task's minimum requirements. Run a fixture with one intentionally unavailable source and require an explicit incomplete-result indication.","refs":["custom","custom-create","custom-run","custom-output"]},
-    {"id":"D11","group":"automation","name":"Publish incident updates and converse in supported channels","status":"Integration","input":"A registered communication provider and a channel association for the Agent Space.","operation":"Slack supports one-way notifications in public or private channels and bidirectional conversations in private channels when enabled. Microsoft Teams is documented as a one-way notification integration. These are different delivery modes and must not be described as universal chat parity.","output":"Incident updates or a Slack conversation thread, depending on the configured channel and mode.","entry":"Associate the channel under the Agent Space's communications capabilities. For Slack bidirectional mode, use a private channel, complete the documented setup and mention the regional app in messages.","limits":"Channel membership changes who can see operational evidence. Available conversations and actions remain constrained by Agent Space configuration; a channel connection is not authorization for arbitrary changes.","check":"Use a non-sensitive test incident to verify destination, thread behavior and authorized audience. Test removal of the association separately from unregistering the provider.","refs":["slack","history"]},
-    {"id":"D12","group":"release","name":"Review source changes for release readiness","status":"Preview","input":"A connected repository change and relevant code, dependency, infrastructure and operational context.","operation":"Release readiness review analyzes a change for operational risk before deployment. It can apply team standards and inspect affected dependencies. This differs from generic style review and from executing tests against the deployed application.","output":"A release-readiness report with findings and an advisory release recommendation, such as Block or Proceed with Caution. The label does not by itself enforce a deployment gate.","entry":"Configure release management on the connected repository or request a review in Chat. Automated PR/MR triggers are documented for private repositories; verify provider-specific trigger configuration.","limits":"Preview in us-east-1. Repository connectivity, indexing and available context determine coverage. Branch protection or pipeline gating must be separately configured and tested.","check":"Use a known, non-production risky change and inspect whether the report identifies the affected dependency and relevant lines. Test the pipeline's actual gating behavior independently of the prose recommendation.","refs":["release","release-review","regions","history"]},
-    {"id":"D13","group":"release","name":"Execute exploratory UI or API release tests","status":"Preview","input":"A running application URL, a UI or API test profile, test intent and configured authentication when needed.","operation":"The agent generates a test plan and interacts with the application through a browser or HTTP requests. It explores functional behavior and returns failures with reproduction information. This is execution against the target application, not read-only analysis of a repository.","output":"A test run with status, findings and reproduction steps; UI runs can include screenshots. Coverage is exploratory rather than an exhaustive specification-based proof.","entry":"Release Manager → Test profiles → Add test profile; choose target and test type, configure required authentication, then Start testing with a bounded intent.","limits":"Preview in us-east-1. Requests can create, modify or delete application data and trigger external business effects. Directed-action approval for AWS APIs is not a per-request approval gate for these application tests.","check":"Use an authorized staging deployment with disposable data and disabled real payments/notifications. Confirm the tested build and authentication role; reproduce a reported failure independently before assigning a fix.","refs":["release-test","regions","history"]}
+    {
+      "id": "D01",
+      "group": "context",
+      "name": "Discover and inspect application topology",
+      "input": "Associated cloud resources, repositories, deployment pipelines and observability connections.",
+      "operation": "The service discovers resources and builds a representation of application components and their relationships. The Topology view exposes that representation; the environment summary and generated understanding reuse the discovered context. This helps locate a service's resources and dependencies before querying live telemetry.",
+      "output": "A topology and versioned environment summary. These are derived views, not a guarantee that every resource, dependency or recent deployment has been discovered.",
+      "entry": "Associate the required providers with the Agent Space; inspect Topology. Use Regenerate when deliberately refreshing derived understanding.",
+      "limits": "Discovery is limited by provider scope and permissions. Scheduled refresh and source changes have different update behavior; check timestamps rather than treating the map as live configuration.",
+      "check": "Select one service and reconcile its resource identifiers, repository and critical dependency against the deployment inventory. Record missing mappings before using the map for incident scope.",
+      "refs": [
+        "create",
+        "memory",
+        "learned"
+      ],
+      "availability": "Documented",
+      "activation": "See invocation and prerequisites"
+    },
+    {
+      "id": "D02",
+      "group": "context",
+      "name": "Query connected resources and telemetry in Chat",
+      "input": "A specific operational question, resource or service identity, time window, and connected data sources.",
+      "operation": "On-demand Chat calls available tools to inspect infrastructure and retrieve operational data. It can combine resource configuration, metrics, logs and change information when those integrations are available. It is an interactive query interface, not a replacement collector that creates missing telemetry.",
+      "output": "A response supported by tool results, with tables or charts where applicable. Tool access failures and missing data remain limitations of the answer.",
+      "entry": "Open Chat in the Agent Space and state the account, region, identifiers and UTC interval. Move a complex issue into a formal investigation when a persistent incident record is needed.",
+      "limits": "A successful Chat response does not prove that all intended sources were queried. Source permissions, telemetry retention and query limits still apply.",
+      "check": "Inspect the called tool, query window and returned identifiers. Re-run one material query in the source system; distinguish an empty result from denied or unavailable access.",
+      "refs": [
+        "ondemand",
+        "incident"
+      ],
+      "availability": "Documented",
+      "activation": "See invocation and prerequisites"
+    },
+    {
+      "id": "D15",
+      "group": "context",
+      "name": "Execute analysis code in an investigation sandbox",
+      "activation": "Explicit Agent Space opt-in",
+      "input": "An investigation requiring computation, a configured Sandbox, allowed destinations and preinstalled packages.",
+      "operation": "The agent can run shell commands, write files and execute code in an ephemeral Linux environment scoped to one investigation. It can parse evidence or compute results and read them back into the analysis. AWS CLI/SDK access uses the documented read-only proxy; allowed HTTP destinations remain a separate effect boundary.",
+      "output": "Computed results and investigation evidence from that environment, not a persistent deployment or a shared execution host.",
+      "entry": "Agent Space → Capabilities → Sandbox → Configure. Set narrowly scoped hosts, methods and paths and the required pip/npm packages before saving.",
+      "limits": "Preview, limited regions, and investigation use only in the cited guidance. It is not enabled by default and is not documented as a general execution feature for Chat or custom agents. Removing configuration stops provisioning for new investigations.",
+      "check": "Use a known small dataset and independently recompute the result. Test a disallowed destination and inspect the configured egress rules; an AWS read-only proxy does not make arbitrary external application endpoints harmless.",
+      "refs": [
+        "sandbox",
+        "history",
+        "regions"
+      ],
+      "availability": "Preview"
+    },
+    {
+      "id": "D03",
+      "group": "incident",
+      "name": "Open an investigation from an event or operator request",
+      "input": "An alarm, incident or webhook payload, or an operator-specified problem with its occurrence time and starting resource.",
+      "operation": "An associated trigger or a manual request creates a formal investigation. Native incident integrations and authenticated webhooks supply entry points; manual creation supplies the problem statement directly. The originating system remains responsible for detecting its own event.",
+      "output": "An investigation linked to the submitted problem and its timeline. Creation is not confirmation of the root cause or severity of business impact.",
+      "entry": "Use Incident Response to create an investigation, accept the investigation prompt in Chat, or configure a supported incident integration or signed webhook.",
+      "limits": "An event without reliable identifiers or timestamps can produce an incorrectly scoped investigation. A generic webhook still requires the documented payload and credential configuration.",
+      "check": "Submit a controlled test event and confirm the correct Agent Space, resource, event time and incident linkage. Check duplicate delivery behavior before production routing.",
+      "refs": [
+        "incident",
+        "webhook"
+      ],
+      "availability": "Documented",
+      "activation": "See invocation and prerequisites"
+    },
+    {
+      "id": "D04",
+      "group": "incident",
+      "name": "Correlate, link or skip incoming incidents",
+      "input": "A new incident, recent investigation context and applicable triage instructions or skills.",
+      "operation": "Triage decides whether the event should proceed as a new investigation, be linked to related work, or be skipped under applicable criteria. Linking supplies context to the existing investigation; skipping avoids starting analysis for that event. Operators can unlink or unskip when the decision is wrong.",
+      "output": "A triage decision and its relationship to an investigation, rather than an independently established diagnosis.",
+      "entry": "Configure narrowly scoped triage guidance and inspect the incident's triage decision. Use the documented unlink or unskip control to initiate independent analysis when necessary.",
+      "limits": "Similarity in time or service is not proof of a shared cause. Broad maintenance-window rules can suppress relevant incidents. Triage configuration should not be mistaken for disabling the originating alarm.",
+      "check": "Test an in-window low-priority event, an out-of-window event and a critical event. The proposed policy must not skip the latter two; retain the underlying alerts independently.",
+      "refs": [
+        "incident",
+        "skills"
+      ],
+      "availability": "Documented",
+      "activation": "See invocation and prerequisites"
+    },
+    {
+      "id": "D05",
+      "group": "incident",
+      "name": "Investigate evidence and develop a root-cause explanation",
+      "input": "The scoped problem, accessible metrics, logs, traces, deployment history, code and selected historical context.",
+      "operation": "The investigation forms and tests hypotheses by collecting evidence from connected tools. It relates symptoms, dependencies and changes and produces findings and a root-cause explanation. A recent change is a candidate explanation, not automatically the cause.",
+      "output": "Findings, supporting evidence, an investigation timeline and a conclusion that the operator can inspect. Missing observations may leave the diagnosis incomplete.",
+      "entry": "Open the investigation's Summary and Timeline. Supply additional facts through Chat with investigation rather than silently changing the problem in a separate conversation.",
+      "limits": "The agent can reason incorrectly or stop with incomplete evidence. Old monitor memories may bias a new diagnosis; they must be checked against the current incident.",
+      "check": "For each material hypothesis, retain the observation that supports it, the observation that would refute it, and the unresolved gap. Do not approve mitigation merely because the explanation is fluent.",
+      "refs": [
+        "incident",
+        "memory"
+      ],
+      "availability": "Documented",
+      "activation": "See invocation and prerequisites"
+    },
+    {
+      "id": "D06",
+      "group": "incident",
+      "name": "Steer, resume and fork an investigation",
+      "input": "A running or completed investigation, an additional fact or correction, or a selected timeline message from which to fork.",
+      "operation": "Messages can redirect an investigation. A completed investigation can resume with its prior context; a fork explores another line without changing the original. These controls change the analysis lifecycle, not the underlying production resources.",
+      "output": "An updated or branched investigation record with its own sequence of evidence and conclusions.",
+      "entry": "Use Chat with investigation to supply facts or resume completed work. Use Fork on the relevant timeline message to test an alternative line of analysis.",
+      "limits": "Resuming can incur additional analysis. Forking inherits prior context, which may include a wrong premise. A new branch of reasoning is not independent verification of its inputs.",
+      "check": "Fork a prepared investigation to test a competing hypothesis. Compare the observations each branch actually collected and identify premises inherited without a fresh check.",
+      "refs": [
+        "incident",
+        "history"
+      ],
+      "availability": "Documented",
+      "activation": "See invocation and prerequisites"
+    },
+    {
+      "id": "D14",
+      "group": "incident",
+      "name": "Assess the quality of a completed investigation",
+      "input": "A completed investigation record, with any reference root cause on its linked incident or ticket.",
+      "operation": "Review reads the reported problem, collected evidence and conclusion. It produces a separate helpful/not-helpful verdict and criterion-level assessments of scope alignment, evidence grounding, completeness, environment impact and accuracy. It does not rerun the investigation or alter its record.",
+      "output": "A Review result with pass, fail or not applicable per criterion and supporting reasoning. Accuracy is not applicable when no reference diagnosis is available.",
+      "entry": "Incident Response → completed investigation → Review; inspect the separate Review tab. The Grader agent instructions can tailor the criteria for future reviews.",
+      "limits": "Review assesses the record it is given. A passing grade cannot establish facts absent from that record or substitute for an independent telemetry check.",
+      "check": "Inspect whether a real reference root cause exists before interpreting Accuracy. Compare one evidence-grounding judgment with the cited source observation rather than accepting only the overall verdict.",
+      "refs": [
+        "review",
+        "instructions",
+        "history"
+      ],
+      "availability": "Documented",
+      "activation": "See invocation and prerequisites"
+    },
+    {
+      "id": "D07",
+      "group": "response",
+      "name": "Generate and refine mitigation proposals",
+      "input": "Investigation findings, the affected resources and operational constraints.",
+      "operation": "The agent proposes actions to reduce impact and can refine those proposals in the investigation context. A proposal explains the intended change and its rationale; it is a planning output. Current documentation describes inline proposals in the investigation flow rather than a mandatory separate handoff.",
+      "output": "A mitigation proposal to review. The team must establish exact targets, expected recovery signals and rollback conditions before using it.",
+      "entry": "Review the inline mitigation proposal and request changes to scope or assumptions. Move to the directed-action path only when a supported resource mutation is explicitly intended.",
+      "limits": "Generating a proposal neither grants permission nor executes it. A technically plausible rollback can still cause data or compatibility problems not represented in the incident evidence.",
+      "check": "Compare the proposal with the deployed version, migration state and service runbook. Require a measurable recovery condition and an owner capable of stopping or reversing the change.",
+      "refs": [
+        "incident",
+        "history",
+        "actions"
+      ],
+      "availability": "Documented",
+      "activation": "See invocation and prerequisites"
+    },
+    {
+      "id": "D08",
+      "group": "response",
+      "name": "Execute an individually approved directed action",
+      "input": "A specific mutating operation, parameters and resource scope, requested in Chat.",
+      "operation": "After Agent Space enablement and the relevant elevated account role or third-party tool opt-in, the agent presents an approval for the specific operation. The elevated execution path is separate from normal read-only investigation access. Service guardrails can refuse operations even when IAM would otherwise allow them.",
+      "output": "An execution result and associated audit evidence. Successful API execution is not proof that the incident recovered.",
+      "entry": "Enable directed actions, register the account's elevated role or classify and allow the integration tool, then review the action approval in Chat. Check validation status before attempting the action.",
+      "limits": "Disabled by default. Mutating calls outside the supported Chat approval path fail rather than silently queueing approval. Delete-class and other guarded operations can be refused. Tool classification does not repair an overprivileged backend.",
+      "check": "In a non-production account, first reject an approval and confirm no change; then approve a narrowly scoped reversible operation and correlate its result with CloudTrail and independent resource state.",
+      "refs": [
+        "actions"
+      ],
+      "availability": "Documented",
+      "activation": "Explicit opt-in"
+    },
+    {
+      "id": "D09",
+      "group": "response",
+      "name": "Generate prevention recommendations from incident patterns",
+      "input": "Past incidents, recurring causes and available environmental context.",
+      "operation": "Prevention analysis turns incident patterns into proposed reliability changes. Recommendations describe the problem, supporting incident context and implementation guidance; code-related recommendations can include a specification for engineering work. This is a separate output from the immediate mitigation of one incident.",
+      "output": "Recommendations in the improvement backlog, with rationale and prioritization. They are proposals, not completed infrastructure changes or measured reductions in incidents.",
+      "entry": "Review prevention recommendations and their supporting incidents. Route accepted work through the team's existing engineering change process.",
+      "limits": "Incomplete or incorrect historical diagnoses affect recommendation quality. Ranking is not a substitute for reviewing implementation risk, effort and ownership.",
+      "check": "Reject a recommendation that cannot identify the recurring failure it addresses. For an accepted item, define the operational metric to compare after deployment and record the observation window.",
+      "refs": [
+        "prevention"
+      ],
+      "availability": "Documented",
+      "activation": "See invocation and prerequisites"
+    },
+    {
+      "id": "D10",
+      "group": "automation",
+      "name": "Execute a configured custom agent",
+      "input": "A reusable definition containing a system prompt, assigned tools, skills and attached memory stores; optional invocation-specific instructions.",
+      "operation": "A custom agent executes the defined task using its selected toolbox and context. It records an invocation trajectory and can produce text, artifacts or recommendations. Runtime subagent delegation can continue long work with the same tools and skills; it is not permission escalation or a documented orchestrator for the three products in this collection.",
+      "output": "An invocation record and its outputs. A daily configuration report is a team-defined application of this function, not an independently supplied monitoring feature.",
+      "entry": "Agents → Custom Agents → Create agent. Use the form for the definition and optional skills/memory; use Chat to assign MCP tools. Test with Run Now before adding a trigger.",
+      "limits": "A new custom agent has no memory access until stores are attached. It reads attached managed stores but writes only attached custom stores. Required integrations must already exist.",
+      "check": "Compare the configured toolbox and memory attachments with the task's minimum requirements. Run a fixture with one intentionally unavailable source and require an explicit incomplete-result indication.",
+      "refs": [
+        "custom",
+        "custom-create",
+        "custom-run",
+        "custom-output"
+      ],
+      "availability": "Documented",
+      "activation": "See invocation and prerequisites"
+    },
+    {
+      "id": "D11",
+      "group": "automation",
+      "name": "Publish incident updates and converse in supported channels",
+      "input": "A registered communication provider and a channel association for the Agent Space.",
+      "operation": "Slack supports one-way notifications in public or private channels and bidirectional conversations in private channels when enabled. Microsoft Teams is documented as a one-way notification integration. These are different delivery modes and must not be described as universal chat parity.",
+      "output": "Incident updates or a Slack conversation thread, depending on the configured channel and mode.",
+      "entry": "Associate the channel under the Agent Space's communications capabilities. For Slack bidirectional mode, use a private channel, complete the documented setup and mention the regional app in messages.",
+      "limits": "Channel membership changes who can see operational evidence. Available conversations and actions remain constrained by Agent Space configuration; a channel connection is not authorization for arbitrary changes.",
+      "check": "Use a non-sensitive test incident to verify destination, thread behavior and authorized audience. Test removal of the association separately from unregistering the provider.",
+      "refs": [
+        "slack",
+        "history"
+      ],
+      "availability": "Documented",
+      "activation": "Configured integration"
+    },
+    {
+      "id": "D12",
+      "group": "release",
+      "name": "Review source changes for release readiness",
+      "input": "A connected repository change and relevant code, dependency, infrastructure and operational context.",
+      "operation": "Release readiness review analyzes a change for operational risk before deployment. It can apply team standards and inspect affected dependencies. This differs from generic style review and from executing tests against the deployed application.",
+      "output": "A release-readiness report with findings and an advisory release recommendation, such as Block or Proceed with Caution. The label does not by itself enforce a deployment gate.",
+      "entry": "Configure release management on the connected repository or request a review in Chat. Automated PR/MR triggers are documented for private repositories; verify provider-specific trigger configuration.",
+      "limits": "Preview in us-east-1. Repository connectivity, indexing and available context determine coverage. Branch protection or pipeline gating must be separately configured and tested.",
+      "check": "Use a known, non-production risky change and inspect whether the report identifies the affected dependency and relevant lines. Test the pipeline's actual gating behavior independently of the prose recommendation.",
+      "refs": [
+        "release",
+        "release-review",
+        "regions",
+        "history"
+      ],
+      "availability": "Preview",
+      "activation": "See invocation and prerequisites"
+    },
+    {
+      "id": "D13",
+      "group": "release",
+      "name": "Execute exploratory UI or API release tests",
+      "input": "A running application URL, a UI or API test profile, test intent and configured authentication when needed.",
+      "operation": "The agent generates a test plan and interacts with the application through a browser or HTTP requests. It explores functional behavior and returns failures with reproduction information. This is execution against the target application, not read-only analysis of a repository.",
+      "output": "A test run with status, findings and reproduction steps; UI runs can include screenshots. Coverage is exploratory rather than an exhaustive specification-based proof.",
+      "entry": "Release Manager → Test profiles → Add test profile; choose target and test type, configure required authentication, then Start testing with a bounded intent.",
+      "limits": "Preview in us-east-1. Requests can create, modify or delete application data and trigger external business effects. Directed-action approval for AWS APIs is not a per-request approval gate for these application tests.",
+      "check": "Use an authorized staging deployment with disposable data and disabled real payments/notifications. Confirm the tested build and authentication role; reproduce a reported failure independently before assigning a fix.",
+      "refs": [
+        "release-test",
+        "regions",
+        "history"
+      ],
+      "availability": "Preview",
+      "activation": "See invocation and prerequisites"
+    }
   ],
   "mechanisms": [
-    {"id":"DM1","name":"Establish data access before writing instructions","explanation":"A provider connection supplies tools; an association puts the connection in the Agent Space. Role policies and provider credentials determine what those tools can read. A skill that says to inspect a database cannot create missing database access. Private connectivity and authentication are separate configuration problems.","configure":["Create the Agent Space and associate only the intended accounts and provider connections. Record the account, region, repository and telemetry scope.","Validate a minimal read for each required source. For remote MCP servers, inspect the advertised tools, authentication method and network path before adding them.","Keep investigation reads separate from elevated directed-action roles. Inspect custom MCP tool effect classifications and backend credentials; an omitted classification can default to READ_ONLY.","For private endpoints, configure the documented private connection, DNS resolution and port ranges. Verify both the target and any separate OAuth exchange endpoint."],"lifecycle":"Changing a registration or association can change the available toolbox. Refresh derived environment context after material changes and test reads again.","verification":"Proposed check: use a resource outside the intended scope and confirm the backend denies access. A prompt that tells the agent not to read it is not a substitute.","refs":["create","mcp","actions","history"]},
-    {"id":"DM2","name":"Separate always-loaded instructions from selected skills","explanation":"Agent instructions are injected when a session begins; skills are procedural documents selected for task relevance. Use instructions for short standing constraints and skills for a specific diagnosis or triage method. Neither is an enforcement boundary.","configure":["For the current UI, open Agents → Managed agents → the relevant agent → Agent definition. Set global and agent-specific instructions there; older pages still describe the previous Knowledge location.","Create a skill under Knowledge → Skills, with a precise name and description stating when it applies. Assign it only to the relevant agent types.","For a repository-imported skill, inspect the imported content and explicitly Sync after a reviewed change. Do not assume edits in Git are already active in the Agent Space.","Keep triage skip rules bounded by exact resource, priority and maintenance window. Keep root-cause procedures separate from instructions for publishing findings."],"lifecycle":"New sessions load fresh instructions. In-flight work is not assumed to adopt edits. Learned environment knowledge is now maintained as memory; it should not be confused with user-authored procedural skills.","verification":"Proposed check: compare an applicable and a non-applicable task, inspect observable skill selection, and verify that a matching skip rule does not affect critical or out-of-window alerts.","refs":["instructions","skills","managed","history","learned"]},
-    {"id":"DM3","name":"Understand exactly what persists from past incidents","explanation":"The managed monitors store contains per-monitor cause history. Corrective investigation feedback can produce per-monitor reflections. Generated topology, dependency, pipeline and tool-use knowledge is also maintained as memory. The agent first sees store descriptions, then opens relevant entries; retaining an entry does not prove it was read in a particular run. This is documented context reuse, not evidence of customer-controlled model-weight training.","configure":["Inspect Knowledge → Memories: store name, activation, entry content, version and timestamp. Monitor memory is enabled by default; do not assume a useful entry already exists.","For an incorrect completed diagnosis, use Add feedback or Chat to record the actual root cause and correction. Inspect the resulting reflection rather than treating the feedback submission as proof of future accuracy.","Use Agents → Managed agents → Learning to inspect run History and Triggers. Current guidance describes daily monitor refresh when recent investigations exist; stale monitor entries expire after two weeks without updates.","Create a custom store only for durable operational context, give it a description explaining when it applies, and attach it explicitly to each custom agent that needs it. Managed attachments are read-only to custom agents; attached custom stores can be written.","Deactivate a misleading entry or store while correcting it. Custom stores can be deleted; managed stores cannot. Do not use memory as the only copy of an incident record."],"lifecycle":"Current memory guidance describes tool-use refresh after at least ten new completed investigations and no more than once every three days. Earlier learned-skill pages used different cadences; the memory and change-history pages take precedence. Agent Space understanding has its own refresh conditions.","verification":"Proposed check: retain the entry version, start a later investigation of the same monitor and inspect available read evidence. Require current telemetry to support or refute the historical cause. Record recall as unverified if no read evidence is exposed.","refs":["memory","learned","managed","history","doc-history","custom","custom-create"]},
-    {"id":"DM4","name":"Bound custom-agent schedules and execution","explanation":"A custom-agent definition and its schedule are separate objects. A schedule starts invocations; it does not make an incomplete prompt or missing integration into a reliable daily report. Dynamic subagent delegation continues work within the configured tool and skill boundary.","configure":["Create the definition with a precise output contract: account/resource scope, time interval, required data, incomplete-result handling and allowed outputs.","Assign actual tool names from the connected toolbox through Chat; attach only the required skills and memory stores.","Run the agent manually and inspect its History and trajectory. Fix missing-source behavior before creating a recurring trigger.","Add a schedule on the Triggers tab using the documented cron or rate syntax and time basis. Review trigger state and invocation history separately.","Pause the trigger to stop future scheduled runs. Cancel an active invocation separately; in-flight tool calls may finish."],"lifecycle":"Only one invocation per custom agent runs at a time under the documented execution model. Invocation timeouts and service quotas still apply; the schedule is not a completion-time guarantee.","verification":"Proposed check: run a read-only configuration inventory against a small resource set with a deliberately missing source. Confirm an incomplete artifact rather than a fabricated all-clear report.","refs":["custom","custom-create","custom-run","custom-output"]},
-    {"id":"DM5","name":"Separate three execution boundaries","explanation":"Read-only investigation tools, optional investigation Sandbox execution and directed actions are different paths. Release testing is a fourth boundary: it sends real application requests. A single label such as 'human approved' is insufficient to describe all of them.","configure":["Use source IAM and provider credentials to constrain ordinary investigation reads.","For Sandbox preview, explicitly enable it per Agent Space and configure outbound allowlists and package prerequisites. The documented AWS CLI/SDK proxy is read-only; this does not make arbitrary outbound application endpoints harmless.","For directed actions, enable the Agent Space preference, configure the account's elevated role or permitted mutating third-party tool, and require the individual Chat approval.","For release testing, authorize the target environment and test identity before running the profile. Isolate external side effects; do not rely on the directed-action gate to intercept each form submission."],"lifecycle":"Removing one execution path does not necessarily disable the others. Review role grants, tool opt-ins, sandbox egress and release profiles independently.","verification":"Proposed check: verify denied reads, rejected directed approvals and blocked sandbox destinations independently. For release testing, inspect target-side audit logs and disposable-data cleanup.","refs":["actions","sandbox","release-test","regions"]}
+    {
+      "id": "DM1",
+      "name": "Establish data access before writing instructions",
+      "explanation": "A provider connection supplies tools; an association puts the connection in the Agent Space. Role policies and provider credentials determine what those tools can read. A skill that says to inspect a database cannot create missing database access. Private connectivity and authentication are separate configuration problems.",
+      "configure": [
+        "Create the Agent Space and associate only the intended accounts and provider connections. Record the account, region, repository and telemetry scope.",
+        "Validate a minimal read for each required source. For remote MCP servers, inspect the advertised tools, authentication method and network path before adding them.",
+        "Keep investigation reads separate from elevated directed-action roles. Inspect custom MCP tool effect classifications and backend credentials; an omitted classification can default to READ_ONLY.",
+        "For private endpoints, configure the documented private connection, DNS resolution and port ranges. Verify both the target and any separate OAuth exchange endpoint."
+      ],
+      "lifecycle": "Changing a registration or association can change the available toolbox. Refresh derived environment context after material changes and test reads again.",
+      "verification": "Proposed check: use a resource outside the intended scope and confirm the backend denies access. A prompt that tells the agent not to read it is not a substitute.",
+      "refs": [
+        "create",
+        "mcp",
+        "actions",
+        "history"
+      ]
+    },
+    {
+      "id": "DM2",
+      "name": "Separate always-loaded instructions from selected skills",
+      "explanation": "Agent instructions are injected when a session begins; skills are procedural documents selected for task relevance. Use instructions for short standing constraints and skills for a specific diagnosis or triage method. Neither is an enforcement boundary.",
+      "configure": [
+        "For the current UI, open Agents → Managed agents → the relevant agent → Agent definition. Set global and agent-specific instructions there; older pages still describe the previous Knowledge location.",
+        "Create a skill under Knowledge → Skills, with a precise name and description stating when it applies. Assign it only to the relevant agent types.",
+        "For a repository-imported skill, inspect the imported content and explicitly Sync after a reviewed change. Do not assume edits in Git are already active in the Agent Space.",
+        "Keep triage skip rules bounded by exact resource, priority and maintenance window. Keep root-cause procedures separate from instructions for publishing findings."
+      ],
+      "lifecycle": "New sessions load fresh instructions. In-flight work is not assumed to adopt edits. Learned environment knowledge is now maintained as memory; it should not be confused with user-authored procedural skills.",
+      "verification": "Proposed check: compare an applicable and a non-applicable task, inspect observable skill selection, and verify that a matching skip rule does not affect critical or out-of-window alerts.",
+      "refs": [
+        "instructions",
+        "skills",
+        "managed",
+        "history",
+        "learned"
+      ]
+    },
+    {
+      "id": "DM3",
+      "name": "Understand exactly what persists from past incidents",
+      "explanation": "The managed monitors store contains per-monitor cause history. Corrective investigation feedback can produce per-monitor reflections. Generated topology, dependency, pipeline and tool-use knowledge is also maintained as memory. The agent first sees store descriptions, then opens relevant entries; retaining an entry does not prove it was read in a particular run. This is documented context reuse, not evidence of customer-controlled model-weight training.",
+      "configure": [
+        "Inspect Knowledge → Memories: store name, activation, entry content, version and timestamp. Monitor memory is enabled by default; do not assume a useful entry already exists.",
+        "For an incorrect completed diagnosis, use Add feedback or Chat to record the actual root cause and correction. Inspect the resulting reflection rather than treating the feedback submission as proof of future accuracy.",
+        "Use Agents → Managed agents → Learning to inspect run History and Triggers. Current guidance describes daily monitor refresh when recent investigations exist; stale monitor entries expire after two weeks without updates.",
+        "Create a custom store only for durable operational context, give it a description explaining when it applies, and attach it explicitly to each custom agent that needs it. Managed attachments are read-only to custom agents; attached custom stores can be written.",
+        "Deactivate a misleading entry or store while correcting it. Custom stores can be deleted; managed stores cannot. Do not use memory as the only copy of an incident record."
+      ],
+      "lifecycle": "Current memory guidance describes tool-use refresh after at least ten new completed investigations and no more than once every three days. Earlier learned-skill pages used different cadences; the memory and change-history pages take precedence. Agent Space understanding has its own refresh conditions.",
+      "verification": "Proposed check: retain the entry version, start a later investigation of the same monitor and inspect available read evidence. Require current telemetry to support or refute the historical cause. Record recall as unverified if no read evidence is exposed.",
+      "refs": [
+        "memory",
+        "learned",
+        "managed",
+        "history",
+        "doc-history",
+        "custom",
+        "custom-create"
+      ]
+    },
+    {
+      "id": "DM4",
+      "name": "Bound custom-agent schedules and execution",
+      "explanation": "A custom-agent definition and its schedule are separate objects. A schedule starts invocations; it does not make an incomplete prompt or missing integration into a reliable daily report. Dynamic subagent delegation continues work within the configured tool and skill boundary.",
+      "configure": [
+        "Create the definition with a precise output contract: account/resource scope, time interval, required data, incomplete-result handling and allowed outputs.",
+        "Assign actual tool names from the connected toolbox through Chat; attach only the required skills and memory stores.",
+        "Run the agent manually and inspect its History and trajectory. Fix missing-source behavior before creating a recurring trigger.",
+        "Add a schedule on the Triggers tab using the documented cron or rate syntax and time basis. Review trigger state and invocation history separately.",
+        "Pause the trigger to stop future scheduled runs. Cancel an active invocation separately; in-flight tool calls may finish."
+      ],
+      "lifecycle": "Only one invocation per custom agent runs at a time under the documented execution model. Invocation timeouts and service quotas still apply; the schedule is not a completion-time guarantee.",
+      "verification": "Proposed check: run a read-only configuration inventory against a small resource set with a deliberately missing source. Confirm an incomplete artifact rather than a fabricated all-clear report.",
+      "refs": [
+        "custom",
+        "custom-create",
+        "custom-run",
+        "custom-output"
+      ]
+    },
+    {
+      "id": "DM5",
+      "name": "Separate three execution boundaries",
+      "explanation": "Read-only investigation tools, optional investigation Sandbox execution and directed actions are different paths. Release testing is a fourth boundary: it sends real application requests. A single label such as 'human approved' is insufficient to describe all of them.",
+      "configure": [
+        "Use source IAM and provider credentials to constrain ordinary investigation reads.",
+        "For Sandbox preview, explicitly enable it per Agent Space and configure outbound allowlists and package prerequisites. The documented AWS CLI/SDK proxy is read-only; this does not make arbitrary outbound application endpoints harmless.",
+        "For directed actions, enable the Agent Space preference, configure the account's elevated role or permitted mutating third-party tool, and require the individual Chat approval.",
+        "For release testing, authorize the target environment and test identity before running the profile. Isolate external side effects; do not rely on the directed-action gate to intercept each form submission."
+      ],
+      "lifecycle": "Removing one execution path does not necessarily disable the others. Review role grants, tool opt-ins, sandbox egress and release profiles independently.",
+      "verification": "Proposed check: verify denied reads, rejected directed approvals and blocked sandbox destinations independently. For release testing, inspect target-side audit logs and disposable-data cleanup.",
+      "refs": [
+        "actions",
+        "sandbox",
+        "release-test",
+        "regions"
+      ]
+    }
   ],
   "procedures": [
-    {"id":"DU1","title":"Investigate a recurrent error-rate alarm without assuming the old cause","goal":"Decide whether the current incident supports the previous diagnosis and whether a mitigation is justified.","when":"An identified alarm recurs after a deployment or dependency change. The team has access to current telemetry and a prior investigation.","not_for":"Proving that the agent learns correctly from a single repeated answer, or automatically rolling back every deployment near an alarm.","functions":["D03","D04","D05","D06","D07"],"inputs":["Alarm identifier, account, region, affected service and UTC start/end interval.","Deployment/build identifiers and change times; request volume and error/latency measurements before and after the event.","Prior investigation and memory entry/version, plus the corrected diagnosis if available.","Named incident owner, allowed read sources and separate approval authority for any change."],"steps":[["Operator","Confirm the event and scope","Check the triggering resource and interval against the monitoring system. If identifiers or access are missing, correct those first rather than asking for a cause."],["Agent and operator","Inspect triage and form competing hypotheses","If linked to an old incident incorrectly, unlink. Ask for current evidence for a deployment regression, a dependency failure and the remembered cause; these are proposed hypotheses, not product-supplied categories."],["Operator","Challenge the evidence","Re-run a material log or metric query. Check whether errors preceded the deployment, whether unaffected instances differ, and whether the alleged dependency actually lies on the failed request path."],["Operator","Choose continuation or mitigation","If evidence conflicts, steer or fork the investigation. If a cause is supported, review the mitigation's exact target, recovery signal and rollback condition; do not equate proposal generation with authorization."],["Operator","Record the result","After independent verification, provide structured feedback and inspect any retained reflection. Keep the incident record as the durable source of truth."]],"acceptance":"A diagnosis tied to current observations, a stated alternative that was tested or left unresolved, and an explicit change/no-change decision. A Review may help assess the record but does not replace the telemetry check.","stop":"Stop causal claims when required logs are inaccessible, the interval is wrong or the deployment identity is unknown. Escalate to the owning engineer with the evidence gap.","prompt":"Investigate alarm <identifier> for <UTC interval> in <account/region>. Compare the prior diagnosis with current telemetry and deployment <build>. Separate observations, hypotheses and missing evidence. Propose mitigation only; do not change resources.","demo_minutes":8,"demo":[[1,"Show the prepared event, build and scope; identify unavailable sources."],[2,"Inspect the stored memory and the current investigation's evidence side by side."],[2,"Challenge one causal claim with a source query; show an alternative explanation."],[2,"Review a mitigation proposal and explain the separate execution approval."],[1,"Show corrective feedback and the evidence needed to claim later recall."]],"fallback":"Use a clearly labeled prepared investigation export and source-query results. Do not invent a completed agent run during the demonstration.","refs":["incident","review","memory","actions","history"]},
-    {"id":"DU2","title":"Configure a recurring configuration check without granting change authority","goal":"Produce a reviewable list of resources that violate a team-defined configuration rule.","when":"A platform team already has a precise rule, inventory scope and tools capable of reading the relevant configuration.","not_for":"An assertion that the product includes a universal compliance scanner or that generated findings certify compliance.","functions":["D01","D02","D10"],"inputs":["A small approved resource set and one explicit rule, such as a required configuration value.","The exact read tool and returned field used to evaluate that rule.","A fixture with compliant, non-compliant and inaccessible resources.","An owner and a report destination; no mutation tools for the first run."],"steps":[["Operator","Define the decision rule","Write the exact field comparison and specify that inaccessible resources are unknown, not compliant."],["Operator","Create the custom agent","Assign the minimal read toolbox and, only if needed, a reviewed custom context store. Inspect the saved configuration."],["Agent and operator","Run against the fixture","Compare all three resource classes against the expected results. Require resource IDs, observed values and query timestamps in the proposed output contract."],["Operator","Add and supervise a trigger","Enable the schedule only after the manual check passes. Inspect invocation history for failures; pause the trigger independently of cancelling an active invocation."]],"acceptance":"Every in-scope resource is classified as compliant, non-compliant or unknown with evidence. Missing access remains visible. No change action occurs.","stop":"Do not schedule if inventory is incomplete, the rule cannot be expressed against an observed field, or output turns access failures into compliant results.","prompt":"Create a read-only custom agent for <resource scope>. Evaluate <field/rule> using <approved tool>. Report resource ID, observed value, query time and compliant/non-compliant/unknown. Treat denied or missing data as unknown. Do not modify resources.","demo_minutes":0,"demo":[],"fallback":"Review the definition and fixture locally; do not imply that a background schedule was exercised.","refs":["custom","custom-create","custom-run","custom-output"]}
+    {
+      "id": "DU1",
+      "title": "Investigate a recurrent error-rate alarm without assuming the old cause",
+      "goal": "Decide whether the current incident supports the previous diagnosis and whether a mitigation is justified.",
+      "when": "An identified alarm recurs after a deployment or dependency change. The team has access to current telemetry and a prior investigation.",
+      "not_for": "Proving that the agent learns correctly from a single repeated answer, or automatically rolling back every deployment near an alarm.",
+      "functions": [
+        "D03",
+        "D04",
+        "D05",
+        "D06",
+        "D07",
+        "D14"
+      ],
+      "inputs": [
+        "Alarm identifier, account, region, affected service and UTC start/end interval.",
+        "Deployment/build identifiers and change times; request volume and error/latency measurements before and after the event.",
+        "Prior investigation and memory entry/version, plus the corrected diagnosis if available.",
+        "Named incident owner, allowed read sources and separate approval authority for any change."
+      ],
+      "steps": [
+        [
+          "Operator",
+          "Confirm the event and scope",
+          "Check the triggering resource and interval against the monitoring system. If identifiers or access are missing, correct those first rather than asking for a cause."
+        ],
+        [
+          "Agent and operator",
+          "Inspect triage and form competing hypotheses",
+          "If linked to an old incident incorrectly, unlink. Ask for current evidence for a deployment regression, a dependency failure and the remembered cause; these are proposed hypotheses, not product-supplied categories."
+        ],
+        [
+          "Operator",
+          "Challenge the evidence",
+          "Re-run a material log or metric query. Check whether errors preceded the deployment, whether unaffected instances differ, and whether the alleged dependency actually lies on the failed request path."
+        ],
+        [
+          "Operator",
+          "Choose continuation or mitigation",
+          "If evidence conflicts, steer or fork the investigation. If a cause is supported, review the mitigation's exact target, recovery signal and rollback condition; do not equate proposal generation with authorization."
+        ],
+        [
+          "Operator",
+          "Record the result",
+          "After independent verification, provide structured feedback and inspect any retained reflection. Keep the incident record as the durable source of truth."
+        ]
+      ],
+      "acceptance": "A diagnosis tied to current observations, a stated alternative that was tested or left unresolved, and an explicit change/no-change decision. A Review may help assess the record but does not replace the telemetry check.",
+      "stop": "Stop causal claims when required logs are inaccessible, the interval is wrong or the deployment identity is unknown. Escalate to the owning engineer with the evidence gap.",
+      "prompt": "Investigate alarm <identifier> for <UTC interval> in <account/region>. Compare the prior diagnosis with current telemetry and deployment <build>. Separate observations, hypotheses and missing evidence. Propose mitigation only; do not change resources.",
+      "demo_minutes": 8,
+      "demo": [
+        [
+          1,
+          "Show the prepared event, build and scope; identify unavailable sources."
+        ],
+        [
+          2,
+          "Inspect the stored memory and the current investigation's evidence side by side."
+        ],
+        [
+          2,
+          "Challenge one causal claim with a source query; show an alternative explanation."
+        ],
+        [
+          2,
+          "Review a mitigation proposal and explain the separate execution approval."
+        ],
+        [
+          1,
+          "Show corrective feedback and the evidence needed to claim later recall."
+        ]
+      ],
+      "fallback": "Use a clearly labeled prepared investigation export and source-query results. Do not invent a completed agent run during the demonstration.",
+      "refs": [
+        "incident",
+        "review",
+        "memory",
+        "actions",
+        "history"
+      ]
+    },
+    {
+      "id": "DU2",
+      "title": "Configure a recurring configuration check without granting change authority",
+      "goal": "Produce a reviewable list of resources that violate a team-defined configuration rule.",
+      "when": "A platform team already has a precise rule, inventory scope and tools capable of reading the relevant configuration.",
+      "not_for": "An assertion that the product includes a universal compliance scanner or that generated findings certify compliance.",
+      "functions": [
+        "D01",
+        "D02",
+        "D10"
+      ],
+      "inputs": [
+        "A small approved resource set and one explicit rule, such as a required configuration value.",
+        "The exact read tool and returned field used to evaluate that rule.",
+        "A fixture with compliant, non-compliant and inaccessible resources.",
+        "An owner and a report destination; no mutation tools for the first run."
+      ],
+      "steps": [
+        [
+          "Operator",
+          "Define the decision rule",
+          "Write the exact field comparison and specify that inaccessible resources are unknown, not compliant."
+        ],
+        [
+          "Operator",
+          "Create the custom agent",
+          "Assign the minimal read toolbox and, only if needed, a reviewed custom context store. Inspect the saved configuration."
+        ],
+        [
+          "Agent and operator",
+          "Run against the fixture",
+          "Compare all three resource classes against the expected results. Require resource IDs, observed values and query timestamps in the proposed output contract."
+        ],
+        [
+          "Operator",
+          "Add and supervise a trigger",
+          "Enable the schedule only after the manual check passes. Inspect invocation history for failures; pause the trigger independently of cancelling an active invocation."
+        ]
+      ],
+      "acceptance": "Every in-scope resource is classified as compliant, non-compliant or unknown with evidence. Missing access remains visible. No change action occurs.",
+      "stop": "Do not schedule if inventory is incomplete, the rule cannot be expressed against an observed field, or output turns access failures into compliant results.",
+      "prompt": "Create a read-only custom agent for <resource scope>. Evaluate <field/rule> using <approved tool>. Report resource ID, observed value, query time and compliant/non-compliant/unknown. Treat denied or missing data as unknown. Do not modify resources.",
+      "demo_minutes": 0,
+      "demo": [],
+      "fallback": "Review the definition and fixture locally; do not imply that a background schedule was exercised.",
+      "refs": [
+        "custom",
+        "custom-create",
+        "custom-run",
+        "custom-output"
+      ]
+    }
   ],
   "gaps": [
     "Some retrieved HTML pages expose older cached text than the same URL's current indexed documentation. The current change history and feature-specific updates are used for migrated memory and instruction locations. The sources register records the relevant pages; the guide does not preserve obsolete cadence claims as current behavior.",
@@ -53,30 +572,105 @@
     "The procedural-skill guide and newer Sandbox guidance describe different execution contexts. Code bundled with a skill is treated as Sandbox-specific preview behavior, not as a default skill capability."
   ],
   "sources": {
-    "create":{"title":"Create an Agent Space","url":"https://docs.aws.amazon.com/devopsagent/latest/userguide/getting-started-with-aws-devops-agent-creating-an-agent-space.html"},
-    "ondemand":{"title":"On-demand DevOps tasks","url":"https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-on-demand-devops-tasks.html"},
-    "incident":{"title":"Autonomous incident response","url":"https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-autonomous-incident-response.html"},
-    "webhook":{"title":"Invoke through a webhook","url":"https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-invoking-devops-agent-through-webhook.html"},
-    "review":{"title":"Reviewing investigations","url":"https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-reviewing-investigations.html"},
-    "actions":{"title":"Working with directed actions","url":"https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-working-with-directed-actions.html"},
-    "prevention":{"title":"Proactive incident prevention","url":"https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-proactive-incident-prevention.html"},
-    "custom":{"title":"Custom agents","url":"https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html"},
-    "custom-create":{"title":"Creating a custom agent","url":"https://docs.aws.amazon.com/devopsagent/latest/userguide/custom-agents-creating-a-custom-agent.html"},
-    "custom-run":{"title":"Executing custom agents","url":"https://docs.aws.amazon.com/devopsagent/latest/userguide/custom-agents-executing-custom-agents.html"},
-    "custom-output":{"title":"Custom-agent outputs","url":"https://docs.aws.amazon.com/devopsagent/latest/userguide/custom-agents-custom-agent-outputs.html"},
-    "memory":{"title":"Memories: current stores, refresh and lifecycle","url":"https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html"},
-    "learned":{"title":"Learned skills: migration to memory","url":"https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-learned-skills.html"},
-    "instructions":{"title":"Agent instructions","url":"https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-agent-instructions.html"},
-    "skills":{"title":"DevOps Agent skills","url":"https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-skills.html"},
-    "managed":{"title":"Managed agents and Learning history","url":"https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-managed-agents.html"},
-    "mcp":{"title":"Connect MCP servers","url":"https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-connecting-mcp-servers.html"},
-    "slack":{"title":"Connecting Slack","url":"https://docs.aws.amazon.com/devopsagent/latest/userguide/connecting-to-ticketing-and-chat-connecting-slack.html"},
-    "release":{"title":"Release management","url":"https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-release-management-index.html"},
-    "release-review":{"title":"Release readiness code review","url":"https://docs.aws.amazon.com/devopsagent/latest/userguide/release-management-release-readiness-code-review.html"},
-    "release-test":{"title":"Release testing","url":"https://docs.aws.amazon.com/devopsagent/latest/userguide/release-management-release-testing.html"},
-    "sandbox":{"title":"Sandbox preview release and isolation notes","url":"https://docs.aws.amazon.com/devopsagent/latest/userguide/whats-new.html"},
-    "history":{"title":"What's new: dated behavior and UI changes","url":"https://docs.aws.amazon.com/devopsagent/latest/userguide/whats-new.html"},
-    "doc-history":{"title":"Document history: reflections and memory changes","url":"https://docs.aws.amazon.com/devopsagent/latest/userguide/document-history.html"},
-    "regions":{"title":"Feature availability by Region","url":"https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-supported-regions.html"}
+    "create": {
+      "title": "Create an Agent Space",
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/getting-started-with-aws-devops-agent-creating-an-agent-space.html"
+    },
+    "ondemand": {
+      "title": "On-demand DevOps tasks",
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-on-demand-devops-tasks.html"
+    },
+    "incident": {
+      "title": "Autonomous incident response",
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-autonomous-incident-response.html"
+    },
+    "webhook": {
+      "title": "Invoke through a webhook",
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-invoking-devops-agent-through-webhook.html"
+    },
+    "review": {
+      "title": "Reviewing investigations",
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-reviewing-investigations.html"
+    },
+    "actions": {
+      "title": "Working with directed actions",
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-working-with-directed-actions.html"
+    },
+    "prevention": {
+      "title": "Proactive incident prevention",
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-proactive-incident-prevention.html"
+    },
+    "custom": {
+      "title": "Custom agents",
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html"
+    },
+    "custom-create": {
+      "title": "Creating a custom agent",
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/custom-agents-creating-a-custom-agent.html"
+    },
+    "custom-run": {
+      "title": "Executing custom agents",
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/custom-agents-executing-custom-agents.html"
+    },
+    "custom-output": {
+      "title": "Custom-agent outputs",
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/custom-agents-custom-agent-outputs.html"
+    },
+    "memory": {
+      "title": "Memories: current stores, refresh and lifecycle",
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html"
+    },
+    "learned": {
+      "title": "Learned skills: migration to memory",
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-learned-skills.html"
+    },
+    "instructions": {
+      "title": "Agent instructions",
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-agent-instructions.html"
+    },
+    "skills": {
+      "title": "DevOps Agent skills",
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-skills.html"
+    },
+    "managed": {
+      "title": "Managed agents and Learning history",
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-managed-agents.html"
+    },
+    "mcp": {
+      "title": "Connect MCP servers",
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-connecting-mcp-servers.html"
+    },
+    "slack": {
+      "title": "Connecting Slack",
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/connecting-to-ticketing-and-chat-connecting-slack.html"
+    },
+    "release": {
+      "title": "Release management",
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-release-management-index.html"
+    },
+    "release-review": {
+      "title": "Release readiness code review",
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/release-management-release-readiness-code-review.html"
+    },
+    "release-test": {
+      "title": "Release testing",
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/release-management-release-testing.html"
+    },
+    "sandbox": {
+      "title": "Set up a Sandbox: execution, egress and package configuration",
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-sandbox.html"
+    },
+    "history": {
+      "title": "What's new: dated behavior and UI changes",
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/whats-new.html"
+    },
+    "doc-history": {
+      "title": "Document history: reflections and memory changes",
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/document-history.html"
+    },
+    "regions": {
+      "title": "Feature availability by Region",
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-supported-regions.html"
+    }
   }
 }
