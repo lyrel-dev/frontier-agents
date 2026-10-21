@@ -25,23 +25,26 @@ jobs:
         run: |
           python -m pip install beautifulsoup4==4.13.4 python-pptx==1.0.2 playwright==1.57.0
           python -m playwright install --with-deps chromium
-      - name: Apply requested scope transition when present
-        run: |
-          if [ -f tools/apply_scope.py ]; then python tools/apply_scope.py; fi
-      - name: Assemble and rebuild current documents
+      - name: Assemble existing scenario and architecture documents
         run: |
           python tools/assemble_content.py
           python tools/build_suite.py
-      - name: Validate content, browser controls and presentations
+      - name: Build platform capability and mechanism references
+        run: |
+          python -m py_compile tools/build_platform_references.py tools/finalize_platform_publication.py
+          python tools/build_platform_references.py --browser
+      - name: Validate the final document collection
         run: |
           python tools/build_suite.py --check
           python tools/editorial_lint.py
           python tools/qa_format.py
           python tools/qa_mechanisms_browser.py
           python tools/validate_scope.py
+          python tools/build_platform_references.py --check --browser
+          python tools/finalize_platform_publication.py
       - name: Commit each changed document or deletion separately
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          python tools/build_suite.py --commit
+          python tools/build_platform_references.py --commit
           git push origin HEAD:main
