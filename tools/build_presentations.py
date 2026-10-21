@@ -67,7 +67,7 @@ def card(slide,x,y,w,h,title,body,tag,accent):
     text(slide,title,x+.18,top,w-.36,.55,20,INK,True,minimum=16)
     text(slide,body,x+.18,top+.66,w-.36,h-(top-y)-.82,18 if h>2.4 else 16,INK,minimum=14)
 
-def build_deck(deck:dict,story:dict,path:Path):
+def build_deck(deck:dict,story:dict,path:Path,evidence:dict,records:dict):
     prs=Presentation();prs.slide_width=Inches(13.333);prs.slide_height=Inches(7.5)
     prs.core_properties.title=deck['title']+' — engineering field guide'
     prs.core_properties.subject='Source-aligned publication edition; timed demonstrations and official documentation.'
@@ -76,6 +76,8 @@ def build_deck(deck:dict,story:dict,path:Path):
     accent=story['accent'].lstrip('#').upper();elapsed=0
     for index,s in enumerate(deck['slides'],1):
         slide=base(prs,deck,s,index,elapsed,accent);kind=s['kind']
+        if s.get('refs'):
+            text(slide,'Official source IDs: '+', '.join(s['refs']),.57,6.79,11.9,.17,9.5,MUTED,minimum=9)
         if kind=='hero':
             box(slide,.55,2.55,12.23,1.05,NAVY,None,True)
             text(slide,s['outcome'],.8,2.84,11.7,.45,25,WHITE,True,minimum=21)
@@ -112,6 +114,49 @@ def build_deck(deck:dict,story:dict,path:Path):
         else:raise ValueError('Unsupported slide type '+kind)
         elapsed+=s['seconds']
     assert elapsed==deck['minutes']*60
+    items=evidence.get('capabilities',evidence.get('patterns',[]))
+    official={x['id']:x for x in evidence['sources']}
+    for ref_index,c in enumerate(items,1):
+        claim=c.get('claim',c.get('rule',''))
+        limit=c.get('limit',c.get('boundary',''))
+        output=records[c['id']]['record']
+        name=f'{c["id"]} · {c["title"]}'
+        meta=' · '.join([c.get('availability',c.get('kind','Team recommendation')),c.get('delivery','Architecture pattern')])
+        refslide={'title':name,'takeaway':meta,'phase':'Untimed appendix','kind':'reference','seconds':0,
+                  'notes':'Reference content only; not part of the timed presentation. Product function and prerequisites come from the cited official documentation. The retention record and independent acceptance procedure are recommended team controls, not asserted native outputs. No live workflow was executed.',
+                  'refs':[]}
+        slide=base(prs,deck,refslide,len(deck['slides'])+ref_index,elapsed,accent)
+        head='PROPOSED ARCHITECTURE PATTERN' if 'patterns' in evidence else 'DOCUMENTED FUNCTION'
+        top=[(head,claim),('INVOCATION & SCOPE',c.get('setup','')),('RETAINED RECORD · PROPOSED',output)]
+        for j,(title,body) in enumerate(top):
+            x=.55+j*4.14;box(slide,x,2.50,3.95,2.03,SOFT,LINE,True)
+            text(slide,title,x+.17,2.66,3.60,.28,10.5,accent,True,minimum=10)
+            text(slide,body,x+.17,3.04,3.58,1.44,17,INK,minimum=12.5)
+        box(slide,.55,4.72,6.00,1.94,SOFT,LINE,True)
+        text(slide,'INDEPENDENT ACCEPTANCE · PROPOSED',.72,4.88,5.65,.27,10.5,accent,True,minimum=10)
+        text(slide,c.get('check',''),.72,5.29,5.63,1.18,17,INK,minimum=12.5)
+        box(slide,6.77,4.72,6.01,1.94,'FCF9F1',LINE,True)
+        text(slide,'KNOWN LIMITS AND EFFECTS',6.94,4.88,5.67,.27,10.5,'8B5B1C',True,minimum=10)
+        text(slide,limit,6.94,5.29,5.63,1.18,17,INK,minimum=12.5)
+        source_lines=[]
+        for rid in [*c.get('refs',[])]:
+            source=official.get(rid)
+            if source:source_lines.append(f'{rid} — {source["title"]}: {source["url"]}')
+        for imp in c.get('implementations',[]):
+            if isinstance(imp,dict):
+                for rid in imp.get('refs',[]):
+                    source=official.get(rid)
+                    if source:source_lines.append(f'{rid} — {source["title"]}: {source["url"]}')
+        if not source_lines and isinstance(c.get('implementation'),dict):
+            for imp in c['implementation'].values():
+                if isinstance(imp,dict):
+                    for rid in imp.get('refs',[]):
+                        source=official.get(rid)
+                        if source:source_lines.append(f'{rid} — {source["title"]}: {source["url"]}')
+        slide.notes_slide.notes_text_frame.text += '\n\nCapability evidence:\n'+'\n'.join(dict.fromkeys(source_lines))
+        source_ids=[entry.split(' — ')[0] for entry in dict.fromkeys(source_lines)]
+        if source_ids:
+            text(slide,'Official source IDs: '+', '.join(source_ids[:9])+(' + others in notes' if len(source_ids)>9 else ''),.57,6.79,11.9,.17,9.5,MUTED,minimum=9)
     appendix={'title':'Official evidence and delivery boundary','takeaway':'Use the linked product documentation and the complete report source register.','phase':'Untimed appendix','kind':'matrix','seconds':0,'notes':'This appendix is outside the timed session. All source URLs are listed below and in the relevant slide notes. No live workflow or measured benefit is claimed.','refs':list(deck['sources'])}
     slide=base(prs,deck,appendix,len(deck['slides'])+1,elapsed,accent)
     for j,(ref,source) in enumerate(list(deck['sources'].items())[:6]):
