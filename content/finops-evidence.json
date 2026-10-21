@@ -1,18 +1,8 @@
 {
-  "slug": "aws_finops_agent",
   "title": "AWS FinOps Agent",
-  "subtitle": "Day-to-day cloud cost engineering · preview",
+  "slug": "aws_finops_agent",
   "validated": "2026-10-20",
-  "scope": "Cost inquiry, anomaly investigation, recommendation triage, recurring reporting, and engineering handoff. All service features in this report are preview; no autonomous resource resizing, deletion, or commitment purchase is claimed.",
-  "overview": "Use the agent to turn AWS cost data into a specific engineering question: what changed, which account or service is responsible, what evidence supports the explanation, and what should a team investigate next. Keep infrastructure changes and financial commitments in existing approval processes.",
-  "alert": "The entire service is preview in us-east-1. Stored context, conversations, memory, and artifacts remain there; inference can use other US Regions. Slack is outbound-only. Jira approvals depend on how the action starts, and optimization advice does not apply infrastructure changes.",
-  "alert_refs": [
-    "S02",
-    "S16",
-    "S14",
-    "S15"
-  ],
-  "default_preview": true,
+  "scope": "Day-to-day cost-engineering workflows with AWS FinOps Agent.",
   "capabilities": [
     {
       "id": "C01",
@@ -276,220 +266,7 @@
       "note": "Core behavior is documented; the example task and acceptance check are author recommendations, not executed demonstrations."
     }
   ],
-  "general_audit": [
-    {
-      "id": "G01",
-      "title": "All capabilities remain preview",
-      "text": "Every card inherits the service’s preview status. Preview is included by default because excluding it would hide the entire report; turning the filter off intentionally shows no routine GA baseline.",
-      "refs": [
-        "S02",
-        "S01"
-      ],
-      "verdict": "Qualified"
-    },
-    {
-      "id": "G02",
-      "title": "Region and residency",
-      "text": "Preview runs and stores context, conversations, memory, and artifacts in us-east-1. Inference can occur in other US Regions. This is not an EU- or Switzerland-resident processing option.",
-      "refs": [
-        "S16"
-      ],
-      "verdict": "Qualified"
-    },
-    {
-      "id": "G03",
-      "title": "Permissions and charges are still real",
-      "text": "Separate agent service-role access from operator access. Prerequisite AWS services and APIs have their own permissions and possible charges; no preview service fee does not mean every dependency is free. EventBridge automation setup also requires scoped management permissions.",
-      "refs": [
-        "S04",
-        "S03",
-        "S05"
-      ],
-      "verdict": "Qualified"
-    },
-    {
-      "id": "G04",
-      "title": "Analysis does not apply resource changes",
-      "text": "Recommendations come from existing AWS optimization services. No resource resizing, deletion, or commitment purchase is asserted. Do not confuse read-oriented analysis with an absence of all writes: automations manage event rules and can send external messages.",
-      "refs": [
-        "S09",
-        "S15",
-        "S04"
-      ],
-      "verdict": "Qualified"
-    },
-    {
-      "id": "G05",
-      "title": "Approval depends on the action path",
-      "text": "Chat or on-demand Jira issues/comments require approval. Scheduled/event-driven Jira actions are pre-authorized when configured. Slack posts require no per-message approval, so channel selection is a material control.",
-      "refs": [
-        "S15"
-      ],
-      "verdict": "Qualified"
-    },
-    {
-      "id": "G06",
-      "title": "Owner mapping is not a Jira assignment action",
-      "text": "The context guidance discusses ownership-aware routing, but the Jira integration’s specific supported-action list does not include setting assignee, priority, or status. This report treats ownership context as ticket content and project routing; assignment is controlled by Jira defaults or rules.",
-      "refs": [
-        "S12",
-        "S13"
-      ],
-      "verdict": "Qualified"
-    },
-    {
-      "id": "G07",
-      "title": "Context formats and access",
-      "text": "Supported uploads are text-based formats, not PDF/PPTX. Context files are shared with the agent’s authorized users; memory correction does not edit those files. Sanitize organizational examples before use.",
-      "refs": [
-        "S12"
-      ],
-      "verdict": "Qualified"
-    },
-    {
-      "id": "G08",
-      "title": "Validate data semantics and source evidence",
-      "text": "Match periods, dimensions, granularity, and cost basis before comparing numbers. Anomaly causes are investigative and reported savings are estimates until an approved change is measured.",
-      "refs": [
-        "S06",
-        "S07",
-        "S09",
-        "S15"
-      ],
-      "verdict": "Qualified"
-    }
-  ],
-  "transcript": [
-    {
-      "n": 1,
-      "title": "Position FinOps Agent in the engineering workflow",
-      "message": "Analyze and route cost work; keep change authority elsewhere.",
-      "speaker": "This is a preview service for cost analysis, anomaly investigation, recommendation triage, and reporting. Its engineering value is to turn a vague cost concern into evidence and a next action. It is not presented here as an infrastructure-remediation engine. A service owner still decides whether a capacity or configuration change is safe, and existing approval processes still govern financial commitments. Keep this scope distinct from DevOps incident response: cost evidence can inform an investigation, but the report does not claim general operational diagnosis or automatic production repair.",
-      "demo": "Choose one engineering cost question and identify the service owner, billing period, evidence source, and possible follow-up action.",
-      "refs": [
-        "S02",
-        "S09",
-        "S15"
-      ]
-    },
-    {
-      "n": 2,
-      "title": "Establish a trustworthy cost baseline",
-      "message": "The same number requires the same period, filters, and cost basis.",
-      "speaker": "Begin with a question that can be reproduced in the underlying billing view. Define the account scope, completed time periods, dimensions, and cost treatment. Ask the agent to expose these choices in its answer. Our suggested first check is a two-week comparison for a single service rather than an organization-wide explanation. Reconcile a material total before acting on the narrative. A forecast or commitment-coverage summary is a separate kind of output: useful for planning, but not a guarantee or an authorization to buy.",
-      "demo": "Compare a generated breakdown with the equivalent source-console view and explain any difference before accepting the report.",
-      "refs": [
-        "S06",
-        "S04"
-      ]
-    },
-    {
-      "n": 3,
-      "title": "Investigate an anomaly without overstating causality",
-      "message": "Separate observed cost drivers from plausible explanations.",
-      "speaker": "An anomaly investigation can combine billing drivers with relevant operational events when the required access exists. A deployment or configuration change near a cost increase is evidence to examine, not a proven cause. Our proposed investigation record separates facts, hypotheses, and missing data. Validate the leading explanation with the responsible team and relevant usage information. Missing CloudTrail access should be visible as a limitation rather than silently filled with speculation. This approach makes the result suitable for an engineering handoff without presenting uncertain diagnosis as settled fact.",
-      "demo": "Build a sample evidence table with observed cost movement, candidate operational changes, and the test needed to distinguish explanations.",
-      "refs": [
-        "S07",
-        "S15"
-      ]
-    },
-    {
-      "n": 4,
-      "title": "Convert optimizer output into reviewable engineering work",
-      "message": "Estimated benefit must survive reliability and workload checks.",
-      "speaker": "The agent retrieves and contextualizes recommendations from existing AWS optimization services. Use it to filter the backlog and surface opportunities that match a team’s account scope and constraints. Do not mistake a compelling summary for a safe implementation plan. Our suggested first opportunity is low-risk and reversible, with an owner and a baseline. Check workload variability, dependencies, and overlapping recommendations before combining estimated savings. Implementation remains in the normal engineering change process, followed by measurement on a comparable period. A generated ticket is a handoff, not a completed optimization.",
-      "demo": "Review one proposed opportunity and write its operational acceptance criteria, rollback condition, and post-change cost measurement.",
-      "refs": [
-        "S09",
-        "S13"
-      ]
-    },
-    {
-      "n": 5,
-      "title": "Build reporting that remains useful every week",
-      "message": "A recurring artifact needs an owner, validation, and a stop condition.",
-      "speaker": "Reports can be produced in HTML, PDF, or editable PowerPoint and refined for a particular audience. A tracked on-demand task differs from a normal chat answer, and a scheduled task differs from a manually requested review. Our recommendation is to begin with one reporting cadence and a simple template rather than many notifications. Reconcile totals and labels on the first output, then inspect subsequent runs for drift and failures. Record who maintains the account mapping and who decides when the automation should be revised or disabled.",
-      "demo": "Draft one platform-team report, request a tracked run, and inspect the planned recurrence before enabling delivery.",
-      "refs": [
-        "S10",
-        "S11"
-      ]
-    },
-    {
-      "n": 6,
-      "title": "Add event-driven response only after prerequisites are ready",
-      "message": "Cost-anomaly events are supported; arbitrary deployment events are not.",
-      "speaker": "Event-based workflows build on Cost Anomaly Detection and EventBridge permissions. They are not a general event bus for every engineering signal during this preview. Define the monitor, threshold conditions, account scope, and destination together. Our proposed rollout first validates that a relevant event produces one useful investigation rather than repeated noisy output. Keep historical tasks separate from the decision to disable future automation. Review destinations and write approvals at setup time because a scheduled or event-triggered action can behave differently from an interactive request.",
-      "demo": "Review a proposed anomaly-trigger configuration, its expected output, a duplicate-event case, and the procedure to disable future runs.",
-      "refs": [
-        "S08",
-        "S11",
-        "S04"
-      ]
-    },
-    {
-      "n": 7,
-      "title": "Treat context and collaboration settings as access decisions",
-      "message": "Outbound messaging and task ownership have specific limits.",
-      "speaker": "Organizational context helps translate account IDs into meaningful team work, but uploaded files are visible to users with access to the agent and must be sanitized. Memory corrections are not edits to those uploaded files. For collaboration, the supported capabilities are narrower than a generic assistant inside every application: Jira Cloud receives issues and comments, while Slack is an outbound destination rather than a command interface. Do not assume the agent assigns a ticket to an owner simply because it knows the team mapping. Inspect the actual destination, project defaults, and action-approval path.",
-      "demo": "Inspect an account-to-team context file, a draft Jira issue, and a Slack destination; verify ownership and visibility without posting sensitive data.",
-      "refs": [
-        "S12",
-        "S13",
-        "S14"
-      ]
-    },
-    {
-      "n": 8,
-      "title": "Evaluate the preview with a controlled scorecard",
-      "message": "Measure evidence quality, reviewer burden, and verified outcomes.",
-      "speaker": "Before enabling the preview, approve the US-based storage and inference boundary for the intended data. The proposed pilot then measures whether the agent reduces effort without creating inaccurate reports, noisy tickets, or unsafe assumptions. Record reconciled analyses, useful anomaly explanations, accepted opportunities, reporting corrections, and actual dependency costs. Treat savings as realized only after an approved change is measured under comparable conditions. Do not extrapolate a successful example into a guaranteed percentage benefit. Expansion should preserve human ownership and established operational controls.",
-      "demo": "Review a pilot scorecard that separates estimated opportunity, approved change, measured result, and unresolved evidence gaps.",
-      "refs": [
-        "S16",
-        "S05",
-        "S09"
-      ]
-    }
-  ],
-  "pilot": [
-    {
-      "days": "Days 1–3",
-      "title": "Approve preview and access",
-      "description": "Approve the US processing/storage boundary, configure least-privilege agent/operator access, and select one account group with a known owner."
-    },
-    {
-      "days": "Days 4–7",
-      "title": "Reconcile basic analysis",
-      "description": "Compare a small set of cost questions against matching source views. Record data filters, unsupported questions, and correction effort."
-    },
-    {
-      "days": "Days 8–14",
-      "title": "Investigate and prioritize",
-      "description": "Review one anomaly and a short optimizer backlog. Validate evidence with service owners; avoid implementation or purchase automation."
-    },
-    {
-      "days": "Days 15–21",
-      "title": "Trial one recurring workflow",
-      "description": "Build one scheduled report or cost-anomaly response. Check history, destinations, approval behavior, and disablement before expanding notifications."
-    },
-    {
-      "days": "Days 22–30",
-      "title": "Measure controlled follow-through",
-      "description": "Route one accepted opportunity into the normal change process. Compare outcome and reviewer effort with the baseline; retain only useful automation."
-    }
-  ],
   "sources": [
-    {
-      "id": "S01",
-      "title": "AWS frontier agents",
-      "url": "https://aws.amazon.com/ai/frontier-agents/",
-      "locator": "AWS FinOps Agent (preview)",
-      "note": "Portfolio membership and preview designation.",
-      "kind": "Official product page",
-      "checked": "2026-10-20"
-    },
     {
       "id": "S02",
       "title": "What is AWS FinOps Agent?",
@@ -635,13 +412,34 @@
       "checked": "2026-10-20"
     }
   ],
-  "quickstart": [
-    "Approve preview use and the us-east-1 storage / US inference boundary before uploading organizational data.",
-    "Create roles, verify source-service access, and reconcile one cost breakdown against the original billing view.",
-    "Add a sanitized team map, then trial one owned report or anomaly workflow with explicit destination checks."
+  "scope_revision": "2026-10-21-three-agent-scope",
+  "pilot": [
+    {
+      "days": "Days 1–3",
+      "title": "Approve preview and access",
+      "description": "Approve the US processing/storage boundary, configure least-privilege agent/operator access, and select one account group with a known owner."
+    },
+    {
+      "days": "Days 4–7",
+      "title": "Reconcile basic analysis",
+      "description": "Compare a small set of cost questions against matching source views. Record data filters, unsupported questions, and correction effort."
+    },
+    {
+      "days": "Days 8–14",
+      "title": "Investigate and prioritize",
+      "description": "Review one anomaly and a short optimizer backlog. Validate evidence with service owners; avoid implementation or purchase automation."
+    },
+    {
+      "days": "Days 15–21",
+      "title": "Trial one recurring workflow",
+      "description": "Build one scheduled report or cost-anomaly response. Check history, destinations, approval behavior, and disablement before expanding notifications."
+    },
+    {
+      "days": "Days 22–30",
+      "title": "Measure controlled follow-through",
+      "description": "Route one accepted opportunity into the normal change process. Compare outcome and reviewer effort with the baseline; retain only useful automation."
+    }
   ],
-  "exclusions": "Autonomous AWS resource remediation, commitment purchasing, arbitrary custom-event automation, inbound Slack commands, Jira workflow administration, and claims of realized savings are outside this first pass. All included features remain preview, not a GA production baseline.",
-  "measures": "Recommended measures: reconciled-answer rate; analyst and engineer review time; useful anomaly explanations; accepted versus rejected opportunities; reporting corrections; notification noise; actual underlying-service costs; and realized savings after separately approved changes. No results have been measured.",
   "counts": {
     "Confirmed": 4,
     "Qualified": 8,
