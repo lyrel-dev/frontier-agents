@@ -628,3 +628,8 @@ exclusions: [production, unapproved-third-parties]
 ## Validation boundary
 
 Documentation synthesis and proposed workflows only. No live AWS execution or measured engineering outcome. The original audit snapshot and the selected narrative rechecks are distinct.
+
+
+## Mechanisms and enablement extension
+
+See the [detailed source-linked setup and verification guide](../mechanisms/security.md). It contains 7 records, a proposed six-step exercise and lifecycle controls. Existing presentation timing is unchanged.
