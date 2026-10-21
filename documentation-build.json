@@ -1,5 +1,6 @@
 {
   "revision": "2026-10-21-platform-reference-1",
+  "build": 2,
   "scope": ["AWS DevOps Agent", "AWS Security Agent", "AWS FinOps Agent"],
   "shared_architecture": true,
   "publication": "Grouped platform capabilities, configuration operations, documented mechanisms, enablement and proposed verification; existing scenario material is explicitly separate.",
