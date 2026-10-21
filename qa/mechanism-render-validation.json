@@ -1,32 +1,17 @@
 {
-  "revision": "2026-10-21-mechanisms-v1",
+  "revision": "2026-10-21-mechanisms-v2",
   "checks": [
-    {
-      "file": "presentations/devops-mechanisms-reference.pptx",
-      "slides": 13,
-      "shape_bounds_errors": []
-    },
-    {
-      "file": "presentations/finops-mechanisms-reference.pptx",
-      "slides": 11,
-      "shape_bounds_errors": []
-    },
-    {
-      "file": "presentations/kiro-mechanisms-reference.pptx",
-      "slides": 12,
-      "shape_bounds_errors": []
-    },
-    {
-      "file": "presentations/overview-mechanisms-reference.pptx",
-      "slides": 8,
-      "shape_bounds_errors": []
-    },
-    {
-      "file": "presentations/security-mechanisms-reference.pptx",
-      "slides": 11,
-      "shape_bounds_errors": []
-    }
+    {"file": "presentations/aws-devops-agent-presentation.pptx", "slides": 38, "shape_bounds_errors": [], "empty_notes": []},
+    {"file": "presentations/aws-finops-agent-presentation.pptx", "slides": 30, "shape_bounds_errors": [], "empty_notes": []},
+    {"file": "presentations/aws-frontier-agents-common-architecture-presentation.pptx", "slides": 31, "shape_bounds_errors": [], "empty_notes": []},
+    {"file": "presentations/aws-security-agent-presentation.pptx", "slides": 37, "shape_bounds_errors": [], "empty_notes": []},
+    {"file": "presentations/devops-mechanisms-reference.pptx", "slides": 14, "shape_bounds_errors": [], "empty_notes": []},
+    {"file": "presentations/finops-mechanisms-reference.pptx", "slides": 11, "shape_bounds_errors": [], "empty_notes": []},
+    {"file": "presentations/kiro-mechanisms-reference.pptx", "slides": 12, "shape_bounds_errors": [], "empty_notes": []},
+    {"file": "presentations/kiro-presentation.pptx", "slides": 40, "shape_bounds_errors": [], "empty_notes": []},
+    {"file": "presentations/overview-mechanisms-reference.pptx", "slides": 8, "shape_bounds_errors": [], "empty_notes": []},
+    {"file": "presentations/security-mechanisms-reference.pptx", "slides": 11, "shape_bounds_errors": [], "empty_notes": []}
   ],
-  "visual_review": "Representative mechanism slides from all five reference decks and a DevOps use-case slide. Source-driven mechanism boxes were shortened after detecting and correcting text overflow. Not a pixel-level review of every slide.",
+  "visual_review": "All 14 DevOps reference slides rendered. The new corrective-feedback slide and updated exercise page inspected directly. Other decks: shape bounds and note presence, not a new pixel-level review.",
   "live_aws_execution": false
 }
