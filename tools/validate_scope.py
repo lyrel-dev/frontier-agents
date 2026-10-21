@@ -49,7 +49,14 @@ def main():
     if set(load('content/narratives.json')['agents'])!=REPORTS:errors.append('Assembled narrative scope differs')
     m=load('content/mechanisms.json')
     if set(m['agents'])!=AGENTS:errors.append('Mechanism catalog outside approved scope')
-    expected_pptx={'aws-devops-agent-presentation.pptx','aws-security-agent-presentation.pptx','aws-finops-agent-presentation.pptx','aws-frontier-agents-common-architecture-presentation.pptx','devops-mechanisms-reference.pptx','security-mechanisms-reference.pptx','finops-mechanisms-reference.pptx','overview-mechanisms-reference.pptx'}
+    if {p.stem for p in (ROOT/'content/platforms').glob('*.json')}!=AGENTS:errors.append('Platform reference catalog outside approved scope')
+    expected_pptx={
+        'aws-devops-agent-presentation.pptx','aws-security-agent-presentation.pptx',
+        'aws-finops-agent-presentation.pptx','aws-frontier-agents-common-architecture-presentation.pptx',
+        'devops-mechanisms-reference.pptx','security-mechanisms-reference.pptx',
+        'finops-mechanisms-reference.pptx','overview-mechanisms-reference.pptx',
+        'devops-platform-reference.pptx','security-platform-reference.pptx','finops-platform-reference.pptx'
+    }
     if {p.name for p in (ROOT/'presentations').glob('*.pptx')}!=expected_pptx:errors.append('Presentation catalog outside approved scope')
     def check(text,location):
         if any(t in text.casefold() for t in terms):errors.append('Excluded-scope text: '+location)
@@ -71,7 +78,8 @@ def main():
             try:check(p.read_text(encoding='utf-8'),rel)
             except UnicodeDecodeError:pass
     counts={k:len(load(f'content/{k}-evidence.json').get('capabilities',load(f'content/{k}-evidence.json').get('patterns',[]))) for k in sorted(REPORTS)}
-    report={'revision':load('documentation-build.json')['revision'],'scope':['AWS DevOps Agent','AWS Security Agent','AWS FinOps Agent'],'shared_architecture':True,'baseline_commit':BASE,'text_files_and_presentations_checked':files,'presentation_xml_parts_checked':parts,'capability_and_pattern_counts':counts,'mechanism_records':sum(len(a['records']) for a in m['agents'].values()),'mechanism_source_references':len(m['sources']),'core_minutes':sum(load(f'content/{k}-presentation.json')['minutes'] for k in REPORTS),'core_demo_minutes':sum(load(f'content/{k}-presentation.json')['demo'] for k in REPORTS),'presentations':decks,'removed_scope_matches':sum(e.startswith('Excluded-scope') for e in errors),'errors':errors,'boundary':'Content, links, timing, notes and shape bounds are checked separately from runtime product behavior. No new external documentation audit or live AWS run.'}
+    platform_counts={k:{'capabilities':len(load(f'content/platforms/{k}.json')['capabilities']),'mechanisms':len(load(f'content/platforms/{k}.json')['mechanisms'])} for k in sorted(AGENTS)}
+    report={'revision':load('documentation-build.json')['revision'],'scope':['AWS DevOps Agent','AWS Security Agent','AWS FinOps Agent'],'shared_architecture':True,'baseline_commit':BASE,'text_files_and_presentations_checked':files,'presentation_xml_parts_checked':parts,'capability_and_pattern_counts':counts,'platform_reference_counts':platform_counts,'mechanism_records':sum(len(a['records']) for a in m['agents'].values()),'mechanism_source_references':len(m['sources']),'core_minutes':sum(load(f'content/{k}-presentation.json')['minutes'] for k in REPORTS),'core_demo_minutes':sum(load(f'content/{k}-presentation.json')['demo'] for k in REPORTS),'presentations':decks,'removed_scope_matches':sum(e.startswith('Excluded-scope') for e in errors),'errors':errors,'boundary':'Content, links, timing, notes and shape bounds are checked separately from runtime product behavior. Platform-reference counts are separate from the retained scenario-edition records. No new external documentation audit or live AWS run.'}
     (ROOT/'qa/scope-validation.json').write_text(json.dumps(report,indent=2)+'\n')
     if errors:raise SystemExit(json.dumps(report,indent=2))
     manifest={}
