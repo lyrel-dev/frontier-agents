@@ -1,18 +1,14 @@
 name: Build and publish documentation suite
-
 on:
   workflow_dispatch:
   push:
     branches: [main]
     paths: [documentation-build.json]
-
 permissions:
   contents: write
-
 concurrency:
   group: frontier-document-suite
   cancel-in-progress: false
-
 jobs:
   documents:
     runs-on: ubuntu-latest
@@ -25,24 +21,27 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Install document tooling
-        run: python -m pip install beautifulsoup4==4.13.4 python-pptx==1.0.2
-      - name: Assemble and validate source content
-        run: python tools/assemble_content.py
-      - name: Build reports, transcripts, and presentation decks
-        run: python tools/build_suite.py
-      - name: Validate generated documents
-        run: python tools/build_suite.py --check
-      - name: Commit each generated document separately
+      - name: Install document and browser test tools
+        run: |
+          python -m pip install beautifulsoup4==4.13.4 python-pptx==1.0.2 playwright==1.57.0
+          python -m playwright install --with-deps chromium
+      - name: Apply requested scope transition when present
+        run: |
+          if [ -f tools/apply_scope.py ]; then python tools/apply_scope.py; fi
+      - name: Assemble and rebuild current documents
+        run: |
+          python tools/assemble_content.py
+          python tools/build_suite.py
+      - name: Validate content, browser controls and presentations
+        run: |
+          python tools/build_suite.py --check
+          python tools/editorial_lint.py
+          python tools/qa_format.py
+          python tools/qa_mechanisms_browser.py
+          python tools/validate_scope.py
+      - name: Commit each changed document or deletion separately
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           python tools/build_suite.py --commit
           git push origin HEAD:main
-      - name: Retain downloadable document package
-        uses: actions/upload-artifact@v4
-        with:
-          name: frontier-agents-document-suite
-          path: dist/frontier-agents-document-suite.zip
-          if-no-files-found: error
-          retention-days: 30
