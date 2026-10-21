@@ -1,0 +1,71 @@
+{
+  "schema": "aperture-review-dashboard-validation-v1",
+  "edition": "D1",
+  "source_baseline": "C2",
+  "source_date": "2026-10-21",
+  "validation_date": "2026-10-21",
+  "artifact": "index.html",
+  "artifact_sha256": "0eaf3ef562a3657ed0e33deb864b0755d5209ec084a01b3ae751f47336b2b931",
+  "dataset_fingerprint": "9544d4e812fc4813a71628583e55c1ca5c50172fc8bdcfdfab1de22019cae2b6",
+  "source_package_sha256": "33d1bd98741ca956b62e2e6fd9c43616d1d8bf45f8853464e47bb0b47ed37412",
+  "status": "passed_with_explicit_environment_and_acceptance_boundaries",
+  "suites": [
+    {
+      "name": "Browser functionality and selected responsive/keyboard paths",
+      "receipt": "validation/browser-tests.json",
+      "passed": 126,
+      "failed": 0
+    },
+    {
+      "name": "Source completeness, document links and provenance",
+      "receipt": "validation/structure-tests.json",
+      "passed": 127,
+      "failed": 0
+    },
+    {
+      "name": "Actual static loopback HTTP server",
+      "receipt": "validation/static-http-tests.json",
+      "passed": 10,
+      "failed": 0
+    }
+  ],
+  "total_named_checks": 263,
+  "source_files_preserved": 944,
+  "inspector_source_links_verified": 658,
+  "checks_not_summed_with_historical_application_receipts": true,
+  "browser_method": "Unchanged final HTML injected into managed Chromium after native file navigation was blocked. Functional and responsive UI checks. Separate explicit localStorage simulation; clipboard capture instrumentation for binding assertions. Real browser blob downloads captured.",
+  "native_navigation": "blocked: Page.goto: net::ERR_BLOCKED_BY_ADMINISTRATOR at file:///mnt/data/Aperture-Review-Dashboard/index.html",
+  "delivered_counts": {
+    "decisions": 352,
+    "metrics": 178,
+    "native": 112,
+    "alarms": 48,
+    "queries": 100,
+    "sops": 40,
+    "fields": 40,
+    "opsGates": 24,
+    "gates": 14,
+    "findings": 16,
+    "alignment": 36,
+    "blueprints": 12,
+    "documents": 47,
+    "api": 37
+  },
+  "corrected_during_review": [
+    "Contained absolutely positioned screen-reader table labels inside the scroll container, preventing mobile/tablet document overflow.",
+    "Updated the review-bookmark action immediately after saving a previously unselected record.",
+    "Required confirmation before removing a record carrying review notes or rehearsal checks.",
+    "Bound imported annotations to a reproducible full-dataset fingerprint, not just a partial source list.",
+    "Kept hidden mobile navigation outside the keyboard focus path and added menu focus handling."
+  ],
+  "assurance_boundary": [
+    "No live telemetry, backend control, monitoring rule evaluation, SQL execution, paid inference or repository writes from this dashboard.",
+    "No historical application suite rerun or refresh of vendor/repository status.",
+    "Source ADRs and gate states are immutable in this review app; local annotation is not acceptance.",
+    "Native file-origin persistence, true concurrent multi-tab coordination, production security and screen-reader conformance were not established.",
+    "LocalStorage-specific cases used an explicit controlled simulation; clipboard output was captured for binding tests. Real browser blob exports were exercised.",
+    "The static launcher was tested with actual loopback HTTP, but not native browser cookie or authentication flows; it provides neither."
+  ],
+  "data_handling": "No user review outcomes are seeded. Screenshots may show clearly illustrative test notes. User annotations remain in memory or opt-in unencrypted browser storage; export is explicit.",
+  "manifest": "MANIFEST.json"
+}

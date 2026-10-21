@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><meta content="Aligned Aperture and LiteLLM documentation with explicit implementation and evidence boundaries" name="description"/><title>Aperture — Consolidated Documentation</title><style>
+:root{--bg:#f4f6f9;--panel:#fff;--ink:#142535;--muted:#536779;--line:#d9e1e8;--nav:#101e2d;--accent:#086d88;--soft:#eaf4f8;--amber:#955600;--amberbg:#fff5df;--code:#edf1f5;--shadow:0 8px 30px #14253509;color-scheme:light}
+html[data-theme=dark]{--bg:#0f1822;--panel:#172330;--ink:#e5edf4;--muted:#aabac8;--line:#334554;--nav:#0b121a;--accent:#71d2ec;--soft:#183542;--amber:#f1cd86;--amberbg:#352e20;--code:#101c27;color-scheme:dark}*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:30px}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}a{color:var(--accent);text-underline-offset:3px;overflow-wrap:anywhere}a:hover{text-decoration-thickness:2px}button,input,select{font:inherit}button,select{border:1px solid var(--line);border-radius:7px;padding:8px 12px;background:var(--panel);color:var(--ink)}button{cursor:pointer}button:hover{background:var(--soft)}input{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:7px;padding:10px 12px;min-width:0}input[type=search]{width:min(520px,100%)}*:focus-visible{outline:3px solid var(--accent);outline-offset:3px}.skip{position:fixed;top:-100px;left:20px;padding:12px;background:var(--panel);z-index:20}.skip:focus{top:10px}.sidebar{position:fixed;inset:0 auto 0 0;width:262px;background:var(--nav);color:#dbe7ee;overflow:auto;padding:30px 20px;z-index:5}.brand{font-size:25px;letter-spacing:-.7px;font-weight:750;color:#fff}.sidebar .meta{font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:#8db6c6;margin:4px 0 24px}.sidebar a{display:block;color:#becfdb;text-decoration:none;padding:7px 10px;margin:2px 0;border-radius:5px;font-size:13px;line-height:1.45}.sidebar a:hover{background:#20394a;color:#fff}.sidebar .primary{border-top:1px solid #314654;margin:18px 0;padding-top:14px}.sidebar .toc-title{color:#7f9cac;font-size:11px;letter-spacing:.12em;margin:20px 10px 8px}.main{margin-left:262px;padding:38px clamp(22px,4.3vw,72px) 80px;max-width:1620px}.topline{display:flex;align-items:center;justify-content:space-between;gap:16px;color:var(--muted);font-size:12px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:26px}.topline button{font-size:13px;letter-spacing:0;text-transform:none}.mobile-toggle{display:none}h1{font-size:clamp(30px,3.6vw,50px);line-height:1.13;letter-spacing:-1.4px;max-width:1000px;margin:12px 0 24px}h2{font-size:27px;line-height:1.3;letter-spacing:-.6px;margin:0 0 18px}h3{font-size:19px;line-height:1.4;margin:28px 0 12px}h4{font-size:16px;margin:22px 0 8px}p{margin:12px 0 18px}li{margin:5px 0}code{background:var(--code);padding:2px 5px;border-radius:4px;font: .88em/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;overflow-wrap:anywhere}pre{padding:20px;background:var(--nav);color:#e8f1f6;border-radius:10px;overflow-x:auto;line-height:1.6}pre code{background:transparent;padding:0;color:inherit;white-space:pre}blockquote{border-left:4px solid var(--accent);margin:24px 0;padding:14px 22px;background:var(--soft);border-radius:0 8px 8px 0}blockquote p{margin:4px 0}section{margin:26px 0 38px;padding:28px 30px;background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);scroll-margin-top:24px}section.intro{background:transparent;border:0;box-shadow:none;padding:0}table{border-collapse:collapse;width:100%;font-size:14px;margin:18px 0 24px}th,td{text-align:left;vertical-align:top;padding:12px 13px;border-bottom:1px solid var(--line);overflow-wrap:anywhere}th{background:var(--soft);font-size:12px;letter-spacing:.035em}td:first-child{font-weight:550}tr:nth-child(even) td{background:color-mix(in srgb,var(--soft) 25%,transparent)}.table-scroll{overflow-x:auto;max-width:100%}.table-scroll table{min-width:640px}strong{font-weight:680}.controls{position:sticky;top:0;z-index:3;display:flex;flex-wrap:wrap;gap:10px;align-items:center;background:var(--bg);padding:15px 0;border-bottom:1px solid var(--line);margin:18px 0}.controls label{font-size:12px;color:var(--muted);display:flex;flex-direction:column;gap:3px}.controls button{align-self:flex-end}.result-count{color:var(--muted);font-size:13px;margin-left:auto}.tag,.pill{display:inline-flex;border-radius:5px;padding:3px 7px;background:var(--soft);font-size:11px;font-weight:600;line-height:1.4}.muted,.small{color:var(--muted)}.small{font-size:13px}.alert{background:var(--amberbg);border:1px solid var(--line);border-left:4px solid var(--amber);padding:14px 18px;border-radius:8px;font-size:14px}.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:22px 0}.card{padding:18px;border:1px solid var(--line);background:var(--panel);border-radius:10px}.card .number{font-size:28px;font-weight:730;letter-spacing:-.7px}.card p{font-size:13px;color:var(--muted);margin:4px 0}.docrow{border:1px solid var(--line);border-radius:10px;background:var(--panel);padding:20px;margin:12px 0;break-inside:avoid}.docrow h3{margin:5px 0 7px;font-size:18px}.docrow .links{display:flex;flex-wrap:wrap;gap:16px;font-size:13px;margin-top:12px}.docrow .meta-line{font-size:12px;color:var(--muted);display:flex;gap:12px;flex-wrap:wrap}.decision-entry{margin:18px 0}.provenance{font-size:12px;color:var(--muted);margin:5px 0}.disposition{padding:12px 16px;font-size:13px;background:var(--soft);border-radius:8px;margin:8px 0}details.adr{background:var(--panel);border:1px solid var(--line);border-radius:10px;margin:8px 0}summary{cursor:pointer;padding:18px;font-weight:600;line-height:1.45}summary>span{margin-right:12px}summary::marker{color:var(--accent)}.adr-title{font-size:17px}.adr-code,.adr-id{font-size:12px;color:var(--accent);white-space:nowrap}.adr-body{padding:0 24px 24px}.adr-meta{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--muted);margin:8px 0 20px}.adr-decision{background:var(--soft);border-left:3px solid var(--accent);padding:8px 18px;margin:18px 0}.adr-body ul,.adr-body ol{padding-left:22px}.adr-body a{font-size:inherit}.finding{border-top:1px solid var(--line);padding:24px 0}.finding:first-child{border:0}.finding h3{margin-top:0}.hidden,[hidden]{display:none!important}.empty-results{padding:30px;text-align:center;color:var(--muted)}footer{font-size:12px;color:var(--muted);margin-top:50px;border-top:1px solid var(--line);padding-top:16px}.nowrap{white-space:nowrap}.doc-status{font-size:12px;color:var(--accent);font-weight:650}.chipline{display:flex;gap:8px;flex-wrap:wrap}.catalog-title{margin-bottom:8px}.linklist{font-size:14px}#sourceObjects td{font-weight:400}.toc a[aria-current=true]{background:#20394a;color:#fff}
+@media(max-width:1000px){.main{padding:25px 25px 70px}.sidebar{width:230px}.main{margin-left:230px}section{padding:24px}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){.sidebar{transform:translateX(-100%);width:280px;transition:transform .15s ease}.sidebar.open{transform:translateX(0)}.main{margin-left:0;padding:22px 16px 60px}.mobile-toggle{display:inline-block}.topline{gap:8px;letter-spacing:.04em}section{padding:20px 17px;margin:20px 0 28px}h1{letter-spacing:-.8px;font-size:34px}h2{font-size:24px}.cards{grid-template-columns:1fr 1fr}.controls{position:static}.controls label{width:100%}.controls input,.controls select{width:100%}.adr-title{font-size:15px}.adr-body{padding:0 17px 20px}summary{padding:15px}.result-count{margin-left:0;width:100%}.table-scroll table{min-width:620px}pre{font-size:12px}}
+@media print{@page{size:A4;margin:17mm 14mm}body{background:#fff;color:#000;font-size:10pt}.sidebar,.controls,.topline button,.skip,.no-print{display:none!important}.main{margin:0;padding:0;max-width:none}.topline{font-size:9pt;margin-bottom:12px}section{box-shadow:none;border:0;border-top:1px solid #bbb;border-radius:0;padding:16px 0;margin:14px 0;break-before:auto}h1{font-size:26pt}h2{font-size:17pt;break-after:avoid}h3,h4{break-after:avoid}p{orphans:3;widows:3}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#eee;color:#000;overflow:visible}pre code{white-space:pre-wrap}table{font-size:8.5pt}th,td{padding:6px}.table-scroll{overflow:visible}.table-scroll table{min-width:0}thead{display:table-header-group}tr{break-inside:avoid}details.adr{break-inside:auto}.adr-body{display:block!important}summary{break-after:avoid}.cards{display:flex}.card{flex:1}.docrow{break-inside:avoid}.provenance{font-size:8pt}.tag,.pill{border:1px solid #bbb}a{color:#164e63}.hidden,[hidden]{display:block!important}}
+</style></head><body><a class="skip" href="#main">Skip to content</a><aside aria-label="Documentation navigation" class="sidebar"><div class="brand">Aperture</div><div class="meta">Documentation baseline C2</div><nav class="primary"><a href="Aperture-Consolidated-Documentation.html">Current handbook</a><a href="Documentation-Catalog.html">All documents</a><a href="Decision-Register.html">352 decision records</a><a href="Alignment-Register.html">Corrections &amp; alignment</a><a href="Aperture-Operational-Review.html">Operational review &amp; SOPs</a></nav><div class="toc-title">IN THIS DOCUMENT</div><nav class="toc"><a href="#baseline">1. The authoritative baseline</a><a href="#coverage">2. Coverage, preservation and version precedence</a><a href="#product">3. Product goal and bounded pilot</a><a href="#architecture">4. Architecture: current reference versus proposed destination</a><a href="#capabilities">5. Component and capability alignment</a><a href="#identity">6. Identity, tenancy and authority</a><a href="#governance">7. One change grammar, distinct states</a><a href="#execution">8. Execution, uncertainty and cancellation</a><a href="#finance">9. Financial semantics and optimization</a><a href="#operations">10. Operating continuity, readiness and restore</a><a href="#signals">11. Durable signals and governed delivery</a><a href="#litellm">12. LiteLLM correction and qualification boundary</a><a href="#contracts">13. Contracts and source-of-truth map</a><a href="#experience">14. User experience and research continuity</a><a href="#runbooks">15. Safe package use and migration</a><a href="#evidence">16. Evidence ledger: retained versus newly checked</a><a href="#decisions">17. Decision register and alignment dispositions</a><a href="#roadmap">18. One roadmap and one promotion decision</a><a href="#glossary">19. Terminology and ownership</a><a href="#alignment">20. Corrections, integrity and maintenance</a><a href="#operational-review">21. Complete operational review and SOP library</a></nav><p class="small" style="color:#8da7b8;padding:10px">21 October 2026<br/>Proposed ≠ implemented ≠ qualified</p></aside><main class="main" id="main"><div class="topline"><span><button aria-expanded="false" aria-label="Open navigation" class="mobile-toggle" id="menu">Menu</button> Authoritative reading guide · C2 / 2026-10-21</span><span><button aria-label="Change appearance" id="theme">Appearance</button> <button id="print">Print</button></span></div><section class="intro"><h1>Aperture: consolidated architecture, implementation and evidence</h1>
+<p><strong>Documentation baseline C2 · 21 October 2026</strong><br>
+A consolidated reference for the comparative research, Aperture design and releases, LiteLLM source review, correction, and restricted integration candidate. <strong>This is a documentation consolidation, not a new software release.</strong></br></p>
+<p>The product goal remains to make enterprise AI services easy to adopt, safe to change and understandable to operate. The common object is a versioned <strong>AI Service Contract</strong>. Success is a user completing a governed task with accurate evidence, not the number of screens, adapters or test assertions.</p>
+<blockquote>
+<p><strong>Current position:</strong> Aperture Release 14 is the latest delivered local persistent reference. Its model execution is synthetic. The LiteLLM integration kit is separate candidate code with an unimplemented durable Authority binding. The duration correction remains an unmerged draft. No document in this set establishes production approval.</p>
+</blockquote>
+<p><a href="Documentation-Catalog.html">Browse every document</a> · <a href="Decision-Register.html">Search all 352 decision records</a> · <a href="Alignment-Register.html">Read the alignment register</a> · <a href="registry/source-inventory.json">Inspect the preserved source inventory</a></p>
+<blockquote><p><strong>C2 operational expansion.</strong> <a href="Aperture-Operational-Review.html">Read the 25-chapter operational review</a>: 178 canonical metric contracts, 85 pinned LiteLLM declarations plus 27 supplemental families, 48 alarm templates, 100 queries, 40 SOPs, 12 dashboard specifications and 24 qualification gates. This documentation adds no runtime exporter, paging route or production acceptance.</p></blockquote></section><section id="baseline"><h2>1. The authoritative baseline</h2>
+<p>Use this matrix before following an example or making an implementation claim. “Current” means the most recent <strong>delivered artifact in this body of work</strong>, not the latest market release or an accepted production system.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Baseline</th>
+<th>What it establishes</th>
+<th>What it does not establish</th>
+<th>Authoritative reference</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Target architecture</strong></td>
+<td>Proposed enterprise model, invariants, component responsibilities and 40 Aperture ADRs</td>
+<td>Deployed Go kernel, PostgreSQL/RLS, signed policy distribution, distributed finance or production acceptance</td>
+<td><a href="documents/Aperture-Architecture-Release14.html">Aligned architecture reader</a></td>
+</tr>
+<tr>
+<td><strong>Aperture R14 persistent reference</strong></td>
+<td>Local identities/optional OIDC, SQLite transactions, controlled changes, synthetic execution, operations, signals and opt-in signed HTTPS notifications</td>
+<td>Real model execution, enterprise-qualified identity/TLS, multi-node deployment or external billing</td>
+<td><a href="documents/Aperture-Backend-Release14.html">R14 operations reader</a>, <a href="runtime/aperture-r14/contracts/openapi.json">implemented API</a></td>
+</tr>
+<tr>
+<td><strong>Browser demonstration</strong></td>
+<td>Fifteen-screen local mock product and connected UX examples</td>
+<td>Server authority or parity with every persistent feature</td>
+<td><a href="runtime/aperture-r14/Aperture-Console-Release14.html">R14 standalone console</a></td>
+</tr>
+<tr>
+<td><strong>LiteLLM source and draft patch</strong></td>
+<td>Pinned fork inspection and a two-file duration correction with isolated regression evidence</td>
+<td>Merge, stable release provenance, native CI success or deployment</td>
+<td><a href="documents/LiteLLM-Codebase-Review-2026-10-21.html">Source review</a>, <a href="evidence/repository-status.json">repository snapshot</a></td>
+</tr>
+<tr>
+<td><strong>Restricted LiteLLM candidate</strong></td>
+<td>Plain-text, nonstreaming request builder, bounded HTTPS transport, permit/evidence checks and qualification tools</td>
+<td>Durable <code>Authority</code>, public API, Aperture wiring, actual proxy traffic or accepted invoice bounds</td>
+<td><a href="documents/LiteLLM-Qualification-Guide.html">Integration guide</a>, <a href="runtime/litellm-candidate/boundary/contract.py">candidate source</a></td>
+</tr>
+<tr>
+<td><strong>Research and qualification history</strong></td>
+<td>Dated comparison, UX findings, protocols, historical implementations and retained test receipts</td>
+<td>Refreshed product facts, representative participant evidence or inherited production certification</td>
+<td><a href="documents/AI-Platform-Architecture-Evaluation-Agent-Router-Extended.html">Comparative research</a>, <a href="Documentation-Catalog.html">catalog</a></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Conflict rule.</strong> For behavior, inspect the exact source and versioned API contract. For why a design exists, use its scoped ADR. For what was tested, use the matching evidence receipt and its source hashes. This handbook reconciles status and terminology; it does not make documented behavior true when code or evidence is missing. An unresolved discrepancy remains a gate, not a silently chosen assumption.</p>
+<p>The fork was rechecked through GitHub during C1 consolidation. That dated observation is retained, not a new CI or merge verification in C2. Main remains <code>c8ed5ccca8500ccc0c8a3b499790c07e7e57a763</code>; PR #1 remains open, draft and unmerged at <code>52fe1a585142442771b81afcef9e8eb227b8af72</code>. No check runs were returned for that head. A mergeability result is not a successful merge or approval. The earlier inspected package declaration of <code>1.108.0</code> is source metadata, not a published-image qualification. <a href="evidence/repository-status.json">Repository observation</a></p>
+</section><section id="coverage"><h2>2. Coverage, preservation and version precedence</h2>
+<p>The inventory covers <strong>74 delivered files and 627 archive-member occurrences</strong>, representing <strong>510 unique byte-identical artifacts</strong>. It includes <strong>42 distinct HTML artifacts</strong>, of which 30 are documentation and 12 are applications, plus contracts, evidence, source, tests, screenshots, patches and the original packages. Every available source occurrence maps to a preserved object and SHA-256 in the inventory. Exact duplicate bytes are stored once in the preservation collection; original package bytes and runnable current distributions retain their original context.</p>
+<p>The earliest LiteLLM-only, LiteLLM/Bifrost and Bedrock-first comparison snapshots referenced in the conversation are <strong>not available as separate files</strong>. Their subject coverage is retained in the later cumulative comparison. This package does not reconstruct missing historical bytes or invent intermediate editions. Conversation-only prioritization and roadmap decisions are consolidated here as recommendations, not falsely represented as original file artifacts.</p>
+<p>There are four ways to read the collection. The <strong>handbook</strong> gives the aligned current narrative. <strong>Reader editions</strong> retain full source documents with a visible status notice, resolved local links and specifically logged corrections. The <strong>decision register</strong> brings together full records without merging their scopes. The <strong>preserved originals and original ZIPs</strong> retain historical bytes, including historical wording and package-relative links. Open reader editions for navigation and original packages when reproducing a historical environment.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Family</th>
+<th>Canonical selection</th>
+<th>Treatment of earlier editions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Comparative evaluation</td>
+<td>Agent Router extended report, the latest cumulative eight-evaluation volume</td>
+<td>Kong, Azure, Google and Portkey extensions remain archived snapshots; their repeated chapters are not new decisions</td>
+</tr>
+<tr>
+<td>Aperture design</td>
+<td>R14 architecture with C1 reader corrections</td>
+<td>All ten available architecture editions retain the same 40 ADR texts; implementation commentary differs by release</td>
+</tr>
+<tr>
+<td>Persistent application</td>
+<td>Original R14 package and implemented OpenAPI</td>
+<td>R10–R13 are historical implementation/migration references, not concurrent live interfaces</td>
+</tr>
+<tr>
+<td>Mock administration</td>
+<td>R14 embedded demo; R9 core guide for its historical feature provenance</td>
+<td>Mock feature availability cannot be projected onto the persistent API</td>
+</tr>
+<tr>
+<td>Research workbench</td>
+<td>R8 instrument, retained against its own R8 console</td>
+<td>No study outcomes are seeded or promoted to acceptance of later releases</td>
+</tr>
+<tr>
+<td>LiteLLM review</td>
+<td>21 October pinned code review plus later qualification kit</td>
+<td>The later kit supplements evidence and adds candidate code, but does not replace the fork or accept its patch</td>
+</tr>
+</tbody>
+</table></div>
+<p>The 102-chapter comparative report is a <strong>historical research corpus</strong>. Early-October product names, prices, preview status, lifecycle claims, endpoint matrices and vendor version statements have not all been re-researched. The later LiteLLM source review supersedes only claims about the inspected fork and paths. Reading or repackaging the comparison on 21 October does not refresh the rest of the market. <a href="documents/AI-Platform-Architecture-Evaluation-Agent-Router-Extended.html">Full comparison reader</a></p>
+</section><section id="product"><h2>3. Product goal and bounded pilot</h2>
+<p>Aperture should expose a coherent service journey: <strong>describe intent, validate constraints, obtain independent approval, activate the approved contract, execute within authority, and explain the resulting evidence</strong>. The same conceptual resources should be visible in the UI, automation interfaces, request evidence and financial attribution. The viewing filter is a convenience; it is never an authorization grant.</p>
+<p>The candidate pilot remains <strong>internal, non-sensitive text brief drafting with mandatory human review</strong>. No retrieval, tool side effects or automatic publication are part of its initial contract. Actual owners, provider/deployment, processing region, financial allowance, participant cohort and organizational approvals have not been supplied. Those are explicit open inputs, not values to fill with synthetic demo personas. <a href="documents/Aperture-Qualification-Release7.html">Pilot protocol</a>, <a href="documents/Aperture-Release8-Guide.html">research-workbench guide</a></p>
+<p>The principal user tasks remain service onboarding to a first observed response, diagnosis of a denied/failed/unknown request, and review through verified activation of a change. Financial investigation crosses those tasks. A test receipt demonstrates some behavior of an artifact; it does not show that representative users understand that behavior. The qualification workbench records such evidence but has not itself generated participant acceptance.</p>
+<p>The next UX work should simplify the service workspace and decision summaries only where user observations justify it. Preserve the common change grammar and progressive disclosure. Show the conclusion, responsible owner and safe next step first, with exact differences and technical evidence available underneath. Do not remove an independent decision merely to shorten a journey.</p>
+</section><section id="architecture"><h2>4. Architecture: current reference versus proposed destination</h2>
+<p>The target design separates Control API, Control Worker, Execution Kernel and Admission Service roles. It places service contracts, policy compilation, governed releases and financial authority under explicit ownership. It originally proposed a small Go kernel with build-time adapters and PostgreSQL/RLS defense in depth. These remain <strong>proposals</strong>, not descriptions of the current R14 distribution. <a href="documents/Aperture-Architecture-Release14.html#architecture">Architecture</a>, <a href="Decision-Register.html#AP-ADR-003">AP-ADR-003</a>, <a href="Decision-Register.html#AP-ADR-004">AP-ADR-004</a></p>
+<p>The actual R14 reference is a Python application with a single SQLite store and an exclusive process owner. It offers a standard-library local HTTP path and an optional ASGI path. Execution, observation and delivery workers use the same local authority/store. Separating modules does not turn them into independent deployable services or prove multi-node coordination. The model adapter is deterministic and accepts execution metadata, not a live user prompt sent to a model. <a href="documents/Aperture-Backend-Release14.html">R14 implementation</a>, <a href="runtime/aperture-r14/aperture/domain.py">source</a></p>
+<p>The separate candidate’s path is:</p>
+<pre><code class="language-text">Verified host subject
+  -&gt; host Authority.begin(contract, request): authorize / replay / reserve
+  -&gt; host Authority.claim(permit): recheck / consume one dispatch right
+  -&gt; bounded candidate transport: one HTTPS POST to a qualified LiteLLM gateway
+  -&gt; validate response and usage evidence
+  -&gt; host Authority.record(permit, evidence): persist or recover the receipt
+</code></pre>
+<p>The three Authority operations are interfaces. <strong>There is no delivered wire from Aperture R14 to this candidate.</strong> The test-only MemoryAuthority does not supply the missing durable binding. A future implementation may reuse R14 concepts, but must explicitly map transactions, identities, replay, revocation, price revisions and unknown exposure. <a href="runtime/litellm-candidate/boundary/contract.py">Candidate interface</a>, <a href="documents/LiteLLM-Qualification-Guide.html#authority">integration guide</a></p>
+<p><strong>Runtime-language disposition.</strong> Preserve AP-ADR-004 as its original proposal and mark it for reconsideration alongside RV-02. The next increment should qualify reused LiteLLM execution machinery before selecting a replacement runtime. Neither an automatic Go rewrite nor treating the Python candidate as an accepted architecture decision is warranted. This changes the immediate qualification sequence without rewriting historical decision text.</p>
+</section><section id="capabilities"><h2>5. Component and capability alignment</h2>
+<p>The table distinguishes an implemented local capability from a demonstration, candidate or proposal. “Implemented reference” does not mean production-qualified.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Capability / component</th>
+<th>R14 persistent reference</th>
+<th>Browser demo / candidate / target distinction</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Principal identity</td>
+<td>Generated local accounts; optional pinned OIDC bindings and fresh-authentication rules</td>
+<td>Persona switching is demo-only; corporate IdP/browser qualification is pending</td>
+</tr>
+<tr>
+<td>Tenant/workspace scope</td>
+<td>Current membership and object-scope checks; scoped reads, exports and commands</td>
+<td>Full delegated enterprise hierarchy, SCIM and database RLS are not delivered</td>
+</tr>
+<tr>
+<td>Service contracts</td>
+<td>Draft/Active/Paused services, revisions, owned bounds</td>
+<td>Dedicated physical placements and generalized signed contracts remain proposed</td>
+</tr>
+<tr>
+<td>Governed changes</td>
+<td>Contract, workload and budget changes; independent approval; exact reviewed content</td>
+<td>R9 mock connection/catalog/admission/lifecycle/runtime decision types are not persistent API parity</td>
+</tr>
+<tr>
+<td>Provider connections</td>
+<td>No real model destination or provider secret manager</td>
+<td>Connection forms/probes in the mock are synthetic; candidate gateway configuration is separate</td>
+</tr>
+<tr>
+<td>Model catalog and qualification</td>
+<td>Synthetic model contract</td>
+<td>Synthetic scores do not qualify a real model, region, endpoint or billing model</td>
+</tr>
+<tr>
+<td>Workload grants</td>
+<td>Single-service grants; issued/expired/rotated/revoked credentials</td>
+<td>Browser tokens are synthetic; actual provider identities are not forwarded</td>
+</tr>
+<tr>
+<td>Admission and finance</td>
+<td>Transactional tenant allowance, holds, queue, journal and settlement</td>
+<td>Hierarchical mock caps and distributed/regional financial rights are not implemented server controls</td>
+</tr>
+<tr>
+<td>Execution</td>
+<td>Durable synthetic dispatcher and explicit uncertain outcome</td>
+<td>Candidate is one nonstreaming plain-text call; no actual LiteLLM/provider execution was tested</td>
+</tr>
+<tr>
+<td>Retries and fallback</td>
+<td>R14 synthetic scenarios; unknown dispatch not automatically repeated</td>
+<td>Candidate emits zero-retry/empty-fallback controls, whose actual proxy behavior is unqualified</td>
+</tr>
+<tr>
+<td>Response cache</td>
+<td>No qualified shared response-cache service</td>
+<td>Namespace support in LiteLLM is not authorization; target defaults reuse off</td>
+</tr>
+<tr>
+<td>Streaming and stateful APIs</td>
+<td>Not a live inference capability in R14</td>
+<td>Excluded from candidate; target compatibility/ownership decisions remain proposed</td>
+</tr>
+<tr>
+<td>Retrieval and tool execution</td>
+<td>Not implemented</td>
+<td>Separate data authorization, tool identity and business-object authority remain acceptance requirements</td>
+</tr>
+<tr>
+<td>Control distribution</td>
+<td>Local database-backed authority</td>
+<td>Signed bundles, offline validity and independent cell distribution remain proposed</td>
+</tr>
+<tr>
+<td>Operational continuity</td>
+<td>Serving/Draining/Paused/Recovery; queued-only cancellation; exact-state resume</td>
+<td>Installation state is separate from service activation and liability</td>
+</tr>
+<tr>
+<td>Signals</td>
+<td>Three fixed durable observer rules with scoped case triage</td>
+<td>Not a general production automation builder or autonomous remediation engine</td>
+</tr>
+<tr>
+<td>Notifications</td>
+<td>Opt-in reviewed public-HTTPS receiver, transactional outbox, signed delivery and bounded recovery</td>
+<td>No email/paging connector, exactly-once side effect or unconditional delivery guarantee</td>
+</tr>
+<tr>
+<td>Observability and audit</td>
+<td>Local request/attempt/financial/case/delivery records and application append-only history</td>
+<td>No full external OpenTelemetry collector, immutable audit sink or provider invoice ingestion</td>
+</tr>
+<tr>
+<td>Optimization</td>
+<td>No measured production optimizer</td>
+<td>Demo comparisons use fixtures; lower token price does not prove lower cost per accepted outcome</td>
+</tr>
+<tr>
+<td>Database and recovery</td>
+<td>SQLite schema 2, explicit extensions, backup/verify/quarantined restore</td>
+<td>PostgreSQL, multi-node fencing, distributed finance and cross-host DR remain pending</td>
+</tr>
+</tbody>
+</table></div>
+<p>These boundaries are grounded in the <a href="runtime/aperture-r14/contracts/openapi.json">implemented API</a>, <a href="runtime/aperture-r14/aperture/store.py">persistent schema</a>, <a href="documents/Aperture-Core-Release9.html">R9 mock core guide</a>, and <a href="documents/LiteLLM-Qualification-Guide.html">candidate scope</a>. A feature in one column is not transferable evidence for another.</p>
+</section><section id="identity"><h2>6. Identity, tenancy and authority</h2>
+<p>In server mode, the browser does not select its effective role. Current server-side membership defines tenant/workspace visibility and command authority. A workload credential is a separately approved, single-service authority; revoking a creator’s human session does not automatically revoke every independently approved workload. Reads, exports, commands and eligible replay require current scope rather than trusting an earlier cached UI state. <a href="documents/Aperture-Backend-Release11.html">Identity guide</a>, <a href="runtime/aperture-r14/aperture/security.py">current security source</a></p>
+<p>Optional federation uses authorization-code sign-in with PKCE, signed token validation and explicit issuer/subject bindings. It does not link identities by matching email or automatically accept provider groups as application grants. Binding and policy revisions participate in authority freshness. Recent authentication before a sensitive action is not a claim of MFA assurance. Reverification does not automatically resubmit the action or resolve an unknown command acknowledgement. <a href="runtime/aperture-r14/aperture/federation.py">Federation source</a>, <a href="runtime/aperture-r14/aperture/settings.py">deployment settings</a></p>
+<p>The server uses scoped role domains rather than treating all reviewers as financial approvers. Tenant-budget authority requires tenant-wide financial authority. Technical case triage and notification recovery have different eligible roles from financial case/delivery recovery. Read access does not imply resend, settlement or approval permission. The current implementation and tests, not merely disabled controls, define those boundaries. <a href="documents/Aperture-Backend-Release14.html">R14 guide</a>, <a href="runtime/aperture-r14/contracts/openapi.json">API</a></p>
+<p>Administrative tenant/workspace organization is distinct from physical isolation. A synthetic tenant fixture is not a dedicated deployment. PostgreSQL row security, sovereign cells, multi-account operation, production support-access controls and organizational provisioning remain target decisions. The new registry leaves their ADR status Proposed and requires independent evidence before any isolation claim. <a href="Decision-Register.html#AP-ADR-002">AP-ADR-002</a>, <a href="Decision-Register.html#AP-ADR-007">AP-ADR-007</a>, <a href="Decision-Register.html#AP-ADR-008">AP-ADR-008</a></p>
+<p><strong>C2 extension:</strong> <a href="Aperture-Operational-Review.html#privacy">Tenant-safe telemetry and evidence custody</a>. Existing implementation and historical evidence boundaries remain unchanged.</p></section><section id="governance"><h2>7. One change grammar, distinct states</h2>
+<p>The user-facing progression is <strong>Draft → Validate → Review → Approve → Activate → Observe</strong>. Those words describe distinct events. An approved change can still be stale, fail activation or lack runtime health evidence. A local content fingerprint binds what was reviewed; it is not a cryptographic signature, independent attestation or immutable external audit.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Object / fact</th>
+<th>Current reference meaning</th>
+<th>Do not infer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Service</td>
+<td>Draft, Active or Paused</td>
+<td>An active service has a successful request or a healthy provider</td>
+</tr>
+<tr>
+<td>Change</td>
+<td>Awaiting review, Approved, Activated or Withdrawn</td>
+<td>Approval is activation; activation is a qualified rollout</td>
+</tr>
+<tr>
+<td>Review content</td>
+<td>Scoped resource, base revision, before/after proposal, author and rationale are bound</td>
+<td>Changing the reason preserves the old approval</td>
+</tr>
+<tr>
+<td>Observation</td>
+<td>Request or operational evidence describes an actual recorded state</td>
+<td>A UI status badge proves execution or delivery</td>
+</tr>
+<tr>
+<td>Local operator reference</td>
+<td>Attestation to an external reviewed record for installation/egress work</td>
+<td>Authenticated two-person approval or a digital signature</td>
+</tr>
+</tbody>
+</table></div>
+<p>The R14 schema uses <strong>Activated</strong>. Earlier browser editions may retain <code>Released</code> as a legacy serialized value. Consolidated prose uses Activated for the user concept, but this package performs no data conversion. Historical values are interpreted with their own release contract. <a href="runtime/aperture-r14/aperture/store.py">Current schema</a>, <a href="documents/Aperture-Release7-Guide.html">R7 consistency guide</a></p>
+<p>The service-change flow rechecks current revision and authority at activation. Restrictive actions such as pause or revoke do not authorize a later restoration. Current installation operations and webhook route plans are trusted local-operator workflows; they must not be presented as the same independently authenticated review mechanism used for service/workload changes. <a href="runtime/aperture-r14/aperture/operations.py">Operations source</a>, <a href="runtime/aperture-r14/aperture/notification_admin.py">route administration</a></p>
+</section><section id="execution"><h2>8. Execution, uncertainty and cancellation</h2>
+<p>A logical request intent, durable dispatch record, execution attempt and receipt are different identifiers and states. The local reference can queue synthetic work transactionally with its reservation. Before dispatch, current authority is rechecked. Once durable dispatch intent exists, a crash or uncertain outcome must not become a fresh automatic execution. <a href="documents/Aperture-Backend-Release10.html">Persistent core guide</a>, <a href="runtime/aperture-r14/aperture/domain.py">current domain implementation</a></p>
+<p>The request state set includes <code>Queued</code>, <code>Dispatching</code>, <code>Completed</code>, <code>Unknown</code>, <code>Reconciled</code>, <code>Not dispatched</code>, <code>Declined</code> and <code>Denied</code>. Explicit pre-dispatch cancellation competes with dispatch inside the database transaction. It does not introduce a fictitious successful provider cancellation after dispatch. The cancellation reason and closed job explain the outcome; consumers should use the implemented schema rather than invent a new <code>Cancelled</code> inference state. <a href="runtime/aperture-r14/aperture/store.py">Schema</a>, <a href="runtime/aperture-r14/aperture/operations.py">operations</a></p>
+<p>Closing a tab or an inspector does not cancel work. Repeating an eligible command after losing its acknowledgement retrieves the same committed result under its logical key; current identity still applies. A reconciliation observation can establish liability without proving that a model response was received or delivered to the end user. The asynchronous metadata API does not measure end-user response delivery.</p>
+<p>The candidate has a separate evidence vocabulary, including <code>Response</code>, <code>Truncated</code> and <code>Unknown</code>. Do not map <code>Response</code> directly to every R14 completion/delivery fact. A future host adapter must explicitly map observed usage, truncated output, failed transport, uncertain dispatch and durable receipt recovery into the authoritative state model. <a href="runtime/litellm-candidate/boundary/contract.py">Candidate contract</a></p>
+</section><section id="finance"><h2>9. Financial semantics and optimization</h2>
+<p><strong>Rate allowance, spending reservation, accrued liability and provider billing are separate contracts.</strong> The local reference tracks tenant-level financial authority with integer micro-units, held exposure and journal adjustments. Pending/unknown exposure reduces available allowance. A known request-total settlement does not invent missing attempt-level attribution. An acknowledged overrun records liability and restricts further admission; it does not discard the excess to keep a dashboard below budget. <a href="runtime/aperture-r14/aperture/store.py">Current finance schema</a>, <a href="runtime/aperture-r14/aperture/domain.py">domain implementation</a></p>
+<p>For explaining available authority, use <code>available = authorized allowance − accrued liability − held exposure</code>, subject to the implementation’s blocked state and admission rules. This is a local admission/accounting relationship, not proof that a provider invoice can never exceed a configured amount. Unknown is a distinct state, never shorthand for zero. A counter TTL expiring or a queue becoming empty does not establish that remote liability disappeared.</p>
+<p>The candidate checks that the external permit binds the contract/request and carries a positive sufficient reservation. It does not calculate a qualified provider worst-case bound from text bytes. The host must establish token counting, pricing revision, output limits, fixed fees, allowed ancillary work and settlement behavior. Usage reported in a response is metering evidence, not an invoice. <a href="documents/LiteLLM-Qualification-Guide.html#authority">Candidate authority requirements</a></p>
+<p>The reviewed LiteLLM source has genuine pre-call reservations, not just asynchronous reporting. It also has estimate-coverage exclusions, configurable failure behavior, throttling exceptions and terminal-path/lease qualifications. Enabling a strict flag is not evidence of universal per-request financial containment. Use LiteLLM controls as qualified implementation mechanisms or defense in depth; do not assume they implement Aperture’s intended durable unknown-liability contract. <a href="documents/LiteLLM-Codebase-Review-2026-10-21.html#architecture">Pinned review</a>, <a href="Decision-Register.html#RV-03">RV-03</a></p>
+<p>Optimization remains advisory until quality and workload evidence exist. Compare input and output cost on the same workload within approved capability, privacy and context constraints. Show exclusions and uncertainty. Synthetic latency/quality scores and assumed acceptance rates are planning inputs. Cost per accepted outcome requires a defined outcome and actual observations; cheaper output-token pricing alone is not demonstrated savings. <a href="documents/Aperture-Innovation-Release.html">Innovation guide</a>, <a href="Decision-Register.html#AP-ADR-020">AP-ADR-020</a>, <a href="Decision-Register.html#AP-ADR-038">AP-ADR-038</a></p>
+<p><strong>C2 extension:</strong> <a href="Aperture-Operational-Review.html#finops">Financial invariant diagnostics and cost attribution</a>. Existing implementation and historical evidence boundaries remain unchanged.</p></section><section id="operations"><h2>10. Operating continuity, readiness and restore</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Installation mode</th>
+<th>New inference admission</th>
+<th>Queued work</th>
+<th>Existing liabilities / administration</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Serving</td>
+<td>Allowed only through applicable controls</td>
+<td>Eligible for dispatch</td>
+<td>Retained; scoped administration available</td>
+</tr>
+<tr>
+<td>Draining</td>
+<td>Refused before a new reservation</td>
+<td>May finish</td>
+<td>Retained; administration available</td>
+</tr>
+<tr>
+<td>Paused</td>
+<td>Refused before a new reservation</td>
+<td>Frozen; eligible explicit cancellation remains possible</td>
+<td>Retained; in-flight work may finish</td>
+</tr>
+<tr>
+<td>Recovery</td>
+<td>Refused in the quarantined branch</td>
+<td>Not dispatched</td>
+<td>Restored authority is restricted; unresolved exposure remains explicit</td>
+</tr>
+</tbody>
+</table></div>
+<p>Installation mode does not activate a service, restore a credential or settle money. Pausing inference is not a notification kill switch. Reviewed route disable or process stop provides separate delivery containment. A restored branch must not automatically send historical notifications. <a href="documents/Aperture-Backend-Release12.html">Operations guide</a>, <a href="documents/Aperture-Backend-Release14.html">current notification guide</a></p>
+<p>The probes establish different facts. <code>/health/live</code> establishes process response; <code>/health/control</code> checks control storage/state; <code>/health/ready</code> additionally requires Serving mode and recent execution-worker evidence. <code>/health/signals</code> and <code>/health/notifications</code> cover their distinct observers/senders. A healthy observer does not mean no active case; a healthy sender does not mean a receiver accepted every event; none proves a real provider is healthy. <a href="runtime/aperture-r14/contracts/openapi.json">Implemented API</a></p>
+<p>Resumption uses a short-lived exact-state plan. Relevant authority or financial changes invalidate it; session refresh alone need not. Unknown exposure requires acknowledgement and stays held. A restore creates a new quarantined branch instead of replacing a live database and reviving stale authority. The recovery drill verifies actual restored local data but does not reconstruct liabilities incurred after the backup or prove cross-host recovery objectives. <a href="runtime/aperture-r14/aperture/operations.py">Recovery source</a></p>
+<p>The implemented journal mode is <strong>DELETE</strong>, not WAL. Historical R10 WAL references describe that older artifact. The R11 maintenance conversion and subsequent versions’ local tests do not qualify PostgreSQL or distributed recovery. Revisit the selected database and its supported version under a separate production decision rather than interpreting an environment provisioning limitation as a permanent architectural rejection. <a href="documents/Aperture-Backend-Release11.html">R11 guide</a>, <a href="runtime/aperture-r14/aperture/store.py">current store</a></p>
+<p><strong>C2 extension:</strong> <a href="Aperture-Operational-Review.html#sops">Complete operational procedures and recovery criteria</a>. Existing implementation and historical evidence boundaries remain unchanged.</p></section><section id="signals"><h2>11. Durable signals and governed delivery</h2>
+<p>The server-side observer evaluates three fixed rules on its own schedule: unknown financial exposure aged at least 60 seconds, queued work aged at least 120 seconds, and at least five denied receipts in a workspace within five minutes. Its nominal interval is ten seconds. Those are reference rules, not accepted enterprise response-time commitments or a general user-programmable automation engine. <a href="documents/Aperture-Backend-Release13.html">Signals guide</a>, <a href="runtime/aperture-r14/aperture/signals.py">source</a></p>
+<p>Case workflow (<code>Open</code>, <code>Acknowledged</code>, <code>Resolved</code>), observed condition (<code>Active</code>, <code>Clear</code>, <code>Suppressed</code>) and evidence freshness remain independent. Old evidence becomes Unknown rather than implying the source problem cleared. Resolution rechecks the source condition; acknowledging the case does not stop detection. Recurrence preserves history and requires renewed ownership. Detection does not authorize a configuration change or financial settlement.</p>
+<p>R14 adds a transactional notification outbox. A trusted operator reviews a workspace/domain receiver, hostname/path and signing-key reference. No destination or external probe is enabled by default. Event creation and outbox enqueue commit together. Delivery is separately signed and attempted against the approved public HTTPS destination, with no caller URL or redirect following. The receiver function is an example, not a deployed service. <a href="documents/Aperture-Backend-Release14.html">Delivery guide</a>, <a href="runtime/aperture-r14/examples/webhook_receiver.py">receiver example</a></p>
+<p>Delivery states are <code>Pending</code>, <code>Dispatching</code>, <code>Retrying</code>, <code>Accepted</code>, <code>Blocked</code>, <code>Exhausted</code>, <code>Cancelled</code> and <code>Expired</code>. Here <strong>Cancelled is a delivery state</strong>, distinct from inference cancellation’s schema. A retry cycle is bounded to five attempts within the original 24-hour lifetime. Stable identity and immutable bytes allow receiver deduplication, but duplicate/out-of-order receipt and final non-delivery remain possible.</p>
+<p><code>Accepted</code> means the receiver returned HTTP 2xx. It does not mean a person read the event, a downstream task completed, the case was acknowledged or the source condition was resolved. Preserve the distinction in dashboards and exports. Minimal event metadata still has privacy and retention implications even when prompts, amounts and free-text notes are excluded. <a href="runtime/aperture-r14/aperture/notifications.py">Notification source</a>, <a href="runtime/aperture-r14/aperture/webhooks.py">transport source</a></p>
+<p><strong>Two different egress contracts must remain separate.</strong> Notifications target explicitly approved public DNS names on HTTPS 443 and refuse private/IP destinations. The LiteLLM candidate intentionally connects to an explicitly configured numeric gateway address with hostname-verified TLS. This is a qualified internal-gateway use case, not an exception that should weaken webhook destination validation. <a href="runtime/litellm-candidate/boundary/transport.py">Candidate transport</a></p>
+<p><strong>C2 extension:</strong> <a href="Aperture-Operational-Review.html#alarms">Operational alarm and notification lifecycle</a>. Existing implementation and historical evidence boundaries remain unchanged.</p></section><section id="litellm"><h2>12. LiteLLM correction and qualification boundary</h2>
+<p>The pinned source correction addresses two duration behaviors. Multi-day hour/minute/second reset paths dropped whole elapsed days during rollover. Prefix parsing accepted malformed input such as <code>1ms</code> as one minute and <code>1h30m</code> as one hour. The patch preserves day quotient/remainder and requires complete matching. Its scheduler still preserves the legacy invalid-input fallback; it does not provide a new universal fail-closed scheduling API. <a href="documents/LiteLLM-Codebase-Review-2026-10-21.html#defects">Code review</a>, <a href="runtime/litellm-candidate/reference/litellm-duration-corrections.patch">patch</a></p>
+<p>For the fixed input <code>2026-10-21T15:20:30.123456+00:00</code>, the corrected standardized <code>48h</code> reset is 23 October at 00:00 under the existing clock alignment. That example is <strong>not</strong> a claim of 48 elapsed hours after the input instant. Standardized schedules, elapsed durations, aliases and calendar-month semantics must stay explicit in operator previews and audits.</p>
+<p>No stored values or reset timestamps were migrated. The read-only audit accepts a sanitized projection with caller semantics; it does not connect to a database, repair rows or certify deployments. A clean syntax result does not prove that existing timestamps or financial history are correct. The native runner requires the exact clean PR checkout and a provisioned environment; isolated subsets cannot satisfy it. <a href="runtime/litellm-candidate/qualification/audit_durations.py">Audit</a>, <a href="runtime/litellm-candidate/qualification/native_gate.py">native gate</a></p>
+<p>The source review also corrects general architecture claims. Python gateway/backend entrypoints share proxy implementation and startup dependencies; filtered routes do not prove independent control/data-plane failure domains. Effective configuration includes file ownership and blocked conflicting writes. Cache namespaces and a broad endpoint surface are mechanisms to qualify, not implicit tenant isolation or application compatibility. <a href="Decision-Register.html#RV-05">Review amendments</a>, <a href="Decision-Register.html#RV-06">configuration ownership</a>, <a href="Decision-Register.html#RV-07">cache partitioning</a></p>
+<p>The later integration candidate adds no source commit to the fork. It accepts only plain text and stable intent, reconstructs one nonstreaming Chat Completions request, owns model/retry/cache parameters, validates permit bindings and records evidence through the host interface. Real proxy behavior, native package imports, database/Redis interactions, provider compatibility and production finances remain outside its exercised scope. <a href="documents/LiteLLM-Qualification-Guide.html">Candidate guide</a></p>
+</section><section id="contracts"><h2>13. Contracts and source-of-truth map</h2>
+<p>The current persistent OpenAPI contains <strong>37 HTTP operations and 52 schemas</strong>. The mock catalogs, public target sketches and Python candidate interface are different surfaces. Never generate a production client from the mock API or publish a target sketch as an implemented endpoint.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Contract</th>
+<th>Purpose and scope</th>
+<th>Location</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R14 implemented HTTP API</td>
+<td>Local persistent server and health/operations/signals/notification surfaces</td>
+<td><a href="runtime/aperture-r14/contracts/openapi.json">OpenAPI</a></td>
+</tr>
+<tr>
+<td>R9 mock catalog and bindings</td>
+<td>Historical browser command behavior, including features absent from R14 persistent API</td>
+<td><a href="archive/delivered/Aperture-Contracts-Release9.json">Catalog</a>, <a href="archive/delivered/Aperture-Core-Mock-Bindings-Release9.openapi.json">mock API</a></td>
+</tr>
+<tr>
+<td>R7/R8 pilot bindings</td>
+<td>Earlier prototype and study instrument</td>
+<td><a href="Documentation-Catalog.html">Catalog</a></td>
+</tr>
+<tr>
+<td>Target public interfaces</td>
+<td>Representative architecture sketches only</td>
+<td><a href="documents/Aperture-Architecture-Release14.html#interfaces">Architecture interfaces</a></td>
+</tr>
+<tr>
+<td>LiteLLM candidate</td>
+<td>Python <code>ServiceContract</code>, permit, evidence, receipt and <code>Authority</code> interface</td>
+<td><a href="runtime/litellm-candidate/boundary/contract.py">Source</a></td>
+</tr>
+<tr>
+<td>Qualification record schema</td>
+<td>Research data against the R8 instrument; not operational authority</td>
+<td><a href="runtime/qualification-r8/Aperture-Qualification-Schema-Release8.json">R8 schema</a></td>
+</tr>
+</tbody>
+</table></div>
+<details><summary>All 37 implemented HTTP operations (R14)</summary><div class="table-scroll"><table><thead><tr><th>Method</th><th>Path</th><th>Contract</th></tr></thead><tbody><tr><td><code>POST</code></td><td><code>/api/login</code></td><td>Create local session</td></tr><tr><td><code>POST</code></td><td><code>/api/logout</code></td><td>End session</td></tr><tr><td><code>GET</code></td><td><code>/api/session</code></td><td>Read current account and CSRF value</td></tr><tr><td><code>GET</code></td><td><code>/api/snapshot</code></td><td>Read authorized operating view</td></tr><tr><td><code>POST</code></td><td><code>/api/services</code></td><td>Create draft service and activation proposal</td></tr><tr><td><code>POST</code></td><td><code>/api/changes</code></td><td>Propose exact contract or tenant allowance change</td></tr><tr><td><code>POST</code></td><td><code>/api/changes/{id}/approve</code></td><td>Approve change</td></tr><tr><td><code>POST</code></td><td><code>/api/changes/{id}/activate</code></td><td>Activate change</td></tr><tr><td><code>POST</code></td><td><code>/api/changes/{id}/withdraw</code></td><td>Withdraw change</td></tr><tr><td><code>POST</code></td><td><code>/api/services/{id}/pause</code></td><td>Pause admission immediately</td></tr><tr><td><code>POST</code></td><td><code>/api/workloads</code></td><td>Request single-service workload grant</td></tr><tr><td><code>POST</code></td><td><code>/api/workloads/{id}/credential</code></td><td>Issue or atomically rotate workload credential</td></tr><tr><td><code>POST</code></td><td><code>/api/workloads/{id}/revoke</code></td><td>Revoke workload grant and its credentials</td></tr><tr><td><code>POST</code></td><td><code>/api/credentials/{id}/revoke</code></td><td>Revoke one credential</td></tr><tr><td><code>POST</code></td><td><code>/api/execute</code></td><td>Admit deterministic metadata execution</td></tr><tr><td><code>GET</code></td><td><code>/api/requests/{id}</code></td><td>Inspect request and financial evidence</td></tr><tr><td><code>POST</code></td><td><code>/api/requests/{id}/observe</code></td><td>Record unresolved usage observation</td></tr><tr><td><code>POST</code></td><td><code>/api/requests/{id}/settle</code></td><td>Reconcile unknown request total</td></tr><tr><td><code>GET</code></td><td><code>/api/auth/config</code></td><td>Read the configured sign-in contract</td></tr><tr><td><code>POST</code></td><td><code>/api/auth/start</code></td><td>Create a browser-bound OIDC flow</td></tr><tr><td><code>GET</code></td><td><code>/auth/callback</code></td><td>Consume the bound authorization-code callback</td></tr><tr><td><code>POST</code></td><td><code>/api/logout-all</code></td><td>Revoke every Aperture browser session for the current principal</td></tr><tr><td><code>GET</code></td><td><code>/health/live</code></td><td>Read local live status</td></tr><tr><td><code>GET</code></td><td><code>/health/ready</code></td><td>Read local ready status</td></tr><tr><td><code>GET</code></td><td><code>/api/operations</code></td><td>Inspect all authorized operating exposure</td></tr><tr><td><code>POST</code></td><td><code>/api/requests/{id}/cancel</code></td><td>Cancel only before durable dispatch intent</td></tr><tr><td><code>GET</code></td><td><code>/health/control</code></td><td>Read control-plane availability</td></tr><tr><td><code>GET</code></td><td><code>/api/signals</code></td><td>List scoped operational cases and observer freshness</td></tr><tr><td><code>GET</code></td><td><code>/api/signals/{id}</code></td><td>Inspect an authorized case and bounded event history</td></tr><tr><td><code>POST</code></td><td><code>/api/signals/{id}/acknowledge</code></td><td>Take ownership; do not clear the condition or silence evaluation.</td></tr><tr><td><code>POST</code></td><td><code>/api/signals/{id}/resolve</code></td><td>Recheck the source condition in the command transaction. Active and suppressed conditions cannot be resolved. A local reference is not verified external evidence.</td></tr><tr><td><code>GET</code></td><td><code>/health/signals</code></td><td>Anonymous observer freshness probe</td></tr><tr><td><code>GET</code></td><td><code>/api/notifications</code></td><td>list notification deliveries</td></tr><tr><td><code>GET</code></td><td><code>/api/notifications/{id}</code></td><td>inspect notification delivery</td></tr><tr><td><code>POST</code></td><td><code>/api/notifications/{id}/retry</code></td><td>retry notification delivery</td></tr><tr><td><code>POST</code></td><td><code>/api/notifications/{id}/cancel</code></td><td>cancel notification delivery</td></tr><tr><td><code>GET</code></td><td><code>/health/notifications</code></td><td>notification worker health</td></tr></tbody></table></div></details>
+<p>The authority port needs one transactionally coherent implementation of <code>begin</code>, <code>claim</code> and <code>record</code>. Its expected semantics should be mapped to server identity, logical intent, reservation, dispatch and evidence records before wiring it to a network call. Do not alias methods by similar names without proving crash and replay behavior. An in-memory callback test is not evidence for concurrent financial correctness in an actual shared store.</p>
+</section><section id="experience"><h2>14. User experience and research continuity</h2>
+<p>The nine server-backed views are <strong>My work, AI services, Change center, Workload access, Request lab, Request explorer, Spend &amp; allowances, Audit trail, and Runtime &amp; scope</strong>. They implement a constrained reference journey rather than every feature visible in the fifteen-screen mock. <a href="runtime/aperture-r14/implementation/server-console.js">Server console source</a></p>
+<p>The earlier innovations remain valuable product requirements: resumable onboarding, constraint diagnosis, workspace delegation, financial investigation, scenario comparison, exact batch review, evidence freshness and saved investigations. Their prototype implementations and tests are retained. They are not silently declared complete in R14 whenever no corresponding persistent command exists. <a href="documents/Aperture-Innovation-Release.html">Innovation reader</a>, <a href="documents/Aperture-UX-Review.html">historical UX review</a></p>
+<p>Keep service context continuous through a proposal, execution receipt, financial observation, operational case and delivery receipt. Show which snapshot a summary came from. The freshest detail record may be newer than a list’s aggregates. Avoid inferred success from a timer, a proposal’s approval, a completed HTTP exchange or a reconciled cost.</p>
+<p>The R8 qualification workbench is deliberately separate from operational data. It supports rehearsals, participant observations, findings, retests and external decision references, but remains bound to its R8 tasks and console. Do not use its existing study packets as acceptance of R9–R14 features or the candidate. Later tasks require an updated scope and fresh evidence; the research instrument’s existence is not completed user research. <a href="documents/Aperture-Release8-Guide.html">R8 guide</a>, <a href="runtime/qualification-r8/Aperture-Qualification-Release8.html">retained tool</a></p>
+<p>Accessibility, native browser/cookie behavior, actual multi-tab persistence and representative task comprehension remain unqualified in the historical validation scope. Automated responsive checks and injected browser journeys are useful regression evidence, not conformance certificates. Participant-facing drafts should continue to avoid real sensitive content, credentials or production financial records.</p>
+<p><strong>C2 extension:</strong> <a href="Aperture-Operational-Review.html#ux">Operational user-experience measurements</a>. Existing implementation and historical evidence boundaries remain unchanged.</p></section><section id="runbooks"><h2>15. Safe package use and migration</h2>
+<p>From the extracted consolidation package, enter the <strong>unchanged R14 distribution</strong>, not the candidate or an archived older package:</p>
+<pre><code class="language-bash">cd runtime/aperture-r14
+python server.py init
+python server.py serve
+</code></pre>
+<p>Initialization creates a new local store and prints generated passwords once. Do not initialize over an existing store or expose the development listener publicly. Use the exact loopback address printed by the server. Opening the HTML directly runs the separate browser demo. Neither workflow enables a webhook destination or real inference by default. <a href="runtime/aperture-r14/README.md">Current README</a></p>
+<p>The optional ASGI/federation path uses the distribution’s requirement file and reviewed settings. Production HTTPS requires its specified private socket/TLS edge arrangement; a loopback testing identity provider is not an organizational identity authority. The documentation set has not newly installed dependencies or assessed their present vulnerability status.</p>
+<h3>Sequential migration policy</h3>
+<p>Existing persistent stores require the applicable stopped, exact-state plan/apply operations and protected new backup paths. Do not skip prerequisites or treat a schema version alone as sufficient: R14 requires schema 2 <strong>and</strong> <code>operations-v1</code>, <code>signals-v1</code>, <code>notifications-v1</code> metadata/extensions. <a href="runtime/aperture-r14/aperture/cli.py">Current CLI</a></p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Source generation</th>
+<th>Required transition</th>
+<th>Important authority effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R10 schema 1</td>
+<td>Reviewed <code>migrate-plan</code> / <code>migrate-apply</code> into schema 2</td>
+<td>Explicit journal conversion, session revocation and pending-review handling; preserve money and logical history</td>
+</tr>
+<tr>
+<td>R11 schema 2</td>
+<td><code>ops-enable-plan</code> / <code>ops-enable-apply</code></td>
+<td>Begins Paused; requires explicit resumption</td>
+</tr>
+<tr>
+<td>R12 with operations</td>
+<td><code>signals-enable-plan</code> / <code>signals-enable-apply</code></td>
+<td>Installs fixed observer model; begins Paused</td>
+</tr>
+<tr>
+<td>R13 with operations/signals</td>
+<td><code>notifications-enable-plan</code> / <code>notifications-enable-apply</code></td>
+<td>No active destinations; begins Paused</td>
+</tr>
+<tr>
+<td>Current R14</td>
+<td>Verify all expected extensions and financial graph</td>
+<td>No automatic startup upgrade or inferred permission restoration</td>
+</tr>
+</tbody>
+</table></div>
+<p>The immediate R13→R14 transition has retained prior-release-source test evidence. That does not prove every older-to-latest chained upgrade was exercised end to end. Follow the detailed release runbooks, validate actual source states and retain reversible backups. Plans can expire or become stale after relevant changes. No downgrade guarantee is supplied.</p>
+<p>Browser storage namespaces are release-specific (<code>aperture-demo-v14</code> for the latest demo); explicit compatible backup import is distinct from server migration. Browser state, persona settings or research records must never be imported as authoritative server grants or liabilities. The consolidation does not modify any local browser store or server database.</p>
+<h3>Candidate qualification tools</h3>
+<pre><code class="language-bash">cd runtime/litellm-candidate
+python qualification/audit_durations.py examples/duration-projection.json \
+  --out /private/new-duration-audit.json
+
+python qualification/native_gate.py \
+  --repo /work/litellm \
+  --out /private/new-native-evidence
+</code></pre>
+<p>The example audit intentionally identifies findings. The native runner requires the specified complete, clean PR checkout with dependencies already provisioned. Neither command makes an unsupported environment native, alters the fork or authorizes paid inference. Their exact prerequisites and exit semantics are in the <a href="runtime/litellm-candidate/README.md">candidate README</a>.</p>
+</section><section id="evidence"><h2>16. Evidence ledger: retained versus newly checked</h2>
+<p>Evidence is attached to a source/version and a test mode. <strong>Do not add these counts across releases.</strong> Suites overlap; source versions differ; assertions, parametrized tests, subtests, document checks and participant outcomes are different units.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Evidence record</th>
+<th>Recorded result</th>
+<th>What it supports</th>
+<th>What remains unproved</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="runtime/aperture-r14/Aperture-Release14-Test-Results.json">R14 receipt</a></td>
+<td>1,058 recorded checks across 21 suites</td>
+<td>Named local core, federation, operations, signals, notification, TLS fixture, browser-bridge and packaging behaviors at its source hashes</td>
+<td>Production security, native browser session behavior, real inference or distributed persistence</td>
+</tr>
+<tr>
+<td><a href="runtime/litellm-candidate/Qualification-Test-Results.json">Candidate receipt</a></td>
+<td>153 tests, including 27 transport tests</td>
+<td>Candidate logic and actual scripted local TLS transport</td>
+<td>Running LiteLLM, PostgreSQL/Redis, provider compatibility or production Authority</td>
+</tr>
+<tr>
+<td><a href="archive/delivered/LiteLLM-Review-Test-Results.json">Duration review</a></td>
+<td>Corrected 77 tests + 16 subtests; 24 failures on original source with extended cases</td>
+<td>Isolated regression detection at verified file blobs</td>
+<td>Native repository test/CI success or deployed-budget correctness</td>
+</tr>
+<tr>
+<td><a href="documents/Aperture-Release8-Guide.html">Research instrumentation</a></td>
+<td>Tooling and synthetic/browser checks</td>
+<td>The ability to record a study under a scope</td>
+<td>Representative participant findings or owner approval</td>
+</tr>
+<tr>
+<td><a href="evidence/consolidation-validation.json">C1 alignment validation</a></td>
+<td>See executed structural, provenance and rendering results</td>
+<td>Integrity, reference resolution, decision preservation and documented-baseline consistency</td>
+<td>Re-execution of historical application suites or new production assurance</td>
+</tr>
+<tr><td>C2 operational validation</td><td><a href="operations/evidence/operational-review-validation.json">Executed current checks and limitations</a></td><td>Read-only diagnostics on actual R14 schema with synthetic records, log schema and tool behavior, operational registries, preserved source and document controls</td><td>Native Prometheus/Loki/Alertmanager execution, real-provider behavior, production paging and operator rehearsal</td></tr></tbody>
+</table></div>
+<p>C1 verified original bytes, distribution manifests, the implemented OpenAPI shape, local references, ADR preservation and document behavior, and checked GitHub separately. C2 preserves those receipts and adds read-only query/tool tests and current operational-document validation. C2 does not refresh repository CI status. It does not reuse a historical green result as a new test execution. Failed network provisioning documented in earlier receipts remains a dated environment observation, not a claim that future provisioning is impossible.</p>
+<p>For any new deployment, collect a fresh record identifying source commit, build/dependency set, configuration and price revisions, schema/extensions, topology, identity mode, scenario, expected behavior, observations and limitations. Evidence without that scope cannot close a promotion gate.</p>
+<p><strong>C2 extension:</strong> <a href="Aperture-Operational-Review.html#validation">New C2 diagnostic and documentation validation</a>. Existing implementation and historical evidence boundaries remain unchanged.</p></section><section id="decisions"><h2>17. Decision register and alignment dispositions</h2>
+<p>The consolidated register contains <strong>352 full records</strong>: 304 product-specific comparative ADRs, 40 Aperture ADRs and eight LiteLLM review amendments. It keeps original IDs, full content, ownership suggestions, rationale and source links. All remain <strong>Proposed</strong>. Counts refer to canonical records, not repeated copies of the same ADR in successive reports.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Register</th>
+<th style="text-align:right">Records</th>
+<th>Governing scope</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bedrock</td>
+<td style="text-align:right">40</td>
+<td>Its reference architecture in the historical comparison</td>
+</tr>
+<tr>
+<td>LiteLLM comparison</td>
+<td style="text-align:right">40</td>
+<td>Original gateway evaluation, with later source review noted</td>
+</tr>
+<tr>
+<td>Bifrost</td>
+<td style="text-align:right">24</td>
+<td>Its distinct reference architecture and crosswalk</td>
+</tr>
+<tr>
+<td>Kong / Azure / Google / Portkey / Agent Router</td>
+<td style="text-align:right">40 each</td>
+<td>Each product’s independent reference choices</td>
+</tr>
+<tr>
+<td>Aperture</td>
+<td style="text-align:right">40</td>
+<td>Proposed target design, with explicit R14/candidate implementation dispositions</td>
+</tr>
+<tr>
+<td>LiteLLM source review</td>
+<td style="text-align:right">8</td>
+<td>Proposed corrections to baseline, reuse, finance, scheduling, packaging, configuration, caching and delivery strategy</td>
+</tr>
+</tbody>
+</table></div>
+<p>The 304 comparison records are not a backlog of 304 Aperture implementation decisions. Similarly, matching concepts across products do not make their entitlements, failure modes, permissions or acceptance evidence transferable. <a href="Decision-Register.html">Full searchable register</a></p>
+<p>The C1 overlay records which Aperture proposals are partially represented locally, only demonstrated, absent, or need reconsideration. AP-ADR-004’s Go-kernel proposal is explicitly under reconsideration with RV-02. AP-ADR-008’s RLS and AP-ADR-010’s signed bundles remain unimplemented. AP-ADR-015–019 retain distributed-finance/estimator proof obligations despite a local ledger. AP-ADR-029’s broad automation design is not accepted by the presence of three fixed observers. No overlay changes the preserved original ADR text.</p>
+</section><section id="roadmap"><h2>18. One roadmap and one promotion decision</h2>
+<p>The earlier milestone sequence and successive release-specific “next steps” now resolve to the following gated plan. Receiver qualification remains necessary before meaningful-data webhook egress, but is not the sole platform-wide next step after the separate LiteLLM candidate appeared.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Gate</th>
+<th>Next work</th>
+<th>Completion evidence</th>
+<th>Current disposition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>C0: coherent reference</strong></td>
+<td>Maintain this baseline, source ownership and explicit runtime boundaries</td>
+<td>Preserved artifacts, consistent contracts and documented discrepancies</td>
+<td>Documentation consolidated; no new product acceptance</td>
+</tr>
+<tr>
+<td><strong>C1: safe duration rollout</strong></td>
+<td>Audit actual stored values; run native mapped tests and repository gates; review PR</td>
+<td>Real inventory, native/CI receipt, proxy create/read/reset tests and compatibility approval</td>
+<td>Draft patch; native/proxy gates pending</td>
+</tr>
+<tr>
+<td><strong>C2: authoritative integration</strong></td>
+<td>Implement durable candidate <code>begin</code> / <code>claim</code> / <code>record</code> using reviewed identity, ledger and attempt semantics</td>
+<td>Concurrent/revoked replay, crash, unknown-liability, settlement and recovery tests on real storage</td>
+<td>Not implemented as candidate binding</td>
+</tr>
+<tr>
+<td><strong>C3: one real service journey</strong></td>
+<td>Qualify one model/API/deployment tuple through actual LiteLLM and selected state services</td>
+<td>Negative tenant tests, effective retry/fallback/cache evidence, provider payload and usage compatibility</td>
+<td>Not run; no paid inference authorized by existing receipts</td>
+</tr>
+<tr>
+<td><strong>C4: enterprise operation and UX</strong></td>
+<td>Qualify IdP/TLS, persistence/topology, observability, retention, recovery, accessibility and representative tasks</td>
+<td>Named owners and accepted operating/user outcomes</td>
+<td>Open; can run in parallel where prerequisites exist</td>
+</tr>
+<tr>
+<td><strong>C5: bounded production pilot</strong></td>
+<td>Admit only a reviewed low-risk cohort with containment and exit plan</td>
+<td>Explicit external production approval and monitored rollout</td>
+<td>Not approved</td>
+</tr>
+<tr>
+<td><strong>C6: measured optimization and expansion</strong></td>
+<td>Add broader capabilities only against demonstrated demand</td>
+<td>Outcome economics, capability-specific threat/recovery contracts and independent release evidence</td>
+<td>Deferred</td>
+</tr>
+</tbody>
+</table></div>
+<p>A second provider is needed when portability/fallback is being claimed, not automatically for the first successful plain-text call. The first actual provider path should be narrow; qualify its recovery target independently before advertising fallback. This resolves the older “two adapters first” target wording with the later bounded candidate plan.</p>
+<p><strong>Do not expand primary screens or rename a documentation package as a product milestone to imply gate completion.</strong> Architecture, tested reference, integration candidate and accepted production are different milestones. Prefer build-versus-compose evaluation of the real execution boundary over an unmeasured rewrite.</p>
+<h3>Candidate acceptance register, preserved in scope</h3><div class="table-scroll"><table><thead><tr><th>Scoped ID</th><th>Gate</th><th>Recorded status</th><th>Evidence / remaining work</th></tr></thead><tbody><tr><td><code>LQ-G01</code></td><td>Pin repository and PR</td><td>PASS</td><td>Observed current refs and draft state through GitHub</td></tr><tr><td><code>LQ-G02</code></td><td>Retained isolated red/green regression</td><td>PASS</td><td>77 corrected tests plus 16 subtests; baseline produces 24 expected failures</td></tr><tr><td><code>LQ-G03</code></td><td>Read-only duration inventory</td><td>PENDING CUSTOMER DATA</td><td>Audit implemented and tested; no actual stored inventory was supplied</td></tr><tr><td><code>LQ-G04</code></td><td>Native mapped test</td><td>BLOCKED ENVIRONMENT</td><td>No full checkout or dependency-complete LiteLLM runtime; runner refuses subset</td></tr><tr><td><code>LQ-G05</code></td><td>Repository lint/type/CI gates</td><td>NOT RUN</td><td>No GitHub check runs observed; not inferred from isolated tests</td></tr><tr><td><code>LQ-G06</code></td><td>Proxy budget create/read/reset</td><td>NOT RUN</td><td>Requires actual proxy, PostgreSQL and Redis</td></tr><tr><td><code>LQ-G07</code></td><td>Revocation and tenant isolation</td><td>NOT RUN</td><td>Requires authoritative implementation, not MemoryAuthority</td></tr><tr><td><code>LQ-G08</code></td><td>Exact retry/fallback and cache behavior</td><td>NOT RUN</td><td>Candidate emits fixed controls; deployed LiteLLM must prove honoring them</td></tr><tr><td><code>LQ-G09</code></td><td>Provider payload and usage compatibility</td><td>NOT RUN</td><td>No real provider or actual LiteLLM traffic</td></tr><tr><td><code>LQ-G10</code></td><td>Financial reservation and settlement</td><td>NOT IMPLEMENTED IN CANDIDATE</td><td>Authority port only; full worst-case pricing and liability ledger remain external</td></tr><tr><td><code>LQ-G11</code></td><td>Bounded transport and response validation</td><td>PASS LOCAL FIXTURE</td><td>153 candidate tests include 27 transport tests with a scripted TLS peer</td></tr><tr><td><code>LQ-G12</code></td><td>Streaming, tools, RAG and stateful APIs</td><td>OUT OF SCOPE</td><td>Requests limited to one nonstreaming plain-text chat completion</td></tr><tr><td><code>LQ-G13</code></td><td>Crash/restart and distributed recovery</td><td>NOT RUN</td><td>No deployed adapter Authority or distributed financial store</td></tr><tr><td><code>LQ-G14</code></td><td>Production promotion</td><td>NOT APPROVED</td><td>No merge, deployment, secret provisioning or live traffic authorized by this evidence</td></tr></tbody></table></div><p class="small">The LQ prefix is a consolidation namespace; original IDs G01–G14 are retained in the source kit. Out of scope is not a passed gate.</p>
+</section><section id="glossary"><h2>19. Terminology and ownership</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Canonical meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AI Service Contract</td>
+<td>Versioned promise of capabilities, scope, allowed implementations and operating/financial constraints</td>
+</tr>
+<tr>
+<td>Tenant</td>
+<td>Authorization and financial boundary, not merely a display grouping</td>
+</tr>
+<tr>
+<td>Workspace</td>
+<td>Scoped organizational/environment grouping; not automatically dedicated infrastructure</td>
+</tr>
+<tr>
+<td>Runtime cell</td>
+<td>Proposed/qualified execution placement; not established by a local fixture’s region label</td>
+</tr>
+<tr>
+<td>Verified subject</td>
+<td>Identity established by the server/host; not a browser-selected persona or request field</td>
+</tr>
+<tr>
+<td>Workload grant</td>
+<td>Independently authorized single-service machine authority</td>
+</tr>
+<tr>
+<td>Approval</td>
+<td>Consent to exact content under current scope and review rules</td>
+</tr>
+<tr>
+<td>Activation</td>
+<td>Explicit application of approved content after revalidation</td>
+</tr>
+<tr>
+<td>Health observation</td>
+<td>Time- and revision-bound evidence, not a synonym for activation</td>
+</tr>
+<tr>
+<td>Reservation</td>
+<td>Financial exposure held before dispatch under a defined estimator/authority contract</td>
+</tr>
+<tr>
+<td>Accrued liability</td>
+<td>Known recorded cost, distinct from an upstream invoice</td>
+</tr>
+<tr>
+<td>Unknown</td>
+<td>Missing or uncertain execution/cost evidence; not zero, failure or permission to retry</td>
+</tr>
+<tr>
+<td>Logical intent</td>
+<td>Stable caller intent used for idempotent admission/recovery</td>
+</tr>
+<tr>
+<td>Attempt</td>
+<td>A distinct dispatch lifecycle, with its own evidence</td>
+</tr>
+<tr>
+<td>Replay</td>
+<td>Retrieval of a bound prior outcome after current authorization, not a new send</td>
+</tr>
+<tr>
+<td>Case</td>
+<td>Human investigation workflow linked to a detected condition</td>
+</tr>
+<tr>
+<td>Delivery acceptance</td>
+<td>Receiver HTTP acknowledgement, distinct from business processing or case resolution</td>
+</tr>
+<tr>
+<td>Reference implementation</td>
+<td>Executable limited model; not a production guarantee</td>
+</tr>
+<tr>
+<td>Candidate</td>
+<td>Reviewable code that has not satisfied required integration/operating gates</td>
+</tr>
+<tr>
+<td>Proposed ADR</td>
+<td>Decision rationale awaiting acceptance; tests do not automatically accept it</td>
+</tr>
+<tr>
+<td>Qualification gate</td>
+<td>Scoped evidence requirement; not a badge inferred from version or feature count</td>
+</tr>
+<tr>
+<td>Historical snapshot</td>
+<td>Preserved source statements and evidence as originally dated</td>
+</tr>
+</tbody>
+</table></div>
+<p>Owner roles are suggestions, not assigned people. The platform owner approves scope; security/identity owners qualify authority; finance owners accept reservation and reconciliation semantics; operations owners accept failure/recovery; product/research owners accept usability evidence; application owners define acceptable outcomes. None of those approvals is fabricated in this collection.</p>
+</section><section id="alignment"><h2>20. Corrections, integrity and maintenance</h2>
+<p>The <a href="Alignment-Register.html">alignment register</a> records actual corrections and boundary clarifications with affected sources, current wording, evidence and remaining work. It includes the stale R10-current evidence pointer in R14 architecture, the receiver-first immediate roadmap, proposed Go runtime versus reuse, browser/server feature parity, distinct API surfaces, separate egress rules, legacy state names, non-additive test counts and historical comparison freshness.</p>
+<p>All original bytes remain preserved. The reader-edition transformation log identifies rewritten links and semantic edits. Original package manifests and source hash records remain independently checkable. The top-level integrity manifest is a checksum catalog, not a publisher signature or proof that all content is correct. <a href="registry/source-inventory.json">Source inventory</a>, <a href="registry/reader-edits.json">reader edits</a>, <a href="registry/baseline.json">baseline registry</a></p>
+<p>Maintain the collection through a versioned baseline record, capability matrix, evidence ledger and decision dispositions. A code or contract change must update its corresponding current reader, commands and acceptance status. Historical files should remain historical; append a dated correction rather than silently replacing their evidence. Revalidate external vendor facts only when a new decision depends on them, recording the new source and date.</p>
+<p>No repository source, pull request state, application code, database, credential, financial amount or original ADR text was changed by this consolidation. No provider, receiver or production service was contacted. The remaining claims that need live, organizational or production evidence remain explicitly open.</p>
+</section><section id="operational-review"><h2>21. Complete operational review and SOP library</h2><p><a href="Aperture-Operational-Review.html">Open the self-contained operational review</a>. It is the current operational supplement to this handbook. The underlying runtime remains R14, with synthetic inference and no installed unified telemetry exporter.</p><div class="table-scroll"><table><thead><tr><th>Register</th><th>Coverage</th><th>Machine-readable artifact</th></tr></thead><tbody><tr><td>Metrics</td><td>178 canonical definitions; all 85 names in the pinned LiteLLM metric declaration, plus 27 live-document supplements.</td><td><a href="operations/catalogs/metrics.csv">Metrics CSV</a> / <a href="operations/catalogs/litellm-metrics.json">Native inventory</a></td></tr><tr><td>Alarms</td><td>48 conditions with owners, persistence, dependencies, maintenance and recovery; nine recording rules.</td><td><a href="operations/prometheus/alert-rules.yml">Rules</a></td></tr><tr><td>Logs and queries</td><td>Actual ASGI JSON plus proposed 40-field normalized schema; 40 SQLite, 24 PromQL, 30 LogQL and six PostgreSQL recipes.</td><td><a href="operations/catalogs/queries.json">Query catalog</a></td></tr><tr><td>Operations</td><td>40 complete SOPs, 12 decision-oriented dashboards, 16 findings and 24 production gates.</td><td><a href="operations/catalogs/sops.json">SOP register</a></td></tr></tbody></table></div><p>Metrics, alarm and SOP IDs are local to the operational review. AL-xx in that document means an alarm; AL-xx in the alignment register means a documentation correction. Links carry the document namespace.</p><p>No existing application source, original ADR, repository branch, financial record or credential was changed. Native monitoring engines and real provider integrations remain separate qualification work.</p></section><footer>Documentation consolidation only. Original artifacts remain preserved. No code deployment, financial change or organizational acceptance is implied. <a href="registry/source-inventory.json">Source inventory</a> · <a href="evidence/consolidation-validation.json">Consolidation evidence</a></footer></main><script>
+(()=>{'use strict';const $=s=>document.querySelector(s);const all=s=>[...document.querySelectorAll(s)];
+try{const t=localStorage.getItem('aperture-docs-theme');if(t==='dark')document.documentElement.dataset.theme='dark'}catch{}
+$('#theme')?.addEventListener('click',()=>{const t=document.documentElement.dataset.theme==='dark'?'light':'dark';document.documentElement.dataset.theme=t;try{localStorage.setItem('aperture-docs-theme',t)}catch{}});
+$('#menu')?.addEventListener('click',()=>{const open=$('.sidebar').classList.toggle('open');$('#menu').setAttribute('aria-expanded',String(open))});all('.sidebar a').forEach(a=>a.addEventListener('click',()=>{$('.sidebar').classList.remove('open');$('#menu')?.setAttribute('aria-expanded','false')}));
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){$('.sidebar').classList.remove('open');$('#menu')?.setAttribute('aria-expanded','false')}});
+function filter(){const q=($('#search')?.value||'').trim().toLowerCase();const scope=$('#scope')?.value||'';const kind=$('#kind')?.value||'';const rows=all('[data-searchable]');let count=0;rows.forEach(r=>{const text=r.dataset.searchable.toLowerCase();const ok=(!q||text.includes(q))&&(!scope||r.dataset.scope===scope)&&(!kind||r.dataset.kind===kind);r.hidden=!ok;if(ok)count++});if($('#resultCount'))$('#resultCount').textContent=count+' of '+rows.length+' entries';if($('#noResults'))$('#noResults').hidden=count!==0;}
+['search','scope','kind'].forEach(id=>$('#'+id)?.addEventListener(id==='search'?'input':'change',filter));$('#clear')?.addEventListener('click',()=>{['search','scope','kind'].forEach(id=>{if($('#'+id))$('#'+id).value=''});filter();$('#search')?.focus()});
+$('#expand')?.addEventListener('click',()=>all('.decision-entry:not([hidden]) details').forEach(d=>d.open=true));$('#collapse')?.addEventListener('click',()=>all('details.adr').forEach(d=>d.open=false));$('#print')?.addEventListener('click',()=>window.print());
+function reveal(){const id=decodeURIComponent(location.hash.slice(1));if(!id)return;const node=document.getElementById(id);if(!node)return;node.closest('[data-searchable]')?.removeAttribute('hidden');if(node.tagName==='DETAILS')node.open=true;let p=node.parentElement;while(p){if(p.tagName==='DETAILS')p.open=true;p=p.parentElement;}setTimeout(()=>node.scrollIntoView({block:'start'}),50)}window.addEventListener('hashchange',reveal);reveal();
+let printState=[];window.addEventListener('beforeprint',()=>{printState=all('details.adr').map(d=>[d,d.open]);all('details.adr').forEach(d=>d.open=true)});window.addEventListener('afterprint',()=>printState.forEach(([d,o])=>d.open=o));filter();
+})();
+</script></body></html>
