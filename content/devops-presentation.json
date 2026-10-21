@@ -452,96 +452,82 @@
       ]
     },
     {
-      "title": "Kiro capabilities are separate from DevOps Agent",
-      "takeaway": "Kiro supports code work; the team still owns CI, IaC and operational correctness.",
+      "title": "Translate investigation findings into owned work",
+      "takeaway": "A proposed engineering handoff does not transfer production authorization.",
       "kind": "matrix",
       "seconds": 90,
-      "phase": "Boundaries",
+      "phase": "Operational handoff",
       "refs": [
-        "K03",
-        "K08",
-        "K09",
-        "K17"
+        "D03",
+        "D04",
+        "D13"
       ],
       "caps": [
-        "C09",
-        "C10",
-        "C11",
-        "C12",
-        "C13",
-        "C14"
+        "C01",
+        "C02",
+        "C04"
       ],
-      "notes": "The original report included related developer tasks, so keep them visible without attributing them to the wrong product. Repository explanation, scoped code changes and test creation fit Kiro’s documented coding tools. IaC drafting, supplied-build-log diagnosis and runbook writing are composed uses of those tools. They are not native promises of complete infrastructure validation or an automatically connected CI monitor. Validate with the repository’s own tests, linters and infrastructure tooling.",
+      "notes": "This is a proposed team procedure using the documented investigation, mitigation and prevention outputs. It is not a native implementation or deployment feature. The receiving engineers decide whether a change is justified and use their existing repository, test and release controls. Preserve the distinction between an observed symptom, a hypothesis, a recommended action and a verified result.",
       "headers": [
-        "Daily task",
-        "Useful output",
-        "Team acceptance"
+        "Operational record",
+        "Receiving team action",
+        "Independent acceptance"
       ],
       "rows": [
         [
-          "Understand / change code",
-          "Cited code path; small patch",
-          "Inspect scope and runtime behavior"
+          "Incident evidence",
+          "Record resource, revision, UTC window and missing signals",
+          "A reviewer can locate and challenge the source evidence"
         ],
         [
-          "Generate tests",
-          "Test source and execution result",
-          "Check meaningful failure cases"
+          "Mitigation candidate",
+          "Choose a safe change and document rollback assumptions",
+          "Change owner authorizes the exact effect"
         ],
         [
-          "Draft IaC / diagnose CI",
-          "Candidate config or diagnosis",
-          "Run provider validation and same CI check"
-        ],
-        [
-          "Write operational docs",
-          "Runbook or README draft",
-          "Rehearse safely; owner signs off"
+          "Prevention recommendation",
+          "Create a scoped work item with a named owner",
+          "Closure requires a test or other independent evidence"
         ]
       ]
     },
     {
-      "title": "Amazon Q Developer is a companion product",
-      "takeaway": "Existing guidance, review and transformation workflows are companion services—not DevOps Agent features.",
+      "title": "Verify recovery before closing the incident",
+      "takeaway": "Completion is a service-owner decision supported by current telemetry.",
       "kind": "matrix",
       "seconds": 90,
-      "phase": "Boundaries",
+      "phase": "Operational handoff",
       "refs": [
-        "D23",
-        "D24",
-        "D26",
-        "D27",
-        "D28",
-        "D29"
+        "D03",
+        "D04",
+        "D05"
       ],
       "caps": [
-        "C15",
-        "C16",
-        "C17",
-        "C18",
-        "C19"
+        "C01",
+        "C03",
+        "C04"
       ],
-      "notes": "For teams already using Amazon Q Developer, the relevant distinctions are AWS guidance, IDE reviews, GitHub preview workflows and supported transformations. GitHub review triggers differ from other products: subsequent commits do not automatically retrigger a Q review; a new review can be requested explicitly. A language transformation is constrained by its supported source versions, build prerequisites and IDE. These are compatibility decisions, not reasons to represent Q as part of the DevOps Agent runtime.",
+      "notes": "Retain a small closure record with the deployed revision, verification window, observed result and owner. These are proposed team acceptance criteria, not guaranteed product-generated fields. When evidence is missing or the symptom persists, keep the incident open and continue the investigation. The walkthrough does not demonstrate an automated code-change workflow.",
       "headers": [
-        "Companion workflow",
-        "Documented behavior",
-        "Important qualification"
+        "Operational record",
+        "Receiving team action",
+        "Independent acceptance"
       ],
       "rows": [
         [
-          "AWS questions / IDE reviews",
-          "Guidance and code findings",
-          "Review actual source/language support"
+          "Accepted change",
+          "Use normal review and delivery controls",
+          "The reviewed revision is the one actually deployed"
         ],
         [
-          "GitHub review / feature work",
-          "Review or issue-to-PR assistance",
-          "Preview; use /q review after later commits"
+          "Recovery record",
+          "Compare the original symptom with post-change telemetry",
+          "Errors, latency and relevant business checks are independently reviewed"
         ],
         [
-          "Java / .NET transformation",
-          "Supported upgrade or porting flow",
-          "Validate build prerequisites and resulting code"
+          "Follow-up work",
+          "Assign unresolved risks and prevention tasks",
+          "Do not mark untested recommendations as completed"
         ]
       ]
     },
@@ -652,7 +638,7 @@
         "D11"
       ],
       "caps": [],
-      "notes": "Close by asking the team to choose one read-heavy operational workflow and its owner. The agent can help connect evidence and produce useful recommendations, but the engineer remains responsible for the decision and its consequences. Release preview, directed actions and active tests should each be evaluated on their own terms. Questions follow the timed close. The detailed inventory below maps every original capability to the new presentation so no feature disappears during the restructuring.",
+      "notes": "Close by asking the team to choose one read-heavy operational workflow and its owner. The agent can help connect evidence and produce useful recommendations, but the engineer remains responsible for the decision and its consequences. Release preview, directed actions and active tests should each be evaluated on their own terms. Questions follow the timed close. The detailed inventory below maps every retained capability to the new presentation so no feature disappears during the restructuring.",
       "items": [
         {
           "title": "Start",
@@ -721,30 +707,6 @@
       "title": "Supported Regions",
       "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-supported-regions.html"
     },
-    "D23": {
-      "title": "What is Amazon Q Developer?",
-      "url": "https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/what-is.html"
-    },
-    "D24": {
-      "title": "Reviewing code with Amazon Q Developer",
-      "url": "https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/code-reviews.html"
-    },
-    "D26": {
-      "title": "Reviewing code in GitHub",
-      "url": "https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/github-code-reviews.html"
-    },
-    "D27": {
-      "title": "Developing features in GitHub",
-      "url": "https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/github-feature-development.html"
-    },
-    "D28": {
-      "title": "Upgrading Java versions",
-      "url": "https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/code-transformation.html"
-    },
-    "D29": {
-      "title": "Transforming .NET applications",
-      "url": "https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/transform-dotnet-IDE.html"
-    },
     "D34": {
       "title": "Limiting Agent Access in an AWS Account",
       "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/aws-devops-agent-security-limiting-agent-access-in-an-aws-account.html"
@@ -760,23 +722,8 @@
     "D39": {
       "title": "Private connections for integrations",
       "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-connecting-to-privately-hosted-tools.html"
-    },
-    "K03": {
-      "title": "Working with the agent",
-      "url": "https://kiro.dev/docs/web/using-the-agent/"
-    },
-    "K08": {
-      "title": "Specifications",
-      "url": "https://kiro.dev/docs/specs/"
-    },
-    "K09": {
-      "title": "Built-in tools",
-      "url": "https://kiro.dev/docs/tools/"
-    },
-    "K17": {
-      "title": "Hooks",
-      "url": "https://kiro.dev/docs/hooks/"
     }
   },
-  "editorial_classification": "Technical documentation; documented features and proposed team workflows are explicitly distinguished."
+  "editorial_classification": "Technical documentation; documented features and proposed team workflows are explicitly distinguished.",
+  "scope_revision": "2026-10-21-three-agent-scope"
 }
