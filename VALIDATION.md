@@ -19,3 +19,8 @@ No live AWS accounts, repositories, deployments, agent runs, penetration tests o
 ## Publication
 
 Repository visibility and hosting settings are not changed by the build. The generated HTML works locally. Publishing files to GitHub does not automatically enable GitHub Pages. Historical audits, code revisions and unrelated files remain intact.
+
+
+## Mechanisms extension
+
+See [the mechanism-specific validation boundary](mechanisms/VALIDATION.md) and `qa/mechanism-validation.json`. This extension uses a new official-documentation review, with explicit source discrepancies, and does not claim a new audit of every earlier report statement.
