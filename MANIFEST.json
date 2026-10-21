@@ -1,9 +1,9 @@
 {
-  "revision": "2026-10-21-three-agent-scope",
+  "revision": "2026-10-21-platform-reference-1",
   "files": {
     ".github/workflows/document-suite.yml": {
-      "bytes": 1624,
-      "sha256": "b3738df27f0157946db607738c3eda1964ba205890b869f157729d907700736f"
+      "bytes": 1858,
+      "sha256": "24b5b02427dc5797ba21afbb611c181c0c83cf4abd03e9bfd615ab1f3a2fee3b"
     },
     ".gitignore": {
       "bytes": 33,
@@ -26,8 +26,8 @@
       "sha256": "9d2c86fd27d9143407ee6a3727dbfd90c1ebad6e0cf5758ea73630281c31ed60"
     },
     "README.md": {
-      "bytes": 3754,
-      "sha256": "cbc4155647fb2a52f9d53e4af6346be123d5c9d721d677c1a90646da9fa019d8"
+      "bytes": 4525,
+      "sha256": "8b088276512b6e8d373f67846651495423c1e76d331eace147bc463992c81b02"
     },
     "SCOPE.md": {
       "bytes": 707,
@@ -89,6 +89,10 @@
       "bytes": 87981,
       "sha256": "b0729bb3c03d056ec0f9659c1f447adf2557741d8188ceff22a9a576f2f5040a"
     },
+    "content/narratives.json": {
+      "bytes": 43572,
+      "sha256": "7c95d0b6f11bfde2ff42519808b74b7cf15928560dc04c1f49ebc28c73aef512"
+    },
     "content/narratives/architecture.json": {
       "bytes": 10378,
       "sha256": "281c251c93c55c5ddb639f18edc6ecff82a9fb4b56a8e58c397f3eb4c98f907e"
@@ -105,9 +109,17 @@
       "bytes": 10249,
       "sha256": "a0ec4bc854ea1487114c7f9b65323937a19df7a31c41874642be8f8ba2f40a7d"
     },
-    "content/narratives.json": {
-      "bytes": 43569,
-      "sha256": "a0f859ba0a259aa6f5761aad893fd4a30a76658426d5132ecb525b1900a7372e"
+    "content/platforms/devops.json": {
+      "bytes": 19828,
+      "sha256": "90b85545e5de05617ced0a6f26707356ca9830d68d1b1cbebb4a6c7fc0457427"
+    },
+    "content/platforms/finops.json": {
+      "bytes": 15159,
+      "sha256": "6466f54ea54c15c1d80639accfabce697feff9387d215237cd74a28d4bf78179"
+    },
+    "content/platforms/security.json": {
+      "bytes": 14195,
+      "sha256": "f3649a9d4864d3b796dd42c1deee9e49ec5f57b225252e65ae7d2c72618dfb30"
     },
     "content/security-evidence.json": {
       "bytes": 33614,
@@ -142,24 +154,24 @@
       "sha256": "c447a99c5ff5e12b36a71371b4bc053c1e790b7909b1d96c7d465a29bfdd6a93"
     },
     "devops/validated-report.html": {
-      "bytes": 180891,
-      "sha256": "52600da63b4f8b42e52d8e9342cfecf918a471031c7368580992ceb3f362f4fd"
+      "bytes": 179207,
+      "sha256": "6588cf45d2cf1619a5fd5d22a4a593140b9485b2cdbc07dfb15eb9f0ff736243"
     },
     "devops/validation-record.md": {
       "bytes": 8260,
       "sha256": "01fb7648a79d2952c251ad4d7cf8e90fc1cdc55dd599691026a68b6b58c148d4"
     },
     "documentation-build.json": {
-      "bytes": 298,
-      "sha256": "9b05b56a0713812bd7fc9e02cd18f5c580baed0d1b12f2f713bd5b0735d48e1f"
+      "bytes": 795,
+      "sha256": "b2e003c74a19b6cc1ce35319fc2b34f932cd4a3f76904d14386d9aea6d38efe5"
     },
     "finops/presentation-transcript.md": {
       "bytes": 15625,
       "sha256": "23b9b9d328c9177474718fd5e23daeeedc19f1b2f48c04691e95aaad7a1057f3"
     },
     "finops/report.html": {
-      "bytes": 186652,
-      "sha256": "f7826f3f9fba6b5e386f9ae2cb5cebce54d5055ea8493f154b86b12bcf86078d"
+      "bytes": 183511,
+      "sha256": "8784869236a58676b1506ab17f406d06cd0432c1effbe1a0b37b9cbc5e43749f"
     },
     "finops/report.md": {
       "bytes": 25437,
@@ -170,8 +182,8 @@
       "sha256": "a9a1878f65f71309afef0128ae5cb8538a6137f0e1cdb4b86dcb4d9dc5d28bbd"
     },
     "index.html": {
-      "bytes": 31730,
-      "sha256": "61676b92334938c7f4eba2713bb5a2a72c66822281002049034018d847e27ffa"
+      "bytes": 32274,
+      "sha256": "1f9cdca4ed22be17a0bf871f9e4c5e746c8a0cd84b36ce74af8bc29675909924"
     },
     "mechanisms/VALIDATION.md": {
       "bytes": 1819,
@@ -233,37 +245,85 @@
       "bytes": 7858,
       "sha256": "f96d310431972a54741065838b8a1bb243e93473259331f13088fef6f5523b7b"
     },
+    "platforms/TAXONOMY.md": {
+      "bytes": 1286,
+      "sha256": "141560a053e7c609f73bf1687e990bcccb74150bf684f8c05fbd0bb6fb1c182f"
+    },
+    "platforms/VALIDATION.md": {
+      "bytes": 1506,
+      "sha256": "2f2a3fc56bd9234899e85605cb4a3073d3aec053e1c78338dd985d4a782dc573"
+    },
+    "platforms/devops.html": {
+      "bytes": 66335,
+      "sha256": "9f336cfc1edf3710e29b0d07127b43f0605e08d7631123a03776af9d9963bf00"
+    },
+    "platforms/devops.md": {
+      "bytes": 25190,
+      "sha256": "654cde6835bbf9d5bd48723d7b5358aa62e753a6b1c0a6aa089c069908083af5"
+    },
+    "platforms/finops.html": {
+      "bytes": 51884,
+      "sha256": "913a6860e79f85a51b6b24092ebe2d4ccdc0ce5cd40bf55fe5a5865a87b58e17"
+    },
+    "platforms/finops.md": {
+      "bytes": 18734,
+      "sha256": "0eb08d90b6ed5a8904968c247614e0a18870481165078afcab45707b09997e19"
+    },
+    "platforms/index.html": {
+      "bytes": 10388,
+      "sha256": "d78479022112ed5084ea9cd3b6fa7ba5e49e9e8fd4d3d10c5f43a6659e13fff6"
+    },
+    "platforms/security.html": {
+      "bytes": 48543,
+      "sha256": "3c139528f002b30ee40407a23f2df73e805b7cc82c576d8adec12a6dffb264aa"
+    },
+    "platforms/security.md": {
+      "bytes": 17156,
+      "sha256": "2a4f31115cf6d7c88ca7f54ec94f5f3e234bada3d5483bb879e32cce9089fe49"
+    },
     "presentations/aws-devops-agent-presentation.pptx": {
       "bytes": 133828,
-      "sha256": "b15cfff951210d2612891b26294441b67cb21fd9a2128770699c4831ff4b05aa"
+      "sha256": "e15029b950f4a5cd219c64c42aca8072172bbb1934d1728f36a9ec77d5efd08b"
     },
     "presentations/aws-finops-agent-presentation.pptx": {
       "bytes": 142950,
-      "sha256": "e5d8d7a4bdd9b8657a68a0ebe18ac75b76c931fdbd8c8619664dfa2029f7e418"
+      "sha256": "6e3a01136229847a507eec2a14596829cb9177d8d22d290aa40cb7bc3983b7ba"
     },
     "presentations/aws-frontier-agents-common-architecture-presentation.pptx": {
       "bytes": 151615,
-      "sha256": "2002b748ca2d6fdf2510ad244cd63fa3b6f1a944bf981cb286c8140c9da11cc3"
+      "sha256": "9613b7df171a791e07050fa142125b10ec3a0958056c202a0a07efe3b0a215eb"
     },
     "presentations/aws-security-agent-presentation.pptx": {
       "bytes": 167195,
-      "sha256": "463a998582d92afb4645013fa5d2f3a73cc67b3997f0a9c6cacf8865db96aae9"
+      "sha256": "73bb498bb746ab92a53c0fe62cfe7f8542de2a57f1800211a81a1b79a07ef330"
     },
     "presentations/devops-mechanisms-reference.pptx": {
       "bytes": 91821,
-      "sha256": "54e89d700c7c79e885a6b7d9ae6cda44c47599965089f37c0fa4ebd5f631aa86"
+      "sha256": "9e5244c7f3f443d5626bcc37d9695a1527e732796846d6cda56c7b2ebf87f335"
+    },
+    "presentations/devops-platform-reference.pptx": {
+      "bytes": 136704,
+      "sha256": "fd66d3c58bf96bd8b0dc786e65f4421caead6327b3962ab944458af9be9065b8"
     },
     "presentations/finops-mechanisms-reference.pptx": {
       "bytes": 76094,
-      "sha256": "9f78fbae9b04d012ee1b59ae6ea3e8502a6f0f17d12709c442a2bfd8e50975e3"
+      "sha256": "a2354f671adde47050c4b6fe46dedb8c41d7a25fb4f1812327f87f51059af75a"
+    },
+    "presentations/finops-platform-reference.pptx": {
+      "bytes": 109767,
+      "sha256": "6c891fc5475be34ac28b131e736aca552f84aeb546cc0055568cf02d6e84dfff"
     },
     "presentations/overview-mechanisms-reference.pptx": {
       "bytes": 63925,
-      "sha256": "927e26289d2f527d50a4d267793985c5f7332693569f720aa3b0052a178b4590"
+      "sha256": "08fa885ff2ebfcda0b1767776fe0b912142623aca9af704017ffdd944915516f"
     },
     "presentations/security-mechanisms-reference.pptx": {
       "bytes": 72166,
-      "sha256": "f3e380e196e14162c69011d5d1f0491eb5ec1ab7437762ebe2f8a25014f77a59"
+      "sha256": "ca8ff2bd751ad0f094c13abdde4d27693412604e8c967ce59e1b75fe95f9ce07"
+    },
+    "presentations/security-platform-reference.pptx": {
+      "bytes": 101900,
+      "sha256": "13ecd08d8ed1a7232ec4afdd5bafac5ae719b8df60339af9b247590b84c34b8b"
     },
     "qa/build-validation.json": {
       "bytes": 264,
@@ -285,21 +345,29 @@
       "bytes": 382,
       "sha256": "b0edde0f6f79bbf3efd18e8415d85c6623362c17b5ed865d6383dfaa48989f1a"
     },
+    "qa/platform-publication-validation.json": {
+      "bytes": 286,
+      "sha256": "7b58a628ab7ba35881ce9b0e128159326e379329058cfde14ae92b6493b7d577"
+    },
+    "qa/platform-validation.json": {
+      "bytes": 3511,
+      "sha256": "cbbb1d8722dec88750d710ef1a576d9a7c93730cbe2945012ac5c334ded77b18"
+    },
     "qa/scope-validation.json": {
-      "bytes": 1763,
-      "sha256": "ff1f6df5619940d96cea60fa0df24ae1271bf09db9f9d3b51768b563f836c8ee"
+      "bytes": 2445,
+      "sha256": "b15f2e8d35b5a3f0442826686f831e49ed99adb34d5c4a67e042bb7c541a816f"
     },
     "qa/source-validation.json": {
-      "bytes": 725,
-      "sha256": "440d3e3d5642fce7d116acb6deff11f83a69546f83c49a6790162092935b61d0"
+      "bytes": 728,
+      "sha256": "198b8290d028df8bb8a0e3ccf1d9551b609ede370d8445c5c44d6509073ed9fa"
     },
     "security/presentation-transcript.md": {
       "bytes": 19452,
       "sha256": "5f2ed56be1c282a5cfaa4a628b132f1d2c97c84ba076442ecfa486b5da091110"
     },
     "security/report.html": {
-      "bytes": 222328,
-      "sha256": "da971b71361a3fda0667e9a79fec70a0b500cd8005c5226b460003903988bd90"
+      "bytes": 218003,
+      "sha256": "5889c0d950097403c83550f971fc17fb4182fb69215f3170b0c20caac213a1e1"
     },
     "security/report.md": {
       "bytes": 31452,
@@ -321,6 +389,10 @@
       "bytes": 42220,
       "sha256": "09264d3d0a9107df6a316a15bacb30dd50171d277687ce542fe235852f92e9e3"
     },
+    "tools/build_platform_references.py": {
+      "bytes": 32700,
+      "sha256": "3b28ece6df2264bebe552ea1719309e7b111ed6d5c65eba3426be75df964ceea"
+    },
     "tools/build_presentations.py": {
       "bytes": 12439,
       "sha256": "1bf53f135ed8d51b7a7b6a93e4605f106be2f476218f5270954a34a4d9fd3850"
@@ -333,6 +405,10 @@
       "bytes": 4023,
       "sha256": "4fbb9bbb912336b035c922dcbad49cf3da0d82a5097aa27fdcabd79ab9c1da29"
     },
+    "tools/finalize_platform_publication.py": {
+      "bytes": 2736,
+      "sha256": "4db2f504800c5a4132aa9032385bfb88c88496ed05c2e8067f74cf63b565b0d5"
+    },
     "tools/qa_format.py": {
       "bytes": 3305,
       "sha256": "caf06214a4c4e93a2a0e4903df1b6d1e634339599cecddea3c2a4c1fda1c2fed"
@@ -342,14 +418,9 @@
       "sha256": "2aa19062541b896dcba371b03b2bc829c4f824c84b47a404e3f7ddb0d18c3025"
     },
     "tools/validate_scope.py": {
-      "bytes": 6621,
-      "sha256": "cf018d5982473e4157647d920ec69d40dbff19f2f9276969be7a54968e10f4b2"
+      "bytes": 7231,
+      "sha256": "3184ff9d7e1898b24c91d48e3b23b3d6d9fa713f89104ee9d4296708fbb78fa6"
     }
   },
-  "excluded": [
-    "MANIFEST.json itself",
-    ".git/",
-    "__pycache__/"
-  ],
-  "history_policy": "Git history; no manually retained snapshots or compressed distributions"
+  "boundary": "File hashes identify this working-tree publication. They do not establish external documentation accuracy or runtime product behavior."
 }
