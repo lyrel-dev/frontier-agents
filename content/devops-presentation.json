@@ -8,7 +8,7 @@
   "slides": [
     {
       "title": "AWS DevOps Agent",
-      "takeaway": "From a production symptom to an evidence-backed engineering decision.",
+      "takeaway": "Investigations produce hypotheses and evidence for operational review.",
       "kind": "hero",
       "seconds": 60,
       "phase": "Position",
@@ -39,7 +39,7 @@
       "label": "Operations / SRE / Platform engineering"
     },
     {
-      "title": "Start with the incident, not the tool",
+      "title": "Define the incident scope and evidence window",
       "takeaway": "A time window, a service boundary, and a change reference make the question answerable.",
       "kind": "flow",
       "seconds": 90,
@@ -76,7 +76,7 @@
       ]
     },
     {
-      "title": "Six useful capability families",
+      "title": "Operational capability groups and their dependencies",
       "takeaway": "Choose an operational job first; enable its data and action paths second.",
       "kind": "cards",
       "seconds": 90,
@@ -131,7 +131,7 @@
       ]
     },
     {
-      "title": "Build an Agent Space with useful context",
+      "title": "Configure Agent Space data access and scope",
       "takeaway": "Acceptance: one known resource is visible; an out-of-scope test resource is denied.",
       "kind": "lens",
       "seconds": 90,
@@ -161,7 +161,7 @@
       ]
     },
     {
-      "title": "Investigate and steer a live incident",
+      "title": "Investigate a service incident and review hypotheses",
       "takeaway": "Acceptance: distinguish observed facts, hypotheses, and missing telemetry.",
       "kind": "lens",
       "seconds": 90,
@@ -234,7 +234,7 @@
       "fallback": "After 60 seconds without usable output, use the completed run and inspect its evidence; do not wait for a fresh run."
     },
     {
-      "title": "Answer the daily SRE questions",
+      "title": "Daily service-health and incident queries",
       "takeaway": "Acceptance: inspect one cited alarm or resource before sharing the summary.",
       "kind": "lens",
       "seconds": 75,
@@ -260,7 +260,7 @@
       ]
     },
     {
-      "title": "Convert repeat incidents into prevention work",
+      "title": "Create prevention tasks from investigation history",
       "takeaway": "Acceptance: an owner and a measurable recurrence or detection check accompany each accepted item.",
       "kind": "lens",
       "seconds": 75,
@@ -286,7 +286,7 @@
       ]
     },
     {
-      "title": "Configure a recurring operational assistant",
+      "title": "Configure scheduled operational reports",
       "takeaway": "Acceptance: the selected tools—not the prompt alone—bound access and side effects.",
       "kind": "lens",
       "seconds": 75,
@@ -312,7 +312,7 @@
       ]
     },
     {
-      "title": "A recommendation is not permission to act",
+      "title": "Mitigation recommendations and action authorization",
       "takeaway": "Directed actions have their own enablement, role, tool and approval path.",
       "kind": "flow",
       "seconds": 120,
@@ -349,7 +349,7 @@
       ]
     },
     {
-      "title": "Release preview has two different execution paths",
+      "title": "Release-review and deployed-application testing differ",
       "takeaway": "Managed code verification is not the same as active testing against a deployed application.",
       "kind": "compare",
       "seconds": 120,
@@ -425,7 +425,7 @@
       "fallback": "Use the prepared review and code diff if the preview or verification environment is unavailable."
     },
     {
-      "title": "Bring operational context into the coding workflow",
+      "title": "Access operational context from coding clients",
       "takeaway": "Acceptance: client connectivity does not widen the Agent Space’s permissions.",
       "kind": "lens",
       "seconds": 75,
@@ -452,7 +452,7 @@
       ]
     },
     {
-      "title": "Separate companion coding work from DevOps Agent",
+      "title": "Kiro capabilities are separate from DevOps Agent",
       "takeaway": "Kiro supports code work; the team still owns CI, IaC and operational correctness.",
       "kind": "matrix",
       "seconds": 90,
@@ -501,7 +501,7 @@
       ]
     },
     {
-      "title": "Keep Amazon Q Developer in its own lane",
+      "title": "Amazon Q Developer is a companion product",
       "takeaway": "Existing guidance, review and transformation workflows are companion services—not DevOps Agent features.",
       "kind": "matrix",
       "seconds": 90,
@@ -546,7 +546,7 @@
       ]
     },
     {
-      "title": "A safe starting configuration is intentionally small",
+      "title": "Pilot a single service with scoped read access",
       "takeaway": "Prove the read path before expanding automated effects.",
       "kind": "cards",
       "seconds": 90,
@@ -596,8 +596,8 @@
       ]
     },
     {
-      "title": "Measure accepted engineering outcomes",
-      "takeaway": "Pilot success is less effort per verified outcome—not more generated text.",
+      "title": "Pilot metrics require verified engineering results",
+      "takeaway": "Measure review effort and rework for independently accepted outcomes.",
       "kind": "matrix",
       "seconds": 90,
       "phase": "Adoption",
@@ -641,7 +641,7 @@
       ]
     },
     {
-      "title": "Operate an evidence accelerator—not an authority shortcut",
+      "title": "Accept outcomes only after verification and authorization",
       "takeaway": "Investigate with context. Gate the effect. Close with independent verification.",
       "kind": "close",
       "seconds": 60,
@@ -777,5 +777,6 @@
       "title": "Hooks",
       "url": "https://kiro.dev/docs/hooks/"
     }
-  }
+  },
+  "editorial_classification": "Technical documentation; documented features and proposed team workflows are explicitly distinguished."
 }
