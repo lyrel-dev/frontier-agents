@@ -8,7 +8,7 @@
   "slides": [
     {
       "title": "Kiro",
-      "takeaway": "Turn a bounded engineering outcome into a reviewable change.",
+      "takeaway": "A delegated task can produce a change proposal for repository review.",
       "kind": "hero",
       "seconds": 45,
       "phase": "Position",
@@ -38,7 +38,7 @@
       "label": "Software engineering / Tech leads / Platform teams"
     },
     {
-      "title": "Choose the interaction model by uncertainty",
+      "title": "Select interactive and delegated modes by task definition",
       "takeaway": "Collaboration, specs and autonomous work solve different coordination problems.",
       "kind": "cards",
       "seconds": 60,
@@ -117,7 +117,7 @@
       ]
     },
     {
-      "title": "Specs make intended behavior inspectable",
+      "title": "Specifications record expected behavior and non-goals",
       "takeaway": "Acceptance: approve behavior and non-goals before accepting implementation work.",
       "kind": "lens",
       "seconds": 75,
@@ -292,7 +292,7 @@
       "fallback": "Use the prepared spec, diff and test output after 60 seconds without usable progress; inspect rather than imply live completion."
     },
     {
-      "title": "Review feedback is a new work item",
+      "title": "Review feedback requires a new validated change",
       "takeaway": "Acceptance: verify the latest revision, not the first green result.",
       "kind": "lens",
       "seconds": 75,
@@ -319,8 +319,8 @@
       ]
     },
     {
-      "title": "Automations handle repeatable repository work",
-      "takeaway": "Acceptance: recurring work should reduce toil without creating uncontrolled PR noise.",
+      "title": "Scheduled tasks require repository scope and review",
+      "takeaway": "Acceptance: review recurring changes and prevent unbounded pull-request creation.",
       "kind": "lens",
       "seconds": 60,
       "phase": "Capabilities",
@@ -418,7 +418,7 @@
       "callout": "Recommended practice: version stable guidance; verify learned context against the current repository."
     },
     {
-      "title": "Extend capabilities deliberately",
+      "title": "Evaluate tool integrations for a defined task",
       "takeaway": "Choose the smallest reusable mechanism that fits the task.",
       "kind": "matrix",
       "seconds": 60,
@@ -487,7 +487,7 @@
       "callout": "Do not copy a local permission or hook configuration and assume it protects a Web task."
     },
     {
-      "title": "Workflows make multi-step delegation explicit",
+      "title": "Workflow definitions specify steps and handoffs",
       "takeaway": "Acceptance: bound retries and verify account/client availability before relying on a workflow.",
       "kind": "lens",
       "seconds": 90,
@@ -586,8 +586,8 @@
       ]
     },
     {
-      "title": "Pilot for accepted changes, not generated volume",
-      "takeaway": "Scale only when review effort, correctness and operational risk improve together.",
+      "title": "Measure accepted changes, review effort and rework",
+      "takeaway": "Expand scope only if acceptance, review effort and failure metrics support it.",
       "kind": "close",
       "seconds": 120,
       "phase": "Close",
@@ -702,5 +702,6 @@
       "title": "Workflows",
       "url": "https://kiro.dev/docs/workflows/"
     }
-  }
+  },
+  "editorial_classification": "Technical documentation; documented features and proposed team workflows are explicitly distinguished."
 }
