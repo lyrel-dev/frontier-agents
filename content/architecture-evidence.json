@@ -1,0 +1,1744 @@
+{
+  "title": "AWS frontier agents — common architectural patterns",
+  "slug": "aws_frontier_agents_common_architecture",
+  "date": "20 October 2026",
+  "scope": "Day-to-day operating patterns across AWS DevOps Agent, Kiro, AWS Security Agent (now part of AWS Continuum), and AWS FinOps Agent. Amazon Q Developer and unrelated Continuum capabilities are excluded.",
+  "synthesis_boundary": "Logical operating design and team conventions, not an assertion about shared AWS internals or a native four-agent orchestrator.",
+  "patterns": [
+    {
+      "id": "P01",
+      "title": "Bounded workspaces and accountable owners",
+      "layer": "Identity & scope",
+      "kind": "Documented analogue",
+      "rule": "Define a service, repository set, or account group before delegating work. Give that boundary a named platform owner and a separate operational owner.",
+      "boundary": "A workspace name, topology view, or prompt is not proof of an enforced security boundary. Test the underlying role and integration scope.",
+      "setup": "Create a boundary record with application ID, environment, accounts, repositories, targets, authorized operators, and output destinations. Start with one team-owned workload.",
+      "check": "Attempt a harmless read of an explicitly out-of-scope test resource. Confirm denial at the actual integration or identity layer, not merely a refusal in chat.",
+      "anti": "One organization-wide identity and a prompt saying “only touch checkout.”",
+      "implementations": [
+        {
+          "agent": "DevOps",
+          "text": "An Agent Space groups account associations, integrations, and access. IAM policies—not the displayed topology—bound AWS resource access.",
+          "refs": [
+            "D01",
+            "D05"
+          ],
+          "preview": false,
+          "status": "Documented · setup-dependent"
+        },
+        {
+          "agent": "Kiro",
+          "text": "GitHub access requires both app authorization for the repository and user write access. A Web task executes against authorized repositories.",
+          "refs": [
+            "K02",
+            "K03"
+          ],
+          "preview": false,
+          "status": "Documented · setup-dependent"
+        },
+        {
+          "agent": "Security",
+          "text": "An Agent Space supplies service and user access; a penetration-test configuration adds authorized targets and scope.",
+          "refs": [
+            "S02",
+            "S03"
+          ],
+          "preview": false,
+          "status": "Documented · setup-dependent"
+        },
+        {
+          "agent": "FinOps",
+          "text": "Each agent instance has its own permissions, context, memory, queue, and integrations; these are not shared across FinOps agents.",
+          "refs": [
+            "F01",
+            "F02"
+          ],
+          "preview": true,
+          "status": "Preview · entire service"
+        }
+      ],
+      "origin": {
+        "DevOps": "C01, C02, C06; G06",
+        "Kiro": "C04, C15, C16; G03",
+        "Security": "C01, C02; G03",
+        "FinOps": "C01, C09; G03"
+      }
+    },
+    {
+      "id": "P02",
+      "title": "Source-grounded context, with provenance",
+      "layer": "Context & data",
+      "kind": "Documented analogue",
+      "rule": "Supply a minimum evidence packet: exact code or deployment version, relevant time window, authoritative source links, and known gaps. Separate observations from inferred explanations.",
+      "boundary": "Connected data is not necessarily complete or current. A missing signal must remain missing rather than being filled in with a plausible narrative.",
+      "setup": "Record a source owner, revision or timestamp, classification, and refresh rule for every context input. Keep one canonical owner map outside the agent.",
+      "check": "Reproduce one material claim in the source system. Check the commit, application version, observation period, filters, and whether data was actually accessible.",
+      "anti": "A copied chat summary becomes the authoritative incident, security, or billing record.",
+      "implementations": [
+        {
+          "agent": "DevOps",
+          "text": "Production investigations correlate accessible telemetry, deployment information, and code using application topology.",
+          "refs": [
+            "D02"
+          ],
+          "preview": false,
+          "status": "Documented · setup-dependent"
+        },
+        {
+          "agent": "Kiro",
+          "text": "Specifications structure requirements, design, and tasks; repository access and the selected code state constrain what the agent can inspect.",
+          "refs": [
+            "K11",
+            "K02"
+          ],
+          "preview": false,
+          "status": "Documented · setup-dependent"
+        },
+        {
+          "agent": "Security",
+          "text": "Tests accept application documentation and source context. Connected resources can update, so the team should record the version used for each run.",
+          "refs": [
+            "S03"
+          ],
+          "preview": false,
+          "status": "Documented · setup-dependent"
+        },
+        {
+          "agent": "FinOps",
+          "text": "Cost questions use billing dimensions and time periods; uploaded organizational context supplies ownership and reporting semantics.",
+          "refs": [
+            "F09",
+            "F04"
+          ],
+          "preview": true,
+          "status": "Preview · entire service"
+        }
+      ],
+      "origin": {
+        "DevOps": "C01, C03, C05",
+        "Kiro": "C01, C02, C03",
+        "Security": "C03, C05",
+        "FinOps": "C01, C02, C03, C09"
+      }
+    },
+    {
+      "id": "P03",
+      "title": "Instructions and memory are not authorization",
+      "layer": "Context & data",
+      "kind": "Different mechanisms",
+      "rule": "Version explicit team instructions and review learned context separately. Enforce access, network reach, and execution authority in the controls that actually govern the chosen interface.",
+      "boundary": "Do not assume one shared memory store, instruction format, or permission configuration across the portfolio. A policy written in a document is not an IAM policy.",
+      "setup": "Maintain approved runbooks, conventions, and owner mappings with review dates. Treat repository text, tool responses, and generated memory as inputs that can be wrong or untrusted.",
+      "check": "Change a non-sensitive convention in a test workspace and check its effect. Separately verify that instructions cannot grant a denied operation or broaden repository access.",
+      "anti": "“Never change production” in a steering file is the only safeguard protecting production credentials.",
+      "implementations": [
+        {
+          "agent": "DevOps",
+          "text": "Custom agents receive selected tools and explicitly attached memory stores. A new custom agent starts without memory access until stores are attached.",
+          "refs": [
+            "D03"
+          ],
+          "preview": false,
+          "status": "Documented · setup-dependent"
+        },
+        {
+          "agent": "Kiro",
+          "text": "Steering expresses intentional guidance; memory captures learned context. IDE/CLI permission rules and the Web sandbox are separate controls.",
+          "refs": [
+            "K07",
+            "K08",
+            "K04"
+          ],
+          "preview": false,
+          "status": "Documented · setup-dependent"
+        },
+        {
+          "agent": "Security",
+          "text": "Organizational security requirements guide design and code review; they are review criteria, not a substitute for test authorization or IAM.",
+          "refs": [
+            "S09",
+            "S13",
+            "S02"
+          ],
+          "preview": true,
+          "status": "Preview · design/code review example"
+        },
+        {
+          "agent": "FinOps",
+          "text": "Context files are visible to agent users and are not editable by the agent through conversation. Preference memory is a different input.",
+          "refs": [
+            "F04"
+          ],
+          "preview": true,
+          "status": "Preview · entire service"
+        }
+      ],
+      "origin": {
+        "DevOps": "C05; G06",
+        "Kiro": "C11, C12, C15, C20; G04",
+        "Security": "C10, C11",
+        "FinOps": "C09, C10; G07"
+      }
+    },
+    {
+      "id": "P04",
+      "title": "Explicit task contracts and trigger ownership",
+      "layer": "Execution & control",
+      "kind": "Different mechanisms",
+      "rule": "Wrap every interactive, scheduled, or event-driven request in a bounded task: objective, inputs, allowed effects, owner, expected output, and completion criteria.",
+      "boundary": "“Event-driven” does not mean every event type is supported. A schedule, webhook, issue trigger, and local IDE hook are different integration paths.",
+      "setup": "Prove an on-demand task first. Then add only a supported trigger, one owner, a deduplication key, an escalation destination, and a way to disable recurrence.",
+      "check": "Replay the same sample event twice in a test setup. Ensure your team process or adapter prevents duplicate actionable work; no universal native deduplication is assumed.",
+      "anti": "Every alert automatically starts every agent, with no owner, suppression window, or action boundary.",
+      "implementations": [
+        {
+          "agent": "DevOps",
+          "text": "Investigations can start manually or from configured incident sources; custom agents additionally support on-demand and schedule-based invocation.",
+          "refs": [
+            "D02",
+            "D03"
+          ],
+          "preview": false,
+          "status": "Documented · setup-dependent"
+        },
+        {
+          "agent": "Kiro",
+          "text": "Web automations schedule recurring work; GitHub issue-based tasks are a separate entry point. Multiple users can create separate tasks for the same issue.",
+          "refs": [
+            "K09",
+            "K02"
+          ],
+          "preview": false,
+          "status": "Documented · setup-dependent"
+        },
+        {
+          "agent": "Security",
+          "text": "Authorized on-demand testing is available. The separate post-deployment CI/CD integration remains public preview.",
+          "refs": [
+            "S03",
+            "S11"
+          ],
+          "preview": false,
+          "status": "On-demand baseline; CI/CD extension is preview"
+        },
+        {
+          "agent": "FinOps",
+          "text": "The task queue supports on-demand, scheduled, and event-based work. Preview event automation is for Cost Anomaly Detection, not arbitrary event payloads.",
+          "refs": [
+            "F05",
+            "F08"
+          ],
+          "preview": true,
+          "status": "Preview · entire service"
+        }
+      ],
+      "origin": {
+        "DevOps": "C01, C05, C08",
+        "Kiro": "C06, C09, C14",
+        "Security": "C01, C18",
+        "FinOps": "C06, C07, C08"
+      }
+    },
+    {
+      "id": "P05",
+      "title": "Authorize effects, not product labels",
+      "layer": "Execution & control",
+      "kind": "Different mechanisms",
+      "rule": "Classify each proposed effect as observation, repository change, external publication, application testing, or infrastructure mutation. Apply the destination’s native gate to that exact effect.",
+      "boundary": "No portfolio-wide “human approval” switch exists in this design. The ability to generate a recommendation never transfers permission to execute it.",
+      "setup": "Maintain an action register with initiator, tool, target, permissions, approval behavior, output visibility, and revocation owner. Classify custom tools before enabling them.",
+      "check": "Test one permitted action and one denied action for each configured path. Verify the identity, target, parameters, and whether approval is per call or pre-authorized.",
+      "anti": "A reviewer approves an investigation summary and the integration treats it as authorization for arbitrary changes.",
+      "implementations": [
+        {
+          "agent": "DevOps",
+          "text": "Directed actions require explicit enablement and per-action operator approval. This is distinct from the read-oriented investigation path.",
+          "refs": [
+            "D04",
+            "D05"
+          ],
+          "preview": false,
+          "status": "Documented · setup-dependent"
+        },
+        {
+          "agent": "Kiro",
+          "text": "IDE/CLI expose allow, ask, and deny capability rules. Web does not use those per-action prompts; its task sandbox is a different control surface.",
+          "refs": [
+            "K04"
+          ],
+          "preview": false,
+          "status": "Documented · setup-dependent"
+        },
+        {
+          "agent": "Security",
+          "text": "Launching a penetration test authorizes active testing of the configured surface; tests can change application state. Generated fixes still need review.",
+          "refs": [
+            "S03",
+            "S04"
+          ],
+          "preview": false,
+          "status": "Documented · setup-dependent"
+        },
+        {
+          "agent": "FinOps",
+          "text": "Interactive Jira issue/comment actions require approval; scheduled/event Jira actions are pre-authorized. Slack posts do not require per-message approval.",
+          "refs": [
+            "F03",
+            "F05"
+          ],
+          "preview": true,
+          "status": "Preview · entire service"
+        }
+      ],
+      "origin": {
+        "DevOps": "C02, C08; G06",
+        "Kiro": "C04, C15, C16",
+        "Security": "C01, C06; G03, G08",
+        "FinOps": "C11, C12, C13; G04, G05"
+      }
+    },
+    {
+      "id": "P06",
+      "title": "Isolate both execution and its targets",
+      "layer": "Execution & control",
+      "kind": "Different mechanisms",
+      "rule": "Constrain the worker environment and every system it can reach. Use disposable test data, narrow credentials, limited egress, and explicit non-production targets for active testing.",
+      "boundary": "An isolated runner is not a guarantee that reachable databases, APIs, payment endpoints, or communication channels are isolated. Secrets can escape through permitted outputs.",
+      "setup": "Inventory egress, environment variables, test identities, external callbacks, and data-reset procedures. Remove live payment, email, and production-data paths from the test environment.",
+      "check": "In a controlled test, confirm an out-of-scope endpoint is blocked and a non-production write can be reset. Review logs and generated diffs for accidental secret disclosure.",
+      "anti": "A sandbox is given production credentials and unrestricted network access, then treated as harmless.",
+      "implementations": [
+        {
+          "agent": "DevOps",
+          "text": "Release testing sends real requests, including application writes and deletes. AWS recommends staging; it is a preview workflow.",
+          "refs": [
+            "D08",
+            "D09"
+          ],
+          "preview": true,
+          "status": "Preview · release testing"
+        },
+        {
+          "agent": "Kiro",
+          "text": "Web offers sandbox egress controls and secret injection. Its documentation explicitly warns that secrets can leak through code, logs, or external requests.",
+          "refs": [
+            "K03",
+            "K05",
+            "K06"
+          ],
+          "preview": false,
+          "status": "Documented · setup-dependent"
+        },
+        {
+          "agent": "Security",
+          "text": "AWS recommends isolated non-production targets. Accessible URLs are trusted dependencies and can receive test data or credentials; they are not the same as test targets.",
+          "refs": [
+            "S04"
+          ],
+          "preview": false,
+          "status": "Documented · setup-dependent"
+        },
+        {
+          "agent": "FinOps",
+          "text": "This report treats FinOps as a managed analytical worker, not a general code sandbox. Its material boundaries include data access and connected publication destinations.",
+          "refs": [
+            "F01",
+            "F03"
+          ],
+          "preview": true,
+          "status": "Preview · entire service"
+        }
+      ],
+      "origin": {
+        "DevOps": "C08; G06",
+        "Kiro": "C08, C15, C16; G06",
+        "Security": "C01, C02; G03",
+        "FinOps": "C09, C11, C12; G02, G05"
+      }
+    },
+    {
+      "id": "P07",
+      "title": "Integrate through explicit adapters",
+      "layer": "Integration & handoff",
+      "kind": "Different mechanisms",
+      "rule": "Use documented product interfaces with their own authentication and scope. Keep the shared contract agent-neutral; put provider-specific request and response handling in small adapters.",
+      "boundary": "MCP compatibility is not a shared authorization domain. This report does not establish a generic FinOps MCP endpoint, common cross-agent API, or built-in four-agent orchestration service.",
+      "setup": "For each proposed connection, record client, server, protocol, authentication, enabled tools, data transferred, feature status, and failure behavior. A manual artifact handoff is a valid first implementation.",
+      "check": "Demonstrate one permitted call with a narrow identity. Remove the connection and verify access stops without breaking unrelated agents.",
+      "anti": "One universal connector forwards every tool and credential to every agent.",
+      "implementations": [
+        {
+          "agent": "DevOps",
+          "text": "The service documents MCP, A2A, ACP, webhook, and API access; the remote MCP guide explicitly covers coding-client integration.",
+          "refs": [
+            "D06",
+            "D07"
+          ],
+          "preview": false,
+          "status": "Documented · setup-dependent"
+        },
+        {
+          "agent": "Kiro",
+          "text": "MCP extends available tools, with configuration differences across interfaces. Confirm the connection in the interface that will actually run the task.",
+          "refs": [
+            "K10"
+          ],
+          "preview": false,
+          "status": "Documented · setup-dependent"
+        },
+        {
+          "agent": "Security",
+          "text": "IDE code review has a documented MCP/Kiro Power route and service-side source-upload prerequisites. This route inherits code-review preview status.",
+          "refs": [
+            "S08",
+            "S13"
+          ],
+          "preview": true,
+          "status": "Preview · code-review integration"
+        },
+        {
+          "agent": "FinOps",
+          "text": "Documented team integrations include Jira and outbound Slack. This architecture does not assume they provide inbound orchestration or general-purpose tool execution.",
+          "refs": [
+            "F10",
+            "F11"
+          ],
+          "preview": true,
+          "status": "Preview · entire service"
+        }
+      ],
+      "origin": {
+        "DevOps": "C06; G07",
+        "Kiro": "C13, C19, C21",
+        "Security": "C09, C16, C17, C18",
+        "FinOps": "C11, C12; G06"
+      }
+    },
+    {
+      "id": "P08",
+      "title": "Artifact-first handoff between specialists",
+      "layer": "Integration & handoff",
+      "kind": "Recommended standard",
+      "rule": "Pass a small, reviewable evidence packet rather than raw conversation history: finding, affected scope, evidence links, proposed change, owner, acceptance tests, and expiry.",
+      "boundary": "The handoff contract below is a team convention, not an AWS schema. It carries context and provenance—not credentials, delegated authority, or transferable approvals.",
+      "setup": "Use the existing issue, pull request, or change record as the durable handoff. Give linked agent runs the same work-item ID and keep sensitive findings in approved locations.",
+      "check": "Ask the receiving engineer to reconstruct the problem without reading the original chat. Reject packets with unresolved source access, missing versions, or no accountable owner.",
+      "anti": "A generated narrative is sent to another agent with “implement everything,” including unverified assumptions.",
+      "implementations": [
+        {
+          "agent": "DevOps",
+          "text": "Prevention can produce agent-ready specifications describing implementation work. This supports a coding handoff without implying automatic execution.",
+          "refs": [
+            "D10"
+          ],
+          "preview": false,
+          "status": "Documented · setup-dependent"
+        },
+        {
+          "agent": "Kiro",
+          "text": "Autonomous tasks can produce PRs or MRs; specifications can preserve requirements, design decisions, and implementation tasks.",
+          "refs": [
+            "K12",
+            "K11"
+          ],
+          "preview": false,
+          "status": "Documented · setup-dependent"
+        },
+        {
+          "agent": "Security",
+          "text": "Findings include verification evidence, and configured remediation can produce a proposed fix. The team must preserve the finding-to-change relationship.",
+          "refs": [
+            "S05",
+            "S07"
+          ],
+          "preview": false,
+          "status": "Documented · setup-dependent"
+        },
+        {
+          "agent": "FinOps",
+          "text": "Optimization outputs summarize recommendations from existing AWS optimizers; Jira can carry an issue or comment for engineering follow-through.",
+          "refs": [
+            "F07",
+            "F10"
+          ],
+          "preview": true,
+          "status": "Preview · entire service"
+        }
+      ],
+      "origin": {
+        "DevOps": "C02, C04; G07",
+        "Kiro": "C02, C04, C07",
+        "Security": "C05, C06, C08, C09",
+        "FinOps": "C04, C11, C13"
+      }
+    },
+    {
+      "id": "P09",
+      "title": "Bounded asynchronous work and stop responsibility",
+      "layer": "Execution & control",
+      "kind": "Different mechanisms",
+      "rule": "Track every run as a job with a lifecycle, an owner, a work budget, and a stop procedure. Reconcile completed, partial, failed, cancelled, and waiting-for-input states explicitly.",
+      "boundary": "Client timeout is not proof that server work stopped. Product quotas, elapsed time, billable work, and spending caps are different concepts.",
+      "setup": "Set team-level concurrency and retry limits; use native caps where available. Record run identifiers, last observed state, budget consumption, and the operator who can stop the job.",
+      "check": "Exercise cancellation on a safe task and confirm the server reaches a terminal state. Check partial outputs and duplicate retries before closing the work item.",
+      "anti": "A CI job is cancelled, so everyone assumes the billable agent job has also ended.",
+      "implementations": [
+        {
+          "agent": "DevOps",
+          "text": "Custom-agent invocations have recorded trajectories and concurrency constraints. Design your wrapper around invocation state, not only chat completion.",
+          "refs": [
+            "D03"
+          ],
+          "preview": false,
+          "status": "Documented · setup-dependent"
+        },
+        {
+          "agent": "Kiro",
+          "text": "Autonomous sessions expose progress and can require attention. Coordinate issue ownership to avoid separate user-triggered tasks for the same work.",
+          "refs": [
+            "K12",
+            "K02"
+          ],
+          "preview": false,
+          "status": "Documented · setup-dependent"
+        },
+        {
+          "agent": "Security",
+          "text": "Pentest task hours accumulate across parallel work. A capped run can finish as Completed; pipeline cancellation does not reliably stop every server-side job.",
+          "refs": [
+            "S03",
+            "S10",
+            "S13"
+          ],
+          "preview": false,
+          "status": "Documented · setup-dependent"
+        },
+        {
+          "agent": "FinOps",
+          "text": "Long-running tasks and automations have a task queue and history. Disable or delete recurrence separately from reviewing a previous task result.",
+          "refs": [
+            "F05"
+          ],
+          "preview": true,
+          "status": "Preview · entire service"
+        }
+      ],
+      "origin": {
+        "DevOps": "C01, C05",
+        "Kiro": "C04, C06, C09",
+        "Security": "C04, C18; G08",
+        "FinOps": "C06, C07, C08; G03"
+      }
+    },
+    {
+      "id": "P10",
+      "title": "Independent verification before promotion",
+      "layer": "Assurance & governance",
+      "kind": "Recommended standard",
+      "rule": "Define acceptance criteria before a run and verify the result with evidence independent of the generated narrative. Keep merge, deployment, security acceptance, and financial decisions with accountable owners.",
+      "boundary": "Completed is not correct; a passing gate is not complete coverage; an estimate is not realized savings. Confidence and scope must remain attached to the result.",
+      "setup": "Write separate checks for code behavior, operational recovery, finding reproduction, and billing reconciliation. Use ordinary CI and source dashboards wherever possible.",
+      "check": "Re-run the relevant test against the exact proposed commit or deployed version. Document unresolved coverage and compare cost results with matched periods and dimensions.",
+      "anti": "A fluent root-cause explanation, green job, or projected saving becomes a production approval.",
+      "implementations": [
+        {
+          "agent": "DevOps",
+          "text": "Investigation evidence and mitigation proposals provide inputs for recovery decisions. Your team still validates the observed recovery and change outcome.",
+          "refs": [
+            "D11"
+          ],
+          "preview": false,
+          "status": "Documented · setup-dependent"
+        },
+        {
+          "agent": "Kiro",
+          "text": "Web does not merge automatically; reviewers use the normal repository workflow. Keep independent tests and required reviews on the proposed change.",
+          "refs": [
+            "K01",
+            "K02"
+          ],
+          "preview": false,
+          "status": "Documented · setup-dependent"
+        },
+        {
+          "agent": "Security",
+          "text": "AWS advises validating findings and generated fixes. Revalidation checks existing findings, not all possible new vulnerabilities.",
+          "refs": [
+            "S04",
+            "S06"
+          ],
+          "preview": false,
+          "status": "Documented · setup-dependent"
+        },
+        {
+          "agent": "FinOps",
+          "text": "Investigative explanations need review; recommendations are contextualized optimizer outputs. Reconcile billing semantics and measure results after an approved change.",
+          "refs": [
+            "F03",
+            "F07",
+            "F09"
+          ],
+          "preview": true,
+          "status": "Preview · entire service"
+        }
+      ],
+      "origin": {
+        "DevOps": "C01, C02, C08; G08, G09",
+        "Kiro": "C07, C08; G03",
+        "Security": "C05, C06, C07; G04, G07",
+        "FinOps": "C01, C03, C04, C13; G08"
+      }
+    },
+    {
+      "id": "P11",
+      "title": "Evidence lineage and separate systems of record",
+      "layer": "Assurance & governance",
+      "kind": "Recommended standard",
+      "rule": "Correlate request, run, source version, evidence, approval, change, and observed outcome in a durable work record. Store evidence under the access and retention policy appropriate to its sensitivity.",
+      "boundary": "There is no common portfolio-wide audit trail asserted here. A chat log does not replace Git history, cloud audit events, security evidence, or billing records.",
+      "setup": "Use one correlation ID across links; retain minimal structured metadata and source references. Define access to evidence separately from access to the generated executive summary.",
+      "check": "Sample a completed work item. Reconstruct who requested it, what it read, what it changed or published, who authorized the effect, and how the result was verified.",
+      "anti": "Store only the final summary and lose the source version, tool call, and approval history.",
+      "implementations": [
+        {
+          "agent": "DevOps",
+          "text": "Directed-action approvals and resulting actions are attributable to the approving operator in CloudTrail. Custom-agent invocation records provide separate execution evidence.",
+          "refs": [
+            "D04",
+            "D03"
+          ],
+          "preview": false,
+          "status": "Documented · setup-dependent"
+        },
+        {
+          "agent": "Kiro",
+          "text": "Session progress, linked pull requests, diffs, and commit history provide complementary records; do not treat a generated summary as the only change evidence.",
+          "refs": [
+            "K12",
+            "K02"
+          ],
+          "preview": false,
+          "status": "Documented · setup-dependent"
+        },
+        {
+          "agent": "Security",
+          "text": "Finding views expose evidence and logs. Preserve the finding ID, tested target/version, and revalidation outcome in the remediation record.",
+          "refs": [
+            "S05",
+            "S06"
+          ],
+          "preview": false,
+          "status": "Documented · setup-dependent"
+        },
+        {
+          "agent": "FinOps",
+          "text": "Task history records work and external actions; billing services remain the underlying cost evidence. Use both for the engineering audit trail.",
+          "refs": [
+            "F05",
+            "F09"
+          ],
+          "preview": true,
+          "status": "Preview · entire service"
+        }
+      ],
+      "origin": {
+        "DevOps": "C01, C02, C05; G12",
+        "Kiro": "C04, C07, C10",
+        "Security": "C05, C07, C08",
+        "FinOps": "C01, C05, C06, C11, C12"
+      }
+    },
+    {
+      "id": "P12",
+      "title": "Feature-level availability and data-location gates",
+      "layer": "Assurance & governance",
+      "kind": "Different mechanisms",
+      "rule": "Approve the exact combination of feature, interface, Region, inference route, data classification, and integration destination. Recheck it when the configuration or product changes.",
+      "boundary": "Availability in a Region does not establish end-to-end data residency. Source location, service storage, model inference, and third-party output destinations are separate boundaries.",
+      "setup": "Keep a feature register with status, storage Region, processing geography, eligible users/plans, source links, owner, and review date. Treat preview use as an explicit exception decision.",
+      "check": "Trace one representative artifact from source through service processing to PR, ticket, or channel. Confirm each destination is approved before providing sensitive data.",
+      "anti": "“It runs on AWS” is used as proof that all data stays in the workload’s Region.",
+      "implementations": [
+        {
+          "agent": "DevOps",
+          "text": "Agent Space data is stored in its selected Region; release management is preview in us-east-1. Monitoring scope can include resources in other Regions.",
+          "refs": [
+            "D09"
+          ],
+          "preview": false,
+          "status": "Documented · setup-dependent"
+        },
+        {
+          "agent": "Kiro",
+          "text": "Web is documented for eligible paid plans in us-east-1. That availability statement should not be generalized to every Kiro interface or processing path.",
+          "refs": [
+            "K01"
+          ],
+          "preview": false,
+          "status": "Documented · setup-dependent"
+        },
+        {
+          "agent": "Security",
+          "text": "The regional guide distinguishes geographic and global cross-region inference. Mumbai, Singapore, and São Paulo use global routing.",
+          "refs": [
+            "S12"
+          ],
+          "preview": false,
+          "status": "Documented · setup-dependent"
+        },
+        {
+          "agent": "FinOps",
+          "text": "Preview data is stored in us-east-1; inference can occur in other US Regions. This is not an EU-only storage-and-processing deployment.",
+          "refs": [
+            "F06"
+          ],
+          "preview": true,
+          "status": "Preview · entire service"
+        }
+      ],
+      "origin": {
+        "DevOps": "G01, G02, G03, G06",
+        "Kiro": "G01, G02, G06",
+        "Security": "G01, G02, G06",
+        "FinOps": "G01, G02, G03"
+      }
+    }
+  ],
+  "controls": [
+    {
+      "path": "DevOps · investigation",
+      "effect": "Observe AWS resources",
+      "native": "Investigation access is constrained by IAM and service guardrails; the displayed topology is not the authorization boundary.",
+      "recommendation": "Scope the role and prove an out-of-scope read is denied.",
+      "refs": [
+        "D05"
+      ]
+    },
+    {
+      "path": "DevOps · directed action",
+      "effect": "Mutate an approved target",
+      "native": "Disabled by default; layered enablement and per-action approval apply. Customer MCP tools need correct classifications; an omitted classification can default to READ_ONLY.",
+      "recommendation": "Review every custom tool’s real effects. Never rely on its name or an omitted classification.",
+      "refs": [
+        "D04"
+      ]
+    },
+    {
+      "path": "Kiro · IDE / CLI",
+      "effect": "Files, shell, tools",
+      "native": "Capability rules can allow, ask, or deny. These local controls are not the Web control model.",
+      "recommendation": "Test the effective rule set in the chosen client and keep privileged credentials out of routine coding sessions.",
+      "refs": [
+        "K04"
+      ]
+    },
+    {
+      "path": "Kiro · Web",
+      "effect": "Code and PR/MR changes",
+      "native": "Runs in a configurable cloud sandbox without local per-action permission prompts; does not automatically merge.",
+      "recommendation": "Combine narrow repository access, restricted egress, minimal secrets, and protected-branch review.",
+      "refs": [
+        "K01",
+        "K03",
+        "K04",
+        "K05"
+      ]
+    },
+    {
+      "path": "Security · on-demand pentest",
+      "effect": "Active application testing",
+      "native": "Testing uses configured targets, scope, credentials, and network access. It can modify state or disrupt systems.",
+      "recommendation": "Authorize the test window and targets; use isolated test data and a named stop/recovery owner.",
+      "refs": [
+        "S03",
+        "S04"
+      ]
+    },
+    {
+      "path": "DevOps · release test",
+      "effect": "Exploratory application writes",
+      "native": "Preview tests can issue real POST, PUT, and DELETE requests to the target application.",
+      "recommendation": "Treat this as active testing, not as a read-only investigation or a directed-action approval sequence.",
+      "refs": [
+        "D08",
+        "D09"
+      ]
+    },
+    {
+      "path": "FinOps · interactive Jira",
+      "effect": "Create issue or comment",
+      "native": "Chat and on-demand issue/comment actions require approval. Other Jira administration is not implied.",
+      "recommendation": "Check project, audience, content sensitivity, and duplicate work before confirming.",
+      "refs": [
+        "F03",
+        "F10"
+      ]
+    },
+    {
+      "path": "FinOps · automated Jira / Slack",
+      "effect": "Publish externally",
+      "native": "Scheduled/event Jira actions are pre-authorized. Slack posting has no per-message approval, even from chat.",
+      "recommendation": "Approve the automation and destination as a standing permission; restrict sensitive output and review task history.",
+      "refs": [
+        "F03",
+        "F05",
+        "F11"
+      ]
+    }
+  ],
+  "workflows": [
+    {
+      "id": "W01",
+      "title": "Incident → reviewable fix",
+      "label": "Operations + development",
+      "status": "Baseline without release-preview dependencies",
+      "refs": [
+        "D11",
+        "D10",
+        "K11",
+        "K12",
+        "K02"
+      ],
+      "premise": "Team-composed workflow using existing incident, repository, and deployment processes; not a native four-agent transaction.",
+      "steps": [
+        [
+          "Investigate",
+          "DevOps Agent assembles an evidence-backed account of the scoped incident. The SRE checks timestamps, deployed version, missing telemetry, and competing explanations."
+        ],
+        [
+          "Create the handoff",
+          "The SRE creates a bounded issue or implementation specification with the observed failure, evidence links, affected repository, regression test, and acceptance criteria."
+        ],
+        [
+          "Implement",
+          "Kiro works on the selected repository and proposes a PR/MR. Do not pass production credentials or an instruction to apply every suggested mitigation."
+        ],
+        [
+          "Review and deploy",
+          "A reviewer validates the diff and independent CI results. The existing deployment process authorizes the release; emergency remediation remains a separate native approval path."
+        ],
+        [
+          "Close with evidence",
+          "Record the deployed commit and verify recovery using telemetry. Feed an accepted lesson into the reviewed runbook or prevention backlog."
+        ]
+      ],
+      "done": "Closure requires an accepted change or documented no-change decision plus an observed operational outcome—not merely a completed investigation.",
+      "stop": "Pause on inaccessible evidence, uncertain ownership, unrelated code changes, or a proposed effect outside the authorized task."
+    },
+    {
+      "id": "W02",
+      "title": "Security finding → verified repair",
+      "label": "Application security + development",
+      "status": "On-demand pentest baseline; code-review integration is optional preview",
+      "refs": [
+        "S03",
+        "S05",
+        "S07",
+        "S06",
+        "S04",
+        "K11",
+        "S13"
+      ],
+      "premise": "Use either configured Security Agent remediation or a separately scoped Kiro coding task. Avoid assigning the same repair to two writers at once.",
+      "steps": [
+        [
+          "Authorize and isolate",
+          "The security owner confirms allowed targets, excluded paths, test identity, approved time window, and a recoverable non-production environment."
+        ],
+        [
+          "Triage evidence",
+          "Review the finding’s affected path, reproduction material, confidence, and impact. Establish which exact deployment and code revision were assessed."
+        ],
+        [
+          "Propose the fix",
+          "Choose one remediation owner. Preserve the finding reference and add an explicit regression test; the generated fix is a proposal, not a release authorization."
+        ],
+        [
+          "Review and retest",
+          "Run ordinary code review and regression checks. Deploy the candidate to the authorized test environment and revalidate the known finding."
+        ],
+        [
+          "Document closure",
+          "Attach the revalidation outcome and residual coverage limitations to the issue. A known finding passing revalidation is not a claim of complete application security."
+        ]
+      ],
+      "done": "Closure requires a reviewed repair, the tested deployment identity, and evidence for the original finding’s outcome.",
+      "stop": "Stop testing on unexpected production reach, unsafe side effects, scope drift, or missing recovery capability."
+    },
+    {
+      "id": "W03",
+      "title": "Cost anomaly → controlled change",
+      "label": "FinOps + platform + development",
+      "status": "Preview-dependent · FinOps Agent",
+      "refs": [
+        "F08",
+        "F09",
+        "F07",
+        "F10",
+        "D02",
+        "K11"
+      ],
+      "premise": "An analytical recommendation becomes an engineering decision only after source reconciliation and workload review. This is not autonomous resource optimization.",
+      "steps": [
+        [
+          "Investigate the anomaly",
+          "FinOps Agent analyzes a supported anomaly or an on-demand cost question. Record affected accounts, time range, dimensions, and cost basis."
+        ],
+        [
+          "Check operational constraints",
+          "The workload owner compares utilization, reliability requirements, and recent changes; DevOps Agent may assist with connected operational context."
+        ],
+        [
+          "Choose an owned action",
+          "Create an issue that separates estimated savings from risks and assumptions. A budget or commitment purchase needs its existing approval route."
+        ],
+        [
+          "Prepare a reviewable change",
+          "For a code or IaC change, give Kiro a narrow task and required validation steps. The normal plan, review, and deployment process remains authoritative."
+        ],
+        [
+          "Measure the result",
+          "After an approved change and a suitable observation window, reconcile actual cost and service health. Record confounding workload changes and avoid claiming all differences as savings."
+        ]
+      ],
+      "done": "Closure requires a verified engineering outcome; savings remain estimates until measured with comparable data.",
+      "stop": "Do not proceed when the cost basis is unclear, an owner is missing, or a proposed saving threatens the service objective."
+    },
+    {
+      "id": "W04",
+      "title": "Daily engineering review → owned backlog",
+      "label": "Recurring work without a shared control plane",
+      "status": "Mixed baseline; optional FinOps inputs are preview",
+      "refs": [
+        "D03",
+        "K09",
+        "S05",
+        "F05",
+        "F11"
+      ],
+      "premise": "Independent runs feed an existing team review. No common scheduler, shared memory, automatic Security Agent schedule, or native digest aggregator is asserted.",
+      "steps": [
+        [
+          "Choose one report owner",
+          "Define the review’s audience, inputs, data freshness, and publication destination. Keep sensitive security evidence behind its own access boundary."
+        ],
+        [
+          "Run supported tasks separately",
+          "Use a configured DevOps custom-agent schedule, a narrow Kiro maintenance automation, and—when approved—a FinOps recurring report. Review current security findings through its documented workflow."
+        ],
+        [
+          "Normalize the handoffs",
+          "Use the shared work-item fields for each accepted item. Keep source run IDs and clearly label stale, missing, or preview-derived information."
+        ],
+        [
+          "Assign or discard",
+          "At the team review, accept specific tasks with accountable owners. Reject duplicate work and track why suggestions were not actionable."
+        ],
+        [
+          "Tune recurrence",
+          "Adjust scope and frequency based on accepted work, review effort, and false or duplicate findings. Disable an automation that cannot sustain a useful signal."
+        ]
+      ],
+      "done": "The output is a small owned backlog and a documented decision trail, not an unreviewed stream of notifications.",
+      "stop": "Suspend publication when destination access, data classification, ownership, or source freshness is no longer approved."
+    }
+  ],
+  "transcript": [
+    {
+      "n": 1,
+      "title": "One operating model, not one implementation",
+      "message": "Standardize the work contract and evidence; keep execution and authorization product-specific.",
+      "speaker": "We are consolidating the architecture of day-to-day engineering work, not claiming that AWS exposes a single backend for these four products. Our common unit is a bounded work item with an owner, scope, evidence, allowed effects, and acceptance criteria. Each specialist keeps its own access model and execution surface. The practical starting point is an existing incident or issue record, not a new orchestration platform. We can connect outputs manually first and automate a documented interface only when it adds measurable value. Amazon Q Developer and unrelated Continuum capabilities are outside this companion’s scope.",
+      "demo": "Walk through one sample incident record and identify the worker, evidence source, reviewer, and deployment owner. Do not run an agent.",
+      "refs": [
+        "X01",
+        "D01",
+        "S01",
+        "F01",
+        "K01"
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Make scope and evidence explicit",
+      "message": "The task boundary must be enforced and the source data must be reproducible.",
+      "speaker": "Before asking an agent to investigate, define the relevant repositories, accounts, application endpoints, and observation period. Give the evidence a version or timestamp and identify its owner. A plausible explanation is not a substitute for access to the underlying signal. Ask the reviewer to reproduce one important statement in the source system. Keep application ownership in an authoritative inventory and publish only the minimum approved context to the agent. For access testing, use a harmless out-of-scope resource in a controlled environment and verify that the underlying control actually denies it.",
+      "demo": "Compare a weak prompt with an evidence packet containing a commit, deployment ID, UTC window, source links, and an explicit list of unavailable signals.",
+      "refs": [
+        "D05",
+        "D02",
+        "K11",
+        "S03",
+        "F09"
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Classify the effect before choosing the gate",
+      "message": "Reading, coding, publishing, testing, and mutating infrastructure need different controls.",
+      "speaker": "The same word—autonomous—can describe very different effects. A cost query, a Slack post, a branch update, a penetration test, and a production configuration change do not have the same risk or approval semantics. Use the control matrix to identify the exact path, not just the product name. Record whether approval happens per action, at automation setup, or in the repository workflow. An approved handoff is permission to review the next task, not a credential or a reusable production authorization. Test both the allowed and denied paths before expanding scope.",
+      "demo": "Classify five sample requests by effect and identify the native gate and the team-owned control for each.",
+      "refs": [
+        "D04",
+        "K04",
+        "S04",
+        "F03"
+      ]
+    },
+    {
+      "n": 4,
+      "title": "Protect the target, not only the worker",
+      "message": "A sandbox can still reach a real system; active testing can change real data.",
+      "speaker": "Review the full reach of the task: network destinations, test credentials, callback URLs, source repositories, and output channels. Protecting the execution environment alone is not sufficient when its permitted connections reach sensitive systems. Use disposable data and narrowly scoped credentials, and disable live business side effects in a representative test deployment. Decide who stops the run and who restores the environment. Treat a secret placed in a worker as accessible to that work; do not use sandbox isolation as a reason to distribute production credentials broadly.",
+      "demo": "Inspect a proposed test configuration for production endpoints, payment callbacks, email delivery, and broad egress. Replace them with approved test equivalents.",
+      "refs": [
+        "K03",
+        "K05",
+        "K06",
+        "S04",
+        "D08"
+      ]
+    },
+    {
+      "n": 5,
+      "title": "Connect specialists through reviewable artifacts",
+      "message": "The shared interface is evidence plus acceptance criteria—not shared credentials or memory.",
+      "speaker": "A useful handoff names the finding, the affected version, the proposed change, and how someone will prove that the work is complete. It links to sensitive evidence rather than copying it indiscriminately. The receiving worker obtains its own authorized access and does not inherit the originating agent’s privileges. Use documented adapters for calls that genuinely need automation; otherwise, a linked issue and pull request are sufficient for a first pass. Keep provider-specific identifiers alongside the common work-item ID so the team can trace the process without inventing a universal agent API.",
+      "demo": "Populate the neutral handoff template for an incident-to-fix task; remove any secrets and separate the recommended change from execution approval.",
+      "refs": [
+        "D10",
+        "D07",
+        "K10",
+        "S08",
+        "F10"
+      ]
+    },
+    {
+      "n": 6,
+      "title": "Treat every long-running task as a job",
+      "message": "Track state, concurrency, partial results, cost, and stop responsibility.",
+      "speaker": "A task should have an observable lifecycle and a clear terminal condition. Define retry limits and duplicate handling before connecting event sources, then record what happened when a job failed, timed out, or needed input. A client stopping its wait is not enough evidence that all server-side work has ended. Test the actual cancellation path in a safe environment and reconcile the resulting state. Keep budget and coverage separate: reaching a work limit may leave useful partial findings, but it does not establish complete assessment. Review recurring automation as a standing operational permission, not a one-time chat decision.",
+      "demo": "Tabletop a timed-out task: identify the server run ID, stop owner, terminal-state check, partial artifacts, and retry decision.",
+      "refs": [
+        "D03",
+        "K12",
+        "K02",
+        "S03",
+        "S10",
+        "F05"
+      ]
+    },
+    {
+      "n": 7,
+      "title": "Verify outcomes and preserve lineage",
+      "message": "A completed run is an output; an accepted outcome requires independent evidence.",
+      "speaker": "Choose acceptance checks before the work starts. For code, use the intended behavior, the exact candidate revision, and normal review. For an incident, verify the operational recovery. For a security finding, confirm the specific repair and record what was not assessed. For cost work, reconcile the data definition and measure the result after the authorized change. Preserve links between request, run, evidence, approval, change, and outcome. Do not flatten every record into a chat transcript or assume one audit system covers the entire portfolio.",
+      "demo": "Review a completed sample work item and reject it until the source version, reviewer, verification evidence, and unresolved limitations are present.",
+      "refs": [
+        "D11",
+        "K02",
+        "S06",
+        "F07",
+        "F09"
+      ]
+    },
+    {
+      "n": 8,
+      "title": "Roll out through explicit architecture gates",
+      "message": "Start with one bounded workflow, then expand only when evidence justifies it.",
+      "speaker": "The proposed rollout begins with an access and data-flow review, then one on-demand workflow, then independent verification, and only then recurring or cross-agent automation. Evaluate the exact feature and interface rather than applying a blanket product status. Storage location, model processing, and external publication destinations need separate approval. The checklist in this report records team decisions; it does not certify compliance or enforce permissions. Measure accepted work and review effort alongside incorrect, duplicate, or unsafe outputs. Expand only after the team can demonstrate a repeatable outcome and a working stop path.",
+      "demo": "Complete the readiness checklist for one non-production workflow and explicitly defer any preview or regional boundary that has not been approved.",
+      "refs": [
+        "D09",
+        "K01",
+        "S12",
+        "S13",
+        "S11",
+        "F06"
+      ]
+    }
+  ],
+  "readiness_checks": [
+    [
+      "Scope",
+      "A workload owner and platform owner have approved exact accounts, repositories, targets, users, and output audiences.",
+      "Platform lead + workload owner"
+    ],
+    [
+      "Authority",
+      "Native permissions and approval paths are documented and tested; a harmless out-of-scope attempt is denied.",
+      "Platform / identity owner"
+    ],
+    [
+      "Context",
+      "Sources have versions or timestamps; inputs are sanitized; owner mappings and instructions have review dates.",
+      "Data or repository owner"
+    ],
+    [
+      "Target safety",
+      "Test identities, network scope, data-reset steps, and business-side-effect controls are validated.",
+      "Application / security owner"
+    ],
+    [
+      "Execution",
+      "Supported triggers, duplicate handling, run-state tracking, retries, budgets, and the server-side stop path are exercised.",
+      "Automation owner"
+    ],
+    [
+      "Evidence",
+      "The handoff links source, run, change, reviewer, acceptance checks, and observed outcome.",
+      "Reviewer / service owner"
+    ],
+    [
+      "Availability",
+      "Feature status, interface, service Region, inference route, and external destinations are approved separately.",
+      "Platform + data-governance owner"
+    ],
+    [
+      "Operations",
+      "Revocation, recurrence disablement, evidence retention, incident escalation, and a review date are assigned.",
+      "Operational owner"
+    ]
+  ],
+  "pilot": [
+    [
+      "Days 1–3",
+      "Inventory and boundaries",
+      "Select one workload. Complete identity, context, and data-location review; choose one low-impact on-demand task."
+    ],
+    [
+      "Days 4–7",
+      "Prove a single path",
+      "Run the agreed safe pilot in your environment. Reproduce evidence and test a harmless denied path before adding integrations."
+    ],
+    [
+      "Days 8–14",
+      "Add a handoff",
+      "Use one reviewed issue-to-PR or finding-to-fix packet. Record rework, missing context, and reviewer effort."
+    ],
+    [
+      "Days 15–21",
+      "Bound recurrence",
+      "Add one supported schedule or event path. Test duplicate handling, destination restrictions, and server-side stop behavior."
+    ],
+    [
+      "Days 22–30",
+      "Decide with evidence",
+      "Review accepted outcomes, error/duplicate rates, reviewer time, run cost, and control exceptions. Expand, narrow, or stop deliberately."
+    ]
+  ],
+  "audit_notes": [
+    [
+      "A01",
+      "Common pattern is a synthesis",
+      "The 12 patterns are author recommendations inferred from documented product mechanisms. They are not an AWS reference architecture, service guarantee, or proof of a shared runtime.",
+      [
+        "D01",
+        "K03",
+        "S02",
+        "F01"
+      ]
+    ],
+    [
+      "A02",
+      "Do not flatten approval semantics",
+      "The report separates investigations, tool calls, repository changes, active testing, infrastructure actions, and publication. The control matrix takes precedence over generic language such as “human in the loop.”",
+      [
+        "D04",
+        "K04",
+        "S04",
+        "F03"
+      ]
+    ],
+    [
+      "A03",
+      "Keep preview tied to the exact workflow",
+      "DevOps release management, Security design/code review and CI/CD integration, and the whole FinOps service have distinct preview boundaries. Kiro is qualified by interface and prerequisites rather than a universal feature-level GA label.",
+      [
+        "D09",
+        "S13",
+        "S11",
+        "F06",
+        "K01"
+      ]
+    ],
+    [
+      "A04",
+      "No universal sandbox, memory, or scheduler",
+      "The logical architecture standardizes team records and decisions. It does not assert a portable policy file, shared cross-product memory, or native scheduler for all four agents.",
+      [
+        "K03",
+        "K04",
+        "D03",
+        "F01"
+      ]
+    ],
+    [
+      "A05",
+      "Native integrations versus composed workflows",
+      "Documented Kiro/DevOps MCP and Security code-review IDE paths are retained. Multi-step cross-product recipes and the neutral contract are team-owned workflows; no generic FinOps MCP/A2A endpoint is established by this audit.",
+      [
+        "D07",
+        "S08",
+        "K10",
+        "F10",
+        "F11"
+      ]
+    ],
+    [
+      "A06",
+      "Job success is not assurance",
+      "The report distinguishes execution status, assessed scope, finding confidence, and business outcome. In preview CI/CD, scope conflicts, infrastructure errors, and findings have separate settings; passing without assessment can advance the baseline.",
+      [
+        "S10",
+        "S03",
+        "F03"
+      ]
+    ],
+    [
+      "A07",
+      "Current security naming and scope",
+      "Security Agent is now part of AWS Continuum. This report remains limited to the application-security workflows in the prior agent report; it is not a broader assessment of Continuum.",
+      [
+        "S01"
+      ]
+    ],
+    [
+      "A08",
+      "Documentation and implementation boundary",
+      "Official pages were revisited for the architectural claims. No live account, policy, repository, application, prompt, or agent workflow was exercised. The readiness checks and pilot are proposed validation activities.",
+      []
+    ]
+  ],
+  "contract": "# Proposed team convention; NOT an AWS API payload or permission policy.\nschema: team.agent-work-item/v1\nwork_item_id: ENG-142\napplication_id: checkout\nenvironment: staging\nowner: checkout-platform-team\nobjective: \"Repair the observed retry regression without unrelated changes\"\nsource_context:\n  repository: \"approved repository reference\"\n  commit: \"exact reviewed commit SHA\"\n  deployed_version: \"exact deployment identifier\"\n  observation_window_utc: \"explicit start and end\"\n  evidence_refs: [\"restricted incident/finding link\"]\n  known_gaps: [\"state any unavailable evidence\"]\nrequest:\n  effect_class: repository_change\n  allowed_scope: [\"approved paths and tests\"]\n  excluded_effects: [\"production writes\", \"new secrets\", \"merge\", \"deploy\"]\n  completion_checks: [\"regression test\", \"existing CI\", \"reviewer acceptance\"]\nhandoff:\n  next_worker: Kiro\n  authority: \"none transferred; use destination-native access and gates\"\n  agent_run_refs: []\n  proposed_change_ref: null\n  approval_refs: []  # References for audit; never reusable authorization.\n  verification_refs: []\ngovernance:\n  data_classification: internal\n  approved_audience: checkout-engineering\n  feature_status_review: \"required for exact feature/interface\"\n  expires_on: \"team-defined evidence refresh date\"\n  stop_owner: checkout-platform-oncall\n",
+  "inputs": [
+    {
+      "file": "aws_devops_agents_report_validated.html",
+      "sha256": "c8208761174fcd3b2f7328125eccc6169236dc683d9cb74be1a0e25c807889cc"
+    },
+    {
+      "file": "aws_kiro_frontier_agent_report.html",
+      "sha256": "8ddf7ca311240a6c95d097332036f33c443187835a861697e87cc6244b64f3e3"
+    },
+    {
+      "file": "aws_security_agent_report.html",
+      "sha256": "3fe42f15bca9755407f045e4abe58e224ece3ae80868400436b9084157e041ab"
+    },
+    {
+      "file": "aws_finops_agent_report.html",
+      "sha256": "04a6acc500afa2665e6e71a5a4f5220aeaf7cee6fd176bcbef14e60ba52efed7"
+    }
+  ],
+  "sources": [
+    {
+      "id": "X01",
+      "title": "AWS frontier agents",
+      "url": "https://aws.amazon.com/ai/frontier-agents/",
+      "agent": "Portfolio",
+      "scope": "Identifies the four products in scope; not evidence of shared runtime or controls.",
+      "kind": "Official product page",
+      "checked": "20 October 2026"
+    },
+    {
+      "id": "D01",
+      "title": "About AWS DevOps Agent",
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent.html",
+      "agent": "DevOps",
+      "scope": "Agent Spaces, topology, release-management preview, and operational outputs.",
+      "kind": "Product documentation",
+      "checked": "20 October 2026"
+    },
+    {
+      "id": "D02",
+      "title": "Production operations",
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-production-operations-index.html",
+      "agent": "DevOps",
+      "scope": "Connected telemetry, manual/event investigations, and operational feedback.",
+      "kind": "Product documentation",
+      "checked": "20 October 2026"
+    },
+    {
+      "id": "D03",
+      "title": "Custom Agents",
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html",
+      "agent": "DevOps",
+      "scope": "Selected tools, attached memory, scheduled runs, and invocation records.",
+      "kind": "Product documentation",
+      "checked": "20 October 2026"
+    },
+    {
+      "id": "D04",
+      "title": "Working with directed actions",
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-working-with-directed-actions.html",
+      "agent": "DevOps",
+      "scope": "Layered opt-in, action approval, audit attribution, and MCP tool classification.",
+      "kind": "Product documentation",
+      "checked": "20 October 2026"
+    },
+    {
+      "id": "D05",
+      "title": "Limiting Agent Access in an AWS Account",
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/aws-devops-agent-security-limiting-agent-access-in-an-aws-account.html",
+      "agent": "DevOps",
+      "scope": "IAM boundaries for investigation access; topology is not an access boundary.",
+      "kind": "Product documentation",
+      "checked": "20 October 2026"
+    },
+    {
+      "id": "D06",
+      "title": "Accessing DevOps Agent",
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-accessing-devops-agent-index.html",
+      "agent": "DevOps",
+      "scope": "Service-specific MCP, A2A, ACP, webhook, and API access.",
+      "kind": "Product documentation",
+      "checked": "20 October 2026"
+    },
+    {
+      "id": "D07",
+      "title": "Connecting to the DevOps Agent MCP server",
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/connecting-to-devops-agent-remote-servers-connecting-to-the-devops-agent-mcp-server.html",
+      "agent": "DevOps",
+      "scope": "Documented coding-client connection and authentication.",
+      "kind": "Product documentation",
+      "checked": "20 October 2026"
+    },
+    {
+      "id": "D08",
+      "title": "Release testing",
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/release-management-release-testing.html",
+      "agent": "DevOps",
+      "scope": "Exploratory writes to deployed applications; staging recommendation.",
+      "kind": "Product documentation",
+      "checked": "20 October 2026"
+    },
+    {
+      "id": "D09",
+      "title": "Supported Regions",
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-supported-regions.html",
+      "agent": "DevOps",
+      "scope": "Feature-level regional availability and Agent Space data storage.",
+      "kind": "Product documentation",
+      "checked": "20 October 2026"
+    },
+    {
+      "id": "D10",
+      "title": "Proactive incident prevention",
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-proactive-incident-prevention.html",
+      "agent": "DevOps",
+      "scope": "Improvement recommendations and agent-ready implementation specifications.",
+      "kind": "Product documentation",
+      "checked": "20 October 2026"
+    },
+    {
+      "id": "D11",
+      "title": "Autonomous incident response",
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-autonomous-incident-response.html",
+      "agent": "DevOps",
+      "scope": "Investigation evidence, mitigation proposals, progress, and human intervention.",
+      "kind": "Product documentation",
+      "checked": "20 October 2026"
+    },
+    {
+      "id": "K01",
+      "title": "Kiro Web",
+      "url": "https://kiro.dev/docs/web/",
+      "agent": "Kiro",
+      "scope": "Paid-plan availability, us-east-1, workflow modes, and no automatic merging.",
+      "kind": "Product documentation",
+      "checked": "20 October 2026"
+    },
+    {
+      "id": "K02",
+      "title": "GitHub integration",
+      "url": "https://kiro.dev/docs/web/github/",
+      "agent": "Kiro",
+      "scope": "App/user repository access, PR feedback, duplicate tasks, and protected branches.",
+      "kind": "Product documentation",
+      "checked": "20 October 2026"
+    },
+    {
+      "id": "K03",
+      "title": "Cloud sandbox",
+      "url": "https://kiro.dev/docs/web/sandbox/",
+      "agent": "Kiro",
+      "scope": "Task execution, authorized repositories, session file state, and browser tooling.",
+      "kind": "Product documentation",
+      "checked": "20 October 2026"
+    },
+    {
+      "id": "K04",
+      "title": "Permissions",
+      "url": "https://kiro.dev/docs/permissions/",
+      "agent": "Kiro",
+      "scope": "IDE/CLI capability rules; Web uses a different control model.",
+      "kind": "Product documentation",
+      "checked": "20 October 2026"
+    },
+    {
+      "id": "K05",
+      "title": "Sandbox internet access",
+      "url": "https://kiro.dev/docs/web/sandbox/internet-access/",
+      "agent": "Kiro",
+      "scope": "Network access levels and allowlists.",
+      "kind": "Product documentation",
+      "checked": "20 October 2026"
+    },
+    {
+      "id": "K06",
+      "title": "Sandbox environment variables and secrets",
+      "url": "https://kiro.dev/docs/web/sandbox/environment-variables/",
+      "agent": "Kiro",
+      "scope": "Secrets are available to task execution and can leak through outputs or requests.",
+      "kind": "Product documentation",
+      "checked": "20 October 2026"
+    },
+    {
+      "id": "K07",
+      "title": "Steering",
+      "url": "https://kiro.dev/docs/steering/",
+      "agent": "Kiro",
+      "scope": "Explicit team instructions; applicability and configuration vary by interface.",
+      "kind": "Product documentation",
+      "checked": "20 October 2026"
+    },
+    {
+      "id": "K08",
+      "title": "Memory",
+      "url": "https://kiro.dev/docs/memory/",
+      "agent": "Kiro",
+      "scope": "Learned context is distinct from steering and session history.",
+      "kind": "Product documentation",
+      "checked": "20 October 2026"
+    },
+    {
+      "id": "K09",
+      "title": "Automations",
+      "url": "https://kiro.dev/docs/web/automations/",
+      "agent": "Kiro",
+      "scope": "Scheduled repository work; reviewable task outputs.",
+      "kind": "Product documentation",
+      "checked": "20 October 2026"
+    },
+    {
+      "id": "K10",
+      "title": "Model Context Protocol",
+      "url": "https://kiro.dev/docs/mcp/",
+      "agent": "Kiro",
+      "scope": "Tool connectivity is configured per interface.",
+      "kind": "Product documentation",
+      "checked": "20 October 2026"
+    },
+    {
+      "id": "K11",
+      "title": "Specifications",
+      "url": "https://kiro.dev/docs/specs/",
+      "agent": "Kiro",
+      "scope": "Requirements, design, tasks, and acceptance-oriented development.",
+      "kind": "Product documentation",
+      "checked": "20 October 2026"
+    },
+    {
+      "id": "K12",
+      "title": "Autonomous mode",
+      "url": "https://kiro.dev/docs/web/autonomous-mode/",
+      "agent": "Kiro",
+      "scope": "Planning, delegated execution, session progress, and PR/MR outputs.",
+      "kind": "Product documentation",
+      "checked": "20 October 2026"
+    },
+    {
+      "id": "S01",
+      "title": "What is AWS Security Agent (now part of AWS Continuum)?",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/what-is.html",
+      "agent": "Security",
+      "scope": "Current naming and application-security scope.",
+      "kind": "Product documentation",
+      "checked": "20 October 2026"
+    },
+    {
+      "id": "S02",
+      "title": "Set up AWS Security Agent",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/setup-security-agent.html",
+      "agent": "Security",
+      "scope": "Agent Spaces, administration, service access, and operator access.",
+      "kind": "Product documentation",
+      "checked": "20 October 2026"
+    },
+    {
+      "id": "S03",
+      "title": "Create a penetration test",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html",
+      "agent": "Security",
+      "scope": "Authorized targets, context, network scope, exclusions, and task-hour limits.",
+      "kind": "Product documentation",
+      "checked": "20 October 2026"
+    },
+    {
+      "id": "S04",
+      "title": "Security best practices",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/security-best-practices.html",
+      "agent": "Security",
+      "scope": "Non-production testing, accessible-URL risks, and independent verification.",
+      "kind": "Product documentation",
+      "checked": "20 October 2026"
+    },
+    {
+      "id": "S05",
+      "title": "Review penetration-test findings",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/review-penetration-findings.html",
+      "agent": "Security",
+      "scope": "Finding evidence, logs, verification material, and triage.",
+      "kind": "Product documentation",
+      "checked": "20 October 2026"
+    },
+    {
+      "id": "S06",
+      "title": "Revalidate findings",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html",
+      "agent": "Security",
+      "scope": "Focused reassessment of known findings and interpretation of outcomes.",
+      "kind": "Product documentation",
+      "checked": "20 October 2026"
+    },
+    {
+      "id": "S07",
+      "title": "Enable finding remediation",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/enable-remediate-findings.html",
+      "agent": "Security",
+      "scope": "Repository configuration and enabling proposed fixes.",
+      "kind": "Product documentation",
+      "checked": "20 October 2026"
+    },
+    {
+      "id": "S08",
+      "title": "Run code security scans from your IDE",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/code-review-ide-integration.html",
+      "agent": "Security",
+      "scope": "MCP/Kiro Power access and source-upload/service prerequisites.",
+      "kind": "Product documentation",
+      "checked": "20 October 2026"
+    },
+    {
+      "id": "S09",
+      "title": "Manage security requirements",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/security-requirements.html",
+      "agent": "Security",
+      "scope": "Reusable organizational review requirements.",
+      "kind": "Product documentation",
+      "checked": "20 October 2026"
+    },
+    {
+      "id": "S10",
+      "title": "Run penetration tests from CI/CD",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/cicd-pentest.html",
+      "agent": "Security",
+      "scope": "Gate outcomes, baseline advancement, and server-side cancellation behavior.",
+      "kind": "Product documentation",
+      "checked": "20 October 2026"
+    },
+    {
+      "id": "S11",
+      "title": "Scoped-pentest GitHub Actions tutorial",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/sample-cicd-github.html",
+      "agent": "Security",
+      "scope": "Explicit public-preview status of CI/CD integration.",
+      "kind": "Product documentation",
+      "checked": "20 October 2026"
+    },
+    {
+      "id": "S12",
+      "title": "Resilience and regional availability",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/resilience.html",
+      "agent": "Security",
+      "scope": "Geographic versus global inference routing by selected Region.",
+      "kind": "Product documentation",
+      "checked": "20 October 2026"
+    },
+    {
+      "id": "S13",
+      "title": "Pricing and billing",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/pricing.html",
+      "agent": "Security",
+      "scope": "Preview status of code/design review and threat modeling; quotas versus spend.",
+      "kind": "Product documentation",
+      "checked": "20 October 2026"
+    },
+    {
+      "id": "S14",
+      "title": "On-demand penetration testing is generally available",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/03/aws-security-agent-ondemand-penetration/",
+      "agent": "Security",
+      "scope": "Confirms GA for on-demand penetration testing, not every security capability.",
+      "kind": "Official release announcement",
+      "checked": "20 October 2026"
+    },
+    {
+      "id": "F01",
+      "title": "Creating an agent",
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/creating-an-agent.html",
+      "agent": "FinOps",
+      "scope": "Independent agent instances, service/operator roles, and integrations.",
+      "kind": "Product documentation",
+      "checked": "20 October 2026"
+    },
+    {
+      "id": "F02",
+      "title": "IAM setup guide",
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/setting-up.html",
+      "agent": "FinOps",
+      "scope": "Separate setup, agent, operator, and event-automation permissions.",
+      "kind": "Product documentation",
+      "checked": "20 October 2026"
+    },
+    {
+      "id": "F03",
+      "title": "Agent guardrail controls",
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html",
+      "agent": "FinOps",
+      "scope": "Read/write boundaries, trigger-specific approval, and analytical limitations.",
+      "kind": "Product documentation",
+      "checked": "20 October 2026"
+    },
+    {
+      "id": "F04",
+      "title": "Context files and memory",
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/context-files-and-memory.html",
+      "agent": "FinOps",
+      "scope": "Context visibility, read-only files, learned preferences, and sanitization.",
+      "kind": "Product documentation",
+      "checked": "20 October 2026"
+    },
+    {
+      "id": "F05",
+      "title": "Task management",
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/task-management.html",
+      "agent": "FinOps",
+      "scope": "On-demand, scheduled, and cost-anomaly event tasks with history.",
+      "kind": "Product documentation",
+      "checked": "20 October 2026"
+    },
+    {
+      "id": "F06",
+      "title": "Cross-region inference",
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/cross-region-inference.html",
+      "agent": "FinOps",
+      "scope": "Preview storage in us-east-1 and inference within the US geography.",
+      "kind": "Product documentation",
+      "checked": "20 October 2026"
+    },
+    {
+      "id": "F07",
+      "title": "Optimization recommendations",
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/optimization-recommendations.html",
+      "agent": "FinOps",
+      "scope": "Contextualizes existing Cost Optimization Hub and Compute Optimizer outputs.",
+      "kind": "Product documentation",
+      "checked": "20 October 2026"
+    },
+    {
+      "id": "F08",
+      "title": "Event-triggered cost anomaly investigation",
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/automated-anomaly-response.html",
+      "agent": "FinOps",
+      "scope": "Cost Anomaly Detection prerequisites and EventBridge-based triggers.",
+      "kind": "Product documentation",
+      "checked": "20 October 2026"
+    },
+    {
+      "id": "F09",
+      "title": "Asking about costs",
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/cost-inquiry.html",
+      "agent": "FinOps",
+      "scope": "Cost dimensions, periods, trends, and supported billing questions.",
+      "kind": "Product documentation",
+      "checked": "20 October 2026"
+    },
+    {
+      "id": "F10",
+      "title": "Jira integration",
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/jira-integration.html",
+      "agent": "FinOps",
+      "scope": "Jira issue/comment support and unsupported workflow-administration actions.",
+      "kind": "Product documentation",
+      "checked": "20 October 2026"
+    },
+    {
+      "id": "F11",
+      "title": "Slack integration",
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/slack-integration.html",
+      "agent": "FinOps",
+      "scope": "Outbound channel posting; not a bidirectional command interface.",
+      "kind": "Product documentation",
+      "checked": "20 October 2026"
+    }
+  ],
+  "logical_flow": [
+    [
+      "Scope the task",
+      "Name the workload, owner, intended effect, approved users, and completion checks. Enforce source access before any evidence is retrieved.",
+      "P01 · P04 · P12"
+    ],
+    [
+      "Assemble context",
+      "Use authorized, minimum-necessary sources with versions, timestamps, and known gaps. Treat instructions and learned context as data—not authority.",
+      "P02 · P03"
+    ],
+    [
+      "Plan the work",
+      "Select one specialist and its supported interface. Identify expected reads, writes, publication, active testing, and any required handoff.",
+      "P04 · P07 · P08"
+    ],
+    [
+      "Authorize and execute",
+      "Apply the native control for each effect before it occurs. Keep execution targets, credentials, budgets, job state, and stop responsibility bounded.",
+      "P05 · P06 · P09"
+    ],
+    [
+      "Verify and hand off",
+      "Independently validate the outcome, retain evidence and source versions, and create the next owned work item. Re-authorize any new effect.",
+      "P08 · P10 · P11"
+    ]
+  ],
+  "agent_roles": [
+    {
+      "agent": "DevOps Agent",
+      "role": "Operations and reliability",
+      "description": "Investigations, mitigation proposals, and prevention. Directed actions are separately gated; release management remains preview.",
+      "refs": [
+        "D01",
+        "D04",
+        "D09"
+      ]
+    },
+    {
+      "agent": "Kiro",
+      "role": "Software implementation",
+      "description": "Specifications, repository work, and PR/MR delivery. Web requires an eligible paid plan; Web and local permission models differ.",
+      "refs": [
+        "K01",
+        "K04"
+      ]
+    },
+    {
+      "agent": "Security Agent",
+      "role": "Application security · now part of AWS Continuum",
+      "description": "On-demand penetration testing is GA. Design/code review and CI/CD integration have separate preview boundaries.",
+      "refs": [
+        "S01",
+        "S14",
+        "S13",
+        "S11"
+      ]
+    },
+    {
+      "agent": "FinOps Agent",
+      "role": "Cloud cost engineering · preview",
+      "description": "Cost analysis, recommendation triage, reporting, and external handoffs. This is not an autonomous infrastructure-change path.",
+      "refs": [
+        "F03",
+        "F07",
+        "F06"
+      ]
+    }
+  ]
+}
