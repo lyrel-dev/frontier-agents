@@ -62,16 +62,6 @@ Revalidation repeats checks for selected findings against the running target. It
 
 **Boundary:** Resolved means the issue was not reproduced by that check. It is not an exhaustive assurance statement.
 
-## S-M07 — Connect an IDE scan through the Security Agent MCP server
-
-The MCP integration packages code, uploads it to an account S3 bucket, starts a scan and retrieves findings. First use can provision an Agent Space, IAM role and bucket.
-
-**Setup:** Install the AWS Security Agent Power in Kiro, following the official IDE integration procedure. Review the AWS profile, Region and setup permissions before first use. Request a scan of a disposable repository and inspect the created resources and findings.
-
-**Proposed verification:** Check the packaged source for secrets and unnecessary content before upload. Confirm bucket, role, scan ID and source revision; inspect generated fixes before committing.
-
-**Boundary:** The AWS integration page and current Kiro configuration guide show different manual config paths. Prefer the supported Power setup and inspect the installed configuration rather than copying an older path. No runtime guarantee is assumed.
-
 ## Optional use-case exercise
 
 
