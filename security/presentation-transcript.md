@@ -233,15 +233,13 @@ Repository review, change-triggered review and remediation answer different ques
 [S05 — Pricing and billing](https://docs.aws.amazon.com/securityagent/latest/userguide/pricing.html)
 
 
-## 15. IDE and build workflows still call a service
+## 15. Submit and verify a differential source review
 
 **24:15–25:30 · 01:15 allocated**
 
-**Takeaway:** A local entry point does not make the assessment a local-only operation.
+**Takeaway:** A build submission calls a service; retain the source revision and scan evidence.
 
-The IDE integration is an entry point into the service workflow. Review source upload, credentials, permissions and the destination Region before enabling it. A differential scan submitted from a build workflow uses the codebase as context and focuses findings on the supplied changes. Preserve the base and head revisions so the result can be tied to the intended diff. Neither path is a guarantee that every build is automatically gated.
-
-[S26 — Code review from an IDE](https://docs.aws.amazon.com/securityagent/latest/userguide/code-review-ide-integration.html)
+The documented S3 differential-review workflow uses uploaded source and diff context. Record the base and head revisions, approved bucket and role, scan identifier and returned findings. Review the source payload for secrets and unnecessary content before submission. A scan result is not itself authorization to merge or deploy; the promotion rule is a separately proposed team control.
 
 [S27 — Run a differential code scan with S3](https://docs.aws.amazon.com/securityagent/latest/userguide/run-diff-scan-s3.html)
 
