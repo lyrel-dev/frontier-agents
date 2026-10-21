@@ -1,0 +1,48 @@
+{
+  "revision": "2026-10-21-editorial-v2",
+  "guides": [
+    {
+      "guide": "devops",
+      "timed_slides": 18,
+      "reference_slides": 19,
+      "pptx_slides": 38,
+      "minutes": 35,
+      "demo_minutes": 12
+    },
+    {
+      "guide": "kiro",
+      "timed_slides": 18,
+      "reference_slides": 21,
+      "pptx_slides": 40,
+      "minutes": 32,
+      "demo_minutes": 13
+    },
+    {
+      "guide": "security",
+      "timed_slides": 18,
+      "reference_slides": 18,
+      "pptx_slides": 37,
+      "minutes": 30,
+      "demo_minutes": 8
+    },
+    {
+      "guide": "finops",
+      "timed_slides": 16,
+      "reference_slides": 13,
+      "pptx_slides": 30,
+      "minutes": 27,
+      "demo_minutes": 7
+    },
+    {
+      "guide": "architecture",
+      "timed_slides": 18,
+      "reference_slides": 12,
+      "pptx_slides": 31,
+      "minutes": 36,
+      "demo_minutes": 8
+    }
+  ],
+  "review_records": 83,
+  "errors": [],
+  "boundary": "Editorial structure and linked source identifiers verified. No new external documentation verification or live AWS execution."
+}
