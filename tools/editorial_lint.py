@@ -6,9 +6,9 @@ import json, re, sys, urllib.parse
 from bs4 import BeautifulSoup
 from pptx import Presentation
 ROOT=Path(__file__).resolve().parents[1]
-KEYS=['devops','kiro','security','finops','architecture']
-PPTX={'devops':'aws-devops-agent-presentation.pptx','kiro':'kiro-presentation.pptx','security':'aws-security-agent-presentation.pptx','finops':'aws-finops-agent-presentation.pptx','architecture':'aws-frontier-agents-common-architecture-presentation.pptx'}
-REPORTS={'devops':'devops/validated-report.html','kiro':'kiro/report.html','security':'security/report.html','finops':'finops/report.html','architecture':'architecture/common-patterns.html'}
+KEYS=['devops','security','finops','architecture']
+PPTX={'devops':'aws-devops-agent-presentation.pptx','security':'aws-security-agent-presentation.pptx','finops':'aws-finops-agent-presentation.pptx','architecture':'aws-frontier-agents-common-architecture-presentation.pptx'}
+REPORTS={'devops':'devops/validated-report.html','security':'security/report.html','finops':'finops/report.html','architecture':'architecture/common-patterns.html'}
 FORBIDDEN=r'(?i)\b(revolutionary|transformative|game[- ]changing|seamless|effortless|best[- ]in[- ]class|zero[- ]touch|cutting[- ]edge|next[- ]generation|evidence accelerator|unlock potential)\b'
 errors=[];summary=[]
 annotations=json.loads((ROOT/'content/format-annotations.json').read_text())
@@ -40,7 +40,7 @@ for k in KEYS:
     actual=Presentation(ROOT/'presentations'/PPTX[k])
     if len(actual.slides)!=len(slides['slides'])+len(capabilities)+1:errors.append(k+' PowerPoint count mismatch')
     summary.append({'guide':k,'timed_slides':len(slides['slides']),'reference_slides':len(capabilities),'pptx_slides':len(actual.slides),'minutes':slides['minutes'],'demo_minutes':slides['demo']})
-result={'revision':'2026-10-21-editorial-v2','guides':summary,'review_records':sum(x['reference_slides'] for x in summary),'errors':errors,'boundary':'Editorial structure and linked source identifiers verified. No new external documentation verification or live AWS execution.'}
+result={'revision':'2026-10-21-three-agent-scope','guides':summary,'review_records':sum(x['reference_slides'] for x in summary),'errors':errors,'boundary':'Editorial structure and linked source identifiers verified. No new external documentation verification or live AWS execution.'}
 (ROOT/'qa'/'editorial-lint.json').write_text(json.dumps(result,indent=2)+'\n')
 print(json.dumps(result,indent=2))
 if errors:sys.exit(1)
