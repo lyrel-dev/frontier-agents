@@ -1,10 +1,13 @@
 {
-  "revision": "2026-10-21-editorial-v2",
-  "build": 3,
-  "purpose": "Build detailed interactive reports and PowerPoints using factual capability and use-case records, official source references, and an untimed capability appendix.",
+  "revision": "2026-10-21-mechanisms-v1",
+  "build": 1,
+  "purpose": "Publish 31 documented platform mechanisms with official enablement guidance, context and permission boundaries, verification exercises, lifecycle controls and five reference presentations.",
   "commit_policy": "One generated document per commit; preserve existing history and archive original reports.",
   "repository_visibility": "Leave unchanged.",
+  "workflow_files": "Leave unchanged.",
   "live_aws_execution": false,
   "editorial_standard": "EDITORIAL_STANDARD.md",
-  "reference_slides": "Outside the core presentation budgets"
+  "reference_slides": "Untimed; outside the existing 160-minute core programme",
+  "optional_prepared_result_exercises_minutes": 44,
+  "source_review_date": "2026-10-21"
 }
