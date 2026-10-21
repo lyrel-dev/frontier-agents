@@ -92,6 +92,16 @@ Directed actions require an enabled Agent Space, an elevated account role or too
 
 **Boundary:** The API preferences update replaces the supplied preference map; preserve other settings. Do not infer that all AWS operations are supported.
 
+## D-M10 — Record a corrected cause through investigation feedback
+
+Corrective feedback can create a memory in the reflections store for later investigations of the alarm. This is distinct from recurring-cause summaries and does not establish model-weight training.
+
+**Setup:** Open the completed investigation and choose Add feedback, or provide the correction in Chat. Select an incorrect verdict and supply the actual root cause. Sharing with AWS requires separate confirmation. Inspect Knowledge → Memories → reflections and retain the relevant entry and version.
+
+**Proposed verification:** Proposed: use a reviewed, non-production incident whose established cause differs from the original result. Record feedback and any resulting reflection; check a separate investigation against new evidence. Report recall as unverified unless the run exposes evidence that the memory was read.
+
+**Boundary:** A reflection is retained context, not proof of a future diagnosis or broader execution authority.
+
 ## Optional use-case exercise
 
 
@@ -142,13 +152,13 @@ Compare proposed cause with telemetry; do not count a matching narrative as proo
 
 **Gate:** Independent evidence supports or rejects the hypothesis.
 
-### 6. Correct or exclude stale knowledge · 10:30–12:00
+### 6. Record a corrected outcome · 10:30–12:00
 
-**Role:** Knowledge owner · **Mechanism:** D-M01
+**Role:** Incident reviewer · **Mechanism:** D-M10
 
-Update or deactivate an incorrect item and retain the review record.
+Submit the reviewed cause using Add feedback; inspect the reflection or a prepared record.
 
-**Gate:** Correction recorded and assessed in a new session.
+**Gate:** Feedback and memory version retained; later recall checked separately.
 
 ### Exit
 
