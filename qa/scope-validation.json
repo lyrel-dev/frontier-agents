@@ -1,5 +1,5 @@
 {
-  "revision": "2026-10-21-three-agent-scope",
+  "revision": "2026-10-21-platform-reference-1",
   "scope": [
     "AWS DevOps Agent",
     "AWS Security Agent",
@@ -7,13 +7,27 @@
   ],
   "shared_architecture": true,
   "baseline_commit": "c1c810b48e2349d3fb2479402c767a2834c76b9a",
-  "text_files_and_presentations_checked": 86,
-  "presentation_xml_parts_checked": 964,
+  "text_files_and_presentations_checked": 105,
+  "presentation_xml_parts_checked": 1375,
   "capability_and_pattern_counts": {
     "architecture": 12,
     "devops": 8,
     "finops": 13,
     "security": 17
+  },
+  "platform_reference_counts": {
+    "devops": {
+      "capabilities": 12,
+      "mechanisms": 7
+    },
+    "finops": {
+      "capabilities": 9,
+      "mechanisms": 5
+    },
+    "security": {
+      "capabilities": 9,
+      "mechanisms": 4
+    }
   },
   "mechanism_records": 23,
   "mechanism_source_references": 32,
@@ -46,8 +60,18 @@
       "errors": []
     },
     {
+      "file": "presentations/devops-platform-reference.pptx",
+      "slides": 31,
+      "errors": []
+    },
+    {
       "file": "presentations/finops-mechanisms-reference.pptx",
       "slides": 11,
+      "errors": []
+    },
+    {
+      "file": "presentations/finops-platform-reference.pptx",
+      "slides": 23,
       "errors": []
     },
     {
@@ -59,9 +83,14 @@
       "file": "presentations/security-mechanisms-reference.pptx",
       "slides": 10,
       "errors": []
+    },
+    {
+      "file": "presentations/security-platform-reference.pptx",
+      "slides": 21,
+      "errors": []
     }
   ],
   "removed_scope_matches": 0,
   "errors": [],
-  "boundary": "Content, links, timing, notes and shape bounds are checked separately from runtime product behavior. No new external documentation audit or live AWS run."
+  "boundary": "Content, links, timing, notes and shape bounds are checked separately from runtime product behavior. Platform-reference counts are separate from the retained scenario-edition records. No new external documentation audit or live AWS run."
 }
