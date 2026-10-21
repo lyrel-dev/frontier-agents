@@ -1,0 +1,7 @@
+{
+  "revision": "2026-10-21-narrative-1",
+  "purpose": "Build and publish all five detailed interactive reports, aligned presentations, transcripts, source records and supporting documents.",
+  "commit_policy": "One generated document per commit; preserve existing history and archive original reports.",
+  "repository_visibility": "Leave unchanged.",
+  "live_aws_execution": false
+}
