@@ -1,0 +1,84 @@
+{
+  "browser_loading": "file",
+  "review_date": "2026-10-21",
+  "reference_checks": [
+    {
+      "product": "devops",
+      "functions": 15,
+      "groups": 5,
+      "mechanisms": 5,
+      "procedures": 2,
+      "timed_seconds": 2100,
+      "demo_seconds": 480
+    },
+    {
+      "product": "security",
+      "functions": 10,
+      "groups": 4,
+      "mechanisms": 4,
+      "procedures": 2,
+      "timed_seconds": 2010,
+      "demo_seconds": 600
+    },
+    {
+      "product": "finops",
+      "functions": 11,
+      "groups": 5,
+      "mechanisms": 4,
+      "procedures": 2,
+      "timed_seconds": 1890,
+      "demo_seconds": 480
+    }
+  ],
+  "html_files": 8,
+  "local_links_checked": 503,
+  "browser_checks": [
+    {
+      "product": "devops",
+      "report_filters": true,
+      "disclosures_and_print_restoration": true,
+      "mobile_page_overflow": false,
+      "deck_navigation_notes_timer": true,
+      "javascript_errors": []
+    },
+    {
+      "product": "security",
+      "report_filters": true,
+      "disclosures_and_print_restoration": true,
+      "mobile_page_overflow": false,
+      "deck_navigation_notes_timer": true,
+      "javascript_errors": []
+    },
+    {
+      "product": "finops",
+      "report_filters": true,
+      "disclosures_and_print_restoration": true,
+      "mobile_page_overflow": false,
+      "deck_navigation_notes_timer": true,
+      "javascript_errors": []
+    }
+  ],
+  "presentation_checks": [
+    {
+      "file": "aws-devops-agent-presentation.pptx",
+      "slides": 13,
+      "shape_bounds_errors": [],
+      "notes_present": true
+    },
+    {
+      "file": "aws-finops-agent-presentation.pptx",
+      "slides": 13,
+      "shape_bounds_errors": [],
+      "notes_present": true
+    },
+    {
+      "file": "aws-security-agent-presentation.pptx",
+      "slides": 13,
+      "shape_bounds_errors": [],
+      "notes_present": true
+    }
+  ],
+  "synthetic_arithmetic": "passed",
+  "errors": [],
+  "boundary": "Structural, arithmetic and browser checks only. Presentation shape bounds do not prove absence of text overflow; visual rendering is recorded separately. No live AWS execution."
+}
