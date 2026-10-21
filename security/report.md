@@ -134,9 +134,9 @@ Export a point-in-time report that preserves the scope, results and unresolved l
 
 Design reviews, organizational security requirements and threat models can make assumptions and trust boundaries inspectable before testing a running application. Code review can analyze full repositories or configured change triggers, with provider-specific remediation paths. These are distinct from the GA on-demand penetration-testing baseline.
 
-Treat IDE, S3 differential-scan and CI/CD integrations as separate preview adoption decisions. A promotion gate needs explicit thresholds, timeout behavior and a policy for missing or inconclusive evidence. The team owns that release policy; an unavailable or unfinished scan should not silently become a green gate.
+Treat S3 differential-scan and CI/CD integrations as separate preview adoption decisions. A promotion gate needs explicit thresholds, timeout behavior and a policy for missing or inconclusive evidence. The team owns that release policy; an unavailable or unfinished scan should not silently become a green gate.
 
-**Capability crosswalk:** C10, C11, C12, C13, C14, C15, C16, C17, C18
+**Capability crosswalk:** C10, C11, C12, C13, C14, C15, C17, C18
 
 **Responsible role (team recommendation):** Security programme owner
 
@@ -467,27 +467,6 @@ Official documentation references: S23, S24, S05
 Official documentation references: S25, S05
 
 
-### C16 — Start a code review from the developer’s IDE
-
-**Claim:** The IDE integration packages source for a service-backed code review and returns findings through the configured client.
-
-**Availability:** Preview · MCP or Kiro Power integration
-
-**Delivery:** Configured client integration with cloud scan
-
-**Setup:** Install the supported integration, review first-use provisioning permissions, and approve the code/data handling boundary.
-
-**Limit:** This is not an offline local-only scan: source is uploaded to S3. Initial setup can provision an Agent Space, role, and bucket and requires corresponding IAM permissions.
-
-**Check:** Check upload contents, resource ownership, retention settings, and returned scan revision before accepting the result.
-
-**Prompt:** Run a review of this approved repository through the configured security integration and show the submitted source scope.
-
-**Review record to retain (team recommendation):** IDE-submitted review task and code findings linked to the reviewed revision.
-
-Official documentation references: S26, S05
-
-
 ### C17 — Submit a differential source review from a build workflow
 
 **Claim:** The documented API path accepts full source context in S3 together with a unified diff to focus a review on changed code.
@@ -564,8 +543,6 @@ exclusions: [production, unapproved-third-parties]
 
 ## Sources
 
-- S01: [AWS frontier agents](https://aws.amazon.com/ai/frontier-agents/)
-
 - S02: [AWS Continuum](https://aws.amazon.com/continuum/)
 
 - S03: [On-demand penetration testing generally available](https://aws.amazon.com/about-aws/whats-new/2026/03/aws-security-agent-ondemand-penetration/)
@@ -614,8 +591,6 @@ exclusions: [production, unapproved-third-parties]
 
 - S25: [Remediate code-review findings](https://docs.aws.amazon.com/securityagent/latest/userguide/remediate-code-scan-findings.html)
 
-- S26: [Code review from an IDE](https://docs.aws.amazon.com/securityagent/latest/userguide/code-review-ide-integration.html)
-
 - S27: [Run a differential code scan with S3](https://docs.aws.amazon.com/securityagent/latest/userguide/run-diff-scan-s3.html)
 
 - S28: [Run penetration tests from CI/CD](https://docs.aws.amazon.com/securityagent/latest/userguide/cicd-pentest.html)
@@ -632,4 +607,4 @@ Documentation synthesis and proposed workflows only. No live AWS execution or me
 
 ## Mechanisms and enablement extension
 
-See the [detailed source-linked setup and verification guide](../mechanisms/security.md). It contains 7 records, a proposed six-step exercise and lifecycle controls. Existing presentation timing is unchanged.
+See the [detailed source-linked setup and verification guide](../mechanisms/security.md). It contains 6 records, a proposed six-step exercise and lifecycle controls. Existing presentation timing is unchanged.
