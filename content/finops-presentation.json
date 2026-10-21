@@ -1,24 +1,614 @@
 {
-"key":"finops","title":"AWS FinOps Agent","subtitle":"Reproducible cost insight → owned action","minutes":27,"demo":7,"scenario":"41% synthetic storage-cost increase, reconciliation and engineering handoff",
-"slides":[
-{"title":"AWS FinOps Agent","takeaway":"Turn a cost question into reproducible evidence and owned engineering work.","kind":"hero","seconds":45,"phase":"Position","refs":["F02","F15","F16"],"caps":["C01"],"notes":"The entire FinOps Agent service remains preview. This presentation focuses on the daily engineering value: cost explanation, anomaly investigation, recommendation triage and reporting. It does not grant infrastructure or purchasing authority. The illustrative storage-cost demo uses synthetic numbers to teach reconciliation; it is not an account result or a measured saving.","metrics":[["27 min","session, including demo"],["7 min","anomaly walkthrough"],["Preview","entire service"]],"outcome":"Question → reconcile → investigate → prioritize → hand off","label":"FinOps / Platform engineering / Service owners"},
-{"title":"Use case · explain a 41% storage-cost increase","takeaway":"A useful answer separates observed movement, likely drivers and unresolved uncertainty.","kind":"flow","seconds":75,"phase":"Use case","refs":["F06","F07","F09"],"caps":["C01","C03","C04"],"notes":"Use two complete 14-day periods and the same account, Region and cost basis. The 41 percent figure is an illustrative calculation used in the demo, not a real anomaly from the user’s account. Determine which service or usage type moved before proposing a cause. CloudTrail correlation can inform a hypothesis when access is configured, but time proximity alone does not establish causality.","items":[{"title":"Scope","body":"Accounts, complete periods, cost basis and dimensions.","tag":"INPUT"},{"title":"Reconcile","body":"Repeat the material total in the source cost view.","tag":"VERIFY"},{"title":"Investigate","body":"Separate usage, rates and correlated change evidence.","tag":"ANALYZE"},{"title":"Hand off","body":"Assign a bounded action and post-change measurement.","tag":"TEAM"}]},
-{"title":"Six practical capability families","takeaway":"The service helps analyze and route work; it does not apply resource changes.","kind":"cards","seconds":90,"phase":"Capabilities","refs":["F06","F07","F09","F10","F11","F15"],"caps":["C01","C02","C03","C04","C05","C06","C07","C08","C11","C12","C13"],"notes":"The capability map is an analytical workflow: understand spend, investigate anomalies, retrieve optimization opportunities, produce reports, run tasks and route results. All are within the preview service. Recommendation output comes from connected cost-management sources and must not be presented as a second independent optimizer or a completed change. The native collaboration writes are explicit and limited.","items":[{"title":"Cost inquiry","body":"Breakdowns, comparisons, forecasts and commitment views.","tag":"ANALYSIS"},{"title":"Anomaly investigation","body":"Rank cost drivers; inspect usage versus rates.","tag":"INVESTIGATION"},{"title":"Optimization triage","body":"Filter existing recommendation sources.","tag":"PRIORITIZATION"},{"title":"Reports","body":"HTML, PDF and editable PowerPoint artifacts.","tag":"COMMUNICATION"},{"title":"Tasks / automations","body":"On-demand, scheduled and anomaly-event work.","tag":"CONFIGURED"},{"title":"Jira / Slack","body":"Configured issues, comments and outbound updates.","tag":"HANDOFF"}]},
-{"title":"Data permissions determine analytical depth","takeaway":"Context adds business meaning; it does not grant access to missing sources.","kind":"matrix","seconds":90,"phase":"Setup","refs":["F03","F04","F06","F07"],"caps":["C01","C03"],"notes":"Create the agent and operator access paths and activate the cost services needed for the pilot. Cost Explorer supplies cost and usage views; anomaly and optimizer services provide their own evidence. CloudTrail access can add change context. If a source is not permitted, the corresponding analytical depth is unavailable. The account-to-owner mapping is interpretive context, not a permission policy.","headers":["Source or context","Contribution","Setup consequence"],"rows":[["Cost Explorer","Spend, usage, trends and commitment views","Enable and scope the required API access"],["Anomaly Detection","Detected anomalies and monitors","Configure monitors for event-driven use"],["Optimization sources","Existing resource recommendations","Enable the relevant services and permissions"],["CloudTrail / business context","Change evidence / team ownership","Optional access and reviewed context files"]]},
-{"title":"Cost inquiry needs a reproducible question","takeaway":"Acceptance: reconcile one material total using identical source filters.","kind":"lens","seconds":90,"phase":"Capabilities","refs":["F06"],"caps":["C01"],"notes":"A cost narrative is only reproducible when the time range, grouping, filters and cost basis are explicit. Choose complete periods for the demonstration to avoid treating a partial day as a trend. Reconcile at least one material total in the source view before sharing a report. Do not use an account-specific answer outside its documented scope.","inputs":["Explicit start/end periods and accounts","Service, Region, tag dimensions and cost basis"],"actions":["Retrieve accessible cost and usage data","Compare periods and produce relevant breakdowns"],"outputs":["A numerical explanation with its query scope","Follow-up questions grounded in the same context"]},
-{"title":"Forecasts and commitments inform a decision","takeaway":"Acceptance: a forecast is not a guaranteed bill, and a recommendation is not a purchase.","kind":"lens","seconds":75,"phase":"Capabilities","refs":["F06","F09"],"caps":["C02"],"notes":"This capability helps the team understand expected spend and current commitment usage. Make the analysis period and assumptions visible. A recommendation may reflect a source service’s model and eligibility rules, and it still requires review against business constraints. Keep purchasing decisions with the authorized finance or platform owner. No commitment purchase is demonstrated here.","inputs":["Accessible forecast and commitment data","A named period and relevant usage assumptions"],"actions":["Summarize forecasts, coverage and utilization","Retrieve supported purchase or commitment recommendations"],"outputs":["Planning information with assumptions","Candidates for finance and engineering review"]},
-{"title":"Investigate an anomaly without overstating cause","takeaway":"Acceptance: label correlated changes as hypotheses until the causal mechanism is verified.","kind":"lens","seconds":90,"phase":"Capabilities","refs":["F07"],"caps":["C03"],"notes":"An anomaly investigation should answer what moved and how much before answering why. Higher usage, higher rates and mixed effects lead to different actions. When CloudTrail is available, compare candidate events with the service and cost timeline. A nearby change can be relevant without being the cause. Capture what additional evidence would distinguish the leading hypotheses.","inputs":["A detected anomaly and the affected cost slice","Optional CloudTrail event access"],"actions":["Rank contributors and separate rate/usage movement","Search for operational activity correlated with the change"],"outputs":["An evidence-backed explanation and uncertainty","A candidate engineering follow-up"]},
-{"title":"Demo · reconcile the storage-cost anomaly","takeaway":"Work from a labeled synthetic fixture, then demonstrate the source-reconciliation method.","kind":"demo","seconds":420,"phase":"Demonstration","refs":["F06","F07","F13"],"caps":["C01","C03","C11"],"notes":"The bundled synthetic fixture has fourteen baseline rows at $100 each, totaling $1,400, and fourteen comparison rows at $141 each, totaling $1,974. The difference is $574, or 41%. It deliberately contains no account, usage-type, quantity or rate breakdown, so it supports arithmetic reconciliation only—not driver attribution or a causal conclusion. These figures are invented for instruction. For an authorized real analysis, use matching date windows, filters and cost basis, then obtain the additional breakdown and event evidence. Any real Jira write still requires the configured approval.","prompt":"For authorized real data, compare storage costs for the selected accounts over two complete 14-day windows using the same unblended basis. Identify leading drivers only where breakdown evidence is available, separate usage from rate effects, and label correlated CloudTrail changes as hypotheses. For the bundled synthetic fixture, reconcile the $1,400 and $1,974 totals only; do not invent drivers. Do not modify infrastructure.","steps":[[60,"Set the query contract","Fix complete periods, account scope, service grouping and basis."],[90,"Reconcile the totals","Use the synthetic period totals for arithmetic; inspect driver breakdowns only with matching authorized data."],[90,"Separate effects","Inspect usage and rate evidence instead of inferring from spend alone."],[90,"Challenge causality","Compare a candidate change with evidence and alternative explanations."],[90,"Create the handoff","Draft an owned follow-up and inspect the Jira confirmation boundary."]],"success":"A reproducible explanation and a bounded next step; no infrastructure mutation or claimed realized savings.","preflight":"Use sanitized authorized cost access or the bundled synthetic fixture. Any real Jira write needs the configured confirmation.","fallback":"The included fixture is sufficient to teach the method offline; it must remain visibly labeled synthetic."},
-{"title":"Prioritize existing optimization recommendations","takeaway":"Acceptance: estimated monthly savings are not realized savings; the team executes changes separately.","kind":"lens","seconds":90,"phase":"Capabilities","refs":["F09"],"caps":["C04","C13"],"notes":"The agent makes optimizer results easier to triage. Select reversible opportunities that fit the team’s operational constraints rather than sorting only by the largest estimate. Check utilization evidence, performance requirements and existing commitments. The generated ticket is the start of an engineering process. Measure results after an approved change using a comparable period, and do not double-count overlapping recommendations.","inputs":["Cost Optimization Hub and Compute Optimizer results","Owned resources, risk constraints and savings thresholds"],"actions":["Retrieve and filter candidate opportunities","Present resource, proposed configuration, effort and estimated savings"],"outputs":["A short, justified engineering backlog","A handoff with an implementation and measurement plan"]},
-{"title":"Generate reports for a specific audience","takeaway":"Acceptance: every headline number retains its period, filters and cost basis.","kind":"lens","seconds":75,"phase":"Capabilities","refs":["F10"],"caps":["C05"],"notes":"An engineering report should emphasize owned resources and next actions; a leadership report may emphasize the overall trend and decisions required. The native report formats support those audiences, but visual polish does not verify the arithmetic. Reconcile key totals before distributing the artifact and make assumptions visible. Reports generated by the service are distinct from this documentation package.","inputs":["A reporting question, audience and format","Relevant data scope and optional example template"],"actions":["Assemble cost summaries, comparisons and visual artifacts","Revise the report through follow-up requests"],"outputs":["HTML, PDF or editable PowerPoint","A report artifact ready for human review and distribution"]},
-{"title":"Tasks make work and history inspectable","takeaway":"Acceptance: inspect the first runs and disable a cadence that produces noise or stale information.","kind":"lens","seconds":75,"phase":"Capabilities","refs":["F11"],"caps":["C06","C07"],"notes":"A task is useful when the team needs an inspectable execution record rather than a one-off chat answer. Begin with a report whose source totals have already been reconciled. Give the schedule an owner and a review cadence. A recurring task can continue producing misleading output if its context or source access changes, so inspect failures and data drift.","inputs":["An on-demand request or recurring schedule","A bounded analysis/report prompt and destination"],"actions":["Create and run tracked work","Retain task history, results and integration outcomes"],"outputs":["A repeatable operational review","Evidence of what ran and where the output went"]},
-{"title":"Anomaly-event automation needs an explicit trigger","takeaway":"Acceptance: this documented trigger is not a general automation engine for every cost threshold.","kind":"lens","seconds":90,"phase":"Capabilities","refs":["F08","F11"],"caps":["C08"],"notes":"The event-driven workflow builds on Cost Anomaly Detection and an EventBridge rule. The prompt describes the response; the actual monitor and event configuration determine when it runs. Review the generated automation and its destination. Scheduled and event-based Jira actions can be pre-authorized at setup, so enablement is itself an approval decision rather than an expectation of a confirmation prompt for every run.","inputs":["Cost Anomaly Detection monitor and matching condition","Configured EventBridge permissions and delivery destination"],"actions":["Create an event-based automation","Run the stored investigation prompt when a matching event arrives"],"outputs":["An investigation task for the event","A configured report, Slack message or Jira handoff"]},
-{"title":"Context files and memory make reporting team-specific","takeaway":"Business context is interpretive guidance—not access control or an authoritative ledger.","kind":"compare","seconds":75,"phase":"Capabilities","refs":["F12"],"caps":["C09","C10"],"notes":"Upload a reviewed account-to-team mapping and the reporting conventions the organization actually uses. Context files are read-only from the agent’s perspective; update the source through the supported management path. Memory can retain preferences, but stale or incorrect preferences need correction. Do not upload secrets or assume an owner field in a context file can change a Jira assignee automatically.","left":{"title":"Context files","body":"Account ownership, cost categories, report templates and recurring instructions.","tag":"TEAM-SUPPLIED"},"right":{"title":"Memory","body":"Preferences carried into future questions, reports and tasks.","tag":"PERSISTENT CONTEXT"},"callout":"Recommended practice: name a context owner and review date; reconcile labels with the current organization."},
-{"title":"Collaboration approval depends on action and trigger","takeaway":"Do not assume every outbound write prompts for confirmation.","kind":"matrix","seconds":90,"phase":"Controls","refs":["F13","F14","F15"],"caps":["C11","C12"],"notes":"The supported external writes are constrained. Jira issue and comment actions started in chat or on-demand require confirmation; the same actions can be pre-authorized in scheduled or event-based automations. Slack posting does not require a per-message approval prompt. The Slack integration is outbound rather than a channel command bot. Jira support is not general workflow administration and does not allow arbitrary assignee or status updates.","headers":["Action","Chat / on-demand","Scheduled / event"],"rows":[["Read cost data","No confirmation; scoped source access","Same permission boundary"],["Jira issue / comment","Confirm details before execution","Pre-authorized in automation setup"],["Slack post","No per-message confirmation","No per-message confirmation"],["Change infrastructure","Not a supported action path here","Use the team’s separate delivery process"]]},
-{"title":"Preview governance is part of the workflow","takeaway":"Approve storage, inference and destination boundaries before uploading organizational context.","kind":"cards","seconds":75,"phase":"Controls","refs":["F03","F04","F15","F16"],"caps":[],"notes":"The preview stores agent data in us-east-1 and can use inference within the originating US geography. Storage location and inference location are different questions. An organization must also approve the content sent to Jira or Slack. Keep role and integration scope narrow and account for underlying service/API consumption. This is a readiness recommendation, not legal or financial advice.","items":[{"title":"Data boundary","body":"us-east-1 storage; US-geography inference during preview.","tag":"REGION"},{"title":"Identity","body":"Separate agent/operator access with only required sources.","tag":"PERMISSIONS"},{"title":"Destinations","body":"Approved projects and channels; understand pre-authorization.","tag":"SHARING"}]},
-{"title":"Measure reconciled analysis and verified follow-through","takeaway":"Accepted cost work is the outcome; estimated savings are only an input.","kind":"close","seconds":75,"phase":"Close","refs":["F06","F09","F11"],"caps":[],"notes":"Begin with one account group and a known owner. Reconcile an analysis before automating it, investigate a representative anomaly, and send one approved recommendation through the team’s normal change process. Measure reviewer effort, accepted explanations, duplicate or noisy tickets and any independently observed post-change result. The presentation contains all 13 capability entries through the crosswalk below. Questions follow the timed close.","items":[{"title":"Week 1","body":"Approve preview/data scope and reconcile a baseline.","tag":""},{"title":"Weeks 2–3","body":"Investigate one anomaly and route one low-risk opportunity.","tag":""},{"title":"Week 4","body":"Review evidence, cost and owner feedback; automate only useful work.","tag":""}]}
-],
-"sources":{
-"F02":{"title":"What is AWS FinOps Agent?","url":"https://docs.aws.amazon.com/finops-agent/latest/userguide/what-is.html"},"F03":{"title":"Create an agent","url":"https://docs.aws.amazon.com/finops-agent/latest/userguide/creating-an-agent.html"},"F04":{"title":"IAM setup guide","url":"https://docs.aws.amazon.com/finops-agent/latest/userguide/setting-up.html"},"F06":{"title":"Cost inquiry","url":"https://docs.aws.amazon.com/finops-agent/latest/userguide/cost-inquiry.html"},"F07":{"title":"Cost anomaly investigation","url":"https://docs.aws.amazon.com/finops-agent/latest/userguide/cost-anomaly-detection.html"},"F08":{"title":"Automated anomaly response","url":"https://docs.aws.amazon.com/finops-agent/latest/userguide/automated-anomaly-response.html"},"F09":{"title":"Optimization recommendations","url":"https://docs.aws.amazon.com/finops-agent/latest/userguide/optimization-recommendations.html"},"F10":{"title":"Custom cost reporting","url":"https://docs.aws.amazon.com/finops-agent/latest/userguide/custom-cost-reporting.html"},"F11":{"title":"Task management","url":"https://docs.aws.amazon.com/finops-agent/latest/userguide/task-management.html"},"F12":{"title":"Context files and memory","url":"https://docs.aws.amazon.com/finops-agent/latest/userguide/context-files-and-memory.html"},"F13":{"title":"Jira integration","url":"https://docs.aws.amazon.com/finops-agent/latest/userguide/jira-integration.html"},"F14":{"title":"Slack integration","url":"https://docs.aws.amazon.com/finops-agent/latest/userguide/slack-integration.html"},"F15":{"title":"Agent guardrail controls","url":"https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html"},"F16":{"title":"Cross-region inference","url":"https://docs.aws.amazon.com/finops-agent/latest/userguide/cross-region-inference.html"}
-}
+  "key": "finops",
+  "title": "AWS FinOps Agent",
+  "subtitle": "Reproducible cost insight → owned action",
+  "minutes": 27,
+  "demo": 7,
+  "scenario": "41% synthetic storage-cost increase, reconciliation and engineering handoff",
+  "slides": [
+    {
+      "title": "AWS FinOps Agent",
+      "takeaway": "Turn a cost question into reproducible evidence and owned engineering work.",
+      "kind": "hero",
+      "seconds": 45,
+      "phase": "Position",
+      "refs": [
+        "F02",
+        "F15",
+        "F16"
+      ],
+      "caps": [
+        "C01"
+      ],
+      "notes": "The entire FinOps Agent service remains preview. This presentation focuses on the daily engineering value: cost explanation, anomaly investigation, recommendation triage and reporting. It does not grant infrastructure or purchasing authority. The illustrative storage-cost demo uses synthetic numbers to teach reconciliation; it is not an account result or a measured saving.",
+      "metrics": [
+        [
+          "27 min",
+          "session, including demo"
+        ],
+        [
+          "7 min",
+          "anomaly walkthrough"
+        ],
+        [
+          "Preview",
+          "entire service"
+        ]
+      ],
+      "outcome": "Question → reconcile → investigate → prioritize → hand off",
+      "label": "FinOps / Platform engineering / Service owners"
+    },
+    {
+      "title": "Use case · explain a 41% storage-cost increase",
+      "takeaway": "A useful answer separates observed movement, likely drivers and unresolved uncertainty.",
+      "kind": "flow",
+      "seconds": 75,
+      "phase": "Use case",
+      "refs": [
+        "F06",
+        "F07",
+        "F09"
+      ],
+      "caps": [
+        "C01",
+        "C03",
+        "C04"
+      ],
+      "notes": "Use two complete 14-day periods and the same account, Region and cost basis. The 41 percent figure is an illustrative calculation used in the demo, not a real anomaly from the user’s account. Determine which service or usage type moved before proposing a cause. CloudTrail correlation can inform a hypothesis when access is configured, but time proximity alone does not establish causality.",
+      "items": [
+        {
+          "title": "Scope",
+          "body": "Accounts, complete periods, cost basis and dimensions.",
+          "tag": "INPUT"
+        },
+        {
+          "title": "Reconcile",
+          "body": "Repeat the material total in the source cost view.",
+          "tag": "VERIFY"
+        },
+        {
+          "title": "Investigate",
+          "body": "Separate usage, rates and correlated change evidence.",
+          "tag": "ANALYZE"
+        },
+        {
+          "title": "Hand off",
+          "body": "Assign a bounded action and post-change measurement.",
+          "tag": "TEAM"
+        }
+      ]
+    },
+    {
+      "title": "Six practical capability families",
+      "takeaway": "The service helps analyze and route work; it does not apply resource changes.",
+      "kind": "cards",
+      "seconds": 90,
+      "phase": "Capabilities",
+      "refs": [
+        "F06",
+        "F07",
+        "F09",
+        "F10",
+        "F11",
+        "F15"
+      ],
+      "caps": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07",
+        "C08",
+        "C11",
+        "C12",
+        "C13"
+      ],
+      "notes": "The capability map is an analytical workflow: understand spend, investigate anomalies, retrieve optimization opportunities, produce reports, run tasks and route results. All are within the preview service. Recommendation output comes from connected cost-management sources and must not be presented as a second independent optimizer or a completed change. The native collaboration writes are explicit and limited.",
+      "items": [
+        {
+          "title": "Cost inquiry",
+          "body": "Breakdowns, comparisons, forecasts and commitment views.",
+          "tag": "ANALYSIS"
+        },
+        {
+          "title": "Anomaly investigation",
+          "body": "Rank cost drivers; inspect usage versus rates.",
+          "tag": "INVESTIGATION"
+        },
+        {
+          "title": "Optimization triage",
+          "body": "Filter existing recommendation sources.",
+          "tag": "PRIORITIZATION"
+        },
+        {
+          "title": "Reports",
+          "body": "HTML, PDF and editable PowerPoint artifacts.",
+          "tag": "COMMUNICATION"
+        },
+        {
+          "title": "Tasks / automations",
+          "body": "On-demand, scheduled and anomaly-event work.",
+          "tag": "CONFIGURED"
+        },
+        {
+          "title": "Jira / Slack",
+          "body": "Configured issues, comments and outbound updates.",
+          "tag": "HANDOFF"
+        }
+      ]
+    },
+    {
+      "title": "Data permissions determine analytical depth",
+      "takeaway": "Context adds business meaning; it does not grant access to missing sources.",
+      "kind": "matrix",
+      "seconds": 90,
+      "phase": "Setup",
+      "refs": [
+        "F03",
+        "F04",
+        "F06",
+        "F07"
+      ],
+      "caps": [
+        "C01",
+        "C03"
+      ],
+      "notes": "Create the agent and operator access paths and activate the cost services needed for the pilot. Cost Explorer supplies cost and usage views; anomaly and optimizer services provide their own evidence. CloudTrail access can add change context. If a source is not permitted, the corresponding analytical depth is unavailable. The account-to-owner mapping is interpretive context, not a permission policy.",
+      "headers": [
+        "Source or context",
+        "Contribution",
+        "Setup consequence"
+      ],
+      "rows": [
+        [
+          "Cost Explorer",
+          "Spend, usage, trends and commitment views",
+          "Enable and scope the required API access"
+        ],
+        [
+          "Anomaly Detection",
+          "Detected anomalies and monitors",
+          "Configure monitors for event-driven use"
+        ],
+        [
+          "Optimization sources",
+          "Existing resource recommendations",
+          "Enable the relevant services and permissions"
+        ],
+        [
+          "CloudTrail / business context",
+          "Change evidence / team ownership",
+          "Optional access and reviewed context files"
+        ]
+      ]
+    },
+    {
+      "title": "Cost inquiry needs a reproducible question",
+      "takeaway": "Acceptance: reconcile one material total using identical source filters.",
+      "kind": "lens",
+      "seconds": 90,
+      "phase": "Capabilities",
+      "refs": [
+        "F06"
+      ],
+      "caps": [
+        "C01"
+      ],
+      "notes": "A cost narrative is only reproducible when the time range, grouping, filters and cost basis are explicit. Choose complete periods for the demonstration to avoid treating a partial day as a trend. Reconcile at least one material total in the source view before sharing a report. Do not use an account-specific answer outside its documented scope.",
+      "inputs": [
+        "Explicit start/end periods and accounts",
+        "Service, Region, tag dimensions and cost basis"
+      ],
+      "actions": [
+        "Retrieve accessible cost and usage data",
+        "Compare periods and produce relevant breakdowns"
+      ],
+      "outputs": [
+        "A numerical explanation with its query scope",
+        "Follow-up questions grounded in the same context"
+      ]
+    },
+    {
+      "title": "Forecasts and commitments inform a decision",
+      "takeaway": "Acceptance: a forecast is not a guaranteed bill, and a recommendation is not a purchase.",
+      "kind": "lens",
+      "seconds": 75,
+      "phase": "Capabilities",
+      "refs": [
+        "F06",
+        "F09"
+      ],
+      "caps": [
+        "C02"
+      ],
+      "notes": "This capability helps the team understand expected spend and current commitment usage. Make the analysis period and assumptions visible. A recommendation may reflect a source service’s model and eligibility rules, and it still requires review against business constraints. Keep purchasing decisions with the authorized finance or platform owner. No commitment purchase is demonstrated here.",
+      "inputs": [
+        "Accessible forecast and commitment data",
+        "A named period and relevant usage assumptions"
+      ],
+      "actions": [
+        "Summarize forecasts, coverage and utilization",
+        "Retrieve supported purchase or commitment recommendations"
+      ],
+      "outputs": [
+        "Planning information with assumptions",
+        "Candidates for finance and engineering review"
+      ]
+    },
+    {
+      "title": "Investigate an anomaly without overstating cause",
+      "takeaway": "Acceptance: label correlated changes as hypotheses until the causal mechanism is verified.",
+      "kind": "lens",
+      "seconds": 90,
+      "phase": "Capabilities",
+      "refs": [
+        "F07"
+      ],
+      "caps": [
+        "C03"
+      ],
+      "notes": "An anomaly investigation should answer what moved and how much before answering why. Higher usage, higher rates and mixed effects lead to different actions. When CloudTrail is available, compare candidate events with the service and cost timeline. A nearby change can be relevant without being the cause. Capture what additional evidence would distinguish the leading hypotheses.",
+      "inputs": [
+        "A detected anomaly and the affected cost slice",
+        "Optional CloudTrail event access"
+      ],
+      "actions": [
+        "Rank contributors and separate rate/usage movement",
+        "Search for operational activity correlated with the change"
+      ],
+      "outputs": [
+        "An evidence-backed explanation and uncertainty",
+        "A candidate engineering follow-up"
+      ]
+    },
+    {
+      "title": "Demo · reconcile the storage-cost anomaly",
+      "takeaway": "Work from a labeled synthetic fixture, then demonstrate the source-reconciliation method.",
+      "kind": "demo",
+      "seconds": 420,
+      "phase": "Demonstration",
+      "refs": [
+        "F06",
+        "F07",
+        "F13"
+      ],
+      "caps": [
+        "C01",
+        "C03",
+        "C11"
+      ],
+      "notes": "The bundled synthetic fixture has fourteen baseline rows at $100 each, totaling $1,400, and fourteen comparison rows at $141 each, totaling $1,974. The difference is $574, or 41%. It deliberately contains no account, usage-type, quantity or rate breakdown, so it supports arithmetic reconciliation only—not driver attribution or a causal conclusion. These figures are invented for instruction. For an authorized real analysis, use matching date windows, filters and cost basis, then obtain the additional breakdown and event evidence. Any real Jira write still requires the configured approval.",
+      "prompt": "For authorized real data, compare storage costs for the selected accounts over two complete 14-day windows using the same unblended basis. Identify leading drivers only where breakdown evidence is available, separate usage from rate effects, and label correlated CloudTrail changes as hypotheses. For the bundled synthetic fixture, reconcile the $1,400 and $1,974 totals only; do not invent drivers. Do not modify infrastructure.",
+      "steps": [
+        [
+          60,
+          "Set the query contract",
+          "Fix complete periods, account scope, service grouping and basis."
+        ],
+        [
+          90,
+          "Reconcile the totals",
+          "Use the synthetic period totals for arithmetic; inspect driver breakdowns only with matching authorized data."
+        ],
+        [
+          90,
+          "Separate effects",
+          "Inspect usage and rate evidence instead of inferring from spend alone."
+        ],
+        [
+          90,
+          "Challenge causality",
+          "Compare a candidate change with evidence and alternative explanations."
+        ],
+        [
+          90,
+          "Create the handoff",
+          "Draft an owned follow-up and inspect the Jira confirmation boundary."
+        ]
+      ],
+      "success": "A reproducible explanation and a bounded next step; no infrastructure mutation or claimed realized savings.",
+      "preflight": "Use sanitized authorized cost access or the bundled synthetic fixture. Any real Jira write needs the configured confirmation.",
+      "fallback": "The included fixture is sufficient to teach the method offline; it must remain visibly labeled synthetic."
+    },
+    {
+      "title": "Prioritize existing optimization recommendations",
+      "takeaway": "Acceptance: estimated monthly savings are not realized savings; the team executes changes separately.",
+      "kind": "lens",
+      "seconds": 90,
+      "phase": "Capabilities",
+      "refs": [
+        "F09"
+      ],
+      "caps": [
+        "C04",
+        "C13"
+      ],
+      "notes": "The agent makes optimizer results easier to triage. Select reversible opportunities that fit the team’s operational constraints rather than sorting only by the largest estimate. Check utilization evidence, performance requirements and existing commitments. The generated ticket is the start of an engineering process. Measure results after an approved change using a comparable period, and do not double-count overlapping recommendations.",
+      "inputs": [
+        "Cost Optimization Hub and Compute Optimizer results",
+        "Owned resources, risk constraints and savings thresholds"
+      ],
+      "actions": [
+        "Retrieve and filter candidate opportunities",
+        "Present resource, proposed configuration, effort and estimated savings"
+      ],
+      "outputs": [
+        "A short, justified engineering backlog",
+        "A handoff with an implementation and measurement plan"
+      ]
+    },
+    {
+      "title": "Generate reports for a specific audience",
+      "takeaway": "Acceptance: every headline number retains its period, filters and cost basis.",
+      "kind": "lens",
+      "seconds": 75,
+      "phase": "Capabilities",
+      "refs": [
+        "F10"
+      ],
+      "caps": [
+        "C05"
+      ],
+      "notes": "An engineering report should emphasize owned resources and next actions; a leadership report may emphasize the overall trend and decisions required. The native report formats support those audiences, but visual polish does not verify the arithmetic. Reconcile key totals before distributing the artifact and make assumptions visible. Reports generated by the service are distinct from this documentation package.",
+      "inputs": [
+        "A reporting question, audience and format",
+        "Relevant data scope and optional example template"
+      ],
+      "actions": [
+        "Assemble cost summaries, comparisons and visual artifacts",
+        "Revise the report through follow-up requests"
+      ],
+      "outputs": [
+        "HTML, PDF or editable PowerPoint",
+        "A report artifact ready for human review and distribution"
+      ]
+    },
+    {
+      "title": "Tasks make work and history inspectable",
+      "takeaway": "Acceptance: inspect the first runs and disable a cadence that produces noise or stale information.",
+      "kind": "lens",
+      "seconds": 75,
+      "phase": "Capabilities",
+      "refs": [
+        "F11"
+      ],
+      "caps": [
+        "C06",
+        "C07"
+      ],
+      "notes": "A task is useful when the team needs an inspectable execution record rather than a one-off chat answer. Begin with a report whose source totals have already been reconciled. Give the schedule an owner and a review cadence. A recurring task can continue producing misleading output if its context or source access changes, so inspect failures and data drift.",
+      "inputs": [
+        "An on-demand request or recurring schedule",
+        "A bounded analysis/report prompt and destination"
+      ],
+      "actions": [
+        "Create and run tracked work",
+        "Retain task history, results and integration outcomes"
+      ],
+      "outputs": [
+        "A repeatable operational review",
+        "Evidence of what ran and where the output went"
+      ]
+    },
+    {
+      "title": "Anomaly-event automation needs an explicit trigger",
+      "takeaway": "Acceptance: this documented trigger is not a general automation engine for every cost threshold.",
+      "kind": "lens",
+      "seconds": 90,
+      "phase": "Capabilities",
+      "refs": [
+        "F08",
+        "F11"
+      ],
+      "caps": [
+        "C08"
+      ],
+      "notes": "The event-driven workflow builds on Cost Anomaly Detection and an EventBridge rule. The prompt describes the response; the actual monitor and event configuration determine when it runs. Review the generated automation and its destination. Scheduled and event-based Jira actions can be pre-authorized at setup, so enablement is itself an approval decision rather than an expectation of a confirmation prompt for every run.",
+      "inputs": [
+        "Cost Anomaly Detection monitor and matching condition",
+        "Configured EventBridge permissions and delivery destination"
+      ],
+      "actions": [
+        "Create an event-based automation",
+        "Run the stored investigation prompt when a matching event arrives"
+      ],
+      "outputs": [
+        "An investigation task for the event",
+        "A configured report, Slack message or Jira handoff"
+      ]
+    },
+    {
+      "title": "Context files and memory make reporting team-specific",
+      "takeaway": "Business context is interpretive guidance—not access control or an authoritative ledger.",
+      "kind": "compare",
+      "seconds": 75,
+      "phase": "Capabilities",
+      "refs": [
+        "F12"
+      ],
+      "caps": [
+        "C09",
+        "C10"
+      ],
+      "notes": "Upload a reviewed account-to-team mapping and the reporting conventions the organization actually uses. Context files are read-only from the agent’s perspective; update the source through the supported management path. Memory can retain preferences, but stale or incorrect preferences need correction. Do not upload secrets or assume an owner field in a context file can change a Jira assignee automatically.",
+      "left": {
+        "title": "Context files",
+        "body": "Account ownership, cost categories, report templates and recurring instructions.",
+        "tag": "TEAM-SUPPLIED"
+      },
+      "right": {
+        "title": "Memory",
+        "body": "Preferences carried into future questions, reports and tasks.",
+        "tag": "PERSISTENT CONTEXT"
+      },
+      "callout": "Recommended practice: name a context owner and review date; reconcile labels with the current organization."
+    },
+    {
+      "title": "Collaboration approval depends on action and trigger",
+      "takeaway": "Do not assume every outbound write prompts for confirmation.",
+      "kind": "matrix",
+      "seconds": 90,
+      "phase": "Controls",
+      "refs": [
+        "F13",
+        "F14",
+        "F15"
+      ],
+      "caps": [
+        "C11",
+        "C12"
+      ],
+      "notes": "The supported external writes are constrained. Jira issue and comment actions started in chat or on-demand require confirmation; the same actions can be pre-authorized in scheduled or event-based automations. Slack posting does not require a per-message approval prompt. The Slack integration is outbound rather than a channel command bot. Jira support is not general workflow administration and does not allow arbitrary assignee or status updates.",
+      "headers": [
+        "Action",
+        "Chat / on-demand",
+        "Scheduled / event"
+      ],
+      "rows": [
+        [
+          "Read cost data",
+          "No confirmation; scoped source access",
+          "Same permission boundary"
+        ],
+        [
+          "Jira issue / comment",
+          "Confirm details before execution",
+          "Pre-authorized in automation setup"
+        ],
+        [
+          "Slack post",
+          "No per-message confirmation",
+          "No per-message confirmation"
+        ],
+        [
+          "Change infrastructure",
+          "Not a supported action path here",
+          "Use the team’s separate delivery process"
+        ]
+      ]
+    },
+    {
+      "title": "Preview governance is part of the workflow",
+      "takeaway": "Approve storage, inference and destination boundaries before uploading organizational context.",
+      "kind": "cards",
+      "seconds": 75,
+      "phase": "Controls",
+      "refs": [
+        "F03",
+        "F04",
+        "F15",
+        "F16"
+      ],
+      "caps": [],
+      "notes": "The preview stores agent data in us-east-1 and can use inference within the originating US geography. Storage location and inference location are different questions. An organization must also approve the content sent to Jira or Slack. Keep role and integration scope narrow and account for underlying service/API consumption. This is a readiness recommendation, not legal or financial advice.",
+      "items": [
+        {
+          "title": "Data boundary",
+          "body": "us-east-1 storage; US-geography inference during preview.",
+          "tag": "REGION"
+        },
+        {
+          "title": "Identity",
+          "body": "Separate agent/operator access with only required sources.",
+          "tag": "PERMISSIONS"
+        },
+        {
+          "title": "Destinations",
+          "body": "Approved projects and channels; understand pre-authorization.",
+          "tag": "SHARING"
+        }
+      ]
+    },
+    {
+      "title": "Measure reconciled analysis and verified follow-through",
+      "takeaway": "Accepted cost work is the outcome; estimated savings are only an input.",
+      "kind": "close",
+      "seconds": 75,
+      "phase": "Close",
+      "refs": [
+        "F06",
+        "F09",
+        "F11"
+      ],
+      "caps": [],
+      "notes": "Begin with one account group and a known owner. Reconcile an analysis before automating it, investigate a representative anomaly, and send one approved recommendation through the team’s normal change process. Measure reviewer effort, accepted explanations, duplicate or noisy tickets and any independently observed post-change result. The presentation contains all 13 capability entries through the crosswalk below. Questions follow the timed close.",
+      "items": [
+        {
+          "title": "Week 1",
+          "body": "Approve preview/data scope and reconcile a baseline.",
+          "tag": ""
+        },
+        {
+          "title": "Weeks 2–3",
+          "body": "Investigate one anomaly and route one low-risk opportunity.",
+          "tag": ""
+        },
+        {
+          "title": "Week 4",
+          "body": "Review evidence, cost and owner feedback; automate only useful work.",
+          "tag": ""
+        }
+      ]
+    }
+  ],
+  "sources": {
+    "F02": {
+      "title": "What is AWS FinOps Agent?",
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/what-is.html"
+    },
+    "F03": {
+      "title": "Create an agent",
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/creating-an-agent.html"
+    },
+    "F04": {
+      "title": "IAM setup guide",
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/setting-up.html"
+    },
+    "F06": {
+      "title": "Cost inquiry",
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/cost-inquiry.html"
+    },
+    "F07": {
+      "title": "Cost anomaly investigation",
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/cost-anomaly-detection.html"
+    },
+    "F08": {
+      "title": "Automated anomaly response",
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/automated-anomaly-response.html"
+    },
+    "F09": {
+      "title": "Optimization recommendations",
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/optimization-recommendations.html"
+    },
+    "F10": {
+      "title": "Custom cost reporting",
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/custom-cost-reporting.html"
+    },
+    "F11": {
+      "title": "Task management",
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/task-management.html"
+    },
+    "F12": {
+      "title": "Context files and memory",
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/context-files-and-memory.html"
+    },
+    "F13": {
+      "title": "Jira integration",
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/jira-integration.html"
+    },
+    "F14": {
+      "title": "Slack integration",
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/slack-integration.html"
+    },
+    "F15": {
+      "title": "Agent guardrail controls",
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html"
+    },
+    "F16": {
+      "title": "Cross-region inference",
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/cross-region-inference.html"
+    }
+  }
 }
