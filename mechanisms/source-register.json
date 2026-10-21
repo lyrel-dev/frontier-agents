@@ -262,5 +262,17 @@
     "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/cross-region-inference.html",
     "reviewed": "2026-10-21",
     "note": ""
+  },
+  "DF": {
+    "title": "Provide feedback on investigations",
+    "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-autonomous-incident-response.html#provide-feedback-on-investigations",
+    "reviewed": "2026-10-21",
+    "note": "Corrective verdict plus actual root cause creates a reflections memory. Sharing feedback with AWS is a separate, explicit confirmation."
+  },
+  "DN": {
+    "title": "DevOps Agent dated product changes",
+    "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/whats-new.html",
+    "reviewed": "2026-10-21",
+    "note": "Dated entries document monitor memory enabled by default (19 June), learned knowledge moved to memory (27 August), and reflections (4 September 2026)."
   }
 }
