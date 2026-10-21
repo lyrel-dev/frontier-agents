@@ -94,24 +94,15 @@
       "fallback": "Use prepared results or the ordinary test suite rather than testing a production endpoint to keep a demo moving."
     },
     {
-      "title": "Hand off code work and close on independent evidence",
+      "title": "Hand off an operational work item and verify closure",
       "caps": [
-        "C06",
-        "C09",
-        "C10",
-        "C11",
-        "C12",
-        "C13",
-        "C14",
-        "C15",
-        "C16",
-        "C17",
-        "C18",
-        "C19"
+        "C01",
+        "C02",
+        "C04"
       ],
       "paragraphs": [
-        "An investigation can hand a bounded implementation task to a coding workflow. Kiro can help with code understanding, changes and tests; Amazon Q Developer has separate AWS guidance, review and transformation capabilities. Those companion tools are retained in the inventory, but they are not renamed as native DevOps Agent features.",
-        "Close the loop with a reviewed change, the normal delivery process and an independent check of the original service symptom. IaC drafts, build-log diagnoses and runbooks remain team-composed uses of coding tools. Measure accepted investigations and completed follow-ups, not the number of agent responses."
+        "The proposed team handoff turns an accepted investigation into an owned engineering work item. Include the incident window, affected service and revision, evidence references, remaining uncertainty and the required recovery check. Preparing a code or configuration change is a responsibility of the receiving engineering team; it is not an additional DevOps Agent capability claimed here.",
+        "Use the existing review and delivery process for any change. The service owner checks current telemetry after deployment, records whether the symptom recovered and reopens the investigation when the evidence does not support closure. A generated recommendation alone is not a completed incident."
       ],
       "input": "Evidence-linked issue with affected repository, constraints, test expectations and reviewer.",
       "artifact": "Reviewed code or operational change plus a recovery or regression-test record.",
@@ -128,5 +119,5 @@
     "Active release tests use an approved non-production target."
   ],
   "handoff": "work_item: INC-DEMO-001\nservice: checkout-api\nenvironment: staging\nrevision: DEMO-A\nevidence: [incident-window, telemetry-links, deployed-diff]\nallowed_effects: [read-evidence, propose-code-change]\nprohibited_effects: [production-deployment]\nowner: service-owner\ndone: reviewed-change-and-independent-verification",
-  "related": "Use Kiro for the code change, the Security report for an authorized application assessment, and the architecture report for the handoff contract."
+  "related": "Use the Security Agent report for an authorized assessment, the FinOps Agent report for cost analysis, and the architecture report for a reviewed handoff contract."
 }
