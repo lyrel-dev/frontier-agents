@@ -32,8 +32,6 @@ jobs:
           python - <<'PY'
           import subprocess, yaml
           from pathlib import Path
-          # Reuse the explicit source transforms from the completed acceptance run.
-          # This pinned revision is repository history, not an external script.
           source = subprocess.check_output(['git','show','e4054ce4b7322002681ef8dde47133fdd3f5cc24:.github/workflows/console-publication-review.yml'],text=True)
           steps = yaml.safe_load(source)['jobs']['review']['steps']
           script = next(s['run'] for s in steps if s.get('name')=='Apply the reviewed source corrections')
@@ -41,9 +39,11 @@ jobs:
           code = script.split('\n',1)[1].rsplit('\nPY',1)[0]
           exec(compile(code,'reviewed-corrections-e4054ce4','exec'),{'__name__':'__main__'})
           workflow=Path('.github/workflows/validation-console.yml')
-          text=workflow.read_text()
-          text=text.replace('          python tests/metrics_browser_checks.py\n','          METRICS_TEST_OUTPUT=validation python tests/metrics_browser_checks.py\n')
+          text=workflow.read_text().replace('          python tests/metrics_browser_checks.py\n','          METRICS_TEST_OUTPUT=validation python tests/metrics_browser_checks.py\n')
           workflow.write_text(text)
+          readme=Path('applications/aws-validation-console/README.md')
+          text=readme.read_text().replace('No live AWS/runtime or Grafana acceptance is claimed.','Live account/runtime inspection, PromQL execution and production Grafana datasource provisioning remain unverified.')
+          readme.write_text(text)
           PY
       - name: Require complete publication acceptance
         working-directory: applications/aws-validation-console
@@ -83,15 +83,17 @@ jobs:
             !applications/aws-validation-console/.pytest_cache/**
           retention-days: 14
           include-hidden-files: true
-      - name: Commit only reviewed files to the feature branch and remove this one-time workflow
+      - name: Commit application files only using contents permission
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add .github/workflows/validation-console.yml
           cd applications/aws-validation-console
           git add .gitignore app/__init__.py app/connectors.py app/evaluator.py static/app.js static/metrics.js static/metrics-charts.js static/shell.html build_metrics.py tests/test_evaluator.py tests/test_connectors.py tests/browser_checks.py tests/publication_browser_checks.py compose.yaml deploy/kubernetes.yaml docs/DEPLOYMENT.md README.md docs/METRICS.md CHANGELOG.md docs/PUBLICATION_REVIEW.md validation/publication-review.json
           cd ../..
-          git rm .github/workflows/console-publication-review.yml
           git diff --cached --check
+          if git diff --cached --name-only | grep -v '^applications/aws-validation-console/'; then
+            echo 'Refusing to publish paths outside the reviewed application.' >&2
+            exit 1
+          fi
           git commit -m 'fix(console): publish reviewed metrics console 0.2.1 with acceptance evidence'
           git push origin HEAD:feat/aws-operational-readiness-console
