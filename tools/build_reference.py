@@ -11,6 +11,7 @@ from pptx import Presentation
 from pptx.util import Inches, Pt
 from pptx.dml.color import RGBColor
 from pptx.enum.shapes import MSO_SHAPE
+from pptx.oxml.xmlchemy import OxmlElement
 
 ROOT=Path(__file__).resolve().parents[1]
 KEYS=('devops','security','finops')
@@ -81,7 +82,8 @@ def render_report(d,deck):
         body+=f'<section class="group function-group" id="group-{g["id"]}"><h3>{E(g["title"])}</h3>{p(g["purpose"],"section-intro")}'
         for f in [x for x in d['functions'] if x['group']==g['id']]:
             badge='preview' if f['availability']=='Preview' else ''
-            body+=f'<article class="record function" id="{f["id"]}" data-group="{g["id"]}" data-availability="{f["availability"]}"><div class="badges"><span class="id">{f["id"]}</span><span class="badge {badge}">{E(f["availability"])}</span><span class="badge">{E(f["activation"])}</span></div><h3>{E(f["name"])}</h3>{p(f["operation"],"operation")}<div class="two">{block("Input",f["input"])}{block("Output and interpretation",f["output"])}</div><details><summary>Invocation, limitations and proposed verification</summary>{block("Where to invoke / prerequisite",f["entry"])}{block("Limitations and effects",f["limits"])}{block("Proposed operator verification — not an executed test",f["check"],"check")}</details>{refs(d,f["refs"])}</article>'
+            activation_badge='' if f['activation'].startswith('See invocation') else '<span class="badge">'+E(f['activation'])+'</span>'
+            body+=f'<article class="record function" id="{f["id"]}" data-group="{g["id"]}" data-availability="{f["availability"]}"><div class="badges"><span class="id">{f["id"]}</span><span class="badge {badge}">{E(f["availability"])}</span>{activation_badge}</div><h3>{E(f["name"])}</h3>{p(f["operation"],"operation")}<div class="two">{block("Input",f["input"])}{block("Output and interpretation",f["output"])}</div><details><summary>Invocation, limitations and proposed verification</summary>{block("Where to invoke / prerequisite",f["entry"])}{block("Limitations and effects",f["limits"])}{block("Proposed operator verification — not an executed test",f["check"],"check")}</details>{refs(d,f["refs"])}</article>'
         body+='</section>'
     body+='</section><section class="section" id="mechanisms"><h2>Configuration mechanisms</h2><p class="section-intro">How to enable or constrain the functions above. Configuration details are not counted as separate use cases. Recommended verification exercises have not been run against an AWS account.</p><div class="actions"><button id="expand-all">Expand technical detail</button><button id="collapse-all">Collapse technical detail</button></div>'
     for m in d['mechanisms']:
@@ -164,12 +166,13 @@ NAVY='11283E';INK='182B40';TEAL='006D76';MUTED='536477';WHITE='FFFFFF';PALE='EDF
 def shape(slide,x,y,w,h,fill,line=None,kind=MSO_SHAPE.RECTANGLE):
     sh=slide.shapes.add_shape(kind,Inches(x),Inches(y),Inches(w),Inches(h));sh.fill.solid();sh.fill.fore_color.rgb=RGBColor.from_string(fill);sh.line.fill.background() if line is None else None
     if line:sh.line.color.rgb=RGBColor.from_string(line);sh.line.width=Pt(.7)
+    sh._element.spPr.append(OxmlElement('a:effectLst'))
     return sh
 
 def text(slide,value,x,y,w,h,size=18,color=INK,bold=False):
     sh=slide.shapes.add_textbox(Inches(x),Inches(y),Inches(w),Inches(h));tf=sh.text_frame;tf.clear();tf.word_wrap=True;tf.margin_left=0;tf.margin_right=0;tf.margin_top=0;tf.margin_bottom=0
     for i,line in enumerate(str(value).split('\n')):
-        para=tf.paragraphs[0] if i==0 else tf.add_paragraph();para.text=line;para.font.name='Aptos';para.font.size=Pt(size);para.font.bold=bold;para.font.color.rgb=RGBColor.from_string(color);para.space_after=Pt(4);para.line_spacing=1.08
+        para=tf.paragraphs[0] if i==0 else tf.add_paragraph();para.text=line;para.font.name='Arial';para.font.size=Pt(size);para.font.bold=bold;para.font.color.rgb=RGBColor.from_string(color);para.space_after=Pt(4);para.line_spacing=1.08
     return sh
 
 def pptx_deck(d,deck):
@@ -177,15 +180,15 @@ def pptx_deck(d,deck):
     for i,s in enumerate(deck['slides']):
         sl=prs.slides.add_slide(prs.slide_layouts[6]);shape(sl,0,0,13.333,7.5,WHITE);shape(sl,0,0,13.333,.13,TEAL)
         text(sl,d['title'].upper()+'  /  ENGINEERING REFERENCE',.5,.32,11.8,.25,10,TEAL,True)
-        text(sl,s['title'],.5,.78,12.25,.88,30,INK,True)
-        text(sl,s['thesis'],.5,1.72,12.15,.65,18,TEAL)
+        text(sl,s['title'],.5,.78,12.25,1.0,29,INK,True)
+        text(sl,s['thesis'],.5,1.94,12.15,.52,17,TEAL)
         top=2.55;bottom=6.65
         if s['kind'] in ('flow','cover'):
             count=len(s['headers']);gap=.18;w=(12.3-gap*(count-1))/count
             for j,(heading,body) in enumerate(zip(s['headers'],s['rows'][0])):
                 x=.5+j*(w+gap);shape(sl,x,top+.2,w,2.95,PALE);shape(sl,x,top+.2,w,.07,TEAL);text(sl,f'{j+1:02d}',x+.18,top+.42,w-.36,.3,12,TEAL,True);text(sl,heading,x+.18,top+.9,w-.36,.7,21,INK,True);text(sl,body,x+.18,top+1.67,w-.36,1.12,18,INK)
         elif s['kind']=='table':
-            n=len(s['headers']);widths=([2.65,4.8,4.85] if n==3 else [2.3,3.34,3.33,3.33] if n==4 else [12.3/n]*n);rows=s['rows'];height=3.6 if s.get('callout') else 4.08;hh=.55;rh=(height-hh)/len(rows)
+            n=len(s['headers']);widths=([3.3,4.5,4.5] if n==3 else [2.3,3.34,3.33,3.33] if n==4 else [12.3/n]*n);rows=s['rows'];height=3.6 if s.get('callout') else 4.08;hh=.55;rh=(height-hh)/len(rows)
             x=.5
             for j,head in enumerate(s['headers']):shape(sl,x,top,widths[j],hh,NAVY);text(sl,head,x+.14,top+.12,widths[j]-.28,hh-.16,15,WHITE,True);x+=widths[j]
             for r,row in enumerate(rows):
