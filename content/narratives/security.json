@@ -1,16 +1,132 @@
 {
-"number":"03","accent":"#167259","title":"AWS Security Agent","strapline":"Move from an authorized assessment to a verified repair.","audience":"Application-security engineers, software teams and security platform owners","availability":"On-demand penetration testing: GA. Design review, threat modeling, code review and CI/CD integration are separate preview capabilities.","decision":"Start with one explicitly authorized staging application. Assess the safety of real requests, then connect findings to reviewed repairs and revalidation.",
-"summary":["A security assessment is useful when the finding is understandable, the affected application is known, and the team can act on the evidence. An automatically generated severity label is not enough. The application owner needs a reproducible account of the issue, a repair decision and evidence that the repaired deployment no longer exhibits the tested behavior.","The running scenario is an authorized assessment of a staging application with synthetic data and test identities. It follows scope, testing, finding triage, proposed remediation and revalidation. Design and code analysis are presented as complementary preview paths, not as guarantees of complete coverage or interchangeable forms of penetration testing."],
-"use_case":{"name":"Assess and repair an owned staging application","trigger":"A team wants evidence about an application change before deciding how to proceed with release.","scope":"Verified targets, written authorization, test accounts, synthetic data, explicit exclusions and a stop owner.","deliverable":"A triaged finding linked to the tested revision, a reviewed remediation proposal and revalidation evidence.","not_done":"A generated fix exists, but it has not been reviewed, deployed to the test target or reassessed.","done":"The authorized test, code review and revalidation records support an owner-approved disposition of the finding."},
-"stages":[
-{"title":"Make authorization and target safety explicit","caps":["C01","C02","C04"],"paragraphs":["Define the application, exact target addresses, permitted test window, identities, exclusions and stop authority. Domain verification is a technical prerequisite; it is not permission from every system owner affected by a request. A staging label alone does not prove that payments, emails or other downstream effects are disabled.","Penetration testing sends real requests and can change application state. Use synthetic data and appropriately limited test identities, and understand the configured execution and spend controls. The demo should be possible without touching production or a third party outside the authorization."],"input":"Written scope, verified target, test identities, approved network path and operational stop procedure.","artifact":"An assessment authorization and preflight record.","gate":"The owner has approved the targets and business effects, not merely a hostname.","fallback":"Stop preparation when authority or downstream effects are unclear; use a labeled schematic walkthrough instead."},
-{"title":"Give the assessment current application context","caps":["C02","C03"],"paragraphs":["Source code, architecture documents and authentication details help the assessment understand the application. Keep the code revision aligned with the deployed test target. Old design documents or credentials for the wrong role can distort both coverage and interpretation.","Use the documented credential and private-connectivity paths rather than pasting secrets into example prompts or reports. Record what was reachable and authenticated. A test that did not reach a protected workflow cannot provide evidence that the workflow is safe."],"input":"Current code and design context, revision identity, approved credentials and reachable test routes.","artifact":"A context and coverage record attached to the assessment.","gate":"The team knows which roles, routes and deployed revision were actually in scope.","fallback":"Report inaccessible areas as coverage gaps and resolve setup before drawing broader conclusions."},
-{"title":"Observe the run and triage the evidence","caps":["C01","C04","C05"],"paragraphs":["Monitor the authorized task and inspect findings as evidence about a particular application state. Prioritization should combine the reported impact, reproducibility, affected data or role, and the service owner's business context. Do not equate finding count with assessment quality.","Preserve the path from the observation to the affected revision and identity. A validated exploit path can be valuable, but a clean result is not proof that every vulnerability class or application route has been covered. Escalate uncertain findings for human review rather than turning uncertainty into a release assurance."],"input":"Assessment execution details and finding evidence.","artifact":"A triaged finding with owner, affected scope, reproduction context and disposition.","gate":"The service owner understands the finding and the limits of the assessment.","fallback":"Pause or stop on unexpected effects and retain an incomplete-run record instead of treating it as a pass."},
-{"title":"Review a proposed repair as an engineering change","caps":["C06","C09"],"paragraphs":["With the appropriate repository configuration, a finding can lead to a proposed code repair. That proposal needs normal review for correctness, compatibility and test coverage. A patch that blocks the observed path may still create a regression or leave a related path unresolved.","Track the finding and repair in the team's existing issue system. A Jira handoff is useful only when the audience is appropriate and the ticket links the evidence, affected revision and acceptance test. Do not publish sensitive assessment details to a broader channel simply because an integration is connected."],"input":"Accepted finding, permitted repository access and a repair owner.","artifact":"A reviewed PR/MR or repair plan linked to the original finding.","gate":"The proposed change passes independent review and normal delivery controls.","fallback":"Assign a manual repair when repository support, authorization or generated output is inadequate."},
-{"title":"Deploy to the authorized target and revalidate","caps":["C07","C08"],"paragraphs":["A code fix is not the same as a repaired deployed application. Record the revision deployed to the authorized test target before requesting revalidation. Compare the result with the original evidence and confirm that the targeted behavior is no longer reproducible under the intended conditions.","Export a point-in-time report that preserves the scope, results and unresolved limitations. Closing the issue is an owner decision supported by assessment evidence, code review and revalidation. None of those artifacts alone is a certificate that the application is secure."],"input":"Reviewed repair deployed to the approved target and linked to the original finding.","artifact":"Revalidation outcome and point-in-time evidence report.","gate":"The closure decision identifies the tested revision and remaining risks.","fallback":"Keep the finding open or explicitly risk-accepted if revalidation is inconclusive or fails."},
-{"title":"Add earlier feedback without overstating availability","caps":["C10","C11","C12","C13","C14","C15","C16","C17","C18"],"paragraphs":["Design reviews, organizational security requirements and threat models can make assumptions and trust boundaries inspectable before testing a running application. Code review can analyze full repositories or configured change triggers, with provider-specific remediation paths. These are distinct from the GA on-demand penetration-testing baseline.","Treat IDE, S3 differential-scan and CI/CD integrations as separate preview adoption decisions. A promotion gate needs explicit thresholds, timeout behavior and a policy for missing or inconclusive evidence. The team owns that release policy; an unavailable or unfinished scan should not silently become a green gate."],"input":"Approved preview use, provider-specific integration and an explicit review or promotion policy.","artifact":"Design, threat-model or code findings and an auditable gate decision where configured.","gate":"Availability, source-provider support and failure behavior are checked for the exact workflow.","fallback":"Retain the existing review and security checks until the preview path is accepted for the intended use."}
-],
-"checks":["Written authorization covers every target and relevant downstream effect.","The test uses synthetic data and limited test identities.","Source context and deployed revision agree.","Execution, budget and stop ownership are configured.","Findings and generated repairs receive independent review.","Revalidation and closure identify the tested repaired revision."],
-"handoff":"assessment: SEC-DEMO-001\ntarget: owned-staging-application\nauthorization: approved-scope-record\ndata: synthetic-only\nrevision: DEMO-A\nfinding: illustrative-finding-reference\nrepair: reviewed-branch-change\nclosure: deployed-revision-plus-revalidation\nexclusions: [production, unapproved-third-parties]",
-"related":"Use Kiro for a bounded repair task and the architecture report to retain finding provenance without transferring assessment authority."
+  "number": "03",
+  "accent": "#167259",
+  "title": "AWS Security Agent",
+  "strapline": "Authorized application assessments, findings, remediation proposals and revalidation.",
+  "audience": "Application-security engineers, software teams and security platform owners",
+  "availability": "On-demand penetration testing: GA. Design review, threat modeling, code review and CI/CD integration are separate preview capabilities.",
+  "decision": "Start with one explicitly authorized staging application. Assess the safety of real requests, then connect findings to reviewed repairs and revalidation.",
+  "summary": [
+    "A security assessment is useful when the finding is understandable, the affected application is known, and the team can act on the evidence. An automatically generated severity label is not enough. The application owner needs a reproducible account of the issue, a repair decision and evidence that the repaired deployment no longer exhibits the tested behavior.",
+    "The running scenario is an authorized assessment of a staging application with synthetic data and test identities. It follows scope, testing, finding triage, proposed remediation and revalidation. Design and code analysis are presented as complementary preview paths, not as guarantees of complete coverage or interchangeable forms of penetration testing."
+  ],
+  "use_case": {
+    "name": "Assess and repair an owned staging application",
+    "trigger": "A team wants evidence about an application change before deciding how to proceed with release.",
+    "scope": "Verified targets, written authorization, test accounts, synthetic data, explicit exclusions and a stop owner.",
+    "deliverable": "A triaged finding linked to the tested revision, a reviewed remediation proposal and revalidation evidence.",
+    "not_done": "A generated fix exists, but it has not been reviewed, deployed to the test target or reassessed.",
+    "done": "The authorized test, code review and revalidation records support an owner-approved disposition of the finding."
+  },
+  "stages": [
+    {
+      "title": "Make authorization and target safety explicit",
+      "caps": [
+        "C01",
+        "C02",
+        "C04"
+      ],
+      "paragraphs": [
+        "Define the application, exact target addresses, permitted test window, identities, exclusions and stop authority. Domain verification is a technical prerequisite; it is not permission from every system owner affected by a request. A staging label alone does not prove that payments, emails or other downstream effects are disabled.",
+        "Penetration testing sends real requests and can change application state. Use synthetic data and appropriately limited test identities, and understand the configured execution and spend controls. The demo should be possible without touching production or a third party outside the authorization."
+      ],
+      "input": "Written scope, verified target, test identities, approved network path and operational stop procedure.",
+      "artifact": "An assessment authorization and preflight record.",
+      "gate": "The owner has approved the targets and business effects, not merely a hostname.",
+      "fallback": "Stop preparation when authority or downstream effects are unclear; use a labeled schematic walkthrough instead."
+    },
+    {
+      "title": "Give the assessment current application context",
+      "caps": [
+        "C02",
+        "C03"
+      ],
+      "paragraphs": [
+        "Source code, architecture documents and authentication details help the assessment understand the application. Keep the code revision aligned with the deployed test target. Old design documents or credentials for the wrong role can distort both coverage and interpretation.",
+        "Use the documented credential and private-connectivity paths rather than pasting secrets into example prompts or reports. Record what was reachable and authenticated. A test that did not reach a protected workflow cannot provide evidence that the workflow is safe."
+      ],
+      "input": "Current code and design context, revision identity, approved credentials and reachable test routes.",
+      "artifact": "A context and coverage record attached to the assessment.",
+      "gate": "The team knows which roles, routes and deployed revision were actually in scope.",
+      "fallback": "Report inaccessible areas as coverage gaps and resolve setup before drawing broader conclusions."
+    },
+    {
+      "title": "Observe the run and triage the evidence",
+      "caps": [
+        "C01",
+        "C04",
+        "C05"
+      ],
+      "paragraphs": [
+        "Monitor the authorized task and inspect findings as evidence about a particular application state. Prioritization should combine the reported impact, reproducibility, affected data or role, and the service owner's business context. Do not equate finding count with assessment quality.",
+        "Preserve the path from the observation to the affected revision and identity. A validated exploit path can be valuable, but a clean result is not proof that every vulnerability class or application route has been covered. Escalate uncertain findings for human review rather than turning uncertainty into a release assurance."
+      ],
+      "input": "Assessment execution details and finding evidence.",
+      "artifact": "A triaged finding with owner, affected scope, reproduction context and disposition.",
+      "gate": "The service owner understands the finding and the limits of the assessment.",
+      "fallback": "Pause or stop on unexpected effects and retain an incomplete-run record instead of treating it as a pass."
+    },
+    {
+      "title": "Review a proposed repair as an engineering change",
+      "caps": [
+        "C06",
+        "C09"
+      ],
+      "paragraphs": [
+        "With the appropriate repository configuration, a finding can lead to a proposed code repair. That proposal needs normal review for correctness, compatibility and test coverage. A patch that blocks the observed path may still create a regression or leave a related path unresolved.",
+        "Track the finding and repair in the team's existing issue system. A Jira handoff is useful only when the audience is appropriate and the ticket links the evidence, affected revision and acceptance test. Do not publish sensitive assessment details to a broader channel simply because an integration is connected."
+      ],
+      "input": "Accepted finding, permitted repository access and a repair owner.",
+      "artifact": "A reviewed PR/MR or repair plan linked to the original finding.",
+      "gate": "The proposed change passes independent review and normal delivery controls.",
+      "fallback": "Assign a manual repair when repository support, authorization or generated output is inadequate."
+    },
+    {
+      "title": "Deploy to the authorized target and revalidate",
+      "caps": [
+        "C07",
+        "C08"
+      ],
+      "paragraphs": [
+        "A code fix is not the same as a repaired deployed application. Record the revision deployed to the authorized test target before requesting revalidation. Compare the result with the original evidence and confirm that the targeted behavior is no longer reproducible under the intended conditions.",
+        "Export a point-in-time report that preserves the scope, results and unresolved limitations. Closing the issue is an owner decision supported by assessment evidence, code review and revalidation. None of those artifacts alone is a certificate that the application is secure."
+      ],
+      "input": "Reviewed repair deployed to the approved target and linked to the original finding.",
+      "artifact": "Revalidation outcome and point-in-time evidence report.",
+      "gate": "The closure decision identifies the tested revision and remaining risks.",
+      "fallback": "Keep the finding open or explicitly risk-accepted if revalidation is inconclusive or fails."
+    },
+    {
+      "title": "Add earlier feedback without overstating availability",
+      "caps": [
+        "C10",
+        "C11",
+        "C12",
+        "C13",
+        "C14",
+        "C15",
+        "C16",
+        "C17",
+        "C18"
+      ],
+      "paragraphs": [
+        "Design reviews, organizational security requirements and threat models can make assumptions and trust boundaries inspectable before testing a running application. Code review can analyze full repositories or configured change triggers, with provider-specific remediation paths. These are distinct from the GA on-demand penetration-testing baseline.",
+        "Treat IDE, S3 differential-scan and CI/CD integrations as separate preview adoption decisions. A promotion gate needs explicit thresholds, timeout behavior and a policy for missing or inconclusive evidence. The team owns that release policy; an unavailable or unfinished scan should not silently become a green gate."
+      ],
+      "input": "Approved preview use, provider-specific integration and an explicit review or promotion policy.",
+      "artifact": "Design, threat-model or code findings and an auditable gate decision where configured.",
+      "gate": "Availability, source-provider support and failure behavior are checked for the exact workflow.",
+      "fallback": "Retain the existing review and security checks until the preview path is accepted for the intended use."
+    }
+  ],
+  "checks": [
+    "Written authorization covers every target and relevant downstream effect.",
+    "The test uses synthetic data and limited test identities.",
+    "Source context and deployed revision agree.",
+    "Execution, budget and stop ownership are configured.",
+    "Findings and generated repairs receive independent review.",
+    "Revalidation and closure identify the tested repaired revision."
+  ],
+  "handoff": "assessment: SEC-DEMO-001\ntarget: owned-staging-application\nauthorization: approved-scope-record\ndata: synthetic-only\nrevision: DEMO-A\nfinding: illustrative-finding-reference\nrepair: reviewed-branch-change\nclosure: deployed-revision-plus-revalidation\nexclusions: [production, unapproved-third-parties]",
+  "related": "Use Kiro for a bounded repair task and the architecture report to retain finding provenance without transferring assessment authority."
 }
