@@ -7,7 +7,7 @@
 
 **00:00–01:00 · 01:00 allocated**
 
-**Takeaway:** Standardize the work and evidence—not the agent privileges.
+**Takeaway:** Common task records do not imply shared permissions across products.
 
 This is a team-level reference design assembled from the documented behavior of four products. It is not an AWS internal architecture or a shared four-agent runtime. The common unit is a bounded engineering work item with an owner, evidence, allowed effects and completion checks. Each product retains its own identity, execution and approval model. The demo is a tabletop handoff walkthrough, not an implemented orchestrator.
 
@@ -20,7 +20,7 @@ This is a team-level reference design assembled from the documented behavior of 
 [F03 — Create an agent](https://docs.aws.amazon.com/finops-agent/latest/userguide/creating-an-agent.html)
 
 
-## 02. One operating model; four specialist roles
+## 02. Different agent functions require separate authorities
 
 **01:00–02:30 · 01:30 allocated**
 
@@ -37,7 +37,7 @@ DevOps Agent is the operational investigator, Kiro produces repository work, Sec
 [F07 — Cost anomaly investigation](https://docs.aws.amazon.com/finops-agent/latest/userguide/cost-anomaly-detection.html)
 
 
-## 03. Use a work contract as the unit of delegation
+## 03. Define task scope, effects and acceptance in a work contract
 
 **02:30–04:00 · 01:30 allocated**
 
@@ -54,7 +54,7 @@ The contract is a team artifact, not a product-specific API. Start with the serv
 [F11 — Task management](https://docs.aws.amazon.com/finops-agent/latest/userguide/task-management.html)
 
 
-## 04. Four handoffs cover most first-pass team needs
+## 04. Four illustrative cross-agent handoff sequences
 
 **04:00–06:00 · 02:00 allocated**
 
@@ -90,7 +90,7 @@ Use a service-oriented boundary record: accounts, repositories, targets, operato
 [F03 — Create an agent](https://docs.aws.amazon.com/finops-agent/latest/userguide/creating-an-agent.html)
 
 
-## 06. P02 · retain provenance with every conclusion
+## 06. P02 · retain source provenance for reported findings
 
 **08:00–09:30 · 01:30 allocated**
 
@@ -198,7 +198,7 @@ The sample handoff is deliberately product-neutral. Keep the work-item ID, owner
 [F09 — Optimization recommendations](https://docs.aws.amazon.com/finops-agent/latest/userguide/optimization-recommendations.html)
 
 
-## 12. P09 · bound jobs, retries, schedules and stop ownership
+## 12. P09 · define job limits, retries and stop ownership
 
 **18:00–19:30 · 01:30 allocated**
 
@@ -307,7 +307,7 @@ For the illustrative checkout incident, assemble an evidence-linked handoff with
 [F09 — Optimization recommendations](https://docs.aws.amazon.com/finops-agent/latest/userguide/optimization-recommendations.html)
 
 
-## 17. Prove the process before building orchestration
+## 17. Test manual handoffs before orchestration
 
 **32:30–34:30 · 02:00 allocated**
 
@@ -324,11 +324,11 @@ Start with a manual evidence handoff and a small set of representative tasks. Ve
 [F15 — Agent guardrail controls](https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html)
 
 
-## 18. Share the work contract; keep authority local
+## 18. Standardize work records; authorize actions separately
 
 **34:30–36:00 · 01:30 allocated**
 
-**Takeaway:** The common architecture is an accountable engineering process.
+**Takeaway:** The proposed common model defines work records; product permissions remain separate.
 
 Close with the architecture decision: standardize scope, evidence, handoff and verification, but keep product-specific controls explicit. There is no need to invent a shared memory or privilege layer to gain value from specialist tools. Adopt only the integrations the team can observe and stop. The detailed report below preserves all twelve patterns, the action matrix and the proposed workflow material for implementation planning.
 
