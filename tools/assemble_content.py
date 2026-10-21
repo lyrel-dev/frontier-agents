@@ -48,12 +48,12 @@ def main() -> None:
         write_json(path, deck)
         results.append({'agent': key, 'stages': len(narrative['stages']), 'slides': len(deck['slides']), 'minutes': deck['minutes'], 'demo_minutes': deck['demo'], 'source_references_valid': True})
     write_json(ROOT/'content/narratives.json', {
-        'revision': '2026-10-21-narrative-1',
+        'revision': '2026-10-21-editorial-v2',
         'scope': 'Independent engineering field guides; documented product behavior, proposed team workflows, and illustrative examples are labeled separately. No live AWS execution or measured benefit is claimed.',
         'agents': agents,
     })
     write_json(ROOT/'qa/source-validation.json', {
-        'revision': '2026-10-21-narrative-1',
+        'revision': '2026-10-21-editorial-v2',
         'checks': results,
         'boundary': 'Structural and timing validation of source files, not verification of external source content or live AWS behavior.'
     })
