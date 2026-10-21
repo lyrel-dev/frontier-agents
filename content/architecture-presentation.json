@@ -8,7 +8,7 @@
   "slides": [
     {
       "title": "Common architectural patterns",
-      "takeaway": "Standardize the work and evidence—not the agent privileges.",
+      "takeaway": "Common task records do not imply shared permissions across products.",
       "kind": "hero",
       "seconds": 60,
       "phase": "Position",
@@ -38,7 +38,7 @@
       "label": "Platform architecture / Engineering leadership / Security governance"
     },
     {
-      "title": "One operating model; four specialist roles",
+      "title": "Different agent functions require separate authorities",
       "takeaway": "Assign work by the evidence and result needed, not by a generic “agent” label.",
       "kind": "matrix",
       "seconds": 90,
@@ -80,7 +80,7 @@
       ]
     },
     {
-      "title": "Use a work contract as the unit of delegation",
+      "title": "Define task scope, effects and acceptance in a work contract",
       "takeaway": "A task is ready when its owner, scope, allowed effects and done condition are explicit.",
       "kind": "flow",
       "seconds": 90,
@@ -119,7 +119,7 @@
       ]
     },
     {
-      "title": "Four handoffs cover most first-pass team needs",
+      "title": "Four illustrative cross-agent handoff sequences",
       "takeaway": "Compose only the specialists needed by the actual job.",
       "kind": "matrix",
       "seconds": 120,
@@ -209,7 +209,7 @@
       ]
     },
     {
-      "title": "P02 · retain provenance with every conclusion",
+      "title": "P02 · retain source provenance for reported findings",
       "takeaway": "An answer must carry enough context to be checked after it leaves the original interface.",
       "kind": "cards",
       "seconds": 90,
@@ -450,7 +450,7 @@
       ]
     },
     {
-      "title": "P09 · bound jobs, retries, schedules and stop ownership",
+      "title": "P09 · define job limits, retries and stop ownership",
       "takeaway": "Client completion and service-side termination are different events.",
       "kind": "cards",
       "seconds": 90,
@@ -668,7 +668,7 @@
       "fallback": "This tabletop is the default mode. A prepared recording may illustrate a real integration, but must be identified as replay."
     },
     {
-      "title": "Prove the process before building orchestration",
+      "title": "Test manual handoffs before orchestration",
       "takeaway": "Manual handoffs make authority and evidence defects visible early.",
       "kind": "matrix",
       "seconds": 120,
@@ -710,8 +710,8 @@
       ]
     },
     {
-      "title": "Share the work contract; keep authority local",
-      "takeaway": "The common architecture is an accountable engineering process.",
+      "title": "Standardize work records; authorize actions separately",
+      "takeaway": "The proposed common model defines work records; product permissions remain separate.",
       "kind": "close",
       "seconds": 90,
       "phase": "Close",
@@ -911,5 +911,6 @@
       "title": "Resilience and regional availability",
       "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/resilience.html"
     }
-  }
+  },
+  "editorial_classification": "Technical documentation; documented features and proposed team workflows are explicitly distinguished."
 }
