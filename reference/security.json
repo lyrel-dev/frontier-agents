@@ -1,77 +1,601 @@
 {
-  "id":"security",
-  "title":"AWS Security Agent",
-  "subtitle":"Design evaluation, source assessment and authorized application testing",
-  "reviewed":"2026-10-21",
-  "scope":"A technical reference for application developers, security engineers and platform owners. The current official documentation identifies the service as part of AWS Continuum; this collection retains the requested AWS Security Agent name. The assessment modes are not interchangeable: each examines a different object and provides a different kind of evidence.",
-  "availability":"On-demand penetration testing is generally available. Design review, threat modeling and code review remain preview in the cited documentation. Integration support, source-provider permissions and test-network access must be checked for the selected mode; service availability does not make every mode generally available.",
-  "availability_refs":["pricing","ga","history"],
-  "objects":[
-    ["Agent Space","The application assessment workspace and its configured source, target and access associations. Do not assume that a source connection is also permission to test the deployed application.","overview"],
-    ["Requirement pack","A collection of security criteria evaluated during design and code reviews. Packs are shared across Agent Spaces; enabling a pack affects new reviews, not historical results.","requirements"],
-    ["Assessment definition and run","A reusable review or test configuration versus one execution against particular source or target state. Keep the run ID and source revision; the latest configuration alone cannot describe an earlier result.","perform-code"],
-    ["Finding and validation result","A finding records a potential issue and its evidence. Severity, agent confidence, exploit validation and workflow status are separate attributes. Marking a finding resolved is not the same as executing a successful retest.","code-findings"],
-    ["Verified target domain","A domain verified and associated for testing. Domain verification and test credentials solve different problems: control of the destination versus the identity used inside the application.","domain"]
+  "id": "security",
+  "title": "AWS Security Agent",
+  "subtitle": "Design evaluation, source assessment and authorized application testing",
+  "reviewed": "2026-10-21",
+  "scope": "A technical reference for application developers, security engineers and platform owners. The current official documentation identifies the service as part of AWS Continuum; this collection retains the requested AWS Security Agent name. The assessment modes are not interchangeable: each examines a different object and provides a different kind of evidence.",
+  "availability": "On-demand penetration testing is generally available. Design review, threat modeling and code review remain preview in the cited documentation. Integration support, source-provider permissions and test-network access must be checked for the selected mode; service availability does not make every mode generally available.",
+  "availability_refs": [
+    "pricing",
+    "ga",
+    "history"
   ],
-  "groups":[
-    {"id":"design","title":"Design and threat assessment","purpose":"Evaluate intended controls and model threats before interpreting source or runtime observations."},
-    {"id":"code","title":"Source-code assessment","purpose":"Distinguish whole-codebase review, changed-code review and attempted runtime validation of source findings."},
-    {"id":"runtime","title":"Deployed-application testing","purpose":"Test an authorized target, then retest selected findings after a deployed fix."},
-    {"id":"remediation","title":"Remediation and evidence management","purpose":"Produce reviewable repair proposals and retain results without turning workflow status into a security guarantee."}
+  "objects": [
+    [
+      "Agent Space",
+      "The application assessment workspace and its configured source, target and access associations. Do not assume that a source connection is also permission to test the deployed application.",
+      "overview"
+    ],
+    [
+      "Requirement pack",
+      "A collection of security criteria evaluated during design and code reviews. Packs are shared across Agent Spaces; enabling a pack affects new reviews, not historical results.",
+      "requirements"
+    ],
+    [
+      "Assessment definition and run",
+      "A reusable review or test configuration versus one execution against particular source or target state. Keep the run ID and source revision; the latest configuration alone cannot describe an earlier result.",
+      "perform-code"
+    ],
+    [
+      "Finding and validation result",
+      "A finding records a potential issue and its evidence. Severity, agent confidence, exploit validation and workflow status are separate attributes. Marking a finding resolved is not the same as executing a successful retest.",
+      "code-findings"
+    ],
+    [
+      "Verified target domain",
+      "A domain verified and associated for testing. Domain verification and test credentials solve different problems: control of the destination versus the identity used inside the application.",
+      "domain"
+    ]
   ],
-  "functions":[
-    {"id":"S01","group":"design","name":"Evaluate design documentation against enabled requirements","status":"Preview","input":"Design documents describing the workload and a set of enabled security requirements.","operation":"Design review compares the documented design with each applicable requirement. It evaluates what the design states, not what the production system actually enforces. The result can distinguish a demonstrated control, a documented violation, missing information and a requirement that does not apply.","output":"Requirement-level results: compliant, non-compliant, insufficient data or not applicable, with supporting reasoning. Insufficient data is a request for evidence, not automatically a violation.","entry":"Enable the intended requirement packs, create a design review with the relevant documents, then inspect the findings by requirement.","limits":"A compliant document does not establish a compliant implementation. A broad policy with vague applicability can create irrelevant findings; requirements and document versions must be recorded together.","check":"Use a document with one explicit control, one deliberate omission and one out-of-scope control. Confirm that missing evidence is distinguished from non-compliance and non-applicability.","refs":["overview","requirements","design-findings"]},
-    {"id":"S02","group":"design","name":"Generate an application threat model","status":"Preview","input":"Scope documents, source repositories, or both. Scope documents define the feature or design under analysis; source code supplies implementation context.","operation":"Threat modeling builds a system overview and identifies possible threats across assets, data flows and trust boundaries. Threats are classified using STRIDE and include prerequisites, actions, impacts and recommendations. This asks how the system could be attacked; it is not the same question as whether a fixed requirement is documented.","output":"A system model and threat records with severity and evidence. Operators can review and edit the model and threats before using them for engineering decisions.","entry":"Enable threat modeling for the Agent Space, create a threat model with selected scope and sources, then start a run. Review the architecture interpretation before prioritizing the threat list.","limits":"An incorrect trust boundary can invalidate several otherwise plausible threats. A generated threat is not proof that an exploit succeeds on a running deployment.","check":"Reconcile identities, entry points, stores and trust boundaries with the system owners. For each selected threat, identify the actual attacker prerequisite and the control that should prevent the action.","refs":["threat-setup","threat-start","threat-findings"]},
-    {"id":"S03","group":"code","name":"Analyze a complete source revision","status":"Preview","input":"A selected branch of a connected repository or a full-source ZIP in an authorized S3 location, plus enabled review settings and requirements.","operation":"Full code review performs context-aware static analysis across the submitted codebase for vulnerabilities and requirement violations. Preflight validates access and the analysis environment before scanning. Optional simulated validation is a later, distinct phase.","output":"Findings tied to code locations, risk reasoning, evidence and suggested repairs; run logs and preflight results explain what actually executed.","entry":"Code reviews → Create code review; select the source and service role, configure the review and start it. Inspect Preflight before interpreting the Findings tab.","limits":"A preflight failure means analysis did not proceed; an empty findings view is not an all-clear result. Dependency access, source completeness and filtering affect what is examined.","check":"Retain the source commit or S3 object version and run ID. Confirm successful preflight, inspect excluded paths and verify the source lines for one material finding.","refs":["perform-code","enable-code","code-findings"]},
-    {"id":"S04","group":"code","name":"Analyze changed code in a pull request or supplied diff","status":"Preview","input":"Changed code with its full source context, provided by an eligible pull request integration or a full-source ZIP plus unified diff in S3.","operation":"Differential review focuses findings on changed code while using surrounding source to interpret the change. A repository integration can post review comments; the programmatic S3 path starts a code-review job from submitted artifacts. These are invocation routes for changed-code analysis, not a full penetration test.","output":"Findings associated with the change and, when configured, repository review comments. Provider support and publication permissions determine where results appear.","entry":"Configure code-review comments and trigger filters for the repository. For the S3 route, provide both source and diff and use the documented StartCodeReviewJob request rather than uploading only the patch.","limits":"A diff-only review is not a complete baseline assessment of unchanged code. A skipped trigger and a successful review with no findings are different states.","check":"Use a controlled PR to test branch, draft and label filters. Confirm the job used the intended revision and changed lines; inspect whether a new commit actually caused a new run.","refs":["diff","pr-review","triggers","enable-code"]},
-    {"id":"S05","group":"code","name":"Attempt exploit validation of static findings in a simulated environment","status":"Preview","input":"A code review with simulated validation enabled and an application that can run in the supported self-contained, containerized setup.","operation":"After static analysis, the service provisions a simulated environment, starts the application and attempts to reproduce selected vulnerabilities. This adds runtime evidence to a source finding. It is not equivalent to testing the real deployed environment, its external services or production identity configuration.","output":"Per-finding states such as confirmed, not reproduced, validation failed or not validated, together with available verification evidence.","entry":"Enable simulated validation while configuring the code review. Check environment startup and dependency access before interpreting validation outcomes.","limits":"Validation failed is inconclusive. Not validated means no completed attempt for that finding. Not reproduced is limited to the attempted environment and conditions; it does not establish absence of the vulnerability.","check":"For a confirmed finding, inspect the executed path and evidence. For a failure or non-reproduction, inspect missing dependencies, authentication, timeouts and environment differences before dismissing the source finding.","refs":["perform-code","code-findings"]},
-    {"id":"S06","group":"runtime","name":"Run a scoped penetration test against a deployed application","status":"GA","input":"Verified and associated target domains, included and excluded paths, application scope, current credentials, network access and optional source/design context.","operation":"The agent explores the authorized target, plans tests and attempts to validate security issues. The selected scope determines the risk classes: a web-application assessment differs from the generative-AI application scope. This operation sends real traffic to the target and can exercise application behavior.","output":"A run with executed tasks, findings, evidence and coverage limitations. Run duration and billable task hours measure different things because work can execute concurrently.","entry":"Enable penetration testing, verify the domain and create a penetration-test configuration. Set target scope, credentials, network access, risk selection and a maximum task-hours limit where appropriate before starting.","limits":"Credentials or networking failures can leave authenticated surfaces untested. A budget or run limit can stop work before coverage is complete. A risk class listed in scope does not mean every endpoint was tested for it.","check":"Verify the intended build and test identity at the target. Inspect executed tasks and access failures; compare the explored paths with the team's required test surface. Stop if real customer effects or out-of-scope traffic occur.","refs":["pentest-enable","pentest-create","domain","credentials","guidance","pricing","history"]},
-    {"id":"S07","group":"runtime","name":"Retest selected existing penetration-test findings","status":"Documented","input":"One or more findings from a completed run, with a fix already deployed to the same target and valid current authentication.","operation":"Revalidation repeats the validation steps for the selected findings as a separate job. It does not discover new vulnerabilities or replace the original finding. The link between original evidence and subsequent attempts supports a remediation history.","output":"Active when the issue is reproduced, or Resolved when it is not reproduced during the retest. A linked Jira issue can receive a result comment.","entry":"Open the completed penetration-test run, choose Multiselect findings for revalidation, select the findings and choose Revalidate findings.","limits":"A patch existing only in a branch cannot change the running target's result. Resolved is scoped to that retest and is not an assurance that all related paths or regressions were tested.","check":"Confirm deployment identity and authentication before interpreting non-reproduction. Run the application's own regression tests and a broader test when the fix changes other trust boundaries.","refs":["revalidate"]},
-    {"id":"S08","group":"remediation","name":"Generate a code-remediation proposal","status":"Preview","input":"A source finding, associated code and a source connection capable of returning the proposed change.","operation":"Code remediation generates a repair for review. Depending on the supported source route, the result is a pull or merge request or a downloadable diff. The source integration's write permission and remediation setting are separate from the permission to scan.","output":"A proposed patch and its explanation, not an accepted, merged, deployed or independently verified fix.","entry":"Select Remediate code on an eligible finding and inspect the provider-specific result. For S3 sources, review the downloadable diff before applying it in the team's repository.","limits":"The change may remove intended behavior, miss another entry point or introduce a regression. Provider and repository eligibility affect whether an automated PR is available; do not assume universal write support.","check":"Review authorization logic and behavior, run positive and negative tests, then deploy through the normal change process. Use code rereview or target revalidation according to the original finding type.","refs":["remediate","enable-code","code-findings"]},
-    {"id":"S09","group":"remediation","name":"Triage findings and export assessment evidence","status":"Documented","input":"Assessment findings with severity, confidence, validation evidence and the organization's disposition or annotations.","operation":"The findings interface supports review of evidence and workflow disposition. Penetration-test report generation exports a selected set of findings and can include organization-authored annotation notes. Filtering controls what is shown or exported; it does not alter the set of tests that actually ran.","output":"A reviewable assessment record or PDF report. Organization annotations are distinct from the agent's assessment. Exporting a report does not confer compliance or certification.","entry":"Inspect finding details and active confidence/status filters. From a penetration-test run, use Generate report and explicitly choose findings and annotation options.","limits":"A high-confidence-only view can hide unresolved findings. A workflow status such as resolved or accepted is not the same as confirmed exploit validation or successful revalidation.","check":"Before sharing a report, record run ID, source/build, target, test window, filters and unresolved coverage gaps. Reconcile exported totals against the selected findings, not the default dashboard alone.","refs":["code-findings","export","revalidate","guidance"]}
+  "groups": [
+    {
+      "id": "design",
+      "title": "Design and threat assessment",
+      "purpose": "Evaluate intended controls and model threats before interpreting source or runtime observations."
+    },
+    {
+      "id": "code",
+      "title": "Source-code assessment",
+      "purpose": "Distinguish whole-codebase review, changed-code review and attempted runtime validation of source findings."
+    },
+    {
+      "id": "runtime",
+      "title": "Deployed-application testing",
+      "purpose": "Test an authorized target, then retest selected findings after a deployed fix."
+    },
+    {
+      "id": "remediation",
+      "title": "Remediation and evidence management",
+      "purpose": "Produce reviewable repair proposals and retain results without turning workflow status into a security guarantee."
+    }
   ],
-  "mechanisms":[
-    {"id":"SM1","name":"Configure criteria independently of the review being run","explanation":"Requirement packs supply explicit evaluation criteria for design and code review. Managed requirements are read-only; custom requirements can be written, cloned or generated from existing policy documents. These criteria are not a learned memory of previous penetration-test incidents.","configure":["In the AWS console, open Security requirements and select the managed or custom packs relevant to the application.","For a custom requirement, specify applicability, observable compliant/non-compliant conditions and remediation guidance. Avoid a criterion such as 'use secure authentication' without a testable meaning.","To generate requirements from existing policies, upload supported documents into a custom pack and review the generated criteria before enabling it.","Enable the pack before a new design or code review. Record the pack version or reviewed definition with the assessment.","Treat a new document upload as replacement: it regenerates all requirements in that pack, including previously hand-written entries."],"lifecycle":"Pack enablement and edits affect new reviews, not past results. A custom copy of a managed requirement does not automatically inherit later managed updates. Packs are shared across Agent Spaces, so changes need an identified owner.","verification":"Proposed check: evaluate deliberately complete, incomplete and non-applicable design examples and verify that the criterion discriminates between them. Do not equate an enabled framework pack with an audit opinion.","refs":["requirements","import-requirements","design-findings"]},
-    {"id":"SM2","name":"Configure source access and PR triggers as separate controls","explanation":"Repository or S3 access determines what can be analyzed. Review-comment publication, remediation writes and automated triggers are separate settings. The effective review boundary is the combination of source revision, trigger configuration, analysis settings and file/context filters.","configure":["Connect the supported source provider or authorize the S3 bucket/prefix. Associate the intended source with the Agent Space and verify the service role's access.","Enable code-review comments and code-remediation writes only where required; do not grant source write access merely to perform static analysis.","Configure repository triggers for target branch, relevant event, draft state and supported labels. The documented branch expressions use RE2 full-name regular expressions, not shell globs.","Test condition groups: conditions within a group combine with AND; groups combine with OR. Label-based conditions are provider-dependent.","For GitHub filtering guidance, review .awssecurityagent/filtering.md on the default branch. Distinguish IgnorePatterns from ContextHints; hints are not an access-control mechanism."],"lifecycle":"Changing filters changes future invocation or result selection. A manually requested review may bypass trigger filters; verify the documented provider command and settings before relying on them as a review gate.","verification":"Proposed check: create matching and non-matching test changes, including a draft and a target-branch mismatch. Record the run IDs or the reason no run occurred. Inspect both review comments and the underlying run state.","refs":["connect","s3","enable-code","triggers","pr-review","diff"]},
-    {"id":"SM3","name":"Authorize the runtime target, identity and test surface","explanation":"Testing authorization requires more than a URL. The registered domain establishes a permitted target; network configuration makes it reachable; credentials determine the authenticated surface. The test scope and exclusions limit what the service should exercise. None makes a production side effect harmless.","configure":["Verify domain control using the documented mechanism and associate the domain with the Agent Space. For private targets, follow the private-domain and VPC requirements rather than assuming public DNS verification covers the network path.","Create a test configuration with the intended URLs, excluded paths and selected risk classes. Use the generative-AI scope only when testing that application's LLM-related risks.","Provide dedicated test credentials through the supported credential flow. Check login and any required authentication step against the actual target before starting.","Supply relevant design/source context and network configuration. Restrict the test identity and replace payments, outbound messages and other irreversible effects with safe staging equivalents.","Set a task-hours limit and supervise run logs. Distinguish a graceful limit stop from a complete assessment."],"lifecycle":"Changing credentials or a deployment can invalidate comparison with an earlier run. Domain association removal is distinct from deleting a registration. Keep target-side audit records for each test window.","verification":"Proposed check: prove that the test identity reaches the required surface and cannot access out-of-scope data. Inspect real executed tasks rather than only configured risk categories.","refs":["domain","pentest-enable","pentest-create","credentials","guidance","history","pricing"]},
-    {"id":"SM4","name":"Interpret severity, confidence, validation and workflow status independently","explanation":"Severity describes potential impact; confidence describes the agent's confidence in the finding; validation records an exploit attempt; workflow status records disposition. These are four different axes. A low-confidence high-impact issue still requires triage, and a manually resolved finding is not a successful runtime retest.","configure":["Inspect active confidence and status filters before counting findings or exporting a report. The code-review guide documents a high-confidence default; other assessment screens can use different defaults.","Read preflight and task logs before interpreting an empty list. Failed access or startup is an assessment failure, not absence of vulnerabilities.","For simulated validation, retain confirmed, not reproduced, validation failed and not validated distinctly.","For a deployed fix, start a revalidation job and retain its link to the original finding. Keep organization-authored risk acceptance or annotations separate from agent evidence."],"lifecycle":"Revalidation adds a new result and does not overwrite the original. Findings can be filtered or dispositioned without changing what was tested. No documented general incident-memory retraining mechanism is inferred from these features.","verification":"Proposed check: review one confirmed finding, one inconclusive validation and one accepted-risk item. The final report should make all three states distinguishable without reading hidden notes.","refs":["code-findings","revalidate","export","guidance"]}
+  "functions": [
+    {
+      "id": "S01",
+      "group": "design",
+      "name": "Evaluate design documentation against enabled requirements",
+      "input": "Design documents describing the workload and a set of enabled security requirements.",
+      "operation": "Design review compares the documented design with each applicable requirement. It evaluates what the design states, not what the production system actually enforces. The result can distinguish a demonstrated control, a documented violation, missing information and a requirement that does not apply.",
+      "output": "Requirement-level results: compliant, non-compliant, insufficient data or not applicable, with supporting reasoning. Insufficient data is a request for evidence, not automatically a violation.",
+      "entry": "Enable the intended requirement packs, create a design review with the relevant documents, then inspect the findings by requirement.",
+      "limits": "A compliant document does not establish a compliant implementation. A broad policy with vague applicability can create irrelevant findings; requirements and document versions must be recorded together.",
+      "check": "Use a document with one explicit control, one deliberate omission and one out-of-scope control. Confirm that missing evidence is distinguished from non-compliance and non-applicability.",
+      "refs": [
+        "overview",
+        "requirements",
+        "design-findings"
+      ],
+      "availability": "Preview",
+      "activation": "See invocation and prerequisites"
+    },
+    {
+      "id": "S02",
+      "group": "design",
+      "name": "Generate an application threat model",
+      "input": "Scope documents, source repositories, or both. Scope documents define the feature or design under analysis; source code supplies implementation context.",
+      "operation": "Threat modeling builds a system overview and identifies possible threats across assets, data flows and trust boundaries. Threats are classified using STRIDE and include prerequisites, actions, impacts and recommendations. This asks how the system could be attacked; it is not the same question as whether a fixed requirement is documented.",
+      "output": "A system model and threat records with severity and evidence. Operators can review and edit the model and threats before using them for engineering decisions.",
+      "entry": "Enable threat modeling for the Agent Space, create a threat model with selected scope and sources, then start a run. Review the architecture interpretation before prioritizing the threat list.",
+      "limits": "An incorrect trust boundary can invalidate several otherwise plausible threats. A generated threat is not proof that an exploit succeeds on a running deployment.",
+      "check": "Reconcile identities, entry points, stores and trust boundaries with the system owners. For each selected threat, identify the actual attacker prerequisite and the control that should prevent the action.",
+      "refs": [
+        "threat-setup",
+        "threat-start",
+        "threat-findings"
+      ],
+      "availability": "Preview",
+      "activation": "See invocation and prerequisites"
+    },
+    {
+      "id": "S10",
+      "group": "design",
+      "name": "Generate structured requirements from policy documents",
+      "input": "Security policies or standards in supported DOC, DOCX, Markdown, PDF or text files, submitted to a custom requirement pack.",
+      "operation": "The service extracts security-relevant content and generates workload-level requirements with applicability, compliance criteria and remediation guidance. The operator reviews, edits or deletes the generated criteria before enabling the pack for new assessments.",
+      "output": "A custom pack of reviewable requirements. Generation does not show that an application meets the source policy.",
+      "entry": "Security requirements → Custom security requirements packs → create or select a pack → Choose files → Generate requirements. Review and enable only after checking the generated criteria.",
+      "limits": "A new upload replaces all requirements in that pack, including hand-written entries. Concurrent uploads to the same pack are not allowed while generation is in progress.",
+      "check": "Map generated criteria back to selected source-policy clauses. Check applicability and observable compliance conditions; reject ambiguous or unsupported interpretations before enabling the pack.",
+      "refs": [
+        "import-requirements",
+        "requirements"
+      ],
+      "availability": "Documented",
+      "activation": "See invocation and prerequisites"
+    },
+    {
+      "id": "S03",
+      "group": "code",
+      "name": "Analyze a complete source revision",
+      "input": "A selected branch of a connected repository or a full-source ZIP in an authorized S3 location, plus enabled review settings and requirements.",
+      "operation": "Full code review performs context-aware static analysis across the submitted codebase for vulnerabilities and requirement violations. Preflight validates access and the analysis environment before scanning. Optional simulated validation is a later, distinct phase.",
+      "output": "Findings tied to code locations, risk reasoning, evidence and suggested repairs; run logs and preflight results explain what actually executed.",
+      "entry": "Code reviews → Create code review; select the source and service role, configure the review and start it. Inspect Preflight before interpreting the Findings tab.",
+      "limits": "A preflight failure means analysis did not proceed; an empty findings view is not an all-clear result. Dependency access, source completeness and filtering affect what is examined.",
+      "check": "Retain the source commit or S3 object version and run ID. Confirm successful preflight, inspect excluded paths and verify the source lines for one material finding.",
+      "refs": [
+        "perform-code",
+        "enable-code",
+        "code-findings"
+      ],
+      "availability": "Preview",
+      "activation": "See invocation and prerequisites"
+    },
+    {
+      "id": "S04",
+      "group": "code",
+      "name": "Analyze changed code in a pull request or supplied diff",
+      "input": "Changed code with its full source context, provided by an eligible pull request integration or a full-source ZIP plus unified diff in S3.",
+      "operation": "Differential review focuses findings on changed code while using surrounding source to interpret the change. A repository integration can post review comments; the programmatic S3 path starts a code-review job from submitted artifacts. These are invocation routes for changed-code analysis, not a full penetration test.",
+      "output": "Findings associated with the change and, when configured, repository review comments. Provider support and publication permissions determine where results appear.",
+      "entry": "Configure code-review comments and trigger filters for the repository. For the S3 route, provide both source and diff and use the documented StartCodeReviewJob request rather than uploading only the patch.",
+      "limits": "A diff-only review is not a complete baseline assessment of unchanged code. A skipped trigger and a successful review with no findings are different states.",
+      "check": "Use a controlled PR to test branch, draft and label filters. Confirm the job used the intended revision and changed lines; inspect whether a new commit actually caused a new run.",
+      "refs": [
+        "diff",
+        "pr-review",
+        "triggers",
+        "enable-code"
+      ],
+      "availability": "Preview",
+      "activation": "See invocation and prerequisites"
+    },
+    {
+      "id": "S05",
+      "group": "code",
+      "name": "Attempt exploit validation of static findings in a simulated environment",
+      "input": "A code review with simulated validation enabled and an application that can run in the supported self-contained, containerized setup.",
+      "operation": "After static analysis, the service provisions a simulated environment, starts the application and attempts to reproduce selected vulnerabilities. This adds runtime evidence to a source finding. It is not equivalent to testing the real deployed environment, its external services or production identity configuration.",
+      "output": "Per-finding states such as confirmed, not reproduced, validation failed or not validated, together with available verification evidence.",
+      "entry": "Enable simulated validation while configuring the code review. Check environment startup and dependency access before interpreting validation outcomes.",
+      "limits": "Validation failed is inconclusive. Not validated means no completed attempt for that finding. Not reproduced is limited to the attempted environment and conditions; it does not establish absence of the vulnerability.",
+      "check": "For a confirmed finding, inspect the executed path and evidence. For a failure or non-reproduction, inspect missing dependencies, authentication, timeouts and environment differences before dismissing the source finding.",
+      "refs": [
+        "perform-code",
+        "code-findings"
+      ],
+      "availability": "Preview",
+      "activation": "See invocation and prerequisites"
+    },
+    {
+      "id": "S06",
+      "group": "runtime",
+      "name": "Run a scoped penetration test against a deployed application",
+      "input": "Verified and associated target domains, included and excluded paths, application scope, current credentials, network access and optional source/design context.",
+      "operation": "The agent explores the authorized target, plans tests and attempts to validate security issues. The selected scope determines the risk classes: a web-application assessment differs from the generative-AI application scope. This operation sends real traffic to the target and can exercise application behavior.",
+      "output": "A run with executed tasks, findings, evidence and coverage limitations. Run duration and billable task hours measure different things because work can execute concurrently.",
+      "entry": "Enable penetration testing, verify the domain and create a penetration-test configuration. Set target scope, credentials, network access, risk selection and a maximum task-hours limit where appropriate before starting.",
+      "limits": "Credentials or networking failures can leave authenticated surfaces untested. A budget or run limit can stop work before coverage is complete. A risk class listed in scope does not mean every endpoint was tested for it.",
+      "check": "Verify the intended build and test identity at the target. Inspect executed tasks and access failures; compare the explored paths with the team's required test surface. Stop if real customer effects or out-of-scope traffic occur.",
+      "refs": [
+        "pentest-enable",
+        "pentest-create",
+        "domain",
+        "credentials",
+        "guidance",
+        "pricing",
+        "history"
+      ],
+      "availability": "GA",
+      "activation": "See invocation and prerequisites"
+    },
+    {
+      "id": "S07",
+      "group": "runtime",
+      "name": "Retest selected existing penetration-test findings",
+      "input": "One or more findings from a completed run, with a fix already deployed to the same target and valid current authentication.",
+      "operation": "Revalidation repeats the validation steps for the selected findings as a separate job. It does not discover new vulnerabilities or replace the original finding. The link between original evidence and subsequent attempts supports a remediation history.",
+      "output": "Active when the issue is reproduced, or Resolved when it is not reproduced during the retest. A linked Jira issue can receive a result comment.",
+      "entry": "Open the completed penetration-test run, choose Multiselect findings for revalidation, select the findings and choose Revalidate findings.",
+      "limits": "A patch existing only in a branch cannot change the running target's result. Resolved is scoped to that retest and is not an assurance that all related paths or regressions were tested.",
+      "check": "Confirm deployment identity and authentication before interpreting non-reproduction. Run the application's own regression tests and a broader test when the fix changes other trust boundaries.",
+      "refs": [
+        "revalidate"
+      ],
+      "availability": "Documented",
+      "activation": "See invocation and prerequisites"
+    },
+    {
+      "id": "S08",
+      "group": "remediation",
+      "name": "Generate a code-remediation proposal",
+      "input": "A source finding, associated code and a source connection capable of returning the proposed change.",
+      "operation": "Code remediation generates a repair for review. Depending on the supported source route, the result is a pull or merge request or a downloadable diff. The source integration's write permission and remediation setting are separate from the permission to scan.",
+      "output": "A proposed patch and its explanation, not an accepted, merged, deployed or independently verified fix.",
+      "entry": "Select Remediate code on an eligible finding and inspect the provider-specific result. For S3 sources, review the downloadable diff before applying it in the team's repository.",
+      "limits": "The change may remove intended behavior, miss another entry point or introduce a regression. Provider and repository eligibility affect whether an automated PR is available; do not assume universal write support.",
+      "check": "Review authorization logic and behavior, run positive and negative tests, then deploy through the normal change process. Use code rereview or target revalidation according to the original finding type.",
+      "refs": [
+        "remediate",
+        "enable-code",
+        "code-findings"
+      ],
+      "availability": "Preview",
+      "activation": "See invocation and prerequisites"
+    },
+    {
+      "id": "S09",
+      "group": "remediation",
+      "name": "Triage findings and export assessment evidence",
+      "input": "Assessment findings with severity, confidence, validation evidence and the organization's disposition or annotations.",
+      "operation": "The findings interface supports review of evidence and workflow disposition. Penetration-test report generation exports a selected set of findings and can include organization-authored annotation notes. Filtering controls what is shown or exported; it does not alter the set of tests that actually ran.",
+      "output": "A reviewable assessment record or PDF report. Organization annotations are distinct from the agent's assessment. Exporting a report does not confer compliance or certification.",
+      "entry": "Inspect finding details and active confidence/status filters. From a penetration-test run, use Generate report and explicitly choose findings and annotation options.",
+      "limits": "A high-confidence-only view can hide unresolved findings. A workflow status such as resolved or accepted is not the same as confirmed exploit validation or successful revalidation.",
+      "check": "Before sharing a report, record run ID, source/build, target, test window, filters and unresolved coverage gaps. Reconcile exported totals against the selected findings, not the default dashboard alone.",
+      "refs": [
+        "code-findings",
+        "export",
+        "revalidate",
+        "guidance"
+      ],
+      "availability": "Documented",
+      "activation": "See invocation and prerequisites"
+    }
   ],
-  "procedures":[
-    {"id":"SU1","title":"Assess an authorization change before merging it","goal":"Determine whether a specific code change weakens an authorization boundary, and identify what still needs runtime testing.","when":"A developer changes ownership checks, tenant scoping or role enforcement in a repository with configured review access.","not_for":"Replacing code-owner review, proving production security from a passing diff review, or using a source-only result to claim exploitability.","functions":["S03","S04","S05","S08"],"inputs":["Base/head commit IDs and a complete source revision with the actual changed lines.","The intended authorization rule and one allowed and one denied request, specified by the application owner.","Relevant enabled requirements, PR trigger settings and excluded paths.","A reproducible build and test harness; simulated validation only if the application fits its prerequisites."],"steps":[["Developer","Define expected behavior","State which principal may access which object and under what tenant/role condition. A request being authenticated does not establish that object access is authorized."],["Operator","Confirm that a review ran","Check source revision, changed-line scope and preflight. If a filter skipped the PR or source access failed, fix that instead of interpreting no comments as a clean review."],["Developer and security reviewer","Trace the finding to code","Follow the request through routing, identity extraction and ownership checks. Determine whether the finding is on an executed path and whether a relevant check exists elsewhere."],["Operator","Interpret validation separately","For an optional simulated attempt, inspect runtime setup and evidence. Keep failed or unperformed attempts unresolved; do not downgrade a source issue merely because private dependencies prevented startup."],["Developer","Review the proposed repair","Check that the patch enforces the intended rule without blocking allowed requests. Run positive and negative regression tests; deploy normally and test the runtime boundary when required."]],"acceptance":"A decision tied to the exact change, a disposition for each relevant finding and executable allowed/denied regression tests. Remaining runtime assumptions are listed explicitly.","stop":"Do not approve based on missing comments, a failed preflight, unknown source revision or a generated patch without behavior tests.","prompt":"Assess the change from <base> to <head> for the rule <principal/object/tenant condition>. Identify the actual code path and evidence for any bypass. Separate source findings from demonstrated runtime exploitation. Do not merge or deploy a repair.","demo_minutes":5,"demo":[[1,"Show the authorization rule, exact diff and intended allowed/denied cases."],[1,"Confirm the prepared review's revision, preflight and trigger behavior."],[1,"Trace one finding and identify its validation state."],[1,"Review a proposed patch against both allowed and denied tests."],[1,"State the merge decision and remaining runtime evidence gap."]],"fallback":"Use a prepared, permission-cleared PR, finding and test output. Label the data as a prepared example; do not simulate a successful live scan.","refs":["diff","triggers","code-findings","remediate"]},
-    {"id":"SU2","title":"Verify a deployed fix for a cross-user access finding","goal":"Confirm whether a previously observed authorization failure can still be reproduced on the patched staging build.","when":"A completed authorized penetration test has a relevant finding and the proposed repair is deployed to the original target.","not_for":"Testing a third-party target, discovering unrelated vulnerabilities through revalidation, or declaring the entire application secure after one non-reproduction.","functions":["S06","S07","S09"],"inputs":["Original run/finding ID, evidence, target URL and tested path.","Patched build identifier and deployment time; proof that the running target uses that build.","Two disposable test identities and test records with explicit ownership, where the application supports such testing.","Authorization, exclusions, current credentials, target-side logs and a cleanup owner."],"steps":[["Application owner","Verify the environment","Confirm the patched build and current test identity. Seed disposable records and disable real outbound effects. Stop if the original finding cannot be mapped to the intended target."],["Operator","Run targeted revalidation","Select the existing finding and start its separate revalidation job. Do not describe this as a new full penetration test."],["Security reviewer","Inspect the result and prerequisites","If Active, inspect reproduction evidence and return to remediation. If Resolved, check that authentication and the intended endpoint worked; a login failure must not be accepted as a fixed authorization control."],["Developer","Run independent regressions","Verify that the legitimate owner can still access its record and a different identity cannot. These are proposed application-specific tests, not a claimed built-in universal test fixture."],["Operator","Retain the evidence and decide breadth","Record original and revalidation IDs, build, test identities' roles and application logs. Run a broader assessment if the fix alters other routes or trust boundaries."]],"acceptance":"Non-reproduction under valid test conditions plus passing allowed/denied application tests. The record states exactly which finding and build were tested and what remains outside scope.","stop":"Stop if the patched build is not deployed, credentials fail, the target differs or the test touches real customer data or external side effects.","prompt":"Revalidate finding <finding-id> on the authorized staging target after build <build-id>. Preserve the link to the original run. Report whether the same issue is reproduced and identify authentication or execution failures separately.","demo_minutes":5,"demo":[[1,"Show original finding, authorized target and deployed build identity."],[1,"Explain the test identities and safe data boundary."],[1,"Open a prepared revalidation job and inspect execution evidence."],[1,"Contrast Active, valid non-reproduction and authentication failure."],[1,"Show independent regression results and the narrowly scoped conclusion."]],"fallback":"Walk through prepared original and retest evidence. Do not start an unbounded penetration test merely to fill a five-minute demonstration slot.","refs":["revalidate","guidance","export"]}
+  "mechanisms": [
+    {
+      "id": "SM1",
+      "name": "Configure criteria independently of the review being run",
+      "explanation": "Requirement packs supply explicit evaluation criteria for design and code review. Managed requirements are read-only; custom requirements can be written, cloned or generated from existing policy documents. These criteria are not a learned memory of previous penetration-test incidents.",
+      "configure": [
+        "In the AWS console, open Security requirements and select the managed or custom packs relevant to the application.",
+        "For a custom requirement, specify applicability, observable compliant/non-compliant conditions and remediation guidance. Avoid a criterion such as 'use secure authentication' without a testable meaning.",
+        "To generate requirements from existing policies, upload supported documents into a custom pack and review the generated criteria before enabling it.",
+        "Enable the pack before a new design or code review. Record the pack version or reviewed definition with the assessment.",
+        "Treat a new document upload as replacement: it regenerates all requirements in that pack, including previously hand-written entries."
+      ],
+      "lifecycle": "Pack enablement and edits affect new reviews, not past results. A custom copy of a managed requirement does not automatically inherit later managed updates. Packs are shared across Agent Spaces, so changes need an identified owner.",
+      "verification": "Proposed check: evaluate deliberately complete, incomplete and non-applicable design examples and verify that the criterion discriminates between them. Do not equate an enabled framework pack with an audit opinion.",
+      "refs": [
+        "requirements",
+        "import-requirements",
+        "design-findings"
+      ]
+    },
+    {
+      "id": "SM2",
+      "name": "Configure source access and PR triggers as separate controls",
+      "explanation": "Repository or S3 access determines what can be analyzed. Review-comment publication, remediation writes and automated triggers are separate settings. The effective review boundary is the combination of source revision, trigger configuration, analysis settings and file/context filters.",
+      "configure": [
+        "Connect the supported source provider or authorize the S3 bucket/prefix. Associate the intended source with the Agent Space and verify the service role's access.",
+        "Enable code-review comments and code-remediation writes only where required; do not grant source write access merely to perform static analysis.",
+        "Configure repository triggers for target branch, relevant event, draft state and supported labels. The documented branch expressions use RE2 full-name regular expressions, not shell globs.",
+        "Test condition groups: conditions within a group combine with AND; groups combine with OR. Label-based conditions are provider-dependent.",
+        "For GitHub filtering guidance, review .awssecurityagent/filtering.md on the default branch. Distinguish IgnorePatterns from ContextHints; hints are not an access-control mechanism."
+      ],
+      "lifecycle": "Changing filters changes future invocation or result selection. A manually requested review may bypass trigger filters; verify the documented provider command and settings before relying on them as a review gate.",
+      "verification": "Proposed check: create matching and non-matching test changes, including a draft and a target-branch mismatch. Record the run IDs or the reason no run occurred. Inspect both review comments and the underlying run state.",
+      "refs": [
+        "connect",
+        "s3",
+        "enable-code",
+        "triggers",
+        "pr-review",
+        "diff"
+      ]
+    },
+    {
+      "id": "SM3",
+      "name": "Authorize the runtime target, identity and test surface",
+      "explanation": "Testing authorization requires more than a URL. The registered domain establishes a permitted target; network configuration makes it reachable; credentials determine the authenticated surface. The test scope and exclusions limit what the service should exercise. None makes a production side effect harmless.",
+      "configure": [
+        "Verify domain control using the documented mechanism and associate the domain with the Agent Space. For private targets, follow the private-domain and VPC requirements rather than assuming public DNS verification covers the network path.",
+        "Create a test configuration with the intended URLs, excluded paths and selected risk classes. Use the generative-AI scope only when testing that application's LLM-related risks.",
+        "Provide dedicated test credentials through the supported credential flow. Check login and any required authentication step against the actual target before starting.",
+        "Supply relevant design/source context and network configuration. Restrict the test identity and replace payments, outbound messages and other irreversible effects with safe staging equivalents.",
+        "Set a task-hours limit and supervise run logs. Distinguish a graceful limit stop from a complete assessment."
+      ],
+      "lifecycle": "Changing credentials or a deployment can invalidate comparison with an earlier run. Domain association removal is distinct from deleting a registration. Keep target-side audit records for each test window.",
+      "verification": "Proposed check: prove that the test identity reaches the required surface and cannot access out-of-scope data. Inspect real executed tasks rather than only configured risk categories.",
+      "refs": [
+        "domain",
+        "pentest-enable",
+        "pentest-create",
+        "credentials",
+        "guidance",
+        "history",
+        "pricing"
+      ]
+    },
+    {
+      "id": "SM4",
+      "name": "Interpret severity, confidence, validation and workflow status independently",
+      "explanation": "Severity describes potential impact; confidence describes the agent's confidence in the finding; validation records an exploit attempt; workflow status records disposition. These are four different axes. A low-confidence high-impact issue still requires triage, and a manually resolved finding is not a successful runtime retest.",
+      "configure": [
+        "Inspect active confidence and status filters before counting findings or exporting a report. The code-review guide documents a high-confidence default; other assessment screens can use different defaults.",
+        "Read preflight and task logs before interpreting an empty list. Failed access or startup is an assessment failure, not absence of vulnerabilities.",
+        "For simulated validation, retain confirmed, not reproduced, validation failed and not validated distinctly.",
+        "For a deployed fix, start a revalidation job and retain its link to the original finding. Keep organization-authored risk acceptance or annotations separate from agent evidence."
+      ],
+      "lifecycle": "Revalidation adds a new result and does not overwrite the original. Findings can be filtered or dispositioned without changing what was tested. No documented general incident-memory retraining mechanism is inferred from these features.",
+      "verification": "Proposed check: review one confirmed finding, one inconclusive validation and one accepted-risk item. The final report should make all three states distinguishable without reading hidden notes.",
+      "refs": [
+        "code-findings",
+        "revalidate",
+        "export",
+        "guidance"
+      ]
+    }
   ],
-  "gaps":[
+  "procedures": [
+    {
+      "id": "SU1",
+      "title": "Assess an authorization change before merging it",
+      "goal": "Determine whether a specific code change weakens an authorization boundary, and identify what still needs runtime testing.",
+      "when": "A developer changes ownership checks, tenant scoping or role enforcement in a repository with configured review access.",
+      "not_for": "Replacing code-owner review, proving production security from a passing diff review, or using a source-only result to claim exploitability.",
+      "functions": [
+        "S03",
+        "S04",
+        "S05",
+        "S08"
+      ],
+      "inputs": [
+        "Base/head commit IDs and a complete source revision with the actual changed lines.",
+        "The intended authorization rule and one allowed and one denied request, specified by the application owner.",
+        "Relevant enabled requirements, PR trigger settings and excluded paths.",
+        "A reproducible build and test harness; simulated validation only if the application fits its prerequisites."
+      ],
+      "steps": [
+        [
+          "Developer",
+          "Define expected behavior",
+          "State which principal may access which object and under what tenant/role condition. A request being authenticated does not establish that object access is authorized."
+        ],
+        [
+          "Operator",
+          "Confirm that a review ran",
+          "Check source revision, changed-line scope and preflight. If a filter skipped the PR or source access failed, fix that instead of interpreting no comments as a clean review."
+        ],
+        [
+          "Developer and security reviewer",
+          "Trace the finding to code",
+          "Follow the request through routing, identity extraction and ownership checks. Determine whether the finding is on an executed path and whether a relevant check exists elsewhere."
+        ],
+        [
+          "Operator",
+          "Interpret validation separately",
+          "For an optional simulated attempt, inspect runtime setup and evidence. Keep failed or unperformed attempts unresolved; do not downgrade a source issue merely because private dependencies prevented startup."
+        ],
+        [
+          "Developer",
+          "Review the proposed repair",
+          "Check that the patch enforces the intended rule without blocking allowed requests. Run positive and negative regression tests; deploy normally and test the runtime boundary when required."
+        ]
+      ],
+      "acceptance": "A decision tied to the exact change, a disposition for each relevant finding and executable allowed/denied regression tests. Remaining runtime assumptions are listed explicitly.",
+      "stop": "Do not approve based on missing comments, a failed preflight, unknown source revision or a generated patch without behavior tests.",
+      "prompt": "Assess the change from <base> to <head> for the rule <principal/object/tenant condition>. Identify the actual code path and evidence for any bypass. Separate source findings from demonstrated runtime exploitation. Do not merge or deploy a repair.",
+      "demo_minutes": 5,
+      "demo": [
+        [
+          1,
+          "Show the authorization rule, exact diff and intended allowed/denied cases."
+        ],
+        [
+          1,
+          "Confirm the prepared review's revision, preflight and trigger behavior."
+        ],
+        [
+          1,
+          "Trace one finding and identify its validation state."
+        ],
+        [
+          1,
+          "Review a proposed patch against both allowed and denied tests."
+        ],
+        [
+          1,
+          "State the merge decision and remaining runtime evidence gap."
+        ]
+      ],
+      "fallback": "Use a prepared, permission-cleared PR, finding and test output. Label the data as a prepared example; do not simulate a successful live scan.",
+      "refs": [
+        "diff",
+        "triggers",
+        "code-findings",
+        "remediate"
+      ]
+    },
+    {
+      "id": "SU2",
+      "title": "Verify a deployed fix for a cross-user access finding",
+      "goal": "Confirm whether a previously observed authorization failure can still be reproduced on the patched staging build.",
+      "when": "A completed authorized penetration test has a relevant finding and the proposed repair is deployed to the original target.",
+      "not_for": "Testing a third-party target, discovering unrelated vulnerabilities through revalidation, or declaring the entire application secure after one non-reproduction.",
+      "functions": [
+        "S06",
+        "S07",
+        "S09"
+      ],
+      "inputs": [
+        "Original run/finding ID, evidence, target URL and tested path.",
+        "Patched build identifier and deployment time; proof that the running target uses that build.",
+        "Two disposable test identities and test records with explicit ownership, where the application supports such testing.",
+        "Authorization, exclusions, current credentials, target-side logs and a cleanup owner."
+      ],
+      "steps": [
+        [
+          "Application owner",
+          "Verify the environment",
+          "Confirm the patched build and current test identity. Seed disposable records and disable real outbound effects. Stop if the original finding cannot be mapped to the intended target."
+        ],
+        [
+          "Operator",
+          "Run targeted revalidation",
+          "Select the existing finding and start its separate revalidation job. Do not describe this as a new full penetration test."
+        ],
+        [
+          "Security reviewer",
+          "Inspect the result and prerequisites",
+          "If Active, inspect reproduction evidence and return to remediation. If Resolved, check that authentication and the intended endpoint worked; a login failure must not be accepted as a fixed authorization control."
+        ],
+        [
+          "Developer",
+          "Run independent regressions",
+          "Verify that the legitimate owner can still access its record and a different identity cannot. These are proposed application-specific tests, not a claimed built-in universal test fixture."
+        ],
+        [
+          "Operator",
+          "Retain the evidence and decide breadth",
+          "Record original and revalidation IDs, build, test identities' roles and application logs. Run a broader assessment if the fix alters other routes or trust boundaries."
+        ]
+      ],
+      "acceptance": "Non-reproduction under valid test conditions plus passing allowed/denied application tests. The record states exactly which finding and build were tested and what remains outside scope.",
+      "stop": "Stop if the patched build is not deployed, credentials fail, the target differs or the test touches real customer data or external side effects.",
+      "prompt": "Revalidate finding <finding-id> on the authorized staging target after build <build-id>. Preserve the link to the original run. Report whether the same issue is reproduced and identify authentication or execution failures separately.",
+      "demo_minutes": 5,
+      "demo": [
+        [
+          1,
+          "Show original finding, authorized target and deployed build identity."
+        ],
+        [
+          1,
+          "Explain the test identities and safe data boundary."
+        ],
+        [
+          1,
+          "Open a prepared revalidation job and inspect execution evidence."
+        ],
+        [
+          1,
+          "Contrast Active, valid non-reproduction and authentication failure."
+        ],
+        [
+          1,
+          "Show independent regression results and the narrowly scoped conclusion."
+        ]
+      ],
+      "fallback": "Walk through prepared original and retest evidence. Do not start an unbounded penetration test merely to fill a five-minute demonstration slot.",
+      "refs": [
+        "revalidate",
+        "guidance",
+        "export"
+      ]
+    }
+  ],
+  "gaps": [
     "The general security-guidance FAQ has contained older statements about API and CI availability that conflict with newer feature-specific API and pipeline tutorials. This guide follows the documented full-source/diff job and current integration pages, not the older blanket statement.",
     "Default confidence filtering differs between assessment views and documentation revisions. The operating procedure requires inspection of the actual filter instead of asserting one default for every screen.",
     "A requirement evaluation, generated threat, static finding, simulated exploit and deployed-target revalidation are different evidence classes. None alone establishes application-wide security or certification.",
     "This guide does not assume that previous assessments become a general incident-memory store. Reusable source context, requirement packs and linked retest history are the documented mechanisms described here."
   ],
-  "sources":{
-    "overview":{"title":"What is AWS Security Agent","url":"https://docs.aws.amazon.com/securityagent/latest/userguide/what-is.html"},
-    "pricing":{"title":"Pricing: capability status and task-hours semantics","url":"https://docs.aws.amazon.com/securityagent/latest/userguide/pricing.html"},
-    "ga":{"title":"On-demand penetration testing general availability","url":"https://aws.amazon.com/about-aws/whats-new/2026/03/aws-security-agent-ondemand-penetration/"},
-    "history":{"title":"Document history and feature updates","url":"https://docs.aws.amazon.com/securityagent/latest/userguide/doc-history.html"},
-    "requirements":{"title":"Manage security requirements","url":"https://docs.aws.amazon.com/securityagent/latest/userguide/security-requirements.html"},
-    "import-requirements":{"title":"Generate requirements from documents","url":"https://docs.aws.amazon.com/securityagent/latest/userguide/import-security-requirements.html"},
-    "design-findings":{"title":"Review design findings","url":"https://docs.aws.amazon.com/securityagent/latest/userguide/review-design-findings.html"},
-    "threat-setup":{"title":"Enable threat modeling","url":"https://docs.aws.amazon.com/securityagent/latest/userguide/enable-threat-model.html"},
-    "threat-start":{"title":"Create a threat model","url":"https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-threat-model.html"},
-    "threat-findings":{"title":"Review threat-model findings","url":"https://docs.aws.amazon.com/securityagent/latest/userguide/review-threat-model-findings.html"},
-    "perform-code":{"title":"Perform a full code review","url":"https://docs.aws.amazon.com/securityagent/latest/userguide/perform-code-review-scan.html"},
-    "enable-code":{"title":"Enable code reviews","url":"https://docs.aws.amazon.com/securityagent/latest/userguide/enable-code-review-scan.html"},
-    "code-findings":{"title":"Code-review findings and validation states","url":"https://docs.aws.amazon.com/securityagent/latest/userguide/review-code-scan-findings.html"},
-    "diff":{"title":"Run a differential scan from S3","url":"https://docs.aws.amazon.com/securityagent/latest/userguide/run-diff-scan-s3.html"},
-    "pr-review":{"title":"Review code findings in GitHub","url":"https://docs.aws.amazon.com/securityagent/latest/userguide/review-code-findings-github.html"},
-    "triggers":{"title":"Configure code-review triggers","url":"https://docs.aws.amazon.com/securityagent/latest/userguide/configure-code-review-triggers.html"},
-    "connect":{"title":"Connect GitHub","url":"https://docs.aws.amazon.com/securityagent/latest/userguide/connect-github.html"},
-    "s3":{"title":"Configure S3 source access","url":"https://docs.aws.amazon.com/securityagent/latest/userguide/enable-s3-bucket.html"},
-    "pentest-enable":{"title":"Enable penetration testing","url":"https://docs.aws.amazon.com/securityagent/latest/userguide/enable-penetration-test.html"},
-    "pentest-create":{"title":"Create a penetration test","url":"https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html"},
-    "domain":{"title":"Verify a test domain","url":"https://docs.aws.amazon.com/securityagent/latest/userguide/enable-test-domain.html"},
-    "credentials":{"title":"Provide test credentials","url":"https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html"},
-    "guidance":{"title":"Security guidance and testing boundaries","url":"https://docs.aws.amazon.com/securityagent/latest/userguide/security-guidance.html"},
-    "revalidate":{"title":"Revalidate penetration-test findings","url":"https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html"},
-    "remediate":{"title":"Remediate code-review findings","url":"https://docs.aws.amazon.com/securityagent/latest/userguide/remediate-code-scan-findings.html"},
-    "export":{"title":"Export penetration-test reports","url":"https://docs.aws.amazon.com/securityagent/latest/userguide/export-penetration-report.html"}
+  "sources": {
+    "overview": {
+      "title": "What is AWS Security Agent",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/what-is.html"
+    },
+    "pricing": {
+      "title": "Pricing: capability status and task-hours semantics",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/pricing.html"
+    },
+    "ga": {
+      "title": "On-demand penetration testing general availability",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/03/aws-security-agent-ondemand-penetration/"
+    },
+    "history": {
+      "title": "Document history and feature updates",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/doc-history.html"
+    },
+    "requirements": {
+      "title": "Manage security requirements",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/security-requirements.html"
+    },
+    "import-requirements": {
+      "title": "Generate requirements from documents",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/import-security-requirements.html"
+    },
+    "design-findings": {
+      "title": "Review design findings",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/review-design-findings.html"
+    },
+    "threat-setup": {
+      "title": "Enable threat modeling",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/enable-threat-model.html"
+    },
+    "threat-start": {
+      "title": "Create a threat model",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-threat-model.html"
+    },
+    "threat-findings": {
+      "title": "Review threat-model findings",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/review-threat-model-findings.html"
+    },
+    "perform-code": {
+      "title": "Perform a full code review",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/perform-code-review-scan.html"
+    },
+    "enable-code": {
+      "title": "Enable code reviews",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/enable-code-review-scan.html"
+    },
+    "code-findings": {
+      "title": "Code-review findings and validation states",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/review-code-scan-findings.html"
+    },
+    "diff": {
+      "title": "Run a differential scan from S3",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/run-diff-scan-s3.html"
+    },
+    "pr-review": {
+      "title": "Review code findings in GitHub",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/review-code-findings-github.html"
+    },
+    "triggers": {
+      "title": "Configure code-review triggers",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/configure-code-review-triggers.html"
+    },
+    "connect": {
+      "title": "Connect GitHub",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/connect-github.html"
+    },
+    "s3": {
+      "title": "Configure S3 source access",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/enable-s3-bucket.html"
+    },
+    "pentest-enable": {
+      "title": "Enable penetration testing",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/enable-penetration-test.html"
+    },
+    "pentest-create": {
+      "title": "Create a penetration test",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html"
+    },
+    "domain": {
+      "title": "Verify a test domain",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/enable-test-domain.html"
+    },
+    "credentials": {
+      "title": "Provide test credentials",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html"
+    },
+    "guidance": {
+      "title": "Security guidance and testing boundaries",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/security-guidance.html"
+    },
+    "revalidate": {
+      "title": "Revalidate penetration-test findings",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html"
+    },
+    "remediate": {
+      "title": "Remediate code-review findings",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/remediate-code-scan-findings.html"
+    },
+    "export": {
+      "title": "Export penetration-test reports",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/export-penetration-report.html"
+    }
   }
 }
