@@ -1,0 +1,851 @@
+{
+  "slug": "aws_kiro_frontier_agent",
+  "title": "Kiro",
+  "subtitle": "Day-to-day engineering with the frontier coding agent",
+  "validated": "2026-10-20",
+  "scope": "Cloud autonomous delivery, repository collaboration, and the IDE/CLI capabilities that support the same engineering workflow. No production deployment authority is assumed.",
+  "overview": "Use Kiro for bounded engineering outcomes: understand a repository, specify a change, implement and test it, and hand a reviewable pull request to a person. Cloud delivery is the central frontier-agent workflow; local-only controls are labeled separately.",
+  "alert": "Kiro Web requires an eligible paid plan and is documented in us-east-1 only. It does not automatically merge changes. Local permission prompts, hooks, and file restore behavior must not be assumed to exist in a cloud session.",
+  "alert_refs": [
+    "S02",
+    "S18",
+    "S17",
+    "S21"
+  ],
+  "default_preview": false,
+  "capabilities": [
+    {
+      "id": "C01",
+      "number": 1,
+      "title": "Understand a repository before editing",
+      "product": "Coding and specifications",
+      "verdict": "Confirmed",
+      "availability": "Web · interactive mode",
+      "delivery": "Native; connected repository",
+      "claim": "Inspect connected code, discuss implementation choices, and iterate on a change in a selected branch.",
+      "limit": "The accessible repository is the evidence base. A plausible explanation is not proof that the runtime behaves as described.",
+      "setup": "Connect GitHub or GitLab and select the relevant repository and branch. Start with a narrowly scoped question.",
+      "prompt": "Explain how request IDs pass through this service. Cite files and symbols, identify gaps, and make no changes yet.",
+      "check": "Follow the cited call path yourself and compare it with a known request or test trace.",
+      "refs": [
+        "S03",
+        "S09"
+      ],
+      "preview": false,
+      "note": "Core behavior is documented; the example task and acceptance check are author recommendations, not executed demonstrations."
+    },
+    {
+      "id": "C02",
+      "number": 2,
+      "title": "Plan a feature with requirements, design, and tasks",
+      "product": "Coding and specifications",
+      "verdict": "Confirmed",
+      "availability": "IDE / CLI / Web · specifications",
+      "delivery": "Native structured workflow",
+      "claim": "Feature specifications separate requirements, technical design, and implementation tasks before execution.",
+      "limit": "Spec capabilities vary by interface. Requirements analysis and correctness/property-based tooling are not uniformly available in Web.",
+      "setup": "Provide the desired outcome, constraints, non-goals, and acceptance evidence; select the appropriate specification workflow.",
+      "prompt": "Plan request-ID propagation. Preserve public APIs, identify affected components, and propose tests before implementation.",
+      "check": "Review requirements and design against actual service contracts; reject tasks that expand the agreed scope.",
+      "refs": [
+        "S08"
+      ],
+      "preview": false,
+      "note": "Core behavior is documented; the example task and acceptance check are author recommendations, not executed demonstrations."
+    },
+    {
+      "id": "C03",
+      "number": 3,
+      "title": "Specify a bug fix without changing unrelated behavior",
+      "product": "Coding and specifications",
+      "verdict": "Confirmed",
+      "availability": "IDE / CLI / Web · bugfix specifications",
+      "delivery": "Native structured workflow",
+      "claim": "Bugfix specifications distinguish current behavior, expected behavior, and behavior that must remain unchanged.",
+      "limit": "The specification is not evidence that the bug is reproduced or the fix is correct.",
+      "setup": "Provide a minimal reproduction, relevant input, expected output, and regression constraints.",
+      "prompt": "Create a bugfix spec for duplicate webhook handling. Define the failing case and the successful flows that must remain unchanged.",
+      "check": "Require a failing regression test before the change and the same test passing afterward.",
+      "refs": [
+        "S08"
+      ],
+      "preview": false,
+      "note": "Core behavior is documented; the example task and acceptance check are author recommendations, not executed demonstrations."
+    },
+    {
+      "id": "C04",
+      "number": 4,
+      "title": "Delegate a bounded outcome through to a pull request",
+      "product": "Cloud delivery",
+      "verdict": "Qualified",
+      "availability": "Web / cloud sessions · autonomous mode",
+      "delivery": "Native autonomous execution",
+      "claim": "Autonomous mode can plan work, delegate sub-agents, implement, verify, and open a pull request or merge request.",
+      "limit": "It is off by default, can pause for input, and may return an answer instead of a code change. It does not merge into the default branch.",
+      "setup": "Use an eligible plan, connected repositories, a functioning sandbox, explicit acceptance criteria, and a named human reviewer.",
+      "prompt": "Fix this reproducible retry defect, add focused tests, and open a small PR explaining evidence and remaining risks. Do not deploy.",
+      "check": "Inspect the full diff and actual test output; apply ordinary review and branch-protection rules.",
+      "refs": [
+        "S04",
+        "S02",
+        "S12"
+      ],
+      "preview": false,
+      "note": "Core behavior is documented; the example task and acceptance check are author recommendations, not executed demonstrations."
+    },
+    {
+      "id": "C05",
+      "number": 5,
+      "title": "Coordinate a change across repositories",
+      "product": "Cloud delivery",
+      "verdict": "Qualified",
+      "availability": "Web · GitHub and GitLab",
+      "delivery": "Native; provider connections required",
+      "claim": "A task can span multiple repositories, including mixed GitHub and GitLab projects, with a separate PR or MR for each.",
+      "limit": "Provider access is not implied by the repository picker. GitLab token scope and network reachability matter; VPC-only private GitLab is not supported.",
+      "setup": "Connect only trusted repositories; validate tokens, write access, default branches, and cross-repository dependency order.",
+      "prompt": "Update the shared client and its consuming service for the new optional header. Open linked changes and describe the safe merge order.",
+      "check": "Run consumer compatibility checks and review whether either change can be deployed independently.",
+      "refs": [
+        "S05",
+        "S07"
+      ],
+      "preview": false,
+      "note": "Core behavior is documented; the example task and acceptance check are author recommendations, not executed demonstrations."
+    },
+    {
+      "id": "C06",
+      "number": 6,
+      "title": "Assign a GitHub issue to the agent",
+      "product": "Repository collaboration",
+      "verdict": "Confirmed",
+      "availability": "Web · GitHub integration",
+      "delivery": "Native issue trigger",
+      "claim": "The documented GitHub flow delegates an issue using the kiro label or a /kiro comment.",
+      "limit": "The app must have repository access and the assigning user needs suitable write access. Multiple assignments can create duplicate tasks.",
+      "setup": "Install the Kiro GitHub app on selected repositories; give the issue a reproduction and completion criteria.",
+      "prompt": "Prepare a small bug issue with expected behavior and test criteria, then assign it using the documented Kiro trigger.",
+      "check": "Confirm one task owns the issue and that its resulting PR addresses the issue rather than unrelated cleanup.",
+      "refs": [
+        "S06"
+      ],
+      "preview": false,
+      "note": "Core behavior is documented; the example task and acceptance check are author recommendations, not executed demonstrations."
+    },
+    {
+      "id": "C07",
+      "number": 7,
+      "title": "Iterate on review feedback and supplied CI failures",
+      "product": "Repository collaboration",
+      "verdict": "Qualified",
+      "availability": "Web · GitHub feedback flow",
+      "delivery": "Native PR interaction; trigger restrictions",
+      "claim": "Kiro can address explicit PR feedback through documented commands, including /kiro all or /kiro fix for a thread.",
+      "limit": "The GitHub flow responds to the task creator’s instructions. Automated CI feedback is addressed when user feedback triggers work; do not assume every failed build causes an autonomous retry.",
+      "setup": "Keep the task creator responsible for feedback and attach the failing job, commit, and test output.",
+      "prompt": "Address this review thread and the linked CI failure. Preserve the test intent; report the exact check you reran.",
+      "check": "Confirm a fresh CI run validates the new commit rather than relying on a previous green result.",
+      "refs": [
+        "S06"
+      ],
+      "preview": false,
+      "note": "Core behavior is documented; the example task and acceptance check are author recommendations, not executed demonstrations."
+    },
+    {
+      "id": "C08",
+      "number": 8,
+      "title": "Write tests and verify a UI in the sandbox",
+      "product": "Coding and specifications",
+      "verdict": "Qualified",
+      "availability": "Cloud sandbox; local tools where configured",
+      "delivery": "Native tools; project test setup required",
+      "claim": "Code and shell tools support test-writing workflows; the cloud sandbox includes browser tooling for UI inspection and verification.",
+      "limit": "Available tools do not guarantee adequate coverage, reliable assertions, or access to every test dependency.",
+      "setup": "Provide reproducible fixtures, test commands, dependency access, and a non-production application endpoint when required.",
+      "prompt": "Add a regression test for the empty-state bug, run the affected tests, and inspect the page at a mobile viewport. Report failures honestly.",
+      "check": "Review assertions, fixture realism, screenshots where relevant, and captured command exit status.",
+      "refs": [
+        "S09",
+        "S10"
+      ],
+      "preview": false,
+      "note": "Core behavior is documented; the example task and acceptance check are author recommendations, not executed demonstrations."
+    },
+    {
+      "id": "C09",
+      "number": 9,
+      "title": "Schedule small repository-maintenance jobs",
+      "product": "Cloud delivery",
+      "verdict": "Qualified",
+      "availability": "Web · paid-plan automations",
+      "delivery": "Native recurring autonomous tasks",
+      "claim": "Automations run a stored prompt against connected repositories on a schedule and can produce reviewable changes.",
+      "limit": "Schedules use UTC and cannot run more often than hourly. Repeated runs still need output review and consumption monitoring.",
+      "setup": "Define a narrow prompt, repository selection, recurrence, and responsible reviewer; inspect the schedule before activating it.",
+      "prompt": "Once a week, identify outdated internal API examples and propose corrections only when a concrete mismatch is found. Avoid empty PRs.",
+      "check": "Check the UTC-to-local conversion, inspect the first run, and disable the automation when ownership or usefulness lapses.",
+      "refs": [
+        "S11"
+      ],
+      "preview": false,
+      "note": "Core behavior is documented; the example task and acceptance check are author recommendations, not executed demonstrations."
+    },
+    {
+      "id": "C10",
+      "number": 10,
+      "title": "Continue cloud work from another client",
+      "product": "Cloud delivery",
+      "verdict": "Confirmed",
+      "availability": "IDE / CLI / Web · cloud sessions",
+      "delivery": "Native session continuity",
+      "claim": "Cloud sessions run in a managed environment and can be resumed or steered from supported Kiro clients.",
+      "limit": "The service clones repository content server-side. Unsaved or unpushed local working-copy changes are not automatically uploaded.",
+      "setup": "Enable Cloud Sessions where required and ensure the intended branch and commit are available to the cloud session.",
+      "prompt": "Resume the cloud task for this branch. Summarize completed checks and ask before changing the agreed acceptance criteria.",
+      "check": "Compare the cloud commit with the intended local change before continuing or reviewing output.",
+      "refs": [
+        "S12"
+      ],
+      "preview": false,
+      "note": "Core behavior is documented; the example task and acceptance check are author recommendations, not executed demonstrations."
+    },
+    {
+      "id": "C11",
+      "number": 11,
+      "title": "Apply team conventions through steering",
+      "product": "Team configuration",
+      "verdict": "Qualified",
+      "availability": "Documented · interface and access requirements apply",
+      "delivery": "Native context configuration",
+      "claim": "Workspace steering and AGENTS.md can carry repository conventions, architecture guidance, and expected engineering practices.",
+      "limit": "Steering is instruction context, not an access-control boundary. Custom agents do not automatically inherit all steering resources.",
+      "setup": "Commit concise project guidance and explicitly load necessary resources for custom agents; handle personal cloud context through supported sync.",
+      "prompt": "Follow the repository’s API-compatibility and testing guidance. Identify conflicts in those instructions before editing.",
+      "check": "Check which instructions actually loaded and verify compliance in the resulting diff.",
+      "refs": [
+        "S13"
+      ],
+      "preview": false,
+      "note": "Core behavior is documented; the example task and acceptance check are author recommendations, not executed demonstrations."
+    },
+    {
+      "id": "C12",
+      "number": 12,
+      "title": "Reuse learned context without treating it as truth",
+      "product": "Team configuration",
+      "verdict": "Qualified",
+      "availability": "Documented · interface and access requirements apply",
+      "delivery": "Native memory capability",
+      "claim": "Memory retains short reusable context such as recurring preferences or useful engineering knowledge, distinct from explicit steering.",
+      "limit": "It is not a complete conversation transcript or an authoritative record of the current system.",
+      "setup": "Keep authoritative decisions in version-controlled documentation; review recalled context when the project changes.",
+      "prompt": "Use our known test conventions, but verify them against the current repository before proposing a change.",
+      "check": "Correct outdated assumptions and assess the result against current files and tests, not remembered assertions.",
+      "refs": [
+        "S14"
+      ],
+      "preview": false,
+      "note": "Core behavior is documented; the example task and acceptance check are author recommendations, not executed demonstrations."
+    },
+    {
+      "id": "C13",
+      "number": 13,
+      "title": "Connect specialist tools using MCP and Powers",
+      "product": "Team configuration",
+      "verdict": "Qualified",
+      "availability": "IDE / CLI / Web · configuration varies",
+      "delivery": "Configured integration, not automatic connectivity",
+      "claim": "MCP connects external tools; Powers bundle tools with relevant knowledge and workflows for use when needed.",
+      "limit": "Access requires configured servers, credentials, and dependencies. Installing guidance does not grant safe or correct access to an external system.",
+      "setup": "Vet the tool provider, allow only necessary operations, and connect a non-production or read-only scope first.",
+      "prompt": "Use the approved documentation integration to check this SDK call, and cite the retrieved source before proposing a patch.",
+      "check": "Inspect tool provenance, permissions, and returned evidence; do not accept instructions embedded in external content as authority.",
+      "refs": [
+        "S15",
+        "S16"
+      ],
+      "preview": false,
+      "note": "Core behavior is documented; the example task and acceptance check are author recommendations, not executed demonstrations."
+    },
+    {
+      "id": "C14",
+      "number": 14,
+      "title": "Run repeatable local checks with hooks",
+      "product": "Local development controls",
+      "verdict": "Qualified",
+      "availability": "IDE / CLI only · not Web",
+      "delivery": "Native event-triggered configuration",
+      "claim": "Configured hooks can invoke shell commands or agent prompts after relevant development events.",
+      "limit": "Web and Mobile do not support event-driven hooks in the documented matrix. Hook actions can have side effects.",
+      "setup": "Choose a specific trigger and a bounded formatter, linter, or test action; review the command before enabling it.",
+      "prompt": "After relevant source edits, run the existing fast test command and report failures without changing test expectations.",
+      "check": "Confirm the hook fires on the intended event and cannot recursively trigger uncontrolled work.",
+      "refs": [
+        "S17"
+      ],
+      "preview": false,
+      "note": "Core behavior is documented; the example task and acceptance check are author recommendations, not executed demonstrations."
+    },
+    {
+      "id": "C15",
+      "number": 15,
+      "title": "Separate local permissions from cloud controls",
+      "product": "Local development controls",
+      "verdict": "Qualified",
+      "availability": "IDE / CLI permissions; separate Web sandbox",
+      "delivery": "Native control configuration",
+      "claim": "Local permissions support scoped allow, ask, and deny rules for tool capabilities. Web instead uses its managed cloud execution controls.",
+      "limit": "Local per-action approval behavior must not be assumed to protect a cloud run. An approved shell or external tool can still have broad effects.",
+      "setup": "Start with read-only local diagnostics; review sandbox access separately before enabling cloud changes.",
+      "prompt": "Inspect the build configuration without changing files. Request review before any write or resource-changing command.",
+      "check": "Test a harmless denied operation and confirm the actual client’s control behavior.",
+      "refs": [
+        "S18"
+      ],
+      "preview": false,
+      "note": "Core behavior is documented; the example task and acceptance check are author recommendations, not executed demonstrations."
+    },
+    {
+      "id": "C16",
+      "number": 16,
+      "title": "Configure sandbox dependencies, egress, and secrets",
+      "product": "Cloud delivery",
+      "verdict": "Qualified",
+      "availability": "Web sandbox",
+      "delivery": "Native sandbox configuration",
+      "claim": "Sandbox settings control network access and provide environment variables or secrets for authorized task dependencies.",
+      "limit": "Encryption at rest does not prevent a task from exposing secrets through code, logs, or external requests. Isolation is not permission to provide production credentials.",
+      "setup": "Use trusted repositories, minimal test credentials, and a narrow network allow-list; avoid broad AWS production access.",
+      "prompt": "Run the integration test using the provided staging fixture. Never print credentials and report any unavailable dependency.",
+      "check": "Review allowed endpoints and logs, rotate temporary credentials, and inspect changes for accidental disclosure.",
+      "refs": [
+        "S19",
+        "S20",
+        "S10"
+      ],
+      "preview": false,
+      "note": "Core behavior is documented; the example task and acceptance check are author recommendations, not executed demonstrations."
+    },
+    {
+      "id": "C17",
+      "number": 17,
+      "title": "Recover local work with the correct restore mechanism",
+      "product": "Local development controls",
+      "verdict": "Qualified",
+      "availability": "IDE file checkpoints; CLI conversation rewind",
+      "delivery": "Native; different semantics by client",
+      "claim": "IDE checkpoints can restore files and conversation context. CLI rewind forks conversation context but does not revert files.",
+      "limit": "Neither capability is available as a Web file-rollback mechanism; neither reverses changes to external infrastructure.",
+      "setup": "Use version control alongside the client feature and record the commit before a change.",
+      "prompt": "Return to the pre-change discussion, then show the working-tree diff so I can decide which edits to restore.",
+      "check": "Inspect git status and external side effects explicitly; do not infer restored files from a rewound conversation.",
+      "refs": [
+        "S21"
+      ],
+      "preview": false,
+      "note": "Core behavior is documented; the example task and acceptance check are author recommendations, not executed demonstrations."
+    },
+    {
+      "id": "C18",
+      "number": 18,
+      "title": "Diagnose IaC or pipeline failures using supplied evidence",
+      "product": "Engineering workflow examples",
+      "verdict": "Workflow example",
+      "availability": "Use supported coding tools; environment setup required",
+      "delivery": "Application of documented file and shell tools",
+      "claim": "A practical workflow is to provide Terraform, CloudFormation, CDK, or pipeline files plus a failure log and request a minimal proposed fix.",
+      "limit": "This is not a separately documented universal IaC validator, a connected CI monitoring service, or authorization to deploy.",
+      "setup": "Provide redacted logs, the exact tool version, relevant files, and safe validation commands.",
+      "prompt": "Explain the earliest causal error in this failed infrastructure plan. Propose the smallest correction and do not apply changes.",
+      "check": "Rerun the organization’s existing plan, lint, and policy checks in the intended environment and review all resource changes.",
+      "refs": [
+        "S09",
+        "S18"
+      ],
+      "preview": false,
+      "note": "Core behavior is documented; the example task and acceptance check are author recommendations, not executed demonstrations."
+    },
+    {
+      "id": "C19",
+      "number": 19,
+      "title": "Reuse a specialist custom agent",
+      "product": "Team configuration",
+      "verdict": "Qualified",
+      "availability": "IDE / CLI primary agents; Web sub-agent delegation",
+      "delivery": "Native configuration; client-specific behavior",
+      "claim": "Custom agents define focused instructions, tools, and context. Web can delegate to project-level agents committed in .kiro/agents/.",
+      "limit": "A custom agent cannot be selected as the primary Web session agent. Local profiles and cloud-loaded configurations have different scope.",
+      "setup": "Version-control the agent configuration and include only the tools and resources needed for its task.",
+      "prompt": "Ask our test-review agent to inspect missing regression coverage and return findings without implementing changes.",
+      "check": "Check the effective tool list and confirm the reviewer’s evidence is independent of the implementation summary.",
+      "refs": [
+        "S22",
+        "S13"
+      ],
+      "preview": false,
+      "note": "Core behavior is documented; the example task and acceptance check are author recommendations, not executed demonstrations."
+    },
+    {
+      "id": "C20",
+      "number": 20,
+      "title": "Package a repeatable team procedure as a skill",
+      "product": "Team configuration",
+      "verdict": "Confirmed",
+      "availability": "IDE / CLI / Web · workspace skills",
+      "delivery": "Native reusable instruction package",
+      "claim": "Skills package instructions, reference material, and optional scripts for relevant tasks, with workspace scope suitable for shared procedures.",
+      "limit": "A skill is not inherently a security sandbox. Scripts and instructions must be reviewed before the agent uses them.",
+      "setup": "Create a focused SKILL.md under .kiro/skills/ and commit reviewed supporting material.",
+      "prompt": "Use the team’s release-note skill to draft a changelog from merged commits. Do not publish or change the release tag.",
+      "check": "Validate the included changes, excluded work, and output format against the intended release.",
+      "refs": [
+        "S23"
+      ],
+      "preview": false,
+      "note": "Core behavior is documented; the example task and acceptance check are author recommendations, not executed demonstrations."
+    },
+    {
+      "id": "C21",
+      "number": 21,
+      "title": "Orchestrate a repeatable multi-step engineering workflow",
+      "product": "Team configuration",
+      "verdict": "Qualified",
+      "availability": "Opt-in · account rollout and client controls vary",
+      "delivery": "Native workflow graph; optional advanced setup",
+      "claim": "Workflows define steps, handoffs, parallel branches, loops, and completion conditions; recipes can be saved for reuse.",
+      "limit": "This is distinct from autonomous mode. Workflows require opt-in; an absent setting can mean the account lacks access. Multi-agent work can consume more tokens.",
+      "setup": "Enable the feature where available, cap loops, name required evidence, and keep a human merge decision.",
+      "prompt": "Create a bounded workflow: investigate, propose a fix, independently review, and rerun the regression test. Stop after two unsuccessful repair cycles.",
+      "check": "Inspect handoff artifacts and each step’s result. A completed graph is not proof of a correct release.",
+      "refs": [
+        "S24"
+      ],
+      "preview": false,
+      "note": "Core behavior is documented; the example task and acceptance check are author recommendations, not executed demonstrations."
+    }
+  ],
+  "general_audit": [
+    {
+      "id": "G01",
+      "title": "Availability is not one universal GA label",
+      "text": "This report uses the current documented feature matrices rather than claiming every Kiro feature is generally available everywhere. Web access is paid-plan and us-east-1 scoped; organizational Cloud Sessions can require administrator enablement.",
+      "refs": [
+        "S02"
+      ],
+      "verdict": "Qualified"
+    },
+    {
+      "id": "G02",
+      "title": "Frontier core versus developer companions",
+      "text": "Autonomous cloud delivery is the central subject. Hooks, local permission rules, and checkpoint behavior are included because teams use them alongside that workflow, not because they are all Web capabilities.",
+      "refs": [
+        "S04",
+        "S17",
+        "S18",
+        "S21"
+      ],
+      "verdict": "Qualified"
+    },
+    {
+      "id": "G03",
+      "title": "Repository access and human merge",
+      "text": "Keep repository app installation and token access narrow. Kiro’s documented no-auto-merge boundary does not replace branch protections, review responsibility, or deployment controls.",
+      "refs": [
+        "S02",
+        "S06",
+        "S07"
+      ],
+      "verdict": "Qualified"
+    },
+    {
+      "id": "G04",
+      "title": "Instruction files are not security controls",
+      "text": "Steering, skills, and memory affect behavior; permissions and external-system access are separate. Custom agents need explicit context, and third-party instruction packages require review.",
+      "refs": [
+        "S13",
+        "S23",
+        "S14",
+        "S22"
+      ],
+      "verdict": "Qualified"
+    },
+    {
+      "id": "G05",
+      "title": "Automation and workflow availability",
+      "text": "Recurring automations use UTC and are distinct from reusable workflow graphs. Opt-in workflow availability and control surfaces vary; do not promise unattended delivery solely because scheduling exists.",
+      "refs": [
+        "S11",
+        "S24"
+      ],
+      "verdict": "Qualified"
+    },
+    {
+      "id": "G06",
+      "title": "Secrets and untrusted input",
+      "text": "Limit egress and use disposable test credentials. A cloud sandbox does not eliminate malicious repository instructions or the risk of a task exposing injected secrets.",
+      "refs": [
+        "S05",
+        "S20",
+        "S19"
+      ],
+      "verdict": "Qualified"
+    }
+  ],
+  "transcript": [
+    {
+      "n": 1,
+      "title": "Start with a reviewable engineering outcome",
+      "message": "Delegate a bounded change, not an unlimited mandate.",
+      "speaker": "The useful starting point is one engineering outcome with observable completion criteria: explain a code path, fix a reproduced defect, or update an interface without breaking consumers. Kiro’s cloud autonomous mode can carry work through implementation and reviewable repository changes. It is not an automatic production-release authority. Our recommended boundary is simple: an engineer owns the task, the evidence, and the merge decision. The local development features in this report support that same workflow, but they are not all available in the browser. Keep those interfaces distinct when planning a team rollout.",
+      "demo": "Select one small issue, identify the affected repository and reviewer, and write a measurable acceptance check before assigning it.",
+      "refs": [
+        "S04",
+        "S02"
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Specify success and preserve behavior",
+      "message": "Requirements and regression evidence precede implementation.",
+      "speaker": "Use a feature specification when the desired behavior needs design discussion. Use a bugfix specification when there is a concrete defect and existing behavior to preserve. The important team habit is to make non-goals explicit. In our proposed example, request IDs must propagate correctly without changing existing response contracts. A specification should expose unresolved decisions before code is accepted; it is not itself a successful test. Review generated acceptance criteria for missing negative cases, and use the project’s real build and test commands to establish evidence.",
+      "demo": "Prepare a feature spec and a bugfix spec for the same service, then compare their scope and required regression checks.",
+      "refs": [
+        "S08",
+        "S09"
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Move from a task to linked repository changes",
+      "message": "One outcome can produce several independently reviewed PRs or MRs.",
+      "speaker": "For a cross-repository change, identify both the producer and consumer and agree on a safe sequence. Kiro can work across connected repositories, including GitHub and GitLab. That makes consistency work practical, but access and provider limitations still apply. The GitHub issue flow gives teams a familiar assignment point. Avoid duplicate ownership: a second independent assignment can create competing work rather than useful coordination. Our acceptance rule is that each resulting change must explain its dependency on the others and demonstrate compatibility before any merge.",
+      "demo": "Describe a shared-client change, show the repository selections, and define what evidence each resulting PR or MR must contain.",
+      "refs": [
+        "S05",
+        "S07",
+        "S06"
+      ]
+    },
+    {
+      "n": 4,
+      "title": "Treat tests and review feedback as evidence",
+      "message": "A green claim is weaker than a fresh check on the current commit.",
+      "speaker": "Ask for test changes and execution evidence together. Browser tooling can help inspect a UI in the sandbox, while project commands provide repeatable checks. The reviewer still needs to examine assertions and failure output. For GitHub feedback, use the documented explicit interaction path rather than assuming the agent watches every failed job independently. Our proposed review checks three things: the reproduced bug disappears, preserved behavior still passes, and the new commit—not an older one—has the expected CI result. Do not accept weakened tests as a repair.",
+      "demo": "Walk through a proposed regression test, its command output, a review comment, and the evidence required after a follow-up change.",
+      "refs": [
+        "S10",
+        "S09",
+        "S06"
+      ]
+    },
+    {
+      "n": 5,
+      "title": "Make team knowledge reusable and inspectable",
+      "message": "Steering, memory, skills, and tools serve different purposes.",
+      "speaker": "Steering expresses deliberate project guidance. Memory carries reusable learned context. Skills package procedures, while MCP and Powers provide configured tool access and associated guidance. Keep these concepts separate: an instruction to follow a process does not grant permission, and a connected tool does not establish the truth of its output. Our recommendation is to keep authoritative standards in version control and use a small number of reviewed packages. Introduce specialist agents only when a focused role improves the review process; check their actual context and tools rather than assuming they inherit everything.",
+      "demo": "Show one steering file, one narrowly scoped skill, and the effective tool list for a proposed test-review agent.",
+      "refs": [
+        "S13",
+        "S14",
+        "S23",
+        "S15",
+        "S16",
+        "S22"
+      ]
+    },
+    {
+      "n": 6,
+      "title": "Automate the repetitive work, not the approval decision",
+      "message": "Schedules and workflow graphs require different controls.",
+      "speaker": "A scheduled automation is useful for a recurring bounded job such as checking documentation drift. A workflow graph is useful when work needs explicit handoffs and independent checks. Neither should become an unowned source of repository churn. Our pilot starts with one recurrence and an instruction to produce no change when nothing is wrong. Check UTC schedule interpretation, consumption, and reviewer workload. For workflows, confirm account availability, limit retries, and specify the artifacts required to conclude each step. Keep small tasks in a normal session when orchestration adds more work than it removes.",
+      "demo": "Draft one weekly maintenance automation and one two-stage review workflow; leave both disabled until their owner approves the configuration.",
+      "refs": [
+        "S11",
+        "S24"
+      ]
+    },
+    {
+      "n": 7,
+      "title": "Apply controls in the interface where work actually runs",
+      "message": "Local approvals are not cloud approvals; rewind is not infrastructure rollback.",
+      "speaker": "A developer may begin in the IDE and continue in a cloud session, but that does not carry every local control into the cloud. Local hooks and permission rules have their own support boundaries. Cloud execution needs separate network, credential, and repository review. Similarly, an IDE checkpoint and a CLI conversation rewind do different things. The safe engineering practice is to know the exact branch and commit, limit external access, and retain normal version-control and recovery procedures. Never supply production credentials merely because a task runs in an isolated environment.",
+      "demo": "Compare a local read-only diagnostic setup with a cloud sandbox configuration; inspect the git diff after a conversation rewind.",
+      "refs": [
+        "S12",
+        "S18",
+        "S17",
+        "S19",
+        "S20",
+        "S21"
+      ]
+    },
+    {
+      "n": 8,
+      "title": "Measure accepted work, not generated volume",
+      "message": "A successful pilot improves delivery without lowering the quality bar.",
+      "speaker": "Our proposed thirty-day pilot uses a small, representative issue set and records outcomes before and after assistance. Measure accepted changes, reviewer corrections, escaped regressions, and total human effort, including setup and supervision. These are evaluation recommendations, not published product guarantees. Keep failed or abandoned tasks in the results so the team does not confuse impressive examples with reliable performance. Expand only when the same review standard holds across repeated tasks. Defer production-changing tool access and complex orchestration until the simpler workflow has demonstrated value in your environment.",
+      "demo": "Review the pilot scorecard and classify each task as accepted, reworked, abandoned, or blocked by setup; retain the underlying evidence.",
+      "refs": [
+        "S02",
+        "S04"
+      ]
+    }
+  ],
+  "pilot": [
+    {
+      "days": "Days 1–3",
+      "title": "Scope and access",
+      "description": "Choose two trusted repositories, an eligible account, and one reviewer per task. Record branch protections, cloud enablement, and prohibited actions."
+    },
+    {
+      "days": "Days 4–7",
+      "title": "Small reproducible fixes",
+      "description": "Try code comprehension and two bounded bug fixes. Record the reproduction, human effort, test results, and reasons for rejected output."
+    },
+    {
+      "days": "Days 8–14",
+      "title": "Structured changes",
+      "description": "Use specs for one feature and one cross-repository change. Review compatibility, merge ordering, and current-commit CI evidence."
+    },
+    {
+      "days": "Days 15–21",
+      "title": "Reusable team context",
+      "description": "Version-control a steering file and a reviewed skill. Trial one disabled-by-default automation; activate only after ownership and schedule checks."
+    },
+    {
+      "days": "Days 22–30",
+      "title": "Evaluate and constrain",
+      "description": "Compare accepted outcomes with the baseline. Retain useful patterns, remove noisy automations, and review tool/secret access before expansion."
+    }
+  ],
+  "sources": [
+    {
+      "id": "S01",
+      "title": "AWS frontier agents",
+      "url": "https://aws.amazon.com/ai/frontier-agents/",
+      "locator": "Meet the frontier agents",
+      "note": "Establishes Kiro as part of the AWS frontier-agent portfolio.",
+      "kind": "Official product page",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "S02",
+      "title": "Kiro Web",
+      "url": "https://kiro.dev/docs/web/",
+      "locator": "Prerequisites; ways to work",
+      "note": "Paid-plan access, administrator enablement, region, and human merge boundary.",
+      "kind": "Product documentation",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "S03",
+      "title": "Working with the agent",
+      "url": "https://kiro.dev/docs/web/using-the-agent/",
+      "locator": "Start a session",
+      "note": "Interactive collaboration and repository/branch selection.",
+      "kind": "Product documentation",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "S04",
+      "title": "Autonomous mode",
+      "url": "https://kiro.dev/docs/web/autonomous-mode/",
+      "locator": "How autonomous mode works; task outcomes",
+      "note": "Plans, delegated implementation, verification, and PR/MR delivery.",
+      "kind": "Product documentation",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "S05",
+      "title": "Creating tasks",
+      "url": "https://kiro.dev/docs/web/using-the-agent/creating-tasks/",
+      "locator": "From app.kiro.dev; multi-repository tasks",
+      "note": "Cross-provider changes and trusted-repository warning.",
+      "kind": "Product documentation",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "S06",
+      "title": "GitHub integration",
+      "url": "https://kiro.dev/docs/web/github/",
+      "locator": "Installation; issue tasks; pull-request feedback",
+      "note": "Provider-specific triggers and feedback behavior.",
+      "kind": "Product documentation",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "S07",
+      "title": "GitLab integration",
+      "url": "https://kiro.dev/docs/web/gitlab/",
+      "locator": "Connection; access requirements",
+      "note": "Token scope and private-network limitations.",
+      "kind": "Product documentation",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "S08",
+      "title": "Specifications",
+      "url": "https://kiro.dev/docs/specs/",
+      "locator": "Capability matrix; feature and bugfix specifications",
+      "note": "Feature planning, preservation requirements, and interface differences.",
+      "kind": "Product documentation",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "S09",
+      "title": "Built-in tools",
+      "url": "https://kiro.dev/docs/tools/",
+      "locator": "File, search, and shell tools",
+      "note": "Engineering primitives, not a universal CI or infrastructure connector.",
+      "kind": "Product documentation",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "S10",
+      "title": "Cloud sandbox",
+      "url": "https://kiro.dev/docs/web/sandbox/",
+      "locator": "Sandbox environment; browser tools",
+      "note": "Isolated execution and browser verification tools.",
+      "kind": "Product documentation",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "S11",
+      "title": "Automations",
+      "url": "https://kiro.dev/docs/web/automations/",
+      "locator": "Create and manage automations; schedules",
+      "note": "Recurring cloud tasks, UTC scheduling, and enable/disable controls.",
+      "kind": "Product documentation",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "S12",
+      "title": "Cloud sessions",
+      "url": "https://kiro.dev/docs/cloud-sessions/",
+      "locator": "Client capabilities; repositories",
+      "note": "Session continuity and server-side repository cloning.",
+      "kind": "Product documentation",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "S13",
+      "title": "Steering",
+      "url": "https://kiro.dev/docs/steering/",
+      "locator": "Locations; custom agents",
+      "note": "Explicit project guidance and loading boundaries.",
+      "kind": "Product documentation",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "S14",
+      "title": "Memory",
+      "url": "https://kiro.dev/docs/memory/",
+      "locator": "What memory is; relation to steering",
+      "note": "Reusable learned context is not a complete transcript or a permission policy.",
+      "kind": "Product documentation",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "S15",
+      "title": "Model Context Protocol",
+      "url": "https://kiro.dev/docs/mcp/",
+      "locator": "Capability matrix; server configuration",
+      "note": "Tool connection prerequisites and interface support.",
+      "kind": "Product documentation",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "S16",
+      "title": "Powers",
+      "url": "https://kiro.dev/docs/powers/",
+      "locator": "Capability matrix; activation",
+      "note": "Tools bundled with guidance; authoring and usage differ by interface.",
+      "kind": "Product documentation",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "S17",
+      "title": "Hooks",
+      "url": "https://kiro.dev/docs/hooks/",
+      "locator": "Capability matrix; trigger/action examples",
+      "note": "Event-driven hooks are IDE/CLI features, not Web features.",
+      "kind": "Product documentation",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "S18",
+      "title": "Permissions",
+      "url": "https://kiro.dev/docs/permissions/",
+      "locator": "Capability matrix; permission rules",
+      "note": "Local allow/ask/deny controls versus managed Web sandbox.",
+      "kind": "Product documentation",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "S19",
+      "title": "Sandbox internet access",
+      "url": "https://kiro.dev/docs/web/sandbox/internet-access/",
+      "locator": "Network access levels",
+      "note": "Network allow-list options.",
+      "kind": "Product documentation",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "S20",
+      "title": "Environment variables and secrets",
+      "url": "https://kiro.dev/docs/web/sandbox/environment-variables/",
+      "locator": "Secrets; security considerations",
+      "note": "Encryption does not prevent disclosure through code, logs, or network requests.",
+      "kind": "Product documentation",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "S21",
+      "title": "Checkpoints and rewind",
+      "url": "https://kiro.dev/docs/checkpoints/",
+      "locator": "Capability matrix; restore behavior",
+      "note": "IDE file restore, CLI conversation rewind, and Web exclusions.",
+      "kind": "Product documentation",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "S22",
+      "title": "Custom agents",
+      "url": "https://kiro.dev/docs/custom-agents/",
+      "locator": "Surface behavior; configuration files",
+      "note": "Web project agents are delegated sub-agents, not selectable primary session agents.",
+      "kind": "Product documentation",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "S23",
+      "title": "Agent Skills",
+      "url": "https://kiro.dev/docs/skills/",
+      "locator": "Skill scope; activation; custom agents",
+      "note": "Reusable instruction packages; workspace and global scope differ.",
+      "kind": "Product documentation",
+      "checked": "2026-10-20"
+    },
+    {
+      "id": "S24",
+      "title": "Workflows",
+      "url": "https://kiro.dev/docs/workflows/",
+      "locator": "Turn it on; client support; workflow graph",
+      "note": "Opt-in workflow orchestration; account rollout and client controls vary.",
+      "kind": "Product documentation",
+      "checked": "2026-10-20"
+    }
+  ],
+  "quickstart": [
+    "Confirm the target client, paid Web access, region, and Cloud Sessions policy.",
+    "Connect a trusted repository and define a small task with evidence-based completion criteria.",
+    "Review the diff and fresh checks; let the normal human process decide merge and deployment."
+  ],
+  "exclusions": "Mobile preview, personal-assistant/Crew scenarios, legacy client migration, experimental features, detailed model comparisons, and autonomous production deployment are outside this first pass. Optional workflow orchestration is included only where the account exposes it.",
+  "measures": "Recommended measures: accepted-task ratio; reviewer rework; human minutes including setup; regression rate; actual task consumption; and changes rejected for access or evidence gaps. No baseline, savings, or accuracy results have been measured.",
+  "counts": {
+    "Confirmed": 6,
+    "Qualified": 14,
+    "Workflow example": 1
+  }
+}
