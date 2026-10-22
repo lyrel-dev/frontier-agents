@@ -1,0 +1,432 @@
+{
+  "reviewed_on": "2026-10-22",
+  "baseline": "cd65b98e04e20e7a4bcf59165db7f98315417964",
+  "scope": "Product-specific specialization of the approved conceptual ER model. The thirty approved use cases and their identifiers remain unchanged.",
+  "sources": {
+    "DS50": {
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-what-are-devops-agent-spaces.html",
+      "section": "Agent Space scope and isolation",
+      "basis": "Retrieved official HTML",
+      "supports": [
+        "D-Space",
+        "D-Role",
+        "D-Chat"
+      ]
+    },
+    "DS51": {
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/APIReference/API_AssociateService.html",
+      "section": "Request, Association response and replacement semantics",
+      "basis": "Retrieved official API reference",
+      "supports": [
+        "D-Space",
+        "D-Registration",
+        "D-Association",
+        "DR01",
+        "DR02"
+      ]
+    },
+    "DS52": {
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-managing-assets.html",
+      "section": "Asset types; custom_agent, memory_store, memory; metadata references",
+      "basis": "Updated official indexed text; cached HTML omits memory asset types",
+      "qualification": "Use the indexed eight-type list and asset-ID references, not the older six-type cached page. ListAssetTypes remains the runtime discovery operation.",
+      "supports": [
+        "D-Tool",
+        "D-Custom",
+        "D-Skill",
+        "D-Instructions",
+        "D-Store",
+        "D-Memory",
+        "D-Feedback",
+        "D-TestProfile",
+        "DR04",
+        "DR06",
+        "DR07",
+        "DR08",
+        "DR09"
+      ]
+    },
+    "DS53": {
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html",
+      "section": "Key concepts and execution; store attachment",
+      "basis": "Updated official indexed text; cached HTML omits memory attachment",
+      "supports": [
+        "D-Tool",
+        "D-Custom",
+        "D-Store",
+        "D-Trigger",
+        "D-Invocation",
+        "DR05",
+        "DR07",
+        "DR11"
+      ]
+    },
+    "DS54": {
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/custom-agents-executing-custom-agents.html",
+      "section": "Triggers, invocation history, cancellation and tool results",
+      "basis": "Retrieved official HTML",
+      "supports": [
+        "D-Trigger",
+        "D-Invocation",
+        "DR11",
+        "DR12",
+        "DR13"
+      ]
+    },
+    "DS55": {
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html",
+      "section": "Store, memory, versions, retrieval and activation",
+      "basis": "Retrieved official HTML and indexed memory guidance",
+      "supports": [
+        "D-Instructions",
+        "D-Store",
+        "D-Memory",
+        "D-Version",
+        "D-LearningRun",
+        "DR08",
+        "DR09",
+        "DR10",
+        "DR16",
+        "DR26"
+      ]
+    },
+    "DS56": {
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-autonomous-incident-response.html",
+      "section": "Incident triage, investigation and feedback",
+      "basis": "Retrieved official HTML",
+      "supports": [
+        "D-Signal",
+        "D-Investigation",
+        "D-Feedback",
+        "DR14",
+        "DR15"
+      ]
+    },
+    "DS57": {
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-working-with-directed-actions.html",
+      "section": "Opt-in, account role, tool category, per-action approval and attribution",
+      "basis": "Retrieved official HTML",
+      "supports": [
+        "D-Role",
+        "D-Approval",
+        "DR22",
+        "DR23"
+      ]
+    },
+    "DS58": {
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-what-is-a-devops-agent-topology.html",
+      "section": "Resource discovery, views and scope beyond topology",
+      "basis": "Retrieved official HTML",
+      "qualification": "Older topology prose calls learned knowledge skills. The model treats topology as a derived view without asserting a new independent storage API.",
+      "supports": [
+        "D-Topology",
+        "DR18"
+      ]
+    },
+    "DS59": {
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-proactive-incident-prevention.html",
+      "section": "Evaluations and recommendations",
+      "basis": "Retrieved official HTML; evaluation and recommendation relationship reviewed",
+      "supports": [
+        "D-Evaluation",
+        "D-Recommendation",
+        "DR17"
+      ]
+    },
+    "DS60": {
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/release-management-release-testing.html",
+      "section": "Test profiles, executions and application effects",
+      "basis": "Retrieved official HTML",
+      "supports": [
+        "D-TestProfile",
+        "D-TestRun",
+        "DR20",
+        "DR21"
+      ]
+    },
+    "DS61": {
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent.html",
+      "section": "Production operations, release review and on-demand inquiry",
+      "basis": "Retrieved official HTML",
+      "supports": [
+        "D-Chat",
+        "D-Readiness"
+      ]
+    },
+    "DS62": {
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-connecting-mcp-servers.html",
+      "section": "Account registration, space association, tool selection and authentication",
+      "basis": "Updated official indexed text",
+      "supports": [
+        "D-Registration",
+        "D-Tool",
+        "DR02",
+        "DR03",
+        "DR19"
+      ]
+    },
+    "SS50": {
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html",
+      "section": "Tenant versus Agent Space scope; assessment lifecycles; repository reuse",
+      "basis": "Retrieved official HTML",
+      "supports": [
+        "S-Tenant",
+        "S-Space",
+        "S-Registration",
+        "S-Connection",
+        "S-Pentest",
+        "S-Run",
+        "S-CodeConfig",
+        "S-CodeRun",
+        "S-Design",
+        "S-ThreatConfig",
+        "S-CodeSettings",
+        "S-RemediationSettings",
+        "S-CodeFinding",
+        "SR01",
+        "SR03",
+        "SR04",
+        "SR05",
+        "SR07",
+        "SR08",
+        "SR12",
+        "SR15",
+        "SR16",
+        "SR17",
+        "SR25",
+        "SR27"
+      ]
+    },
+    "SS51": {
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/about-integrations.html",
+      "section": "Register once; connect selected sources; supported providers",
+      "basis": "Retrieved official HTML",
+      "supports": [
+        "S-Registration",
+        "S-Connection",
+        "SR02",
+        "SR03"
+      ]
+    },
+    "SS52": {
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html",
+      "section": "Credential strategies, multiple credentials and Login Optimization",
+      "basis": "Retrieved official HTML; later indexed guidance retained for UI detail",
+      "supports": [
+        "S-Credential",
+        "S-Login",
+        "SR09",
+        "SR11"
+      ]
+    },
+    "SS53": {
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/security-requirements.html",
+      "section": "Requirement membership, shared scope and activation",
+      "basis": "Retrieved official HTML",
+      "supports": [
+        "S-Pack",
+        "S-Requirement",
+        "SR05",
+        "SR06",
+        "SR18",
+        "SR19"
+      ]
+    },
+    "SS54": {
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html",
+      "section": "Selection of findings, job results and original-finding lineage",
+      "basis": "Retrieved official indexed text",
+      "supports": [
+        "S-Finding",
+        "S-Revalidation",
+        "S-SelectedResult",
+        "SR12",
+        "SR13",
+        "SR14",
+        "SR23",
+        "SR24"
+      ]
+    },
+    "SS55": {
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/remediate-finding.html",
+      "section": "Finding-linked remediation and provider-dependent output",
+      "basis": "Retrieved official HTML",
+      "supports": [
+        "S-Finding",
+        "S-Remediation",
+        "S-RemediationSettings",
+        "SR20",
+        "SR21",
+        "SR26"
+      ]
+    },
+    "SS56": {
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html",
+      "section": "Configuration, target rules, credentials and create versus execute",
+      "basis": "Retrieved official HTML; current guide retains newer wizard details",
+      "supports": [
+        "S-Pentest",
+        "S-Rules",
+        "S-Run",
+        "SR10",
+        "SR22"
+      ]
+    },
+    "SS57": {
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-threat-model.html",
+      "section": "Scope documents, source context, configuration and run",
+      "basis": "Retrieved official HTML",
+      "supports": [
+        "S-ThreatConfig",
+        "S-ThreatRun",
+        "SR17"
+      ]
+    },
+    "SS58": {
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/connect-jira.html",
+      "section": "Finding publication and project connection",
+      "basis": "Retrieved official indexed text; project selection and finding publication reviewed",
+      "supports": [
+        "S-Jira",
+        "SR24"
+      ]
+    },
+    "FS50": {
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/creating-an-agent.html",
+      "section": "Instance isolation; two roles; integration and connection setup",
+      "basis": "Retrieved official HTML",
+      "supports": [
+        "F-Agent",
+        "F-DataRole",
+        "F-OperatorRole",
+        "F-Integration",
+        "F-Connection",
+        "FR01",
+        "FR02",
+        "FR03",
+        "FR06",
+        "FR07"
+      ]
+    },
+    "FS51": {
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/setting-up.html",
+      "section": "IAM responsibilities; finops-agent AgentSpace action and ARN names; managed-rule permissions",
+      "basis": "Retrieved official HTML",
+      "supports": [
+        "F-Agent",
+        "F-DataRole",
+        "F-OperatorRole",
+        "F-Rule",
+        "F-Source",
+        "FR02",
+        "FR19"
+      ]
+    },
+    "FS52": {
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/task-management.html",
+      "section": "Conversation versus task; automations; queue; managed events",
+      "basis": "Retrieved official HTML",
+      "supports": [
+        "F-Conversation",
+        "F-Task",
+        "F-Automation",
+        "F-Rule",
+        "FR07",
+        "FR08",
+        "FR09",
+        "FR10",
+        "FR11",
+        "FR17"
+      ]
+    },
+    "FS53": {
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/context-files-and-memory.html",
+      "section": "Files, persistent memory and conversation compaction",
+      "basis": "Retrieved official HTML",
+      "supports": [
+        "F-File",
+        "F-Memory",
+        "F-Summary",
+        "FR12",
+        "FR13",
+        "FR16"
+      ]
+    },
+    "FS54": {
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html",
+      "section": "Session loading, retained records, isolation and deletion behavior",
+      "basis": "Retrieved official HTML",
+      "supports": [
+        "F-Conversation",
+        "F-Task",
+        "F-File",
+        "F-Memory",
+        "F-Runtime",
+        "F-Artifact",
+        "FR06",
+        "FR12",
+        "FR13",
+        "FR14",
+        "FR15"
+      ]
+    },
+    "FS55": {
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/jira-integration.html",
+      "section": "Account registration and agent-specific destination connection",
+      "basis": "Retrieved official HTML",
+      "supports": [
+        "F-Integration",
+        "F-Connection",
+        "FR03",
+        "FR04",
+        "FR05",
+        "FR18"
+      ]
+    },
+    "FS56": {
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/slack-integration.html",
+      "section": "Account registration, channel connection and one-way publication",
+      "basis": "Retrieved official HTML",
+      "supports": [
+        "F-Integration",
+        "F-Connection",
+        "FR03",
+        "FR04",
+        "FR05",
+        "FR18"
+      ]
+    },
+    "FS57": {
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html",
+      "section": "Effect and invocation-specific approval; upstream evidence",
+      "basis": "Retrieved official HTML",
+      "supports": [
+        "F-Source",
+        "F-Approval",
+        "FR18",
+        "FR19"
+      ]
+    },
+    "FS58": {
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/custom-cost-reporting.html",
+      "section": "Artifact production, revision and distribution",
+      "basis": "Retrieved official HTML",
+      "supports": [
+        "F-Artifact",
+        "FR17"
+      ]
+    },
+    "DS63": {
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-managed-agents.html",
+      "section": "Platform-owned managed agents; Learning history and triggers versus incident roles",
+      "basis": "Retrieved current official indexed text; direct cached URL was unavailable",
+      "supports": [
+        "D-Managed",
+        "D-LearningRun",
+        "DR24",
+        "DR25",
+        "DR26"
+      ]
+    }
+  }
+}
