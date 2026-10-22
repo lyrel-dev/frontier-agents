@@ -1,19 +1,10 @@
 {
-  "revision": "2026-10-22-product-resource-models",
-  "baseline": "cd65b98e04e20e7a4bcf59165db7f98315417964",
+  "revision": "2026-10-22-mechanism-review",
+  "baseline": "75f7d7c11d29e308e71a1bbe77ad93e9bc9f08a9",
   "guides": 4,
   "canonical_sections": 73,
-  "previous_identifiers_retained": 65,
-  "new_sections": [
-    "A-10",
-    "A-11",
-    "D-13",
-    "D-14",
-    "F-09",
-    "F-10",
-    "S-10",
-    "S-11"
-  ],
+  "previous_identifiers_retained": 73,
+  "new_sections": [],
   "authored_use_case_narratives": 30,
   "narrative_paragraphs": 60,
   "platform_use_cases": {
@@ -22,13 +13,13 @@
     "finops": 7,
     "architecture": 1
   },
-  "logical_diagrams": 25,
-  "rendered_diagram_instances": 115,
+  "logical_diagrams": 26,
+  "rendered_diagram_instances": 121,
   "html_presentations": 4,
   "slides": 81,
   "programme_minutes": 221,
   "exercise_minutes": 28,
-  "local_links_checked": 3337,
+  "local_links_checked": 3441,
   "browser_checks": [
     {
       "subject": "devops",
@@ -121,6 +112,64 @@
   "excluded_scope_hits": [],
   "errors": [],
   "boundary": "Source mapping, narrative presence/uniqueness, logical SVG accessibility, examples, and HTML behavior were checked. These checks do not establish factual completeness, live AWS operation, agent accuracy, or measured outcomes.",
+  "mechanism_review": {
+    "stage": 3,
+    "reviewed_on": "2026-10-22",
+    "baseline": "75f7d7c11d29e308e71a1bbe77ad93e9bc9f08a9",
+    "reviewed_mechanisms": 41,
+    "distribution": {
+      "devops": 15,
+      "security": 16,
+      "finops": 10
+    },
+    "official_sources": 42,
+    "claim_mappings": 69,
+    "approved_sources": {
+      "catalog/use-cases.json": {
+        "unchanged": true,
+        "sha256": "e5aae837db20d3dc7383b86cf22f01cb7310c8691e37122b0f11650ecc92900c"
+      },
+      "catalog/features.json": {
+        "unchanged": true,
+        "sha256": "fefc21015e00bf043a9bbbe9776caa5ca5cb2de0ab3232ca8a6437ad8ed20763"
+      },
+      "catalog/profiles.json": {
+        "unchanged": true,
+        "sha256": "89d23d92c97b95288e68de2a001186ba5846b18b6dec3774ba545143aea33190"
+      },
+      "catalog/aliases.json": {
+        "unchanged": true,
+        "sha256": "5f1efdc4eb665cdd3d7830c148d653cc2f38a7d4c7cf4cf1f68e538d95ced720"
+      },
+      "catalog/resource-models.json": {
+        "unchanged": true,
+        "sha256": "4565514f203edd099b20fdc1472a3a1472696e147952f838e2163efe2947aa42"
+      }
+    },
+    "old_mechanism_core_fields_preserved": true,
+    "added_mechanism": "MX-S-PERSONALIZE",
+    "regression_checks": [
+      "Missing lifecycle rejected",
+      "Unresolved claim evidence rejected",
+      "Missing condition and unknown related mechanism rejected"
+    ],
+    "browser": [
+      {
+        "width": 390,
+        "mechanism_to_detailed_procedure": "passed",
+        "conditional_personalization_link": "passed",
+        "javascript_errors": []
+      },
+      {
+        "width": 1440,
+        "mechanism_to_detailed_procedure": "passed",
+        "conditional_personalization_link": "passed",
+        "javascript_errors": []
+      }
+    ],
+    "errors": [],
+    "boundary": "Document-level review and proposed test plans, not live AWS execution or an exhaustive internal algorithm specification."
+  },
   "relationship_model": {
     "schema_version": 2,
     "primary_cases": 30,
@@ -130,7 +179,7 @@
       "finops": 7,
       "architecture": 1
     },
-    "mechanisms": 40,
+    "mechanisms": 41,
     "features": 37,
     "implementation_profiles": 15,
     "former_identifiers_mapped": 54,
@@ -177,10 +226,6 @@
       "catalog/use-cases.json": {
         "unchanged": true,
         "sha256": "e5aae837db20d3dc7383b86cf22f01cb7310c8691e37122b0f11650ecc92900c"
-      },
-      "catalog/mechanisms.json": {
-        "unchanged": true,
-        "sha256": "ac390358c3e241b9e00fe17720ce656c97abc081f6b5fee25df1821c2fbfb0bf"
       },
       "catalog/features.json": {
         "unchanged": true,
