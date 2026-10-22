@@ -220,7 +220,7 @@ DECKS={'devops': {'title': 'AWS DevOps Agent',
                                    'invocation queries sources, produces a report, and exposes results '
                                    'for review. Schedule timing and the reporting window are separate '
                                    'configuration decisions.'},
-                       {'title': 'Sandbox and directed actions',
+                       {'title': 'Sandbox execution and directed-action approval',
                         'seconds': 180,
                         'refs': ['D-M05', 'D-M06'],
                         'kind': 'table',
@@ -266,7 +266,7 @@ DECKS={'devops': {'title': 'AWS DevOps Agent',
                                   'Use selected tools and inspect task state']],
                         'message': 'Readiness review, managed verification and active application '
                                    'testing are separate preview operations.'},
-                       {'title': 'Incident response outcomes',
+                       {'title': 'Incident triage, investigation, and mitigation',
                         'seconds': 180,
                         'refs': ['D-06', 'D-M06'],
                         'kind': 'table',
@@ -288,10 +288,10 @@ DECKS={'devops': {'title': 'AWS DevOps Agent',
                                  ['Prepare an incident-status bulletin',
                                   'Incident and measurement window are identified.',
                                   'Configured custom agent']],
-                        'message': 'Follow the operational objective through its workflow, configured '
-                                   'mechanisms and independent completion evidence. The catalog links '
-                                   'each dependency to its detailed guide.'},
-                       {'title': 'Reporting and reliability outcomes',
+                        'message': 'Triage determines routing. Investigation evaluates current '
+                                   'evidence. A mitigation plan is a proposal; execution requires the '
+                                   'applicable action authorization and a separate recovery check.'},
+                       {'title': 'Health reporting, deployment review, and prevention',
                         'seconds': 180,
                         'refs': ['D-07', 'D-06'],
                         'kind': 'table',
@@ -310,9 +310,10 @@ DECKS={'devops': {'title': 'AWS DevOps Agent',
                                  ['Prioritize incident-prevention work',
                                   'Accepted proposals retain source incidents.',
                                   'Built-in function']],
-                        'message': 'Follow the operational objective through its workflow, configured '
-                                   'mechanisms and independent completion evidence. The catalog links '
-                                   'each dependency to its detailed guide.'},
+                        'message': 'A health report summarizes measurements for a defined period. A '
+                                   'deployment review traces actual release records. Pattern analysis '
+                                   'and prevention evaluation use multiple investigations to identify '
+                                   'and prioritize follow-up work.'},
                        {'title': 'Operational knowledge and release assurance',
                         'seconds': 180,
                         'refs': ['D-M04', 'D-M08', 'D-09'],
@@ -335,9 +336,10 @@ DECKS={'devops': {'title': 'AWS DevOps Agent',
                                  ['Test a deployed application release',
                                   'Target revision, identities and permitted effects are explicit.',
                                   'Preview function']],
-                        'message': 'Follow the operational objective through its workflow, configured '
-                                   'mechanisms and independent completion evidence. The catalog links '
-                                   'each dependency to its detailed guide.'},
+                        'message': 'SOP consolidation maintains reviewed procedural content. Topology '
+                                   'documentation records discovered and inferred relationships. '
+                                   'Release-readiness analysis and active testing apply to different '
+                                   'subjects and have different effects.'},
                        {'title': 'Service-health reporting: workflow dependencies',
                         'seconds': 180,
                         'refs': ['D-03', 'D-07', 'D-M01', 'D-M07'],
@@ -358,9 +360,10 @@ DECKS={'devops': {'title': 'AWS DevOps Agent',
                                   'Conditional schedule and optional destination',
                                   'Timing and publication controls remain separate from the report '
                                   'objective.']],
-                        'message': 'One reporting objective has native and configured implementations. '
-                                   'Required evidence, optional context and conditional execution '
-                                   'remain explicit.'},
+                        'message': 'Current telemetry is required for a health conclusion. Context is '
+                                   'optional unless the reporting profile depends on it. A recurring '
+                                   'profile adds a trigger; an external destination adds a separate '
+                                   'publication operation.'},
                        {'title': 'Incident records and action-specific authorization',
                         'seconds': 180,
                         'refs': ['D-14'],
@@ -748,9 +751,10 @@ DECKS={'devops': {'title': 'AWS DevOps Agent',
                                    ['Develop and review an application threat model',
                                     'Boundaries and flows are reviewed before threats.',
                                     'Preview assessment']],
-                          'message': 'Follow the operational objective through its workflow, configured '
-                                     'mechanisms and independent completion evidence. The catalog links '
-                                     'each dependency to its detailed guide.'},
+                          'message': 'Select the assessment by subject: a running target, a source '
+                                     'revision, a design document, or a scoped system model. '
+                                     'Authentication and network configuration are variants of the '
+                                     'running-application assessment.'},
                          {'title': 'Finding disposition, repair and verification',
                           'seconds': 180,
                           'refs': ['S-05', 'S-M05', 'S-M04'],
@@ -770,9 +774,10 @@ DECKS={'devops': {'title': 'AWS DevOps Agent',
                                    ['Consolidate and maintain security requirements',
                                     'Conflicting policy sources are reconciled.',
                                     'Composed workflow']],
-                          'message': 'Follow the operational objective through its workflow, configured '
-                                     'mechanisms and independent completion evidence. The catalog links '
-                                     'each dependency to its detailed guide.'},
+                          'message': 'Disposition records the team decision about a finding. A '
+                                     'remediation proposal changes source only after review and merge. '
+                                     'Revalidation evaluates selected findings against the deployed '
+                                     'target.'},
                          {'title': 'Application assessment: independent configuration choices',
                           'seconds': 180,
                           'refs': ['S-03', 'S-M01', 'S-M02', 'S-04', 'S-M05'],
@@ -791,9 +796,9 @@ DECKS={'devops': {'title': 'AWS DevOps Agent',
                                     'Findings, source evidence and separate revalidation',
                                     'Non-reproduction is scoped to the selected issue and valid test '
                                     'conditions.']],
-                          'message': 'Follow the operational objective through its workflow, configured '
-                                     'mechanisms and independent completion evidence. The catalog links '
-                                     'each dependency to its detailed guide.'},
+                          'message': 'Target authorization, public or private connectivity, application '
+                                     'credentials, source context, and invocation mode are independent '
+                                     'settings. Inspect each setting before interpreting coverage.'},
                          {'title': 'Original findings and revalidation history',
                           'seconds': 180,
                           'refs': ['S-11'],
@@ -1006,7 +1011,7 @@ DECKS={'devops': {'title': 'AWS DevOps Agent',
                                   'Account ownership, allocation rules and reporting standards',
                                   'Upload, soft delete and restore'],
                                  ['Conversational memory',
-                                  'Explicit remember/update/forget request',
+                                  'Conversation preferences, corrections and task outcomes',
                                   'Preferences, corrections and ownership details',
                                   'Update or forget across sessions'],
                                  ['Conversation context',
@@ -1023,15 +1028,15 @@ DECKS={'devops': {'title': 'AWS DevOps Agent',
                                   'No shared memory across instances']],
                         'message': 'File retrieval, cross-session memory and within-session compaction '
                                    'require separate tests.'},
-                       {'title': 'Task execution and destination-specific approval',
+                       {'title': 'Conversation actions, queued tasks, and publication approval',
                         'seconds': 120,
                         'refs': ['F-03', 'F-M05', 'F-M06'],
                         'kind': 'diagram',
                         'diagram': 'mechanism-finops-publication',
                         'data': [],
-                        'message': 'A matching event or schedule creates work. Analysis and publication '
-                                   'are separate; Jira approval depends on invocation mode and Slack '
-                                   'has no per-message prompt.'},
+                        'message': 'A conversation can request Jira or Slack publication directly. '
+                                   'Explicit tasks and automations use the queue. Jira confirmation '
+                                   'depends on invocation mode; Slack has no per-message approval.'},
                        {'title': 'Anomaly investigation and cost driver analysis',
                         'seconds': 180,
                         'refs': ['F-M01', 'F-M05'],
@@ -1111,8 +1116,8 @@ DECKS={'devops': {'title': 'AWS DevOps Agent',
                                   'Task invokes configured destination',
                                   'Records post/issue outcome',
                                   'Inspect independently from analysis result']],
-                        'message': 'An automation is a task factory; it is not the task or the external '
-                                   'message.'},
+                        'message': 'An automation stores the trigger and task instructions. Each '
+                                   'created task has its own execution history and publication result.'},
                        {'title': 'Report artifacts and data lifecycle',
                         'seconds': 120,
                         'refs': ['F-04', 'F-M07'],
@@ -1160,9 +1165,10 @@ DECKS={'devops': {'title': 'AWS DevOps Agent',
                                  ['Review commitment coverage',
                                   'Commitment type, period and eligible scope are explicit.',
                                   'Native function']],
-                        'message': 'Follow the operational objective through its workflow, configured '
-                                   'mechanisms and independent completion evidence. The catalog links '
-                                   'each dependency to its detailed guide.'},
+                        'message': 'Historical analysis reports observed cost under a specified query. '
+                                   'Forecasting estimates a future period. Commitment coverage reports '
+                                   'the covered share of eligible usage. Retain the source and '
+                                   'calculation basis for each.'},
                        {'title': 'Reporting, anomaly investigation and optimization',
                         'seconds': 180,
                         'refs': ['F-03', 'F-04', 'F-M01'],
@@ -1182,9 +1188,10 @@ DECKS={'devops': {'title': 'AWS DevOps Agent',
                                  ['Measure the outcome of an implemented optimization',
                                   'Before and after periods are comparable.',
                                   'Composed workflow']],
-                        'message': 'Follow the operational objective through its workflow, configured '
-                                   'mechanisms and independent completion evidence. The catalog links '
-                                   'each dependency to its detailed guide.'},
+                        'message': 'Reporting formats source analysis. Anomaly investigation evaluates '
+                                   'a deviation. Recommendation review prioritizes upstream proposals; '
+                                   'savings measurement evaluates an implemented change using '
+                                   'comparable periods.'},
                        {'title': 'Cost-anomaly investigation: trigger and publication controls',
                         'seconds': 180,
                         'refs': ['F-M05', 'F-M01', 'F-M06'],
@@ -1202,9 +1209,10 @@ DECKS={'devops': {'title': 'AWS DevOps Agent',
                                  ['Publish to Slack',
                                   'Configured channel and audience',
                                   'No per-message approval prompt; review scope before invocation.']],
-                        'message': 'Follow the operational objective through its workflow, configured '
-                                   'mechanisms and independent completion evidence. The catalog links '
-                                   'each dependency to its detailed guide.'},
+                        'message': 'Inspect event matching, task creation, source queries, and '
+                                   'publication as separate steps. Jira approval depends on how the '
+                                   'action starts. Slack publication requires destination review before '
+                                   'invocation.'},
                        {'title': 'Retained context and session-local execution',
                         'seconds': 180,
                         'refs': ['F-10'],
@@ -1263,7 +1271,7 @@ DECKS={'devops': {'title': 'AWS DevOps Agent',
                                   'Control-model misunderstanding']],
                         'message': 'Validate data, retained context, execution and external effects as '
                                    'separate layers.'}]},
- 'architecture': {'title': 'Shared Architecture',
+ 'architecture': {'title': 'Cross-service architecture',
                   'subtitle': 'Architecture, integrations, knowledge, and operational workflows',
                   'prefix': 'A',
                   'slides': [{'title': 'Concept ownership and resource identity',
@@ -1322,30 +1330,7 @@ DECKS={'devops': {'title': 'AWS DevOps Agent',
                                          'tools return observations. Those observations can lead to '
                                          'another step or a result. Retention is a separate, '
                                          'product-specific path.'},
-                             {'title': 'Comparison framework',
-                              'seconds': 120,
-                              'refs': ['A-01'],
-                              'kind': 'table',
-                              'data': [['Question', 'DevOps Agent', 'Security Agent', 'FinOps Agent'],
-                                       ['Scope object',
-                                        'Agent Space',
-                                        'Application Agent Space plus shared resources',
-                                        'Agent instance'],
-                                       ['Configuration',
-                                        'Agents, tools and knowledge',
-                                        'Assessment definitions and criteria',
-                                        'Context, tasks, automations and connections'],
-                                       ['Execution',
-                                        'Investigation or invocation',
-                                        'Run, review or revalidation job',
-                                        'Conversation or task'],
-                                       ['Primary evidence',
-                                        'Tool results and investigation history',
-                                        'Findings and linked verification',
-                                        'Source query, task and artifact']],
-                              'message': 'Cross-platform comparison begins with the actual resource and '
-                                         'execution model.'},
-                             {'title': 'Resource and context models',
+                             {'title': 'Retained context: producers, consumers, and lifecycle',
                               'seconds': 120,
                               'refs': ['A-01', 'A-02'],
                               'kind': 'table',
@@ -1367,7 +1352,7 @@ DECKS={'devops': {'title': 'AWS DevOps Agent',
                                         'Task or conversation',
                                         'Soft delete and restore'],
                                        ['Conversational memory',
-                                        'Explicit user request',
+                                        'Conversation preferences, corrections and task outcomes',
                                         'Later FinOps session',
                                         'Update or forget']],
                               'message': 'The three services do not expose one common memory '
@@ -1377,9 +1362,10 @@ DECKS={'devops': {'title': 'AWS DevOps Agent',
                               'refs': ['A-09'],
                               'kind': 'diagram',
                               'data': [],
-                              'message': 'Follow the operational objective through its workflow, '
-                                         'configured mechanisms and independent completion evidence. '
-                                         'The catalog links each dependency to its detailed guide.',
+                              'message': 'The use case supplies the objective and completion criteria. '
+                                         'Each workflow step links to a mechanism and its product '
+                                         'feature. The implementation profile supplies '
+                                         'environment-specific configuration and verification steps.',
                               'diagram': 'workflow-feature-map'},
                              {'title': 'Service-health reporting: required and conditional dependencies',
                               'seconds': 180,
@@ -1400,9 +1386,10 @@ DECKS={'devops': {'title': 'AWS DevOps Agent',
                                        ['External destination',
                                         'Optional publication effect',
                                         'Destination-specific authorization and delivery result.']],
-                              'message': 'Follow the operational objective through its workflow, '
-                                         'configured mechanisms and independent completion evidence. '
-                                         'The catalog links each dependency to its detailed guide.'},
+                              'message': 'A missing required data source blocks the corresponding '
+                                         'conclusion. Optional history changes the available context. '
+                                         'Schedule and destination dependencies apply only to profiles '
+                                         'that enable them.'},
                              {'title': 'Operational-review profiles and evidence handoffs',
                               'seconds': 180,
                               'refs': ['A-06', 'A-09', 'A-U01'],
@@ -1420,9 +1407,11 @@ DECKS={'devops': {'title': 'AWS DevOps Agent',
                                         'Independently configured service results',
                                         'Retained source identities; no shared credentials or '
                                         'approval.']],
-                              'message': 'Follow the operational objective through its workflow, '
-                                         'configured mechanisms and independent completion evidence. '
-                                         'The catalog links each dependency to its detailed guide.'},
+                              'message': 'The reliability profile uses service measurements and '
+                                         'incident records. The cost profile uses reconciled amounts '
+                                         'and recommendations. Both produce decisions, assigned owners, '
+                                         'and unresolved evidence requests; neither transfers service '
+                                         'permissions.'},
                              {'title': 'Team-managed evidence handoff',
                               'seconds': 120,
                               'refs': ['A-08', 'A-06'],
@@ -1524,7 +1513,7 @@ DECKS={'devops': {'title': 'AWS DevOps Agent',
                                         'Prevent generated text from becoming automatic closure']],
                               'message': 'A handoff transfers evidence and responsibility, not '
                                          'credentials or authorization.'},
-                             {'title': 'Tabletop: one operational symptom, three different jobs',
+                             {'title': 'Exercise: incident, security, and cost evidence handoff',
                               'seconds': 240,
                               'refs': ['A-U01'],
                               'kind': 'demo',
@@ -1547,7 +1536,7 @@ DECKS={'devops': {'title': 'AWS DevOps Agent',
                                          'obligations for each platform.'},
                              {'title': 'Use case families across the three platforms',
                               'seconds': 180,
-                              'refs': ['A-01', 'A-07'],
+                              'refs': ['A-01', 'A-07', 'A-02'],
                               'kind': 'table',
                               'data': [['Family', 'DevOps Agent', 'Security Agent', 'FinOps Agent'],
                                        ['Event response',
@@ -1560,7 +1549,8 @@ DECKS={'devops': {'title': 'AWS DevOps Agent',
                                         'Cost and FinOps review report'],
                                        ['Pattern analysis',
                                         'Recurring causes and prevention recommendations',
-                                        'Requirement and finding trends',
+                                        'Finding personalization; cross-run trend analysis is '
+                                        'team-composed',
                                         'Cost drivers and optimization candidates'],
                                        ['Documentation',
                                         'Topology, SOP skills and environment memory',
@@ -1572,32 +1562,26 @@ DECKS={'devops': {'title': 'AWS DevOps Agent',
                                         'Jira/Slack publication; engineering change outside agent']],
                               'message': 'Similar business labels can map to different platform objects '
                                          'and authorization boundaries.'},
-                             {'title': 'Documentation and presentation acceptance criteria',
+                             {'title': 'Operational prerequisites and verification records',
                               'seconds': 180,
-                              'refs': ['A-07'],
+                              'refs': ['A-03', 'A-04', 'A-05', 'A-06'],
                               'kind': 'table',
-                              'data': [['Area', 'Acceptance criterion', 'Failure signal'],
-                                       ['Structure',
-                                        'Resource model, capabilities, use cases, mechanisms and '
-                                        'procedures are distinct',
-                                        'A scenario is labeled as a capability'],
-                                       ['Use case catalog',
-                                        'Grouped, searchable and classified by delivery mode and '
-                                        'availability',
-                                        'Duplicated or unclassified entries'],
-                                       ['Procedure',
-                                        'Prerequisite, decision, confirmation and failure '
-                                        'interpretation are present',
-                                        'Generic “configure and verify” language'],
-                                       ['Presentation',
-                                        'Descriptive chapter titles and evidence-bearing slides',
-                                        'Slogan titles and empty visual panels'],
-                                       ['Evidence',
-                                        'Material product claims link to official guidance',
-                                        'Source count used as proof of completeness'],
-                                       ['Validation',
-                                        'Browser, data and link checks are separated from live product '
-                                        'testing',
-                                        'Packaging checks presented as operational proof']],
-                              'message': 'A presentation is an indexed technical explanation, not a '
-                                         'sequence of slogans.'}]}}
+                              'data': [['Check', 'Record to inspect', 'Failure interpretation'],
+                                       ['Source access',
+                                        'Calling identity, selected operation and returned resource',
+                                        'An inaccessible source leaves an evidence gap.'],
+                                       ['Execution scope',
+                                        'Configuration ID, revision, target and observation period',
+                                        'A completed run against the wrong subject is not acceptance.'],
+                                       ['Retained context',
+                                        'Applicable file, memory or procedural state',
+                                        'Availability and observed use are separate checks.'],
+                                       ['State-changing operation',
+                                        'Target, permitted effect and required approval',
+                                        'A generated recommendation is not authorization.'],
+                                       ['Result and handoff',
+                                        'Source references, execution ID, reviewer and unresolved items',
+                                        'Completion and delivery do not establish correctness.']],
+                              'message': 'Check access, execution scope, context, effects, and result '
+                                         'evidence separately. Record unmet prerequisites and '
+                                         'unresolved results before handing work to the next owner.'}]}}
