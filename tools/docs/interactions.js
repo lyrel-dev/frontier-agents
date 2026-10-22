@@ -31,8 +31,10 @@
     function reveal(){
       const id=decodeURIComponent(location.hash.slice(1));if(!id)return;
       const target=document.getElementById(id);if(!target)return;
-      if(target.matches('.report-section,.chapter'))reset();
-      const nav=$$('.toc a').find(a=>a.getAttribute('href')==='#'+id);
+      const section=target.closest('.report-section');
+      if(target.matches('.report-section,.chapter')||section)reset();
+      const navId=section?section.id:id;
+      const nav=$$('.toc a').find(a=>a.getAttribute('href')==='#'+id)||$$('.toc a').find(a=>a.getAttribute('href')==='#'+navId);
       if(nav){nav.closest('details').open=true;$$('.toc a').forEach(a=>a.classList.toggle('active',a===nav));}
       requestAnimationFrame(()=>target.scrollIntoView({block:'start'}));
     }
