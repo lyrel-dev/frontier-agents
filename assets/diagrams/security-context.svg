@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="885pt" height="385pt" viewBox="0.00 0.00 884.50 385.00" role="img" aria-labelledby="security-context-title security-context-desc" data-diagram="security-context">
+<title id="security-context-title">Application context and assessment criteria</title><desc id="security-context-desc">Source evidence and scope documents have different jobs. The assessment uses selected evidence and applicable criteria; a finding is an output of that execution rather than an automatically shared memory.</desc><g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(18 367)">
+<title>G</title>
+
+<g id="node1" class="node">
+<title>code</title>
+<path fill="#edf5f4" stroke="#496b78" d="M266,-349C266,-349 12,-349 12,-349 6,-349 0,-343 0,-337 0,-337 0,-313 0,-313 0,-307 6,-301 12,-301 12,-301 266,-301 266,-301 272,-301 278,-307 278,-313 278,-313 278,-337 278,-337 278,-343 272,-349 266,-349" />
+<text text-anchor="middle" x="139" y="-328.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Implementation evidence</text>
+<text text-anchor="middle" x="139" y="-313.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Repository revision and API material</text>
+</g>
+
+<g id="node4" class="node">
+<title>model</title>
+<path fill="#edf5f4" stroke="#496b78" d="M567,-245C567,-245 299,-245 299,-245 293,-245 287,-239 287,-233 287,-233 287,-209 287,-209 287,-203 293,-197 299,-197 299,-197 567,-197 567,-197 573,-197 579,-203 579,-209 579,-209 579,-233 579,-233 579,-239 573,-245 567,-245" />
+<text text-anchor="middle" x="433" y="-224.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Selected application context</text>
+<text text-anchor="middle" x="433" y="-209.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">System components and relationships</text>
+</g>
+
+<g id="edge1" class="edge">
+<title>code-&gt;model</title>
+<path fill="none" stroke="#496b78" d="M205.35,-300.98C251.18,-285.08 312.16,-263.93 359.47,-247.51" />
+<polygon fill="#496b78" stroke="#496b78" points="360.42,-249.96 366.64,-245.02 358.7,-245 360.42,-249.96" />
+</g>
+
+<g id="node2" class="node">
+<title>design</title>
+<path fill="#edf5f4" stroke="#496b78" d="M550.5,-349C550.5,-349 315.5,-349 315.5,-349 309.5,-349 303.5,-343 303.5,-337 303.5,-337 303.5,-313 303.5,-313 303.5,-307 309.5,-301 315.5,-301 315.5,-301 550.5,-301 550.5,-301 556.5,-301 562.5,-307 562.5,-313 562.5,-313 562.5,-337 562.5,-337 562.5,-343 556.5,-349 550.5,-349" />
+<text text-anchor="middle" x="433" y="-328.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Design context</text>
+<text text-anchor="middle" x="433" y="-313.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Documents and connected pages</text>
+</g>
+
+<g id="edge2" class="edge">
+<title>design-&gt;model</title>
+<path fill="none" stroke="#496b78" d="M433,-300.85C433,-286.64 433,-268.26 433,-252.82" />
+<polygon fill="#496b78" stroke="#496b78" points="435.63,-252.55 433,-245.05 430.38,-252.55 435.63,-252.55" />
+</g>
+
+<g id="node3" class="node">
+<title>scope</title>
+<path fill="#edf5f4" stroke="#496b78" d="M836.5,-349C836.5,-349 599.5,-349 599.5,-349 593.5,-349 587.5,-343 587.5,-337 587.5,-337 587.5,-313 587.5,-313 587.5,-307 593.5,-301 599.5,-301 599.5,-301 836.5,-301 836.5,-301 842.5,-301 848.5,-307 848.5,-313 848.5,-313 848.5,-337 848.5,-337 848.5,-343 842.5,-349 836.5,-349" />
+<text text-anchor="middle" x="718" y="-328.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Assessment scope</text>
+<text text-anchor="middle" x="718" y="-313.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Application and system boundary</text>
+</g>
+
+<g id="edge3" class="edge">
+<title>scope-&gt;model</title>
+<path fill="none" stroke="#496b78" d="M653.69,-300.98C609.43,-285.14 550.6,-264.09 504.81,-247.7" />
+<polygon fill="#496b78" stroke="#496b78" points="505.52,-245.17 497.57,-245.11 503.75,-250.11 505.52,-245.17" />
+<text text-anchor="middle" x="641.5" y="-270.2" font-family="DejaVu Sans" font-size="11.00">bounds the question</text>
+</g>
+
+<g id="node6" class="node">
+<title>assessment</title>
+<path fill="#edf5f4" stroke="#496b78" d="M684,-141C684,-141 450,-141 450,-141 444,-141 438,-135 438,-129 438,-129 438,-105 438,-105 438,-99 444,-93 450,-93 450,-93 684,-93 684,-93 690,-93 696,-99 696,-105 696,-105 696,-129 696,-129 696,-135 690,-141 684,-141" />
+<text text-anchor="middle" x="567" y="-120.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Assessment run</text>
+<text text-anchor="middle" x="567" y="-105.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Analysis or authorized active test</text>
+</g>
+
+<g id="edge4" class="edge">
+<title>model-&gt;assessment</title>
+<path fill="none" stroke="#496b78" d="M463.41,-196.85C483.37,-181.66 509.58,-161.71 530.64,-145.68" />
+<polygon fill="#496b78" stroke="#496b78" points="532.34,-147.69 536.71,-141.05 529.16,-143.51 532.34,-147.69" />
+<text text-anchor="middle" x="526.5" y="-166.2" font-family="DejaVu Sans" font-size="11.00">context</text>
+</g>
+
+<g id="node5" class="node">
+<title>criteria</title>
+<path fill="#edf5f4" stroke="#496b78" d="M787.5,-245C787.5,-245 616.5,-245 616.5,-245 610.5,-245 604.5,-239 604.5,-233 604.5,-233 604.5,-209 604.5,-209 604.5,-203 610.5,-197 616.5,-197 616.5,-197 787.5,-197 787.5,-197 793.5,-197 799.5,-203 799.5,-209 799.5,-209 799.5,-233 799.5,-233 799.5,-239 793.5,-245 787.5,-245" />
+<text text-anchor="middle" x="702" y="-224.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Applicable requirements</text>
+<text text-anchor="middle" x="702" y="-209.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Reviewed criteria</text>
+</g>
+
+<g id="edge5" class="edge">
+<title>criteria-&gt;assessment</title>
+<path fill="none" stroke="#496b78" d="M671.37,-196.85C651.26,-181.66 624.85,-161.71 603.63,-145.68" />
+<polygon fill="#496b78" stroke="#496b78" points="605.08,-143.48 597.51,-141.05 601.91,-147.67 605.08,-143.48" />
+<text text-anchor="middle" x="689.5" y="-166.2" font-family="DejaVu Sans" font-size="11.00">eligible evaluation</text>
+</g>
+
+<g id="node7" class="node">
+<title>finding</title>
+<path fill="#edf5f4" stroke="#496b78" d="M687,-48C687,-48 447,-48 447,-48 441,-48 435,-42 435,-36 435,-36 435,-12 435,-12 435,-6 441,0 447,0 447,0 687,0 687,0 693,0 699,-6 699,-12 699,-12 699,-36 699,-36 699,-42 693,-48 687,-48" />
+<text text-anchor="middle" x="567" y="-27.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Finding or model result</text>
+<text text-anchor="middle" x="567" y="-12.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Evidence, assumptions, and limits</text>
+</g>
+
+<g id="edge6" class="edge">
+<title>assessment-&gt;finding</title>
+<path fill="none" stroke="#496b78" d="M567,-92.57C567,-81.33 567,-67.73 567,-55.69" />
+<polygon fill="#496b78" stroke="#496b78" points="569.63,-55.54 567,-48.04 564.38,-55.54 569.63,-55.54" />
+</g>
+</g>
+</svg>
