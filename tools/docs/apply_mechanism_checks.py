@@ -75,7 +75,7 @@ p.write_text(text)
 
 # The shared knowledge chapter distinguishes the newly reviewed support behavior.
 p=ROOT/'guides/architecture.md';text=p.read_text()
-paragraph='''\nSecurity Agent also documents Findings Personalization. It reuses eligible edits from the most recent completed penetration-test run to adjust similar later findings, provided the feature was enabled when the test started. This is a different producer, retained preference and effect from Login Optimization. The latter reuses authentication navigation; personalization changes finding attributes. Disabling personalization preserves the learned preferences while displaying raw findings. Neither behavior proves that an application defect was repaired. The detailed mechanism is [Finding-edit personalization](security.html#MX-S-PERSONALIZE). [AS401]\n'''
+paragraph='''\nSecurity Agent also documents Findings Personalization. It reuses eligible edits from the most recent completed penetration-test run to adjust similar later findings, provided the feature was enabled when the test started. This is a different producer, retained preference and effect from Login Optimization. The latter reuses authentication navigation; personalization changes finding attributes. Disabling personalization preserves the learned preferences while displaying raw findings. Neither behavior proves that an application defect was repaired. The detailed mechanism is [Finding-edit personalization](../guides/security.html#MX-S-PERSONALIZE). [AS401]\n'''
 match=re.search(r'^### A-02[^\n]*\n',text,re.M)
 assert match
 boundary=re.search(r'^#{2,3} ',text[match.end():],re.M)
