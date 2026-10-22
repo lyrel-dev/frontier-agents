@@ -1,0 +1,13 @@
+{
+  "stage": 3,
+  "baseline": "75f7d7c11d29e308e71a1bbe77ad93e9bc9f08a9",
+  "approved_use_cases": "preserved byte-for-byte",
+  "mechanisms": "40 existing records retain core identities/dependencies; one documented support mechanism added",
+  "new_mechanism": "Findings Personalization is distinct from Login Optimization and revalidation",
+  "shared_guide_source_alias": {
+    "AS401": "SS405"
+  },
+  "timing": "Existing per-slide budgets retained; no appended presentation track",
+  "source_policy": "42 targeted official references; conflicting retrieved versions and unknown internals qualified",
+  "live_aws_execution": false
+}
