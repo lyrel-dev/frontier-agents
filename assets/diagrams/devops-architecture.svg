@@ -1,0 +1,143 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="678pt" height="750pt" viewBox="0.00 0.00 677.50 750.00" role="img" aria-labelledby="devops-architecture-title devops-architecture-desc" data-diagram="devops-architecture">
+<title id="devops-architecture-title">DevOps Agent resource and execution architecture</title><desc id="devops-architecture-desc">Account-level providers and roles are associated with an Agent Space. An execution uses the selected tools and context; learning creates knowledge for later executions.</desc><g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(18 732)">
+<title>G</title>
+<g id="clust1" class="cluster">
+<title>cluster_account</title>
+<path fill="transparent" stroke="#a9bbc7" d="M89.5,-616C89.5,-616 574.5,-616 574.5,-616 580.5,-616 586.5,-622 586.5,-628 586.5,-628 586.5,-694 586.5,-694 586.5,-700 580.5,-706 574.5,-706 574.5,-706 89.5,-706 89.5,-706 83.5,-706 77.5,-700 77.5,-694 77.5,-694 77.5,-628 77.5,-628 77.5,-622 83.5,-616 89.5,-616" />
+<text text-anchor="middle" x="332" y="-689.2" font-family="DejaVu Sans" font-size="16.00">Account configuration</text>
+</g>
+
+<g id="node1" class="node">
+<title>providers</title>
+<path fill="#edf5f4" stroke="#496b78" d="M305.5,-672C305.5,-672 97.5,-672 97.5,-672 91.5,-672 85.5,-666 85.5,-660 85.5,-660 85.5,-636 85.5,-636 85.5,-630 91.5,-624 97.5,-624 97.5,-624 305.5,-624 305.5,-624 311.5,-624 317.5,-630 317.5,-636 317.5,-636 317.5,-660 317.5,-660 317.5,-666 311.5,-672 305.5,-672" />
+<text text-anchor="middle" x="201.5" y="-651.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Provider registrations</text>
+<text text-anchor="middle" x="201.5" y="-636.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Authentication and endpoints</text>
+</g>
+
+<g id="node3" class="node">
+<title>space</title>
+<path fill="#edf5f4" stroke="#496b78" d="M440,-568C440,-568 221,-568 221,-568 215,-568 209,-562 209,-556 209,-556 209,-532 209,-532 209,-526 215,-520 221,-520 221,-520 440,-520 440,-520 446,-520 452,-526 452,-532 452,-532 452,-556 452,-556 452,-562 446,-568 440,-568" />
+<text text-anchor="middle" x="330.5" y="-547.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Agent Space</text>
+<text text-anchor="middle" x="330.5" y="-532.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Associations and selected tools</text>
+</g>
+
+<g id="edge1" class="edge">
+<title>providers-&gt;space</title>
+<path fill="none" stroke="#496b78" d="M230.77,-623.85C249.9,-608.73 275,-588.88 295.23,-572.89" />
+<polygon fill="#496b78" stroke="#496b78" points="297.09,-574.76 301.34,-568.05 293.83,-570.65 297.09,-574.76" />
+<text text-anchor="middle" x="296" y="-593.2" font-family="DejaVu Sans" font-size="11.00">associate</text>
+</g>
+
+<g id="node2" class="node">
+<title>roles</title>
+<path fill="#edf5f4" stroke="#496b78" d="M566,-672C566,-672 355,-672 355,-672 349,-672 343,-666 343,-660 343,-660 343,-636 343,-636 343,-630 349,-624 355,-624 355,-624 566,-624 566,-624 572,-624 578,-630 578,-636 578,-636 578,-660 578,-660 578,-666 572,-672 566,-672" />
+<text text-anchor="middle" x="460.5" y="-651.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">AWS account roles</text>
+<text text-anchor="middle" x="460.5" y="-636.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Resource and operator access</text>
+</g>
+
+<g id="edge2" class="edge">
+<title>roles-&gt;space</title>
+<path fill="none" stroke="#496b78" d="M431,-623.85C411.72,-608.73 386.43,-588.88 366.04,-572.89" />
+<polygon fill="#496b78" stroke="#496b78" points="367.4,-570.62 359.88,-568.05 364.16,-574.75 367.4,-570.62" />
+<text text-anchor="middle" x="435.5" y="-593.2" font-family="DejaVu Sans" font-size="11.00">scope access</text>
+</g>
+
+<g id="node4" class="node">
+<title>definition</title>
+<path fill="#edf5f4" stroke="#496b78" d="M442,-464C442,-464 219,-464 219,-464 213,-464 207,-458 207,-452 207,-452 207,-428 207,-428 207,-422 213,-416 219,-416 219,-416 442,-416 442,-416 448,-416 454,-422 454,-428 454,-428 454,-452 454,-452 454,-458 448,-464 442,-464" />
+<text text-anchor="middle" x="330.5" y="-443.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Agent configuration</text>
+<text text-anchor="middle" x="330.5" y="-428.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Instructions, skills, store access</text>
+</g>
+
+<g id="edge3" class="edge">
+<title>space-&gt;definition</title>
+<path fill="none" stroke="#496b78" d="M330.5,-519.85C330.5,-505.64 330.5,-487.26 330.5,-471.82" />
+<polygon fill="#496b78" stroke="#496b78" points="333.13,-471.55 330.5,-464.05 327.88,-471.55 333.13,-471.55" />
+<text text-anchor="middle" x="359.5" y="-489.2" font-family="DejaVu Sans" font-size="11.00">configures</text>
+</g>
+
+<g id="node5" class="node">
+<title>run</title>
+<path fill="#edf5f4" stroke="#496b78" d="M424,-360C424,-360 237,-360 237,-360 231,-360 225,-354 225,-348 225,-348 225,-324 225,-324 225,-318 231,-312 237,-312 237,-312 424,-312 424,-312 430,-312 436,-318 436,-324 436,-324 436,-348 436,-348 436,-354 430,-360 424,-360" />
+<text text-anchor="middle" x="330.5" y="-339.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Investigation or invocation</text>
+<text text-anchor="middle" x="330.5" y="-324.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Current task and evidence</text>
+</g>
+
+<g id="edge4" class="edge">
+<title>definition-&gt;run</title>
+<path fill="none" stroke="#496b78" d="M330.5,-415.85C330.5,-401.64 330.5,-383.26 330.5,-367.82" />
+<polygon fill="#496b78" stroke="#496b78" points="333.13,-367.55 330.5,-360.05 327.88,-367.55 333.13,-367.55" />
+<text text-anchor="middle" x="352.5" y="-385.2" font-family="DejaVu Sans" font-size="11.00">used by</text>
+</g>
+
+<g id="node6" class="node">
+<title>sources</title>
+<path fill="#edf5f4" stroke="#496b78" d="M251,-256C251,-256 12,-256 12,-256 6,-256 0,-250 0,-244 0,-244 0,-220 0,-220 0,-214 6,-208 12,-208 12,-208 251,-208 251,-208 257,-208 263,-214 263,-220 263,-220 263,-244 263,-244 263,-250 257,-256 251,-256" />
+<text text-anchor="middle" x="131.5" y="-235.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Connected sources</text>
+<text text-anchor="middle" x="131.5" y="-220.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Telemetry, code, deployment data</text>
+</g>
+
+<g id="edge5" class="edge">
+<title>run-&gt;sources</title>
+<path fill="none" stroke="#496b78" d="M224.82,-319.62C189.37,-312.4 155.72,-302.57 143.5,-290 136.72,-283.02 133.34,-273.23 131.76,-263.73" />
+<polygon fill="#496b78" stroke="#496b78" points="134.36,-263.36 130.85,-256.23 129.15,-263.99 134.36,-263.36" />
+<text text-anchor="middle" x="195" y="-281.2" font-family="DejaVu Sans" font-size="11.00">authorized queries</text>
+</g>
+
+<g id="node9" class="node">
+<title>output</title>
+<path fill="#edf5f4" stroke="#496b78" d="M498.5,-256C498.5,-256 300.5,-256 300.5,-256 294.5,-256 288.5,-250 288.5,-244 288.5,-244 288.5,-220 288.5,-220 288.5,-214 294.5,-208 300.5,-208 300.5,-208 498.5,-208 498.5,-208 504.5,-208 510.5,-214 510.5,-220 510.5,-220 510.5,-244 510.5,-244 510.5,-250 504.5,-256 498.5,-256" />
+<text text-anchor="middle" x="399.5" y="-235.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Execution record</text>
+<text text-anchor="middle" x="399.5" y="-220.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Findings, tool results, status</text>
+</g>
+
+<g id="edge7" class="edge">
+<title>run-&gt;output</title>
+<path fill="none" stroke="#496b78" d="M346.16,-311.85C356.04,-297.25 368.89,-278.24 379.51,-262.55" />
+<polygon fill="#496b78" stroke="#496b78" points="381.88,-263.74 383.9,-256.05 377.53,-260.8 381.88,-263.74" />
+<text text-anchor="middle" x="387.5" y="-281.2" font-family="DejaVu Sans" font-size="11.00">records</text>
+</g>
+
+<g id="edge6" class="edge">
+<title>sources-&gt;run</title>
+<path fill="none" stroke="#496b78" d="M199.55,-256C215.92,-262.4 233.12,-269.85 248.5,-278 264.31,-286.38 280.7,-297.26 294.63,-307.27" />
+<polygon fill="#496b78" stroke="#496b78" points="293.24,-309.51 300.85,-311.8 296.33,-305.26 293.24,-309.51" />
+<text text-anchor="middle" x="302.5" y="-281.2" font-family="DejaVu Sans" font-size="11.00">observations</text>
+</g>
+
+<g id="node7" class="node">
+<title>learning</title>
+<path fill="#edf5f4" stroke="#496b78" d="M503.5,-152C503.5,-152 265.5,-152 265.5,-152 259.5,-152 253.5,-146 253.5,-140 253.5,-140 253.5,-116 253.5,-116 253.5,-110 259.5,-104 265.5,-104 265.5,-104 503.5,-104 503.5,-104 509.5,-104 515.5,-110 515.5,-116 515.5,-116 515.5,-140 515.5,-140 515.5,-146 509.5,-152 503.5,-152" />
+<text text-anchor="middle" x="384.5" y="-131.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Managed learning</text>
+<text text-anchor="middle" x="384.5" y="-116.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Environment and incident context</text>
+</g>
+
+<g id="node8" class="node">
+<title>memory</title>
+<path fill="#edf5f4" stroke="#496b78" d="M578.5,-48C578.5,-48 360.5,-48 360.5,-48 354.5,-48 348.5,-42 348.5,-36 348.5,-36 348.5,-12 348.5,-12 348.5,-6 354.5,0 360.5,0 360.5,0 578.5,0 578.5,0 584.5,0 590.5,-6 590.5,-12 590.5,-12 590.5,-36 590.5,-36 590.5,-42 584.5,-48 578.5,-48" />
+<text text-anchor="middle" x="469.5" y="-27.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Knowledge and memory</text>
+<text text-anchor="middle" x="469.5" y="-12.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Descriptions, content, versions</text>
+</g>
+
+<g id="edge9" class="edge">
+<title>learning-&gt;memory</title>
+<path fill="none" stroke="#496b78" d="M403.79,-103.85C416.07,-89.12 432.08,-69.91 445.22,-54.13" />
+<polygon fill="#496b78" stroke="#496b78" points="447.5,-55.5 450.29,-48.05 443.47,-52.13 447.5,-55.5" />
+<text text-anchor="middle" x="462.5" y="-73.2" font-family="DejaVu Sans" font-size="11.00">synthesizes</text>
+</g>
+
+<g id="edge10" class="edge">
+<title>memory-&gt;run</title>
+<path fill="none" stroke="#496b78" stroke-dasharray="5,2" d="M493.21,-48.23C506.38,-62.84 521.48,-82.88 528.5,-104 549.81,-168.15 562.51,-200.8 523.5,-256 504.4,-283.03 474.33,-300.83 443.56,-312.55" />
+<polygon fill="#496b78" stroke="#496b78" points="442.29,-310.21 436.15,-315.25 444.09,-315.14 442.29,-310.21" />
+<text text-anchor="middle" x="595" y="-177.2" font-family="DejaVu Sans" font-size="11.00">selected context</text>
+</g>
+
+<g id="edge8" class="edge">
+<title>output-&gt;learning</title>
+<path fill="none" stroke="#496b78" d="M396.1,-207.85C394.01,-193.64 391.3,-175.26 389.03,-159.82" />
+<polygon fill="#496b78" stroke="#496b78" points="391.58,-159.09 387.89,-152.05 386.38,-159.86 391.58,-159.09" />
+<text text-anchor="middle" x="419.5" y="-177.2" font-family="DejaVu Sans" font-size="11.00">prior work</text>
+</g>
+</g>
+</svg>
