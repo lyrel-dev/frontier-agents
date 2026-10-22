@@ -1,6 +1,6 @@
 """Maintained chapter membership and section types."""
-REVISION="2026-10-22-narrative-guides"
-BASELINE="c3d6f2dafdd87e083989135690e2f4f169e80fc2"
+REVISION='2026-10-22-narrative-guides'
+BASELINE='c3d6f2dafdd87e083989135690e2f4f169e80fc2'
 CHAPTERS={'devops': [{'slug': 'model',
              'title': 'Service architecture',
              'purpose': 'The service separates durable configuration from operational executions. This '
@@ -155,11 +155,11 @@ CHAPTERS={'devops': [{'slug': 'model',
                    'sections': ['A-07']}]}
 DECK_CHAPTERS={'devops': [('Service architecture', [0, 1]),
             ('Integrations and access', [2, 3, 4]),
-            ('Knowledge and behavior', [5, 6, 7, 8]),
-            ('Execution workflows', [9, 10, 11, 12, 13]),
-            ('Operational use cases', [14, 15, 16]),
-            ('Worked example', [17]),
-            ('Troubleshooting and references', [18, 19, 20])],
+            ('Knowledge and behavior', [5, 6, 7]),
+            ('Incident response and operational execution', [8, 9, 10, 11, 12, 13, 14]),
+            ('Operational use cases', [15, 16, 17, 18]),
+            ('Worked example', [19]),
+            ('Troubleshooting and references', [20])],
  'security': [('Service architecture', [0, 1]),
               ('Integrations and access', [2, 3, 4, 5]),
               ('Knowledge and behavior', [6, 7, 8, 9]),
