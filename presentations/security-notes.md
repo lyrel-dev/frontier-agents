@@ -21,28 +21,28 @@ Read the entity kind and ownership label before following the relationship. A qu
 Detailed reference: [Shared configuration, Agent Spaces and assessments](../guides/security.html#S-01)
 
 
-## 02. Product functions and security resource model
+## 02. Resource identities and lifecycle boundaries
 
 02:00–05:00 · Product-specific resource model
 
-Application scope, assessment configuration, execution and finding lifecycle are different resource layers.
+Identify the actual product object before configuring, invoking, correcting or removing it. The resource kind determines which operation is meaningful.
 
 
 
-Layer | Primary objects | Purpose | Evidence
+Object | Identity or membership | Lifecycle distinction
 
-Account resources | Integrations, identity and requirement packs | Shared setup and reusable criteria | Provider registration and enabled packs
+Agent Space | Application or project scope | Shared integration registration is separate
 
-Agent Space | Application sources, users and settings | Application-specific boundary | Space ID and source connections
+Penetration test | Saved configuration and independent run | Record current target revision and test identity
 
-Assessment configuration | Targets, credentials, criteria and limits | Reusable definition for eligible assessment types | Saved configuration and revision
+Code review | Full-scan configuration or repository event settings | Keep the actual reviewed revision
 
-Execution | Run, job or review | Assess the current target or source | Status, identity and findings
+Design review | Individual assessment | Cloning creates a new review
 
-Finding lifecycle | Finding, remediation, Jira link and revalidation | Track evidence through repair | Original and linked verification records
+Finding and revalidation | Original finding plus separate job | Our normalized result association is not a native API resource
 
 
-Detailed reference: [Shared configuration, Agent Spaces and assessments](../guides/security.html#S-01)
+Detailed reference: [Assessment configurations, runs and result identities](../guides/security.html#S-10)
 
 
 ## 03. Assessment configurations and distinct execution lifecycles
