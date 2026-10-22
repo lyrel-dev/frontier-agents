@@ -1,0 +1,535 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><title>AWS Security Agent — HTML presentation</title><style>:root{--ink:#182b3b;--muted:#526574;--navy:#132c40;--accent:#086e68;--pale:#edf5f4;--line:#d5e0e7;--paper:#fff;--bg:#f5f7f9;--warn:#9b5b13;--shadow:0 12px 28px #172c4310}
+*{box-sizing:border-box}html{scroll-padding-top:100px;scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 system-ui,-apple-system,'Segoe UI',sans-serif}a{color:#075d94;text-underline-offset:3px}button,input,select{font:inherit;color:inherit;background:var(--paper);border:1px solid #9cb0bf;border-radius:5px;padding:9px 12px;min-height:42px}button{cursor:pointer}button:hover{background:var(--pale)}button:disabled{opacity:.4;cursor:default}:focus-visible{outline:3px solid #b87114;outline-offset:3px}[hidden]{display:none!important}.skip{position:absolute;top:-100px;left:20px;z-index:50;background:white;padding:12px}.skip:focus{top:12px}.site-header{background:var(--navy);color:white;padding:16px 28px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}.site-header a{color:#e6f3fd}.brand{font-size:13px;font-weight:750;letter-spacing:.08em;text-transform:uppercase}.site-header nav{display:flex;gap:20px;flex-wrap:wrap;font-size:14px}.eyebrow{color:var(--accent);font-size:12px;text-transform:uppercase;letter-spacing:.12em;font-weight:750}.muted,.small{color:var(--muted)}.small{font-size:13px}.intro{max-width:70ch}h1{font-size:clamp(28px,3.2vw,42px);letter-spacing:-.025em;line-height:1.16;margin:12px 0 22px}h2{font-size:29px;line-height:1.25;margin:0 0 14px}h3{font-size:24px;line-height:1.3;margin:8px 0 20px}h4{font-size:19px;line-height:1.4;margin:26px 0 10px}p{margin:0 0 17px}li{margin:7px 0}code{font-size:.9em;overflow-wrap:anywhere}pre{background:#132b3e;color:#eaf2f8;border-radius:5px;padding:20px;overflow-x:auto;max-width:100%;font-size:13px;line-height:1.7}.table-wrap{max-width:100%;overflow-x:auto;margin:22px 0}table{border-collapse:collapse;width:100%;font-size:14px;line-height:1.5}th,td{border:1px solid var(--line);padding:12px 14px;text-align:left;vertical-align:top;min-width:100px}th{background:#e8eff3}tr:nth-child(even) td{background:#f7fafb}blockquote{margin:20px 0;border-left:4px solid var(--accent);background:var(--pale);padding:14px 20px}.button-link{display:inline-block;border:1px solid var(--accent);border-radius:5px;padding:8px 14px;text-decoration:none;color:var(--accent);font-weight:650}.primary{background:var(--accent);color:white}.actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:20px 0}.report-shell{display:grid;grid-template-columns:290px minmax(0,1fr);gap:36px;max-width:1500px;margin:auto;padding:26px}.toc{position:sticky;top:18px;align-self:start;max-height:94vh;overflow:auto;font-size:13px;padding-right:12px}.toc-label{font-size:12px;font-weight:750;letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px}.toc-actions{display:flex;gap:8px;margin:12px 0}.toc-actions button{font-size:12px;min-height:34px;padding:5px 8px}.toc details{border-bottom:1px solid var(--line);padding:8px 0}.toc summary{cursor:pointer;font-weight:700;line-height:1.4;padding:8px 0}.toc ul{list-style:none;margin:0;padding:0 0 6px 14px}.toc li{margin:3px 0}.toc a{display:block;text-decoration:none;color:var(--muted);line-height:1.4;border-left:2px solid transparent;padding:7px 9px}.toc a.active{border-color:var(--accent);background:var(--pale);color:var(--ink);font-weight:650}.toc a small{display:block;font-size:10px;letter-spacing:.03em;color:#5f788a}.content{min-width:0;max-width:1020px}.hero{background:white;border:1px solid var(--line);border-top:5px solid var(--accent);padding:30px;border-radius:7px}.hero h1{max-width:24ch}.meta-row{display:flex;gap:12px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-top:22px}.meta-row span{border-left:2px solid var(--line);padding-left:12px}.chapter-map{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:25px 0}.map-link{display:block;padding:17px 18px;background:white;border:1px solid var(--line);border-radius:6px;text-decoration:none;color:var(--ink)}.map-link:hover{border-color:var(--accent)}.map-link strong{display:block;font-size:16px;margin:4px 0}.map-link p{font-size:13px;color:var(--muted);margin:0}.ordinal{font-size:12px;font-weight:750;color:var(--accent);letter-spacing:.1em}.filter-bar{display:flex;gap:9px;flex-wrap:wrap;padding:14px 0;background:var(--bg);position:sticky;top:0;z-index:4}.filter-bar input{flex:2;min-width:180px}.filter-bar select{flex:1;min-width:145px}.filter-bar button{font-size:14px}.search-status{font-size:13px;color:var(--muted);min-height:24px}.chapter{padding-top:22px;margin-top:12px}.chapter-heading{border-bottom:2px solid var(--ink);padding:14px 0 18px}.chapter-heading .ordinal{font-size:13px}.chapter-heading h2{margin:7px 0 10px}.chapter-heading p{max-width:70ch;color:var(--muted);margin:0}.report-section{border:1px solid var(--line);border-radius:6px;background:white;padding:28px 30px;margin:18px 0;min-width:0}.section-meta{display:flex;gap:12px;align-items:center;flex-wrap:wrap;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px}.section-meta a{margin-left:auto;text-transform:none;font-size:12px;letter-spacing:0}.report-section h3 a{color:inherit;text-decoration:none}.callout{border-left:3px solid var(--accent);padding-left:16px}.section-nav{display:flex;justify-content:space-between;gap:20px;margin-top:25px;padding-top:18px;border-top:1px solid var(--line);font-size:13px}.section-nav a{max-width:47%;overflow-wrap:anywhere}.empty{padding:25px;border:1px dashed var(--line);background:white}.reading-breadcrumb{color:var(--muted);font-size:12px;margin:0 0 12px}footer{font-size:13px;color:var(--muted);border-top:1px solid var(--line);padding:24px 0;margin-top:28px}.index-main{max-width:1200px;margin:38px auto;padding:0 24px}.index-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}.index-card{border:1px solid var(--line);border-top:4px solid var(--accent);background:white;padding:25px;border-radius:7px}.index-card h2{font-size:25px}.index-card .actions{margin-bottom:0}.programme{padding:20px 24px;background:var(--pale);border-left:4px solid var(--accent);margin:25px 0}.deck-main{max-width:1420px;margin:auto;padding:18px 26px 30px}.deck-toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}.deck-toolbar select{flex:1;min-width:200px}.deck-toolbar button{font-size:14px}.deck-toolbar .timer{font-variant-numeric:tabular-nums;font-size:13px;color:var(--muted)}.chapter-strip{display:flex;gap:5px;margin:14px 0;flex-wrap:wrap}.chapter-strip button{flex:1;min-width:100px;min-height:48px;text-align:left;font-size:11px;padding:7px 10px;border-color:var(--line);line-height:1.35}.chapter-strip button span{display:block;font-size:10px;color:var(--muted);margin-bottom:3px}.chapter-strip button[aria-current=true]{background:var(--navy);border-color:var(--navy);color:white}.chapter-strip button[aria-current=true] span{color:#bbd7df}.slide{background:white;border:1px solid var(--line);border-top:5px solid var(--accent);padding:27px 34px;min-height:600px;display:flex;flex-direction:column;box-shadow:var(--shadow)}.slide-top{display:flex;justify-content:space-between;gap:15px;font-size:12px;color:var(--muted)}.slide h1{font-size:clamp(27px,2.7vw,39px);margin:18px 0 25px;max-width:32ch}.slide-body{flex:1;display:flex;align-items:center;min-height:270px}.slide-body .table-wrap{width:100%;margin:0}.slide table{font-size:clamp(15px,1.45vw,20px)}.slide th,.slide td{padding:13px 16px;line-height:1.4}.flow,.columns{display:flex;gap:18px;width:100%;align-items:stretch}.node,.column{flex:1;min-width:0;background:var(--pale);padding:20px;border-top:3px solid var(--accent);position:relative}.node strong,.column strong{display:block;font-size:clamp(18px,1.6vw,24px);line-height:1.3;margin:0 0 18px}.node p,.column p{font-size:clamp(16px,1.5vw,21px);line-height:1.5;margin:0}.node:not(:last-child)::after{content:'→';position:absolute;right:-18px;top:43%;color:var(--accent);font-size:22px}.takeaway{margin-top:26px;padding:14px 18px;background:var(--navy);color:white;font-size:clamp(16px,1.4vw,20px);line-height:1.4}.slide-foot{display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap;font-size:12px;color:var(--muted);padding-top:16px}.slide-foot a{margin-right:10px}.deck-status{display:flex;justify-content:space-between;gap:18px;align-items:center;font-size:13px;color:var(--muted);margin:12px 0}.deck-status progress{width:180px;max-width:30vw;height:7px;accent-color:var(--accent)}.timer.over{color:var(--warn);font-weight:700}.notes{border:1px solid var(--line);background:white;padding:20px 26px;margin-top:20px}.notes summary{cursor:pointer;font-weight:700}.notes h2{font-size:21px;margin-top:22px}.notes h3{font-size:19px}.notes h4{font-size:17px}.notes .talk-track{padding:18px;background:var(--pale);margin:16px 0}.notes .note-reference{border-top:1px solid var(--line);padding-top:18px;margin-top:20px}.notes section p{font-size:14px}.evidence{margin-top:22px;border:1px solid var(--line);padding:18px 22px;background:white}.evidence summary{font-weight:700;cursor:pointer}.evidence ol{font-size:13px}.evidence a{overflow-wrap:anywhere}dialog{max-width:880px;width:calc(100% - 40px);max-height:88vh;border:1px solid var(--line);border-radius:8px;padding:24px;color:var(--ink);box-shadow:0 20px 80px #0004}dialog::backdrop{background:#122b4077}.dialog-top{display:flex;justify-content:space-between;align-items:center;gap:15px;position:sticky;top:-24px;background:white;padding:12px 0}.agenda-group{margin:18px 0}.agenda-group h3{font-size:18px;margin-bottom:8px}.agenda-group button{display:block;width:100%;text-align:left;margin:5px 0;font-size:14px;line-height:1.45}.agenda-group button small{display:block;color:var(--muted)}:fullscreen{overflow:auto;background:var(--bg)}
+@media(max-width:1050px){.report-shell{grid-template-columns:240px minmax(0,1fr);gap:20px;padding:18px}.report-section,.hero{padding:22px}.slide{padding:23px;min-height:530px}.deck-main{padding:16px}.node,.column{padding:16px}.slide-body{min-height:230px}}
+@media(max-width:760px){.site-header{padding:15px 18px}.site-header nav{gap:14px;font-size:12px}.report-shell{display:block;padding:14px}.toc{position:static;max-height:340px;padding:14px;background:white;border:1px solid var(--line);margin-bottom:20px}.toc>details{padding:3px 0}.chapter-map,.index-grid{grid-template-columns:1fr}.filter-bar{position:static}.filter-bar>*{width:100%;min-width:0!important}.hero,.report-section{padding:20px}.report-section h3{font-size:22px}.chapter-heading h2{font-size:25px}.deck-toolbar>*{flex:1}.deck-toolbar select{min-width:100%;order:1}.chapter-strip button{min-width:130px}.slide{min-height:0;padding:20px}.slide h1{font-size:27px}.slide-body{min-height:0}.flow,.columns{flex-direction:column}.node:not(:last-child)::after{display:none}.node p,.column p{font-size:18px}.slide table{font-size:16px}.slide th,.slide td{padding:12px}.slide-top{font-size:11px}.section-meta a{margin-left:0}.notes{padding:18px}.deck-status{align-items:flex-start}.slide-foot{line-height:1.7}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media print{@page{size:A4 landscape;margin:12mm}body{background:white;color:black;font-size:10pt}.site-header,.toc,.filter-bar,.chapter-map,.actions,.search-status,.reading-breadcrumb,.section-nav,.deck-toolbar,.chapter-strip,.deck-status,.notes,.evidence,footer,.empty,.section-meta a,.skip{display:none!important}.report-shell{display:block;padding:0;max-width:none}.content{max-width:none}.hero{border:0;padding:0}.hero h1{max-width:none}.report-section,.chapter{display:block!important;border:0;padding:0;margin:14px 0}.chapter-heading{break-after:avoid}.report-section h3{break-after:avoid}.report-section[hidden],.chapter[hidden]{display:block!important}.table-wrap{overflow:visible}table{font-size:9pt}pre{white-space:pre-wrap;background:#eee;color:black}.deck-main{padding:0;max-width:none}.presentation-page .slide{display:flex!important;box-shadow:none;border:0;padding:0;min-height:0;break-after:page;height:176mm;overflow:visible}.presentation-page .slide:last-of-type{break-after:auto}.slide h1{font-size:25pt;margin:8mm 0 5mm}.slide-body{min-height:0}.slide table{font-size:12pt}.slide td,.slide th{padding:8px}.flow,.columns{flex-direction:row}.node,.column{padding:14px}.node strong,.column strong{font-size:16pt}.node p,.column p{font-size:13pt}.takeaway{background:#e8eeee;color:black;font-size:13pt}.slide-foot{font-size:9pt}.slide-top{font-size:9pt}.index-main{margin:0}.index-grid{grid-template-columns:1fr 1fr}}
+
+@media print{@page{size:A4 landscape}}</style></head><body class="presentation-page" data-view="presentation" data-key="security" data-total="2100"><a href="#main" class="skip">Skip to content</a><header class="site-header"><div class="brand">AWS agent engineering guides</div><nav aria-label="Collection navigation"><a href="../index.html">Collection</a><a href="../presentations/index.html">HTML presentations</a><a href="../guides/coverage.md">Coverage</a></nav></header><main id="main" class="deck-main"><div class="deck-toolbar"><a class="button-link" href="../guides/security.html">Read structured report</a><button id="agenda-open">Agenda</button><button id="previous">Previous</button><select id="slide-select" aria-label="Select slide"><option value="0">01. Application resources sit beneath shared account configuration</option><option value="1">02. Registration is not repository connection</option><option value="2">03. Network rules separate targets, dependencies and exclusions</option><option value="3">04. Obtaining a credential is not logging into the application</option><option value="4">05. Learned login navigation is a specific reuse mechanism</option><option value="5">06. A reusable configuration produces distinct executions</option><option value="6">07. Requirement evaluation starts with applicability</option><option value="7">08. Regeneration replaces requirements; it does not append</option><option value="8">09. A proposed repair is not a deployed repair</option><option value="9">10. Revalidation preserves the original finding</option><option value="10">11. Earlier assessments use different resource lifecycles</option><option value="11">12. Encryption requires the correct identity and context</option><option value="12">13. Exercise: verify the repaired account boundary</option><option value="13">14. Troubleshooting follows the failed prerequisite</option></select><button id="next">Next</button><button id="notes-button">Speaker notes</button><button id="fullscreen">Fullscreen</button><button data-print>Print slides</button></div><nav class="chapter-strip" aria-label="Presentation chapters"><button data-start="0" data-group="0" aria-current="false"><span>01 · 02:00</span>Platform model</button><button data-start="1" data-group="1" aria-current="false"><span>02 · 09:00</span>Scope and authentication</button><button data-start="5" data-group="2" aria-current="false"><span>03 · 06:00</span>Assessment and criteria</button><button data-start="8" data-group="3" aria-current="false"><span>04 · 08:00</span>Repair, evidence and protection</button><button data-start="12" data-group="4" aria-current="false"><span>05 · 08:00</span>Prepared-result exercise</button><button data-start="13" data-group="5" aria-current="false"><span>06 · 02:00</span>Troubleshooting and coverage</button></nav><div class="deck-toolbar"><button id="timer-toggle" aria-pressed="false">Start timer</button><button id="timer-reset">Reset timer</button><span class="timer" id="session-clock">Session <b id="session-time">00:00 / 35:00</b></span><span class="timer" id="slide-clock">Slide <b id="slide-time">00:00</b></span><span class="small">35 min including 8 min prepared-result exercise</span></div><article class="slide" id="slide-01" data-seconds="120" data-kind="flow" data-group="0" data-chapter="Platform model" aria-label="Slide 1"><div class="slide-top"><span>AWS Security Agent · 01 / 06 Platform model</span><span>Presentation</span></div><h1>Application resources sit beneath shared account configuration</h1><div class="slide-body"><div class="flow"><div class="node"><strong>Account resources</strong><p>Integrations, identity and requirement packs</p></div><div class="node"><strong>Agent Space</strong><p>Application sources, users and settings</p></div><div class="node"><strong>Configuration</strong><p>Target, authentication, criteria and limits</p></div><div class="node"><strong>Run and evidence</strong><p>Assessment results and linked verification</p></div></div></div><div class="takeaway">Requirements and integrations can have broader scope than a single application.</div><div class="slide-foot"><span>01 / 14 · 00:00–02:00 · 02:00 planned</span><span>Guide sections: <a href="../guides/security.html#S-01">S-01</a></span></div></article><article class="slide" id="slide-02" data-seconds="120" data-kind="table" data-group="1" data-chapter="Scope and authentication" aria-label="Slide 2" hidden><div class="slide-top"><span>AWS Security Agent · 02 / 06 Scope and authentication</span><span>Presentation</span></div><h1>Registration is not repository connection</h1><div class="slide-body"><div class="table-wrap" tabindex="0" role="region" aria-label="Slide table"><table><thead><tr><th scope="col">Action</th><th scope="col">Establishes</th><th scope="col">Inspect</th></tr></thead><tbody><tr><td>Register integration</td><td>Available source provider</td><td>Account type and authorization</td></tr><tr><td>Connect repository</td><td>Application source selection</td><td>Repository and branch identity</td></tr><tr><td>Enable feature</td><td>Selected assessment behavior</td><td>Modes, comments and remediation settings</td></tr><tr><td>Open as operator</td><td>Usable assessment access</td><td>Intended user rather than setup administrator</td></tr></tbody></table></div></div><div class="takeaway">Verify the deployed revision separately from the latest source branch.</div><div class="slide-foot"><span>02 / 14 · 02:00–04:00 · 02:00 planned</span><span>Guide sections: <a href="../guides/security.html#S-02">S-02</a></span></div></article><article class="slide" id="slide-03" data-seconds="120" data-kind="table" data-group="1" data-chapter="Scope and authentication" aria-label="Slide 3" hidden><div class="slide-top"><span>AWS Security Agent · 02 / 06 Scope and authentication</span><span>Presentation</span></div><h1>Network rules separate targets, dependencies and exclusions</h1><div class="slide-body"><div class="table-wrap" tabindex="0" role="region" aria-label="Slide table"><table><thead><tr><th scope="col">Rule</th><th scope="col">Permitted purpose</th><th scope="col">Example</th></tr></thead><tbody><tr><td>Target</td><td>Access and testing</td><td>Authorized staging application</td></tr><tr><td>Accessible</td><td>Supporting access; not attack target</td><td>Approved login dependency</td></tr><tr><td>Out of scope</td><td>No access; exclusion precedence</td><td>Production callback or payment path</td></tr></tbody></table></div></div><div class="takeaway">A verified domain is not authorization for every downstream effect.</div><div class="slide-foot"><span>03 / 14 · 04:00–06:00 · 02:00 planned</span><span>Guide sections: <a href="../guides/security.html#S-03">S-03</a></span></div></article><article class="slide" id="slide-04" data-seconds="180" data-kind="flow" data-group="1" data-chapter="Scope and authentication" aria-label="Slide 4" hidden><div class="slide-top"><span>AWS Security Agent · 02 / 06 Scope and authentication</span><span>Presentation</span></div><h1>Obtaining a credential is not logging into the application</h1><div class="slide-body"><div class="flow"><div class="node"><strong>Credential source</strong><p>Direct input, secret, role or Lambda</p></div><div class="node"><strong>Service access</strong><p>Required trust and read/invoke permissions</p></div><div class="node"><strong>Login instructions</strong><p>How credentials and MFA apply</p></div><div class="node"><strong>Authenticated role</strong><p>Observed identity and protected routes</p></div></div></div><div class="takeaway">Save &amp; Test verifies the configured flow; inspect where authentication fails.</div><div class="slide-foot"><span>04 / 14 · 06:00–09:00 · 03:00 planned</span><span>Guide sections: <a href="../guides/security.html#S-M01">S-M01</a></span></div></article><article class="slide" id="slide-05" data-seconds="120" data-kind="flow" data-group="1" data-chapter="Scope and authentication" aria-label="Slide 5" hidden><div class="slide-top"><span>AWS Security Agent · 02 / 06 Scope and authentication</span><span>Presentation</span></div><h1>Learned login navigation is a specific reuse mechanism</h1><div class="slide-body"><div class="flow"><div class="node"><strong>First successful login</strong><p>Navigation is discovered</p></div><div class="node"><strong>Saved skill</strong><p>Successful procedure is retained</p></div><div class="node"><strong>Later session</strong><p>Procedure can be reused</p></div><div class="node"><strong>Setting / flow change</strong><p>Toggle reuse; verify actual identity again</p></div></div></div><div class="takeaway">Login Optimization is not a universal vulnerability-memory service.</div><div class="slide-foot"><span>05 / 14 · 09:00–11:00 · 02:00 planned</span><span>Guide sections: <a href="../guides/security.html#S-M02">S-M02</a></span></div></article><article class="slide" id="slide-06" data-seconds="120" data-kind="table" data-group="2" data-chapter="Assessment and criteria" aria-label="Slide 6" hidden><div class="slide-top"><span>AWS Security Agent · 03 / 06 Assessment and criteria</span><span>Presentation</span></div><h1>A reusable configuration produces distinct executions</h1><div class="slide-body"><div class="table-wrap" tabindex="0" role="region" aria-label="Slide table"><table><thead><tr><th scope="col">Object</th><th scope="col">Meaning</th></tr></thead><tbody><tr><td>Draft</td><td>Incomplete configuration, not a completed test</td></tr><tr><td>Saved configuration</td><td>Reusable target, credentials and execution choices</td></tr><tr><td>Run</td><td>Assessment against then-current target/configuration</td></tr><tr><td>Task-hour limit</td><td>Cumulative task work, not elapsed wall time</td></tr></tbody></table></div></div><div class="takeaway">A completed status does not establish exhaustive coverage.</div><div class="slide-foot"><span>06 / 14 · 11:00–13:00 · 02:00 planned</span><span>Guide sections: <a href="../guides/security.html#S-04">S-04</a></span></div></article><article class="slide" id="slide-07" data-seconds="120" data-kind="columns" data-group="2" data-chapter="Assessment and criteria" aria-label="Slide 7" hidden><div class="slide-top"><span>AWS Security Agent · 03 / 06 Assessment and criteria</span><span>Presentation</span></div><h1>Requirement evaluation starts with applicability</h1><div class="slide-body"><div class="columns"><div class="column"><strong>Applicable and compliant</strong><p>The required ownership check exists and supporting evidence is present.</p></div><div class="column"><strong>Applicable and violating</strong><p>A handler returns account-owned data without the required authorization.</p></div><div class="column"><strong>Inapplicable</strong><p>The requirement does not govern the evaluated component.</p></div></div></div><div class="takeaway">Configure requirement evaluation explicitly; vulnerability analysis alone is different.</div><div class="slide-foot"><span>07 / 14 · 13:00–15:00 · 02:00 planned</span><span>Guide sections: <a href="../guides/security.html#S-M03">S-M03</a></span></div></article><article class="slide" id="slide-08" data-seconds="120" data-kind="flow" data-group="2" data-chapter="Assessment and criteria" aria-label="Slide 8" hidden><div class="slide-top"><span>AWS Security Agent · 03 / 06 Assessment and criteria</span><span>Presentation</span></div><h1>Regeneration replaces requirements; it does not append</h1><div class="slide-body"><div class="flow"><div class="node"><strong>Source policy</strong><p>Reviewed governing documents</p></div><div class="node"><strong>Generate</strong><p>Replace the pack contents</p></div><div class="node"><strong>Review</strong><p>Inspect generated and formerly manual rules</p></div><div class="node"><strong>Enable</strong><p>Use the reviewed replacement in later assessments</p></div></div></div><div class="takeaway">Keep authoritative requirement source in Git and review replacement before enabling.</div><div class="slide-foot"><span>08 / 14 · 15:00–17:00 · 02:00 planned</span><span>Guide sections: <a href="../guides/security.html#S-M04">S-M04</a></span></div></article><article class="slide" id="slide-09" data-seconds="120" data-kind="flow" data-group="3" data-chapter="Repair, evidence and protection" aria-label="Slide 9" hidden><div class="slide-top"><span>AWS Security Agent · 04 / 06 Repair, evidence and protection</span><span>Presentation</span></div><h1>A proposed repair is not a deployed repair</h1><div class="slide-body"><div class="flow"><div class="node"><strong>Finding</strong><p>Evidence and affected revision</p></div><div class="node"><strong>Proposed change</strong><p>Provider-specific patch or pull request</p></div><div class="node"><strong>Engineering review</strong><p>Tests and approval</p></div><div class="node"><strong>Deployment</strong><p>Known revision on the authorized target</p></div></div></div><div class="takeaway">Use the finding ID to connect the records, not similarity of titles.</div><div class="slide-foot"><span>09 / 14 · 17:00–19:00 · 02:00 planned</span><span>Guide sections: <a href="../guides/security.html#S-05">S-05</a></span></div></article><article class="slide" id="slide-10" data-seconds="120" data-kind="flow" data-group="3" data-chapter="Repair, evidence and protection" aria-label="Slide 10" hidden><div class="slide-top"><span>AWS Security Agent · 04 / 06 Repair, evidence and protection</span><span>Presentation</span></div><h1>Revalidation preserves the original finding</h1><div class="slide-body"><div class="flow"><div class="node"><strong>Selected finding</strong><p>Original completed assessment</p></div><div class="node"><strong>New job</strong><p>Current credentials; repeat selected steps</p></div><div class="node"><strong>Result</strong><p>Reproduced or not reproduced</p></div><div class="node"><strong>History</strong><p>Original finding linked to new evidence</p></div></div></div><div class="takeaway">A non-reproduction result is scoped; failed authentication can invalidate its interpretation.</div><div class="slide-foot"><span>10 / 14 · 19:00–21:00 · 02:00 planned</span><span>Guide sections: <a href="../guides/security.html#S-M05">S-M05</a></span></div></article><article class="slide" id="slide-11" data-seconds="120" data-kind="table" data-group="3" data-chapter="Repair, evidence and protection" aria-label="Slide 11" hidden><div class="slide-top"><span>AWS Security Agent · 04 / 06 Repair, evidence and protection</span><span>Presentation</span></div><h1>Earlier assessments use different resource lifecycles</h1><div class="slide-body"><div class="table-wrap" tabindex="0" role="region" aria-label="Slide table"><table><thead><tr><th scope="col">Assessment</th><th scope="col">Configuration model</th><th scope="col">Result focus</th></tr></thead><tbody><tr><td>Code</td><td>Full scan or supported change trigger</td><td>Locations, evidence and suggested fixes</td></tr><tr><td>Design</td><td>One-off review; clone for new work</td><td>Design findings against requirements</td></tr><tr><td>Threat model</td><td>Reusable configuration and runs</td><td>System boundary, flows and threats</td></tr></tbody></table></div></div><div class="takeaway">Review inferred system context before relying on individual findings.</div><div class="slide-foot"><span>11 / 14 · 21:00–23:00 · 02:00 planned</span><span>Guide sections: <a href="../guides/security.html#S-06">S-06</a></span></div></article><article class="slide" id="slide-12" data-seconds="120" data-kind="flow" data-group="3" data-chapter="Repair, evidence and protection" aria-label="Slide 12" hidden><div class="slide-top"><span>AWS Security Agent · 04 / 06 Repair, evidence and protection</span><span>Presentation</span></div><h1>Encryption requires the correct identity and context</h1><div class="slide-body"><div class="flow"><div class="node"><strong>Customer KMS key</strong><p>Protects resource branch keys</p></div><div class="node"><strong>Branch key</strong><p>Service-managed stored key material</p></div><div class="node"><strong>Derived wrapping key</strong><p>Protects data-encryption keys</p></div><div class="node"><strong>Authorized request</strong><p>Caller, action and encryption context must match</p></div></div></div><div class="takeaway">Administrator, web-app role, assessment role and asynchronous service access are distinct.</div><div class="slide-foot"><span>12 / 14 · 23:00–25:00 · 02:00 planned</span><span>Guide sections: <a href="../guides/security.html#S-M06">S-M06</a></span></div></article><article class="slide" id="slide-13" data-seconds="480" data-kind="demo" data-group="4" data-chapter="Prepared-result exercise" aria-label="Slide 13" hidden><div class="slide-top"><span>AWS Security Agent · 05 / 06 Prepared-result exercise</span><span>Prepared-result exercise</span></div><h1>Exercise: verify the repaired account boundary</h1><div class="slide-body"><div class="table-wrap" tabindex="0" role="region" aria-label="Slide table"><table><thead><tr><th scope="col">Time</th><th scope="col">Action</th><th scope="col">Prepared evidence</th></tr></thead><tbody><tr><td>0–2 min</td><td>Inspect the finding</td><td>User A received account B’s test invoice in demo-r1</td></tr><tr><td>2–4 min</td><td>Inspect the change</td><td>Ownership check reviewed; demo-r2 deployed</td></tr><tr><td>4–6 min</td><td>Inspect revalidation</td><td>Actual user A role and selected path reached</td></tr><tr><td>6–8 min</td><td>State the result scope</td><td>Prepared denial supports that path, not whole-app security</td></tr></tbody></table></div></div><div class="takeaway">Synthetic staging evidence only. No live penetration test or exploit execution.</div><div class="slide-foot"><span>13 / 14 · 25:00–33:00 · 08:00 planned</span><span>Guide sections: <a href="../guides/security.html#S-U01">S-U01</a><a href="../guides/security.html#S-M05">S-M05</a></span></div></article><article class="slide" id="slide-14" data-seconds="120" data-kind="columns" data-group="5" data-chapter="Troubleshooting and coverage" aria-label="Slide 14" hidden><div class="slide-top"><span>AWS Security Agent · 06 / 06 Troubleshooting and coverage</span><span>Presentation</span></div><h1>Troubleshooting follows the failed prerequisite</h1><div class="slide-body"><div class="columns"><div class="column"><strong>Access</strong><p>Separate repository connection, secret retrieval, application login and private routing.</p></div><div class="column"><strong>Criteria</strong><p>Check pack activation, applicability, regeneration and evaluation mode.</p></div><div class="column"><strong>Evidence</strong><p>Check deployment, actual identity, reachable path and linked job before closing a finding.</p></div></div></div><div class="takeaway">Full provider/pipeline and GenAI exception setup remains explicitly linked coverage.</div><div class="slide-foot"><span>14 / 14 · 33:00–35:00 · 02:00 planned</span><span>Guide sections: <a href="../guides/security.html#S-07">S-07</a><a href="../guides/security.html#S-08">S-08</a></span></div></article><div class="deck-status"><span id="slide-position"></span><progress id="slide-progress" max="14" value="1" aria-label="Slide progress"></progress><span>← → navigate · N notes · T timer · F fullscreen</span></div><span id="slide-announcement" aria-live="polite" style="position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden"></span><details id="speaker-notes" class="notes"><summary>Speaker notes and canonical reference</summary><div class="note-block"><h2>1. Application resources sit beneath shared account configuration</h2><p class="small">Budget 02:00 · cumulative 00:00–02:00.</p><div class="talk-track"><strong>Speaking focus</strong><p>Requirements and integrations can have broader scope than a single application.</p><p class="small">Use the visual as the outline. The linked reference below is supporting detail, not a required verbatim script.</p></div><section class="note-reference"><h3><a href="../guides/security.html#S-01">S-01 — Resources, scopes and functions</a></h3><p>The product functions are application penetration testing, source-code analysis, design review, and threat modeling. Supporting platform capabilities include source connection, reusable configuration, authenticated/private access, requirement management, run observation, remediation and finding revalidation. Do not equate an entire assessment with a single hidden learning mechanism. <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/what-is.html">SS01</a> <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html">SS03</a></p>
+<pre><code class="language-text">Account / organization resources
+  ├─ registered source integrations
+  ├─ security requirement packs
+  └─ identity configuration
+              ↓ connect / assign / enable
+Application Agent Space
+  ├─ repositories, documents, user access, service settings
+  ├─ penetration-test configuration → runs → findings → revalidation jobs
+  ├─ code-review configuration → full scans / change-triggered reviews
+  ├─ threat-model configuration → runs and model results
+  └─ one-off design reviews → clone when a new assessment is needed
+</code></pre>
+<p>Registration makes an integration available; connecting a repository selects it for a space; enabling the assessment configures its use. These are separate actions. Requirements are shared resources, so the application boundary is not an isolation claim for every object. <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html">SS03</a></p>
+<div aria-label="Scrollable reference table" class="table-wrap" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>Capability group</th>
+<th>Resources and operators</th>
+<th>Canonical sections</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Identity and sources</td>
+<td>Administrator, operator, Agent Space, integration, connected repository</td>
+<td><a href="../guides/security.html#S-02">S-02</a></td>
+</tr>
+<tr>
+<td>Target access</td>
+<td>Verified domains, VPC route, target rules, credential definitions</td>
+<td><a href="../guides/security.html#S-03">S-03</a>, <a href="../guides/security.html#S-M01">S-M01</a></td>
+</tr>
+<tr>
+<td>Procedure reuse</td>
+<td>Login Optimization and its learned skill</td>
+<td><a href="../guides/security.html#S-M02">S-M02</a></td>
+</tr>
+<tr>
+<td>Assessment criteria</td>
+<td>Managed/custom requirement packs and applicability</td>
+<td><a href="../guides/security.html#S-M03">S-M03</a>, <a href="../guides/security.html#S-M04">S-M04</a></td>
+</tr>
+<tr>
+<td>Execution</td>
+<td>Configuration, preflight, run, task-hour limit, logs</td>
+<td><a href="../guides/security.html#S-04">S-04</a></td>
+</tr>
+<tr>
+<td>Findings and repair</td>
+<td>Finding evidence, proposed patch, deployed revision</td>
+<td><a href="../guides/security.html#S-05">S-05</a></td>
+</tr>
+<tr>
+<td>Targeted verification</td>
+<td>Revalidation job and finding lineage</td>
+<td><a href="../guides/security.html#S-M05">S-M05</a></td>
+</tr>
+<tr>
+<td>Data protection</td>
+<td>Customer-managed key, branch key, encryption context, calling identity</td>
+<td><a href="../guides/security.html#S-M06">S-M06</a></td>
+</tr>
+<tr>
+<td>Earlier feedback</td>
+<td>Full/change-based code review, design review, threat model</td>
+<td><a href="../guides/security.html#S-06">S-06</a></td>
+</tr>
+</tbody>
+</table></div>
+</section><h3>Official documentation for this slide</h3><ul><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/what-is.html">SS01 — what-is.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html">SS03 — understand-lifecycle.html</a></li></ul></div><div class="note-block" hidden><h2>2. Registration is not repository connection</h2><p class="small">Budget 02:00 · cumulative 02:00–04:00.</p><div class="talk-track"><strong>Speaking focus</strong><p>Verify the deployed revision separately from the latest source branch.</p><p class="small">Use the visual as the outline. The linked reference below is supporting detail, not a required verbatim script.</p></div><section class="note-reference"><h3><a href="../guides/security.html#S-02">S-02 — Set up identity and source access</a></h3><p>The console is the administrative surface. The web app is the assessment workspace. IAM-based operators can enter through the console route; IAM Identity Center supports assigned users without requiring ordinary console access. Configure the intended operator identity, not just the administrator who creates the Agent Space. <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/how-it-works.html">SS04</a> <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-code-review.html">SS05</a></p>
+<p class="callout"><strong>Configuration procedure:</strong> create or select an Agent Space, establish the supported identity mode, register the source integration, connect the application's repositories, and enable the relevant feature. For a GitHub integration, verify whether the installation belongs to a personal account or organization and whether organization approval is required. A successful account registration does not mean a repository was connected. <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html">SS03</a> <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-code-review.html">SS05</a> <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/troubleshooting.html">SS06</a></p>
+<p>For code review, independently review the settings for vulnerability analysis, requirement evaluation, comments, and automatic remediation. Enabling one does not establish that all others are active. S3 can be a code source through its own supported configuration path; provider-specific integration instructions remain authoritative. <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-code-review.html">SS05</a></p>
+<p class="callout"><strong>Engineering verification:</strong> open the web app as the intended user, inspect the connected source and selected branch, and compare the source revision with the deployed test application. Record a known read and an expected denial. Do not place credentials in a repository or presentation to simplify the example.</p>
+</section><h3>Official documentation for this slide</h3><ul><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html">SS03 — understand-lifecycle.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/how-it-works.html">SS04 — how-it-works.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-code-review.html">SS05 — quickstart-code-review.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/troubleshooting.html">SS06 — troubleshooting.html</a></li></ul></div><div class="note-block" hidden><h2>3. Network rules separate targets, dependencies and exclusions</h2><p class="small">Budget 02:00 · cumulative 04:00–06:00.</p><div class="talk-track"><strong>Speaking focus</strong><p>A verified domain is not authorization for every downstream effect.</p><p class="small">Use the visual as the outline. The linked reference below is supporting detail, not a required verbatim script.</p></div><section class="note-reference"><h3><a href="../guides/security.html#S-03">S-03 — Define the reachable surface before execution</a></h3><p>Domain verification demonstrates control through a supported verification method, including DNS, HTTP or a private-VPC route. It is a technical prerequisite, not authorization for every downstream system the application can contact. Private testing additionally needs a supported VPC configuration, subnets, routing and security groups. <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/enable-penetration-test.html">SS07</a></p>
+<p>The current penetration-test wizard separates three network rule classes. <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html">SS08</a></p>
+<div aria-label="Scrollable reference table" class="table-wrap" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>Class</th>
+<th>Intended behavior</th>
+<th>Example in an authorized staging environment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Target</td>
+<td>May be accessed and tested</td>
+<td><code>https://staging.example.test:8443</code></td>
+</tr>
+<tr>
+<td>Accessible</td>
+<td>May be accessed to support the assessment, not attacked as a target</td>
+<td>Approved login-provider or static-content endpoint</td>
+</tr>
+<tr>
+<td>Out of scope</td>
+<td>Must not be accessed; exclusions take precedence</td>
+<td>A payment or production callback path</td>
+</tr>
+</tbody>
+</table></div>
+<p>These example names are illustrative, not running targets. Specify the complete scheme and nonstandard port when applicable. The current wizard supports explicit nonstandard ports; an older troubleshooting page states only 80/443. This guide follows the newer task-specific wizard and records the conflict rather than repeating the older restriction. <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html">SS08</a> <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/troubleshooting.html">SS06</a></p>
+<p class="callout"><strong>Configuration procedure:</strong> prepare the verified target and explicit exclusions; choose public or private connectivity; add representative test credentials; complete the network rules after authentication discovery; inspect suggested extra domains before accepting them. Keep essential login dependencies reachable without turning them into attack targets. Only execute against systems and effects that their owners have authorized. <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/enable-penetration-test.html">SS07</a> <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html">SS08</a></p>
+<p><strong>Expected confirmation:</strong> the saved configuration identifies the target, network path, credential roles and exclusions. Draft configuration and successful authentication preflight are different states. Neither proves that a complete assessment has run.</p>
+</section><h3>Official documentation for this slide</h3><ul><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/troubleshooting.html">SS06 — troubleshooting.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/enable-penetration-test.html">SS07 — enable-penetration-test.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html">SS08 — perform-penetration-test.html</a></li></ul></div><div class="note-block" hidden><h2>4. Obtaining a credential is not logging into the application</h2><p class="small">Budget 03:00 · cumulative 06:00–09:00.</p><div class="talk-track"><strong>Speaking focus</strong><p>Save &amp; Test verifies the configured flow; inspect where authentication fails.</p><p class="small">Use the visual as the outline. The linked reference below is supporting detail, not a required verbatim script.</p></div><section class="note-reference"><h3><a href="../guides/security.html#S-M01">S-M01 — Credential resolution precedes application authentication</a></h3><p>The service first obtains a credential and then follows login instructions to apply it to the application. A successful secret retrieval is not a successful application login. Current configuration requires a credential name, access URL, method and login prompt; <strong>Save &amp; Test</strong> or <strong>Test All</strong> exercises authentication and exposes success/failure information. <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html">SS09</a> <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html">SS08</a></p>
+<div aria-label="Scrollable reference table" class="table-wrap" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>Strategy</th>
+<th>Required dependency</th>
+<th>Typical failure to distinguish</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Direct test credential</td>
+<td>Correct application identity and instructions</td>
+<td>Wrong login URL, role or form flow</td>
+</tr>
+<tr>
+<td>Secrets Manager</td>
+<td>Same-account secret; service role with <code>secretsmanager:GetSecretValue</code> and <code>secretsmanager:DescribeSecret</code></td>
+<td>Access denied versus unusable secret format</td>
+</tr>
+<tr>
+<td>IAM role</td>
+<td>Registered role with correct service trust and limited permissions</td>
+<td>Role assumption versus how the temporary credential is used by the target</td>
+</tr>
+<tr>
+<td>Lambda</td>
+<td>Same-account function, invoke permission, synchronous completion within 30 seconds</td>
+<td>Invocation/timeout versus invalid returned credential</td>
+</tr>
+</tbody>
+</table></div>
+<p>The Lambda input includes <code>pentest_arn</code> and <code>actor_identifier</code>. Login instructions explain the returned credential's application use. The following original function illustrates the response boundary only; it is not a deployable credential provider and deliberately contains no real secret. <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html">SS09</a></p>
+<pre><code class="language-python">def handler(event, context):
+    required = ("pentest_arn", "actor_identifier")
+    if not all(event.get(k) for k in required):
+        raise ValueError("Missing assessment identity")
+    # Retrieve or mint a scoped TEST credential using your approved backend.
+    # Return its actual fields in the format explained by the login prompt.
+    raise NotImplementedError("Connect an authorized test-credential backend")
+</code></pre>
+<p>Use the official trust/policy examples for the selected strategy, restricted to the actual account, space and resource. This snippet is a contract example, not proof that a particular output schema is universal. <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html">SS09</a></p>
+<p>The newer authentication guide includes TOTP and email MFA. Email MFA uses a generated forwarding address associated with the test credential; it is not general permission to forward a real user's inbox. SMS, push and hardware-key flows are not supported in the reviewed guidance. Older cached text says email MFA is unsupported; the newer indexed page is used here. <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html">SS09</a></p>
+<p class="callout"><strong>Proposed verification:</strong> inspect both credential-test status and the authenticated application's identity/role. Test an intended protected route and an excluded route using approved test data. When access fails, capture which stage failed: source access, credential generation, login navigation, MFA, or authorization inside the application.</p>
+</section><h3>Official documentation for this slide</h3><ul><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html">SS08 — perform-penetration-test.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html">SS09 — provide-testing-credentials.html</a></li></ul></div><div class="note-block" hidden><h2>5. Learned login navigation is a specific reuse mechanism</h2><p class="small">Budget 02:00 · cumulative 09:00–11:00.</p><div class="talk-track"><strong>Speaking focus</strong><p>Login Optimization is not a universal vulnerability-memory service.</p><p class="small">Use the visual as the outline. The linked reference below is supporting detail, not a required verbatim script.</p></div><section class="note-reference"><h3><a href="../guides/security.html#S-M02">S-M02 — Login Optimization retains a successful procedure</a></h3><p>The first successful authentication navigation can produce a skill describing the login workflow. Later sessions within the run and subsequent runs reuse it. This is learned procedural navigation, not a general incident-memory store or customer-controlled model retraining. <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html">SS09</a></p>
+<p><strong>Enablement:</strong> add at least one credential, open <strong>Additional configuration → Login optimization</strong>, and inspect the default-enabled toggle. Disabling reuse preserves the skill; re-enabling permits reuse again. The documentation describes adaptation to changed login flows, but does not disclose a general selection algorithm or promise a particular speed improvement. <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html">SS09</a></p>
+<p class="callout"><strong>Proposed test:</strong> use a staging login flow that the team controls. Retain first-login and later-login evidence, then make an authorized change to the test flow. Verify the actual authenticated role on every run. Without observable reuse evidence, distinguish a successful login from a proven reuse of the learned procedure.</p>
+</section><h3>Official documentation for this slide</h3><ul><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html">SS09 — provide-testing-credentials.html</a></li></ul></div><div class="note-block" hidden><h2>6. A reusable configuration produces distinct executions</h2><p class="small">Budget 02:00 · cumulative 11:00–13:00.</p><div class="talk-track"><strong>Speaking focus</strong><p>A completed status does not establish exhaustive coverage.</p><p class="small">Use the visual as the outline. The linked reference below is supporting detail, not a required verbatim script.</p></div><section class="note-reference"><h3><a href="../guides/security.html#S-04">S-04 — Configuration, preflight and run lifecycle</a></h3><p>A penetration-test configuration can be saved as a draft and completed through wizard steps for details, VPC, credentials, network and additional settings. It is reusable. A run is a separate execution against the then-current configuration and target. <strong>Create</strong> and <strong>Create and execute</strong> are not equivalent actions. <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html">SS08</a></p>
+<p>Select sources and branch context deliberately: a latest repository branch is not necessarily the deployed revision. For private testing, configure approved network access and optional CloudWatch logging. For repeated tests, inspect the supported scheduling setup and associated Scheduler role rather than assuming that an external cron trigger is the only path. Complete schedule administration is linked to AWS rather than reproduced here. <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/enable-penetration-test.html">SS07</a> <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html">SS08</a></p>
+<p>Task-hours aggregate work across concurrent tasks; they are not wall-clock duration. The run's configured spending/work limit, account quota and any schedule are different controls. A run reaching its task-hour limit can complete without establishing exhaustive application coverage. Consult pricing before execution; cancelling does not erase work already performed. <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html">SS08</a> <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/quotas.html">SS10</a> <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/pricing.html">SS11</a></p>
+<p><strong>Engineering run record:</strong> capture the configuration ID, target revision, authenticated roles, exclusions, run ID, configured limit, start/end times and incomplete areas. Inspect findings and execution/log evidence while the run operates. Stop on unexpected effects; preserve an incomplete outcome rather than relabeling it a pass. These recordkeeping recommendations do not add product-level guarantees.</p>
+</section><h3>Official documentation for this slide</h3><ul><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/enable-penetration-test.html">SS07 — enable-penetration-test.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html">SS08 — perform-penetration-test.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/quotas.html">SS10 — quotas.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/pricing.html">SS11 — pricing.html</a></li></ul></div><div class="note-block" hidden><h2>7. Requirement evaluation starts with applicability</h2><p class="small">Budget 02:00 · cumulative 13:00–15:00.</p><div class="talk-track"><strong>Speaking focus</strong><p>Configure requirement evaluation explicitly; vulnerability analysis alone is different.</p><p class="small">Use the visual as the outline. The linked reference below is supporting detail, not a required verbatim script.</p></div><section class="note-reference"><h3><a href="../guides/security.html#S-M03">S-M03 — Requirement evaluation applies reviewed criteria</a></h3><p>A requirement contains a name/description, applicability, compliance criteria and optional remediation guidance. Applicability can distinguish a violation from a case to which the requirement does not apply. Packs group requirements; managed and custom packs differ in editability. Enabled packs inform subsequent eligible reviews, not retroactive rewrites of completed results. <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/security-requirements.html">SS14</a></p>
+<p class="callout"><strong>Procedure:</strong> open <strong>Security requirements</strong>, select or create the pack, review applicability and criteria, enable it, and configure the design/code review to evaluate requirements. A vulnerability-only review is not the same evaluation mode. Inspect findings against the selected requirement, not merely the total count. <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/security-requirements.html">SS14</a> <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-code-review.html">SS05</a></p>
+<p class="callout"><strong>Original example:</strong> require an authorization check before returning an account-owned invoice. Applicability: handlers returning account-owned invoices. Compliance: the authenticated principal must be authorized for the invoice's owning account. A public static-document handler is inapplicable, not automatically compliant with an invoice rule. Test all three cases: compliant, violating and inapplicable.</p>
+</section><h3>Official documentation for this slide</h3><ul><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-code-review.html">SS05 — quickstart-code-review.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/security-requirements.html">SS14 — security-requirements.html</a></li></ul></div><div class="note-block" hidden><h2>8. Regeneration replaces requirements; it does not append</h2><p class="small">Budget 02:00 · cumulative 15:00–17:00.</p><div class="talk-track"><strong>Speaking focus</strong><p>Keep authoritative requirement source in Git and review replacement before enabling.</p><p class="small">Use the visual as the outline. The linked reference below is supporting detail, not a required verbatim script.</p></div><section class="note-reference"><h3><a href="../guides/security.html#S-M04">S-M04 — Regeneration replaces a pack&#x27;s contents</a></h3><p>Generating requirements from uploaded documents is a separate administrative mechanism. Supported input includes DOC, DOCX, Markdown, PDF and text. Select a custom pack, upload policy material, generate, inspect and edit the result, then enable it. <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/import-security-requirements.html">SS15</a></p>
+<p>Uploading new documents regenerates the pack and replaces existing requirements, including manually added ones. It is not an append operation. Do not start a competing upload while generation is running. Keep the governing policy and reviewed requirement source in Git; inspect the replacement before enabling it. A framework pack is not a compliance certificate. <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/import-security-requirements.html">SS15</a> <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/security-requirements.html">SS14</a></p>
+</section><h3>Official documentation for this slide</h3><ul><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/security-requirements.html">SS14 — security-requirements.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/import-security-requirements.html">SS15 — import-security-requirements.html</a></li></ul></div><div class="note-block" hidden><h2>9. A proposed repair is not a deployed repair</h2><p class="small">Budget 02:00 · cumulative 17:00–19:00.</p><div class="talk-track"><strong>Speaking focus</strong><p>Use the finding ID to connect the records, not similarity of titles.</p><p class="small">Use the visual as the outline. The linked reference below is supporting detail, not a required verbatim script.</p></div><section class="note-reference"><h3><a href="../guides/security.html#S-05">S-05 — Findings, remediation and deployment are different objects</a></h3><p>A finding identifies the issue and its supporting evidence in a particular assessment context. The review surface can expose description, code locations, evidence and a suggested fix. Configured remediation can produce a patch or pull request, with provider-specific behavior. For example, the reviewed GitHub path distinguishes private-repository pull requests from a downloadable diff for public repositories. <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-code-review.html">SS05</a> <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/remediate-finding.html">SS12</a></p>
+<p class="callout"><strong>Procedure:</strong> select a material finding, verify the affected source and target revision, inspect reproduction or code evidence, request remediation only when the repository path is configured, then review and test the proposed change through the normal engineering process. A generated patch is neither deployment nor revalidation. <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/remediate-finding.html">SS12</a></p>
+<p class="callout"><strong>Engineering verification:</strong> before closure, identify the exact deployed revision and re-run relevant regression tests. Retain rejected changes and failed builds as unfinished work. Use the finding ID as the link between assessment, change, deployment and revalidation—not similarity of issue titles.</p>
+</section><h3>Official documentation for this slide</h3><ul><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-code-review.html">SS05 — quickstart-code-review.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/remediate-finding.html">SS12 — remediate-finding.html</a></li></ul></div><div class="note-block" hidden><h2>10. Revalidation preserves the original finding</h2><p class="small">Budget 02:00 · cumulative 19:00–21:00.</p><div class="talk-track"><strong>Speaking focus</strong><p>A non-reproduction result is scoped; failed authentication can invalidate its interpretation.</p><p class="small">Use the visual as the outline. The linked reference below is supporting detail, not a required verbatim script.</p></div><section class="note-reference"><h3><a href="../guides/security.html#S-M05">S-M05 — Revalidation replays selected finding evidence</a></h3><p>After a repair reaches the original test environment, open the completed penetration-test run, choose <strong>Multiselect findings for revalidation</strong>, select findings, and choose <strong>Revalidate findings</strong>. The service starts a separate job using current authentication/configuration and repeats the selected validation steps. It does not conduct broad new discovery. <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html">SS13</a></p>
+<pre><code class="language-text">Original finding + deployed repair
+                  ↓ selected validation steps
+          Separate revalidation job
+                  ↓
+      Active: reproduced / Resolved: not reproduced
+                  ↓
+          linked finding and job history
+</code></pre>
+<p>The original finding is preserved and linked to the new job. A non-reproduction result is scoped to that finding and execution conditions. An authentication or environment failure can undermine its interpretation; inspect reachability before treating a result as evidence of repair. <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html">SS13</a></p>
+</section><h3>Official documentation for this slide</h3><ul><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html">SS13 — revalidate-findings.html</a></li></ul></div><div class="note-block" hidden><h2>11. Earlier assessments use different resource lifecycles</h2><p class="small">Budget 02:00 · cumulative 21:00–23:00.</p><div class="talk-track"><strong>Speaking focus</strong><p>Review inferred system context before relying on individual findings.</p><p class="small">Use the visual as the outline. The linked reference below is supporting detail, not a required verbatim script.</p></div><section class="note-reference"><h3><a href="../guides/security.html#S-06">S-06 — Code, design and threat-model workflows</a></h3><div aria-label="Scrollable reference table" class="table-wrap" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>Assessment</th>
+<th>Configuration and execution</th>
+<th>Reviewable result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Code review</td>
+<td>Connect sources, select vulnerability/requirement modes, start full review or configure supported repository events</td>
+<td>Locations, evidence, suggested fixes; preflight failures remain separate</td>
+</tr>
+<tr>
+<td>Design review</td>
+<td>Submit a design for a one-off assessment; clone to create a new review</td>
+<td>Design findings against relevant requirements</td>
+</tr>
+<tr>
+<td>Threat model</td>
+<td>Create a reusable definition with scope documents and source context, then start a run</td>
+<td>System overview, boundaries, data flows and threats</td>
+</tr>
+</tbody>
+</table></div>
+<p>Code review preflight checks source and execution prerequisites before analysis. Ready-for-review repository events differ from draft changes; inspect the actual provider and configured trigger. Threat-model scope documents define what to analyze, while source documents/code provide system context. Do not treat them as interchangeable fields. <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html">SS03</a> <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-code-review.html">SS05</a> <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-threat-model.html">SS16</a> <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/review-code-findings-github.html">SS17</a></p>
+<p class="callout"><strong>Threat-model procedure:</strong> in the web app, create the model, provide title, scope documents, sources and service role, optionally configure logs, save, then start a run. Review the inferred system model before relying on individual threats. Inspect severity, evidence and dispositions. A model generated from the wrong system boundary is not repaired merely by dismissing inconvenient threats. <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-threat-model.html">SS16</a></p>
+<p>The full pipeline integration, complete design-review walkthrough and provider-specific remediation matrix are linked coverage, not reproduced procedures in this edition. This is an explicit limit of the guide, not a claim that those functions are absent.</p>
+</section><h3>Official documentation for this slide</h3><ul><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html">SS03 — understand-lifecycle.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-code-review.html">SS05 — quickstart-code-review.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-threat-model.html">SS16 — quickstart-threat-model.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/review-code-findings-github.html">SS17 — review-code-findings-github.html</a></li></ul></div><div class="note-block" hidden><h2>12. Encryption requires the correct identity and context</h2><p class="small">Budget 02:00 · cumulative 23:00–25:00.</p><div class="talk-track"><strong>Speaking focus</strong><p>Administrator, web-app role, assessment role and asynchronous service access are distinct.</p><p class="small">Use the visual as the outline. The linked reference below is supporting detail, not a required verbatim script.</p></div><section class="note-reference"><h3><a href="../guides/security.html#S-M06">S-M06 — Customer-managed encryption uses several identities</a></h3><p>The documented hierarchy uses a customer KMS key to protect a resource-specific branch key held in a service-managed DynamoDB store. The keyring derives wrapping keys used to protect data-encryption keys. Branch-key rotation and rotation of the KMS key are separate processes; old key versions remain necessary to decrypt older data. <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/customer-managed-keys.html">SS18</a></p>
+<p>Resource-specific encryption context and identity determine authorization. The relevant actors are not interchangeable:</p>
+<div aria-label="Scrollable reference table" class="table-wrap" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>Actor/path</th>
+<th>Permission responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Administrator using console</td>
+<td>Caller permissions for configuration and forwarded operations</td>
+</tr>
+<tr>
+<td>Web-app access role</td>
+<td>Supported web-app data access</td>
+</tr>
+<tr>
+<td>Assessment service role</td>
+<td>Customer resources such as S3, secrets and logs</td>
+</tr>
+<tr>
+<td>Service principal / asynchronous workflow</td>
+<td>Service-managed background access as documented</td>
+</tr>
+</tbody>
+</table></div>
+<p class="callout"><strong>Configuration procedure:</strong> select a supported enabled symmetric key, apply the current role/service-principal policy statements with the documented resource and encryption-context conditions, and choose the key when creating the supported resource. An application default can be overridden by an explicit resource key; changing the default does not re-encrypt existing resources. Review the current example policies rather than granting all KMS actions to all four identities. <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/customer-managed-keys.html">SS18</a></p>
+<p><strong>Failure diagnosis:</strong> identify the calling identity and denied KMS action from authorized audit evidence; inspect the matching key policy, grants/role policy and encryption context. Re-enabling a deliberately disabled test key can restore access; deletion can make retained data permanently unavailable. Do not disable a production key merely to demonstrate this mechanism. <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/customer-managed-keys.html">SS18</a></p>
+</section><h3>Official documentation for this slide</h3><ul><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/customer-managed-keys.html">SS18 — customer-managed-keys.html</a></li></ul></div><div class="note-block" hidden><h2>13. Exercise: verify the repaired account boundary</h2><p class="small">Budget 08:00 · cumulative 25:00–33:00.</p><div class="talk-track"><strong>Speaking focus</strong><p>Synthetic staging evidence only. No live penetration test or exploit execution.</p><p class="small">Use the visual as the outline. The linked reference below is supporting detail, not a required verbatim script.</p></div><section class="note-reference"><h3><a href="../guides/security.html#S-U01">S-U01 — Worked example: a repaired authorization check</a></h3><p><strong>Synthetic, authorized-staging exercise.</strong> Two test users belong to different customer accounts. The illustrative finding is that user A can receive a test invoice owned by account B. No live endpoint, credential or exploit execution is supplied.</p>
+<div aria-label="Scrollable reference table" class="table-wrap" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>Evidence record</th>
+<th>Before repair</th>
+<th>Candidate repair</th>
+<th>After deployment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Application revision</td>
+<td><code>demo-r1</code></td>
+<td><code>demo-r2</code> under review</td>
+<td><code>demo-r2</code> deployed</td>
+</tr>
+<tr>
+<td>Same-account test</td>
+<td>Expected invoice returned</td>
+<td>Regression test passes</td>
+<td>Expected invoice returned</td>
+</tr>
+<tr>
+<td>Cross-account test</td>
+<td>Test invoice returned unexpectedly</td>
+<td>Ownership check added; unit test passes</td>
+<td>Access denied in prepared result</td>
+</tr>
+<tr>
+<td>Identity evidence</td>
+<td>User A / account A</td>
+<td>Test principal controlled</td>
+<td>User A / account A confirmed</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Walkthrough:</strong> inspect the original finding and target revision; review the proposed ownership check; verify that the prepared deployment record names <code>demo-r2</code>; select the finding for revalidation; inspect the new job and its linkage. The observation that a patch exists is not used as evidence of deployment. The prepared post-deployment denial supports only this tested path and identity.</p>
+<p><strong>Failure branch:</strong> if revalidation instead logs in as a privileged administrator, its result is not the intended test of user A. Correct the credential role and rerun the authorized verification. If no application path was reached, do not interpret the absence of reproduction as proof of repair.</p>
+<p><strong>Expected deliverable:</strong> a finding disposition linking original evidence, reviewed change, deployed revision, actual authenticated identity and targeted result, with untested routes stated explicitly. The fixture teaches evidence lineage; it is not an assessment result or a security guarantee.</p>
+</section><section class="note-reference"><h3><a href="../guides/security.html#S-M05">S-M05 — Revalidation replays selected finding evidence</a></h3><p>After a repair reaches the original test environment, open the completed penetration-test run, choose <strong>Multiselect findings for revalidation</strong>, select findings, and choose <strong>Revalidate findings</strong>. The service starts a separate job using current authentication/configuration and repeats the selected validation steps. It does not conduct broad new discovery. <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html">SS13</a></p>
+<pre><code class="language-text">Original finding + deployed repair
+                  ↓ selected validation steps
+          Separate revalidation job
+                  ↓
+      Active: reproduced / Resolved: not reproduced
+                  ↓
+          linked finding and job history
+</code></pre>
+<p>The original finding is preserved and linked to the new job. A non-reproduction result is scoped to that finding and execution conditions. An authentication or environment failure can undermine its interpretation; inspect reachability before treating a result as evidence of repair. <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html">SS13</a></p>
+</section><h3>Official documentation for this slide</h3><ul><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html">SS13 — revalidate-findings.html</a></li></ul></div><div class="note-block" hidden><h2>14. Troubleshooting follows the failed prerequisite</h2><p class="small">Budget 02:00 · cumulative 33:00–35:00.</p><div class="talk-track"><strong>Speaking focus</strong><p>Full provider/pipeline and GenAI exception setup remains explicitly linked coverage.</p><p class="small">Use the visual as the outline. The linked reference below is supporting detail, not a required verbatim script.</p></div><section class="note-reference"><h3><a href="../guides/security.html#S-07">S-07 — Operational limits and failure diagnosis</a></h3><p>The reviewed quota page distinguishes assessment capacity from spending controls. Examples include five concurrent penetration tests and five concurrent code-review runs as adjustable quotas, plus 20 requirement packs, 30 requirements per pack and 150 enabled requirements per account/Region as fixed limits. Confirm actual quotas and pricing before large-scale execution; a concurrency limit is not a financial budget. <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/quotas.html">SS10</a> <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/pricing.html">SS11</a></p>
+<div aria-label="Scrollable reference table" class="table-wrap" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Likely boundary</th>
+<th>Next inspection</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Repository missing</td>
+<td>Registration or connection</td>
+<td>Account type, installation approval, connected repo and feature setting</td>
+</tr>
+<tr>
+<td>Credential source denied</td>
+<td>Service-role resource access</td>
+<td>Correct ARN/account, required read/invoke actions and trust</td>
+</tr>
+<tr>
+<td>Secret resolves; login fails</td>
+<td>Application flow</td>
+<td>Access URL, instructions, MFA, identity and credential-test result</td>
+</tr>
+<tr>
+<td>Private endpoint unreachable</td>
+<td>Network</td>
+<td>DNS, route/NAT requirements, egress, target rules and VPC configuration</td>
+</tr>
+<tr>
+<td>Additional domain blocked</td>
+<td>Target/access/exclusion rules</td>
+<td>Login-derived domains; approve only necessary accessible endpoints</td>
+</tr>
+<tr>
+<td>No requirement findings</td>
+<td>Configuration/applicability</td>
+<td>Enabled pack, selected evaluation mode, inapplicable versus compliant</td>
+</tr>
+<tr>
+<td>New document removed a manual rule</td>
+<td>Pack regeneration</td>
+<td>Compare generated replacement with the governing Git source</td>
+</tr>
+<tr>
+<td>Finding not reproduced</td>
+<td>Target and authentication</td>
+<td>Deployed revision, role reached and revalidation job evidence</td>
+</tr>
+<tr>
+<td>Encrypted object inaccessible</td>
+<td>KMS identity/context</td>
+<td>Relevant role/principal, key state, action and context conditions</td>
+</tr>
+</tbody>
+</table></div>
+<p>This ordering is engineering guidance derived from the cited procedures. It does not claim that every error message has one unique cause. <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/troubleshooting.html">SS06</a> <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html">SS09</a> <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/customer-managed-keys.html">SS18</a></p>
+</section><section class="note-reference"><h3><a href="../guides/security.html#S-08">S-08 — Coverage and evidence decisions</a></h3><div aria-label="Scrollable reference table" class="table-wrap" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>Official subject</th>
+<th>Treatment</th>
+<th>Remaining boundary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Resource lifecycle and identities</td>
+<td>Model plus setup sequence</td>
+<td>Complete SSO and organization-policy deployment linked</td>
+</tr>
+<tr>
+<td>Penetration testing</td>
+<td>Configuration, target classes, credentials, run interpretation</td>
+<td>Full GenAI risk-exception authoring not reproduced</td>
+</tr>
+<tr>
+<td>Authentication</td>
+<td>Strategy matrix, preflight, learned login reuse</td>
+<td>No actual secrets or running credential backend</td>
+</tr>
+<tr>
+<td>Requirements</td>
+<td>Evaluation separated from destructive regeneration</td>
+<td>Full managed-pack inventory linked</td>
+</tr>
+<tr>
+<td>Code and threat models</td>
+<td>Usable configuration sequence and result model</td>
+<td>Complete CI/CD and provider compatibility matrix deferred</td>
+</tr>
+<tr>
+<td>Findings and KMS</td>
+<td>Lineage, remediation boundaries, key hierarchy and actors</td>
+<td>Full policy documents remain official reference</td>
+</tr>
+<tr>
+<td>Limits/troubleshooting</td>
+<td>Selected operational constraints and diagnostic paths</td>
+<td>Not an exhaustive error catalog</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Version conflicts:</strong> current indexed authentication/wizard pages include email MFA and nonstandard ports. Older cached authentication/troubleshooting pages contradict those points. The newer task-specific pages are used; the older troubleshooting source supports only the remaining diagnostics. Review date means retrieval, not a page publication date.</p>
+<h4>Official sources and reviewed sections</h4>
+<ul>
+<li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/what-is.html">SS01</a> Service scope and feature distinctions.</li>
+<li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/doc-history.html">SS02</a> Documentation history; feature announcements and availability.</li>
+<li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html">SS03</a> Account versus space resources; configuration/run lifecycle by assessment type.</li>
+<li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/how-it-works.html">SS04</a> Administrative and assessment surfaces, application context.</li>
+<li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-code-review.html">SS05</a> Code-review setup, modes, preflight, full scans and findings.</li>
+<li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/troubleshooting.html">SS06</a> Source registration and network troubleshooting; stale port restriction excluded.</li>
+<li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/enable-penetration-test.html">SS07</a> Target verification, VPC/role/logging setup and optional scheduling; newer indexed content.</li>
+<li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html">SS08</a> Current penetration-test wizard, network classes, credentials and task-hours; newer indexed content.</li>
+<li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html">SS09</a> Credential methods, preflight, login reuse and MFA; newer indexed content resolves older cached text.</li>
+<li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/quotas.html">SS10</a> Quotas and adjustability; current indexed table.</li>
+<li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/pricing.html">SS11</a> Pricing versus capacity and cancellation implications.</li>
+<li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/remediate-finding.html">SS12</a> Remediation provider behavior and proposed patches.</li>
+<li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html">SS13</a> Revalidation initiation, results and lineage.</li>
+<li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/security-requirements.html">SS14</a> Requirement fields, applicability, activation and review behavior.</li>
+<li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/import-security-requirements.html">SS15</a> Requirement generation and replacement consequences.</li>
+<li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-threat-model.html">SS16</a> Threat-model scope/source distinction, setup, preflight and result review.</li>
+<li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/review-code-findings-github.html">SS17</a> Repository-triggered review and comments.</li>
+<li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/customer-managed-keys.html">SS18</a> Hierarchical keyring, identities, encryption context and key lifecycle.</li>
+</ul>
+</section><h3>Official documentation for this slide</h3><ul><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/what-is.html">SS01 — what-is.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/doc-history.html">SS02 — doc-history.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html">SS03 — understand-lifecycle.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/how-it-works.html">SS04 — how-it-works.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-code-review.html">SS05 — quickstart-code-review.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/troubleshooting.html">SS06 — troubleshooting.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/enable-penetration-test.html">SS07 — enable-penetration-test.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html">SS08 — perform-penetration-test.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html">SS09 — provide-testing-credentials.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/quotas.html">SS10 — quotas.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/pricing.html">SS11 — pricing.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/remediate-finding.html">SS12 — remediate-finding.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html">SS13 — revalidate-findings.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/security-requirements.html">SS14 — security-requirements.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/import-security-requirements.html">SS15 — import-security-requirements.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-threat-model.html">SS16 — quickstart-threat-model.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/review-code-findings-github.html">SS17 — review-code-findings-github.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/customer-managed-keys.html">SS18 — customer-managed-keys.html</a></li></ul></div></details><details class="evidence"><summary>Official source register · untimed reference</summary><p class="small">Product statements retain their existing official references. This revision changes organization and HTML delivery; it does not constitute a new product-documentation audit or live AWS test.</p><ol><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/what-is.html">SS01 — what-is.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/doc-history.html">SS02 — doc-history.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html">SS03 — understand-lifecycle.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/how-it-works.html">SS04 — how-it-works.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-code-review.html">SS05 — quickstart-code-review.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/troubleshooting.html">SS06 — troubleshooting.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/enable-penetration-test.html">SS07 — enable-penetration-test.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html">SS08 — perform-penetration-test.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html">SS09 — provide-testing-credentials.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/quotas.html">SS10 — quotas.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/pricing.html">SS11 — pricing.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/remediate-finding.html">SS12 — remediate-finding.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html">SS13 — revalidate-findings.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/security-requirements.html">SS14 — security-requirements.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/import-security-requirements.html">SS15 — import-security-requirements.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-threat-model.html">SS16 — quickstart-threat-model.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/review-code-findings-github.html">SS17 — review-code-findings-github.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/customer-managed-keys.html">SS18 — customer-managed-keys.html</a></li></ol></details><footer>No live service completion or measured outcome is implied by the walkthrough budgets. <a href="security-notes.md">Presenter reference</a>.</footer></main><dialog id="agenda" aria-labelledby="agenda-title"><div class="dialog-top"><h2 id="agenda-title">AWS Security Agent — agenda</h2><button id="agenda-close">Close</button></div><p>35 minutes including 8 minutes of prepared-result exercise. Select a slide or use the chapter buttons.</p><section class="agenda-group"><h3>01. Platform model · 02:00</h3><button data-slide="0">01. Application resources sit beneath shared account configuration<small>00:00–02:00 · 02:00 planned</small></button></section><section class="agenda-group"><h3>02. Scope and authentication · 09:00</h3><button data-slide="1">02. Registration is not repository connection<small>02:00–04:00 · 02:00 planned</small></button><button data-slide="2">03. Network rules separate targets, dependencies and exclusions<small>04:00–06:00 · 02:00 planned</small></button><button data-slide="3">04. Obtaining a credential is not logging into the application<small>06:00–09:00 · 03:00 planned</small></button><button data-slide="4">05. Learned login navigation is a specific reuse mechanism<small>09:00–11:00 · 02:00 planned</small></button></section><section class="agenda-group"><h3>03. Assessment and criteria · 06:00</h3><button data-slide="5">06. A reusable configuration produces distinct executions<small>11:00–13:00 · 02:00 planned</small></button><button data-slide="6">07. Requirement evaluation starts with applicability<small>13:00–15:00 · 02:00 planned</small></button><button data-slide="7">08. Regeneration replaces requirements; it does not append<small>15:00–17:00 · 02:00 planned</small></button></section><section class="agenda-group"><h3>04. Repair, evidence and protection · 08:00</h3><button data-slide="8">09. A proposed repair is not a deployed repair<small>17:00–19:00 · 02:00 planned</small></button><button data-slide="9">10. Revalidation preserves the original finding<small>19:00–21:00 · 02:00 planned</small></button><button data-slide="10">11. Earlier assessments use different resource lifecycles<small>21:00–23:00 · 02:00 planned</small></button><button data-slide="11">12. Encryption requires the correct identity and context<small>23:00–25:00 · 02:00 planned</small></button></section><section class="agenda-group"><h3>05. Prepared-result exercise · 08:00</h3><button data-slide="12">13. Exercise: verify the repaired account boundary<small>25:00–33:00 · 08:00 planned</small></button></section><section class="agenda-group"><h3>06. Troubleshooting and coverage · 02:00</h3><button data-slide="13">14. Troubleshooting follows the failed prerequisite<small>33:00–35:00 · 02:00 planned</small></button></section></dialog><script>'use strict';
+(() => {
+  const $ = s => document.querySelector(s);
+  const $$ = s => [...document.querySelectorAll(s)];
+  const isEditing = () => ['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName);
+  const format = seconds => `${Math.floor(seconds / 60).toString().padStart(2,'0')}:${Math.floor(seconds % 60).toString().padStart(2,'0')}`;
+  $$('[data-print]').forEach(b => b.addEventListener('click', () => window.print()));
+  if (document.body.dataset.view === 'report') {
+    const sections = $$('.report-section'), chapters = $$('.chapter');
+    const search = $('#search'), type = $('#type'), chapter = $('#chapter');
+    function filter() {
+      const query = search.value.toLowerCase().trim();
+      let count = 0;
+      sections.forEach(s => {
+        const visible = (!query || s.textContent.toLowerCase().includes(query)) && (!type.value || s.dataset.kind === type.value) && (!chapter.value || s.dataset.chapter === chapter.value);
+        s.hidden = !visible;
+        if (visible) count++;
+      });
+      chapters.forEach(c => c.hidden = ![...c.querySelectorAll('.report-section')].some(s => !s.hidden));
+      $('#search-status').textContent = `${count} of ${sections.length} sections shown`;
+      $('#empty-results').hidden = count !== 0;
+    }
+    function reset() { search.value = ''; type.value = ''; chapter.value = ''; filter(); }
+    [search,type,chapter].forEach(x => x.addEventListener('input',filter));
+    $('#reset').addEventListener('click',reset);
+    $('#nav-expand').addEventListener('click',() => $$('.toc details').forEach(d => d.open = true));
+    $('#nav-collapse').addEventListener('click',() => $$('.toc details').forEach(d => d.open = false));
+    function reveal() {
+      let id;
+      try { id = decodeURIComponent(location.hash.slice(1)); } catch { return; }
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (el.matches('.report-section,.chapter') || el.closest('.report-section')) {
+        reset();
+        const section = el.closest('.report-section') || el.querySelector('.report-section');
+        if (section) {
+          const link = $$('.toc a[data-section]').find(a => a.dataset.section === section.id);
+          if (link) link.closest('details').open = true;
+        }
+        requestAnimationFrame(() => el.scrollIntoView({block:'start'}));
+      }
+    }
+    window.addEventListener('hashchange',reveal);
+    $$('.toc a,.map-link').forEach(a => a.addEventListener('click',() => { reset(); setTimeout(reveal,0); }));
+    const observer = new IntersectionObserver(entries => {
+      const visible = entries.filter(e => e.isIntersecting && !e.target.hidden).sort((a,b) => a.boundingClientRect.top - b.boundingClientRect.top);
+      if (!visible.length) return;
+      const section = visible[0].target;
+      $$('.toc a[data-section]').forEach(a => {
+        const active = a.dataset.section === section.id;
+        a.classList.toggle('active',active);
+        if (active) a.setAttribute('aria-current','location'); else a.removeAttribute('aria-current');
+      });
+      $('#reading-location').textContent = section.dataset.path;
+    }, {rootMargin:'-80px 0px -60% 0px', threshold:0});
+    sections.forEach(s => observer.observe(s));
+    document.addEventListener('keydown',e => { if (e.key === '/' && !isEditing()) { e.preventDefault(); search.focus(); } });
+    filter(); reveal();
+  }
+  if (document.body.dataset.view === 'presentation') {
+    const slides = $$('.slide'), select = $('#slide-select'), noteBlocks = $$('.note-block');
+    const groups = $$('.chapter-strip button'), totalBudget = Number(document.body.dataset.total);
+    let index = 0, running = false, totalSpent = 0, last = 0;
+    const spent = slides.map(() => 0);
+    function collect() {
+      if (!running) return;
+      const now = performance.now(), delta = Math.max(0,now-last);
+      totalSpent += delta; spent[index] += delta; last = now;
+    }
+    function timers() {
+      collect();
+      $('#session-time').textContent = `${format(totalSpent/1000)} / ${format(totalBudget)}`;
+      $('#slide-time').textContent = `${format(spent[index]/1000)} / ${format(Number(slides[index].dataset.seconds))}`;
+      $('#session-clock').classList.toggle('over',totalSpent/1000 > totalBudget);
+      $('#slide-clock').classList.toggle('over',spent[index]/1000 > Number(slides[index].dataset.seconds));
+    }
+    function show(n, updateHash = true) {
+      collect(); index = Math.max(0,Math.min(slides.length-1,n));
+      slides.forEach((s,i) => s.hidden = i !== index);
+      noteBlocks.forEach((s,i) => s.hidden = i !== index);
+      select.value = String(index);
+      $('#previous').disabled = index === 0; $('#next').disabled = index === slides.length-1;
+      const active = slides[index];
+      groups.forEach(b => b.setAttribute('aria-current',String(b.dataset.group === active.dataset.group)));
+      $('#slide-progress').value = index+1;
+      $('#slide-position').textContent = `Slide ${index+1} of ${slides.length} · ${active.dataset.chapter}`;
+      $('#slide-announcement').textContent = `Slide ${index+1}: ${active.querySelector('h1').textContent}`;
+      if (updateHash) history.replaceState(null,'',`#slide-${String(index+1).padStart(2,'0')}`);
+      timers();
+    }
+    function fromHash() { const m = location.hash.match(/^#slide-(\d+)$/); show(m ? Number(m[1])-1 : 0,false); }
+    $('#previous').onclick = () => show(index-1);
+    $('#next').onclick = () => show(index+1);
+    select.onchange = () => show(Number(select.value));
+    groups.forEach(b => b.onclick = () => show(Number(b.dataset.start)));
+    $('#agenda-open').onclick = () => $('#agenda').showModal();
+    $('#agenda-close').onclick = () => $('#agenda').close();
+    $$('#agenda [data-slide]').forEach(b => b.onclick = () => { show(Number(b.dataset.slide)); $('#agenda').close(); });
+    $('#timer-toggle').onclick = () => {
+      collect(); running = !running; last = performance.now();
+      $('#timer-toggle').textContent = running ? 'Pause timer' : 'Start timer';
+      $('#timer-toggle').setAttribute('aria-pressed',String(running)); timers();
+    };
+    $('#timer-reset').onclick = () => { running=false; totalSpent=0; spent.fill(0); $('#timer-toggle').textContent='Start timer'; $('#timer-toggle').setAttribute('aria-pressed','false'); timers(); };
+    $('#notes-button').onclick = () => { $('#speaker-notes').open = !$('#speaker-notes').open; if ($('#speaker-notes').open) $('#speaker-notes').scrollIntoView({block:'start'}); };
+    $('#fullscreen').onclick = async () => {
+      try { if (document.fullscreenElement) await document.exitFullscreen(); else await document.documentElement.requestFullscreen(); }
+      catch { $('#slide-announcement').textContent='Fullscreen is unavailable; browser presentation controls remain active.'; }
+    };
+    document.addEventListener('keydown',e => {
+      if (isEditing() || $('#agenda').open) return;
+      const actions = {ArrowRight:()=>show(index+1),PageDown:()=>show(index+1),ArrowLeft:()=>show(index-1),PageUp:()=>show(index-1),Home:()=>show(0),End:()=>show(slides.length-1),n:()=>$('#notes-button').click(),t:()=>$('#timer-toggle').click(),f:()=>$('#fullscreen').click()};
+      if (actions[e.key]) { e.preventDefault(); actions[e.key](); }
+    });
+    window.addEventListener('hashchange',fromHash);
+    setInterval(timers,200); fromHash();
+  }
+})();
+</script></body></html>
