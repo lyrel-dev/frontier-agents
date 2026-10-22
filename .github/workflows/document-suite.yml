@@ -27,50 +27,31 @@ jobs:
           sudo apt-get install -y graphviz
           python -m pip install -r tools/docs/requirements.txt
           python -m playwright install --with-deps chromium
-      - name: Finalize reviewed presentation sequence
-        run: |
-          python - <<'PY'
-          import sys, re
-          from pathlib import Path
-          from pprint import pformat
-          sys.path.insert(0,'tools/docs')
-          from presentation import DECKS
-          from structure import CHAPTERS, DECK_CHAPTERS, TYPES, LABELS, REVISION, BASELINE
-          plan=[
-            ('Service architecture',['DevOps Agent resource and execution architecture','Product functions and agent space resource model']),
-            ('Integrations and access',['Provider registration and Agent Space association','Telemetry, source control, and incident connections','Access roles, tool providers and private connectivity']),
-            ('Knowledge and behavior',['Environment-knowledge consolidation','Incident knowledge production and selective retrieval','Memory, instructions and skills']),
-            ('Incident response and operational execution',['Incident triage and investigation workflow','Incident triage and investigation lifecycle','Incident pattern analysis and prevention recommendations','Custom agents, schedules and invocation records','Configured operational-report workflow','Sandbox and directed actions','Release readiness review and release testing']),
-            ('Operational use cases',['Use case taxonomy and delivery modes','Incident operations use cases','Operational reporting and review use cases','Knowledge and documentation use cases']),
-            ('Worked example',['Worked example: recurring alarm with different current evidence']),
-            ('Troubleshooting and references',['Troubleshooting matrix and operating limits'])
-          ]
-          lookup={s['title'].casefold():s for s in DECKS['devops']['slides']}
-          wanted=[title.casefold() for _,titles in plan for title in titles]
-          assert len(wanted)==len(set(wanted)) and set(wanted)==set(lookup), (set(wanted)-set(lookup),set(lookup)-set(wanted))
-          slides=[];groups=[]
-          for group,titles in plan:
-              start=len(slides)
-              slides.extend(lookup[t.casefold()] for t in titles)
-              groups.append((group,list(range(start,len(slides)))))
-          DECKS['devops']['slides']=slides
-          DECK_CHAPTERS['devops']=groups
-          for deck in DECKS.values():
-              for slide in deck['slides']:
-                  for row in slide.get('data',[]):
-                      for i,value in enumerate(row):
-                          if isinstance(value,str):
-                              row[i]=value.replace('Minute incident status report','Incident status bulletin').replace('On demand or short schedule','On demand; flexible schedule')
-          Path('tools/docs/presentation.py').write_text('"""Maintained HTML presentation outline and delivery budgets."""\nDECKS = '+pformat(DECKS,width=105,sort_dicts=False)+'\n')
-          header='"""Maintained chapter membership and section types."""\nREVISION='+repr(REVISION)+'\nBASELINE='+repr(BASELINE)+'\n'
-          body='CHAPTERS='+pformat(CHAPTERS,width=105,sort_dicts=False)+'\nDECK_CHAPTERS='+pformat(DECK_CHAPTERS,width=105,sort_dicts=False)+'\nTYPES='+pformat(TYPES,width=105,sort_dicts=False)+'\nLABELS='+pformat(LABELS,width=105,sort_dicts=False)
-          end='\ndef section_type(sid):\n    return "example" if "-U" in sid else "mechanism" if "-M" in sid else TYPES[sid]\n'
-          Path('tools/docs/structure.py').write_text(header+body+end)
-          PY
       - name: Build guides, figures, catalog, and HTML presentations
         run: |
           python -m compileall -q tools/docs
           python tools/docs/build.py
+      - name: Check repeatable generation
+        run: |
+          python - <<'PY'
+          import hashlib, json, subprocess, sys
+          from pathlib import Path
+          def hashes():
+              paths=[]
+              for directory in ('guides','catalog','presentations','assets'):
+                  paths.extend(p for p in Path(directory).rglob('*') if p.is_file())
+              return {p.as_posix():hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(paths)}
+          before=hashes()
+          subprocess.run([sys.executable,'tools/docs/build.py'],check=True)
+          after=hashes()
+          assert before==after, 'Repeated generation changed document or figure bytes'
+          Path('qa/rebuild.json').write_text(json.dumps({
+              'revision':'2026-10-22-narrative-guides',
+              'files_compared':len(before),
+              'identical_repeated_build':True,
+              'boundary':'Same committed inputs and same runner environment; not a claim of reproducibility across different dependency versions.'
+          },indent=2)+'\n')
+          PY
       - name: Validate source relationships and rendered behavior
         run: python tools/docs/check.py --browser
       - name: Commit each documentation change separately
