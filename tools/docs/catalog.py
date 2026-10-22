@@ -4,6 +4,7 @@ from collections import defaultdict
 from html import escape
 import json
 import re
+from mechanism_detail import index_summary
 
 ROOT=Path(__file__).resolve().parents[2]
 NAMES={'devops':'AWS DevOps Agent','security':'AWS Security Agent','finops':'AWS FinOps Agent','architecture':'Shared operational practice'}
@@ -128,6 +129,7 @@ def reference_pages(catalog,guides,frame,write):
             ident=item['id'];platforms=item.get('platforms',[item.get('platform','')]);parts=[]
             if kind=='mechanisms':
                 parts=['<p>'+esc(item['process'])+'</p><dl class="dependency-fields">'+''.join('<dt>'+esc(label)+'</dt><dd>'+esc(item[field])+'</dd>' for label,field in [('Trigger','trigger'),('Retained or execution state','state'),('Effect','effect'),('Proposed verification','verification'),('Failure handling','on_failure')])+'</dl>', '<h3>Feature configuration</h3><p>'+' · '.join(link(f,reg[f][1]['title']) for f in item['features'])+'</p>',evidence(item,guides)]
+                parts.append(index_summary(item))
                 rows=related(ident)
                 parts+=['<h3>Workflow steps using this mechanism</h3>',table(['Outcome','Step','Dependency'],rows) if rows else '<p>This mechanism is selected through an implementation profile rather than required by every primary case.</p>']
                 p=[r for r in records('profiles') if ident in r['mechanisms']]
