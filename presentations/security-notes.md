@@ -2,32 +2,28 @@
 
 
 
-Presentation: 54 minutes, including 8 minutes of prepared-result exercises. Questions and breaks are additional.
+Presentation: 60 minutes, including 8 minutes of prepared-result exercises. Questions and breaks are additional.
 
 
 
-## 01. Security Agent application and assessment architecture
+## 01. Shared configuration and application Agent Spaces
 
-00:00–02:00 · Service architecture
+00:00–02:00 · Product-specific resource model
 
-Shared account resources are selected for an application Agent Space. Assessment configuration combines sources, criteria, and authorized target access. Runs produce findings that can be reviewed and revalidated.
-
-
-
-![Security Agent application and assessment architecture](../assets/diagrams/security-architecture.svg)
+Read the entity kind and ownership label before following the relationship. A question mark leaves exact multiplicity unspecified; the detailed register explains each logical association.
 
 
 
-Detailed reference: [The agent, application space, and assessment](../guides/security.html#S-01)
+![Security Agent: shared configuration and application scope](../assets/diagrams/er-security-scope.svg)
 
 
 
-Detailed reference: [Supported source and collaboration integrations](../guides/security.html#S-09)
+Detailed reference: [Shared configuration, Agent Spaces and assessments](../guides/security.html#S-01)
 
 
 ## 02. Product functions and security resource model
 
-02:00–05:00 · Service architecture
+02:00–05:00 · Product-specific resource model
 
 Application scope, assessment configuration, execution and finding lifecycle are different resource layers.
 
@@ -46,12 +42,27 @@ Execution | Run, job or review | Assess the current target or source | Status, i
 Finding lifecycle | Finding, remediation, Jira link and revalidation | Track evidence through repair | Original and linked verification records
 
 
-Detailed reference: [The agent, application space, and assessment](../guides/security.html#S-01)
+Detailed reference: [Shared configuration, Agent Spaces and assessments](../guides/security.html#S-01)
 
 
-## 03. Application-source registration and selection
+## 03. Assessment configurations and distinct execution lifecycles
 
-05:00–07:00 · Integrations and access
+05:00–08:00 · Product-specific resource model
+
+Read the entity kind and ownership label before following the relationship. A question mark leaves exact multiplicity unspecified; the detailed register explains each logical association.
+
+
+
+![Security Agent: assessment configurations and executions](../assets/diagrams/er-security-assessments.svg)
+
+
+
+Detailed reference: [Assessment configurations, runs and result identities](../guides/security.html#S-10)
+
+
+## 04. Application-source registration and selection
+
+08:00–10:00 · Integrations and access
 
 The account registration authorizes a provider. The application selects resources from it. Sources are shared across eligible assessments, while repository write actions are separately enabled.
 
@@ -64,9 +75,9 @@ The account registration authorizes a provider. The application selects resource
 Detailed reference: [Supported source and collaboration integrations](../guides/security.html#S-09)
 
 
-## 04. Repository, documentation, and Jira connections
+## 05. Repository, documentation, and Jira connections
 
-07:00–09:00 · Integrations and access
+10:00–12:00 · Integrations and access
 
 Account-level registration authorizes a provider; application-level selection supplies resources. Repository writes and Jira effects require their own settings.
 
@@ -88,9 +99,9 @@ Work tracking | Jira Cloud | Select projects and independently permit issue crea
 Detailed reference: [Supported source and collaboration integrations](../guides/security.html#S-09)
 
 
-## 05. Identity, repository and target configuration
+## 06. Identity, repository and target configuration
 
-09:00–12:00 · Integrations and access
+12:00–15:00 · Integrations and access
 
 Registration, connection, reachability and authorization must be validated separately.
 
@@ -116,9 +127,9 @@ Detailed reference: [User access and repository connections](../guides/security.
 Detailed reference: [Test targets, dependencies, and exclusions](../guides/security.html#S-03)
 
 
-## 06. Repository, pipeline and external tracking integrations
+## 07. Repository, pipeline and external tracking integrations
 
-12:00–14:00 · Integrations and access
+15:00–17:00 · Integrations and access
 
 Integrations move source material, triggers and evidence; they do not broaden the authorized target scope.
 
@@ -148,9 +159,9 @@ Detailed reference: [Finding review and code remediation](../guides/security.htm
 Detailed reference: [Code review, design review, and threat modeling](../guides/security.html#S-06)
 
 
-## 07. Application context and assessment criteria
+## 08. Application context and assessment criteria
 
-14:00–16:00 · Knowledge and behavior
+17:00–19:00 · Knowledge and behavior
 
 Source evidence and scope documents have different jobs. The assessment uses selected evidence and applicable criteria; a finding is an output of that execution rather than an automatically shared memory.
 
@@ -167,9 +178,9 @@ Detailed reference: [Application-context construction and reuse](../guides/secur
 Detailed reference: [Requirement applicability and evaluation](../guides/security.html#S-M03)
 
 
-## 08. Credential retrieval and authenticated test access
+## 09. Credential retrieval and authenticated test access
 
-16:00–18:00 · Knowledge and behavior
+19:00–21:00 · Knowledge and behavior
 
 Credential acquisition, login navigation, and application authorization are distinct stages. A retained login procedure can support later navigation, but actual identity still needs verification.
 
@@ -186,9 +197,9 @@ Detailed reference: [Credential retrieval and application login](../guides/secur
 Detailed reference: [Login-workflow retention and reuse](../guides/security.html#S-M02)
 
 
-## 09. Login optimization
+## 10. Login optimization
 
-18:00–20:00 · Knowledge and behavior
+21:00–23:00 · Knowledge and behavior
 
 Login Optimization reuses authentication navigation; it is not general vulnerability memory.
 
@@ -206,9 +217,9 @@ Changed application flow | Verify the actual authenticated identity and update b
 Detailed reference: [Login-workflow retention and reuse](../guides/security.html#S-M02)
 
 
-## 10. Security requirements and requirement packs
+## 11. Security requirements and requirement packs
 
-20:00–23:00 · Knowledge and behavior
+23:00–26:00 · Knowledge and behavior
 
 Requirement generation replaces pack contents; evaluation applies the reviewed criteria to an assessment.
 
@@ -234,9 +245,9 @@ Detailed reference: [Requirement applicability and evaluation](../guides/securit
 Detailed reference: [Requirement generation and replacement](../guides/security.html#S-M04)
 
 
-## 11. Finding, deployment, and revalidation lineage
+## 12. Finding, deployment, and revalidation lineage
 
-23:00–25:00 · Execution workflows
+26:00–28:00 · Execution workflows
 
 The finding, proposed code change, deployed revision, and revalidation job are separate records. Revalidation repeats selected evidence using the current target and authentication configuration.
 
@@ -253,9 +264,9 @@ Detailed reference: [Finding revalidation and evidence lineage](../guides/securi
 Detailed reference: [Finding review and code remediation](../guides/security.html#S-05)
 
 
-## 12. Credential resolution and application authentication
+## 13. Credential resolution and application authentication
 
-25:00–28:00 · Execution workflows
+28:00–31:00 · Execution workflows
 
 Credential retrieval can succeed while application authentication still fails.
 
@@ -277,9 +288,9 @@ MFA/login instruction | Current instructions and required factors | Complete the
 Detailed reference: [Credential retrieval and application login](../guides/security.html#S-M01)
 
 
-## 13. Assessment configuration and run lifecycle
+## 14. Assessment configuration and run lifecycle
 
-28:00–30:00 · Execution workflows
+31:00–33:00 · Execution workflows
 
 A completed run confirms execution, not exhaustive route or vulnerability-class coverage.
 
@@ -301,9 +312,9 @@ Design review | Different one-off lifecycle | Clone to create new work | Indepen
 Detailed reference: [Assessment configuration and run lifecycle](../guides/security.html#S-04)
 
 
-## 14. Finding lineage, remediation and revalidation
+## 15. Finding lineage, remediation and revalidation
 
-30:00–33:00 · Execution workflows
+33:00–36:00 · Execution workflows
 
 A Resolved revalidation result applies to the selected finding and execution conditions.
 
@@ -325,9 +336,9 @@ Detailed reference: [Finding review and code remediation](../guides/security.htm
 Detailed reference: [Finding revalidation and evidence lineage](../guides/security.html#S-M05)
 
 
-## 15. Customer-managed encryption and service identities
+## 16. Customer-managed encryption and service identities
 
-33:00–35:00 · Execution workflows
+36:00–38:00 · Execution workflows
 
 Encryption configuration and processing geography are separate controls.
 
@@ -349,9 +360,9 @@ Web app / assessment / async identity | Performs different data operations | Doe
 Detailed reference: [Encryption keys, identities, and access](../guides/security.html#S-M06)
 
 
-## 16. Application, source and design assessment objectives
+## 17. Application, source and design assessment objectives
 
-35:00–38:00 · Operational objectives and implementation
+38:00–41:00 · Operational objectives and implementation
 
 Follow the operational objective through its workflow, configured mechanisms and independent completion evidence. The catalog links each dependency to its detailed guide.
 
@@ -368,16 +379,16 @@ Review a proposed application design | Design revision and assumptions are expli
 Develop and review an application threat model | Boundaries and flows are reviewed before threats. | Preview assessment
 
 
-Detailed reference: [The agent, application space, and assessment](../guides/security.html#S-01)
+Detailed reference: [Shared configuration, Agent Spaces and assessments](../guides/security.html#S-01)
 
 
 
 Detailed reference: [Code review, design review, and threat modeling](../guides/security.html#S-06)
 
 
-## 17. Finding disposition, repair and verification
+## 18. Finding disposition, repair and verification
 
-38:00–41:00 · Operational objectives and implementation
+41:00–44:00 · Operational objectives and implementation
 
 Follow the operational objective through its workflow, configured mechanisms and independent completion evidence. The catalog links each dependency to its detailed guide.
 
@@ -405,9 +416,9 @@ Detailed reference: [Finding revalidation and evidence lineage](../guides/securi
 Detailed reference: [Requirement generation and replacement](../guides/security.html#S-M04)
 
 
-## 18. Application assessment: independent configuration choices
+## 19. Application assessment: independent configuration choices
 
-41:00–44:00 · Operational objectives and implementation
+44:00–47:00 · Operational objectives and implementation
 
 Follow the operational objective through its workflow, configured mechanisms and independent completion evidence. The catalog links each dependency to its detailed guide.
 
@@ -443,9 +454,24 @@ Detailed reference: [Assessment configuration and run lifecycle](../guides/secur
 Detailed reference: [Finding revalidation and evidence lineage](../guides/security.html#S-M05)
 
 
-## 19. Worked example: authorization finding through revalidation
+## 20. Original findings and revalidation history
 
-44:00–52:00 · Worked example
+47:00–50:00 · Operational objectives and implementation
+
+Read the entity kind and ownership label before following the relationship. A question mark leaves exact multiplicity unspecified; the detailed register explains each logical association.
+
+
+
+![Security Agent: finding, repair and revalidation lineage](../assets/diagrams/er-security-lineage.svg)
+
+
+
+Detailed reference: [Finding lineage from assessment to repair verification](../guides/security.html#S-11)
+
+
+## 21. Worked example: authorization finding through revalidation
+
+50:00–58:00 · Worked example
 
 Prepared staging evidence traces the finding, deployed repair and scoped revalidation result.
 
@@ -467,9 +493,9 @@ Detailed reference: [Authorization-finding remediation: worked example](../guide
 Detailed reference: [Finding revalidation and evidence lineage](../guides/security.html#S-M05)
 
 
-## 20. Troubleshooting matrix and assessment limits
+## 22. Troubleshooting matrix and assessment limits
 
-52:00–54:00 · Troubleshooting and references
+58:00–60:00 · Troubleshooting and references
 
 Troubleshooting follows the first failed prerequisite in the assessment chain.
 
