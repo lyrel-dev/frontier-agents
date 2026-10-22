@@ -1,6 +1,6 @@
 {
-  "revision": "2026-10-22-product-resource-models",
-  "files_compared": 61,
+  "revision": "2026-10-22-mechanism-review",
+  "files_compared": 62,
   "identical_repeated_build": true,
   "boundary": "Same committed inputs and same runner environment; not cross-version reproducibility."
 }
