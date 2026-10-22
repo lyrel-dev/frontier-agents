@@ -370,7 +370,7 @@ Detailed reference: [Encryption keys, identities, and access](../guides/security
 
 38:00–41:00 · Operational objectives and implementation
 
-Follow the operational objective through its workflow, configured mechanisms and independent completion evidence. The catalog links each dependency to its detailed guide.
+Select the assessment by subject: a running target, a source revision, a design document, or a scoped system model. Authentication and network configuration are variants of the running-application assessment.
 
 
 
@@ -396,7 +396,7 @@ Detailed reference: [Code review, design review, and threat modeling](../guides/
 
 41:00–44:00 · Operational objectives and implementation
 
-Follow the operational objective through its workflow, configured mechanisms and independent completion evidence. The catalog links each dependency to its detailed guide.
+Disposition records the team decision about a finding. A remediation proposal changes source only after review and merge. Revalidation evaluates selected findings against the deployed target.
 
 
 
@@ -426,7 +426,7 @@ Detailed reference: [Requirement generation and replacement](../guides/security.
 
 44:00–47:00 · Operational objectives and implementation
 
-Follow the operational objective through its workflow, configured mechanisms and independent completion evidence. The catalog links each dependency to its detailed guide.
+Target authorization, public or private connectivity, application credentials, source context, and invocation mode are independent settings. Inspect each setting before interpreting coverage.
 
 
 
