@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="519pt" height="396pt" viewBox="0.00 0.00 519.00 396.00" role="img" aria-labelledby="security-integrations-title security-integrations-desc" data-diagram="security-integrations">
+<title id="security-integrations-title">Application-source registration and selection</title><desc id="security-integrations-desc">The account registration authorizes a provider. The application selects resources from it. Sources are shared across eligible assessments, while repository write actions are separately enabled.</desc><g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(18 378)">
+<title>G</title>
+
+<g id="node1" class="node">
+<title>providers</title>
+<path fill="#edf5f4" stroke="#496b78" d="M277,-360C277,-360 12,-360 12,-360 6,-360 0,-354 0,-348 0,-348 0,-324 0,-324 0,-318 6,-312 12,-312 12,-312 277,-312 277,-312 283,-312 289,-318 289,-324 289,-324 289,-348 289,-348 289,-354 283,-360 277,-360" />
+<text text-anchor="middle" x="144.5" y="-339.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Provider account</text>
+<text text-anchor="middle" x="144.5" y="-324.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">GitHub, GitLab, Bitbucket, Confluence</text>
+</g>
+
+<g id="node2" class="node">
+<title>register</title>
+<path fill="#edf5f4" stroke="#496b78" d="M255,-256C255,-256 34,-256 34,-256 28,-256 22,-250 22,-244 22,-244 22,-220 22,-220 22,-214 28,-208 34,-208 34,-208 255,-208 255,-208 261,-208 267,-214 267,-220 267,-220 267,-244 267,-244 267,-250 261,-256 255,-256" />
+<text text-anchor="middle" x="144.5" y="-235.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Account registration</text>
+<text text-anchor="middle" x="144.5" y="-220.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Authorized provider connection</text>
+</g>
+
+<g id="edge1" class="edge">
+<title>providers-&gt;register</title>
+<path fill="none" stroke="#496b78" d="M144.5,-311.85C144.5,-297.64 144.5,-279.26 144.5,-263.82" />
+<polygon fill="#496b78" stroke="#496b78" points="147.13,-263.55 144.5,-256.05 141.88,-263.55 147.13,-263.55" />
+<text text-anchor="middle" x="170.5" y="-281.2" font-family="DejaVu Sans" font-size="11.00">authorize</text>
+</g>
+
+<g id="node3" class="node">
+<title>resources</title>
+<path fill="#edf5f4" stroke="#496b78" d="M222.5,-152C222.5,-152 66.5,-152 66.5,-152 60.5,-152 54.5,-146 54.5,-140 54.5,-140 54.5,-116 54.5,-116 54.5,-110 60.5,-104 66.5,-104 66.5,-104 222.5,-104 222.5,-104 228.5,-104 234.5,-110 234.5,-116 234.5,-116 234.5,-140 234.5,-140 234.5,-146 228.5,-152 222.5,-152" />
+<text text-anchor="middle" x="144.5" y="-131.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Agent Space selection</text>
+<text text-anchor="middle" x="144.5" y="-116.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Repositories or pages</text>
+</g>
+
+<g id="edge2" class="edge">
+<title>register-&gt;resources</title>
+<path fill="none" stroke="#496b78" d="M144.5,-207.85C144.5,-193.64 144.5,-175.26 144.5,-159.82" />
+<polygon fill="#496b78" stroke="#496b78" points="147.13,-159.55 144.5,-152.05 141.88,-159.55 147.13,-159.55" />
+<text text-anchor="middle" x="161.5" y="-177.2" font-family="DejaVu Sans" font-size="11.00">select</text>
+</g>
+
+<g id="node4" class="node">
+<title>read</title>
+<path fill="#edf5f4" stroke="#496b78" d="M462.5,-48C462.5,-48 274.5,-48 274.5,-48 268.5,-48 262.5,-42 262.5,-36 262.5,-36 262.5,-12 262.5,-12 262.5,-6 268.5,0 274.5,0 274.5,0 462.5,0 462.5,0 468.5,0 474.5,-6 474.5,-12 474.5,-12 474.5,-36 474.5,-36 474.5,-42 468.5,-48 462.5,-48" />
+<text text-anchor="middle" x="368.5" y="-27.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Read context</text>
+<text text-anchor="middle" x="368.5" y="-12.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Eligible assessment inputs</text>
+</g>
+
+<g id="edge3" class="edge">
+<title>resources-&gt;read</title>
+<path fill="none" stroke="#496b78" d="M182.1,-103.84C200.78,-92.84 223.93,-79.95 245.5,-70 260.36,-63.14 276.59,-56.59 292.24,-50.7" />
+<polygon fill="#496b78" stroke="#496b78" points="293.27,-53.12 299.38,-48.04 291.44,-48.2 293.27,-53.12" />
+<text text-anchor="middle" x="307.5" y="-73.2" font-family="DejaVu Sans" font-size="11.00">shared source context</text>
+</g>
+
+<g id="node5" class="node">
+<title>write</title>
+<path fill="#edf5f4" stroke="#496b78" d="M208,-48C208,-48 25,-48 25,-48 19,-48 13,-42 13,-36 13,-36 13,-12 13,-12 13,-6 19,0 25,0 25,0 208,0 208,0 214,0 220,-6 220,-12 220,-12 220,-36 220,-36 220,-42 214,-48 208,-48" />
+<text text-anchor="middle" x="116.5" y="-27.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Optional repository writes</text>
+<text text-anchor="middle" x="116.5" y="-12.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Comments or remediation</text>
+</g>
+
+<g id="edge4" class="edge">
+<title>resources-&gt;write</title>
+<path fill="none" stroke="#496b78" stroke-dasharray="5,2" d="M126.1,-103.97C121.77,-97.26 117.76,-89.67 115.5,-82 113.06,-73.71 112.4,-64.45 112.59,-55.84" />
+<polygon fill="#496b78" stroke="#496b78" points="115.22,-55.79 112.98,-48.17 109.98,-55.52 115.22,-55.79" />
+<text text-anchor="middle" x="158" y="-73.2" font-family="DejaVu Sans" font-size="11.00">separate opt-in</text>
+</g>
+
+<g id="node6" class="node">
+<title>s3</title>
+<path fill="#edf5f4" stroke="#496b78" d="M471,-152C471,-152 300,-152 300,-152 294,-152 288,-146 288,-140 288,-140 288,-116 288,-116 288,-110 294,-104 300,-104 300,-104 471,-104 471,-104 477,-104 483,-110 483,-116 483,-116 483,-140 483,-140 483,-146 477,-152 471,-152" />
+<text text-anchor="middle" x="385.5" y="-131.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Connected S3 resources</text>
+<text text-anchor="middle" x="385.5" y="-116.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Selected source objects</text>
+</g>
+
+<g id="edge5" class="edge">
+<title>s3-&gt;read</title>
+<path fill="none" stroke="#496b78" d="M381.64,-103.85C379.27,-89.64 376.21,-71.26 373.64,-55.82" />
+<polygon fill="#496b78" stroke="#496b78" points="376.16,-55.02 372.34,-48.05 370.99,-55.88 376.16,-55.02" />
+<text text-anchor="middle" x="423" y="-73.2" font-family="DejaVu Sans" font-size="11.00">selected objects</text>
+</g>
+</g>
+</svg>
