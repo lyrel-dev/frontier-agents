@@ -41,7 +41,7 @@ def controls(entries,platform=False):
         +'<select data-uc-group aria-label="Use case group">'+choices([e['group'] for e in entries],'groups')+'</select>'
         +'<select data-uc-delivery aria-label="Delivery mode">'+choices([e['delivery'] for e in entries],'delivery modes')+'</select>'
         +'<select data-uc-cadence aria-label="Cadence">'+choices([e['cadence'] for e in entries],'cadences')+'</select>'
-        +'<button data-uc-reset>Reset</button></div><p data-uc-count class="result-count" aria-live="polite"></p><p data-uc-empty hidden>No cases match these filters.</p>')
+        +'<button data-uc-reset>Reset</button></div><p data-uc-count class="result-count" aria-live="polite"></p><p data-uc-empty hidden>No primary outcomes match these filters. Matching supporting references, when present, appear below.</p>')
 
 def alias_nodes(catalog):
     parts=[]
@@ -75,6 +75,7 @@ def content(catalog,guides,key=None):
     groups=defaultdict(list)
     for e in selected:groups[(e['platform'],e['group'])].append(e)
     parts=[controls(selected,key is None),'<p class="catalog-reference-nav"><a href="../catalog/mechanisms.html">Mechanisms and dependent workflows</a> · <a href="../catalog/features.html">Platform features and change impact</a> · <a href="../catalog/profiles.html">Implementation profiles</a> · <a href="../catalog/migration.md">Former-record mapping</a></p>',alias_nodes(catalog)]
+    parts.append(supporting_matches(key))
     for (platform,group),items in groups.items():
         title=group if key else NAMES[platform]+' — '+group
         ident='usecase-'+re.sub('[^a-z0-9]+','-',(platform+'-'+group).lower()).strip('-')
@@ -82,7 +83,7 @@ def content(catalog,guides,key=None):
     return ''.join(parts)
 
 STYLE='''
-.catalog-reference-nav{line-height:1.9}.workflow-steps>li{padding:12px 0 22px;border-bottom:1px solid #c8d1d9}.workflow-steps h4{margin:8px 0}.dependency-fields{display:grid;grid-template-columns:160px minmax(0,1fr);gap:7px 16px}.dependency-fields dt{font-weight:600}.dependency-fields dd{margin:0;overflow-wrap:anywhere}.reference-entry{padding:24px 0 32px;border-top:2px solid #c8d1d9;scroll-margin-top:20px}.reference-entry h2{font-size:24px}.reference-entry p{max-width:88ch}.reference-controls{display:flex;gap:10px;flex-wrap:wrap;margin:22px 0}.reference-controls input{flex:2;min-width:220px}.reference-controls select{flex:1}.reference-controls input,.reference-controls select{padding:10px;border:1px solid #9aaabd;border-radius:4px}.migration-choice{border-left:4px solid #385f76;padding:16px;margin:20px 0}.case-variant{padding:0 0 0 14px;border-left:2px solid #c8d1d9}.case-variant h4{margin-bottom:3px}.dependency-path{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:18px 0}.dependency-path span{border:1px solid #9aaabd;padding:8px}.reference-main{max-width:1120px;margin:30px auto;padding:0 24px}.reference-entry table{width:100%;border-collapse:collapse}.reference-entry th,.reference-entry td{padding:9px;border-bottom:1px solid #c8d1d9;text-align:left;vertical-align:top}.reference-entry td{overflow-wrap:anywhere}.alias-labels{color:#526474;font-size:14px}.reference-filter-empty{padding:20px;border:1px dashed #9aaabd} [hidden]{display:none!important}
+.catalog-reference-nav{line-height:1.9}.workflow-steps>li{padding:12px 0 22px;border-bottom:1px solid #c8d1d9}.workflow-steps h4{margin:8px 0}.dependency-fields{display:grid;grid-template-columns:160px minmax(0,1fr);gap:7px 16px}.dependency-fields dt{font-weight:600}.dependency-fields dd{margin:0;overflow-wrap:anywhere}.reference-entry{padding:24px 0 32px;border-top:2px solid #c8d1d9;scroll-margin-top:20px}.reference-entry h2{font-size:24px}.reference-entry p{max-width:88ch}.reference-controls{display:flex;gap:10px;flex-wrap:wrap;margin:22px 0}.reference-controls input{flex:2;min-width:220px}.reference-controls select{flex:1}.reference-controls input,.reference-controls select{padding:10px;border:1px solid #9aaabd;border-radius:4px}.migration-choice{border-left:4px solid #385f76;padding:16px;margin:20px 0}.case-variant{padding:0 0 0 14px;border-left:2px solid #c8d1d9}.case-variant h4{margin-bottom:3px}.dependency-path{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:18px 0}.dependency-path span{border:1px solid #9aaabd;padding:8px}.reference-main{max-width:1120px;margin:30px auto;padding:0 24px}.reference-entry table{width:100%;border-collapse:collapse}.reference-entry th,.reference-entry td{padding:9px;border-bottom:1px solid #c8d1d9;text-align:left;vertical-align:top}.reference-entry td{overflow-wrap:anywhere}.alias-labels{color:#526474;font-size:14px}.reference-filter-empty{padding:20px;border:1px dashed #9aaabd} @media screen{[hidden]{display:none!important}}
 @media(max-width:700px){.dependency-fields{grid-template-columns:1fr}.dependency-fields dd{margin:0 0 10px}.reference-main{padding:0 16px}.reference-controls>*{width:100%;min-width:0}.reference-entry .table-wrap{overflow-x:auto}}
 '''
 SCRIPT='''
@@ -90,6 +91,12 @@ SCRIPT='''
  const aliases=[...document.querySelectorAll('[data-alias-targets]')];
  function alias(){const id=decodeURIComponent(location.hash.slice(1));const item=aliases.find(x=>x.id===id);if(!item)return;const targets=JSON.parse(item.dataset.aliasTargets);if(targets.length===1){const id2=targets[0];const page=id2.startsWith('UC-')?'index':id2.startsWith('MX-')?'mechanisms':id2.startsWith('FT-')?'features':'profiles';if(document.getElementById(id2)){location.replace('#'+id2);}else{location.replace('../catalog/'+page+'.html#'+id2);}}else{item.hidden=false;item.scrollIntoView();}}
  addEventListener('hashchange',alias);alias();
+
+ document.querySelectorAll('[data-usecase-catalog]').forEach(root=>{
+  const q=root.querySelector('[data-uc-search]'),p=root.querySelector('[data-uc-platform]'),box=root.querySelector('[data-supporting-matches]');if(!box)return;
+  function filterSupport(){const words=q.value.trim().toLowerCase().split(/\s+/).filter(Boolean);let n=0;box.querySelectorAll('[data-support-item]').forEach(el=>{const yes=words.length>0&&words.every(w=>el.textContent.toLowerCase().includes(w))&&(!p?.value||p.value===el.dataset.platform);el.hidden=!yes;if(yes)n++;});box.hidden=n===0;}
+  q.addEventListener('input',filterSupport);if(p)p.addEventListener('input',filterSupport);root.querySelector('[data-uc-reset]').addEventListener('click',()=>setTimeout(filterSupport,0));addEventListener('hashchange',()=>setTimeout(filterSupport,0));filterSupport();
+ });
  const input=document.querySelector('[data-ref-search]'),select=document.querySelector('[data-ref-platform]'),nodes=[...document.querySelectorAll('.reference-entry')];
  if(!input)return;
  function show(){const words=input.value.toLowerCase().split(/\\s+/).filter(Boolean);let count=0;nodes.forEach(n=>{const yes=words.every(w=>n.textContent.toLowerCase().includes(w))&&(!select.value||n.dataset.platform.split(' ').includes(select.value));n.hidden=!yes;if(yes)count++;});document.querySelector('[data-ref-count]').textContent=count+' of '+nodes.length+' records shown';document.querySelector('[data-ref-empty]').hidden=count!==0;}
@@ -114,7 +121,7 @@ def reference_pages(catalog,guides,frame,write):
     def profile_cases(pid):return [c for c in cases if pid in c['profiles']]
     for kind,title,intro in [
         ('mechanisms','Mechanisms and workflow dependencies','Read how a documented process is used by specific workflow steps. Required, optional and conditional dependencies refer to the proposed implementation, not a universal property of the service.'),
-        ('features','Platform features and change impact','Inspect the concrete configuration surface and trace which mechanisms, implementation profiles and outcomes depend on it. This is an index into the maintained guides, not a second competing technical guide.'),
+        ('features','Workflow features and change impact','Inspect the features used by these workflows and trace their mechanism and profile dependencies. This selected inventory is not an exhaustive service feature matrix. This is an index into the maintained guides, not a second competing technical guide.'),
         ('profiles','Implementation profiles','Select a product-specific configuration recipe after choosing the operational objective. Profile parameters and acceptance checks are authored guidance; they are not deployable AWS payloads or evidence that a live test ran.')]:
         articles=[];items=records(kind)
         for item in items:
@@ -167,3 +174,13 @@ def build_pages(catalog,guides,frame,write,*unused):
     for a in records('aliases'):migration.append('| '+a['id']+' | '+a['title']+' | '+a['disposition']+' | '+'; '.join('['+t+']('+address(t)+')' for t in a['targets'])+' |')
     write('catalog/migration.md','\n'.join(migration))
     reference_pages(catalog,guides,frame,write)
+
+def supporting_matches(key=None):
+    result=[]
+    for a in records('aliases'):
+        if not a['disposition'].startswith('Supporting'):continue
+        platform={'D':'devops','S':'security','F':'finops'}[a['id'][0]]
+        if key and key!=platform:continue
+        result.append('<li data-support-item data-platform="'+platform+'" hidden>'+esc(a['title'])+' — '+' · '.join(link(t) for t in a['targets'])+'</li>')
+    return '<aside data-supporting-matches hidden><h2>Related supporting references</h2><p>These former labels describe configuration or mechanisms, not additional primary cases.</p><ul>'+''.join(result)+'</ul></aside>'
+
