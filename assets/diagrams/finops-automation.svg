@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="531pt" height="686pt" viewBox="0.00 0.00 530.50 686.00" role="img" aria-labelledby="finops-automation-title finops-automation-desc" data-diagram="finops-automation">
+<title id="finops-automation-title">Anomaly-to-task and publication workflow</title><desc id="finops-automation-desc">A supported anomaly event matches a configured automation and creates a queued task. Result generation and destination publication are separate stages; authorization depends on action and invocation path.</desc><g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(18 668)">
+<title>G</title>
+
+<g id="node1" class="node">
+<title>monitor</title>
+<path fill="#edf5f4" stroke="#496b78" d="M330,-650C330,-650 161,-650 161,-650 155,-650 149,-644 149,-638 149,-638 149,-614 149,-614 149,-608 155,-602 161,-602 161,-602 330,-602 330,-602 336,-602 342,-608 342,-614 342,-614 342,-638 342,-638 342,-644 336,-650 330,-650" />
+<text text-anchor="middle" x="245.5" y="-629.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Cost Anomaly Detection</text>
+<text text-anchor="middle" x="245.5" y="-614.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Monitor produces event</text>
+</g>
+
+<g id="node2" class="node">
+<title>rule</title>
+<path fill="#edf5f4" stroke="#496b78" d="M360,-546C360,-546 131,-546 131,-546 125,-546 119,-540 119,-534 119,-534 119,-510 119,-510 119,-504 125,-498 131,-498 131,-498 360,-498 360,-498 366,-498 372,-504 372,-510 372,-510 372,-534 372,-534 372,-540 366,-546 360,-546" />
+<text text-anchor="middle" x="245.5" y="-525.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Managed EventBridge rule</text>
+<text text-anchor="middle" x="245.5" y="-510.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Event and permission conditions</text>
+</g>
+
+<g id="edge1" class="edge">
+<title>monitor-&gt;rule</title>
+<path fill="none" stroke="#496b78" d="M245.5,-601.85C245.5,-587.64 245.5,-569.26 245.5,-553.82" />
+<polygon fill="#496b78" stroke="#496b78" points="248.13,-553.55 245.5,-546.05 242.88,-553.55 248.13,-553.55" />
+<text text-anchor="middle" x="261.5" y="-571.2" font-family="DejaVu Sans" font-size="11.00">event</text>
+</g>
+
+<g id="node3" class="node">
+<title>automation</title>
+<path fill="#edf5f4" stroke="#496b78" d="M383,-442C383,-442 108,-442 108,-442 102,-442 96,-436 96,-430 96,-430 96,-406 96,-406 96,-400 102,-394 108,-394 108,-394 383,-394 383,-394 389,-394 395,-400 395,-406 395,-406 395,-430 395,-430 395,-436 389,-442 383,-442" />
+<text text-anchor="middle" x="245.5" y="-421.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Automation</text>
+<text text-anchor="middle" x="245.5" y="-406.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Investigation and destination definition</text>
+</g>
+
+<g id="edge2" class="edge">
+<title>rule-&gt;automation</title>
+<path fill="none" stroke="#496b78" d="M245.5,-497.85C245.5,-483.64 245.5,-465.26 245.5,-449.82" />
+<polygon fill="#496b78" stroke="#496b78" points="248.13,-449.55 245.5,-442.05 242.88,-449.55 248.13,-449.55" />
+<text text-anchor="middle" x="269.5" y="-467.2" font-family="DejaVu Sans" font-size="11.00">matches</text>
+</g>
+
+<g id="node4" class="node">
+<title>queue</title>
+<path fill="#edf5f4" stroke="#496b78" d="M325.5,-338C325.5,-338 165.5,-338 165.5,-338 159.5,-338 153.5,-332 153.5,-326 153.5,-326 153.5,-302 153.5,-302 153.5,-296 159.5,-290 165.5,-290 165.5,-290 325.5,-290 325.5,-290 331.5,-290 337.5,-296 337.5,-302 337.5,-302 337.5,-326 337.5,-326 337.5,-332 331.5,-338 325.5,-338" />
+<text text-anchor="middle" x="245.5" y="-317.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Shared task queue</text>
+<text text-anchor="middle" x="245.5" y="-302.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Distinct task execution</text>
+</g>
+
+<g id="edge3" class="edge">
+<title>automation-&gt;queue</title>
+<path fill="none" stroke="#496b78" d="M245.5,-393.85C245.5,-379.64 245.5,-361.26 245.5,-345.82" />
+<polygon fill="#496b78" stroke="#496b78" points="248.13,-345.55 245.5,-338.05 242.88,-345.55 248.13,-345.55" />
+<text text-anchor="middle" x="280" y="-363.2" font-family="DejaVu Sans" font-size="11.00">creates task</text>
+</g>
+
+<g id="node5" class="node">
+<title>analysis</title>
+<path fill="#edf5f4" stroke="#496b78" d="M366.5,-245C366.5,-245 124.5,-245 124.5,-245 118.5,-245 112.5,-239 112.5,-233 112.5,-233 112.5,-209 112.5,-209 112.5,-203 118.5,-197 124.5,-197 124.5,-197 366.5,-197 366.5,-197 372.5,-197 378.5,-203 378.5,-209 378.5,-209 378.5,-233 378.5,-233 378.5,-239 372.5,-245 366.5,-245" />
+<text text-anchor="middle" x="245.5" y="-224.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Source-backed analysis</text>
+<text text-anchor="middle" x="245.5" y="-209.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Costs, recommendations, changes</text>
+</g>
+
+<g id="edge4" class="edge">
+<title>queue-&gt;analysis</title>
+<path fill="none" stroke="#496b78" d="M245.5,-289.57C245.5,-278.33 245.5,-264.73 245.5,-252.69" />
+<polygon fill="#496b78" stroke="#496b78" points="248.13,-252.54 245.5,-245.04 242.88,-252.54 248.13,-252.54" />
+</g>
+
+<g id="node6" class="node">
+<title>result</title>
+<path fill="#edf5f4" stroke="#496b78" d="M370,-152C370,-152 121,-152 121,-152 115,-152 109,-146 109,-140 109,-140 109,-116 109,-116 109,-110 115,-104 121,-104 121,-104 370,-104 370,-104 376,-104 382,-110 382,-116 382,-116 382,-140 382,-140 382,-146 376,-152 370,-152" />
+<text text-anchor="middle" x="245.5" y="-131.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Result and artifact</text>
+<text text-anchor="middle" x="245.5" y="-116.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Evidence and unresolved questions</text>
+</g>
+
+<g id="edge5" class="edge">
+<title>analysis-&gt;result</title>
+<path fill="none" stroke="#496b78" d="M245.5,-196.57C245.5,-185.33 245.5,-171.73 245.5,-159.69" />
+<polygon fill="#496b78" stroke="#496b78" points="248.13,-159.54 245.5,-152.04 242.88,-159.54 248.13,-159.54" />
+</g>
+
+<g id="node7" class="node">
+<title>jira</title>
+<path fill="#edf5f4" stroke="#496b78" d="M219,-48C219,-48 12,-48 12,-48 6,-48 0,-42 0,-36 0,-36 0,-12 0,-12 0,-6 6,0 12,0 12,0 219,0 219,0 225,0 231,-6 231,-12 231,-12 231,-36 231,-36 231,-42 225,-48 219,-48" />
+<text text-anchor="middle" x="115.5" y="-27.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Jira publication</text>
+<text text-anchor="middle" x="115.5" y="-12.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Automation pre-authorization</text>
+</g>
+
+<g id="edge6" class="edge">
+<title>result-&gt;jira</title>
+<path fill="none" stroke="#496b78" d="M216,-103.85C196.72,-88.73 171.43,-68.88 151.04,-52.89" />
+<polygon fill="#496b78" stroke="#496b78" points="152.4,-50.62 144.88,-48.05 149.16,-54.75 152.4,-50.62" />
+<text text-anchor="middle" x="243" y="-73.2" font-family="DejaVu Sans" font-size="11.00">configured Jira action</text>
+</g>
+
+<g id="node8" class="node">
+<title>slack</title>
+<path fill="#edf5f4" stroke="#496b78" d="M482.5,-48C482.5,-48 268.5,-48 268.5,-48 262.5,-48 256.5,-42 256.5,-36 256.5,-36 256.5,-12 256.5,-12 256.5,-6 262.5,0 268.5,0 268.5,0 482.5,0 482.5,0 488.5,0 494.5,-6 494.5,-12 494.5,-12 494.5,-36 494.5,-36 494.5,-42 488.5,-48 482.5,-48" />
+<text text-anchor="middle" x="375.5" y="-27.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Slack publication</text>
+<text text-anchor="middle" x="375.5" y="-12.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">No per-action approval prompt</text>
+</g>
+
+<g id="edge7" class="edge">
+<title>result-&gt;slack</title>
+<path fill="none" stroke="#496b78" d="M278.32,-103.83C287.83,-96.94 298.17,-89.28 307.5,-82 319.18,-72.88 331.68,-62.57 342.74,-53.25" />
+<polygon fill="#496b78" stroke="#496b78" points="344.69,-55.03 348.72,-48.18 341.3,-51.03 344.69,-55.03" />
+<text text-anchor="middle" x="384.5" y="-73.2" font-family="DejaVu Sans" font-size="11.00">configured Slack action</text>
+</g>
+</g>
+</svg>
