@@ -10,7 +10,7 @@ Presentation: 60 minutes, including 8 minutes of prepared-result exercises. Ques
 
 00:00–02:00 · Product-specific resource model
 
-Read the entity kind and ownership label before following the relationship. A question mark leaves exact multiplicity unspecified; the detailed register explains each logical association.
+Shared registrations and requirement packs are separate from application-scoped configuration. An Agent Space selects sources and users. The target application and published issue retain external ownership.
 
 
 
@@ -21,7 +21,7 @@ Read the entity kind and ownership label before following the relationship. A qu
 Detailed reference: [Shared configuration, Agent Spaces and assessments](../guides/security.html#S-01)
 
 
-## 02. Resource identities and lifecycle boundaries
+## 02. Assessment configuration, run, and finding identities
 
 02:00–05:00 · Product-specific resource model
 
@@ -49,7 +49,7 @@ Detailed reference: [Assessment configurations, runs and result identities](../g
 
 05:00–08:00 · Product-specific resource model
 
-Read the entity kind and ownership label before following the relationship. A question mark leaves exact multiplicity unspecified; the detailed register explains each logical association.
+Penetration tests, full-code reviews, and threat models have reusable configurations and separate runs. A design review is a one-off assessment. Record the assessed revision and scope for each execution.
 
 
 
@@ -79,7 +79,7 @@ Detailed reference: [Supported source and collaboration integrations](../guides/
 
 10:00–12:00 · Integrations and access
 
-Account-level registration authorizes a provider; application-level selection supplies resources. Repository writes and Jira effects require their own settings.
+Register the provider, grant its required permissions, and select application resources. Repository comments, remediation proposals, and Jira publication are separate configured operations.
 
 
 
@@ -88,6 +88,8 @@ Provider family | Documented support | Selection or effect
 GitHub | Cloud-hosted GitHub and Enterprise; self-hosted Enterprise Server | Select application repositories; private servers may require private connectivity.
 
 GitLab and Bitbucket | GitLab cloud and Self-Managed; Bitbucket Cloud | Provider-specific repository context and eligible review/remediation settings.
+
+Azure DevOps | Git repositories; TFVC unsupported | Entra authorization, organization permissions, repository selection; writes configured separately.
 
 Documentation | Confluence Cloud | Selected pages provide read-only application context.
 
@@ -201,7 +203,7 @@ Detailed reference: [Login-workflow retention and reuse](../guides/security.html
 Detailed reference: [Finding review and code remediation](../guides/security.html#S-05)
 
 
-## 10. Login optimization
+## 10. Login Optimization and retained authentication procedures
 
 21:00–23:00 · Knowledge and behavior
 
@@ -462,7 +464,7 @@ Detailed reference: [Finding revalidation and evidence lineage](../guides/securi
 
 47:00–50:00 · Operational objectives and implementation
 
-Read the entity kind and ownership label before following the relationship. A question mark leaves exact multiplicity unspecified; the detailed register explains each logical association.
+Preserve the original finding identity through proposal, deployment, and revalidation. The documentation-defined result association records the outcome of a particular revalidation job; it is not an additional AWS API resource.
 
 
 
