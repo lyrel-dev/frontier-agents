@@ -21,28 +21,28 @@ Read the entity kind and ownership label before following the relationship. A qu
 Detailed reference: [Agent instance, access roles and retained state](../guides/finops.html#F-01)
 
 
-## 02. Product functions and agent instance resource model
+## 02. Resource identities and lifecycle boundaries
 
 02:00–05:00 · Product-specific resource model
 
-Agent configuration, source evidence, queued work and publication effects are separate layers.
+Identify the actual product object before configuring, invoking, correcting or removing it. The resource kind determines which operation is meaningful.
 
 
 
-Layer | Primary objects | Purpose | Evidence
+Object | Identity or membership | Lifecycle distinction
 
-Access | Administrator, agent role, operator role and user permission | Separate configuration, data and daily-use authority | Role ARN, policy and successful sign-in
+Agent instance | finops-agent AgentSpace actions and agentspace ARN | Service-specific scope; not a DevOps resource
 
-Context | Reference files, memory and conversation | Supply organizational facts and preferences | File state, remembered item and current conversation
+Integration / connection | Account registration / instance destination binding | Authorization and destination selection differ
 
-Work | On-demand task, schedule or event automation | Create queued execution | Task and automation records
+Conversation / task | Interaction / separately recorded execution | A direct answer need not create a task
 
-Data sources | Cost, recommendation, anomaly and change APIs | Supply source evidence | Query filters and source provenance
+Automation | Rule that creates future tasks | Deleting a rule does not delete existing work
 
-Outputs | Answer, report artifact, Jira issue or Slack post | Deliver reviewable result | Artifact and destination history
+File / memory / artifact | Reference input / retained context / output | Each has its own update and removal behavior
 
 
-Detailed reference: [Agent instance, access roles and retained state](../guides/finops.html#F-01)
+Detailed reference: [Conversations, automations, tasks and artifacts](../guides/finops.html#F-09)
 
 
 ## 03. Conversations, automations, tasks and artifacts
