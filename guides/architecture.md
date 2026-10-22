@@ -132,7 +132,7 @@ These mechanisms are documented separately in the canonical guides: D-M01, D-M02
 
 **Engineering verification:** separate five questions: was relevant input available, was retained content produced, was it accessible to this execution, was its use observable, and was the resulting conclusion correct? The final answer alone cannot resolve all five.
 
-
+Security Agent also documents Findings Personalization. It reuses eligible edits from the most recent completed penetration-test run to adjust similar later findings, provided the feature was enabled when the test started. This is a different producer, retained preference and effect from Login Optimization. The latter reuses authentication navigation; personalization changes finding attributes. Disabling personalization preserves the learned preferences while displaying raw findings. Neither behavior proves that an application defect was repaired. The detailed mechanism is [Finding-edit personalization](../guides/security.html#MX-S-PERSONALIZE). [AS401]
 
 ## 02. Integration and authorization boundaries
 
@@ -349,3 +349,4 @@ The public sources do not justify specifying a shared vector database, embedding
 [AS52]: https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html
 
 [AS53]: https://docs.aws.amazon.com/finops-agent/latest/userguide/setting-up.html
+[AS401]: https://docs.aws.amazon.com/securityagent/latest/userguide/review-penetration-findings.html
