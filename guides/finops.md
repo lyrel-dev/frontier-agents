@@ -1,20 +1,16 @@
 # AWS FinOps Agent
 
-Architecture, cost-data sources, organizational context, and task execution
+Cost-data access, retained context, tasks, and report artifacts
 
-AWS FinOps Agent is documented as a preview service for cost inquiry, anomaly investigation, reporting, and the interpretation of upstream optimization recommendations. Its work begins with a defined comparison: the accounts, dates, cost basis, and dimensions under consideration. It combines authorized source results with the organization’s uploaded context and retained preferences, then produces an answer, a task result, or a report. [FS01]
+AWS FinOps Agent is documented as a preview service for cost queries, anomaly investigation, reporting, and interpretation of recommendations from AWS optimization services. Analysis depends on the accounts, dates, cost metric, filters, and grouping supplied to authorized source services. The instance retains context, conversations, tasks, and report artifacts. [FS01]
 
-This guide follows that sequence. It explains the instance and permissions first, identifies the supported data and collaboration integrations, and then separates reference files, persistent memory, and conversation summarization. The task chapter follows a scheduled or event-driven request into the queue and through publication. The worked example distinguishes a numerical cost contribution from evidence of an operational cause.
+The guide separates source permissions from operator access and publication connections. It then explains uploaded files, persistent memory, conversation summarization, task execution, and data lifecycle. The cost example reconciles the numerical change before assessing operational evidence. The reviewed preview stores agent data in us-east-1; inference can use other US Regions. [FS08] [FS09]
 
-During the reviewed preview, agent data is stored in us-east-1 and inference can use other US Regions; those are different boundaries. Diagrams are logical service models. Examples and proposed checks are not live account results, purchase authorizations, or measured savings. [FS08] [FS09]
-
-
+**Reading conventions.** Product statements link to official AWS documentation. Configuration recommendations and verification procedures are team guidance; the proposed tests and synthetic examples have not been executed against AWS. Lifecycle tables describe service behavior and operator actions, not an API status enumeration unless explicitly cited. DOC (blue), AWS (green), and EXT (orange) identify concept ownership. Source-review dates and qualifications are recorded in the source registers.
 
 ## 01. Resource model and scope
 
 Begin with the product-specific entities, their scope and their relationships. Configuration, executions, knowledge and external evidence are distinct objects with different lifecycles.
-
-
 
 ### F-01 — Agent instance, access roles and retained state
 
@@ -31,8 +27,6 @@ Work starts either as a conversation or as a task. A direct conversation can ans
 Retained files and memory supply context to the execution runtime. They survive differently from session state, and conversation compaction has a different purpose again. The context chapter follows these distinct representations rather than treating them as one mutable knowledge store. [FS53] [FS54]
 
 Green boxes identify AWS-defined concepts and cross-service dependencies such as IAM roles. Blue identifies our normalized groupings, including the evidence family used to discuss cost queries, anomalies and recommendations together. Those upstream results have different source identities; they are not one native FinOps Evidence resource. The [resource index](../catalog/resource-models.html#model-finops) makes this distinction explicit before the guide applies the model to reporting and anomaly investigation.
-
-
 
 ### F-09 — Conversations, automations, tasks and artifacts
 
@@ -59,13 +53,9 @@ Publication also depends on invocation mode. Jira actions requested interactivel
 
 The model establishes relationships the reader can reason about; it does not provision them. The [feature/resource crosswalk](../catalog/resource-models.html#model-finops) links each approved feature reference to the actual instance, connection, task or context object and its supporting documentation.
 
-
-
 ## 02. Cost-data sources and collaboration connections
 
 A cost conclusion depends on its source data and query basis. Collaboration destinations add a separate publication path with its own authorization and lifecycle.
-
-
 
 ### F-08 — Supported data sources and publication destinations
 
@@ -90,8 +80,6 @@ Jira and Slack each use an account-level registration plus a connection owned by
 
 Test the paths separately. First reproduce a small cost query with known dates and dimensions. Then inspect a recommendation from its upstream source. Finally publish a non-sensitive test result to the intended destination and inspect where it arrived. A failed Slack post is not repaired by widening cost-data access. A missing CloudTrail event does not invalidate arithmetic that was reproduced independently, but it does limit the causal explanation.
 
-
-
 ### F-02 — Administrator, service, and operator permissions
 
 FinOps setup separates the person who administers the service, the identity used for data access, and the people who use the web application. A successful setup performed by an administrator does not prove that a regular operator can enter the agent or that the agent can read every required cost source.
@@ -111,13 +99,9 @@ The setup path uses roles trusted by `finops-agent.amazonaws.com`. Automatically
 
 **Dependency review:** enable the cost/recommendation services required for the selected task and inspect whether the role permits the relevant APIs. For example, missing `cloudtrail:LookupEvents` removes an operational-change input without necessarily disabling Cost Explorer questions. Removing write access to customer infrastructure does not mean that Jira/Slack publishing is disabled; those effects follow separate integration rules. [FS03] [FS06]
 
-
-
 ### F-M01 — Cost queries and recommendation provenance
 
-A cost question becomes a set of data queries with a specific comparison basis. The returned amounts, recommendations, and change records then support different conclusions. Reproducing the amount is the first step; explaining its cause requires additional evidence.
-
-The agent translates an inquiry into supported data-source calls, interprets returned evidence using the instance's context, and generates a response or artifact. Cost Explorer totals, anomaly events, recommendation records and CloudTrail change records answer different questions. [FS01] [FS03]
+Historical amounts, forecasts, anomalies, and recommendations are different source results. Define the query parameters before comparing them. [FS01] [FS03]
 
 | Evidence | Establishes | Does not establish by itself |
 |---|---|---|
@@ -126,7 +110,7 @@ The agent translates an inquiry into supported data-source calls, interprets ret
 | Recommendation source | An upstream optimization candidate and its assumptions | Realized saving or authorization to apply it |
 | Operational event | A recorded change at a time | That the change caused the entire cost movement |
 
-The right procedure is to reproduce the numerical result first, then evaluate the explanation. Fix the time window, cost metric, granularity, filters, currency and relevant allocation assumptions. Require the response to identify unavailable sources instead of filling their absence with a causal story. These comparison rules are engineering guidance, not a new query mode. [FS06]
+To verify the result, reproduce the numerical result first, then evaluate the explanation. Fix the time window, cost metric, granularity, filters, currency and relevant allocation assumptions. Require the response to identify unavailable sources instead of filling their absence with a causal story. These comparison rules are engineering guidance, not a new query mode. [FS06]
 
 **Read-only query example:**
 
@@ -143,49 +127,43 @@ The end date is exclusive. This example deliberately has no account, Region or t
 
 #### MX-F-QUERY — Source-backed cost analysis
 
-**Classification:** Source-backed analytical workflow. **Inputs:** Question, dates, cost metric, scope, dimensions, currency and permissions to the relevant source service.
-
 The agent queries the service that owns the requested evidence. Historical cost, forecasts, commitment coverage, anomaly records, optimization recommendations and change events are different inputs. Combining them in one conversation does not turn projected savings into observed spend. [FS401] [FS407]
 
 The analytical result must preserve the query basis. First reconcile amounts, then examine operational evidence for an explanation. A nearby change event is a lead; numerical contribution and causal attribution remain different claims. [FS401] [FS407]
 
-**Configuration and enablement**
+**Inputs.** Question, dates, cost metric, scope, dimensions, currency and permissions to the relevant source service.
 
-1. **Source.** Enable required upstream services and inspect the agent data role. Applies to: Permitted source evidence.
-2. **Query.** State complete periods, metric, filters and grouping. Applies to: Explicit analytical basis.
-3. **Interpretation.** Identify which source supplied a forecast, anomaly or recommendation. Applies to: Provenance of the returned value.
+**Configuration**
+
+1. **Source — Permitted source evidence.** Enable required upstream services and inspect the agent data role.
+2. **Query — Explicit analytical basis.** State complete periods, metric, filters and grouping.
+3. **Interpretation — Provenance of the returned value.** Identify which source supplied a forecast, anomaly or recommendation.
 
 [FS401] [FS407]
 
-**Lifecycle and state changes**
+**Lifecycle and operator actions**
 
-The rows describe documented consequences and logical stages; they are not an invented SDK status enumeration.
-
-| Starting condition | Operation or event | Consequence |
+| Initial condition | Operation or event | Result |
 |---|---|---|
 | Question submitted | Query upstream service | Source result or access failure returned. |
 | Scope changed | Run a new query | New result is not comparable unless the basis is reconciled. |
 | Recommendation retrieved | Contextualize for owner review | No infrastructure change is authorized by retrieval. |
 
-[FS401] [FS407]
+**Constraints.** The service summarizes recommendations from optimization services; it does not independently calculate its own underlying optimization analysis.
 
-**Controls.** The service summarizes recommendations from optimization services; it does not independently calculate its own underlying optimization analysis.
+**Inspection points.** Returned figures, query basis and source/tool evidence.
 
-**Observable output.** Returned figures, query basis and source/tool evidence.
+**Implementation limits.** The source guides do not specify the query-planning algorithm. Queries with different dates, metrics or filters are not directly comparable.
 
-**Not established by the reviewed sources.** Complete inference logic, causal accuracy and guaranteed agreement with differently scoped console queries are not established.
+**Verification procedure (proposed)**
 
-**Proposed verification — not executed**
-
-1. Use the supplied synthetic cost fixture or a harmless read-only account query.
+1. Use the supplied synthetic cost fixture or a read-only query in an authorized account.
 2. Reconcile components to the total under identical periods and metric.
 3. Change metric or period deliberately; identify why the totals are not comparable.
 
-The verification procedure is authored engineering guidance. A failed or unobservable check must remain unresolved; no live AWS outcome is represented here.
+**Source mapping**
 
-**Official evidence for the product assertions**
-
-| Reference | Reviewed section | Supported assertion |
+| Reference | Documentation section | Supported behavior |
 |---|---|---|
 | [FS401] | Related services | Cost Explorer, anomaly detection, optimization services and CloudTrail supply distinct evidence. |
 | [FS407] | Generative AI accuracy considerations | Recommendations are upstream analysis; anomaly causality remains investigative. |
@@ -207,13 +185,9 @@ Register the integration, complete authorization, then add the agent-specific co
 
 **Engineering procedure:** use designated test destinations, post a non-sensitive test result and record its actual location. Confirm that only the intended users can see it. API retries described in the integration guide address transient failures; they do not turn a permission or invalid-destination error into a successful publication.
 
-
-
 ## 03. Organizational knowledge and session context
 
 Uploaded mappings, retained preferences, and summarized conversations are different representations of organizational context. The operator must know which representation to correct.
-
-
 
 ### F-M02 — Context-file preparation and management
 
@@ -241,51 +215,45 @@ Use the identifiers actually available in your authorized queries; this alias is
 
 #### MX-F-FILES — Uploaded reference-file use
 
-**Classification:** Reference-file loading mechanism. **Inputs:** Approved non-sensitive organization mapping or report convention in a supported active file.
-
 Uploaded context is maintained outside the conversation. The agent can read the file but cannot rewrite or delete it by conversational instruction. A request to forget a preference therefore does not modify a conflicting account-owner mapping in an uploaded file. [FS402] [FS403]
 
 Soft deletion removes a file from active context and Restore makes it active again. This is a documented reversible lifecycle for files, not a claim that every other retained object supports restoration. [FS402] [FS403]
 
+**Inputs.** Approved non-sensitive organization mapping or report convention in a supported active file.
+
 ![Uploaded reference-file use: state and control paths](../assets/diagrams/mechanism-finops-context.svg)
 
-**Configuration and enablement**
+**Configuration**
 
-1. **Upload.** Context files workspace: upload TXT, CSV, JSON, Markdown, HTML or YAML within documented size limits. Applies to: Instance-visible reference.
-2. **Maintain.** Update the governed source and intentionally replace the active uploaded representation. Applies to: Team-managed content.
-3. **Deactivate/restore.** Delete soft-deletes; Restore reactivates. Applies to: File availability.
+1. **Upload — Instance-visible reference.** Context files workspace: upload TXT, CSV, JSON, Markdown, HTML or YAML within documented size limits.
+2. **Maintain — Team-managed content.** Update the governed source and intentionally replace the active uploaded representation.
+3. **Deactivate/restore — File availability.** Delete soft-deletes; Restore reactivates.
 
 [FS402] [FS403]
 
-**Lifecycle and state changes**
+**Lifecycle and operator actions**
 
-The rows describe documented consequences and logical stages; they are not an invented SDK status enumeration.
-
-| Starting condition | Operation or event | Consequence |
+| Initial condition | Operation or event | Result |
 |---|---|---|
 | Active file | Delete | Soft-deleted; removed from active context. |
 | Soft-deleted file | Restore | Available again. |
 | Similar fact retained in memory | Edit file | Memory is a separate representation and may need separate correction. |
 
-[FS402] [FS403]
+**Constraints.** Files are visible to users with access to the agent. Do not upload credentials or sensitive personal information.
 
-**Controls.** Files are visible to users with access to the agent. Do not upload credentials or sensitive personal information.
+**Inspection points.** File state and correct application of a known identifier mapping.
 
-**Observable output.** File state and correct application of a known identifier mapping.
+**Implementation limits.** File-versus-memory precedence and exact internal retrieval ranking are not specified.
 
-**Not established by the reviewed sources.** File-versus-memory precedence and exact internal retrieval ranking are not specified.
-
-**Proposed verification — not executed**
+**Verification procedure (proposed)**
 
 1. Upload a harmless mapping for a fictitious account label.
 2. Ask a question requiring that mapping and inspect attribution.
 3. Soft-delete it and test again; restoring the file is distinct from remembering a new preference.
 
-The verification procedure is authored engineering guidance. A failed or unobservable check must remain unresolved; no live AWS outcome is represented here.
+**Source mapping**
 
-**Official evidence for the product assertions**
-
-| Reference | Reviewed section | Supported assertion |
+| Reference | Documentation section | Supported behavior |
 |---|---|---|
 | [FS402] | Supported file types; Manage context files | Files are agent-read-only, size-limited and support soft deletion/restoration. |
 | [FS403] | Managing your data | File removal and other object lifecycles differ. |
@@ -308,49 +276,43 @@ Recovery is object-specific. A soft-deleted context file can be restored through
 
 #### MX-F-MEMORY — Cross-session preference retention
 
-**Classification:** Cross-session retained-context mechanism. **Inputs:** Preference or correction supplied through conversation; instance-local persistent memory.
-
 Conversational memory retains preferences and corrections for later work in the same instance. It is not the current conversation transcript and is not an uploaded file. An explicit remember, update or forget instruction targets this retained representation. [FS402] [FS403]
 
 Test it across sessions rather than immediately repeating the fact in the same conversation. Also inspect whether an active reference file supplies the same information; otherwise successful file use can be mistaken for memory recall. [FS402] [FS403]
 
-**Configuration and enablement**
+**Inputs.** Conversation preferences, corrections, task outcomes, and explicit requests to remember, update or forget information within the instance.
 
-1. **Write/update.** Ask the agent to remember or update one non-sensitive preference. Applies to: Persistent conversational context.
-2. **Remove.** Ask it to forget the specific retained fact. Applies to: Memory update, not history deletion.
-3. **Verify.** Use a later session without restating the test fact. Applies to: Cross-session behavior.
+**Configuration**
+
+1. **Write/update — Persistent conversational context.** Ask the agent to remember or update one non-sensitive preference.
+2. **Remove — Memory update, not history deletion.** Ask it to forget the specific retained fact.
+3. **Verify — Cross-session behavior.** Use a later session without restating the test fact.
 
 [FS402] [FS403]
 
-**Lifecycle and state changes**
+**Lifecycle and operator actions**
 
-The rows describe documented consequences and logical stages; they are not an invented SDK status enumeration.
-
-| Starting condition | Operation or event | Consequence |
+| Initial condition | Operation or event | Result |
 |---|---|---|
 | Preference supplied | Remember/update | Retained context can influence later work. |
 | Preference retained | Forget | Memory is updated in place. |
 | Session ends | Start later session | Persistent instance data is separate from ephemeral runtime. |
 
-[FS402] [FS403]
+**Constraints.** Each instance isolates its retained content; no shared organization-wide memory is inferred.
 
-**Controls.** Each instance isolates its retained content; no shared organization-wide memory is inferred.
+**Inspection points.** Observed later use of a controlled fact, qualified when no direct memory-inspection evidence is exposed.
 
-**Observable output.** Observed later use of a controlled fact, qualified when no direct memory-inspection evidence is exposed.
+**Implementation limits.** Internal schema, selection precedence and complete deletion of historical conversation occurrences are not established by a forget request.
 
-**Not established by the reviewed sources.** Internal schema, selection precedence and complete deletion of historical conversation occurrences are not established by a forget request.
-
-**Proposed verification — not executed**
+**Verification procedure (proposed)**
 
 1. Use a fictitious reporting preference absent from uploaded files.
 2. Test a later session, then change the preference and test again.
 3. Forget it; do not claim that earlier reports or conversation history were erased.
 
-The verification procedure is authored engineering guidance. A failed or unobservable check must remain unresolved; no live AWS outcome is represented here.
+**Source mapping**
 
-**Official evidence for the product assertions**
-
-| Reference | Reviewed section | Supported assertion |
+| Reference | Documentation section | Supported behavior |
 |---|---|---|
 | [FS402] | Agent memory across sessions | Remember, update and forget govern retained preferences/corrections. |
 | [FS403] | Data isolation; Managing your data | Instance isolation and memory updates differ from conversation retention. |
@@ -369,48 +331,42 @@ As a conversation approaches its context limit, older messages are summarized wh
 
 #### MX-F-COMPACT — Conversation compaction
 
-**Classification:** Session-context compaction mechanism. **Inputs:** Growing conversation approaching the model context window.
-
 Compaction changes the context supplied to continued conversation. Older material is summarized while recent messages remain in full. It preserves a working representation of key decisions, not a verbatim copy of every earlier turn. [FS402]
 
 Keep a material cost question explicit after a long exchange: period, metric, filters and unresolved assumptions. Restating those choices is an engineering safeguard, not a control that changes the undocumented compaction algorithm. [FS402]
 
-**Configuration and enablement**
+**Inputs.** Growing conversation approaching the model context window.
 
-1. **Enablement.** Automatic; no administrator threshold or manual compaction switch is established by the cited guide. Applies to: Service-managed context handling.
-2. **Operational practice.** Restate critical query constraints and reference authoritative outputs. Applies to: Team verification procedure.
+**Configuration**
+
+1. **Enablement — Service-managed context handling.** Automatic; no administrator threshold or manual compaction switch is established by the cited guide.
+2. **Operational practice — Team verification procedure.** Restate critical query constraints and reference authoritative outputs.
 
 [FS402]
 
-**Lifecycle and state changes**
+**Lifecycle and operator actions**
 
-The rows describe documented consequences and logical stages; they are not an invented SDK status enumeration.
-
-| Starting condition | Operation or event | Consequence |
+| Initial condition | Operation or event | Result |
 |---|---|---|
 | Context grows | Approaches context limit | Older portions summarized. |
 | Compacted context | Conversation continues | Recent messages and summary guide subsequent work. |
 | Detail missing | Reconstruct from authoritative record | Do not infer verbatim recall from a fluent answer. |
 
-[FS402]
+**Constraints.** Compaction is not durable preference management or deletion of stored conversation history.
 
-**Controls.** Compaction is not durable preference management or deletion of stored conversation history.
+**Inspection points.** Continued conversation and the constraints it actually applies; a direct compaction event may not be exposed.
 
-**Observable output.** Continued conversation and the constraints it actually applies; a direct compaction event may not be exposed.
+**Implementation limits.** Thresholds, summary-selection rules and lossless retention are not documented.
 
-**Not established by the reviewed sources.** Thresholds, summary-selection rules and lossless retention are not documented.
-
-**Proposed verification — not executed**
+**Verification procedure (proposed)**
 
 1. Use a non-sensitive long conversation with a recorded query contract.
 2. Check whether later analysis retains the period and metric.
 3. Where detail is missing, restore it explicitly and label compaction itself unobserved if no service signal exists.
 
-The verification procedure is authored engineering guidance. A failed or unobservable check must remain unresolved; no live AWS outcome is represented here.
+**Source mapping**
 
-**Official evidence for the product assertions**
-
-| Reference | Reviewed section | Supported assertion |
+| Reference | Documentation section | Supported behavior |
 |---|---|---|
 | [FS402] | Long conversation handling | Automatic summarization replaces older context while recent messages remain in full. |
 
@@ -419,8 +375,6 @@ The verification procedure is authored engineering guidance. A failed or unobser
 ## 04. Tasks, reporting, and data lifecycle
 
 Requests and automations create executions; executions produce results and artifacts. This chapter follows that sequence through publication and the supported retention controls.
-
-
 
 ### F-03 — Tasks, schedules, and execution history
 
@@ -436,99 +390,86 @@ A task is an execution record. An automation is a rule for creating future tasks
 
 #### MX-F-TASK — Queued task execution and observation
 
-**Classification:** Explicit request-to-task mechanism. **Inputs:** Explicit task request or automation invocation, prompt and permitted data/context.
-
 An ordinary question can be answered in the conversation. A task is created when explicitly requested or through an automation. The task has its own queue position, execution and output, so a chat acknowledgement is not completion evidence. [FS404] [FS403]
 
 All documented task types share a queue. Inspect whether work was never created, remains queued, failed during analysis or completed but failed to publish. Those failures require different actions. [FS404] [FS403]
 
-**Configuration and enablement**
+**Inputs.** Explicit task request or automation invocation, prompt and permitted data/context.
 
-1. **Create.** Ask explicitly to create a task, or Tasks → Create tasks. Applies to: Separate execution record.
-2. **Observe.** Inspect Tasks/history and actual tool results. Applies to: Work status and evidence.
-3. **Stop.** Use supported cancellation for current work; control recurring automation separately. Applies to: Execution versus definition.
+**Configuration**
+
+1. **Create — Separate execution record.** Ask explicitly to create a task, or Tasks → Create tasks.
+2. **Observe — Work status and evidence.** Inspect Tasks/history and actual tool results.
+3. **Stop — Execution versus definition.** Use supported cancellation for current work; control recurring automation separately.
 
 [FS404] [FS403]
 
-**Lifecycle and state changes**
+**Lifecycle and operator actions**
 
-The rows describe documented consequences and logical stages; they are not an invented SDK status enumeration.
-
-| Starting condition | Operation or event | Consequence |
+| Initial condition | Operation or event | Result |
 |---|---|---|
 | Task requested | Create record | Work enters the shared queue. |
 | Queued work | Execute | Tool results and output accumulate. |
 | Task cancelled | Inspect retained record | Cancellation does not delete task history. |
 
-[FS404] [FS403]
+**Constraints.** Cancelling work is not rollback of prior external publication.
 
-**Controls.** Cancelling work is not rollback of prior external publication.
+**Inspection points.** Task identity, execution status, source calls, outputs and separate delivery outcome.
 
-**Observable output.** Task identity, execution status, source calls, outputs and separate delivery outcome.
+**Implementation limits.** Queue order, fairness, exactly-once processing and guaranteed cancellation of every in-flight action are not specified.
 
-**Not established by the reviewed sources.** Queue order, fairness, exactly-once processing and guaranteed cancellation of every in-flight action are not specified.
+**Verification procedure (proposed)**
 
-**Proposed verification — not executed**
-
-1. Create a harmless report task with an explicit date range.
+1. Create a report task using non-sensitive inputs with an explicit date range.
 2. Trace its identity from request to resulting output.
 3. Cancel controlled work and distinguish preserved history from a deleted task.
 
-The verification procedure is authored engineering guidance. A failed or unobservable check must remain unresolved; no live AWS outcome is represented here.
+**Source mapping**
 
-**Official evidence for the product assertions**
-
-| Reference | Reviewed section | Supported assertion |
+| Reference | Documentation section | Supported behavior |
 |---|---|---|
 | [FS404] | On-demand tasks | Tasks are explicit and run through a shared queue rather than blocking the conversation. |
 | [FS403] | Managing your data | Cancellation and record removal are different lifecycle operations. |
 
-
 #### MX-F-SCHEDULE — Scheduled task creation
-
-**Classification:** Automation-to-task mechanism. **Inputs:** Recurring prompt, explicit schedule and timezone, observation-window rule and optional destination.
 
 A recurring request creates an automation. Each eligible occurrence creates separate work; the automation is not the historical report. Keep the schedule and reporting basis distinct so a delayed task still queries the intended complete period. [FS404] [FS403]
 
 Disabling an automation controls future starts. Existing tasks and distributed artifacts retain their own lifecycle. When replacing recurring work, inspect old automations to avoid running both definitions unintentionally. [FS404] [FS403]
 
-**Configuration and enablement**
+**Inputs.** Recurring prompt, explicit schedule and timezone, observation-window rule and optional destination.
 
-1. **Create.** Describe the recurring work and schedule in conversation. Applies to: Saved automation.
-2. **Inspect.** Open Automations and confirm the actual saved schedule and prompt. Applies to: Configuration confirmation.
-3. **Disable/delete.** Stop future occurrences through the automation control. Applies to: Not cancellation/deletion of prior tasks.
+**Configuration**
+
+1. **Create — Saved automation.** Describe the recurring work and schedule in conversation.
+2. **Inspect — Configuration confirmation.** Open Automations and confirm the actual saved schedule and prompt.
+3. **Disable/delete — Not cancellation/deletion of prior tasks.** Stop future occurrences through the automation control.
 
 [FS404] [FS403]
 
-**Lifecycle and state changes**
+**Lifecycle and operator actions**
 
-The rows describe documented consequences and logical stages; they are not an invented SDK status enumeration.
-
-| Starting condition | Operation or event | Consequence |
+| Initial condition | Operation or event | Result |
 |---|---|---|
 | Automation active | Scheduled occurrence | A new task is created. |
 | Automation active | Disable | Future starts stop. |
 | Automation deleted | Inspect existing tasks/artifacts | Historical work remains independently retained. |
 
-[FS404] [FS403]
+**Constraints.** Unattended publication has destination-specific authorization; recurrence is not a universal approval bypass for unrelated actions.
 
-**Controls.** Unattended publication has destination-specific authorization; recurrence is not a universal approval bypass for unrelated actions.
+**Inspection points.** Automation configuration and individual task histories with their queried periods.
 
-**Observable output.** Automation configuration and individual task histories with their queried periods.
+**Implementation limits.** Exact missed-run and timezone-resolution behavior must be inspected; the guide does not establish a universal timing SLA.
 
-**Not established by the reviewed sources.** Exact missed-run and timezone-resolution behavior must be inspected; the guide does not establish a universal timing SLA.
-
-**Proposed verification — not executed**
+**Verification procedure (proposed)**
 
 1. Create a non-sensitive recurring report only after an on-demand trial.
 2. Inspect saved timing and the first task observation window.
 3. Disable the automation and confirm future creation stops without assuming prior artifacts disappear.
 
-The verification procedure is authored engineering guidance. A failed or unobservable check must remain unresolved; no live AWS outcome is represented here.
+**Source mapping**
 
-**Official evidence for the product assertions**
-
-| Reference | Reviewed section | Supported assertion |
+| Reference | Documentation section | Supported behavior |
 |---|---|---|
 | [FS404] | Scheduled tasks | Schedules create automations and new tasks; disabling/deleting stops recurring work. |
 | [FS403] | Managing your data | Automations and task records have distinct lifecycles. |
@@ -557,51 +498,45 @@ AWS's IAM examples constrain rule management using service ownership and account
 
 #### MX-F-EVENT — Anomaly-event matching and task creation
 
-**Classification:** Anomaly-event matching mechanism. **Inputs:** Cost Anomaly Detection monitor, required managed EventBridge permissions, condition, response prompt and optional destination.
-
 The event path begins in Cost Anomaly Detection. The service creates a managed rule, matches the configured condition and creates a task using the saved prompt. Analysis and delivery occur after task creation; they are not evidence that matching itself was correct. [FS405] [FS404]
 
 Trace the chain one object at a time. A monitor event with no task points toward rule or condition configuration. A completed analysis with no message points toward destination publication. Changing the analytical prompt does not repair an absent event subscription. [FS405] [FS404]
 
+**Inputs.** Cost Anomaly Detection monitor, required managed EventBridge permissions, condition, response prompt and optional destination.
+
 ![Anomaly-event matching and task creation: state and control paths](../assets/diagrams/mechanism-finops-publication.svg)
 
-**Configuration and enablement**
+**Configuration**
 
-1. **Prerequisites.** Configure a monitor and the agent-role EventBridge permissions. Applies to: Event source and managed-rule authority.
-2. **Automation.** Describe monitor/scope, threshold and desired response in Chat. Applies to: COST_ANOMALY trigger and prompt.
-3. **Verification.** Inspect automation status, last-triggered information, created task and destination result. Applies to: End-to-end observation.
+1. **Prerequisites — Event source and managed-rule authority.** Configure a monitor and the agent-role EventBridge permissions.
+2. **Automation — COST_ANOMALY trigger and prompt.** Describe monitor/scope, threshold and desired response in Chat.
+3. **Verification — End-to-end observation.** Inspect automation status, last-triggered information, created task and destination result.
 
 [FS405] [FS404]
 
-**Lifecycle and state changes**
+**Lifecycle and operator actions**
 
-The rows describe documented consequences and logical stages; they are not an invented SDK status enumeration.
-
-| Starting condition | Operation or event | Consequence |
+| Initial condition | Operation or event | Result |
 |---|---|---|
 | Matching event arrives | Automation matches | Task created in the queue. |
 | Task completes | Optional publication | Delivery has its own outcome. |
 | Automation disabled/deleted | Future event arrives | No future task from that automation; old records remain. |
 
-[FS405] [FS404]
+**Constraints.** The documented preview event source is Cost Anomaly Detection, not arbitrary events. External publication requires its configured destination.
 
-**Controls.** The documented preview event source is Cost Anomaly Detection, not arbitrary events. External publication requires its configured destination.
+**Inspection points.** Monitor/event identity, automation, task, source analysis and any actual message.
 
-**Observable output.** Monitor/event identity, automation, task, source analysis and any actual message.
+**Implementation limits.** Event deduplication keys, ordering and universal delivery/retry guarantees are not established.
 
-**Not established by the reviewed sources.** Event deduplication keys, ordering and universal delivery/retry guarantees are not established.
-
-**Proposed verification — not executed**
+**Verification procedure (proposed)**
 
 1. Use a controlled event fixture for tabletop tracing; do not manufacture production spend.
 2. Verify all chain identities against available service records during an authorized test.
 3. A missing message must be localized to absent task, failed analysis or failed delivery rather than reported as one undifferentiated error.
 
-The verification procedure is authored engineering guidance. A failed or unobservable check must remain unresolved; no live AWS outcome is represented here.
+**Source mapping**
 
-**Official evidence for the product assertions**
-
-| Reference | Reviewed section | Supported assertion |
+| Reference | Documentation section | Supported behavior |
 |---|---|---|
 | [FS405] | Prerequisites; Verify and manage the automation | Monitor, managed-rule permissions and saved condition create a traceable automation/task path. |
 | [FS404] | Event-based tasks | The supported preview trigger is a cost-anomaly event. |
@@ -622,49 +557,43 @@ The artifact store has a separate default quota from context-file storage. Delet
 
 #### MX-F-ARTIFACT — Report generation and revision
 
-**Classification:** Analysis-to-artifact mechanism. **Inputs:** Reviewed cost query/results, report instructions, output format and optional sample template.
-
 Report generation retrieves source data, builds the requested presentation and returns an artifact. A visual quality pass concerns presentation defects; it is not an independent reconciliation of the underlying financial interpretation. [FS406] [FS403]
 
 A follow-up can revise the artifact. Keep the analytical basis explicit when revising it: changing a title or chart layout should not silently change period, cost metric or grouping. [FS406] [FS403]
 
-**Configuration and enablement**
+**Inputs.** Cost-report request, authorized source access, query parameters, output format and optional report template.
 
-1. **Request.** Specify report audience, source period, metric, required sections and supported format; default is HTML. Applies to: Artifact instruction.
-2. **Inspect.** Open/download from Artifacts and compare figures to source results. Applies to: Output review.
-3. **Revise.** Reference the existing report in a follow-up and state whether the query basis may change. Applies to: Revision intent.
+**Configuration**
+
+1. **Request — Artifact instruction.** Specify report audience, source period, metric, required sections and supported format; default is HTML.
+2. **Inspect — Output review.** Open/download from Artifacts and compare figures to source results.
+3. **Revise — Revision intent.** Reference the existing report in a follow-up and state whether the query basis may change.
 
 [FS406] [FS403]
 
-**Lifecycle and state changes**
+**Lifecycle and operator actions**
 
-The rows describe documented consequences and logical stages; they are not an invented SDK status enumeration.
-
-| Starting condition | Operation or event | Consequence |
+| Initial condition | Operation or event | Result |
 |---|---|---|
 | Analysis available | Generate report | Artifact delivered. |
 | Artifact exists | Request revision | Updated presentation can be produced. |
 | Service artifact removed | External copies remain | Downloaded or published copies require separate handling. |
 
-[FS406] [FS403]
+**Constraints.** Formatting and completion status do not establish numerical accuracy; distribution is a separate effect.
 
-**Controls.** Formatting and completion status do not establish numerical accuracy; distribution is a separate effect.
+**Inspection points.** Report artifact and its source conversation or task. Record the query parameters and output identity used for reconciliation.
 
-**Observable output.** Reportable artifact tied by the team to task/query identity and reviewed scope.
+**Implementation limits.** An immutable artifact-version API and universal external-copy deletion are not established by the report guide.
 
-**Not established by the reviewed sources.** An immutable artifact-version API and universal external-copy deletion are not established by the report guide.
-
-**Proposed verification — not executed**
+**Verification procedure (proposed)**
 
 1. Generate a report from the small supplied synthetic cost fixture.
 2. Reconcile displayed components and totals to the fixture.
 3. Revise layout only and verify that period, metric and numbers did not change.
 
-The verification procedure is authored engineering guidance. A failed or unobservable check must remain unresolved; no live AWS outcome is represented here.
+**Source mapping**
 
-**Official evidence for the product assertions**
-
-| Reference | Reviewed section | Supported assertion |
+| Reference | Documentation section | Supported behavior |
 |---|---|---|
 | [FS406] | Generating cost reports | Reports are artifacts, default to HTML and can be revised through follow-up. |
 | [FS403] | Managing your data | Artifacts and other retained objects have distinct controls. |
@@ -688,99 +617,86 @@ These are documented differences, not one universal human-approval rule. Automat
 
 #### MX-F-JIRA — Invocation-dependent Jira approval
 
-**Classification:** Invocation-dependent publication mechanism. **Inputs:** Account Jira registration, per-instance project connection, supported action, payload and invocation mode.
-
 Jira approval depends on how the action starts. Chat and on-demand tasks present issue/comment details for confirmation; a scheduled or event automation uses authorization established during setup. The same destination does not imply the same per-run approval behavior. [FS407] [FS408]
 
 After approval or preauthorization, inspect the actual external record. A successful analysis is not a successful issue creation, and a retry after an uncertain response can create duplicates unless the operator checks the existing project records. [FS407] [FS408]
 
-**Configuration and enablement**
+**Inputs.** Account Jira registration, per-instance project connection, supported action, payload and invocation mode.
 
-1. **Connect.** Authorize the Jira Cloud integration, then bind the approved project to this instance. Applies to: Project scope.
-2. **Interactive action.** Review project, issue/comment body and target shown for approval. Applies to: Per-action decision.
-3. **Automation action.** Review action and audience before enabling recurrence/event handling. Applies to: Setup-time authorization.
+**Configuration**
+
+1. **Connect — Project scope.** Authorize the Jira Cloud integration, then bind the approved project to this instance.
+2. **Interactive action — Per-action decision.** Review project, issue/comment body and target shown for approval.
+3. **Automation action — Setup-time authorization.** Review action and audience before enabling recurrence/event handling.
 
 [FS407] [FS408]
 
-**Lifecycle and state changes**
+**Lifecycle and operator actions**
 
-The rows describe documented consequences and logical stages; they are not an invented SDK status enumeration.
-
-| Starting condition | Operation or event | Consequence |
+| Initial condition | Operation or event | Result |
 |---|---|---|
 | Interactive request | Confirm/revise action | Supported publication can execute. |
 | Automation configured | Matching invocation | Publication executes without a per-run approval prompt. |
 | Publication uncertain | Inspect destination before retry | Avoid assuming an unobserved response means no issue exists. |
 
-[FS407] [FS408]
+**Constraints.** Supported actions do not include arbitrary issue-field changes, deletion or Jira workflow management.
 
-**Controls.** Supported actions do not include arbitrary issue-field changes, deletion or Jira workflow management.
+**Inspection points.** Actual issue/comment, intended project and task action history.
 
-**Observable output.** Actual issue/comment, intended project and task action history.
+**Implementation limits.** Exactly-once external publication and automatic duplicate suppression are not documented.
 
-**Not established by the reviewed sources.** Exactly-once external publication and automatic duplicate suppression are not documented.
-
-**Proposed verification — not executed**
+**Verification procedure (proposed)**
 
 1. Use a restricted Jira Cloud test project and non-sensitive payload.
 2. Compare interactive approval with a separately reviewed automation test.
 3. Deny project access and verify a publication failure does not erase or falsely complete the analysis record.
 
-The verification procedure is authored engineering guidance. A failed or unobservable check must remain unresolved; no live AWS outcome is represented here.
+**Source mapping**
 
-**Official evidence for the product assertions**
-
-| Reference | Reviewed section | Supported assertion |
+| Reference | Documentation section | Supported behavior |
 |---|---|---|
 | [FS407] | Jira issue creation and comment addition | Approval differs between interactive/on-demand and automated invocation. |
 | [FS408] | Integration model; Capabilities | Project connections and supported actions limit the effect. |
 
-
 #### MX-F-SLACK — Direct Slack publication
-
-**Classification:** One-way destination-publication mechanism. **Inputs:** Account workspace registration, instance channel connection, app membership and reviewed message/artifact.
 
 Slack publication is one-way in the documented preview. Registration authorizes the workspace; the instance connection selects a channel; channel membership permits delivery. Posting does not establish channel reading, command handling or thread interaction. [FS409] [FS407]
 
 There is no per-message approval prompt, including interactive requests. Review the intended channel and content before invocation, then inspect actual delivery. Disconnecting the channel is not a mechanism for deleting previously posted messages. [FS409] [FS407]
 
-**Configuration and enablement**
+**Inputs.** Account workspace registration, instance channel connection, app membership and reviewed message/artifact.
 
-1. **Register.** Authorize the workspace integration. Applies to: Account-level registration.
-2. **Connect.** Add the app to the channel; instance → Add connection → Slack; select integration and channel ID. Applies to: Instance-specific destination.
-3. **Publish.** Use the reviewed destination and verify the resulting post. Applies to: External effect.
+**Configuration**
+
+1. **Register — Account-level registration.** Authorize the workspace integration.
+2. **Connect — Instance-specific destination.** Add the app to the channel; instance → Add connection → Slack; select integration and channel ID.
+3. **Publish — External effect.** Use the reviewed destination and verify the resulting post.
 
 [FS409] [FS407]
 
-**Lifecycle and state changes**
+**Lifecycle and operator actions**
 
-The rows describe documented consequences and logical stages; they are not an invented SDK status enumeration.
-
-| Starting condition | Operation or event | Consequence |
+| Initial condition | Operation or event | Result |
 |---|---|---|
 | Connection active | Post requested | Message may be sent without an approval prompt. |
 | App absent from channel | Post attempted | Delivery fails despite registration. |
 | Connection removed | Future request | Future access changes; existing posts remain externally managed. |
 
-[FS409] [FS407]
+**Constraints.** Review audience before sending. The integration does not provide general edit/delete, channel administration or conversation reading.
 
-**Controls.** Review audience before sending. The integration does not provide general edit/delete, channel administration or conversation reading.
+**Inspection points.** Actual channel post and recorded action/delivery result.
 
-**Observable output.** Actual channel post and recorded action/delivery result.
+**Implementation limits.** Deduplicated retries, universal rollback and guaranteed post deletion are not provided by the documented interface.
 
-**Not established by the reviewed sources.** Deduplicated retries, universal rollback and guaranteed post deletion are not provided by the documented interface.
-
-**Proposed verification — not executed**
+**Verification procedure (proposed)**
 
 1. Use a restricted test channel containing the installed app.
 2. Verify destination and content without expecting a confirmation prompt.
 3. Remove app membership for an authorized negative test and distinguish delivery failure from task failure.
 
-The verification procedure is authored engineering guidance. A failed or unobservable check must remain unresolved; no live AWS outcome is represented here.
+**Source mapping**
 
-**Official evidence for the product assertions**
-
-| Reference | Reviewed section | Supported assertion |
+| Reference | Documentation section | Supported behavior |
 |---|---|---|
 | [FS409] | Integration and connection model; Capabilities | Connections are per-instance/channel and one-way; membership is required. |
 | [FS407] | Slack messages | Posting does not prompt for approval even in interactive invocation. |
@@ -807,13 +723,9 @@ Use the operation matching the intended outcome. In particular, cancel, forget, 
 
 For data-location decisions, document both persistent storage (`us-east-1` in the reviewed preview) and cross-Region US inference. Do not describe the chosen console Region as the complete processing boundary. [FS09]
 
-
-
 ## 05. Applying the model to operational outcomes
 
 Trace the approved use cases through their concrete configuration and execution objects, then examine the prepared evidence. The examples remain synthetic, not live AWS results.
-
-
 
 ### F-10 — Context and evidence in reporting and anomaly use cases
 
@@ -839,8 +751,6 @@ The last column is an engineering acceptance model, not a list of automatically 
 
 The shared operational-review case can consume these outputs alongside service-health reports. That handoff is a team process between independently scoped services. It preserves source and execution identities; it does not transfer credentials, merge memory or create a cross-product orchestration engine.
 
-
-
 ### F-U01 — Cost-variance analysis: worked example
 
 **Synthetic fixture; USD; two complete 14-day windows; identical account, service and cost basis.** Rates and quantities are teaching values, not AWS prices. This fixture now includes quantities and rates, so it can support arithmetic attribution rather than just two totals.
@@ -862,13 +772,9 @@ The delta is 574, or 41%. Component contributions are 200 storage, 100 requests 
 
 The repository's deterministic fixture test verifies the arithmetic. It is not a test of the AWS service, recommendation quality or causal inference.
 
-
-
 ## 06. Troubleshooting and operating limits
 
 A numerical disagreement, a missing task, and a failed publication are different faults. Troubleshooting follows the corresponding data, execution, and destination paths.
-
-
 
 ### F-06 — Data, task, and integration failures
 
@@ -888,13 +794,9 @@ Selected documented defaults are one agent per account/Region, 100 MB artifact s
 
 The table is engineering troubleshooting guidance based on the cited configuration and integration pages. It is not a claim of a native unified diagnostic workflow.
 
-
-
 ## 07. Documentation coverage
 
 The references document the source, context, task, and publication behaviors discussed here; unexecuted examples remain explicitly labeled.
-
-
 
 ### F-07 — Documentation coverage and references
 
