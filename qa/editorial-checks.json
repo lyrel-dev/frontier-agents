@@ -92,7 +92,7 @@
     {
       "product": "devops",
       "id": "D-07",
-      "title": "Custom-agent configuration and invocation"
+      "title": "Operational queries and custom-agent invocations"
     },
     {
       "product": "devops",
@@ -207,7 +207,7 @@
     {
       "product": "devops",
       "id": "slide",
-      "title": "Sandbox and directed actions"
+      "title": "Sandbox execution and directed-action approval"
     },
     {
       "product": "devops",
@@ -217,12 +217,12 @@
     {
       "product": "devops",
       "id": "slide",
-      "title": "Incident response outcomes"
+      "title": "Incident triage, investigation, and mitigation"
     },
     {
       "product": "devops",
       "id": "slide",
-      "title": "Reporting and reliability outcomes"
+      "title": "Health reporting, deployment review, and prevention"
     },
     {
       "product": "devops",
@@ -592,7 +592,7 @@
     {
       "product": "finops",
       "id": "slide",
-      "title": "Task execution and destination-specific approval"
+      "title": "Conversation actions, queued tasks, and publication approval"
     },
     {
       "product": "finops",
@@ -727,12 +727,7 @@
     {
       "product": "architecture",
       "id": "slide",
-      "title": "Comparison framework"
-    },
-    {
-      "product": "architecture",
-      "id": "slide",
-      "title": "Resource and context models"
+      "title": "Retained context: producers, consumers, and lifecycle"
     },
     {
       "product": "architecture",
@@ -777,7 +772,7 @@
     {
       "product": "architecture",
       "id": "slide",
-      "title": "Tabletop: one operational symptom, three different jobs"
+      "title": "Exercise: incident, security, and cost evidence handoff"
     },
     {
       "product": "architecture",
@@ -787,7 +782,7 @@
     {
       "product": "architecture",
       "id": "slide",
-      "title": "Documentation and presentation acceptance criteria"
+      "title": "Operational prerequisites and verification records"
     }
   ],
   "protected_sources": {
