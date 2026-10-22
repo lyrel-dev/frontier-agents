@@ -20,6 +20,7 @@ from markdown_it import MarkdownIt
 from structure import CHAPTERS, DECK_CHAPTERS, LABELS, REVISION, section_type
 from presentation import DECKS
 from diagrams import DIAGRAMS, build as build_diagrams
+import catalog as catalogue
 
 ROOT=Path(__file__).resolve().parents[2]
 SOURCE=Path(__file__).resolve().parent
@@ -27,7 +28,7 @@ MD=MarkdownIt('commonmark',{'html':False}).enable('table')
 SID=r'[DSFA]-(?:M|U)?\d+'
 HEADING=re.compile(r'^(#{2,3})\s+('+SID+r')\s+[—-]\s+(.+)$')
 REF=re.compile(r'^\[([DSFA]S\d+)\]:\s+(https://\S+).*$',re.M)
-PLATFORMS={'devops':'AWS DevOps Agent','security':'AWS Security Agent','finops':'AWS FinOps Agent'}
+PLATFORMS={'devops':'AWS DevOps Agent','security':'AWS Security Agent','finops':'AWS FinOps Agent','architecture':'Shared operational practice'}
 PLATFORM_ORDER=tuple(PLATFORMS)
 
 
@@ -135,35 +136,10 @@ def frame(title,body,view,key='',total=0,depth=1):
 
 def options(values,label):return '<option value="">'+esc(label)+'</option>'+''.join(f'<option value="{esc(v)}">{esc(v)}</option>' for v in sorted(values))
 
-def catalog_sources(e,guides):
-    g=guides[e['platform']];ids=[]
-    for sid in e['sections']:
-        if sid not in g['sections']:raise ValueError(e['id']+': unknown guide section '+sid)
-        ids.extend(g['sections'][sid]['sources'])
-    return [(sid,g['refs'][sid]) for sid in dict.fromkeys(ids)]
-
-def catalog_controls(entries,platform=False):
-    p='<select data-uc-platform aria-label="Platform">'+options({e['platform'] for e in entries},'All platforms')+'</select>' if platform else ''
-    return '<div class="catalog-controls"><input data-uc-search type="search" aria-label="Search use cases" placeholder="Search workflows, evidence, outputs, and constraints">'+p+'<select data-uc-group aria-label="Use case group">'+options({e['group'] for e in entries},'All groups')+'</select><select data-uc-delivery aria-label="Delivery mode">'+options({e['delivery'] for e in entries},'All delivery modes')+'</select><select data-uc-cadence aria-label="Cadence">'+options({e['cadence'] for e in entries},'All cadences')+'</select><button data-uc-reset>Reset</button></div><p data-uc-count class="result-count" aria-live="polite"></p><p data-uc-empty hidden>No use cases match the selected filters.</p>'
-
-def catalog_entry(e,guides,embedded=False):
-    start='#' if embedded else '../guides/'+e['platform']+'.html#'
-    refs=' · '.join(f'<a href="{start}{sid}">{esc(guides[e["platform"]]["sections"][sid]["title"])}</a>' for sid in e['sections'])
-    sources=' '.join(f'<a href="{esc(url)}">{sid}</a>' for sid,url in catalog_sources(e,guides))
-    prose=''.join('<p>'+esc(p)+'</p>' for p in e['narrative'])
-    return f'''<article class="usecase-entry" id="{e['id']}" data-platform="{e['platform']}" data-group="{esc(e['group'])}" data-delivery="{esc(e['delivery'])}" data-cadence="{esc(e['cadence'])}"><div class="section-meta">{e['id']} · {esc(e['delivery'])} · {esc(e['availability'])}</div><h3><a href="#{e['id']}">{esc(e['title'])}</a></h3><div class="narrative">{prose}</div><details class="case-reference"><summary>Inputs, output, configuration references, and example request</summary><dl><dt>Inputs</dt><dd>{esc(e['inputs'])}</dd><dt>Output</dt><dd>{esc(e['output'])}</dd><dt>Cadence</dt><dd>{esc(e['cadence'])}</dd><dt>Limits</dt><dd>{esc(e['constraints'])}</dd><dt>Example request</dt><dd>{esc(e['example'])}</dd></dl><p class="reference-links">Guide: {refs}</p><p class="reference-links">Official documentation: {sources}</p><p class="small">{esc(e['narrative_status'])}</p></details></article>'''
-
-def catalog_content(catalog,guides,key=None):
-    entries=[e for e in catalog['entries'] if key is None or e['platform']==key]
-    groups=defaultdict(list)
-    for e in entries:groups[(e['platform'],e['group'])].append(e)
-    body=[catalog_controls(entries,key is None)]
-    for (platform,group),items in groups.items():
-        title=group if key else PLATFORMS[platform]+' — '+group
-        ident='usecase-'+slug(platform+'-'+group)
-        intro=catalog['group_introductions'][group]
-        body.append(f'<section class="catalog-group" id="{ident}" data-uc-group-block><header><h2>{esc(title)}</h2><p>{esc(intro)}</p></header>'+''.join(catalog_entry(e,guides,key is not None) for e in items)+'</section>')
-    return ''.join(body)
+def catalog_sources(e,guides):return catalogue.sources(e,guides)
+def catalog_controls(entries,platform=False):return catalogue.controls(entries,platform)
+def catalog_entry(e,guides,embedded=False):return catalogue.entry(e,guides,embedded)
+def catalog_content(catalog,guides,key=None):return catalogue.content(catalog,guides,key)
 
 def report(key,g,guides,catalog):
     links=links_for(guides,key);deck=DECKS[key];minutes,exercise=totals(deck)
@@ -183,11 +159,11 @@ def report(key,g,guides,catalog):
     type_options=''.join(f'<option value="{t}">{esc(LABELS[t])}</option>' for t in kinds)
     catalog_panel=''
     if key in PLATFORMS:
-        cases=[e for e in catalog['entries'] if e['platform']==key]
+        cases=[e for e in catalog['entries'] if catalogue.includes(e,key)]
         toc.append(f'<details open data-usecase-toc><summary>{len(CHAPTERS[key])+1:02d}. Operational use cases</summary><ol><li><a href="#use-case-catalog">Search and read {len(cases)} workflows</a></li></ol></details>')
         catalog_panel=f'<section id="use-case-catalog" class="embedded-catalog" data-usecase-catalog><header class="chapter-heading"><span class="chapter-number">Chapter {len(CHAPTERS[key])+1:02d}</span><h2>Operational use cases</h2><p>The preceding chapters explain configuration and mechanisms. These workflows apply them to recurring engineering tasks. Read the situation, execution, and interpretation before using the reference fields.</p></header>{catalog_content(catalog,guides,key)}</section>'
     body=f'''<div class="book-layout"><aside class="toc" aria-label="Table of contents"><p class="toc-title">{esc(deck['title'])}</p><div class="toc-actions"><button id="nav-expand">Expand</button><button id="nav-collapse">Collapse</button></div>{''.join(toc)}</aside><main id="main" class="book"><header class="book-title"><p class="eyebrow">Engineering guide</p><h1>{esc(deck['title'])}</h1>{intro}<div class="reading-links"><a href="../presentations/{key}.html">HTML presentation</a><a href="{key}.md">Markdown source</a><a href="../catalog/index.html{'?platform='+key if key in PLATFORMS else ''}">Use-case catalog</a></div></header><div class="filter-bar"><input id="search" type="search" aria-label="Search guide" placeholder="Search the technical chapters"><select id="chapter" aria-label="Chapter"><option value="">All chapters</option>{chapter_options}</select><select id="type" aria-label="Section type"><option value="">All section types</option>{type_options}</select><button id="reset">Reset</button><button data-print>Print</button></div><p id="search-status" class="result-count" aria-live="polite"></p><p id="empty-results" hidden>No technical sections match. The operational catalog has its own search below.</p>{''.join(chapters)}{catalog_panel}<footer>Logical diagrams and authored workflows are explanatory material. Source links support product behavior; no live AWS execution or measured improvement is claimed.</footer></main></div>'''
-    write(f'guides/{key}.html',frame(deck['title']+' — guide',body,'report',key))
+    write(f'guides/{key}.html',catalogue.decorate(frame(deck['title']+' — guide',body,'report',key)))
 
 def table(rows):
     return '<div class="table-wrap" tabindex="0"><table><thead><tr>'+''.join('<th scope="col">'+esc(x)+'</th>' for x in rows[0])+'</tr></thead><tbody>'+''.join('<tr>'+''.join('<td>'+esc(x)+'</td>' for x in r)+'</tr>' for r in rows[1:])+'</tbody></table></div>'
@@ -229,17 +205,7 @@ def presentation(key,g,guides):
     write(f'presentations/{key}-notes.md','\n\n'.join(transcript))
 
 def build_catalog(catalog,guides):
-    body=f'<main id="main" class="catalog-main" data-usecase-catalog><header class="book-title"><p class="eyebrow">Operational workflows</p><h1>Use-case catalog</h1><p>{esc(catalog["description"])}</p><p>These are narrated applications of documented functions. Delivery labels distinguish built-in functions, configured agents, approved actions, and team-composed work. Technical mechanisms remain in the linked guides.</p></header>{catalog_content(catalog,guides)}<footer>Each narrative is authored engineering guidance, not a record of a live service execution.</footer></main>'
-    write('catalog/index.html',frame('Operational use-case catalog',body,'catalog'))
-    lines=['# Operational use-case catalog','',catalog['description'],'']
-    for platform in PLATFORM_ORDER:
-        lines+=['## '+PLATFORMS[platform],''];seen=set()
-        for e in catalog['entries']:
-            if e['platform']!=platform:continue
-            if e['group'] not in seen:
-                seen.add(e['group']);lines+=['### '+e['group'],catalog['group_introductions'][e['group']],'']
-            lines+=[f'#### {e["id"]} — {e["title"]}',f'**Delivery:** {e["delivery"]}. **Availability:** {e["availability"]}.',*e['narrative'],f'**Inputs:** {e["inputs"]}',f'**Output:** {e["output"]}',f'**Limits:** {e["constraints"]}',f'**Example request:** {e["example"]}','**Detailed guide:** '+', '.join(f'[{sid}](../guides/{platform}.html#{sid})' for sid in e['sections']),'**Official references:** '+', '.join(f'[{sid}]({url})' for sid,url in catalog_sources(e,guides)),'']
-    write('catalog/use-cases.md','\n\n'.join(lines))
+    catalogue.build_pages(catalog,guides,frame,write)
 
 def indexes(catalog):
     rows=[]
@@ -257,16 +223,16 @@ def metadata(guides,catalog):
     rows=['| Subject | Guide | HTML presentation | Duration |','|---|---|---|---|']
     for key,d in DECKS.items():
         t,e=totals(d);rows.append(f'| {d["title"]} | [HTML](guides/{key}.html) / [Markdown](guides/{key}.md) | [Slides](presentations/{key}.html) / [Notes](presentations/{key}-notes.md) | {t//60} min including {e//60} min exercise |')
-    write('README.md','# AWS operational agents\n\nOpen `index.html` from a repository checkout. The guides, catalog, and presentations work locally; GitHub source preview does not execute HTML controls.\n\n'+'\n'.join(rows)+f'\n\nThe programme is **{total} minutes including {exercise} minutes of prepared-result exercises**. Questions and breaks are additional.\n\n## Operational use cases\n\n[Read and search the catalog](catalog/index.html). All {len(catalog["entries"])} workflows are narrated in prose and grouped by operational purpose. The catalog is an application layer, not a competing definition of platform capabilities.\n\n## Repository layout\n\n```text\nguides/          Maintained Markdown guides and generated HTML\ncatalog/         Maintained narrative JSON; generated HTML and Markdown\npresentations/   Generated HTML decks and presenter notes\nassets/diagrams/ Generated, accessible SVG figures\nexamples/        Synthetic evidence used in worked examples\ntools/docs/      Rendering, diagrams, presentation outline, and checks\nqa/              Current validation and source-review records\napplications/    Independently maintained readiness-console application\n```\n\nEach guide introduces the agent and its resource model, describes supported integrations, explains knowledge production and retrieval, and then follows operational workflows. Stable identifiers connect use cases, mechanisms, diagrams, and presentation references. Superseded entry-point directories and generators are removed; Git retains history.\n\n## Build and validate\n\nInstall Graphviz (`dot`) and Python dependencies, then run:\n\n```sh\npython -m pip install -r tools/docs/requirements.txt\npython -m playwright install chromium\npython tools/docs/build.py\npython tools/docs/check.py --browser\n```\n\nSee [publishing](PUBLISHING.md), [editorial rules](EDITORIAL_STANDARD.md), [source coverage](guides/coverage.md), and [validation](VALIDATION.md). No live AWS operation is represented by the synthetic examples or document checks.\n')
+    write('README.md','# AWS operational agents\n\nOpen `index.html` from a repository checkout. The guides, catalog, and presentations work locally; GitHub source preview does not execute HTML controls.\n\n'+'\n'.join(rows)+f'\n\nThe programme is **{total} minutes including {exercise} minutes of prepared-result exercises**. Questions and breaks are additional.\n\n## Operational use cases\n\n[Read and search the catalog](catalog/index.html). All {len(catalog["entries"])} workflows are narrated in prose and grouped by operational purpose. Workflow steps link to shared mechanisms, concrete feature configuration and implementation profiles. Browse the [mechanism index](catalog/mechanisms.html), [feature impact index](catalog/features.html), [profiles](catalog/profiles.html) and [consolidation map](catalog/migration.md).\n\n## Repository layout\n\n```text\nguides/          Maintained Markdown guides and generated HTML\ncatalog/         Canonical cases, mechanisms, features, profiles and alias data; generated reading indexes\npresentations/   Generated HTML decks and presenter notes\nassets/diagrams/ Generated, accessible SVG figures\nexamples/        Synthetic evidence used in worked examples\ntools/docs/      Rendering, diagrams, presentation outline, and checks\nqa/              Current validation and source-review records\napplications/    Independently maintained readiness-console application\n```\n\nEach guide introduces the agent and its resource model, describes supported integrations, explains knowledge production and retrieval, and then follows operational workflows. Stable identifiers connect use cases, mechanisms, diagrams, and presentation references. Superseded entry-point directories and generators are removed; Git retains history.\n\n## Build and validate\n\nInstall Graphviz (`dot`) and Python dependencies, then run:\n\n```sh\npython -m pip install -r tools/docs/requirements.txt\npython -m playwright install chromium\npython tools/docs/build.py\npython tools/docs/check.py --browser\n```\n\nSee [publishing](PUBLISHING.md), [editorial rules](EDITORIAL_STANDARD.md), [source coverage](guides/coverage.md), and [validation](VALIDATION.md). No live AWS operation is represented by the synthetic examples or document checks.\n')
     coverage=['# Guide and source coverage','The source map below identifies the references attached to each maintained section. It is not a claim that every upstream page was freshly audited. New integration and scheduling material and selected knowledge mechanisms were reviewed on 22 October 2026; retained sections keep their earlier references. See [the source-review record](../qa/source-review.json).']
     for key,g in guides.items():
         coverage+=['## '+DECKS[key]['title'],'| Section | Subject | Official references |','|---|---|---|']
         for sid in ordered_ids(key):
             s=g['sections'][sid];coverage.append(f'| [{sid}]({key}.html#{sid}) | {s["title"]} | '+', '.join(f'[{r}]({g["refs"][r]})' for r in s['sources'])+' |')
-    coverage+=['## Diagram scope','Figures are logical models of the documented resource relationships and workflow steps, not descriptions of undisclosed infrastructure. Dashed cross-product handoffs are team-composed.','| Figure | Detailed guide |','|---|---|']
+    coverage+=['## Diagram scope','Figures are logical models of documented resource relationships or explicitly labeled documentation dependencies, not descriptions of undisclosed infrastructure. Dashed cross-product handoffs are team-composed.','| Figure | Detailed guide |','|---|---|']
     for key,(title,description,refs,dot) in DIAGRAMS.items():coverage.append(f'| [{title}](../assets/diagrams/{key}.svg) | '+', '.join(refs)+' |')
     write('guides/coverage.md','\n'.join(coverage))
-    write('PUBLISHING.md','# Publishing documentation\n\nEdit guide prose in `guides/*.md`, use-case narratives in `catalog/use-cases.json`, chapter membership in `tools/docs/structure.py`, slide content in `tools/docs/presentation.py`, and figures in `tools/docs/diagrams.py`.\n\nRun `python tools/docs/build.py` and `python tools/docs/check.py --browser`. Inspect rendered prose, diagrams, and slides as well as the recorded checks. Trigger the documentation workflow through `documentation-build.json`; generated documentation changes are committed separately on the checked-out branch. Promote a tested branch without overwriting intervening changes.\n\nDo not maintain compressed distributions, historical copies, old forwarding pages, or alternate renderers. Git is the revision history. Preserve `applications/` and its workflow. Repository publication is not website hosting.\n')
+    write('PUBLISHING.md','# Publishing documentation\n\nEdit guide prose in `guides/*.md`, cases in `catalog/use-cases.json`, mechanism and feature relationships in `catalog/mechanisms.json` and `catalog/features.json`, and recipes in `catalog/profiles.json`, chapter membership in `tools/docs/structure.py`, slide content in `tools/docs/presentation.py`, and figures in `tools/docs/diagrams.py`.\n\nRun `python tools/docs/build.py` and `python tools/docs/check.py --browser`. Inspect rendered prose, diagrams, and slides as well as the recorded checks. Trigger the documentation workflow through `documentation-build.json`; generated documentation changes are committed separately on the checked-out branch. Promote a tested branch without overwriting intervening changes.\n\nDo not maintain compressed distributions, historical copies, old forwarding pages, or alternate renderers. Git is the revision history. Preserve `applications/` and its workflow. Repository publication is not website hosting.\n')
     write('EDITORIAL_STANDARD.md','# Editorial standard\n\n## Explanatory sequence\n\nIntroduce the agent and its resource model before listing functions. Explain integration direction and authorization before describing data use. Explain how knowledge is produced, retained, selected, corrected, and removed before applying it to a use case.\n\n## Prose and headings\n\nUse descriptive sentence-case noun phrases, as in a technical book. Begin a section with the idea and its relationship to the preceding topic. Use procedures and tables where they answer configuration or comparison questions; do not substitute labeled fragments for an explanation. Catalog records are narrated situations, work, and interpretations with reference fields as a supplement.\n\n## Diagrams\n\nProvide named resources, directional relationships, a caption, accessible title and description, and linked source sections. Distinguish logical models from undisclosed implementation. Do not draw a shared runtime, memory store, or permission model without evidence.\n\n## Product claims\n\nLink material product behavior to official documentation. Separate native behavior, configured integrations, team-composed procedures, and synthetic evidence. Availability applies to the specific feature. Memory retrieval is not automatically model training; retention is not automatically backup and recovery.\n\n## Presentations\n\nMaintain HTML decks with visible chapter membership, substantive diagrams or comparisons, source-linked notes, and explicit exercise budgets. Choose content form according to the subject; no arbitrary required number of rows, cards, or procedure steps defines quality.\n\n## Verification\n\nCheck source mapping and content consistency separately from HTML behavior. Check actual rendering, navigation, filters, figure accessibility, slide timing, and print restoration. Report what was tested and what was not. No live-service result may be inferred from a document build.\n')
     write('CHANGELOG.md','# Documentation changes\n\n## 22 October 2026 — narrative and architecture edition\n\nRewrote section introductions and titles, added the agent execution model and supported-integration inventories, and explained knowledge consolidation, retrieval, correction, and restoration boundaries. Added logical architecture and workflow figures and narrated the grouped operational catalog. Consolidated maintained tooling in `tools/docs/` and removed superseded forwarding directories and old generators. Corrected the distinction between minute-resolution incident analysis and flexible scheduled execution. Programme timing is derived from the presentation definitions. Git retains prior revisions.\n')
 
