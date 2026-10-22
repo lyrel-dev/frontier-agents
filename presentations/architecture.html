@@ -1,18 +1,236 @@
-<!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><meta content="light" name="color-scheme"/><title>Shared Architecture — HTML presentation</title><style>:root{--ink:#182b3b;--muted:#526574;--navy:#132c40;--accent:#086e68;--pale:#edf5f4;--line:#d5e0e7;--paper:#fff;--bg:#f5f7f9;--warn:#9b5b13;--shadow:0 12px 28px #172c4310}
-*{box-sizing:border-box}html{scroll-padding-top:100px;scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 system-ui,-apple-system,'Segoe UI',sans-serif}a{color:#075d94;text-underline-offset:3px}button,input,select{font:inherit;color:inherit;background:var(--paper);border:1px solid #9cb0bf;border-radius:5px;padding:9px 12px;min-height:42px}button{cursor:pointer}button:hover{background:var(--pale)}button:disabled{opacity:.4;cursor:default}:focus-visible{outline:3px solid #b87114;outline-offset:3px}[hidden]{display:none!important}.skip{position:absolute;top:-100px;left:20px;z-index:50;background:white;padding:12px}.skip:focus{top:12px}.site-header{background:var(--navy);color:white;padding:16px 28px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}.site-header a{color:#e6f3fd}.brand{font-size:13px;font-weight:750;letter-spacing:.08em;text-transform:uppercase}.site-header nav{display:flex;gap:20px;flex-wrap:wrap;font-size:14px}.eyebrow{color:var(--accent);font-size:12px;text-transform:uppercase;letter-spacing:.12em;font-weight:750}.muted,.small{color:var(--muted)}.small{font-size:13px}.intro{max-width:70ch}h1{font-size:clamp(28px,3.2vw,42px);letter-spacing:-.025em;line-height:1.16;margin:12px 0 22px}h2{font-size:29px;line-height:1.25;margin:0 0 14px}h3{font-size:24px;line-height:1.3;margin:8px 0 20px}h4{font-size:19px;line-height:1.4;margin:26px 0 10px}p{margin:0 0 17px}li{margin:7px 0}code{font-size:.9em;overflow-wrap:anywhere}pre{background:#132b3e;color:#eaf2f8;border-radius:5px;padding:20px;overflow-x:auto;max-width:100%;font-size:13px;line-height:1.7}.table-wrap{max-width:100%;overflow-x:auto;margin:22px 0}table{border-collapse:collapse;width:100%;font-size:14px;line-height:1.5}th,td{border:1px solid var(--line);padding:12px 14px;text-align:left;vertical-align:top;min-width:100px}th{background:#e8eff3}tr:nth-child(even) td{background:#f7fafb}blockquote{margin:20px 0;border-left:4px solid var(--accent);background:var(--pale);padding:14px 20px}.button-link{display:inline-block;border:1px solid var(--accent);border-radius:5px;padding:8px 14px;text-decoration:none;color:var(--accent);font-weight:650}.primary{background:var(--accent);color:white}.actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:20px 0}.report-shell{display:grid;grid-template-columns:290px minmax(0,1fr);gap:36px;max-width:1500px;margin:auto;padding:26px}.toc{position:sticky;top:18px;align-self:start;max-height:94vh;overflow:auto;font-size:13px;padding-right:12px}.toc-label{font-size:12px;font-weight:750;letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px}.toc-actions{display:flex;gap:8px;margin:12px 0}.toc-actions button{font-size:12px;min-height:34px;padding:5px 8px}.toc details{border-bottom:1px solid var(--line);padding:8px 0}.toc summary{cursor:pointer;font-weight:700;line-height:1.4;padding:8px 0}.toc ul{list-style:none;margin:0;padding:0 0 6px 14px}.toc li{margin:3px 0}.toc a{display:block;text-decoration:none;color:var(--muted);line-height:1.4;border-left:2px solid transparent;padding:7px 9px}.toc a.active{border-color:var(--accent);background:var(--pale);color:var(--ink);font-weight:650}.toc a small{display:block;font-size:10px;letter-spacing:.03em;color:#5f788a}.content{min-width:0;max-width:1020px}.hero{background:white;border:1px solid var(--line);border-top:5px solid var(--accent);padding:30px;border-radius:7px}.hero h1{max-width:24ch}.meta-row{display:flex;gap:12px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-top:22px}.meta-row span{border-left:2px solid var(--line);padding-left:12px}.chapter-map{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:25px 0}.map-link{display:block;padding:17px 18px;background:white;border:1px solid var(--line);border-radius:6px;text-decoration:none;color:var(--ink)}.map-link:hover{border-color:var(--accent)}.map-link strong{display:block;font-size:16px;margin:4px 0}.map-link p{font-size:13px;color:var(--muted);margin:0}.ordinal{font-size:12px;font-weight:750;color:var(--accent);letter-spacing:.1em}.filter-bar{display:flex;gap:9px;flex-wrap:wrap;padding:14px 0;background:var(--bg);position:sticky;top:0;z-index:4}.filter-bar input{flex:2;min-width:180px}.filter-bar select{flex:1;min-width:145px}.filter-bar button{font-size:14px}.search-status{font-size:13px;color:var(--muted);min-height:24px}.chapter{padding-top:22px;margin-top:12px}.chapter-heading{border-bottom:2px solid var(--ink);padding:14px 0 18px}.chapter-heading .ordinal{font-size:13px}.chapter-heading h2{margin:7px 0 10px}.chapter-heading p{max-width:70ch;color:var(--muted);margin:0}.report-section{border:1px solid var(--line);border-radius:6px;background:white;padding:28px 30px;margin:18px 0;min-width:0}.section-meta{display:flex;gap:12px;align-items:center;flex-wrap:wrap;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px}.section-meta a{margin-left:auto;text-transform:none;font-size:12px;letter-spacing:0}.report-section h3 a{color:inherit;text-decoration:none}.callout{border-left:3px solid var(--accent);padding-left:16px}.section-nav{display:flex;justify-content:space-between;gap:20px;margin-top:25px;padding-top:18px;border-top:1px solid var(--line);font-size:13px}.section-nav a{max-width:47%;overflow-wrap:anywhere}.empty{padding:25px;border:1px dashed var(--line);background:white}.reading-breadcrumb{color:var(--muted);font-size:12px;margin:0 0 12px}footer{font-size:13px;color:var(--muted);border-top:1px solid var(--line);padding:24px 0;margin-top:28px}.index-main{max-width:1200px;margin:38px auto;padding:0 24px}.index-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}.index-card{border:1px solid var(--line);border-top:4px solid var(--accent);background:white;padding:25px;border-radius:7px}.index-card h2{font-size:25px}.index-card .actions{margin-bottom:0}.programme{padding:20px 24px;background:var(--pale);border-left:4px solid var(--accent);margin:25px 0}.deck-main{max-width:1420px;margin:auto;padding:18px 26px 30px}.deck-toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}.deck-toolbar select{flex:1;min-width:200px}.deck-toolbar button{font-size:14px}.deck-toolbar .timer{font-variant-numeric:tabular-nums;font-size:13px;color:var(--muted)}.chapter-strip{display:flex;gap:5px;margin:14px 0;flex-wrap:wrap}.chapter-strip button{flex:1;min-width:100px;min-height:48px;text-align:left;font-size:11px;padding:7px 10px;border-color:var(--line);line-height:1.35}.chapter-strip button span{display:block;font-size:10px;color:var(--muted);margin-bottom:3px}.chapter-strip button[aria-current=true]{background:var(--navy);border-color:var(--navy);color:white}.chapter-strip button[aria-current=true] span{color:#bbd7df}.slide{background:white;border:1px solid var(--line);border-top:5px solid var(--accent);padding:27px 34px;min-height:600px;display:flex;flex-direction:column;box-shadow:var(--shadow)}.slide-top{display:flex;justify-content:space-between;gap:15px;font-size:12px;color:var(--muted)}.slide h1{font-size:clamp(27px,2.7vw,39px);margin:18px 0 25px;max-width:32ch}.slide-body{flex:1;display:flex;align-items:center;min-height:270px}.slide-body .table-wrap{width:100%;margin:0}.slide table{font-size:clamp(15px,1.45vw,20px)}.slide th,.slide td{padding:13px 16px;line-height:1.4}.flow,.columns{display:flex;gap:18px;width:100%;align-items:stretch}.node,.column{flex:1;min-width:0;background:var(--pale);padding:20px;border-top:3px solid var(--accent);position:relative}.node strong,.column strong{display:block;font-size:clamp(18px,1.6vw,24px);line-height:1.3;margin:0 0 18px}.node p,.column p{font-size:clamp(16px,1.5vw,21px);line-height:1.5;margin:0}.node:not(:last-child)::after{content:'→';position:absolute;right:-18px;top:43%;color:var(--accent);font-size:22px}.takeaway{margin-top:26px;padding:14px 18px;background:var(--navy);color:white;font-size:clamp(16px,1.4vw,20px);line-height:1.4}.slide-foot{display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap;font-size:12px;color:var(--muted);padding-top:16px}.slide-foot a{margin-right:10px}.deck-status{display:flex;justify-content:space-between;gap:18px;align-items:center;font-size:13px;color:var(--muted);margin:12px 0}.deck-status progress{width:180px;max-width:30vw;height:7px;accent-color:var(--accent)}.timer.over{color:var(--warn);font-weight:700}.notes{border:1px solid var(--line);background:white;padding:20px 26px;margin-top:20px}.notes summary{cursor:pointer;font-weight:700}.notes h2{font-size:21px;margin-top:22px}.notes h3{font-size:19px}.notes h4{font-size:17px}.notes .talk-track{padding:18px;background:var(--pale);margin:16px 0}.notes .note-reference{border-top:1px solid var(--line);padding-top:18px;margin-top:20px}.notes section p{font-size:14px}.evidence{margin-top:22px;border:1px solid var(--line);padding:18px 22px;background:white}.evidence summary{font-weight:700;cursor:pointer}.evidence ol{font-size:13px}.evidence a{overflow-wrap:anywhere}dialog{max-width:880px;width:calc(100% - 40px);max-height:88vh;border:1px solid var(--line);border-radius:8px;padding:24px;color:var(--ink);box-shadow:0 20px 80px #0004}dialog::backdrop{background:#122b4077}.dialog-top{display:flex;justify-content:space-between;align-items:center;gap:15px;position:sticky;top:-24px;background:white;padding:12px 0}.agenda-group{margin:18px 0}.agenda-group h3{font-size:18px;margin-bottom:8px}.agenda-group button{display:block;width:100%;text-align:left;margin:5px 0;font-size:14px;line-height:1.45}.agenda-group button small{display:block;color:var(--muted)}:fullscreen{overflow:auto;background:var(--bg)}
-@media(max-width:1050px){.report-shell{grid-template-columns:240px minmax(0,1fr);gap:20px;padding:18px}.report-section,.hero{padding:22px}.slide{padding:23px;min-height:530px}.deck-main{padding:16px}.node,.column{padding:16px}.slide-body{min-height:230px}}
-@media(max-width:760px){.site-header{padding:15px 18px}.site-header nav{gap:14px;font-size:12px}.report-shell{display:block;padding:14px}.toc{position:static;max-height:340px;padding:14px;background:white;border:1px solid var(--line);margin-bottom:20px}.toc>details{padding:3px 0}.chapter-map,.index-grid{grid-template-columns:1fr}.filter-bar{position:static}.filter-bar>*{width:100%;min-width:0!important}.hero,.report-section{padding:20px}.report-section h3{font-size:22px}.chapter-heading h2{font-size:25px}.deck-toolbar>*{flex:1}.deck-toolbar select{min-width:100%;order:1}.chapter-strip button{min-width:130px}.slide{min-height:0;padding:20px}.slide h1{font-size:27px}.slide-body{min-height:0}.flow,.columns{flex-direction:column}.node:not(:last-child)::after{display:none}.node p,.column p{font-size:18px}.slide table{font-size:16px}.slide th,.slide td{padding:12px}.slide-top{font-size:11px}.section-meta a{margin-left:0}.notes{padding:18px}.deck-status{align-items:flex-start}.slide-foot{line-height:1.7}}
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Shared Architecture — presentation</title><style>/* Shared offline styles for guides, catalog, and presentations. */
+:root{--ink:#152c3d;--muted:#526572;--accent:#146c65;--line:#d5dfe4;--paper:#fff;--wash:#f4f7f7;--nav:#132c3e;--focus:#b86613}
+*{box-sizing:border-box}html{scroll-padding-top:100px;scroll-behavior:smooth}body{margin:0;color:var(--ink);background:var(--paper);font:16px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif}a{color:#08638c;text-underline-offset:3px;overflow-wrap:anywhere}button,input,select{font:inherit;color:inherit;background:white;border:1px solid #9caeb9;border-radius:3px;padding:8px 11px;min-height:42px}button{cursor:pointer}button:hover{background:#edf4f3}button:disabled{opacity:.45;cursor:default}:focus-visible{outline:3px solid var(--focus);outline-offset:3px}[hidden]{display:none!important}.skip{position:absolute;top:-80px;left:18px;z-index:100;background:white;padding:12px}.skip:focus{top:12px}
+.site-header{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;padding:18px 28px;border-bottom:1px solid var(--line);background:var(--nav);color:white}.site-header a{color:#ecf5f8;text-decoration:none}.brand{font-weight:700;font-size:15px;letter-spacing:.02em}.site-header nav{display:flex;gap:22px;flex-wrap:wrap;font-size:13px}.site-header a:hover{text-decoration:underline}
+h1,h2,h3,h4{line-height:1.25;font-weight:650;letter-spacing:-.012em;scroll-margin-top:100px}h1{font-size:42px;margin:10px 0 25px}h2{font-size:29px;margin:32px 0 17px}h3{font-size:23px;margin:24px 0 16px}h4{font-size:19px;margin:25px 0 12px}p{margin:0 0 20px}li{margin:7px 0}pre{white-space:pre;overflow:auto;max-width:100%;padding:20px;background:#162e40;color:#edf5f8;border-radius:3px;font:13px/1.6 ui-monospace,Consolas,monospace}code{font-size:.88em;overflow-wrap:anywhere}blockquote{border-left:3px solid var(--accent);margin:24px 0;padding:10px 22px;background:var(--wash)}.small,.section-meta,.reference-links,.result-count{font-size:13px;color:var(--muted);font-family:system-ui,sans-serif}.eyebrow,.chapter-number{font-size:12px;letter-spacing:.1em;color:var(--accent);text-transform:uppercase;font-weight:750}.eyebrow{margin-bottom:10px}
+.book-layout{display:grid;grid-template-columns:265px minmax(0,1fr);gap:50px;max-width:1460px;margin:auto;padding:30px 28px 70px}.toc{position:sticky;top:18px;align-self:start;max-height:94vh;overflow:auto;padding-right:18px;font-size:13px;border-right:1px solid var(--line)}.toc-title{font-weight:750;font-size:14px;margin-bottom:10px}.toc-actions{display:flex;gap:8px;margin:10px 0 20px}.toc-actions button{font-size:11px;min-height:30px;padding:4px 9px}.toc details{margin:12px 0}.toc summary{cursor:pointer;font-weight:650;line-height:1.5;padding:5px 0}.toc ol{list-style:none;margin:7px 0;padding:0 0 0 9px}.toc li{margin:2px 0}.toc a{display:block;padding:7px 8px;color:var(--muted);text-decoration:none;border-left:2px solid transparent;line-height:1.45}.toc a span{font-size:11px;color:var(--accent)}.toc a.active{border-color:var(--accent);background:#edf5f3;color:var(--ink)}.toc a:hover{text-decoration:underline}.book{min-width:0;max-width:1050px}.book-title{padding:10px 0 27px;border-bottom:2px solid var(--ink)}.book-title>p,.book-title>.intro{max-width:80ch}.book-title p,.chapter-heading p,.report-section>p,.narrative p,.catalog-group>header>p{font-family:Georgia,'Times New Roman',serif;font-size:18px;line-height:1.78;max-width:82ch}.reading-links{display:flex;gap:20px;flex-wrap:wrap;font-size:13px;margin-top:25px}.filter-bar,.catalog-controls{display:flex;gap:8px;flex-wrap:wrap;padding:14px 0;background:white;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:8}.filter-bar input,.catalog-controls input{flex:2;min-width:200px}.filter-bar select,.catalog-controls select{flex:1;min-width:140px;font-size:13px}.filter-bar button,.catalog-controls button{font-size:13px}.result-count{margin:10px 0 25px}.chapter{margin-top:44px}.chapter-heading{padding:20px 0 15px;border-bottom:1px solid var(--ink);margin-bottom:25px}.chapter-heading h2{margin:8px 0 18px;font-size:32px}.chapter-heading p{color:#354e5e}.report-section{padding:10px 0 24px;margin:20px 0;border-bottom:1px solid var(--line)}.report-section:last-child{border-bottom:0}.report-section h3>a,.usecase-entry h3>a{color:inherit;text-decoration:none}.report-section h3>a:hover,.usecase-entry h3>a:hover{text-decoration:underline}.section-meta{font-size:11px;margin:8px 0;letter-spacing:.02em}.report-section>ul,.report-section>ol{font-size:16px;line-height:1.7;padding-left:25px}.report-section>p:first-of-type{margin-top:10px}.report-section h4{font-size:19px}
+.table-wrap{width:100%;max-width:100%;overflow:auto;margin:23px 0}table{border-collapse:collapse;width:100%;font-size:14px;line-height:1.55}th,td{padding:13px 14px;vertical-align:top;text-align:left;border-bottom:1px solid var(--line);min-width:110px}th{background:var(--wash);font-weight:700;border-top:1px solid #a9bcc5}tbody tr:nth-child(even){background:#fbfcfc}th[scope=row]{background:transparent}.diagram{margin:28px 0 30px;padding:20px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.diagram-viewport{width:100%;overflow:auto}.diagram svg{display:block;width:100%;height:auto;max-height:680px;margin:auto}.diagram figcaption{font:13px/1.65 system-ui,sans-serif;color:var(--muted);margin:17px 10px 0}.diagram figcaption strong{color:var(--ink)}.diagram-scope{display:block;font-size:12px;margin-top:4px}
+.catalog-main,.index-main{max-width:1120px;margin:30px auto 60px;padding:0 28px}.catalog-main .book-title{max-width:950px}.catalog-group{margin:36px 0}.catalog-group>header{padding:10px 0 18px;border-bottom:1px solid var(--ink)}.catalog-group>header>h2{font-size:27px;margin:5px 0 17px}.usecase-entry{padding:28px 0 30px;border-bottom:1px solid var(--line)}.usecase-entry h3{margin:8px 0 16px}.narrative{max-width:900px}.case-reference{margin:20px 0 0;padding:14px 0 0;border-top:1px dotted var(--line)}summary{cursor:pointer}.case-reference summary{font-size:13px;font-weight:650;color:var(--accent)}dl{display:grid;grid-template-columns:150px minmax(0,1fr);gap:10px 18px;font-size:14px;margin:20px 0}dt{font-weight:700;color:var(--muted)}dd{margin:0}.reference-links{margin:10px 0;line-height:1.7}.reference-links a{margin-right:8px}.embedded-catalog{margin-top:55px}.embedded-catalog .catalog-controls{position:static}.index-main .book-title p{max-width:85ch}.index-main h2{margin-top:38px}.index-main>p{font-family:Georgia,serif;font-size:18px;line-height:1.75}footer{border-top:1px solid var(--line);margin-top:35px;padding-top:20px;font:13px/1.6 system-ui,sans-serif;color:var(--muted)}
+/* HTML teaching edition */
+.presentation-page{background:#edf1f2}.presentation-page .site-header{padding-top:11px;padding-bottom:11px}.deck-main{max-width:1500px;margin:auto;padding:15px 24px 35px}.deck-toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.deck-toolbar select{flex:1;min-width:200px}.deck-toolbar button{font-size:13px}.chapter-strip{display:flex;gap:4px;flex-wrap:wrap;margin:12px 0}.chapter-strip button{flex:1;min-width:120px;font-size:11px;line-height:1.4;text-align:left;border-color:var(--line);padding:7px 10px}.chapter-strip button span{display:block;color:var(--accent);font-weight:750;font-size:10px;margin-bottom:3px}.chapter-strip button[aria-current=true]{background:var(--nav);color:white;border-color:var(--nav)}.chapter-strip button[aria-current=true] span{color:#b8ded8}.timer-bar{display:flex;align-items:center;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin:12px 0}.timer-bar button{font-size:11px;min-height:30px;padding:4px 9px}.timer-bar output{font-variant-numeric:tabular-nums;color:var(--ink)}.timer-bar .over{color:#a34e11;font-weight:750}.slide{display:none;background:white;padding:24px 34px 18px;border-top:4px solid var(--accent);min-height:610px;flex-direction:column}.slide.active{display:flex}.slide-top{display:flex;justify-content:space-between;gap:20px;font-size:11px;line-height:1.5;color:var(--muted)}.slide h1{font-size:32px;line-height:1.2;margin:18px 0 20px;max-width:50ch}.slide-body{flex:1}.slide table{font-size:17px;line-height:1.45}.slide td,.slide th{padding:11px 13px}.slide .table-wrap{margin:8px 0 15px}.flow,.columns{display:flex;gap:16px;margin:15px 0;align-items:stretch}.content-unit{flex:1;min-width:0;padding:17px 19px;background:#f1f6f5;border-top:3px solid var(--accent)}.content-unit h2{font-size:21px;margin:0 0 13px}.content-unit p{font-size:18px;line-height:1.6;margin:0}.flow .content-unit{position:relative}.flow .content-unit:not(:last-child)::after{content:'→';position:absolute;right:-17px;top:42%;font-size:20px;color:var(--accent)}.slide-explanation{padding:13px 17px;background:#f0f4f5;border-left:3px solid var(--accent);font-size:17px;line-height:1.5;margin:15px 0 0}.slide-foot{font-size:11px;line-height:1.5;margin-top:15px;padding-top:10px}.slide-foot a{margin-right:6px}.slide .diagram{margin:0;padding:0;border:0}.slide .diagram svg{max-height:470px;min-height:220px}.slide .diagram figcaption{font-size:12px;margin-top:10px}.slide .diagram-scope{font-size:10px}.deck-links{font-size:13px;margin:17px 0}.notes{padding:20px 25px;margin:20px 0;background:white;border:1px solid var(--line)}.notes>summary{font-weight:650}.note-reference{padding-top:20px;margin-top:22px;border-top:1px solid var(--line)}.note-reference>p{font-family:Georgia,serif;font-size:17px;line-height:1.75}.talk-track{margin:20px 0;padding:17px;background:var(--wash)}.notes .diagram svg{max-height:520px}.notes h2{font-size:25px}.notes h3{font-size:22px}dialog{max-width:900px;width:calc(100% - 40px);max-height:88vh;overflow:auto;border:1px solid var(--line);padding:24px;color:var(--ink)}dialog::backdrop{background:#142c3e88}.dialog-heading{display:flex;justify-content:space-between;align-items:center;gap:20px}.dialog-heading h2{margin:0}dialog h3{font-size:20px}dialog section button{display:block;text-align:left;width:100%;margin:5px 0;font-size:14px}dialog small{float:right;color:var(--muted)}:fullscreen{overflow:auto;background:#edf1f2}
+@media(max-width:1100px){.book-layout{grid-template-columns:220px minmax(0,1fr);gap:28px;padding:25px 20px}.toc{padding-right:10px}.book-title p,.chapter-heading p,.report-section>p,.narrative p,.catalog-group>header>p{font-size:17px}.slide{padding:22px;min-height:560px}.slide h1{font-size:29px}.slide table{font-size:15px}.content-unit{padding:14px}.content-unit h2{font-size:19px}.content-unit p{font-size:16px}}
+@media(max-width:760px){.site-header{padding:14px 18px}.site-header nav{gap:12px;font-size:11px}.book-layout{display:block;padding:20px 18px}.toc{position:static;max-height:280px;border:1px solid var(--line);padding:15px;margin-bottom:28px}.book-title h1{font-size:34px}.chapter-heading h2{font-size:27px}.filter-bar,.catalog-controls{position:static}.filter-bar>*,.catalog-controls>*{width:100%;min-width:0!important}.table-wrap table{min-width:560px}.diagram svg{min-width:600px;max-height:none}.diagram-viewport{overflow:auto}.catalog-main,.index-main{padding:0 18px;margin-top:22px}dl{display:block}dt{margin-top:12px}dd{margin-top:3px}.deck-main{padding:12px}.deck-toolbar select{min-width:100%;order:1}.deck-toolbar button{flex:1}.chapter-strip button{min-width:120px}.slide{padding:18px;min-height:0}.slide h1{font-size:26px}.slide-top{font-size:10px}.flow,.columns{flex-direction:column}.flow .content-unit:not(:last-child)::after{display:none}.slide-explanation{font-size:16px}.slide .diagram svg{min-width:650px;max-height:none}.slide .table-wrap{overflow:auto}.timer-bar{gap:10px}.timer-bar span{font-size:11px}.notes{padding:17px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
-@media print{@page{size:A4 landscape;margin:12mm}body{background:white;color:black;font-size:10pt}.site-header,.toc,.filter-bar,.chapter-map,.actions,.search-status,.reading-breadcrumb,.section-nav,.deck-toolbar,.chapter-strip,.deck-status,.notes,.evidence,footer,.empty,.section-meta a,.skip{display:none!important}.report-shell{display:block;padding:0;max-width:none}.content{max-width:none}.hero{border:0;padding:0}.hero h1{max-width:none}.report-section,.chapter{display:block!important;border:0;padding:0;margin:14px 0}.chapter-heading{break-after:avoid}.report-section h3{break-after:avoid}.report-section[hidden],.chapter[hidden]{display:block!important}.table-wrap{overflow:visible}table{font-size:9pt}pre{white-space:pre-wrap;background:#eee;color:black}.deck-main{padding:0;max-width:none}.presentation-page .slide{display:flex!important;box-shadow:none;border:0;padding:0;min-height:0;break-after:page;height:176mm;overflow:visible}.presentation-page .slide:last-of-type{break-after:auto}.slide h1{font-size:25pt;margin:8mm 0 5mm}.slide-body{min-height:0}.slide table{font-size:12pt}.slide td,.slide th{padding:8px}.flow,.columns{flex-direction:row}.node,.column{padding:14px}.node strong,.column strong{font-size:16pt}.node p,.column p{font-size:13pt}.takeaway{background:#e8eeee;color:black;font-size:13pt}.slide-foot{font-size:9pt}.slide-top{font-size:9pt}.index-main{margin:0}.index-grid{grid-template-columns:1fr 1fr}}
+@media print{@page{size:A4 portrait;margin:16mm}body{background:white;font-size:10pt}.site-header,.toc,.filter-bar,.catalog-controls,.reading-links,.result-count,.skip,.deck-toolbar,.chapter-strip,.timer-bar,.notes,.deck-links,dialog,button{display:none!important}.book-layout,.book,.index-main,.catalog-main{display:block;padding:0;margin:0;max-width:none}.book-title{padding:0;border:0}.book-title h1{font-size:28pt}.book-title p,.chapter-heading p,.report-section>p,.narrative p,.catalog-group>header>p{font-size:11pt;line-height:1.6;max-width:none}.chapter,.report-section,.catalog-group,.usecase-entry{display:block!important}.chapter{margin-top:20px}.report-section{padding:0;margin:15px 0}.chapter-heading{break-after:avoid}.chapter-heading h2{font-size:21pt}.report-section h3,.usecase-entry h3{font-size:16pt;break-after:avoid}.table-wrap{overflow:visible}table{font-size:9pt;min-width:0!important}th,td{min-width:0;padding:7px}.diagram{break-inside:avoid}.diagram-viewport{overflow:visible}.diagram svg{min-width:0!important;width:100%;max-height:170mm}.case-reference{display:block}.case-reference>*{display:block}.case-reference dl{display:grid}.diagram figcaption{font-size:9pt}pre{white-space:pre-wrap;background:#eee;color:black}.presentation-page{background:white}.presentation-page .slide{display:flex!important;break-after:page;padding:0;border:0;min-height:0;box-shadow:none}.presentation-page .slide h1{font-size:23pt}.presentation-page .slide table{font-size:11pt}.presentation-page .slide .diagram svg{min-width:0;max-height:125mm}.presentation-page .slide-explanation{font-size:11pt}.presentation-page .slide-foot{font-size:8pt}.presentation-page .flow,.presentation-page .columns{flex-direction:row}.presentation-page .content-unit{padding:10px}.presentation-page .content-unit p{font-size:11pt}.presentation-page .content-unit h2{font-size:14pt}.presentation-page .slide:last-of-type{break-after:auto}.deck-main{padding:0}.slide-top{font-size:8pt}}
 
-@media print{@page{size:A4 landscape}}</style></head><body class="presentation-page" data-key="architecture" data-total="1320" data-view="presentation"><a class="skip" href="#main">Skip to content</a><header class="site-header"><div class="brand">AWS agent engineering guides</div><nav aria-label="Collection navigation"><a href="../index.html">Collection</a><a href="../presentations/index.html">HTML presentations</a><a href="../guides/coverage.md">Coverage</a><a href="../catalog/index.html?platform=architecture">Use cases</a></nav></header><main class="deck-main" id="main"><div class="deck-toolbar"><a class="button-link" href="../catalog/index.html?platform=architecture">Use case catalog</a><a class="button-link" href="../guides/architecture.html">Read structured report</a><button id="agenda-open">Agenda</button><button id="previous">Previous</button><select aria-label="Select slide" id="slide-select"><option value="0">01. Comparison Framework</option><option value="1">02. Use Case Families Across the Three Platforms</option><option value="2">03. Resource and Context Models</option><option value="3">04. Connectivity, Identity and Authorization</option><option value="4">05. Execution and Approval Boundaries</option><option value="5">06. Configuration, Execution and Artifact Lifecycles</option><option value="6">07. Handoff Record Between Platforms and Teams</option><option value="7">08. Tabletop: One Operational Symptom, Three Different Jobs</option><option value="8">09. Documentation and Presentation Acceptance Criteria</option></select><button id="next">Next</button><button id="notes-button">Speaker notes</button><button id="fullscreen">Fullscreen</button><button data-print="">Print slides</button></div><nav aria-label="Presentation chapters" class="chapter-strip"><button aria-current="false" data-group="0" data-start="0"><span>01 · 05:00</span>Part I · Comparison Framework</button><button aria-current="false" data-group="1" data-start="2"><span>02 · 04:00</span>Part II · Resource, Context and Access</button><button aria-current="false" data-group="2" data-start="4"><span>03 · 06:00</span>Part III · Execution, Lifecycle and Handoffs</button><button aria-current="false" data-group="3" data-start="7"><span>04 · 04:00</span>Part IV · Tabletop</button><button aria-current="false" data-group="4" data-start="8"><span>05 · 03:00</span>Part V · Acceptance Criteria</button></nav><div class="deck-toolbar"><button aria-pressed="false" id="timer-toggle">Start timer</button><button id="timer-reset">Reset timer</button><span class="timer" id="session-clock">Session <b id="session-time">00:00 / 22:00</b></span><span class="timer" id="slide-clock">Slide <b id="slide-time">00:00</b></span><span class="small">22 min including 4 min prepared-result exercise</span></div><article aria-label="Slide 1" class="slide" data-chapter="Part I · Comparison Framework" data-group="0" data-kind="table" data-seconds="120" id="slide-01"><div class="slide-top"><span>Shared Architecture · 01 / 05 Part I · Comparison Framework</span><span>Presentation</span></div><h1>Comparison Framework</h1><div class="slide-body"><div aria-label="Slide table" class="table-wrap" role="region" tabindex="0"><table><thead><tr><th scope="col">Question</th><th scope="col">DevOps Agent</th><th scope="col">Security Agent</th><th scope="col">FinOps Agent</th></tr></thead><tbody><tr><td>Scope object</td><td>Agent Space</td><td>Application Agent Space plus shared resources</td><td>Agent instance</td></tr><tr><td>Configuration</td><td>Agents, tools and knowledge</td><td>Assessment definitions and criteria</td><td>Context, tasks, automations and connections</td></tr><tr><td>Execution</td><td>Investigation or invocation</td><td>Run, review or revalidation job</td><td>Conversation or task</td></tr><tr><td>Primary evidence</td><td>Tool results and investigation history</td><td>Findings and linked verification</td><td>Source query, task and artifact</td></tr></tbody></table></div></div><div class="takeaway">Cross-platform comparison begins with the actual resource and execution model.</div><div class="slide-foot"><span>01 / 09 · 00:00–02:00 · 02:00 planned</span><span>Guide sections: <a href="../guides/architecture.html#A-01">A-01</a></span></div></article><article aria-label="Slide 2" class="slide" data-chapter="Part I · Comparison Framework" data-group="0" data-kind="table" data-seconds="180" hidden="" id="slide-02"><div class="slide-top"><span>Shared Architecture · 01 / 05 Part I · Comparison Framework</span><span>Presentation</span></div><h1>Use Case Families Across the Three Platforms</h1><div class="slide-body"><div aria-label="Slide table" class="table-wrap" role="region" tabindex="0"><table><thead><tr><th scope="col">Family</th><th scope="col">DevOps Agent</th><th scope="col">Security Agent</th><th scope="col">FinOps Agent</th></tr></thead><tbody><tr><td>Event response</td><td>Incident triage and investigation</td><td>Assessment run from configured target or source</td><td>Anomaly-triggered investigation</td></tr><tr><td>Recurring review</td><td>Health and operational review report</td><td>Scheduled assessment or review workflow</td><td>Cost and FinOps review report</td></tr><tr><td>Pattern analysis</td><td>Recurring causes and prevention recommendations</td><td>Requirement and finding trends</td><td>Cost drivers and optimization candidates</td></tr><tr><td>Documentation</td><td>Topology, SOP skills and environment memory</td><td>Threat model and requirement packs</td><td>Context files and report artifacts</td></tr><tr><td>Controlled effect</td><td>Directed resource action</td><td>Repository remediation or issue tracking</td><td>Jira/Slack publication; engineering change outside agent</td></tr></tbody></table></div></div><div class="takeaway">Similar business labels can map to different platform objects and authorization boundaries.</div><div class="slide-foot"><span>02 / 09 · 02:00–05:00 · 03:00 planned</span><span>Guide sections: <a href="../guides/architecture.html#A-01">A-01</a><a href="../guides/architecture.html#A-07">A-07</a></span></div></article><article aria-label="Slide 3" class="slide" data-chapter="Part II · Resource, Context and Access" data-group="1" data-kind="table" data-seconds="120" hidden="" id="slide-03"><div class="slide-top"><span>Shared Architecture · 02 / 05 Part II · Resource, Context and Access</span><span>Presentation</span></div><h1>Resource and Context Models</h1><div class="slide-body"><div aria-label="Slide table" class="table-wrap" role="region" tabindex="0"><table><thead><tr><th scope="col">Material</th><th scope="col">Producer</th><th scope="col">Consumer</th><th scope="col">Lifecycle distinction</th></tr></thead><tbody><tr><td>Incident memory</td><td>Managed learning or corrective feedback</td><td>Relevant later investigation</td><td>Version, active state and bounded retention</td></tr><tr><td>Login procedure</td><td>Successful authenticated navigation</td><td>Later security test session</td><td>Configuration-specific reuse</td></tr><tr><td>Requirement pack</td><td>Administrator or document generation</td><td>Eligible design/code assessment</td><td>Enablement and replacement</td></tr><tr><td>Reference file</td><td>FinOps operator upload</td><td>Task or conversation</td><td>Soft delete and restore</td></tr><tr><td>Conversational memory</td><td>Explicit user request</td><td>Later FinOps session</td><td>Update or forget</td></tr></tbody></table></div></div><div class="takeaway">The three services do not expose one common memory mechanism.</div><div class="slide-foot"><span>03 / 09 · 05:00–07:00 · 02:00 planned</span><span>Guide sections: <a href="../guides/architecture.html#A-01">A-01</a><a href="../guides/architecture.html#A-02">A-02</a></span></div></article><article aria-label="Slide 4" class="slide" data-chapter="Part II · Resource, Context and Access" data-group="1" data-kind="flow" data-seconds="120" hidden="" id="slide-04"><div class="slide-top"><span>Shared Architecture · 02 / 05 Part II · Resource, Context and Access</span><span>Presentation</span></div><h1>Connectivity, Identity and Authorization</h1><div class="slide-body"><div class="flow"><div class="node"><strong>Connectivity</strong><p>Can the endpoint, repository, account or application be reached?</p></div><div class="node"><strong>Identity</strong><p>Which operator, role, credential or application user authenticated?</p></div><div class="node"><strong>Permission</strong><p>Which read, test, publication or mutation operation is allowed?</p></div><div class="node"><strong>Behavioral guidance</strong><p>Which instructions, skills or prompt rules shape the work?</p></div></div></div><div class="takeaway">Reachability and prompt guidance do not establish authorization for an effect.</div><div class="slide-foot"><span>04 / 09 · 07:00–09:00 · 02:00 planned</span><span>Guide sections: <a href="../guides/architecture.html#A-03">A-03</a></span></div></article><article aria-label="Slide 5" class="slide" data-chapter="Part III · Execution, Lifecycle and Handoffs" data-group="2" data-kind="table" data-seconds="120" hidden="" id="slide-05"><div class="slide-top"><span>Shared Architecture · 03 / 05 Part III · Execution, Lifecycle and Handoffs</span><span>Presentation</span></div><h1>Execution and Approval Boundaries</h1><div class="slide-body"><div aria-label="Slide table" class="table-wrap" role="region" tabindex="0"><table><thead><tr><th scope="col">Effect</th><th scope="col">Required control</th><th scope="col">Evidence</th></tr></thead><tbody><tr><td>AWS resource mutation</td><td>Specific directed-action enablement, role and approval</td><td>Approval and resulting resource state</td></tr><tr><td>Application security testing</td><td>Authorized target, credentials, exclusions and stop owner</td><td>Run identity, requests and findings</td></tr><tr><td>Repository change</td><td>Provider access and normal code-review controls</td><td>Patch, pull request, tests and reviewer</td></tr><tr><td>Jira or Slack publication</td><td>Destination and invocation-specific rule</td><td>Issue/comment/post and task history</td></tr><tr><td>Recommendation only</td><td>No execution authority</td><td>Proposal and acceptance criteria</td></tr></tbody></table></div></div><div class="takeaway">Approval follows the concrete effect; there is no universal human-approved agent mode.</div><div class="slide-foot"><span>05 / 09 · 09:00–11:00 · 02:00 planned</span><span>Guide sections: <a href="../guides/architecture.html#A-04">A-04</a></span></div></article><article aria-label="Slide 6" class="slide" data-chapter="Part III · Execution, Lifecycle and Handoffs" data-group="2" data-kind="table" data-seconds="120" hidden="" id="slide-06"><div class="slide-top"><span>Shared Architecture · 03 / 05 Part III · Execution, Lifecycle and Handoffs</span><span>Presentation</span></div><h1>Configuration, Execution and Artifact Lifecycles</h1><div class="slide-body"><div aria-label="Slide table" class="table-wrap" role="region" tabindex="0"><table><thead><tr><th scope="col">Layer</th><th scope="col">Create or configure</th><th scope="col">Stop or remove</th><th scope="col">What may remain</th></tr></thead><tbody><tr><td>Configuration</td><td>Agent, assessment, automation or connection</td><td>Disable, detach or delete</td><td>Prior executions and outputs</td></tr><tr><td>Future execution</td><td>Schedule or event trigger</td><td>Pause/disable/delete trigger</td><td>Existing tasks or runs</td></tr><tr><td>Current execution</td><td>Invocation, assessment or task</td><td>Cancel or stop where supported</td><td>Partial results and audit history</td></tr><tr><td>Retained context</td><td>Memory, requirement or file</td><td>Deactivate, replace, forget or soft-delete</td><td>Versions or recoverable data</td></tr><tr><td>External artifact</td><td>Ticket, message or exported report</td><td>Destination-specific removal</td><td>Copies outside the platform</td></tr></tbody></table></div></div><div class="takeaway">Stopping future starts does not reverse completed effects or delete retained evidence.</div><div class="slide-foot"><span>06 / 09 · 11:00–13:00 · 02:00 planned</span><span>Guide sections: <a href="../guides/architecture.html#A-05">A-05</a></span></div></article><article aria-label="Slide 7" class="slide" data-chapter="Part III · Execution, Lifecycle and Handoffs" data-group="2" data-kind="table" data-seconds="120" hidden="" id="slide-07"><div class="slide-top"><span>Shared Architecture · 03 / 05 Part III · Execution, Lifecycle and Handoffs</span><span>Presentation</span></div><h1>Handoff Record Between Platforms and Teams</h1><div class="slide-body"><div aria-label="Slide table" class="table-wrap" role="region" tabindex="0"><table><thead><tr><th scope="col">Field</th><th scope="col">Required content</th><th scope="col">Reason</th></tr></thead><tbody><tr><td>Origin</td><td>Platform, configuration and execution identifiers</td><td>Trace the producing context</td></tr><tr><td>Subject</td><td>Service, revision, target and UTC window</td><td>Avoid ambiguous scope</td></tr><tr><td>Evidence</td><td>Source links, findings, totals and failed reads</td><td>Support independent review</td></tr><tr><td>Request</td><td>Question, owner, deadline and permitted effect</td><td>Bound the receiving work</td></tr><tr><td>Acceptance</td><td>Required check and unresolved questions</td><td>Prevent generated text from becoming automatic closure</td></tr></tbody></table></div></div><div class="takeaway">A handoff transfers evidence and responsibility, not credentials or authorization.</div><div class="slide-foot"><span>07 / 09 · 13:00–15:00 · 02:00 planned</span><span>Guide sections: <a href="../guides/architecture.html#A-06">A-06</a></span></div></article><article aria-label="Slide 8" class="slide" data-chapter="Part IV · Tabletop" data-group="3" data-kind="demo" data-seconds="240" hidden="" id="slide-08"><div class="slide-top"><span>Shared Architecture · 04 / 05 Part IV · Tabletop</span><span>Prepared-result exercise</span></div><h1>Tabletop: One Operational Symptom, Three Different Jobs</h1><div class="slide-body"><div aria-label="Slide table" class="table-wrap" role="region" tabindex="0"><table><thead><tr><th scope="col">Time</th><th scope="col">Action</th><th scope="col">Prepared evidence</th></tr></thead><tbody><tr><td>0–1 min</td><td>Define the observation</td><td>Latency, application revision, authorization identity and cost window</td></tr><tr><td>1–2 min</td><td>Assign DevOps work</td><td>Investigate current service evidence and dependency path</td></tr><tr><td>2–3 min</td><td>Assign Security and FinOps work</td><td>Assess the authorized application change; reconcile related cost movement</td></tr><tr><td>3–4 min</td><td>State unresolved questions</td><td>No single shared root cause or cross-agent runtime is assumed</td></tr></tbody></table></div></div><div class="takeaway">The same business event creates different evidence obligations for each platform.</div><div class="slide-foot"><span>08 / 09 · 15:00–19:00 · 04:00 planned</span><span>Guide sections: <a href="../guides/architecture.html#A-U01">A-U01</a></span></div></article><article aria-label="Slide 9" class="slide" data-chapter="Part V · Acceptance Criteria" data-group="4" data-kind="table" data-seconds="180" hidden="" id="slide-09"><div class="slide-top"><span>Shared Architecture · 05 / 05 Part V · Acceptance Criteria</span><span>Presentation</span></div><h1>Documentation and Presentation Acceptance Criteria</h1><div class="slide-body"><div aria-label="Slide table" class="table-wrap" role="region" tabindex="0"><table><thead><tr><th scope="col">Area</th><th scope="col">Acceptance criterion</th><th scope="col">Failure signal</th></tr></thead><tbody><tr><td>Structure</td><td>Resource model, capabilities, use cases, mechanisms and procedures are distinct</td><td>A scenario is labeled as a capability</td></tr><tr><td>Use case catalog</td><td>Grouped, searchable and classified by delivery mode and availability</td><td>Duplicated or unclassified entries</td></tr><tr><td>Procedure</td><td>Prerequisite, decision, confirmation and failure interpretation are present</td><td>Generic “configure and verify” language</td></tr><tr><td>Presentation</td><td>Descriptive chapter titles and evidence-bearing slides</td><td>Slogan titles and empty visual panels</td></tr><tr><td>Evidence</td><td>Material product claims link to official guidance</td><td>Source count used as proof of completeness</td></tr><tr><td>Validation</td><td>Browser, data and link checks are separated from live product testing</td><td>Packaging checks presented as operational proof</td></tr></tbody></table></div></div><div class="takeaway">A presentation is an indexed technical explanation, not a sequence of slogans.</div><div class="slide-foot"><span>09 / 09 · 19:00–22:00 · 03:00 planned</span><span>Guide sections: <a href="../guides/architecture.html#A-07">A-07</a></span></div></article><div class="deck-status"><span id="slide-position"></span><progress aria-label="Slide progress" id="slide-progress" max="9" value="1"></progress><span>← → navigate · N notes · T timer · F fullscreen</span></div><span aria-live="polite" id="slide-announcement" style="position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden"></span><details class="notes" id="speaker-notes"><summary>Speaker notes and canonical reference</summary><div class="note-block"><h2>1. Comparison Framework</h2><p class="small">Budget 02:00 · cumulative 00:00–02:00.</p><div class="talk-track"><strong>Speaking focus</strong><p>Cross-platform comparison begins with the actual resource and execution model.</p><p class="small">Use the visual as the outline. The linked reference below is supporting detail, not a required verbatim script.</p></div><section class="note-reference"><h3><a href="../guides/architecture.html#A-01">A-01 — Compare resources before comparing workflows</a></h3><div aria-label="Scrollable reference table" class="table-wrap" role="region" tabindex="0"><table>
+@media print{@page{size:A4 landscape;margin:12mm}}</style></head><body class="presentation-page" data-view="presentation" data-key="architecture" data-total="1560"><a class="skip" href="#main">Skip to content</a><header class="site-header"><a class="brand" href="../index.html">AWS operational agents</a><nav aria-label="Collection"><a href="../index.html">Contents</a><a href="../catalog/index.html">Use cases</a><a href="../presentations/index.html">Presentations</a><a href="../guides/coverage.md">Sources and coverage</a></nav></header><main id="main" class="deck-main"><div class="deck-toolbar"><button id="previous" aria-label="Previous slide">←</button><button id="next" aria-label="Next slide">→</button><select id="slide-select" aria-label="Slide"><option value="0">01. Agent execution and evidence cycle</option><option value="1">02. Comparison framework</option><option value="2">03. Resource and context models</option><option value="3">04. Team-managed evidence handoff</option><option value="4">05. Connectivity, identity and authorization</option><option value="5">06. Execution and approval boundaries</option><option value="6">07. Configuration, execution and artifact lifecycles</option><option value="7">08. Handoff record between platforms and teams</option><option value="8">09. Tabletop: one operational symptom, three different jobs</option><option value="9">10. Use case families across the three platforms</option><option value="10">11. Documentation and presentation acceptance criteria</option></select><button id="agenda-open">Contents</button><button id="notes-button" aria-expanded="false">Notes</button><button id="fullscreen">Fullscreen</button><button data-print>Print slides</button></div><nav class="chapter-strip" aria-label="Presentation chapters"><button data-slide="0" data-chapter-button="0"><span>01</span> Service architecture</button><button data-slide="3" data-chapter-button="1"><span>02</span> Integrations and access</button><button data-slide="5" data-chapter-button="2"><span>03</span> Execution workflows</button><button data-slide="8" data-chapter-button="3"><span>04</span> Worked example</button><button data-slide="9" data-chapter-button="4"><span>05</span> Troubleshooting and references</button></nav><div class="timer-bar"><button id="timer-toggle">Start timer</button><button id="timer-reset">Reset timer</button><span>Session <output id="session-time">00:00</output> / 26:00</span><span>Slide <output id="slide-time">00:00</output></span><span>4 min exercise included</span></div><article class="slide" id="slide-01" data-seconds="120" data-group="0" data-kind="diagram"><header class="slide-top"><span>Shared Architecture · 01. Service architecture</span><span>1/11 · 00:00–02:00</span></header><h1>Agent execution and evidence cycle</h1><div class="slide-body"><figure class="diagram" data-diagram-key="agent-execution"><div class="diagram-viewport"><svg aria-labelledby="architecture-slide0-agent-execution-title architecture-slide0-agent-execution-desc" data-diagram="agent-execution" role="img" viewbox="0.00 0.00 929.00 163.00" xmlns="http://www.w3.org/2000/svg">
+<title id="architecture-slide0-agent-execution-title">Agent execution and evidence cycle</title><desc id="architecture-slide0-agent-execution-desc">A task and its configuration guide an execution. Authorized tools return observations. Those observations can lead to another step or a result. Retention is a separate, product-specific path.</desc><g class="graph" id="architecture-slide0-graph0" transform="scale(1 1) rotate(0) translate(18 145)">
+<title>G</title>
+<g class="node" id="architecture-slide0-node1">
+<title>request</title>
+<path d="M158.5,-127C158.5,-127 37.5,-127 37.5,-127 31.5,-127 25.5,-121 25.5,-115 25.5,-115 25.5,-91 25.5,-91 25.5,-85 31.5,-79 37.5,-79 37.5,-79 158.5,-79 158.5,-79 164.5,-79 170.5,-85 170.5,-91 170.5,-91 170.5,-115 170.5,-115 170.5,-121 164.5,-127 158.5,-127" fill="#edf5f4" stroke="#496b78"></path>
+<text fill="#142c3e" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="98" y="-106.8">Request or event</text>
+<text fill="#142c3e" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="98" y="-91.8">Task and scope</text>
+</g>
+<g class="node" id="architecture-slide0-node3">
+<title>run</title>
+<path d="M484,-90C484,-90 343,-90 343,-90 337,-90 331,-84 331,-78 331,-78 331,-54 331,-54 331,-48 337,-42 343,-42 343,-42 484,-42 484,-42 490,-42 496,-48 496,-54 496,-54 496,-78 496,-78 496,-84 490,-90 484,-90" fill="#edf5f4" stroke="#496b78"></path>
+<text fill="#142c3e" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="413.5" y="-69.8">Agent execution</text>
+<text fill="#142c3e" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="413.5" y="-54.8">Select the next step</text>
+</g>
+<g class="edge" id="architecture-slide0-edge1">
+<title>request-&gt;run</title>
+<path d="M170.53,-94.56C215.82,-89.21 274.74,-82.26 323.1,-76.55" fill="none" stroke="#496b78"></path>
+<polygon fill="#496b78" points="323.62,-79.13 330.76,-75.65 323.01,-73.92 323.62,-79.13" stroke="#496b78"></polygon>
+<text font-family="DejaVu Sans" font-size="11.00" text-anchor="middle" x="263.5" y="-91.2">starts</text>
+</g>
+<g class="node" id="architecture-slide0-node2">
+<title>context</title>
+<path d="M184,-54C184,-54 12,-54 12,-54 6,-54 0,-48 0,-42 0,-42 0,-18 0,-18 0,-12 6,-6 12,-6 12,-6 184,-6 184,-6 190,-6 196,-12 196,-18 196,-18 196,-42 196,-42 196,-48 190,-54 184,-54" fill="#edf5f4" stroke="#496b78"></path>
+<text fill="#142c3e" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="98" y="-33.8">Applicable configuration</text>
+<text fill="#142c3e" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="98" y="-18.8">Instructions and context</text>
+</g>
+<g class="edge" id="architecture-slide0-edge2">
+<title>context-&gt;run</title>
+<path d="M196.05,-41.14C236.59,-45.8 283.4,-51.18 323.1,-55.73" fill="none" stroke="#496b78"></path>
+<polygon fill="#496b78" points="323.19,-58.39 330.94,-56.63 323.79,-53.17 323.19,-58.39" stroke="#496b78"></polygon>
+<text font-family="DejaVu Sans" font-size="11.00" text-anchor="middle" x="263.5" y="-56.2">supplies context</text>
+</g>
+<g class="node" id="architecture-slide0-node4">
+<title>tool</title>
+<path d="M881,-126C881,-126 667,-126 667,-126 661,-126 655,-120 655,-114 655,-114 655,-90 655,-90 655,-84 661,-78 667,-78 667,-78 881,-78 881,-78 887,-78 893,-84 893,-90 893,-90 893,-114 893,-114 893,-120 887,-126 881,-126" fill="#edf5f4" stroke="#496b78"></path>
+<text fill="#142c3e" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="774" y="-105.8">Authorized tool or assessment</text>
+<text fill="#142c3e" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="774" y="-90.8">Query or permitted operation</text>
+</g>
+<g class="edge" id="architecture-slide0-edge3">
+<title>run-&gt;tool</title>
+<path d="M496.11,-76.52C503.51,-77.39 510.89,-78.23 518,-79 560.02,-83.53 606,-87.87 647.21,-91.53" fill="none" stroke="#496b78"></path>
+<polygon fill="#496b78" points="647.14,-94.16 654.85,-92.21 647.61,-88.93 647.14,-94.16" stroke="#496b78"></polygon>
+<text font-family="DejaVu Sans" font-size="11.00" text-anchor="middle" x="575.5" y="-92.2">invokes</text>
+</g>
+<g class="node" id="architecture-slide0-node5">
+<title>result</title>
+<path d="M868.5,-48C868.5,-48 679.5,-48 679.5,-48 673.5,-48 667.5,-42 667.5,-36 667.5,-36 667.5,-12 667.5,-12 667.5,-6 673.5,0 679.5,0 679.5,0 868.5,0 868.5,0 874.5,0 880.5,-6 880.5,-12 880.5,-12 880.5,-36 880.5,-36 880.5,-42 874.5,-48 868.5,-48" fill="#edf5f4" stroke="#496b78"></path>
+<text fill="#142c3e" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="774" y="-27.8">Result</text>
+<text fill="#142c3e" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="774" y="-12.8">Answer, finding, or artifact</text>
+</g>
+<g class="edge" id="architecture-slide0-edge5">
+<title>run-&gt;result</title>
+<path d="M496.19,-45.81C503.54,-44.37 510.89,-43.07 518,-42 564.16,-35.06 615.42,-30.79 659.81,-28.16" fill="none" stroke="#496b78"></path>
+<polygon fill="#496b78" points="660.11,-30.77 667.45,-27.72 659.81,-25.53 660.11,-30.77" stroke="#496b78"></polygon>
+<text font-family="DejaVu Sans" font-size="11.00" text-anchor="middle" x="575.5" y="-45.2">produces</text>
+</g>
+<g class="edge" id="architecture-slide0-edge4">
+<title>tool-&gt;run</title>
+<path d="M698.91,-77.97C677.84,-72.21 654.72,-66.9 633,-64 582.34,-57.25 569.11,-63.51 518,-64 513.34,-64.05 508.57,-64.1 503.74,-64.17" fill="none" stroke="#496b78"></path>
+<polygon fill="#496b78" points="503.6,-61.54 496.14,-64.28 503.67,-66.79 503.6,-61.54" stroke="#496b78"></polygon>
+<text font-family="DejaVu Sans" font-size="11.00" text-anchor="middle" x="575.5" y="-67.2">returns observations</text>
+</g>
+</g>
+</svg></div><figcaption><strong>Agent execution and evidence cycle.</strong> A task and its configuration guide an execution. Authorized tools return observations. Those observations can lead to another step or a result. Retention is a separate, product-specific path. <span class="diagram-scope">Logical model; arrows show documented relationships, not AWS internal deployment.</span></figcaption></figure></div><p class="slide-explanation">A task and its configuration guide an execution. Authorized tools return observations. Those observations can lead to another step or a result. Retention is a separate, product-specific path.</p><footer class="slide-foot">Guide: <a href="../guides/architecture.html#A-00">Agents, tools, context, and executions</a></footer></article><article class="slide" id="slide-02" data-seconds="120" data-group="0" data-kind="table"><header class="slide-top"><span>Shared Architecture · 01. Service architecture</span><span>2/11 · 02:00–04:00</span></header><h1>Comparison framework</h1><div class="slide-body"><div class="table-wrap" tabindex="0"><table><thead><tr><th scope="col">Question</th><th scope="col">DevOps Agent</th><th scope="col">Security Agent</th><th scope="col">FinOps Agent</th></tr></thead><tbody><tr><td>Scope object</td><td>Agent Space</td><td>Application Agent Space plus shared resources</td><td>Agent instance</td></tr><tr><td>Configuration</td><td>Agents, tools and knowledge</td><td>Assessment definitions and criteria</td><td>Context, tasks, automations and connections</td></tr><tr><td>Execution</td><td>Investigation or invocation</td><td>Run, review or revalidation job</td><td>Conversation or task</td></tr><tr><td>Primary evidence</td><td>Tool results and investigation history</td><td>Findings and linked verification</td><td>Source query, task and artifact</td></tr></tbody></table></div></div><p class="slide-explanation">Cross-platform comparison begins with the actual resource and execution model.</p><footer class="slide-foot">Guide: <a href="../guides/architecture.html#A-01">Workspace, configuration, and execution models</a></footer></article><article class="slide" id="slide-03" data-seconds="120" data-group="0" data-kind="table"><header class="slide-top"><span>Shared Architecture · 01. Service architecture</span><span>3/11 · 04:00–06:00</span></header><h1>Resource and context models</h1><div class="slide-body"><div class="table-wrap" tabindex="0"><table><thead><tr><th scope="col">Material</th><th scope="col">Producer</th><th scope="col">Consumer</th><th scope="col">Lifecycle distinction</th></tr></thead><tbody><tr><td>Incident memory</td><td>Managed learning or corrective feedback</td><td>Relevant later investigation</td><td>Version, active state and bounded retention</td></tr><tr><td>Login procedure</td><td>Successful authenticated navigation</td><td>Later security test session</td><td>Configuration-specific reuse</td></tr><tr><td>Requirement pack</td><td>Administrator or document generation</td><td>Eligible design/code assessment</td><td>Enablement and replacement</td></tr><tr><td>Reference file</td><td>FinOps operator upload</td><td>Task or conversation</td><td>Soft delete and restore</td></tr><tr><td>Conversational memory</td><td>Explicit user request</td><td>Later FinOps session</td><td>Update or forget</td></tr></tbody></table></div></div><p class="slide-explanation">The three services do not expose one common memory mechanism.</p><footer class="slide-foot">Guide: <a href="../guides/architecture.html#A-01">Workspace, configuration, and execution models</a> · <a href="../guides/architecture.html#A-02">Knowledge construction and retrieval models</a></footer></article><article class="slide" id="slide-04" data-seconds="120" data-group="1" data-kind="diagram"><header class="slide-top"><span>Shared Architecture · 02. Integrations and access</span><span>4/11 · 06:00–08:00</span></header><h1>Team-managed evidence handoff</h1><div class="slide-body"><figure class="diagram" data-diagram-key="shared-handoff"><div class="diagram-viewport"><svg aria-labelledby="architecture-slide3-shared-handoff-title architecture-slide3-shared-handoff-desc" data-diagram="shared-handoff" role="img" viewbox="0.00 0.00 609.00 500.00" xmlns="http://www.w3.org/2000/svg">
+<title id="architecture-slide3-shared-handoff-title">Team-managed evidence handoff</title><desc id="architecture-slide3-shared-handoff-desc">An operational finding can become input to separate security and cost work. Each receiving service uses its own configuration and authorization; only identifiers, evidence references, and decisions are handed over.</desc><g class="graph" id="architecture-slide3-graph0" transform="scale(1 1) rotate(0) translate(18 482)">
+<title>G</title>
+<g class="node" id="architecture-slide3-node1">
+<title>incident</title>
+<path d="M400.5,-464C400.5,-464 187.5,-464 187.5,-464 181.5,-464 175.5,-458 175.5,-452 175.5,-452 175.5,-428 175.5,-428 175.5,-422 181.5,-416 187.5,-416 187.5,-416 400.5,-416 400.5,-416 406.5,-416 412.5,-422 412.5,-428 412.5,-428 412.5,-452 412.5,-452 412.5,-458 406.5,-464 400.5,-464" fill="#edf5f4" stroke="#496b78"></path>
+<text fill="#142c3e" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="294" y="-443.8">Operational investigation</text>
+<text fill="#142c3e" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="294" y="-428.8">Service, time window, revision</text>
+</g>
+<g class="node" id="architecture-slide3-node2">
+<title>handoff</title>
+<path d="M436.5,-360C436.5,-360 151.5,-360 151.5,-360 145.5,-360 139.5,-354 139.5,-348 139.5,-348 139.5,-324 139.5,-324 139.5,-318 145.5,-312 151.5,-312 151.5,-312 436.5,-312 436.5,-312 442.5,-312 448.5,-318 448.5,-324 448.5,-324 448.5,-348 448.5,-348 448.5,-354 442.5,-360 436.5,-360" fill="#edf5f4" stroke="#496b78"></path>
+<text fill="#142c3e" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="294" y="-339.8">Reviewed handoff</text>
+<text fill="#142c3e" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="294" y="-324.8">Evidence references and open questions</text>
+</g>
+<g class="edge" id="architecture-slide3-edge1">
+<title>incident-&gt;handoff</title>
+<path d="M294,-415.85C294,-401.64 294,-383.26 294,-367.82" fill="none" stroke="#496b78"></path>
+<polygon fill="#496b78" points="296.63,-367.55 294,-360.05 291.38,-367.55 296.63,-367.55" stroke="#496b78"></polygon>
+<text font-family="DejaVu Sans" font-size="11.00" text-anchor="middle" x="329" y="-385.2">team review</text>
+</g>
+<g class="node" id="architecture-slide3-node3">
+<title>security</title>
+<path d="M278,-256C278,-256 12,-256 12,-256 6,-256 0,-250 0,-244 0,-244 0,-220 0,-220 0,-214 6,-208 12,-208 12,-208 278,-208 278,-208 284,-208 290,-214 290,-220 290,-220 290,-244 290,-244 290,-250 284,-256 278,-256" fill="#edf5f4" stroke="#496b78"></path>
+<text fill="#142c3e" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="145" y="-235.8">Security assessment</text>
+<text fill="#142c3e" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="145" y="-220.8">Its own application scope and identity</text>
+</g>
+<g class="edge" id="architecture-slide3-edge2">
+<title>handoff-&gt;security</title>
+<path d="M260.19,-311.85C237.9,-296.6 208.6,-276.54 185.13,-260.47" fill="none" stroke="#496b78" stroke-dasharray="5,2"></path>
+<polygon fill="#496b78" points="186.35,-258.12 178.68,-256.05 183.38,-262.46 186.35,-258.12" stroke="#496b78"></polygon>
+<text font-family="DejaVu Sans" font-size="11.00" text-anchor="middle" x="281" y="-281.2">application evidence</text>
+</g>
+<g class="node" id="architecture-slide3-node4">
+<title>finops</title>
+<path d="M561,-256C561,-256 327,-256 327,-256 321,-256 315,-250 315,-244 315,-244 315,-220 315,-220 315,-214 321,-208 327,-208 327,-208 561,-208 561,-208 567,-208 573,-214 573,-220 573,-220 573,-244 573,-244 573,-250 567,-256 561,-256" fill="#edf5f4" stroke="#496b78"></path>
+<text fill="#142c3e" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="444" y="-235.8">Cost investigation</text>
+<text fill="#142c3e" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="444" y="-220.8">Its own query basis and data role</text>
+</g>
+<g class="edge" id="architecture-slide3-edge3">
+<title>handoff-&gt;finops</title>
+<path d="M328.04,-311.85C350.48,-296.6 379.97,-276.54 403.6,-260.47" fill="none" stroke="#496b78" stroke-dasharray="5,2"></path>
+<polygon fill="#496b78" points="405.37,-262.44 410.1,-256.05 402.42,-258.1 405.37,-262.44" stroke="#496b78"></polygon>
+<text font-family="DejaVu Sans" font-size="11.00" text-anchor="middle" x="424.5" y="-281.2">service and period</text>
+</g>
+<g class="node" id="architecture-slide3-node5">
+<title>owner</title>
+<path d="M427,-152C427,-152 161,-152 161,-152 155,-152 149,-146 149,-140 149,-140 149,-116 149,-116 149,-110 155,-104 161,-104 161,-104 427,-104 427,-104 433,-104 439,-110 439,-116 439,-116 439,-140 439,-140 439,-146 433,-152 427,-152" fill="#edf5f4" stroke="#496b78"></path>
+<text fill="#142c3e" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="294" y="-131.8">Engineering owners</text>
+<text fill="#142c3e" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="294" y="-116.8">Review results and authorize changes</text>
+</g>
+<g class="edge" id="architecture-slide3-edge4">
+<title>security-&gt;owner</title>
+<path d="M178.81,-207.85C201.1,-192.6 230.4,-172.54 253.87,-156.47" fill="none" stroke="#496b78"></path>
+<polygon fill="#496b78" points="255.62,-158.46 260.32,-152.05 252.65,-154.12 255.62,-158.46" stroke="#496b78"></polygon>
+<text font-family="DejaVu Sans" font-size="11.00" text-anchor="middle" x="269.5" y="-177.2">finding evidence</text>
+</g>
+<g class="edge" id="architecture-slide3-edge5">
+<title>finops-&gt;owner</title>
+<path d="M409.96,-207.85C387.52,-192.6 358.03,-172.54 334.4,-156.47" fill="none" stroke="#496b78"></path>
+<polygon fill="#496b78" points="335.58,-154.1 327.9,-152.05 332.63,-158.44 335.58,-154.1" stroke="#496b78"></polygon>
+<text font-family="DejaVu Sans" font-size="11.00" text-anchor="middle" x="411.5" y="-177.2">cost evidence</text>
+</g>
+<g class="node" id="architecture-slide3-node6">
+<title>verification</title>
+<path d="M434.5,-48C434.5,-48 153.5,-48 153.5,-48 147.5,-48 141.5,-42 141.5,-36 141.5,-36 141.5,-12 141.5,-12 141.5,-6 147.5,0 153.5,0 153.5,0 434.5,0 434.5,0 440.5,0 446.5,-6 446.5,-12 446.5,-12 446.5,-36 446.5,-36 446.5,-42 440.5,-48 434.5,-48" fill="#edf5f4" stroke="#496b78"></path>
+<text fill="#142c3e" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="294" y="-27.8">Independent verification</text>
+<text fill="#142c3e" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="294" y="-12.8">Source measurements and scoped tests</text>
+</g>
+<g class="edge" id="architecture-slide3-edge6">
+<title>owner-&gt;verification</title>
+<path d="M294,-103.85C294,-89.64 294,-71.26 294,-55.82" fill="none" stroke="#496b78"></path>
+<polygon fill="#496b78" points="296.63,-55.55 294,-48.05 291.38,-55.55 296.63,-55.55" stroke="#496b78"></polygon>
+<text font-family="DejaVu Sans" font-size="11.00" text-anchor="middle" x="348.5" y="-73.2">controlled follow-up</text>
+</g>
+</g>
+</svg></div><figcaption><strong>Team-managed evidence handoff.</strong> An operational finding can become input to separate security and cost work. Each receiving service uses its own configuration and authorization; only identifiers, evidence references, and decisions are handed over. <span class="diagram-scope">Logical model; arrows show documented relationships, not AWS internal deployment.</span></figcaption></figure></div><p class="slide-explanation">An operational finding can become input to separate security and cost work. Each receiving service uses its own configuration and authorization; only identifiers, evidence references, and decisions are handed over.</p><footer class="slide-foot">Guide: <a href="../guides/architecture.html#A-08">Integration direction and evidence ownership</a> · <a href="../guides/architecture.html#A-06">Cross-team evidence handoffs</a></footer></article><article class="slide" id="slide-05" data-seconds="120" data-group="1" data-kind="flow"><header class="slide-top"><span>Shared Architecture · 02. Integrations and access</span><span>5/11 · 08:00–10:00</span></header><h1>Connectivity, identity and authorization</h1><div class="slide-body"><div class="flow"><section class="content-unit"><h2>Connectivity</h2><p>Can the endpoint, repository, account or application be reached?</p></section><section class="content-unit"><h2>Identity</h2><p>Which operator, role, credential or application user authenticated?</p></section><section class="content-unit"><h2>Permission</h2><p>Which read, test, publication or mutation operation is allowed?</p></section><section class="content-unit"><h2>Behavioral guidance</h2><p>Which instructions, skills or prompt rules shape the work?</p></section></div></div><p class="slide-explanation">Reachability and prompt guidance do not establish authorization for an effect.</p><footer class="slide-foot">Guide: <a href="../guides/architecture.html#A-03">Network, identity, and tool-access boundaries</a></footer></article><article class="slide" id="slide-06" data-seconds="120" data-group="2" data-kind="table"><header class="slide-top"><span>Shared Architecture · 03. Execution workflows</span><span>6/11 · 10:00–12:00</span></header><h1>Execution and approval boundaries</h1><div class="slide-body"><div class="table-wrap" tabindex="0"><table><thead><tr><th scope="col">Effect</th><th scope="col">Required control</th><th scope="col">Evidence</th></tr></thead><tbody><tr><td>AWS resource mutation</td><td>Specific directed-action enablement, role and approval</td><td>Approval and resulting resource state</td></tr><tr><td>Application security testing</td><td>Authorized target, credentials, exclusions and stop owner</td><td>Run identity, requests and findings</td></tr><tr><td>Repository change</td><td>Provider access and normal code-review controls</td><td>Patch, pull request, tests and reviewer</td></tr><tr><td>Jira or Slack publication</td><td>Destination and invocation-specific rule</td><td>Issue/comment/post and task history</td></tr><tr><td>Recommendation only</td><td>No execution authority</td><td>Proposal and acceptance criteria</td></tr></tbody></table></div></div><p class="slide-explanation">Approval follows the concrete effect; there is no universal human-approved agent mode.</p><footer class="slide-foot">Guide: <a href="../guides/architecture.html#A-04">Authorization of state-changing operations</a></footer></article><article class="slide" id="slide-07" data-seconds="120" data-group="2" data-kind="table"><header class="slide-top"><span>Shared Architecture · 03. Execution workflows</span><span>7/11 · 12:00–14:00</span></header><h1>Configuration, execution and artifact lifecycles</h1><div class="slide-body"><div class="table-wrap" tabindex="0"><table><thead><tr><th scope="col">Layer</th><th scope="col">Create or configure</th><th scope="col">Stop or remove</th><th scope="col">What may remain</th></tr></thead><tbody><tr><td>Configuration</td><td>Agent, assessment, automation or connection</td><td>Disable, detach or delete</td><td>Prior executions and outputs</td></tr><tr><td>Future execution</td><td>Schedule or event trigger</td><td>Pause/disable/delete trigger</td><td>Existing tasks or runs</td></tr><tr><td>Current execution</td><td>Invocation, assessment or task</td><td>Cancel or stop where supported</td><td>Partial results and audit history</td></tr><tr><td>Retained context</td><td>Memory, requirement or file</td><td>Deactivate, replace, forget or soft-delete</td><td>Versions or recoverable data</td></tr><tr><td>External artifact</td><td>Ticket, message or exported report</td><td>Destination-specific removal</td><td>Copies outside the platform</td></tr></tbody></table></div></div><p class="slide-explanation">Stopping future starts does not reverse completed effects or delete retained evidence.</p><footer class="slide-foot">Guide: <a href="../guides/architecture.html#A-05">Configuration, execution, and artifact lifecycles</a></footer></article><article class="slide" id="slide-08" data-seconds="120" data-group="2" data-kind="table"><header class="slide-top"><span>Shared Architecture · 03. Execution workflows</span><span>8/11 · 14:00–16:00</span></header><h1>Handoff record between platforms and teams</h1><div class="slide-body"><div class="table-wrap" tabindex="0"><table><thead><tr><th scope="col">Field</th><th scope="col">Required content</th><th scope="col">Reason</th></tr></thead><tbody><tr><td>Origin</td><td>Platform, configuration and execution identifiers</td><td>Trace the producing context</td></tr><tr><td>Subject</td><td>Service, revision, target and UTC window</td><td>Avoid ambiguous scope</td></tr><tr><td>Evidence</td><td>Source links, findings, totals and failed reads</td><td>Support independent review</td></tr><tr><td>Request</td><td>Question, owner, deadline and permitted effect</td><td>Bound the receiving work</td></tr><tr><td>Acceptance</td><td>Required check and unresolved questions</td><td>Prevent generated text from becoming automatic closure</td></tr></tbody></table></div></div><p class="slide-explanation">A handoff transfers evidence and responsibility, not credentials or authorization.</p><footer class="slide-foot">Guide: <a href="../guides/architecture.html#A-06">Cross-team evidence handoffs</a></footer></article><article class="slide" id="slide-09" data-seconds="240" data-group="3" data-kind="demo"><header class="slide-top"><span>Shared Architecture · 04. Worked example</span><span>9/11 · 16:00–20:00</span></header><h1>Tabletop: one operational symptom, three different jobs</h1><div class="slide-body"><div class="table-wrap" tabindex="0"><table><thead><tr><th scope="col">Time</th><th scope="col">Action</th><th scope="col">Prepared evidence</th></tr></thead><tbody><tr><td>0–1 min</td><td>Define the observation</td><td>Latency, application revision, authorization identity and cost window</td></tr><tr><td>1–2 min</td><td>Assign DevOps work</td><td>Investigate current service evidence and dependency path</td></tr><tr><td>2–3 min</td><td>Assign Security and FinOps work</td><td>Assess the authorized application change; reconcile related cost movement</td></tr><tr><td>3–4 min</td><td>State unresolved questions</td><td>No single shared root cause or cross-agent runtime is assumed</td></tr></tbody></table></div></div><p class="slide-explanation">The same business event creates different evidence obligations for each platform.</p><footer class="slide-foot">Guide: <a href="../guides/architecture.html#A-U01">Cross-platform operational review: worked example</a></footer></article><article class="slide" id="slide-10" data-seconds="180" data-group="4" data-kind="table"><header class="slide-top"><span>Shared Architecture · 05. Troubleshooting and references</span><span>10/11 · 20:00–23:00</span></header><h1>Use case families across the three platforms</h1><div class="slide-body"><div class="table-wrap" tabindex="0"><table><thead><tr><th scope="col">Family</th><th scope="col">DevOps Agent</th><th scope="col">Security Agent</th><th scope="col">FinOps Agent</th></tr></thead><tbody><tr><td>Event response</td><td>Incident triage and investigation</td><td>Assessment run from configured target or source</td><td>Anomaly-triggered investigation</td></tr><tr><td>Recurring review</td><td>Health and operational review report</td><td>Scheduled assessment or review workflow</td><td>Cost and FinOps review report</td></tr><tr><td>Pattern analysis</td><td>Recurring causes and prevention recommendations</td><td>Requirement and finding trends</td><td>Cost drivers and optimization candidates</td></tr><tr><td>Documentation</td><td>Topology, SOP skills and environment memory</td><td>Threat model and requirement packs</td><td>Context files and report artifacts</td></tr><tr><td>Controlled effect</td><td>Directed resource action</td><td>Repository remediation or issue tracking</td><td>Jira/Slack publication; engineering change outside agent</td></tr></tbody></table></div></div><p class="slide-explanation">Similar business labels can map to different platform objects and authorization boundaries.</p><footer class="slide-foot">Guide: <a href="../guides/architecture.html#A-01">Workspace, configuration, and execution models</a> · <a href="../guides/architecture.html#A-07">Architecture assumptions and references</a></footer></article><article class="slide" id="slide-11" data-seconds="180" data-group="4" data-kind="table"><header class="slide-top"><span>Shared Architecture · 05. Troubleshooting and references</span><span>11/11 · 23:00–26:00</span></header><h1>Documentation and presentation acceptance criteria</h1><div class="slide-body"><div class="table-wrap" tabindex="0"><table><thead><tr><th scope="col">Area</th><th scope="col">Acceptance criterion</th><th scope="col">Failure signal</th></tr></thead><tbody><tr><td>Structure</td><td>Resource model, capabilities, use cases, mechanisms and procedures are distinct</td><td>A scenario is labeled as a capability</td></tr><tr><td>Use case catalog</td><td>Grouped, searchable and classified by delivery mode and availability</td><td>Duplicated or unclassified entries</td></tr><tr><td>Procedure</td><td>Prerequisite, decision, confirmation and failure interpretation are present</td><td>Generic “configure and verify” language</td></tr><tr><td>Presentation</td><td>Descriptive chapter titles and evidence-bearing slides</td><td>Slogan titles and empty visual panels</td></tr><tr><td>Evidence</td><td>Material product claims link to official guidance</td><td>Source count used as proof of completeness</td></tr><tr><td>Validation</td><td>Browser, data and link checks are separated from live product testing</td><td>Packaging checks presented as operational proof</td></tr></tbody></table></div></div><p class="slide-explanation">A presentation is an indexed technical explanation, not a sequence of slogans.</p><footer class="slide-foot">Guide: <a href="../guides/architecture.html#A-07">Architecture assumptions and references</a></footer></article><details id="speaker-notes" class="notes"><summary>Presenter notes and detailed references</summary><section class="note-block" data-note="0"><h2>Agent execution and evidence cycle</h2><div class="talk-track"><p>A task and its configuration guide an execution. Authorized tools return observations. Those observations can lead to another step or a result. Retention is a separate, product-specific path.</p><p>Allocated time: 02:00. Use the detailed section references below for configuration and limitations.</p></div><section class="note-reference"><h3>Agents, tools, context, and executions</h3><p>In these guides, an agent is a software system that carries out a bounded task by using a model to interpret the request and by invoking the tools or assessment functions the service makes available. The useful unit of observation is the execution: the particular investigation, assessment run, conversation, or task that receives inputs and produces results. The configured agent or application space is longer-lived and can supply permissions, instructions, sources, and retained information to many executions. The three AWS services implement that distinction with different named resources. <a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html">AS30</a> <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html">AS31</a> <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html">AS32</a></p>
+<p>A tool is an interface to another system, such as an authorized telemetry query or an issue-creation operation. Tool output supplies observations. Instructions express how the agent should perform its work. Memory or reference material supplies context. These are different responsibilities: a statement in a document cannot make an unauthorized API call succeed, and a granted API permission does not guarantee that a run will choose the correct query.</p>
+<figure class="diagram" data-diagram-key="agent-execution"><div class="diagram-viewport"><svg aria-labelledby="architecture-note0-A-00-fig0-agent-execution-title architecture-note0-A-00-fig0-agent-execution-desc" data-diagram="agent-execution" role="img" viewbox="0.00 0.00 929.00 163.00" xmlns="http://www.w3.org/2000/svg">
+<title id="architecture-note0-A-00-fig0-agent-execution-title">Agent execution and evidence cycle</title><desc id="architecture-note0-A-00-fig0-agent-execution-desc">A task and its configuration guide an execution. Authorized tools return observations. Those observations can lead to another step or a result. Retention is a separate, product-specific path.</desc><g class="graph" id="architecture-note0-A-00-fig0-graph0" transform="scale(1 1) rotate(0) translate(18 145)">
+<title>G</title>
+<g class="node" id="architecture-note0-A-00-fig0-node1">
+<title>request</title>
+<path d="M158.5,-127C158.5,-127 37.5,-127 37.5,-127 31.5,-127 25.5,-121 25.5,-115 25.5,-115 25.5,-91 25.5,-91 25.5,-85 31.5,-79 37.5,-79 37.5,-79 158.5,-79 158.5,-79 164.5,-79 170.5,-85 170.5,-91 170.5,-91 170.5,-115 170.5,-115 170.5,-121 164.5,-127 158.5,-127" fill="#edf5f4" stroke="#496b78"></path>
+<text fill="#142c3e" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="98" y="-106.8">Request or event</text>
+<text fill="#142c3e" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="98" y="-91.8">Task and scope</text>
+</g>
+<g class="node" id="architecture-note0-A-00-fig0-node3">
+<title>run</title>
+<path d="M484,-90C484,-90 343,-90 343,-90 337,-90 331,-84 331,-78 331,-78 331,-54 331,-54 331,-48 337,-42 343,-42 343,-42 484,-42 484,-42 490,-42 496,-48 496,-54 496,-54 496,-78 496,-78 496,-84 490,-90 484,-90" fill="#edf5f4" stroke="#496b78"></path>
+<text fill="#142c3e" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="413.5" y="-69.8">Agent execution</text>
+<text fill="#142c3e" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="413.5" y="-54.8">Select the next step</text>
+</g>
+<g class="edge" id="architecture-note0-A-00-fig0-edge1">
+<title>request-&gt;run</title>
+<path d="M170.53,-94.56C215.82,-89.21 274.74,-82.26 323.1,-76.55" fill="none" stroke="#496b78"></path>
+<polygon fill="#496b78" points="323.62,-79.13 330.76,-75.65 323.01,-73.92 323.62,-79.13" stroke="#496b78"></polygon>
+<text font-family="DejaVu Sans" font-size="11.00" text-anchor="middle" x="263.5" y="-91.2">starts</text>
+</g>
+<g class="node" id="architecture-note0-A-00-fig0-node2">
+<title>context</title>
+<path d="M184,-54C184,-54 12,-54 12,-54 6,-54 0,-48 0,-42 0,-42 0,-18 0,-18 0,-12 6,-6 12,-6 12,-6 184,-6 184,-6 190,-6 196,-12 196,-18 196,-18 196,-42 196,-42 196,-48 190,-54 184,-54" fill="#edf5f4" stroke="#496b78"></path>
+<text fill="#142c3e" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="98" y="-33.8">Applicable configuration</text>
+<text fill="#142c3e" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="98" y="-18.8">Instructions and context</text>
+</g>
+<g class="edge" id="architecture-note0-A-00-fig0-edge2">
+<title>context-&gt;run</title>
+<path d="M196.05,-41.14C236.59,-45.8 283.4,-51.18 323.1,-55.73" fill="none" stroke="#496b78"></path>
+<polygon fill="#496b78" points="323.19,-58.39 330.94,-56.63 323.79,-53.17 323.19,-58.39" stroke="#496b78"></polygon>
+<text font-family="DejaVu Sans" font-size="11.00" text-anchor="middle" x="263.5" y="-56.2">supplies context</text>
+</g>
+<g class="node" id="architecture-note0-A-00-fig0-node4">
+<title>tool</title>
+<path d="M881,-126C881,-126 667,-126 667,-126 661,-126 655,-120 655,-114 655,-114 655,-90 655,-90 655,-84 661,-78 667,-78 667,-78 881,-78 881,-78 887,-78 893,-84 893,-90 893,-90 893,-114 893,-114 893,-120 887,-126 881,-126" fill="#edf5f4" stroke="#496b78"></path>
+<text fill="#142c3e" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="774" y="-105.8">Authorized tool or assessment</text>
+<text fill="#142c3e" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="774" y="-90.8">Query or permitted operation</text>
+</g>
+<g class="edge" id="architecture-note0-A-00-fig0-edge3">
+<title>run-&gt;tool</title>
+<path d="M496.11,-76.52C503.51,-77.39 510.89,-78.23 518,-79 560.02,-83.53 606,-87.87 647.21,-91.53" fill="none" stroke="#496b78"></path>
+<polygon fill="#496b78" points="647.14,-94.16 654.85,-92.21 647.61,-88.93 647.14,-94.16" stroke="#496b78"></polygon>
+<text font-family="DejaVu Sans" font-size="11.00" text-anchor="middle" x="575.5" y="-92.2">invokes</text>
+</g>
+<g class="node" id="architecture-note0-A-00-fig0-node5">
+<title>result</title>
+<path d="M868.5,-48C868.5,-48 679.5,-48 679.5,-48 673.5,-48 667.5,-42 667.5,-36 667.5,-36 667.5,-12 667.5,-12 667.5,-6 673.5,0 679.5,0 679.5,0 868.5,0 868.5,0 874.5,0 880.5,-6 880.5,-12 880.5,-12 880.5,-36 880.5,-36 880.5,-42 874.5,-48 868.5,-48" fill="#edf5f4" stroke="#496b78"></path>
+<text fill="#142c3e" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="774" y="-27.8">Result</text>
+<text fill="#142c3e" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="774" y="-12.8">Answer, finding, or artifact</text>
+</g>
+<g class="edge" id="architecture-note0-A-00-fig0-edge5">
+<title>run-&gt;result</title>
+<path d="M496.19,-45.81C503.54,-44.37 510.89,-43.07 518,-42 564.16,-35.06 615.42,-30.79 659.81,-28.16" fill="none" stroke="#496b78"></path>
+<polygon fill="#496b78" points="660.11,-30.77 667.45,-27.72 659.81,-25.53 660.11,-30.77" stroke="#496b78"></polygon>
+<text font-family="DejaVu Sans" font-size="11.00" text-anchor="middle" x="575.5" y="-45.2">produces</text>
+</g>
+<g class="edge" id="architecture-note0-A-00-fig0-edge4">
+<title>tool-&gt;run</title>
+<path d="M698.91,-77.97C677.84,-72.21 654.72,-66.9 633,-64 582.34,-57.25 569.11,-63.51 518,-64 513.34,-64.05 508.57,-64.1 503.74,-64.17" fill="none" stroke="#496b78"></path>
+<polygon fill="#496b78" points="503.6,-61.54 496.14,-64.28 503.67,-66.79 503.6,-61.54" stroke="#496b78"></polygon>
+<text font-family="DejaVu Sans" font-size="11.00" text-anchor="middle" x="575.5" y="-67.2">returns observations</text>
+</g>
+</g>
+</svg></div><figcaption><strong>Agent execution and evidence cycle.</strong> A task and its configuration guide an execution. Authorized tools return observations. Those observations can lead to another step or a result. Retention is a separate, product-specific path. <span class="diagram-scope">Logical model; arrows show documented relationships, not AWS internal deployment.</span></figcaption></figure>
+<p>The diagram is a reading model, not a shared AWS implementation. A request or event establishes the task; applicable configuration and context shape the execution; tools or assessment components produce observations; the service uses those observations to continue the work or produce an output. Where an effect requires approval, the approval boundary belongs to that operation. A retained lesson may influence a later run without altering the underlying model’s weights.</p>
+<p>This kind of agent is also different from a telemetry collection agent installed on a machine. The latter collects or forwards measurements. An operational reasoning service consumes evidence exposed through its configured access paths. Calling both an agent does not mean that DevOps Agent installs a universal host collector or that Security Agent continuously observes every request to an application.</p>
+<p>The rest of the comparison keeps four questions separate: what reusable capability exists; which operation configures or invokes it; what documented mechanism carries it out; and which engineering use case combines those pieces. The product guides provide the procedures. The catalog provides concrete applications and their prerequisites.</p>
+</section></section><section class="note-block" data-note="1"><h2>Comparison framework</h2><div class="talk-track"><p>Cross-platform comparison begins with the actual resource and execution model.</p><p>Allocated time: 02:00. Use the detailed section references below for configuration and limitations.</p></div><section class="note-reference"><h3>Workspace, configuration, and execution models</h3><p>A comparison begins with the objects each product actually exposes. The three services all separate configuration from execution, but their scopes and resource relationships are not interchangeable. The table below compares those documented objects without proposing a new universal agent schema.</p>
+<div aria-label="Scrollable reference table" class="table-wrap" role="region" tabindex="0"><table>
 <thead>
 <tr>
-<th>Layer</th>
-<th>DevOps Agent</th>
-<th>Security Agent</th>
-<th>FinOps Agent</th>
+<th scope="col">Layer</th>
+<th scope="col">DevOps Agent</th>
+<th scope="col">Security Agent</th>
+<th scope="col">FinOps Agent</th>
 </tr>
 </thead>
 <tbody>
@@ -44,13 +262,14 @@
 </table></div>
 <p>The terms differ because the objects differ. A common UI label does not make all Agent Spaces identical. In Security Agent, requirements can be shared across applications; in DevOps Agent, a topology graph is not the complete access boundary; in FinOps Agent, an instance's context can be visible to everyone with access to that instance. <a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-what-is-a-devops-agent-topology.html">AS01</a> <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html">AS02</a> <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/creating-an-agent.html">AS03</a></p>
 <p><strong>Engineering design:</strong> record the platform, account/Region, configuration ID and execution ID separately. Do not put one ambiguous <code>agent_id</code> in every downstream ticket and expect it to identify all four concepts.</p>
-</section><h3>Official documentation for this slide</h3><ul><li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-what-is-a-devops-agent-topology.html">AS01 — about-aws-devops-agent-what-is-a-devops-agent-topology.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html">AS02 — understand-lifecycle.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/creating-an-agent.html">AS03 — creating-an-agent.html</a></li></ul></div><div class="note-block" hidden=""><h2>2. Use Case Families Across the Three Platforms</h2><p class="small">Budget 03:00 · cumulative 02:00–05:00.</p><div class="talk-track"><strong>Speaking focus</strong><p>Similar business labels can map to different platform objects and authorization boundaries.</p><p class="small">Use the visual as the outline. The linked reference below is supporting detail, not a required verbatim script.</p></div><section class="note-reference"><h3><a href="../guides/architecture.html#A-01">A-01 — Compare resources before comparing workflows</a></h3><div aria-label="Scrollable reference table" class="table-wrap" role="region" tabindex="0"><table>
+</section></section><section class="note-block" data-note="2"><h2>Resource and context models</h2><div class="talk-track"><p>The three services do not expose one common memory mechanism.</p><p>Allocated time: 02:00. Use the detailed section references below for configuration and limitations.</p></div><section class="note-reference"><h3>Workspace, configuration, and execution models</h3><p>A comparison begins with the objects each product actually exposes. The three services all separate configuration from execution, but their scopes and resource relationships are not interchangeable. The table below compares those documented objects without proposing a new universal agent schema.</p>
+<div aria-label="Scrollable reference table" class="table-wrap" role="region" tabindex="0"><table>
 <thead>
 <tr>
-<th>Layer</th>
-<th>DevOps Agent</th>
-<th>Security Agent</th>
-<th>FinOps Agent</th>
+<th scope="col">Layer</th>
+<th scope="col">DevOps Agent</th>
+<th scope="col">Security Agent</th>
+<th scope="col">FinOps Agent</th>
 </tr>
 </thead>
 <tbody>
@@ -82,70 +301,14 @@
 </table></div>
 <p>The terms differ because the objects differ. A common UI label does not make all Agent Spaces identical. In Security Agent, requirements can be shared across applications; in DevOps Agent, a topology graph is not the complete access boundary; in FinOps Agent, an instance's context can be visible to everyone with access to that instance. <a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-what-is-a-devops-agent-topology.html">AS01</a> <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html">AS02</a> <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/creating-an-agent.html">AS03</a></p>
 <p><strong>Engineering design:</strong> record the platform, account/Region, configuration ID and execution ID separately. Do not put one ambiguous <code>agent_id</code> in every downstream ticket and expect it to identify all four concepts.</p>
-</section><section class="note-reference"><h3><a href="../guides/architecture.html#A-07">A-07 — Coverage, evidence and unresolved implementation details</a></h3><p>This comparison covers resource scoping, retained context, access layers, effects, lifecycle and handoffs. It does not propose a universal agent framework or reproduce complete IAM policies. The three platform guides carry the detailed procedures and explicit per-product coverage tables.</p>
-<p>The public sources do not justify specifying a shared vector database, embedding strategy, memory-ranking algorithm, foundation-model training pipeline or cross-product identity fabric. Where an implementation detail is not documented, the guide says so rather than completing an attractive architecture diagram with invented components.</p>
-<h4>Official sources and reviewed scope</h4>
-<ul>
-<li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-what-is-a-devops-agent-topology.html">AS01</a> DevOps topology versus investigation access scope.</li>
-<li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html">AS02</a> Security account and application resource hierarchy.</li>
-<li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/creating-an-agent.html">AS03</a> FinOps creation and instance connections.</li>
-<li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html">AS04</a> DevOps stored knowledge, retrieval and versioning; newer indexed memory guidance.</li>
-<li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/whats-new.html">AS05</a> Dated DevOps correction-memory change.</li>
-<li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html">AS06</a> Security credential resolution and learned login; newer indexed guidance.</li>
-<li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html">AS07</a> FinOps persistent/runtime state and deletion semantics.</li>
-<li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-connecting-mcp-servers.html">AS08</a> DevOps MCP registration, selection and authentication.</li>
-<li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/jira-integration.html">AS09</a> FinOps integration registration and binding.</li>
-<li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-working-with-directed-actions.html">AS10</a> DevOps directed-action controls and classification.</li>
-<li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html">AS11</a> Security active-target configuration and run boundaries; newer indexed guidance.</li>
-<li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html">AS12</a> FinOps action-specific approval.</li>
-<li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/custom-agents-executing-custom-agents.html">AS13</a> Custom-agent trigger versus invocation cancellation.</li>
-<li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html">AS14</a> Security revalidation lineage.</li>
-</ul>
-</section><h3>Official documentation for this slide</h3><ul><li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-what-is-a-devops-agent-topology.html">AS01 — about-aws-devops-agent-what-is-a-devops-agent-topology.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html">AS02 — understand-lifecycle.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/creating-an-agent.html">AS03 — creating-an-agent.html</a></li><li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html">AS04 — about-aws-devops-agent-devops-agent-memories.html</a></li><li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/whats-new.html">AS05 — whats-new.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html">AS06 — provide-testing-credentials.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html">AS07 — data-protection.html</a></li><li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-connecting-mcp-servers.html">AS08 — configuring-integrations-and-knowledge-connecting-mcp-servers.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/jira-integration.html">AS09 — jira-integration.html</a></li><li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-working-with-directed-actions.html">AS10 — working-with-devops-agent-working-with-directed-actions.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html">AS11 — perform-penetration-test.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html">AS12 — agent-guardrail-control.html</a></li><li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/custom-agents-executing-custom-agents.html">AS13 — custom-agents-executing-custom-agents.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html">AS14 — revalidate-findings.html</a></li></ul></div><div class="note-block" hidden=""><h2>3. Resource and Context Models</h2><p class="small">Budget 02:00 · cumulative 05:00–07:00.</p><div class="talk-track"><strong>Speaking focus</strong><p>The three services do not expose one common memory mechanism.</p><p class="small">Use the visual as the outline. The linked reference below is supporting detail, not a required verbatim script.</p></div><section class="note-reference"><h3><a href="../guides/architecture.html#A-01">A-01 — Compare resources before comparing workflows</a></h3><div aria-label="Scrollable reference table" class="table-wrap" role="region" tabindex="0"><table>
+</section><section class="note-reference"><h3>Knowledge construction and retrieval models</h3><p>Knowledge has a producer, an owner, and a retrieval path. A DevOps monitor entry is synthesized from investigations; a Security login skill comes from successful navigation; a FinOps reference file is uploaded by an operator. Comparing these paths is more informative than asking whether all three products have memory.</p>
+<div aria-label="Scrollable reference table" class="table-wrap" role="region" tabindex="0"><table>
 <thead>
 <tr>
-<th>Layer</th>
-<th>DevOps Agent</th>
-<th>Security Agent</th>
-<th>FinOps Agent</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Scope</td>
-<td>Agent Space with account/provider associations</td>
-<td>Application Agent Space plus shared account resources</td>
-<td>Agent instance with its own data and connections</td>
-</tr>
-<tr>
-<td>Reusable configuration</td>
-<td>Managed/custom agents, selected tools, knowledge, triggers</td>
-<td>Assessment configurations, requirements, sources, credentials</td>
-<td>Context files, memories, integrations and automations</td>
-</tr>
-<tr>
-<td>Execution</td>
-<td>Investigation, chat, evaluation, custom invocation</td>
-<td>Assessment run or one-off design review; revalidation job</td>
-<td>Conversation, queued task, report generation</td>
-</tr>
-<tr>
-<td>Reviewable state</td>
-<td>Tool results, investigation evidence, knowledge versions</td>
-<td>Findings, test context, model/review results, lineage</td>
-<td>Source queries, task results, report artifacts</td>
-</tr>
-</tbody>
-</table></div>
-<p>The terms differ because the objects differ. A common UI label does not make all Agent Spaces identical. In Security Agent, requirements can be shared across applications; in DevOps Agent, a topology graph is not the complete access boundary; in FinOps Agent, an instance's context can be visible to everyone with access to that instance. <a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-what-is-a-devops-agent-topology.html">AS01</a> <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html">AS02</a> <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/creating-an-agent.html">AS03</a></p>
-<p><strong>Engineering design:</strong> record the platform, account/Region, configuration ID and execution ID separately. Do not put one ambiguous <code>agent_id</code> in every downstream ticket and expect it to identify all four concepts.</p>
-</section><section class="note-reference"><h3><a href="../guides/architecture.html#A-02">A-02 — Separate knowledge producers from consumers</a></h3><div aria-label="Scrollable reference table" class="table-wrap" role="region" tabindex="0"><table>
-<thead>
-<tr>
-<th>Retained material</th>
-<th>Producer</th>
-<th>Consumer and lifecycle</th>
-<th>Do not infer</th>
+<th scope="col">Retained material</th>
+<th scope="col">Producer</th>
+<th scope="col">Consumer and lifecycle</th>
+<th scope="col">Do not infer</th>
 </tr>
 </thead>
 <tbody>
@@ -182,16 +345,161 @@
 </tbody>
 </table></div>
 <p>These mechanisms are documented separately in the canonical guides: <a href="../guides/devops.html#D-M01">D-M01</a>, <a href="../guides/devops.html#D-M02">D-M02</a>, <a href="../guides/devops.html#D-M07">D-M07</a>, <a href="../guides/security.html#S-M02">S-M02</a>, <a href="../guides/finops.html#F-M02">F-M02</a> and <a href="../guides/finops.html#F-M03">F-M03</a>. Their lifecycle cannot be replaced by a single generic “learning enabled” checkbox. <a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html">AS04</a> <a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/whats-new.html">AS05</a> <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html">AS06</a> <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html">AS07</a></p>
-<p class="callout"><strong>Engineering verification:</strong> separate five questions: was relevant input available, was retained content produced, was it accessible to this execution, was its use observable, and was the resulting conclusion correct? The final answer alone cannot resolve all five.</p>
-</section><h3>Official documentation for this slide</h3><ul><li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-what-is-a-devops-agent-topology.html">AS01 — about-aws-devops-agent-what-is-a-devops-agent-topology.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html">AS02 — understand-lifecycle.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/creating-an-agent.html">AS03 — creating-an-agent.html</a></li><li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html">AS04 — about-aws-devops-agent-devops-agent-memories.html</a></li><li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/whats-new.html">AS05 — whats-new.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html">AS06 — provide-testing-credentials.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html">AS07 — data-protection.html</a></li></ul></div><div class="note-block" hidden=""><h2>4. Connectivity, Identity and Authorization</h2><p class="small">Budget 02:00 · cumulative 07:00–09:00.</p><div class="talk-track"><strong>Speaking focus</strong><p>Reachability and prompt guidance do not establish authorization for an effect.</p><p class="small">Use the visual as the outline. The linked reference below is supporting detail, not a required verbatim script.</p></div><section class="note-reference"><h3><a href="../guides/architecture.html#A-03">A-03 — Connectivity, authentication and authorization are different layers</a></h3><p>A private connection supplies a route. Authentication establishes an identity. Authorization determines allowed operations. Prompt instructions describe desired behavior. A successful connection test demonstrates only the layers it actually exercised.</p>
+<p><strong>Engineering verification:</strong> separate five questions: was relevant input available, was retained content produced, was it accessible to this execution, was its use observable, and was the resulting conclusion correct? The final answer alone cannot resolve all five.</p>
+</section></section><section class="note-block" data-note="3"><h2>Team-managed evidence handoff</h2><div class="talk-track"><p>An operational finding can become input to separate security and cost work. Each receiving service uses its own configuration and authorization; only identifiers, evidence references, and decisions are handed over.</p><p>Allocated time: 02:00. Use the detailed section references below for configuration and limitations.</p></div><section class="note-reference"><h3>Integration direction and evidence ownership</h3><p>Start an integration design by drawing the direction of every exchange. An event producer can initiate work, a data source can answer a query, an execution target can receive active requests, and a publication destination can receive findings. One system may occupy several roles, but those roles still require distinct permissions and failure handling. <a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html">AS30</a> <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html">AS31</a> <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html">AS32</a></p>
+<div aria-label="Scrollable reference table" class="table-wrap" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">Integration role</th>
+<th scope="col">DevOps Agent</th>
+<th scope="col">Security Agent</th>
+<th scope="col">FinOps Agent</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Evidence source</td>
+<td>AWS resources, observability, code and delivery systems, selected MCP tools</td>
+<td>Selected repositories, S3 resources, design and Confluence documents</td>
+<td>Authorized cost, anomaly, optimization, and change data</td>
+</tr>
+<tr>
+<td>Work initiation</td>
+<td>Operator request, supported incident integration/webhook, custom schedule</td>
+<td>Operator assessment, supported repository or pipeline path, configured schedule</td>
+<td>Conversation/task request, schedule, supported anomaly event</td>
+</tr>
+<tr>
+<td>Active target</td>
+<td>Approved resource/tool action; release-test application</td>
+<td>Explicitly authorized application and authentication scope</td>
+<td>Supported service queries; separately authorized collaboration actions</td>
+</tr>
+<tr>
+<td>Result destination</td>
+<td>Investigation record and configured communication path</td>
+<td>Finding, remediation proposal, revalidation history, connected Jira project</td>
+<td>Response, artifact, connected Jira project or Slack channel</td>
+</tr>
+</tbody>
+</table></div>
+<figure class="diagram" data-diagram-key="shared-handoff"><div class="diagram-viewport"><svg aria-labelledby="architecture-note3-A-08-fig0-shared-handoff-title architecture-note3-A-08-fig0-shared-handoff-desc" data-diagram="shared-handoff" role="img" viewbox="0.00 0.00 609.00 500.00" xmlns="http://www.w3.org/2000/svg">
+<title id="architecture-note3-A-08-fig0-shared-handoff-title">Team-managed evidence handoff</title><desc id="architecture-note3-A-08-fig0-shared-handoff-desc">An operational finding can become input to separate security and cost work. Each receiving service uses its own configuration and authorization; only identifiers, evidence references, and decisions are handed over.</desc><g class="graph" id="architecture-note3-A-08-fig0-graph0" transform="scale(1 1) rotate(0) translate(18 482)">
+<title>G</title>
+<g class="node" id="architecture-note3-A-08-fig0-node1">
+<title>incident</title>
+<path d="M400.5,-464C400.5,-464 187.5,-464 187.5,-464 181.5,-464 175.5,-458 175.5,-452 175.5,-452 175.5,-428 175.5,-428 175.5,-422 181.5,-416 187.5,-416 187.5,-416 400.5,-416 400.5,-416 406.5,-416 412.5,-422 412.5,-428 412.5,-428 412.5,-452 412.5,-452 412.5,-458 406.5,-464 400.5,-464" fill="#edf5f4" stroke="#496b78"></path>
+<text fill="#142c3e" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="294" y="-443.8">Operational investigation</text>
+<text fill="#142c3e" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="294" y="-428.8">Service, time window, revision</text>
+</g>
+<g class="node" id="architecture-note3-A-08-fig0-node2">
+<title>handoff</title>
+<path d="M436.5,-360C436.5,-360 151.5,-360 151.5,-360 145.5,-360 139.5,-354 139.5,-348 139.5,-348 139.5,-324 139.5,-324 139.5,-318 145.5,-312 151.5,-312 151.5,-312 436.5,-312 436.5,-312 442.5,-312 448.5,-318 448.5,-324 448.5,-324 448.5,-348 448.5,-348 448.5,-354 442.5,-360 436.5,-360" fill="#edf5f4" stroke="#496b78"></path>
+<text fill="#142c3e" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="294" y="-339.8">Reviewed handoff</text>
+<text fill="#142c3e" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="294" y="-324.8">Evidence references and open questions</text>
+</g>
+<g class="edge" id="architecture-note3-A-08-fig0-edge1">
+<title>incident-&gt;handoff</title>
+<path d="M294,-415.85C294,-401.64 294,-383.26 294,-367.82" fill="none" stroke="#496b78"></path>
+<polygon fill="#496b78" points="296.63,-367.55 294,-360.05 291.38,-367.55 296.63,-367.55" stroke="#496b78"></polygon>
+<text font-family="DejaVu Sans" font-size="11.00" text-anchor="middle" x="329" y="-385.2">team review</text>
+</g>
+<g class="node" id="architecture-note3-A-08-fig0-node3">
+<title>security</title>
+<path d="M278,-256C278,-256 12,-256 12,-256 6,-256 0,-250 0,-244 0,-244 0,-220 0,-220 0,-214 6,-208 12,-208 12,-208 278,-208 278,-208 284,-208 290,-214 290,-220 290,-220 290,-244 290,-244 290,-250 284,-256 278,-256" fill="#edf5f4" stroke="#496b78"></path>
+<text fill="#142c3e" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="145" y="-235.8">Security assessment</text>
+<text fill="#142c3e" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="145" y="-220.8">Its own application scope and identity</text>
+</g>
+<g class="edge" id="architecture-note3-A-08-fig0-edge2">
+<title>handoff-&gt;security</title>
+<path d="M260.19,-311.85C237.9,-296.6 208.6,-276.54 185.13,-260.47" fill="none" stroke="#496b78" stroke-dasharray="5,2"></path>
+<polygon fill="#496b78" points="186.35,-258.12 178.68,-256.05 183.38,-262.46 186.35,-258.12" stroke="#496b78"></polygon>
+<text font-family="DejaVu Sans" font-size="11.00" text-anchor="middle" x="281" y="-281.2">application evidence</text>
+</g>
+<g class="node" id="architecture-note3-A-08-fig0-node4">
+<title>finops</title>
+<path d="M561,-256C561,-256 327,-256 327,-256 321,-256 315,-250 315,-244 315,-244 315,-220 315,-220 315,-214 321,-208 327,-208 327,-208 561,-208 561,-208 567,-208 573,-214 573,-220 573,-220 573,-244 573,-244 573,-250 567,-256 561,-256" fill="#edf5f4" stroke="#496b78"></path>
+<text fill="#142c3e" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="444" y="-235.8">Cost investigation</text>
+<text fill="#142c3e" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="444" y="-220.8">Its own query basis and data role</text>
+</g>
+<g class="edge" id="architecture-note3-A-08-fig0-edge3">
+<title>handoff-&gt;finops</title>
+<path d="M328.04,-311.85C350.48,-296.6 379.97,-276.54 403.6,-260.47" fill="none" stroke="#496b78" stroke-dasharray="5,2"></path>
+<polygon fill="#496b78" points="405.37,-262.44 410.1,-256.05 402.42,-258.1 405.37,-262.44" stroke="#496b78"></polygon>
+<text font-family="DejaVu Sans" font-size="11.00" text-anchor="middle" x="424.5" y="-281.2">service and period</text>
+</g>
+<g class="node" id="architecture-note3-A-08-fig0-node5">
+<title>owner</title>
+<path d="M427,-152C427,-152 161,-152 161,-152 155,-152 149,-146 149,-140 149,-140 149,-116 149,-116 149,-110 155,-104 161,-104 161,-104 427,-104 427,-104 433,-104 439,-110 439,-116 439,-116 439,-140 439,-140 439,-146 433,-152 427,-152" fill="#edf5f4" stroke="#496b78"></path>
+<text fill="#142c3e" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="294" y="-131.8">Engineering owners</text>
+<text fill="#142c3e" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="294" y="-116.8">Review results and authorize changes</text>
+</g>
+<g class="edge" id="architecture-note3-A-08-fig0-edge4">
+<title>security-&gt;owner</title>
+<path d="M178.81,-207.85C201.1,-192.6 230.4,-172.54 253.87,-156.47" fill="none" stroke="#496b78"></path>
+<polygon fill="#496b78" points="255.62,-158.46 260.32,-152.05 252.65,-154.12 255.62,-158.46" stroke="#496b78"></polygon>
+<text font-family="DejaVu Sans" font-size="11.00" text-anchor="middle" x="269.5" y="-177.2">finding evidence</text>
+</g>
+<g class="edge" id="architecture-note3-A-08-fig0-edge5">
+<title>finops-&gt;owner</title>
+<path d="M409.96,-207.85C387.52,-192.6 358.03,-172.54 334.4,-156.47" fill="none" stroke="#496b78"></path>
+<polygon fill="#496b78" points="335.58,-154.1 327.9,-152.05 332.63,-158.44 335.58,-154.1" stroke="#496b78"></polygon>
+<text font-family="DejaVu Sans" font-size="11.00" text-anchor="middle" x="411.5" y="-177.2">cost evidence</text>
+</g>
+<g class="node" id="architecture-note3-A-08-fig0-node6">
+<title>verification</title>
+<path d="M434.5,-48C434.5,-48 153.5,-48 153.5,-48 147.5,-48 141.5,-42 141.5,-36 141.5,-36 141.5,-12 141.5,-12 141.5,-6 147.5,0 153.5,0 153.5,0 434.5,0 434.5,0 440.5,0 446.5,-6 446.5,-12 446.5,-12 446.5,-36 446.5,-36 446.5,-42 440.5,-48 434.5,-48" fill="#edf5f4" stroke="#496b78"></path>
+<text fill="#142c3e" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="294" y="-27.8">Independent verification</text>
+<text fill="#142c3e" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="294" y="-12.8">Source measurements and scoped tests</text>
+</g>
+<g class="edge" id="architecture-note3-A-08-fig0-edge6">
+<title>owner-&gt;verification</title>
+<path d="M294,-103.85C294,-89.64 294,-71.26 294,-55.82" fill="none" stroke="#496b78"></path>
+<polygon fill="#496b78" points="296.63,-55.55 294,-48.05 291.38,-55.55 296.63,-55.55" stroke="#496b78"></polygon>
+<text font-family="DejaVu Sans" font-size="11.00" text-anchor="middle" x="348.5" y="-73.2">controlled follow-up</text>
+</g>
+</g>
+</svg></div><figcaption><strong>Team-managed evidence handoff.</strong> An operational finding can become input to separate security and cost work. Each receiving service uses its own configuration and authorization; only identifiers, evidence references, and decisions are handed over. <span class="diagram-scope">Logical model; arrows show documented relationships, not AWS internal deployment.</span></figcaption></figure>
+<p>The handoff in the diagram is team-composed. For example, an operational investigation can produce a service identifier and a deployment revision. An application owner can use those identifiers to scope a security assessment, while a cost engineer can use the service and time window to define a cost inquiry. The receiving service uses its own configuration and permissions. The handoff should carry references and decisions, not borrowed credentials or an assertion that an earlier approval applies everywhere.</p>
+<p>Ownership remains with the original systems. A source repository owns the reviewed revision, an assessment owns its finding, and a destination owns the published ticket or message. Removing a connection can stop future access or publication without deleting those external records. This is why a cross-platform workflow needs an explicit record of source identity, execution identity, and publication destination rather than one ambiguous status called complete.</p>
+</section><section class="note-reference"><h3>Cross-team evidence handoffs</h3><p>The documented services retain different execution objects: a custom-agent invocation, an assessment run and finding, or a task and artifact. A receiving specialist therefore needs the original identifiers and source scope to interpret the handoff correctly. The resource and lifecycle guidance supports that distinction. <a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html">AS30</a> <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html">AS31</a> <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html">AS32</a></p>
+<p>The handoff format below is a proposed team record, not an AWS API or a built-in cross-product orchestration protocol. Its fields preserve evidence identity, ownership, and unresolved questions; they do not transfer credentials, retained memory, or approval authority.</p>
+<p>A team handoff transfers evidence and a decision to another owner. It does not need to transfer an agent’s credentials, memory, or approval authority. A useful handoff therefore identifies the source objects and unresolved questions so the next specialist can reconstruct the relevant context.</p>
+<p>The following is an original team interface, not an AWS schema:</p>
+<pre><code class="language-yaml">schema: engineering-handoff-v1
+origin:
+  platform: aws-devops-agent
+  configuration_id: example-space
+  execution_id: example-investigation
+  observed_window_utc: "2026-10-22T10:00Z/2026-10-22T10:15Z"
+subject:
+  service: checkout-staging
+  revision: demo-r2
+request:
+  owner: service-team
+  question: Verify the inventory dependency latency explanation
+  allowed_effect: review-only
+  excluded_effects: [production-deployment, external-publication]
+evidence:
+  - reference: authorized-internal-record
+    observation: inventory p95 increased while database latency remained low
+    classification: synthetic-training-fixture
+completion:
+  required: current evidence supports or rejects the proposed explanation
+  unresolved: [upstream-log-access]
+</code></pre>
+<p>The receiving engineer resolves the internal evidence link, validates the resource/revision, obtains their own access and decides which product operation is appropriate. There is no implied cross-agent shared session, credential forwarding or automatic trust in the originating conclusion.</p>
+<p><strong>Failure branch:</strong> a task naming “the latest deployment” without an immutable revision cannot establish which change was assessed. Return the work item for clarification rather than letting each product silently choose a different latest revision.</p>
+</section></section><section class="note-block" data-note="4"><h2>Connectivity, identity and authorization</h2><div class="talk-track"><p>Reachability and prompt guidance do not establish authorization for an effect.</p><p>Allocated time: 02:00. Use the detailed section references below for configuration and limitations.</p></div><section class="note-reference"><h3>Network, identity, and tool-access boundaries</h3><p>Reachability, identity, and authorization are different boundaries. A route makes an endpoint reachable, credentials identify a caller, and permissions constrain the operation. The execution must satisfy each applicable boundary; a successful check at one layer does not establish the others.</p>
+<p>A private connection supplies a route. Authentication establishes an identity. Authorization determines allowed operations. Prompt instructions describe desired behavior. A successful connection test demonstrates only the layers it actually exercised.</p>
 <p>For DevOps MCP, provider registration and Agent Space tool selection are distinct from private routing and tool-effect classification. Security testing separately resolves credentials and applies them to the application; retrieval may succeed while login fails. FinOps registers an account integration and then binds a destination to an agent. <a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-connecting-mcp-servers.html">AS08</a> <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html">AS06</a> <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/jira-integration.html">AS09</a></p>
 <p><strong>Engineering test matrix:</strong></p>
 <div aria-label="Scrollable reference table" class="table-wrap" role="region" tabindex="0"><table>
 <thead>
 <tr>
-<th>Test</th>
-<th>Evidence needed</th>
-<th>Failure interpretation</th>
+<th scope="col">Test</th>
+<th scope="col">Evidence needed</th>
+<th scope="col">Failure interpretation</th>
 </tr>
 </thead>
 <tbody>
@@ -223,12 +531,13 @@
 </tbody>
 </table></div>
 <p>Use a non-production target and non-sensitive fixture. These are proposed tests, not recorded service outcomes.</p>
-</section><h3>Official documentation for this slide</h3><ul><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html">AS06 — provide-testing-credentials.html</a></li><li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-connecting-mcp-servers.html">AS08 — configuring-integrations-and-knowledge-connecting-mcp-servers.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/jira-integration.html">AS09 — jira-integration.html</a></li></ul></div><div class="note-block" hidden=""><h2>5. Execution and Approval Boundaries</h2><p class="small">Budget 02:00 · cumulative 09:00–11:00.</p><div class="talk-track"><strong>Speaking focus</strong><p>Approval follows the concrete effect; there is no universal human-approved agent mode.</p><p class="small">Use the visual as the outline. The linked reference below is supporting detail, not a required verbatim script.</p></div><section class="note-reference"><h3><a href="../guides/architecture.html#A-04">A-04 — Authorization must follow the effect</a></h3><div aria-label="Scrollable reference table" class="table-wrap" role="region" tabindex="0"><table>
+</section></section><section class="note-block" data-note="5"><h2>Execution and approval boundaries</h2><div class="talk-track"><p>Approval follows the concrete effect; there is no universal human-approved agent mode.</p><p>Allocated time: 02:00. Use the detailed section references below for configuration and limitations.</p></div><section class="note-reference"><h3>Authorization of state-changing operations</h3><p>The effect of an operation determines which controls matter. Reading a metric, posting an issue, changing a resource, and sending an active application test request have different consequences. The comparison should follow those effects rather than assign a single read-only or autonomous label to an entire service.</p>
+<div aria-label="Scrollable reference table" class="table-wrap" role="region" tabindex="0"><table>
 <thead>
 <tr>
-<th>Effect</th>
-<th>Product control to inspect</th>
-<th>Important exception</th>
+<th scope="col">Effect</th>
+<th scope="col">Product control to inspect</th>
+<th scope="col">Important exception</th>
 </tr>
 </thead>
 <tbody>
@@ -261,10 +570,14 @@
 </table></div>
 <p>The common rule is to examine the actual effect, not to label every agent “read-only” or “human-approved.” AWS documents different controls for different paths. <a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-working-with-directed-actions.html">AS10</a> <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html">AS11</a> <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html">AS12</a></p>
 <p><strong>Engineering design:</strong> carry a requested effect and intended target in a work item, but never carry credentials or substitute a ticket approval for the receiving service's native authorization.</p>
-</section><h3>Official documentation for this slide</h3><ul><li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-working-with-directed-actions.html">AS10 — working-with-devops-agent-working-with-directed-actions.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html">AS11 — perform-penetration-test.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html">AS12 — agent-guardrail-control.html</a></li></ul></div><div class="note-block" hidden=""><h2>6. Configuration, Execution and Artifact Lifecycles</h2><p class="small">Budget 02:00 · cumulative 11:00–13:00.</p><div class="talk-track"><strong>Speaking focus</strong><p>Stopping future starts does not reverse completed effects or delete retained evidence.</p><p class="small">Use the visual as the outline. The linked reference below is supporting detail, not a required verbatim script.</p></div><section class="note-reference"><h3><a href="../guides/architecture.html#A-05">A-05 — Configuration, execution and derived artifacts need separate lifecycles</a></h3><p>Pause an automation to stop future starts; cancel a current run using its supported operation; remove or deactivate context using its own controls; delete an artifact only when the artifact itself is the intended target. These are different transitions. In-flight calls or retained execution history may remain after a stop action. <a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/custom-agents-executing-custom-agents.html">AS13</a> <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html">AS07</a></p>
+</section></section><section class="note-block" data-note="6"><h2>Configuration, execution and artifact lifecycles</h2><div class="talk-track"><p>Stopping future starts does not reverse completed effects or delete retained evidence.</p><p>Allocated time: 02:00. Use the detailed section references below for configuration and limitations.</p></div><section class="note-reference"><h3>Configuration, execution, and artifact lifecycles</h3><p>The lifecycle of a saved definition differs from the lifecycle of the executions it creates. Disabling a schedule affects future work, while cancellation concerns an existing execution. Artifacts and external messages may remain after either operation. This distinction is central to a maintainable operating procedure.</p>
+<p>Pause an automation to stop future starts; cancel a current run using its supported operation; remove or deactivate context using its own controls; delete an artifact only when the artifact itself is the intended target. These are different transitions. In-flight calls or retained execution history may remain after a stop action. <a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/custom-agents-executing-custom-agents.html">AS13</a> <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html">AS07</a></p>
 <p>Security revalidation deliberately creates a new job linked to the original finding rather than silently rewriting the original assessment. DevOps memories keep immutable versions. FinOps task records and uploaded files have different retention/deletion semantics. <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html">AS14</a> <a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html">AS04</a> <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html">AS07</a></p>
 <p><strong>Engineering design:</strong> retain version identifiers and source revisions in accepted work records. Keep maintained configuration source in Git. Do not create dated snapshot directories or compressed manual distributions as a substitute for version control. The product's own runtime retention is independent of this repository's history policy.</p>
-</section><h3>Official documentation for this slide</h3><ul><li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html">AS04 — about-aws-devops-agent-devops-agent-memories.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html">AS07 — data-protection.html</a></li><li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/custom-agents-executing-custom-agents.html">AS13 — custom-agents-executing-custom-agents.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html">AS14 — revalidate-findings.html</a></li></ul></div><div class="note-block" hidden=""><h2>7. Handoff Record Between Platforms and Teams</h2><p class="small">Budget 02:00 · cumulative 13:00–15:00.</p><div class="talk-track"><strong>Speaking focus</strong><p>A handoff transfers evidence and responsibility, not credentials or authorization.</p><p class="small">Use the visual as the outline. The linked reference below is supporting detail, not a required verbatim script.</p></div><section class="note-reference"><h3><a href="../guides/architecture.html#A-06">A-06 — A handoff is an artifact, not transferred execution authority</a></h3><p>The following is an original team interface, not an AWS schema:</p>
+</section></section><section class="note-block" data-note="7"><h2>Handoff record between platforms and teams</h2><div class="talk-track"><p>A handoff transfers evidence and responsibility, not credentials or authorization.</p><p>Allocated time: 02:00. Use the detailed section references below for configuration and limitations.</p></div><section class="note-reference"><h3>Cross-team evidence handoffs</h3><p>The documented services retain different execution objects: a custom-agent invocation, an assessment run and finding, or a task and artifact. A receiving specialist therefore needs the original identifiers and source scope to interpret the handoff correctly. The resource and lifecycle guidance supports that distinction. <a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html">AS30</a> <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html">AS31</a> <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html">AS32</a></p>
+<p>The handoff format below is a proposed team record, not an AWS API or a built-in cross-product orchestration protocol. Its fields preserve evidence identity, ownership, and unresolved questions; they do not transfer credentials, retained memory, or approval authority.</p>
+<p>A team handoff transfers evidence and a decision to another owner. It does not need to transfer an agent’s credentials, memory, or approval authority. A useful handoff therefore identifies the source objects and unresolved questions so the next specialist can reconstruct the relevant context.</p>
+<p>The following is an original team interface, not an AWS schema:</p>
 <pre><code class="language-yaml">schema: engineering-handoff-v1
 origin:
   platform: aws-devops-agent
@@ -289,13 +602,13 @@ completion:
 </code></pre>
 <p>The receiving engineer resolves the internal evidence link, validates the resource/revision, obtains their own access and decides which product operation is appropriate. There is no implied cross-agent shared session, credential forwarding or automatic trust in the originating conclusion.</p>
 <p><strong>Failure branch:</strong> a task naming “the latest deployment” without an immutable revision cannot establish which change was assessed. Return the work item for clarification rather than letting each product silently choose a different latest revision.</p>
-</section><h3>Official documentation for this slide</h3><ul><li>Synthetic or team-composed example; see the linked guide for its stated boundaries.</li></ul></div><div class="note-block" hidden=""><h2>8. Tabletop: One Operational Symptom, Three Different Jobs</h2><p class="small">Budget 04:00 · cumulative 15:00–19:00.</p><div class="talk-track"><strong>Speaking focus</strong><p>The same business event creates different evidence obligations for each platform.</p><p class="small">Use the visual as the outline. The linked reference below is supporting detail, not a required verbatim script.</p></div><section class="note-reference"><h3><a href="../guides/architecture.html#A-U01">A-U01 — Worked comparison: one symptom, three different jobs</a></h3><p><strong>Synthetic tabletop.</strong> A staging release produces elevated request retries, an authorization finding and increased transfer volume. Those observations are distinct; one is not proof of the others.</p>
+</section></section><section class="note-block" data-note="8"><h2>Tabletop: one operational symptom, three different jobs</h2><div class="talk-track"><p>The same business event creates different evidence obligations for each platform.</p><p>Allocated time: 04:00. Use the supplied synthetic evidence; do not imply live service execution.</p></div><section class="note-reference"><h3>Cross-platform operational review: worked example</h3><p><strong>Synthetic tabletop.</strong> A staging release produces elevated request retries, an authorization finding and increased transfer volume. Those observations are distinct; one is not proof of the others.</p>
 <div aria-label="Scrollable reference table" class="table-wrap" role="region" tabindex="0"><table>
 <thead>
 <tr>
-<th>Specialist question</th>
-<th>Product evidence</th>
-<th>Acceptance boundary</th>
+<th scope="col">Specialist question</th>
+<th scope="col">Product evidence</th>
+<th scope="col">Acceptance boundary</th>
 </tr>
 </thead>
 <tbody>
@@ -317,7 +630,46 @@ completion:
 </tbody>
 </table></div>
 <p><strong>Four-minute exercise:</strong> spend one minute identifying each product's required input, two minutes checking revision/window/identity consistency across the prepared records, and one minute assigning unresolved questions to owners. A purported single root cause is rejected unless evidence actually connects the observations. No live agents or shared runtime are assumed.</p>
-</section><h3>Official documentation for this slide</h3><ul><li>Synthetic or team-composed example; see the linked guide for its stated boundaries.</li></ul></div><div class="note-block" hidden=""><h2>9. Documentation and Presentation Acceptance Criteria</h2><p class="small">Budget 03:00 · cumulative 19:00–22:00.</p><div class="talk-track"><strong>Speaking focus</strong><p>A presentation is an indexed technical explanation, not a sequence of slogans.</p><p class="small">Use the visual as the outline. The linked reference below is supporting detail, not a required verbatim script.</p></div><section class="note-reference"><h3><a href="../guides/architecture.html#A-07">A-07 — Coverage, evidence and unresolved implementation details</a></h3><p>This comparison covers resource scoping, retained context, access layers, effects, lifecycle and handoffs. It does not propose a universal agent framework or reproduce complete IAM policies. The three platform guides carry the detailed procedures and explicit per-product coverage tables.</p>
+</section></section><section class="note-block" data-note="9"><h2>Use case families across the three platforms</h2><div class="talk-track"><p>Similar business labels can map to different platform objects and authorization boundaries.</p><p>Allocated time: 03:00. Use the detailed section references below for configuration and limitations.</p></div><section class="note-reference"><h3>Workspace, configuration, and execution models</h3><p>A comparison begins with the objects each product actually exposes. The three services all separate configuration from execution, but their scopes and resource relationships are not interchangeable. The table below compares those documented objects without proposing a new universal agent schema.</p>
+<div aria-label="Scrollable reference table" class="table-wrap" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">Layer</th>
+<th scope="col">DevOps Agent</th>
+<th scope="col">Security Agent</th>
+<th scope="col">FinOps Agent</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Scope</td>
+<td>Agent Space with account/provider associations</td>
+<td>Application Agent Space plus shared account resources</td>
+<td>Agent instance with its own data and connections</td>
+</tr>
+<tr>
+<td>Reusable configuration</td>
+<td>Managed/custom agents, selected tools, knowledge, triggers</td>
+<td>Assessment configurations, requirements, sources, credentials</td>
+<td>Context files, memories, integrations and automations</td>
+</tr>
+<tr>
+<td>Execution</td>
+<td>Investigation, chat, evaluation, custom invocation</td>
+<td>Assessment run or one-off design review; revalidation job</td>
+<td>Conversation, queued task, report generation</td>
+</tr>
+<tr>
+<td>Reviewable state</td>
+<td>Tool results, investigation evidence, knowledge versions</td>
+<td>Findings, test context, model/review results, lineage</td>
+<td>Source queries, task results, report artifacts</td>
+</tr>
+</tbody>
+</table></div>
+<p>The terms differ because the objects differ. A common UI label does not make all Agent Spaces identical. In Security Agent, requirements can be shared across applications; in DevOps Agent, a topology graph is not the complete access boundary; in FinOps Agent, an instance's context can be visible to everyone with access to that instance. <a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-what-is-a-devops-agent-topology.html">AS01</a> <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html">AS02</a> <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/creating-an-agent.html">AS03</a></p>
+<p><strong>Engineering design:</strong> record the platform, account/Region, configuration ID and execution ID separately. Do not put one ambiguous <code>agent_id</code> in every downstream ticket and expect it to identify all four concepts.</p>
+</section><section class="note-reference"><h3>Architecture assumptions and references</h3><p>This comparison covers resource scoping, retained context, access layers, effects, lifecycle and handoffs. It does not propose a universal agent framework or reproduce complete IAM policies. The three platform guides carry the detailed procedures and explicit per-product coverage tables.</p>
 <p>The public sources do not justify specifying a shared vector database, embedding strategy, memory-ranking algorithm, foundation-model training pipeline or cross-product identity fabric. Where an implementation detail is not documented, the guide says so rather than completing an attractive architecture diagram with invented components.</p>
 <h4>Official sources and reviewed scope</h4>
 <ul>
@@ -336,122 +688,136 @@ completion:
 <li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/custom-agents-executing-custom-agents.html">AS13</a> Custom-agent trigger versus invocation cancellation.</li>
 <li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html">AS14</a> Security revalidation lineage.</li>
 </ul>
-</section><h3>Official documentation for this slide</h3><ul><li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-what-is-a-devops-agent-topology.html">AS01 — about-aws-devops-agent-what-is-a-devops-agent-topology.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html">AS02 — understand-lifecycle.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/creating-an-agent.html">AS03 — creating-an-agent.html</a></li><li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html">AS04 — about-aws-devops-agent-devops-agent-memories.html</a></li><li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/whats-new.html">AS05 — whats-new.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html">AS06 — provide-testing-credentials.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html">AS07 — data-protection.html</a></li><li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-connecting-mcp-servers.html">AS08 — configuring-integrations-and-knowledge-connecting-mcp-servers.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/jira-integration.html">AS09 — jira-integration.html</a></li><li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-working-with-directed-actions.html">AS10 — working-with-devops-agent-working-with-directed-actions.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html">AS11 — perform-penetration-test.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html">AS12 — agent-guardrail-control.html</a></li><li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/custom-agents-executing-custom-agents.html">AS13 — custom-agents-executing-custom-agents.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html">AS14 — revalidate-findings.html</a></li></ul></div></details><details class="evidence"><summary>Official source register · untimed reference</summary><p class="small">Product statements retain their existing official references. This revision changes organization and HTML delivery; it does not constitute a new product-documentation audit or live AWS test.</p><ol><li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-what-is-a-devops-agent-topology.html">AS01 — about-aws-devops-agent-what-is-a-devops-agent-topology.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html">AS02 — understand-lifecycle.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/creating-an-agent.html">AS03 — creating-an-agent.html</a></li><li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html">AS04 — about-aws-devops-agent-devops-agent-memories.html</a></li><li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/whats-new.html">AS05 — whats-new.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html">AS06 — provide-testing-credentials.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html">AS07 — data-protection.html</a></li><li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-connecting-mcp-servers.html">AS08 — configuring-integrations-and-knowledge-connecting-mcp-servers.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/jira-integration.html">AS09 — jira-integration.html</a></li><li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-working-with-directed-actions.html">AS10 — working-with-devops-agent-working-with-directed-actions.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html">AS11 — perform-penetration-test.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html">AS12 — agent-guardrail-control.html</a></li><li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/custom-agents-executing-custom-agents.html">AS13 — custom-agents-executing-custom-agents.html</a></li><li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html">AS14 — revalidate-findings.html</a></li></ol></details><footer>No live service completion or measured outcome is implied by the walkthrough budgets. <a href="architecture-notes.md">Presenter reference</a>.</footer></main><dialog aria-labelledby="agenda-title" id="agenda"><div class="dialog-top"><h2 id="agenda-title">Shared Architecture — agenda</h2><button id="agenda-close">Close</button></div><p>22 minutes including 4 minutes of prepared-result exercise. Select a slide or use the chapter buttons.</p><section class="agenda-group"><h3>01. Part I · Comparison Framework · 05:00</h3><button data-slide="0">01. Comparison Framework<small>00:00–02:00 · 02:00 planned</small></button><button data-slide="1">02. Use Case Families Across the Three Platforms<small>02:00–05:00 · 03:00 planned</small></button></section><section class="agenda-group"><h3>02. Part II · Resource, Context and Access · 04:00</h3><button data-slide="2">03. Resource and Context Models<small>05:00–07:00 · 02:00 planned</small></button><button data-slide="3">04. Connectivity, Identity and Authorization<small>07:00–09:00 · 02:00 planned</small></button></section><section class="agenda-group"><h3>03. Part III · Execution, Lifecycle and Handoffs · 06:00</h3><button data-slide="4">05. Execution and Approval Boundaries<small>09:00–11:00 · 02:00 planned</small></button><button data-slide="5">06. Configuration, Execution and Artifact Lifecycles<small>11:00–13:00 · 02:00 planned</small></button><button data-slide="6">07. Handoff Record Between Platforms and Teams<small>13:00–15:00 · 02:00 planned</small></button></section><section class="agenda-group"><h3>04. Part IV · Tabletop · 04:00</h3><button data-slide="7">08. Tabletop: One Operational Symptom, Three Different Jobs<small>15:00–19:00 · 04:00 planned</small></button></section><section class="agenda-group"><h3>05. Part V · Acceptance Criteria · 03:00</h3><button data-slide="8">09. Documentation and Presentation Acceptance Criteria<small>19:00–22:00 · 03:00 planned</small></button></section></dialog><script>'use strict';
-(() => {
-  const $ = s => document.querySelector(s);
-  const $$ = s => [...document.querySelectorAll(s)];
-  const isEditing = () => ['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName);
-  const format = seconds => `${Math.floor(seconds / 60).toString().padStart(2,'0')}:${Math.floor(seconds % 60).toString().padStart(2,'0')}`;
-  $$('[data-print]').forEach(b => b.addEventListener('click', () => window.print()));
-  if (document.body.dataset.view === 'report') {
-    const sections = $$('.report-section'), chapters = $$('.chapter');
-    const search = $('#search'), type = $('#type'), chapter = $('#chapter');
-    function filter() {
-      const query = search.value.toLowerCase().trim();
-      let count = 0;
-      sections.forEach(s => {
-        const visible = (!query || s.textContent.toLowerCase().includes(query)) && (!type.value || s.dataset.kind === type.value) && (!chapter.value || s.dataset.chapter === chapter.value);
-        s.hidden = !visible;
-        if (visible) count++;
+</section></section><section class="note-block" data-note="10"><h2>Documentation and presentation acceptance criteria</h2><div class="talk-track"><p>A presentation is an indexed technical explanation, not a sequence of slogans.</p><p>Allocated time: 03:00. Use the detailed section references below for configuration and limitations.</p></div><section class="note-reference"><h3>Architecture assumptions and references</h3><p>This comparison covers resource scoping, retained context, access layers, effects, lifecycle and handoffs. It does not propose a universal agent framework or reproduce complete IAM policies. The three platform guides carry the detailed procedures and explicit per-product coverage tables.</p>
+<p>The public sources do not justify specifying a shared vector database, embedding strategy, memory-ranking algorithm, foundation-model training pipeline or cross-product identity fabric. Where an implementation detail is not documented, the guide says so rather than completing an attractive architecture diagram with invented components.</p>
+<h4>Official sources and reviewed scope</h4>
+<ul>
+<li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-what-is-a-devops-agent-topology.html">AS01</a> DevOps topology versus investigation access scope.</li>
+<li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html">AS02</a> Security account and application resource hierarchy.</li>
+<li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/creating-an-agent.html">AS03</a> FinOps creation and instance connections.</li>
+<li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html">AS04</a> DevOps stored knowledge, retrieval and versioning; newer indexed memory guidance.</li>
+<li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/whats-new.html">AS05</a> Dated DevOps correction-memory change.</li>
+<li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html">AS06</a> Security credential resolution and learned login; newer indexed guidance.</li>
+<li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html">AS07</a> FinOps persistent/runtime state and deletion semantics.</li>
+<li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-connecting-mcp-servers.html">AS08</a> DevOps MCP registration, selection and authentication.</li>
+<li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/jira-integration.html">AS09</a> FinOps integration registration and binding.</li>
+<li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-working-with-directed-actions.html">AS10</a> DevOps directed-action controls and classification.</li>
+<li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html">AS11</a> Security active-target configuration and run boundaries; newer indexed guidance.</li>
+<li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html">AS12</a> FinOps action-specific approval.</li>
+<li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/custom-agents-executing-custom-agents.html">AS13</a> Custom-agent trigger versus invocation cancellation.</li>
+<li><a href="https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html">AS14</a> Security revalidation lineage.</li>
+</ul>
+</section></section></details><p class="deck-links"><a href="../guides/architecture.html">Read the guide</a> · <a href="../catalog/index.html">Read the use cases</a> · <a href="architecture-notes.md">Notes in Markdown</a></p><dialog id="agenda"><div class="dialog-heading"><h2>Presentation contents</h2><button id="agenda-close">Close</button></div><section><h3>Service architecture</h3><button data-slide="0">01. Agent execution and evidence cycle <small>02:00</small></button><button data-slide="1">02. Comparison framework <small>02:00</small></button><button data-slide="2">03. Resource and context models <small>02:00</small></button></section><section><h3>Integrations and access</h3><button data-slide="3">04. Team-managed evidence handoff <small>02:00</small></button><button data-slide="4">05. Connectivity, identity and authorization <small>02:00</small></button></section><section><h3>Execution workflows</h3><button data-slide="5">06. Execution and approval boundaries <small>02:00</small></button><button data-slide="6">07. Configuration, execution and artifact lifecycles <small>02:00</small></button><button data-slide="7">08. Handoff record between platforms and teams <small>02:00</small></button></section><section><h3>Worked example</h3><button data-slide="8">09. Tabletop: one operational symptom, three different jobs <small>04:00</small></button></section><section><h3>Troubleshooting and references</h3><button data-slide="9">10. Use case families across the three platforms <small>03:00</small></button><button data-slide="10">11. Documentation and presentation acceptance criteria <small>03:00</small></button></section></dialog></main><script>/* Offline behavior. Content and diagrams remain in the HTML document. */
+(()=>{
+  'use strict';
+  const $=(selector,root=document)=>root.querySelector(selector);
+  const $$=(selector,root=document)=>Array.from(root.querySelectorAll(selector));
+  const time=seconds=>Math.floor(seconds/60).toString().padStart(2,'0')+':'+Math.floor(seconds%60).toString().padStart(2,'0');
+  $$('[data-print]').forEach(button=>button.addEventListener('click',()=>window.print()));
+  let printDetails=[];
+  addEventListener('beforeprint',()=>{printDetails=$$('details.case-reference').map(el=>[el,el.open]);printDetails.forEach(([el])=>el.open=true);});
+  addEventListener('afterprint',()=>printDetails.forEach(([el,open])=>el.open=open));
+
+  function setupGuide(){
+    const sections=$$('.report-section'),chapters=$$('.chapter');
+    const search=$('#search'),chapter=$('#chapter'),type=$('#type');
+    function filter(){
+      const terms=search.value.toLowerCase().trim().split(/\s+/).filter(Boolean);let visible=0;
+      sections.forEach(section=>{
+        const text=section.textContent.toLowerCase();
+        const show=terms.every(term=>text.includes(term))&&(!chapter.value||chapter.value===section.dataset.chapter)&&(!type.value||type.value===section.dataset.kind);
+        section.hidden=!show;if(show)visible++;
       });
-      chapters.forEach(c => c.hidden = ![...c.querySelectorAll('.report-section')].some(s => !s.hidden));
-      $('#search-status').textContent = `${count} of ${sections.length} sections shown`;
-      $('#empty-results').hidden = count !== 0;
+      chapters.forEach(c=>c.hidden=!$('.report-section:not([hidden])',c));
+      $('#search-status').textContent=visible+' of '+sections.length+' technical sections shown';
+      $('#empty-results').hidden=visible!==0;
     }
-    function reset() { search.value = ''; type.value = ''; chapter.value = ''; filter(); }
-    [search,type,chapter].forEach(x => x.addEventListener('input',filter));
+    function reset(){search.value='';chapter.value='';type.value='';filter();}
+    [search,chapter,type].forEach(el=>el.addEventListener('input',filter));
     $('#reset').addEventListener('click',reset);
-    $('#nav-expand').addEventListener('click',() => $$('.toc details').forEach(d => d.open = true));
-    $('#nav-collapse').addEventListener('click',() => $$('.toc details').forEach(d => d.open = false));
-    function reveal() {
-      let id;
-      try { id = decodeURIComponent(location.hash.slice(1)); } catch { return; }
-      const el = document.getElementById(id);
-      if (!el) return;
-      if (el.matches('.report-section,.chapter') || el.closest('.report-section')) {
-        reset();
-        const section = el.closest('.report-section') || el.querySelector('.report-section');
-        if (section) {
-          const link = $$('.toc a[data-section]').find(a => a.dataset.section === section.id);
-          if (link) link.closest('details').open = true;
-        }
-        requestAnimationFrame(() => el.scrollIntoView({block:'start'}));
-      }
+    $('#nav-expand').addEventListener('click',()=>$$('.toc details').forEach(el=>el.open=true));
+    $('#nav-collapse').addEventListener('click',()=>$$('.toc details').forEach(el=>el.open=false));
+    function reveal(){
+      const id=decodeURIComponent(location.hash.slice(1));if(!id)return;
+      const target=document.getElementById(id);if(!target)return;
+      if(target.matches('.report-section,.chapter'))reset();
+      const nav=$$('.toc a').find(a=>a.getAttribute('href')==='#'+id);
+      if(nav){nav.closest('details').open=true;$$('.toc a').forEach(a=>a.classList.toggle('active',a===nav));}
+      requestAnimationFrame(()=>target.scrollIntoView({block:'start'}));
     }
-    window.addEventListener('hashchange',reveal);
-    $$('.toc a,.map-link').forEach(a => a.addEventListener('click',() => { reset(); setTimeout(reveal,0); }));
-    const observer = new IntersectionObserver(entries => {
-      const visible = entries.filter(e => e.isIntersecting && !e.target.hidden).sort((a,b) => a.boundingClientRect.top - b.boundingClientRect.top);
-      if (!visible.length) return;
-      const section = visible[0].target;
-      $$('.toc a[data-section]').forEach(a => {
-        const active = a.dataset.section === section.id;
-        a.classList.toggle('active',active);
-        if (active) a.setAttribute('aria-current','location'); else a.removeAttribute('aria-current');
-      });
-      $('#reading-location').textContent = section.dataset.path;
-    }, {rootMargin:'-80px 0px -60% 0px', threshold:0});
-    sections.forEach(s => observer.observe(s));
-    document.addEventListener('keydown',e => { if (e.key === '/' && !isEditing()) { e.preventDefault(); search.focus(); } });
-    filter(); reveal();
-  }
-  if (document.body.dataset.view === 'presentation') {
-    const slides = $$('.slide'), select = $('#slide-select'), noteBlocks = $$('.note-block');
-    const groups = $$('.chapter-strip button'), totalBudget = Number(document.body.dataset.total);
-    let index = 0, running = false, totalSpent = 0, last = 0;
-    const spent = slides.map(() => 0);
-    function collect() {
-      if (!running) return;
-      const now = performance.now(), delta = Math.max(0,now-last);
-      totalSpent += delta; spent[index] += delta; last = now;
-    }
-    function timers() {
-      collect();
-      $('#session-time').textContent = `${format(totalSpent/1000)} / ${format(totalBudget)}`;
-      $('#slide-time').textContent = `${format(spent[index]/1000)} / ${format(Number(slides[index].dataset.seconds))}`;
-      $('#session-clock').classList.toggle('over',totalSpent/1000 > totalBudget);
-      $('#slide-clock').classList.toggle('over',spent[index]/1000 > Number(slides[index].dataset.seconds));
-    }
-    function show(n, updateHash = true) {
-      collect(); index = Math.max(0,Math.min(slides.length-1,n));
-      slides.forEach((s,i) => s.hidden = i !== index);
-      noteBlocks.forEach((s,i) => s.hidden = i !== index);
-      select.value = String(index);
-      $('#previous').disabled = index === 0; $('#next').disabled = index === slides.length-1;
-      const active = slides[index];
-      groups.forEach(b => b.setAttribute('aria-current',String(b.dataset.group === active.dataset.group)));
-      $('#slide-progress').value = index+1;
-      $('#slide-position').textContent = `Slide ${index+1} of ${slides.length} · ${active.dataset.chapter}`;
-      $('#slide-announcement').textContent = `Slide ${index+1}: ${active.querySelector('h1').textContent}`;
-      if (updateHash) history.replaceState(null,'',`#slide-${String(index+1).padStart(2,'0')}`);
-      timers();
-    }
-    function fromHash() { const m = location.hash.match(/^#slide-(\d+)$/); show(m ? Number(m[1])-1 : 0,false); }
-    $('#previous').onclick = () => show(index-1);
-    $('#next').onclick = () => show(index+1);
-    select.onchange = () => show(Number(select.value));
-    groups.forEach(b => b.onclick = () => show(Number(b.dataset.start)));
-    $('#agenda-open').onclick = () => $('#agenda').showModal();
-    $('#agenda-close').onclick = () => $('#agenda').close();
-    $$('#agenda [data-slide]').forEach(b => b.onclick = () => { show(Number(b.dataset.slide)); $('#agenda').close(); });
-    $('#timer-toggle').onclick = () => {
-      collect(); running = !running; last = performance.now();
-      $('#timer-toggle').textContent = running ? 'Pause timer' : 'Start timer';
-      $('#timer-toggle').setAttribute('aria-pressed',String(running)); timers();
-    };
-    $('#timer-reset').onclick = () => { running=false; totalSpent=0; spent.fill(0); $('#timer-toggle').textContent='Start timer'; $('#timer-toggle').setAttribute('aria-pressed','false'); timers(); };
-    $('#notes-button').onclick = () => { $('#speaker-notes').open = !$('#speaker-notes').open; if ($('#speaker-notes').open) $('#speaker-notes').scrollIntoView({block:'start'}); };
-    $('#fullscreen').onclick = async () => {
-      try { if (document.fullscreenElement) await document.exitFullscreen(); else await document.documentElement.requestFullscreen(); }
-      catch { $('#slide-announcement').textContent='Fullscreen is unavailable; browser presentation controls remain active.'; }
-    };
-    document.addEventListener('keydown',e => {
-      if (isEditing() || $('#agenda').open) return;
-      const actions = {ArrowRight:()=>show(index+1),PageDown:()=>show(index+1),ArrowLeft:()=>show(index-1),PageUp:()=>show(index-1),Home:()=>show(0),End:()=>show(slides.length-1),n:()=>$('#notes-button').click(),t:()=>$('#timer-toggle').click(),f:()=>$('#fullscreen').click()};
-      if (actions[e.key]) { e.preventDefault(); actions[e.key](); }
+    addEventListener('hashchange',reveal);filter();if(location.hash)reveal();
+    addEventListener('keydown',event=>{
+      if(event.key==='/'&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)){event.preventDefault();search.focus();}
     });
-    window.addEventListener('hashchange',fromHash);
-    setInterval(timers,200); fromHash();
   }
+
+  function setupCatalog(root){
+    const entries=$$('.usecase-entry',root),search=$('[data-uc-search]',root);
+    const selectors=['platform','group','delivery','cadence'].map(name=>[name,$('[data-uc-'+name+']',root)]).filter(([,el])=>el);
+    function filter(){
+      const terms=search.value.trim().toLowerCase().split(/\s+/).filter(Boolean);let shown=0;
+      entries.forEach(entry=>{
+        const text=entry.textContent.toLowerCase();
+        const show=terms.every(term=>text.includes(term))&&selectors.every(([name,el])=>!el.value||el.value===entry.dataset[name]);
+        entry.hidden=!show;if(show)shown++;
+      });
+      $$('[data-uc-group-block]',root).forEach(group=>group.hidden=!$('.usecase-entry:not([hidden])',group));
+      $('[data-uc-count]',root).textContent=shown+' of '+entries.length+' use cases shown';
+      $('[data-uc-empty]',root).hidden=shown!==0;
+    }
+    function reset(){search.value='';selectors.forEach(([,el])=>el.value='');filter();}
+    search.addEventListener('input',filter);selectors.forEach(([,el])=>el.addEventListener('input',filter));
+    $('[data-uc-reset]',root).addEventListener('click',reset);
+    const params=new URLSearchParams(location.search);
+    selectors.forEach(([name,el])=>{const value=params.get(name);if(value&&Array.from(el.options).some(option=>option.value===value))el.value=value;});
+    function reveal(){
+      const id=decodeURIComponent(location.hash.slice(1));const target=document.getElementById(id);
+      if(!target||!root.contains(target)||!target.matches('.usecase-entry,.catalog-group'))return;
+      reset();requestAnimationFrame(()=>target.scrollIntoView({block:'start'}));
+    }
+    filter();addEventListener('hashchange',reveal);if(location.hash)reveal();
+  }
+
+  function setupDeck(){
+    const slides=$$('.slide'),notes=$$('.note-block'),select=$('#slide-select'),noteBox=$('#speaker-notes');
+    let current=0,running=false,session=0,slideElapsed=0,last=performance.now();
+    const total=Number(document.body.dataset.total);
+    function updateClock(){
+      const now=performance.now();if(running){session+=(now-last)/1000;slideElapsed+=(now-last)/1000;}last=now;
+      $('#session-time').textContent=time(session);$('#slide-time').textContent=time(slideElapsed)+' / '+time(Number(slides[current].dataset.seconds));
+      $('#session-time').classList.toggle('over',session>total);$('#slide-time').classList.toggle('over',slideElapsed>Number(slides[current].dataset.seconds));
+    }
+    function show(index,writeHash=true){
+      updateClock();index=Math.max(0,Math.min(slides.length-1,index));if(index!==current)slideElapsed=0;current=index;
+      slides.forEach((slide,i)=>{slide.hidden=i!==current;slide.classList.toggle('active',i===current);});
+      notes.forEach((note,i)=>note.hidden=i!==current);select.value=String(current);
+      $('#previous').disabled=current===0;$('#next').disabled=current===slides.length-1;
+      $$('.chapter-strip button').forEach(button=>button.setAttribute('aria-current',String(button.dataset.chapterButton===slides[current].dataset.group)));
+      if(writeHash)history.replaceState(null,'','#'+slides[current].id);
+      updateClock();
+    }
+    function fromHash(){const match=location.hash.match(/^#slide-(\d+)$/);show(match?Number(match[1])-1:0,false);}
+    select.addEventListener('change',()=>show(Number(select.value)));
+    $('#previous').addEventListener('click',()=>show(current-1));$('#next').addEventListener('click',()=>show(current+1));
+    $$('[data-slide]').forEach(button=>button.addEventListener('click',()=>{show(Number(button.dataset.slide));if($('#agenda').open)$('#agenda').close();}));
+    $('#agenda-open').addEventListener('click',()=>$('#agenda').showModal());$('#agenda-close').addEventListener('click',()=>$('#agenda').close());
+    $('#notes-button').addEventListener('click',()=>{noteBox.open=!noteBox.open;$('#notes-button').setAttribute('aria-expanded',String(noteBox.open));});
+    noteBox.addEventListener('toggle',()=>$('#notes-button').setAttribute('aria-expanded',String(noteBox.open)));
+    $('#timer-toggle').addEventListener('click',()=>{updateClock();running=!running;$('#timer-toggle').textContent=running?'Pause timer':'Start timer';});
+    $('#timer-reset').addEventListener('click',()=>{running=false;session=0;slideElapsed=0;last=performance.now();$('#timer-toggle').textContent='Start timer';updateClock();});
+    $('#fullscreen').addEventListener('click',async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}catch(error){$('#fullscreen').textContent='Fullscreen unavailable';}});
+    addEventListener('keydown',event=>{
+      if(/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)||event.ctrlKey||event.metaKey||event.altKey||$('#agenda').open)return;
+      if(['ArrowRight','PageDown','ArrowLeft','PageUp','Home','End'].includes(event.key))event.preventDefault();
+      if(['ArrowRight','PageDown'].includes(event.key))show(current+1);
+      if(['ArrowLeft','PageUp'].includes(event.key))show(current-1);
+      if(event.key==='Home')show(0);if(event.key==='End')show(slides.length-1);
+      if(event.key.toLowerCase()==='n')$('#notes-button').click();
+    });
+    addEventListener('hashchange',fromHash);fromHash();setInterval(updateClock,200);
+  }
+  if(document.body.dataset.view==='report')setupGuide();
+  $$('[data-usecase-catalog]').forEach(setupCatalog);
+  if(document.body.dataset.view==='presentation')setupDeck();
 })();
 </script></body></html>
