@@ -32,10 +32,6 @@ jobs:
       - name: Install Chromium for browser validation
         timeout-minutes: 3
         run: python -m playwright install chromium
-      - name: Apply reviewed technical editorial changes
-        run: |
-          python -m compileall -q tools/docs
-          if [ -f tools/docs/apply_technical_edit.py ]; then python tools/docs/apply_technical_edit.py; fi
       - name: Build guides, linked catalog, figures and HTML presentations
         run: |
           python -m compileall -q tools/docs
