@@ -1,5 +1,9 @@
 # Documentation changes
 
+## 2026-10-23 — Technical editorial review
+
+Replaced rhetorical introductions, removed repeated mechanism boilerplate and overlapping explanations, and revised diagram presenter notes. Corrected FinOps artifact provenance and memory inputs, separated team policy approval from requirement generation, and added the documented Azure DevOps source binding to the Security integration inventory. The 30 use-case records and approved resource model are unchanged.
+
 ## 22 October 2026 — product-specific resource models
 
 Specialized the approved conceptual model for DevOps, Security and FinOps. Added ownership-coded resource diagrams, entity and relationship registers, feature/resource bindings and model-led guide chapters. Preserved all thirty approved use cases and the existing mechanism, feature, profile and alias source files byte-for-byte. Added model explanations to the HTML presentation flow.
