@@ -1,4 +1,4 @@
-name: Build and publish documentation suite
+name: Build and publish canonical engineering guides
 on:
   workflow_dispatch:
   push:
@@ -21,30 +21,19 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Install document and browser test tools
+      - name: Install documentation and browser dependencies
         run: |
-          python -m pip install beautifulsoup4==4.13.4 python-pptx==1.0.2 playwright==1.57.0
+          python -m pip install -r tools/docs-requirements.txt
           python -m playwright install --with-deps chromium
-      - name: Assemble existing scenario and architecture documents
+      - name: Compile sources and replace superseded documentation
         run: |
-          python tools/assemble_content.py
-          python tools/build_suite.py
-      - name: Build platform capability and mechanism references
-        run: |
-          python -m py_compile tools/build_platform_references.py tools/finalize_platform_publication.py
-          python tools/build_platform_references.py --browser
-      - name: Validate the final document collection
-        run: |
-          python tools/build_suite.py --check
-          python tools/editorial_lint.py
-          python tools/qa_format.py
-          python tools/qa_mechanisms_browser.py
-          python tools/validate_scope.py
-          python tools/build_platform_references.py --check --browser
-          python tools/finalize_platform_publication.py
+          python -m py_compile tools/docs_build.py tools/docs_check.py tools/lesson_plan.py
+          python tools/docs_build.py
+      - name: Validate canonical content, examples, browser controls and application preservation
+        run: python tools/docs_check.py --browser
       - name: Commit each changed document or deletion separately
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          python tools/build_platform_references.py --commit
+          python tools/docs_build.py --commit
           git push origin HEAD:main
