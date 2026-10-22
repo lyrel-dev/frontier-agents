@@ -4,12 +4,16 @@ Open `index.html` from a repository checkout. The guides, catalog, and presentat
 
 | Subject | Guide | HTML presentation | Duration |
 |---|---|---|---|
-| AWS DevOps Agent | [HTML](guides/devops.html) / [Markdown](guides/devops.md) | [Slides](presentations/devops.html) / [Notes](presentations/devops-notes.md) | 59 min including 8 min exercise |
-| AWS Security Agent | [HTML](guides/security.html) / [Markdown](guides/security.md) | [Slides](presentations/security.html) / [Notes](presentations/security-notes.md) | 54 min including 8 min exercise |
-| AWS FinOps Agent | [HTML](guides/finops.html) / [Markdown](guides/finops.md) | [Slides](presentations/finops.html) / [Notes](presentations/finops-notes.md) | 50 min including 8 min exercise |
-| Shared Architecture | [HTML](guides/architecture.html) / [Markdown](guides/architecture.md) | [Slides](presentations/architecture.html) / [Notes](presentations/architecture-notes.md) | 34 min including 4 min exercise |
+| AWS DevOps Agent | [HTML](guides/devops.html) / [Markdown](guides/devops.md) | [Slides](presentations/devops.html) / [Notes](presentations/devops-notes.md) | 65 min including 8 min exercise |
+| AWS Security Agent | [HTML](guides/security.html) / [Markdown](guides/security.md) | [Slides](presentations/security.html) / [Notes](presentations/security-notes.md) | 60 min including 8 min exercise |
+| AWS FinOps Agent | [HTML](guides/finops.html) / [Markdown](guides/finops.md) | [Slides](presentations/finops.html) / [Notes](presentations/finops-notes.md) | 56 min including 8 min exercise |
+| Shared Architecture | [HTML](guides/architecture.html) / [Markdown](guides/architecture.md) | [Slides](presentations/architecture.html) / [Notes](presentations/architecture-notes.md) | 40 min including 4 min exercise |
 
-The programme is **197 minutes including 28 minutes of prepared-result exercises**. Questions and breaks are additional.
+The programme is **221 minutes including 28 minutes of prepared-result exercises**. Questions and breaks are additional.
+
+## Product resource models
+
+[Read the ownership-coded resource models](catalog/resource-models.html). The guides introduce the model in their overview, explain identities and lifecycles, and trace the approved use cases through concrete resource bindings. [Model source](catalog/resource-models.json) and [review evidence](qa/product-source-review.json) are maintained with the build.
 
 ## Operational use cases
 
@@ -19,7 +23,7 @@ The programme is **197 minutes including 28 minutes of prepared-result exercises
 
 ```text
 guides/          Maintained Markdown guides and generated HTML
-catalog/         Canonical cases, mechanisms, features, profiles and alias data; generated reading indexes
+catalog/         Canonical cases, mechanisms, features, profiles, aliases and product resource data; generated reading indexes
 presentations/   Generated HTML decks and presenter notes
 assets/diagrams/ Generated, accessible SVG figures
 examples/        Synthetic evidence used in worked examples
