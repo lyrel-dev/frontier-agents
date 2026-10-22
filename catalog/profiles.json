@@ -1,18 +1,649 @@
 {
-  "schema_version":2,
-  "boundary":"These are authored configuration recipes, not AWS API schemas or deployed configurations. Replace example values with approved identifiers. Do not put credentials in catalog data.",
-  "entries":[
-    {"id":"PR-D-INCIDENT","title":"Incident investigation configuration","platforms":["devops"],"mechanisms":["MX-D-READ","MX-D-TRIAGE","MX-D-INVESTIGATE","MX-D-RECALL","MX-D-FEEDBACK","MX-D-PREVENT"],"parameters":[["Agent Space","Authorized space and account scope","Approved staging space"],["Incident subject","Service identity and actual UTC observation interval","Checkout service and supplied incident window"],["Historical context","Relevant active monitor or service context","Optional; never a substitute for current evidence"]],"setup":["Verify operator access independently from resource and tool access.","Begin with the incident signal or a scoped manual investigation.","Inspect triage, current evidence and any observable historical-context retrieval separately."],"tests":["Current observations contradict a prior cause: the conclusion must follow current evidence.","A missing source produces an explicit evidence gap.","Correcting routing changes linkage, not production resource state."],"stop_behavior":"Use supported investigation controls. Steering and feedback do not grant mutation authority."},
-    {"id":"PR-D-REPORT","title":"Custom operational reporting configuration","platforms":["devops"],"mechanisms":["MX-D-READ","MX-D-CUSTOM","MX-D-SKILL","MX-D-RECALL","MX-D-INSTRUCTIONS","MX-D-SCHEDULE","MX-D-TOPOLOGY"],"parameters":[["Resource scope","Actual service and resource identifiers","Approved service list"],["Tool selection","Exact operations available in the Agent Space","Selected telemetry, incident or deployment read tools"],["Reporting basis","Period, dimensions, aggregation, comparison and failed-read treatment","Previous complete UTC day with declared percentile and error-rate basis"],["Context","Only the relevant procedure and mapping","Reviewed report skill and explicitly selected store"],["Schedule","Optional timing separate from observation window","Disabled until a trial invocation passes"],["Publication","Separate destination-specific effect","No external destination by default"]],"setup":["Create the custom definition with explicit objective, output and source limits.","Select actual tools and inspect applicable skills and store access using the current guide.","Run once, inspect the invocation and reconcile material measurements.","Enable recurrence only when schedule variability and concurrency suit the requirement."],"tests":["Unavailable telemetry is missing evidence, not a healthy result.","A known mapping is interpreted from the intended context.","A delayed invocation exposes both observation time and generation time."],"stop_behavior":"Pause future triggers and cancel current work separately. Do not claim guaranteed minute-by-minute delivery from a flexible schedule."},
-    {"id":"PR-D-ACTION","title":"Directed mitigation configuration","platforms":["devops"],"mechanisms":["MX-D-ACTION","MX-D-READ"],"parameters":[["Target","Explicit resource and eligible operation","Approved staging resource"],["Authorization","Opt-in, role, tool category and exact approval","Record configuration and approval identifiers"],["Recovery","Post-change measurements and rollback conditions","Declared latency and error acceptance"]],"setup":["Inspect each authorization layer without broadening scope.","Review the exact parameters and obtain the documented operator approval.","Compare resulting resource state with service recovery measurements."],"tests":["An operation outside the approval remains rejected.","The action record matches the approved operation and target.","Unsuccessful recovery follows the declared rollback or escalation decision."],"stop_behavior":"Stop when a gate fails. An unconditional elevated-role workaround is not part of this recipe."},
-    {"id":"PR-D-RELEASE","title":"Release-assurance configuration","platforms":["devops"],"mechanisms":["MX-D-READINESS","MX-D-TEST"],"parameters":[["Mode","Source readiness analysis or active application testing","Choose the intended output, not interchangeable modes"],["Revision","Candidate source or actually deployed revision","demo-r2"],["Allowed effects","Application operations for the active test","Disposable data and disabled external notifications"]],"setup":["Check feature, provider and Region eligibility.","Select candidate source for readiness analysis or explicitly authorize the deployed target for testing.","Inspect the resulting task and unresolved limitations."],"tests":["Source review is not represented as deployed-target verification.","Unexpected application effects stop active testing."],"stop_behavior":"Disable future execution and stop active work through the supported path; preserve incomplete coverage."},
-    {"id":"PR-S-ASSESS","title":"Running-application assessment configuration","platforms":["security"],"mechanisms":["MX-S-CONTEXT","MX-S-ACCESS","MX-S-AUTH","MX-S-LOGIN","MX-S-RUN","MX-S-REVALIDATE"],"parameters":[["Target","Authorized application and deployed revision","Staging application / demo-r2"],["Network","Public or private route and explicit exclusions","Separate attack targets from login support paths"],["Identity","Representative test roles and credential strategy","Test customer role; no production credential"],["Run limits","Configured work limits and responsible owner","Owner-approved limit, not assumed wall-clock duration"]],"setup":["Review the saved scope before starting execution.","Test target reachability and actual application identity.","Start a separate run and retain excluded or incomplete paths.","For revalidation, confirm the deployed repair and select original findings rather than run broad discovery."],"tests":["Failed authentication leaves protected paths unassessed.","Each run identifies the actual target revision and roles.","Revalidation retains the original finding and separate job."],"stop_behavior":"Stop unexpected effects. Control future schedules separately from current jobs, findings and external tickets."},
-    {"id":"PR-S-REVIEW","title":"Source, design and finding-review configuration","platforms":["security"],"mechanisms":["MX-S-CONTEXT","MX-S-CODE","MX-S-DESIGN","MX-S-THREAT","MX-S-CRITERIA","MX-S-GENERATE","MX-S-FINDING","MX-S-FIX","MX-S-JIRA"],"parameters":[["Assessment mode","One supported assessment with its own resource lifecycle","Code baseline, code change, design or threat model"],["Evidence revision","Source or design matching the subject","Immutable revision identifier"],["Criteria","Reviewed applicable requirements","Selected enabled pack"],["Write features","Optional comment, repair proposal or ticket","Disabled until provider and audience review"]],"setup":["Choose the actual mode rather than assume a shared configuration schema.","Connect matching evidence and enable the intended review criteria.","Inspect preflight and completed results separately.","Review repair proposals through ordinary tests and deployment before revalidation."],"tests":["A new source revision cannot silently reuse stale acceptance.","A requirement may be inapplicable rather than compliant.","Regenerating a pack is reviewed as replacement."],"stop_behavior":"Retain unfinished findings. Disable optional writes without discarding their source evidence."},
-    {"id":"PR-S-PIPELINE","title":"Pipeline assessment and delivery decision","platforms":["security"],"mechanisms":["MX-S-PIPELINE","MX-S-RUN"],"parameters":[["Assessment","Saved authorized configuration","Actual assessment configuration identifier"],["Pipeline identity","Scoped invocation access","Approved CI identity"],["Gate policy","Errors, incomplete results and accepted findings","Block or escalate; never a missing-result pass"]],"setup":["Verify eligibility and bind the pipeline to the saved assessment.","Invoke and observe the server-side job, retaining revision and run identity.","Apply the team gate only after interpreting actual scope and coverage."],"tests":["Invocation failure is not successful assessment.","An observation timeout does not imply that the underlying job stopped.","A new deployed revision requires matching assessment evidence."],"stop_behavior":"Stop the actual assessment using supported controls; stopping the pipeline runner is not assumed to cancel it."},
-    {"id":"PR-F-ANALYSIS","title":"Cost-analysis and report configuration","platforms":["finops"],"mechanisms":["MX-F-QUERY","MX-F-FILES","MX-F-MEMORY","MX-F-COMPACT","MX-F-TASK","MX-F-ARTIFACT"],"parameters":[["Query basis","Dates, metric, currency, scope, dimensions and granularity","Complete comparable periods and explicitly chosen cost metric"],["Analysis type","Observed cost, forecast, coverage or recommendation","Select the required upstream evidence"],["Organization context","Optional reviewed ownership mapping","Active non-sensitive reference file"],["Output","Result or supported report artifact","HTML report retaining source basis"]],"setup":["Verify the agent data role and relevant upstream service.","State material query choices even when preferences are retained.","Reconcile a material result independently and inspect task or artifact identity."],"tests":["Different filters invalidate a direct numerical comparison.","Forecasts and recommendation estimates are not added to observed costs.","Missing change evidence leaves causal attribution unresolved."],"stop_behavior":"Cancel tasks and manage artifacts separately. This recipe authorizes neither infrastructure changes nor commitment purchases."},
-    {"id":"PR-F-AUTOMATION","title":"Recurring or anomaly-triggered FinOps work","platforms":["finops"],"mechanisms":["MX-F-SCHEDULE","MX-F-EVENT","MX-F-TASK","MX-F-QUERY","MX-F-ARTIFACT"],"parameters":[["Trigger","Schedule or supported anomaly event","Explicit schedule OR selected Cost Anomaly Detection monitor"],["Observation window","Period independent of execution time","Previous complete calendar week"],["Destination","Optional and separately reviewed","No external publication by default"]],"setup":["Verify trigger permissions and source monitor where event-driven.","Inspect the stored automation rather than rely on conversational acknowledgement.","Trace an actual task to its analysis and optional delivery."],"tests":["A nonmatching event creates no expected task.","Queue, analysis and publication failures remain distinguishable.","Disabling automation stops future starts, not deletion of old tasks."],"stop_behavior":"Disable the automation and control existing tasks separately. Manage external records at their destination."},
-    {"id":"PR-F-PUBLICATION","title":"FinOps destination and authorization configuration","platforms":["finops"],"mechanisms":["MX-F-JIRA","MX-F-SLACK"],"parameters":[["Destination","Configured Jira project or Slack channel","Reviewed internal test destination"],["Invocation","Interactive, on-demand, scheduled or event-driven","Specify the path explicitly"],["Content scope","Approved data and audience","Non-sensitive summary and evidence references"]],"setup":["Register the provider and bind the agent connection to its destination.","Review audience and message scope before invocation.","For Jira, use invocation-specific approval; for Slack, do not expect a confirmation prompt.","Inspect actual destination and task history."],"tests":["Interactive or on-demand Jira approval is observed where applicable.","Automated Jira authorization is reviewed at setup.","Slack is treated as direct publication, not as approval-protected."],"stop_behavior":"Disable future publication or its automation. Disconnecting a destination does not delete already published records."},
-    {"id":"PR-REVIEW","title":"Team-managed operational review","platforms":["devops","finops","architecture"],"mechanisms":["MX-D-CUSTOM","MX-F-TASK"],"parameters":[["Profile","Reliability, cost-management or combined meeting","Reliability review"],["Inputs","Reviewed reports with period and execution identity","Health and incident results OR reconciled cost and anomaly results"],["Decision owners","Humans accountable for priorities and closure","Service owner and review chair"]],"setup":["Select reviewed inputs for the chosen profile.","Preserve source and execution identities in the meeting material.","Have owners confirm decisions, progress and acceptance."],"tests":["Estimated benefit is not recorded as measured outcome.","Unverified work is not marked complete.","A handoff transfers neither credentials nor approval authority."],"stop_behavior":"Stop disclosure to an inappropriate audience. Each underlying service retains its own execution and retention controls."},
-    {"id":"PR-EVIDENCE","title":"Cross-tool evidence reconciliation","platforms":["devops"],"mechanisms":["MX-D-READ","MX-D-TOPOLOGY"],"parameters":[["Identity mapping","Service, resource and revision relationships across tools","Reviewed application-to-deployment mapping"],["Observation window","Common UTC period","Explicit incident interval"]],"setup":["Read source identifiers instead of matching only titles.","Join observations using reviewed service and revision mappings.","Retain unmatched records and contradictory evidence."],"tests":["Similar timestamps alone do not establish causality.","An observation for the wrong account or revision is rejected."],"stop_behavior":"Continue only with supported relationships and assign gaps to an owner. This is a team procedure, not a universal native correlation feature."}
+  "schema_version": 2,
+  "boundary": "These are authored configuration recipes, not AWS API schemas or deployed configurations. Replace example values with approved identifiers. Do not put credentials in catalog data.",
+  "entries": [
+    {
+      "id": "PR-D-INCIDENT",
+      "title": "Incident and prevention configuration",
+      "platforms": [
+        "devops"
+      ],
+      "mechanisms": [
+        "MX-D-READ",
+        "MX-D-TRIAGE",
+        "MX-D-INVESTIGATE",
+        "MX-D-RECALL",
+        "MX-D-FEEDBACK",
+        "MX-D-PREVENT"
+      ],
+      "parameters": [
+        [
+          "Operation",
+          "Investigation, routing, feedback or prevention evaluation",
+          "Select the operation matching the objective"
+        ],
+        [
+          "Agent Space",
+          "Authorized space and account scope",
+          "Approved staging space"
+        ],
+        [
+          "Incident subject",
+          "Service identity and actual UTC observation interval",
+          "Checkout service and supplied incident window"
+        ],
+        [
+          "Historical context",
+          "Relevant active monitor or service context",
+          "Optional; never a substitute for current evidence"
+        ]
+      ],
+      "setup": [
+        "Verify operator access independently from resource and tool access.",
+        "For incident work, start from a signal or scoped manual investigation. For prevention work, inspect a manual or scheduled evaluation over existing investigation evidence.",
+        "Inspect triage, current evidence and any observable historical-context retrieval separately."
+      ],
+      "tests": [
+        "Current observations contradict a prior cause: the conclusion must follow current evidence.",
+        "A missing source produces an explicit evidence gap.",
+        "Correcting routing changes linkage, not production resource state."
+      ],
+      "stop_behavior": "Use supported investigation controls. Steering and feedback do not grant mutation authority."
+    },
+    {
+      "id": "PR-D-REPORT",
+      "title": "Custom operational reporting configuration",
+      "platforms": [
+        "devops"
+      ],
+      "mechanisms": [
+        "MX-D-READ",
+        "MX-D-CUSTOM",
+        "MX-D-SKILL",
+        "MX-D-RECALL",
+        "MX-D-INSTRUCTIONS",
+        "MX-D-SCHEDULE",
+        "MX-D-TOPOLOGY"
+      ],
+      "parameters": [
+        [
+          "Resource scope",
+          "Actual service and resource identifiers",
+          "Approved service list"
+        ],
+        [
+          "Tool selection",
+          "Exact operations available in the Agent Space",
+          "Selected telemetry, incident or deployment read tools"
+        ],
+        [
+          "Reporting basis",
+          "Period, dimensions, aggregation, comparison and failed-read treatment",
+          "Previous complete UTC day with declared percentile and error-rate basis"
+        ],
+        [
+          "Context",
+          "Only the relevant procedure and mapping",
+          "Reviewed report skill and explicitly selected store"
+        ],
+        [
+          "Schedule",
+          "Optional timing separate from observation window",
+          "Disabled until a trial invocation passes"
+        ],
+        [
+          "Publication",
+          "Separate destination-specific effect",
+          "No external destination by default"
+        ]
+      ],
+      "setup": [
+        "Create the custom definition with explicit objective, output and source limits.",
+        "Select actual tools and inspect applicable skills and store access using the current guide.",
+        "Run once, inspect the invocation and reconcile material measurements.",
+        "Enable recurrence only when schedule variability and concurrency suit the requirement."
+      ],
+      "tests": [
+        "Unavailable telemetry is missing evidence, not a healthy result.",
+        "A known mapping is interpreted from the intended context.",
+        "A delayed invocation exposes both observation time and generation time."
+      ],
+      "stop_behavior": "Pause future triggers and cancel current work separately. Do not claim guaranteed minute-by-minute delivery from a flexible schedule."
+    },
+    {
+      "id": "PR-D-ACTION",
+      "title": "Directed mitigation configuration",
+      "platforms": [
+        "devops"
+      ],
+      "mechanisms": [
+        "MX-D-ACTION",
+        "MX-D-READ"
+      ],
+      "parameters": [
+        [
+          "Target",
+          "Explicit resource and eligible operation",
+          "Approved staging resource"
+        ],
+        [
+          "Authorization",
+          "Opt-in, role, tool category and exact approval",
+          "Record configuration and approval identifiers"
+        ],
+        [
+          "Recovery",
+          "Post-change measurements and rollback conditions",
+          "Declared latency and error acceptance"
+        ]
+      ],
+      "setup": [
+        "Inspect each authorization layer without broadening scope.",
+        "Review the exact parameters and obtain the documented operator approval.",
+        "Compare resulting resource state with service recovery measurements."
+      ],
+      "tests": [
+        "An operation outside the approval remains rejected.",
+        "The action record matches the approved operation and target.",
+        "Unsuccessful recovery follows the declared rollback or escalation decision."
+      ],
+      "stop_behavior": "Stop when a gate fails. An unconditional elevated-role workaround is not part of this recipe."
+    },
+    {
+      "id": "PR-D-RELEASE",
+      "title": "Release-assurance configuration",
+      "platforms": [
+        "devops"
+      ],
+      "mechanisms": [
+        "MX-D-READINESS",
+        "MX-D-TEST"
+      ],
+      "parameters": [
+        [
+          "Mode",
+          "Source readiness analysis or active application testing",
+          "Choose the intended output, not interchangeable modes"
+        ],
+        [
+          "Revision",
+          "Candidate source or actually deployed revision",
+          "demo-r2"
+        ],
+        [
+          "Allowed effects",
+          "Application operations for the active test",
+          "Disposable data and disabled external notifications"
+        ]
+      ],
+      "setup": [
+        "Check feature, provider and Region eligibility.",
+        "Select candidate source for readiness analysis or explicitly authorize the deployed target for testing.",
+        "Inspect the resulting task and unresolved limitations."
+      ],
+      "tests": [
+        "Source review is not represented as deployed-target verification.",
+        "Unexpected application effects stop active testing."
+      ],
+      "stop_behavior": "Disable future execution and stop active work through the supported path; preserve incomplete coverage."
+    },
+    {
+      "id": "PR-S-ASSESS",
+      "title": "Running-application assessment configuration",
+      "platforms": [
+        "security"
+      ],
+      "mechanisms": [
+        "MX-S-CONTEXT",
+        "MX-S-ACCESS",
+        "MX-S-AUTH",
+        "MX-S-LOGIN",
+        "MX-S-RUN",
+        "MX-S-REVALIDATE"
+      ],
+      "parameters": [
+        [
+          "Target",
+          "Authorized application and deployed revision",
+          "Staging application / demo-r2"
+        ],
+        [
+          "Network",
+          "Public or private route and explicit exclusions",
+          "Separate attack targets from login support paths"
+        ],
+        [
+          "Identity",
+          "Representative test roles and credential strategy",
+          "Test customer role; no production credential"
+        ],
+        [
+          "Run limits",
+          "Configured work limits and responsible owner",
+          "Owner-approved limit, not assumed wall-clock duration"
+        ]
+      ],
+      "setup": [
+        "Review the saved scope before starting execution.",
+        "Test target reachability and actual application identity.",
+        "Start a separate run and retain excluded or incomplete paths.",
+        "For revalidation, confirm the deployed repair and select original findings rather than run broad discovery."
+      ],
+      "tests": [
+        "Failed authentication leaves protected paths unassessed.",
+        "Each run identifies the actual target revision and roles.",
+        "Revalidation retains the original finding and separate job."
+      ],
+      "stop_behavior": "Stop unexpected effects. Control future schedules separately from current jobs, findings and external tickets."
+    },
+    {
+      "id": "PR-S-REVIEW",
+      "title": "Source, design and finding-review configuration",
+      "platforms": [
+        "security"
+      ],
+      "mechanisms": [
+        "MX-S-CONTEXT",
+        "MX-S-CODE",
+        "MX-S-DESIGN",
+        "MX-S-THREAT",
+        "MX-S-CRITERIA",
+        "MX-S-GENERATE",
+        "MX-S-FINDING",
+        "MX-S-FIX",
+        "MX-S-JIRA"
+      ],
+      "parameters": [
+        [
+          "Assessment mode",
+          "One supported assessment with its own resource lifecycle",
+          "Code baseline, code change, design or threat model"
+        ],
+        [
+          "Evidence revision",
+          "Source or design matching the subject",
+          "Immutable revision identifier"
+        ],
+        [
+          "Criteria",
+          "Reviewed applicable requirements",
+          "Selected enabled pack"
+        ],
+        [
+          "Write features",
+          "Optional comment, repair proposal or ticket",
+          "Disabled until provider and audience review"
+        ]
+      ],
+      "setup": [
+        "Choose the actual mode rather than assume a shared configuration schema.",
+        "Connect matching evidence and enable the intended review criteria.",
+        "Inspect preflight and completed results separately.",
+        "Review repair proposals through ordinary tests and deployment before revalidation."
+      ],
+      "tests": [
+        "A new source revision cannot silently reuse stale acceptance.",
+        "A requirement may be inapplicable rather than compliant.",
+        "Regenerating a pack is reviewed as replacement."
+      ],
+      "stop_behavior": "Retain unfinished findings. Disable optional writes without discarding their source evidence."
+    },
+    {
+      "id": "PR-S-PIPELINE",
+      "title": "Pipeline assessment and delivery decision",
+      "platforms": [
+        "security"
+      ],
+      "mechanisms": [
+        "MX-S-PIPELINE",
+        "MX-S-RUN"
+      ],
+      "parameters": [
+        [
+          "Assessment",
+          "Saved authorized configuration",
+          "Actual assessment configuration identifier"
+        ],
+        [
+          "Pipeline identity",
+          "Scoped invocation access",
+          "Approved CI identity"
+        ],
+        [
+          "Gate policy",
+          "Errors, incomplete results and accepted findings",
+          "Block or escalate; never a missing-result pass"
+        ]
+      ],
+      "setup": [
+        "Verify eligibility and bind the pipeline to the saved assessment.",
+        "Invoke and observe the server-side job, retaining revision and run identity.",
+        "Apply the team gate only after interpreting actual scope and coverage."
+      ],
+      "tests": [
+        "Invocation failure is not successful assessment.",
+        "An observation timeout does not imply that the underlying job stopped.",
+        "A new deployed revision requires matching assessment evidence."
+      ],
+      "stop_behavior": "Stop the actual assessment using supported controls; stopping the pipeline runner is not assumed to cancel it."
+    },
+    {
+      "id": "PR-F-ANALYSIS",
+      "title": "Cost-analysis and report configuration",
+      "platforms": [
+        "finops"
+      ],
+      "mechanisms": [
+        "MX-F-QUERY",
+        "MX-F-FILES",
+        "MX-F-MEMORY",
+        "MX-F-COMPACT",
+        "MX-F-TASK",
+        "MX-F-ARTIFACT"
+      ],
+      "parameters": [
+        [
+          "Query basis",
+          "Dates, metric, currency, scope, dimensions and granularity",
+          "Complete comparable periods and explicitly chosen cost metric"
+        ],
+        [
+          "Analysis type",
+          "Observed cost, forecast, coverage or recommendation",
+          "Select the required upstream evidence"
+        ],
+        [
+          "Organization context",
+          "Optional reviewed ownership mapping",
+          "Active non-sensitive reference file"
+        ],
+        [
+          "Output",
+          "Result or supported report artifact",
+          "HTML report retaining source basis"
+        ]
+      ],
+      "setup": [
+        "Verify the agent data role and relevant upstream service.",
+        "State material query choices even when preferences are retained.",
+        "Reconcile a material result independently and inspect task or artifact identity."
+      ],
+      "tests": [
+        "Different filters invalidate a direct numerical comparison.",
+        "Forecasts and recommendation estimates are not added to observed costs.",
+        "Missing change evidence leaves causal attribution unresolved."
+      ],
+      "stop_behavior": "Cancel tasks and manage artifacts separately. This recipe authorizes neither infrastructure changes nor commitment purchases."
+    },
+    {
+      "id": "PR-F-AUTOMATION",
+      "title": "Recurring or anomaly-triggered FinOps work",
+      "platforms": [
+        "finops"
+      ],
+      "mechanisms": [
+        "MX-F-SCHEDULE",
+        "MX-F-EVENT",
+        "MX-F-TASK",
+        "MX-F-QUERY",
+        "MX-F-ARTIFACT"
+      ],
+      "parameters": [
+        [
+          "Trigger",
+          "Schedule or supported anomaly event",
+          "Explicit schedule OR selected Cost Anomaly Detection monitor"
+        ],
+        [
+          "Observation window",
+          "Period independent of execution time",
+          "Previous complete calendar week"
+        ],
+        [
+          "Destination",
+          "Optional and separately reviewed",
+          "No external publication by default"
+        ]
+      ],
+      "setup": [
+        "Verify trigger permissions and source monitor where event-driven.",
+        "Inspect the stored automation rather than rely on conversational acknowledgement.",
+        "Trace an actual task to its analysis and optional delivery."
+      ],
+      "tests": [
+        "A nonmatching event creates no expected task.",
+        "Queue, analysis and publication failures remain distinguishable.",
+        "Disabling automation stops future starts, not deletion of old tasks."
+      ],
+      "stop_behavior": "Disable the automation and control existing tasks separately. Manage external records at their destination."
+    },
+    {
+      "id": "PR-F-PUBLICATION",
+      "title": "FinOps destination and authorization configuration",
+      "platforms": [
+        "finops"
+      ],
+      "mechanisms": [
+        "MX-F-JIRA",
+        "MX-F-SLACK"
+      ],
+      "parameters": [
+        [
+          "Destination",
+          "Configured Jira project or Slack channel",
+          "Reviewed internal test destination"
+        ],
+        [
+          "Invocation",
+          "Interactive, on-demand, scheduled or event-driven",
+          "Specify the path explicitly"
+        ],
+        [
+          "Content scope",
+          "Approved data and audience",
+          "Non-sensitive summary and evidence references"
+        ]
+      ],
+      "setup": [
+        "Register the provider and bind the agent connection to its destination.",
+        "Review audience and message scope before invocation.",
+        "For Jira, use invocation-specific approval; for Slack, do not expect a confirmation prompt.",
+        "Inspect actual destination and task history."
+      ],
+      "tests": [
+        "Interactive or on-demand Jira approval is observed where applicable.",
+        "Automated Jira authorization is reviewed at setup.",
+        "Slack is treated as direct publication, not as approval-protected."
+      ],
+      "stop_behavior": "Disable future publication or its automation. Disconnecting a destination does not delete already published records."
+    },
+    {
+      "id": "PR-REVIEW",
+      "title": "Team-managed operational review",
+      "platforms": [
+        "devops",
+        "finops",
+        "architecture"
+      ],
+      "mechanisms": [
+        "MX-D-CUSTOM",
+        "MX-F-TASK"
+      ],
+      "parameters": [
+        [
+          "Profile",
+          "Reliability, cost-management or combined meeting",
+          "Reliability review"
+        ],
+        [
+          "Inputs",
+          "Reviewed reports with period and execution identity",
+          "Health and incident results OR reconciled cost and anomaly results"
+        ],
+        [
+          "Decision owners",
+          "Humans accountable for priorities and closure",
+          "Service owner and review chair"
+        ]
+      ],
+      "setup": [
+        "Select reviewed inputs for the chosen profile.",
+        "Preserve source and execution identities in the meeting material.",
+        "Have owners confirm decisions, progress and acceptance."
+      ],
+      "tests": [
+        "Estimated benefit is not recorded as measured outcome.",
+        "Unverified work is not marked complete.",
+        "A handoff transfers neither credentials nor approval authority."
+      ],
+      "stop_behavior": "Stop disclosure to an inappropriate audience. Each underlying service retains its own execution and retention controls."
+    },
+    {
+      "id": "PR-EVIDENCE",
+      "title": "Cross-tool evidence reconciliation",
+      "platforms": [
+        "devops"
+      ],
+      "mechanisms": [
+        "MX-D-READ",
+        "MX-D-TOPOLOGY"
+      ],
+      "parameters": [
+        [
+          "Identity mapping",
+          "Service, resource and revision relationships across tools",
+          "Reviewed application-to-deployment mapping"
+        ],
+        [
+          "Observation window",
+          "Common UTC period",
+          "Explicit incident interval"
+        ]
+      ],
+      "setup": [
+        "Read source identifiers instead of matching only titles.",
+        "Join observations using reviewed service and revision mappings.",
+        "Retain unmatched records and contradictory evidence."
+      ],
+      "tests": [
+        "Similar timestamps alone do not establish causality.",
+        "An observation for the wrong account or revision is rejected."
+      ],
+      "stop_behavior": "Continue only with supported relationships and assign gaps to an owner. This is a team procedure, not a universal native correlation feature."
+    },
+    {
+      "id": "PR-D-QUERY",
+      "title": "Native operational-query configuration",
+      "platforms": [
+        "devops"
+      ],
+      "mechanisms": [
+        "MX-D-QUERY",
+        "MX-D-READ"
+      ],
+      "parameters": [
+        [
+          "Agent Space",
+          "Operator and data access for the relevant environment",
+          "Approved space"
+        ],
+        [
+          "Question scope",
+          "Actual service, UTC interval and dimensions",
+          "Declared recent observation period"
+        ]
+      ],
+      "setup": [
+        "Verify access to the sources needed for this question.",
+        "Ask through the built-in query path, stating service and observation scope.",
+        "Inspect returned evidence and reconcile a material observation."
+      ],
+      "tests": [
+        "A missing signal is disclosed rather than interpreted as healthy.",
+        "The answer uses the requested window and dimensions."
+      ],
+      "stop_behavior": "End or redirect an unsupported inquiry. No custom-agent schedule or external publication is implied."
+    },
+    {
+      "id": "PR-D-PROCEDURE",
+      "title": "Reviewed runbook-skill configuration",
+      "platforms": [
+        "devops"
+      ],
+      "mechanisms": [
+        "MX-D-SKILL",
+        "MX-D-INSTRUCTIONS"
+      ],
+      "parameters": [
+        [
+          "Procedure source",
+          "One approved SOP after conflict resolution",
+          "Reviewed source in Git"
+        ],
+        [
+          "Applicability",
+          "Symptoms, services and agent scope",
+          "Specific operational situation"
+        ],
+        [
+          "Tool references",
+          "Real tool names used by the procedure",
+          "Selected supported operations"
+        ]
+      ],
+      "setup": [
+        "Reconcile conflicting SOPs and obtain an accountable review.",
+        "Package the approved procedure as a skill with its applicability description.",
+        "Keep broadly applicable reporting conventions in standing instructions only where appropriate.",
+        "Test a matching and a nonmatching request using non-sensitive evidence."
+      ],
+      "tests": [
+        "Irrelevant tasks do not require the skill.",
+        "Required tools exist and unsupported steps stop explicitly.",
+        "Changes to standing instructions are tested in a new applicable session."
+      ],
+      "stop_behavior": "Deactivate or revise the relevant procedural configuration using the supported controls. Changing a skill does not undo past actions or grant new access."
+    },
+    {
+      "id": "PR-D-KNOWLEDGE",
+      "title": "Environment-knowledge review configuration",
+      "platforms": [
+        "devops"
+      ],
+      "mechanisms": [
+        "MX-D-TOPOLOGY",
+        "MX-D-READ",
+        "MX-D-RECALL"
+      ],
+      "parameters": [
+        [
+          "Environment scope",
+          "Selected accounts, services and connected evidence",
+          "Approved resource and repository scope"
+        ],
+        [
+          "Reference change",
+          "Known deployed relationship to verify",
+          "New dependency and exact revision"
+        ],
+        [
+          "Reviewed output",
+          "Owner-maintained service description",
+          "Evidence-linked topology document"
+        ]
+      ],
+      "setup": [
+        "Verify the relevant discovery and connected sources.",
+        "Inspect the managed knowledge refresh and resulting version where available.",
+        "Compare a known changed relationship with actual source evidence.",
+        "Maintain the owner-reviewed description with unresolved relationships identified."
+      ],
+      "tests": [
+        "An inferred edge remains distinguishable from an observed relationship.",
+        "A submitted refresh is not treated as completed knowledge production.",
+        "A missing graph resource is not automatically interpreted as denied direct access."
+      ],
+      "stop_behavior": "Do not widen permissions to conceal a representation gap. Use authoritative source evidence and record unverified context."
+    }
   ]
 }
