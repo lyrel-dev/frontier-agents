@@ -32,10 +32,9 @@ jobs:
       - name: Install Chromium for browser validation
         timeout-minutes: 3
         run: python -m playwright install chromium
-      - name: Apply reviewed outcome consolidation once
+      - name: Finalize maintained publication metadata once
         run: |
-          if [ -f tools/docs/consolidate_once.py ]; then python tools/docs/consolidate_once.py; fi
-          if [ -f tools/docs/refine_once.py ]; then python tools/docs/refine_once.py; fi
+          if [ -f tools/docs/finish_publication.py ]; then python tools/docs/finish_publication.py; fi
       - name: Build guides, linked catalog, figures and HTML presentations
         run: |
           python -m compileall -q tools/docs
@@ -49,6 +48,7 @@ jobs:
               paths=[]
               for directory in ('guides','catalog','presentations','assets'):
                   paths.extend(p for p in Path(directory).rglob('*') if p.is_file())
+              paths.extend(Path(p) for p in ('README.md','EDITORIAL_STANDARD.md','CHANGELOG.md','PUBLISHING.md'))
               return {p.as_posix():hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(paths)}
           before=hashes()
           subprocess.run([sys.executable,'tools/docs/build.py'],check=True)
