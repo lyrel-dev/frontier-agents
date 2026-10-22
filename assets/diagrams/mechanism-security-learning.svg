@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="582pt" height="385pt" viewBox="0.00 0.00 582.00 385.00" role="img" aria-labelledby="mechanism-security-learning-title mechanism-security-learning-desc" data-diagram="mechanism-security-learning">
+<title id="mechanism-security-learning-title">Security reuse: login navigation and finding preferences</title><desc id="mechanism-security-learning-desc">The two retained processes have different producers and effects. Disabling reuse or personalization preserves learned material; neither operation repairs the application. Green/AWS: documented service concept. Blue/DOC: our verification procedure. Orange/EXT: engineering-owned source. Stages are logical explanations, not API status enum values.</desc><g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(18 367)">
+<title>G</title>
+
+<g id="node1" class="node">
+<title>login</title>
+<path fill="#d9f2e5" stroke="#348761" d="M247,-349C247,-349 12,-349 12,-349 6,-349 0,-343 0,-337 0,-337 0,-313 0,-313 0,-307 6,-301 12,-301 12,-301 247,-301 247,-301 253,-301 259,-307 259,-313 259,-313 259,-337 259,-337 259,-343 253,-349 247,-349" />
+<text text-anchor="middle" x="129.5" y="-328.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">AWS · Successful login</text>
+<text text-anchor="middle" x="129.5" y="-313.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">Current credential and navigation</text>
+</g>
+
+<g id="node2" class="node">
+<title>procedure</title>
+<path fill="#d9f2e5" stroke="#348761" d="M222.5,-245C222.5,-245 36.5,-245 36.5,-245 30.5,-245 24.5,-239 24.5,-233 24.5,-233 24.5,-209 24.5,-209 24.5,-203 30.5,-197 36.5,-197 36.5,-197 222.5,-197 222.5,-197 228.5,-197 234.5,-203 234.5,-209 234.5,-209 234.5,-233 234.5,-233 234.5,-239 228.5,-245 222.5,-245" />
+<text text-anchor="middle" x="129.5" y="-224.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">AWS · Login procedure</text>
+<text text-anchor="middle" x="129.5" y="-209.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">Login Optimization setting</text>
+</g>
+
+<g id="edge1" class="edge">
+<title>login-&gt;procedure</title>
+<path fill="none" stroke="#526474" d="M129.5,-300.85C129.5,-286.64 129.5,-268.26 129.5,-252.82" />
+<polygon fill="#526474" stroke="#526474" points="132.13,-252.55 129.5,-245.05 126.88,-252.55 132.13,-252.55" />
+<text text-anchor="middle" x="177.5" y="-270.2" font-family="DejaVu Sans" font-size="11.00" fill="#344454">learns navigation</text>
+</g>
+
+<g id="node3" class="node">
+<title>nextlogin</title>
+<path fill="#d9f2e5" stroke="#348761" d="M232,-141C232,-141 27,-141 27,-141 21,-141 15,-135 15,-129 15,-129 15,-105 15,-105 15,-99 21,-93 27,-93 27,-93 232,-93 232,-93 238,-93 244,-99 244,-105 244,-105 244,-129 244,-129 244,-135 238,-141 232,-141" />
+<text text-anchor="middle" x="129.5" y="-120.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">AWS · Later login</text>
+<text text-anchor="middle" x="129.5" y="-105.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">Verify the actual role reached</text>
+</g>
+
+<g id="edge2" class="edge">
+<title>procedure-&gt;nextlogin</title>
+<path fill="none" stroke="#526474" d="M129.5,-196.85C129.5,-182.64 129.5,-164.26 129.5,-148.82" />
+<polygon fill="#526474" stroke="#526474" points="132.13,-148.55 129.5,-141.05 126.88,-148.55 132.13,-148.55" />
+<text text-anchor="middle" x="185.5" y="-166.2" font-family="DejaVu Sans" font-size="11.00" fill="#344454">reuse when enabled</text>
+</g>
+
+<g id="node7" class="node">
+<title>review</title>
+<path fill="#dcebff" stroke="#447ac2" d="M424,-48C424,-48 111,-48 111,-48 105,-48 99,-42 99,-36 99,-36 99,-12 99,-12 99,-6 105,0 111,0 111,0 424,0 424,0 430,0 436,-6 436,-12 436,-12 436,-36 436,-36 436,-42 430,-48 424,-48" />
+<text text-anchor="middle" x="267.5" y="-27.8" font-family="DejaVu Sans" font-size="14.00" fill="#183b69">DOC · Independent interpretation</text>
+<text text-anchor="middle" x="267.5" y="-12.8" font-family="DejaVu Sans" font-size="14.00" fill="#183b69">Authentication coverage is not finding repair</text>
+</g>
+
+<g id="edge5" class="edge">
+<title>nextlogin-&gt;review</title>
+<path fill="none" stroke="#526474" stroke-dasharray="5,2" d="M164.68,-92.8C183.33,-80.5 206.37,-65.31 225.9,-52.43" />
+<polygon fill="#526474" stroke="#526474" points="227.57,-54.48 232.38,-48.16 224.68,-50.09 227.57,-54.48" />
+</g>
+
+<g id="node4" class="node">
+<title>edit</title>
+<path fill="#d9f2e5" stroke="#348761" d="M517.5,-349C517.5,-349 297.5,-349 297.5,-349 291.5,-349 285.5,-343 285.5,-337 285.5,-337 285.5,-313 285.5,-313 285.5,-307 291.5,-301 297.5,-301 297.5,-301 517.5,-301 517.5,-301 523.5,-301 529.5,-307 529.5,-313 529.5,-313 529.5,-337 529.5,-337 529.5,-343 523.5,-349 517.5,-349" />
+<text text-anchor="middle" x="407.5" y="-328.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">AWS · Eligible finding edits</text>
+<text text-anchor="middle" x="407.5" y="-313.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">Most recent completed test run</text>
+</g>
+
+<g id="node5" class="node">
+<title>preference</title>
+<path fill="#d9f2e5" stroke="#348761" d="M534,-245C534,-245 281,-245 281,-245 275,-245 269,-239 269,-233 269,-233 269,-209 269,-209 269,-203 275,-197 281,-197 281,-197 534,-197 534,-197 540,-197 546,-203 546,-209 546,-209 546,-233 546,-233 546,-239 540,-245 534,-245" />
+<text text-anchor="middle" x="407.5" y="-224.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">AWS · Finding preferences</text>
+<text text-anchor="middle" x="407.5" y="-209.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">Personalization enabled at test start</text>
+</g>
+
+<g id="edge3" class="edge">
+<title>edit-&gt;preference</title>
+<path fill="none" stroke="#526474" d="M407.5,-300.85C407.5,-286.64 407.5,-268.26 407.5,-252.82" />
+<polygon fill="#526474" stroke="#526474" points="410.13,-252.55 407.5,-245.05 404.88,-252.55 410.13,-252.55" />
+<text text-anchor="middle" x="471" y="-270.2" font-family="DejaVu Sans" font-size="11.00" fill="#344454">learns eligible changes</text>
+</g>
+
+<g id="node6" class="node">
+<title>nextfinding</title>
+<path fill="#d9f2e5" stroke="#348761" d="M534,-141C534,-141 281,-141 281,-141 275,-141 269,-135 269,-129 269,-129 269,-105 269,-105 269,-99 275,-93 281,-93 281,-93 534,-93 534,-93 540,-93 546,-99 546,-105 546,-105 546,-129 546,-129 546,-135 540,-141 534,-141" />
+<text text-anchor="middle" x="407.5" y="-120.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">AWS · Later similar finding</text>
+<text text-anchor="middle" x="407.5" y="-105.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">Original and personalized attributes</text>
+</g>
+
+<g id="edge4" class="edge">
+<title>preference-&gt;nextfinding</title>
+<path fill="none" stroke="#526474" d="M407.5,-196.85C407.5,-182.64 407.5,-164.26 407.5,-148.82" />
+<polygon fill="#526474" stroke="#526474" points="410.13,-148.55 407.5,-141.05 404.88,-148.55 410.13,-148.55" />
+<text text-anchor="middle" x="471" y="-166.2" font-family="DejaVu Sans" font-size="11.00" fill="#344454">apply to similar finding</text>
+</g>
+
+<g id="edge6" class="edge">
+<title>nextfinding-&gt;review</title>
+<path fill="none" stroke="#526474" stroke-dasharray="5,2" d="M371.81,-92.8C352.8,-80.45 329.31,-65.18 309.44,-52.26" />
+<polygon fill="#526474" stroke="#526474" points="310.84,-50.04 303.12,-48.16 307.98,-54.44 310.84,-50.04" />
+</g>
+</g>
+</svg>
