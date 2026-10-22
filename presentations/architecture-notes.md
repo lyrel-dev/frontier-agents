@@ -1,14 +1,29 @@
-# Shared Architecture — HTML presentation reference
+# Shared Architecture: presentation notes
 
 
 
-Open [architecture.html](architecture.html). The timing includes prepared-result exercises, not live service completion. Questions and breaks are additional.
+Presentation: 26 minutes, including 4 minutes of prepared-result exercises. Questions and breaks are additional.
 
 
 
-## 1. Comparison Framework
+## 01. Agent execution and evidence cycle
 
-**Chapter:** Part I · Comparison Framework. **Schedule:** 00:00–02:00. **Slide budget:** 02:00.
+00:00–02:00 · Service architecture
+
+A task and its configuration guide an execution. Authorized tools return observations. Those observations can lead to another step or a result. Retention is a separate, product-specific path.
+
+
+
+![Agent execution and evidence cycle](../assets/diagrams/agent-execution.svg)
+
+
+
+Detailed reference: [Agents, tools, context, and executions](../guides/architecture.html#A-00)
+
+
+## 02. Comparison framework
+
+02:00–04:00 · Service architecture
 
 Cross-platform comparison begins with the actual resource and execution model.
 
@@ -25,40 +40,12 @@ Execution | Investigation or invocation | Run, review or revalidation job | Conv
 Primary evidence | Tool results and investigation history | Findings and linked verification | Source query, task and artifact
 
 
-
-**Guide:** [A-01](../guides/architecture.html#A-01)
-
+Detailed reference: [Workspace, configuration, and execution models](../guides/architecture.html#A-01)
 
 
-## 2. Use Case Families Across the Three Platforms
+## 03. Resource and context models
 
-**Chapter:** Part I · Comparison Framework. **Schedule:** 02:00–05:00. **Slide budget:** 03:00.
-
-Similar business labels can map to different platform objects and authorization boundaries.
-
-
-
-Family | DevOps Agent | Security Agent | FinOps Agent
-
-Event response | Incident triage and investigation | Assessment run from configured target or source | Anomaly-triggered investigation
-
-Recurring review | Health and operational review report | Scheduled assessment or review workflow | Cost and FinOps review report
-
-Pattern analysis | Recurring causes and prevention recommendations | Requirement and finding trends | Cost drivers and optimization candidates
-
-Documentation | Topology, SOP skills and environment memory | Threat model and requirement packs | Context files and report artifacts
-
-Controlled effect | Directed resource action | Repository remediation or issue tracking | Jira/Slack publication; engineering change outside agent
-
-
-
-**Guide:** [A-01](../guides/architecture.html#A-01), [A-07](../guides/architecture.html#A-07)
-
-
-
-## 3. Resource and Context Models
-
-**Chapter:** Part II · Resource, Context and Access. **Schedule:** 05:00–07:00. **Slide budget:** 02:00.
+04:00–06:00 · Service architecture
 
 The three services do not expose one common memory mechanism.
 
@@ -77,14 +64,35 @@ Reference file | FinOps operator upload | Task or conversation | Soft delete and
 Conversational memory | Explicit user request | Later FinOps session | Update or forget
 
 
-
-**Guide:** [A-01](../guides/architecture.html#A-01), [A-02](../guides/architecture.html#A-02)
-
+Detailed reference: [Workspace, configuration, and execution models](../guides/architecture.html#A-01)
 
 
-## 4. Connectivity, Identity and Authorization
 
-**Chapter:** Part II · Resource, Context and Access. **Schedule:** 07:00–09:00. **Slide budget:** 02:00.
+Detailed reference: [Knowledge construction and retrieval models](../guides/architecture.html#A-02)
+
+
+## 04. Team-managed evidence handoff
+
+06:00–08:00 · Integrations and access
+
+An operational finding can become input to separate security and cost work. Each receiving service uses its own configuration and authorization; only identifiers, evidence references, and decisions are handed over.
+
+
+
+![Team-managed evidence handoff](../assets/diagrams/shared-handoff.svg)
+
+
+
+Detailed reference: [Integration direction and evidence ownership](../guides/architecture.html#A-08)
+
+
+
+Detailed reference: [Cross-team evidence handoffs](../guides/architecture.html#A-06)
+
+
+## 05. Connectivity, identity and authorization
+
+08:00–10:00 · Integrations and access
 
 Reachability and prompt guidance do not establish authorization for an effect.
 
@@ -99,14 +107,12 @@ Permission | Which read, test, publication or mutation operation is allowed?
 Behavioral guidance | Which instructions, skills or prompt rules shape the work?
 
 
-
-**Guide:** [A-03](../guides/architecture.html#A-03)
-
+Detailed reference: [Network, identity, and tool-access boundaries](../guides/architecture.html#A-03)
 
 
-## 5. Execution and Approval Boundaries
+## 06. Execution and approval boundaries
 
-**Chapter:** Part III · Execution, Lifecycle and Handoffs. **Schedule:** 09:00–11:00. **Slide budget:** 02:00.
+10:00–12:00 · Execution workflows
 
 Approval follows the concrete effect; there is no universal human-approved agent mode.
 
@@ -125,14 +131,12 @@ Jira or Slack publication | Destination and invocation-specific rule | Issue/com
 Recommendation only | No execution authority | Proposal and acceptance criteria
 
 
-
-**Guide:** [A-04](../guides/architecture.html#A-04)
-
+Detailed reference: [Authorization of state-changing operations](../guides/architecture.html#A-04)
 
 
-## 6. Configuration, Execution and Artifact Lifecycles
+## 07. Configuration, execution and artifact lifecycles
 
-**Chapter:** Part III · Execution, Lifecycle and Handoffs. **Schedule:** 11:00–13:00. **Slide budget:** 02:00.
+12:00–14:00 · Execution workflows
 
 Stopping future starts does not reverse completed effects or delete retained evidence.
 
@@ -151,14 +155,12 @@ Retained context | Memory, requirement or file | Deactivate, replace, forget or 
 External artifact | Ticket, message or exported report | Destination-specific removal | Copies outside the platform
 
 
-
-**Guide:** [A-05](../guides/architecture.html#A-05)
-
+Detailed reference: [Configuration, execution, and artifact lifecycles](../guides/architecture.html#A-05)
 
 
-## 7. Handoff Record Between Platforms and Teams
+## 08. Handoff record between platforms and teams
 
-**Chapter:** Part III · Execution, Lifecycle and Handoffs. **Schedule:** 13:00–15:00. **Slide budget:** 02:00.
+14:00–16:00 · Execution workflows
 
 A handoff transfers evidence and responsibility, not credentials or authorization.
 
@@ -177,14 +179,12 @@ Request | Question, owner, deadline and permitted effect | Bound the receiving w
 Acceptance | Required check and unresolved questions | Prevent generated text from becoming automatic closure
 
 
-
-**Guide:** [A-06](../guides/architecture.html#A-06)
-
+Detailed reference: [Cross-team evidence handoffs](../guides/architecture.html#A-06)
 
 
-## 8. Tabletop: One Operational Symptom, Three Different Jobs
+## 09. Tabletop: one operational symptom, three different jobs
 
-**Chapter:** Part IV · Tabletop. **Schedule:** 15:00–19:00. **Slide budget:** 04:00.
+16:00–20:00 · Worked example
 
 The same business event creates different evidence obligations for each platform.
 
@@ -199,14 +199,40 @@ The same business event creates different evidence obligations for each platform
 3–4 min | State unresolved questions | No single shared root cause or cross-agent runtime is assumed
 
 
-
-**Guide:** [A-U01](../guides/architecture.html#A-U01)
-
+Detailed reference: [Cross-platform operational review: worked example](../guides/architecture.html#A-U01)
 
 
-## 9. Documentation and Presentation Acceptance Criteria
+## 10. Use case families across the three platforms
 
-**Chapter:** Part V · Acceptance Criteria. **Schedule:** 19:00–22:00. **Slide budget:** 03:00.
+20:00–23:00 · Troubleshooting and references
+
+Similar business labels can map to different platform objects and authorization boundaries.
+
+
+
+Family | DevOps Agent | Security Agent | FinOps Agent
+
+Event response | Incident triage and investigation | Assessment run from configured target or source | Anomaly-triggered investigation
+
+Recurring review | Health and operational review report | Scheduled assessment or review workflow | Cost and FinOps review report
+
+Pattern analysis | Recurring causes and prevention recommendations | Requirement and finding trends | Cost drivers and optimization candidates
+
+Documentation | Topology, SOP skills and environment memory | Threat model and requirement packs | Context files and report artifacts
+
+Controlled effect | Directed resource action | Repository remediation or issue tracking | Jira/Slack publication; engineering change outside agent
+
+
+Detailed reference: [Workspace, configuration, and execution models](../guides/architecture.html#A-01)
+
+
+
+Detailed reference: [Architecture assumptions and references](../guides/architecture.html#A-07)
+
+
+## 11. Documentation and presentation acceptance criteria
+
+23:00–26:00 · Troubleshooting and references
 
 A presentation is an indexed technical explanation, not a sequence of slogans.
 
@@ -227,5 +253,4 @@ Evidence | Material product claims link to official guidance | Source count used
 Validation | Browser, data and link checks are separated from live product testing | Packaging checks presented as operational proof
 
 
-
-**Guide:** [A-07](../guides/architecture.html#A-07)
+Detailed reference: [Architecture assumptions and references](../guides/architecture.html#A-07)
