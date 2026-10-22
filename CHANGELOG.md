@@ -1,5 +1,5 @@
 # Documentation changes
 
-## 22 October 2026 — structured HTML edition
+## 22 October 2026 — narrative and architecture edition
 
-Restored explicit chapters and nested section navigation in every report. Added standalone HTML presentations with chapter agendas, source-linked notes, session/slide timers and printing. Removed generated binary decks and their build dependencies. Preserved all canonical section bodies; the revised presentation duration is recorded in the validation output. Git retains earlier versions; no manual archives are produced.
+Rewrote section introductions and titles, added the agent execution model and supported-integration inventories, and explained knowledge consolidation, retrieval, correction, and restoration boundaries. Added logical architecture and workflow figures and narrated the grouped operational catalog. Consolidated maintained tooling in `tools/docs/` and removed superseded forwarding directories and old generators. Corrected the distinction between minute-resolution incident analysis and flexible scheduled execution. Programme timing is derived from the presentation definitions. Git retains prior revisions.
