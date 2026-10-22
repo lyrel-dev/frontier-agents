@@ -329,3 +329,7 @@ step -> evidence [label="accepted using"];
 """)
 
 if __name__=='__main__':print(build())
+
+# The canonical resource register supplies specialized ER figures.
+from resource_model import diagram_definitions
+DIAGRAMS.update(diagram_definitions())
