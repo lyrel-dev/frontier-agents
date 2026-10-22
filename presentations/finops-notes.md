@@ -194,7 +194,7 @@ Mechanism | Producer | Typical content | Lifecycle
 
 Reference file | Operator upload | Account ownership, allocation rules and reporting standards | Upload, soft delete and restore
 
-Conversational memory | Explicit remember/update/forget request | Preferences, corrections and ownership details | Update or forget across sessions
+Conversational memory | Conversation preferences, corrections and task outcomes | Preferences, corrections and ownership details | Update or forget across sessions
 
 Conversation context | Current interaction | Recent messages and summarized older messages | Compaction near context limit
 
@@ -214,11 +214,11 @@ Detailed reference: [Persistent preferences and corrections](../guides/finops.ht
 Detailed reference: [Conversation summarization and context limits](../guides/finops.html#F-M04)
 
 
-## 10. Task execution and destination-specific approval
+## 10. Conversation actions, queued tasks, and publication approval
 
 22:00–24:00 · Execution workflows
 
-A matching event or schedule creates work. Analysis and publication are separate; Jira approval depends on invocation mode and Slack has no per-message prompt.
+A conversation can request Jira or Slack publication directly. Explicit tasks and automations use the queue. Jira confirmation depends on invocation mode; Slack has no per-message approval.
 
 
 
@@ -293,7 +293,7 @@ Detailed reference: [Cost queries and recommendation provenance](../guides/finop
 
 29:00–32:00 · Execution workflows
 
-An automation is a task factory; it is not the task or the external message.
+An automation stores the trigger and task instructions. Each created task has its own execution history and publication result.
 
 
 
@@ -351,7 +351,7 @@ Detailed reference: [Retention, cancellation, and deletion](../guides/finops.htm
 
 34:00–37:00 · Operational objectives and implementation
 
-Follow the operational objective through its workflow, configured mechanisms and independent completion evidence. The catalog links each dependency to its detailed guide.
+Historical analysis reports observed cost under a specified query. Forecasting estimates a future period. Commitment coverage reports the covered share of eligible usage. Retain the source and calculation basis for each.
 
 
 
@@ -375,7 +375,7 @@ Detailed reference: [Supported data sources and publication destinations](../gui
 
 37:00–40:00 · Operational objectives and implementation
 
-Follow the operational objective through its workflow, configured mechanisms and independent completion evidence. The catalog links each dependency to its detailed guide.
+Reporting formats source analysis. Anomaly investigation evaluates a deviation. Recommendation review prioritizes upstream proposals; savings measurement evaluates an implemented change using comparable periods.
 
 
 
@@ -405,7 +405,7 @@ Detailed reference: [Cost queries and recommendation provenance](../guides/finop
 
 40:00–43:00 · Operational objectives and implementation
 
-Follow the operational objective through its workflow, configured mechanisms and independent completion evidence. The catalog links each dependency to its detailed guide.
+Inspect event matching, task creation, source queries, and publication as separate steps. Jira approval depends on how the action starts. Slack publication requires destination review before invocation.
 
 
 
