@@ -1,0 +1,90 @@
+name: Integrate reviewed console delivery once
+on:
+  push:
+    branches: [feat/aws-fis-console-delivery]
+    paths: [.github/workflows/fis-delivery-import-once.yml]
+permissions:
+  contents: write
+concurrency:
+  group: fis-delivery-source-integration
+  cancel-in-progress: false
+jobs:
+  integrate:
+    if: github.repository == 'lyrel-dev/frontier-agents' && github.ref == 'refs/heads/feat/aws-fis-console-delivery'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Recover and verify the reviewed source diff
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python - <<'PY'
+          import base64, hashlib, json, lzma, os, subprocess, urllib.request
+          from pathlib import Path
+          blobs = '''0bfb6328796a5bdb8e4726cd2a5f8f9f46e1ec92
+          6ff7f8b806750d8b423017294f7d2cb8e5ffc79c
+          6aeb5448d0598858465f5f1a75dbfba8319b6abb
+          89453e69ff56a6d022a9bab16cfa72c18abb7f55
+          f0ec2b257fd4d1b73ee4df75ba2e6fdc5ef4323f
+          f3957a7d591d568e00520a06c0702845711d6ca4
+          46bef5bcad26eb3cf2cc76bed797658296df9471
+          f36abcbc035bd2d62a26d5bb89b549938fb6bcf1
+          a8df0b8a8879e9ee998e06f9708c4218f9ef9006
+          a226be70de1ba7786536506ec66b9816f0e118b0
+          6cc2bf9cf23e0ff41241ce6351f15fd3981336d5
+          ebd59223c294810929fcb73c50f05d8abe0c4f41
+          39a0f8549ddc5922d9f082376dfec2dfab8f02a2
+          cc8d3f15dfbe050b45f903443072fa68ccd5bf0b
+          02ca14413650a34d38d7bc7c2ce693c5d9be910b
+          dcf2c70ea37df264ee14a0f84e6d4e4b59946e36'''.split()
+          parts = []
+          for sha in blobs:
+              req = urllib.request.Request(
+                  'https://api.github.com/repos/lyrel-dev/frontier-agents/git/blobs/' + sha,
+                  headers={'Authorization': 'Bearer ' + os.environ['GH_TOKEN'],
+                           'Accept': 'application/vnd.github+json',
+                           'X-GitHub-Api-Version': '2022-11-28'})
+              with urllib.request.urlopen(req, timeout=30) as response:
+                  body = json.load(response)
+              assert body['encoding'] == 'base64' and body['sha'] == sha
+              part = base64.b64decode(body['content'])
+              assert hashlib.sha1(b'blob ' + str(len(part)).encode() + b'\0' + part).hexdigest() == sha
+              parts.append(part)
+          payload = b''.join(parts)
+          assert hashlib.sha256(payload).hexdigest() == '20eae82d9d5404ea43df3fa5a5e879e4b384f16df49fa39f6106d3e459884761'
+          diff = lzma.decompress(payload)
+          assert hashlib.sha256(diff).hexdigest() == '9410578befb90e53c3e5c286f1d97257c217ca48df460af9873c90a25e474a20'
+          patch = Path(os.environ['RUNNER_TEMP']) / 'reviewed-application.patch'
+          patch.write_bytes(diff)
+          subprocess.run(['git', 'apply', '--check', str(patch)], check=True)
+          subprocess.run(['git', 'apply', '--index', str(patch)], check=True)
+          paths = subprocess.check_output(['git','diff','--cached','--name-only'], text=True).splitlines()
+          assert paths and all(p.startswith('applications/aws-validation-console/agent_lab/') for p in paths)
+          assert not any(p.endswith(('.zip','.xz','.b64','.sqlite3')) for p in paths)
+          print('Verified source diff and staged', len(paths), 'application files; no cloud access.')
+          PY
+      - name: Build and test exact staged application
+        working-directory: applications/aws-validation-console/agent_lab
+        env:
+          AWS_EC2_METADATA_DISABLED: 'true'
+        run: |
+          python -m pip install -r requirements-dev.txt
+          python build_assets.py
+          python -m pytest -q
+          git diff --cached --check
+      - name: Publish tested application sources without workflow changes
+        env:
+          BRANCH: feat/aws-fis-console-delivery
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'feat(console): integrate guided AWS onboarding, native FIS execution and response audits' -m 'Import the reviewed 0.5.1-dev application diff with verified content hashes. Preserve existing workspaces, independent safety gates, live-data-only initialization and explicit incomplete live acceptance. Local source tests passed before branch publication; native browser, hosting and monitoring checks follow in read-only CI.'
+          git fetch origin "$BRANCH"
+          test "$(git rev-parse FETCH_HEAD)" = "$GITHUB_SHA"
+          git push origin "HEAD:$BRANCH"
