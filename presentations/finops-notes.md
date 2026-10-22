@@ -2,32 +2,28 @@
 
 
 
-Presentation: 50 minutes, including 8 minutes of prepared-result exercises. Questions and breaks are additional.
+Presentation: 56 minutes, including 8 minutes of prepared-result exercises. Questions and breaks are additional.
 
 
 
-## 01. FinOps Agent instance and execution architecture
+## 01. Instance roles and destination connections
 
-00:00–02:00 · Service architecture
+00:00–02:00 · Product-specific resource model
 
-The instance owns its roles, context, queue, and connections. Data sources supply evidence to a session or task, which produces an answer or artifact and may publish through a configured destination.
-
-
-
-![FinOps Agent instance and execution architecture](../assets/diagrams/finops-architecture.svg)
+Read the entity kind and ownership label before following the relationship. A question mark leaves exact multiplicity unspecified; the detailed register explains each logical association.
 
 
 
-Detailed reference: [The agent instance and its execution environment](../guides/finops.html#F-01)
+![FinOps Agent: instance access and integration connections](../assets/diagrams/er-finops-scope.svg)
 
 
 
-Detailed reference: [Supported data sources and publication destinations](../guides/finops.html#F-08)
+Detailed reference: [Agent instance, access roles and retained state](../guides/finops.html#F-01)
 
 
 ## 02. Product functions and agent instance resource model
 
-02:00–05:00 · Service architecture
+02:00–05:00 · Product-specific resource model
 
 Agent configuration, source evidence, queued work and publication effects are separate layers.
 
@@ -46,12 +42,27 @@ Data sources | Cost, recommendation, anomaly and change APIs | Supply source evi
 Outputs | Answer, report artifact, Jira issue or Slack post | Deliver reviewable result | Artifact and destination history
 
 
-Detailed reference: [The agent instance and its execution environment](../guides/finops.html#F-01)
+Detailed reference: [Agent instance, access roles and retained state](../guides/finops.html#F-01)
 
 
-## 03. Data-source access and collaboration connections
+## 03. Conversations, automations, tasks and artifacts
 
-05:00–07:00 · Integrations and access
+05:00–08:00 · Product-specific resource model
+
+Read the entity kind and ownership label before following the relationship. A question mark leaves exact multiplicity unspecified; the detailed register explains each logical association.
+
+
+
+![FinOps Agent: conversation, automation and task records](../assets/diagrams/er-finops-work.svg)
+
+
+
+Detailed reference: [Conversations, automations, tasks and artifacts](../guides/finops.html#F-09)
+
+
+## 04. Data-source access and collaboration connections
+
+08:00–10:00 · Integrations and access
 
 AWS source access is controlled by the agent data role. Collaboration uses account-level registration and an agent-specific destination. Successful source retrieval and successful publication are independent checks.
 
@@ -68,9 +79,9 @@ Detailed reference: [Supported data sources and publication destinations](../gui
 Detailed reference: [Jira projects and Slack channel connections](../guides/finops.html#F-05)
 
 
-## 04. Cost-data and publication connections
+## 05. Cost-data and publication connections
 
-07:00–09:00 · Integrations and access
+10:00–12:00 · Integrations and access
 
 Data-role permissions control AWS evidence retrieval. Provider registration and agent connections control the available collaboration destinations.
 
@@ -92,9 +103,9 @@ Jira Cloud / Slack | Supported publication actions | Destination and invocation 
 Detailed reference: [Supported data sources and publication destinations](../guides/finops.html#F-08)
 
 
-## 05. Jira and Slack publication controls
+## 06. Jira and Slack publication controls
 
-09:00–11:00 · Integrations and access
+12:00–14:00 · Integrations and access
 
 Approval behavior depends on both the action and the invocation path.
 
@@ -120,9 +131,9 @@ Detailed reference: [Jira projects and Slack channel connections](../guides/fino
 Detailed reference: [Publication permissions and approvals](../guides/finops.html#F-M06)
 
 
-## 06. Access roles and source dependencies
+## 07. Access roles and source dependencies
 
-11:00–14:00 · Integrations and access
+14:00–17:00 · Integrations and access
 
 Data access and team access should be tested independently and with known expected results.
 
@@ -148,9 +159,9 @@ Detailed reference: [Administrator, service, and operator permissions](../guides
 Detailed reference: [Cost queries and recommendation provenance](../guides/finops.html#F-M01)
 
 
-## 07. Persistent context and session-local working state
+## 08. Persistent context and session-local working state
 
-14:00–16:00 · Knowledge and behavior
+17:00–19:00 · Knowledge and behavior
 
 Uploaded files and conversational memory persist within an instance. They are loaded into an isolated ephemeral session runtime. Older messages may be summarized; that is separate from editing a file or a retained preference.
 
@@ -171,9 +182,9 @@ Detailed reference: [Persistent preferences and corrections](../guides/finops.ht
 Detailed reference: [Conversation summarization and context limits](../guides/finops.html#F-M04)
 
 
-## 08. Context files, memory and conversation compaction
+## 09. Context files, memory and conversation compaction
 
-16:00–19:00 · Knowledge and behavior
+19:00–22:00 · Knowledge and behavior
 
 File retrieval, cross-session memory and within-session compaction require separate tests.
 
@@ -203,9 +214,9 @@ Detailed reference: [Persistent preferences and corrections](../guides/finops.ht
 Detailed reference: [Conversation summarization and context limits](../guides/finops.html#F-M04)
 
 
-## 09. Anomaly-to-task and publication workflow
+## 10. Anomaly-to-task and publication workflow
 
-19:00–21:00 · Execution workflows
+22:00–24:00 · Execution workflows
 
 A supported anomaly event matches a configured automation and creates a queued task. Result generation and destination publication are separate stages; authorization depends on action and invocation path.
 
@@ -222,9 +233,9 @@ Detailed reference: [Anomaly events and task creation](../guides/finops.html#F-M
 Detailed reference: [Publication permissions and approvals](../guides/finops.html#F-M06)
 
 
-## 10. Anomaly investigation and cost driver analysis
+## 11. Anomaly investigation and cost driver analysis
 
-21:00–24:00 · Execution workflows
+24:00–27:00 · Execution workflows
 
 Numerical contribution, correlated change and established cause are different conclusions.
 
@@ -250,9 +261,9 @@ Detailed reference: [Cost queries and recommendation provenance](../guides/finop
 Detailed reference: [Anomaly events and task creation](../guides/finops.html#F-M05)
 
 
-## 11. Optimization recommendation review
+## 12. Optimization recommendation review
 
-24:00–26:00 · Execution workflows
+27:00–29:00 · Execution workflows
 
 The agent surfaces and contextualizes recommendations; it does not authorize infrastructure or financial changes.
 
@@ -274,9 +285,9 @@ Measurement | Post-change cost and service data | Was the expected effect observ
 Detailed reference: [Cost queries and recommendation provenance](../guides/finops.html#F-M01)
 
 
-## 12. Tasks, schedules and event automations
+## 13. Tasks, schedules and event automations
 
-26:00–29:00 · Execution workflows
+29:00–32:00 · Execution workflows
 
 An automation is a task factory; it is not the task or the external message.
 
@@ -302,9 +313,9 @@ Detailed reference: [Tasks, schedules, and execution history](../guides/finops.h
 Detailed reference: [Anomaly events and task creation](../guides/finops.html#F-M05)
 
 
-## 13. Report artifacts and data lifecycle
+## 14. Report artifacts and data lifecycle
 
-29:00–31:00 · Execution workflows
+32:00–34:00 · Execution workflows
 
 Stopping future work, cancelling current work and removing retained data are different operations.
 
@@ -332,9 +343,9 @@ Detailed reference: [Report generation and artifact management](../guides/finops
 Detailed reference: [Retention, cancellation, and deletion](../guides/finops.html#F-M07)
 
 
-## 14. Historical cost, forecasting and commitment coverage
+## 15. Historical cost, forecasting and commitment coverage
 
-31:00–34:00 · Operational objectives and implementation
+34:00–37:00 · Operational objectives and implementation
 
 Follow the operational objective through its workflow, configured mechanisms and independent completion evidence. The catalog links each dependency to its detailed guide.
 
@@ -356,9 +367,9 @@ Detailed reference: [Cost queries and recommendation provenance](../guides/finop
 Detailed reference: [Supported data sources and publication destinations](../guides/finops.html#F-08)
 
 
-## 15. Reporting, anomaly investigation and optimization
+## 16. Reporting, anomaly investigation and optimization
 
-34:00–37:00 · Operational objectives and implementation
+37:00–40:00 · Operational objectives and implementation
 
 Follow the operational objective through its workflow, configured mechanisms and independent completion evidence. The catalog links each dependency to its detailed guide.
 
@@ -386,9 +397,9 @@ Detailed reference: [Report generation and artifact management](../guides/finops
 Detailed reference: [Cost queries and recommendation provenance](../guides/finops.html#F-M01)
 
 
-## 16. Cost-anomaly investigation: trigger and publication controls
+## 17. Cost-anomaly investigation: trigger and publication controls
 
-37:00–40:00 · Operational objectives and implementation
+40:00–43:00 · Operational objectives and implementation
 
 Follow the operational objective through its workflow, configured mechanisms and independent completion evidence. The catalog links each dependency to its detailed guide.
 
@@ -416,9 +427,24 @@ Detailed reference: [Cost queries and recommendation provenance](../guides/finop
 Detailed reference: [Publication permissions and approvals](../guides/finops.html#F-M06)
 
 
-## 17. Worked example: cost increase decomposition
+## 18. Retained context and session-local execution
 
-40:00–48:00 · Worked example
+43:00–46:00 · Operational objectives and implementation
+
+Read the entity kind and ownership label before following the relationship. A question mark leaves exact multiplicity unspecified; the detailed register explains each logical association.
+
+
+
+![FinOps Agent: retained inputs and session context](../assets/diagrams/er-finops-context.svg)
+
+
+
+Detailed reference: [Context and evidence in reporting and anomaly use cases](../guides/finops.html#F-10)
+
+
+## 19. Worked example: cost increase decomposition
+
+46:00–54:00 · Worked example
 
 Prepared quantities and rates demonstrate reconciliation, not AWS pricing or realized savings.
 
@@ -436,9 +462,9 @@ Prepared quantities and rates demonstrate reconciliation, not AWS pricing or rea
 Detailed reference: [Cost-variance analysis: worked example](../guides/finops.html#F-U01)
 
 
-## 18. Troubleshooting matrix and preview limits
+## 20. Troubleshooting matrix and preview limits
 
-48:00–50:00 · Troubleshooting and references
+54:00–56:00 · Troubleshooting and references
 
 Validate data, retained context, execution and external effects as separate layers.
 
