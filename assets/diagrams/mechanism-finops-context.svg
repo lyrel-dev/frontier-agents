@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="855pt" height="281pt" viewBox="0.00 0.00 854.50 281.00" role="img" aria-labelledby="mechanism-finops-context-title mechanism-finops-context-desc" data-diagram="mechanism-finops-context">
+<title id="mechanism-finops-context-title">FinOps context: three independent lifecycle operations</title><desc id="mechanism-finops-context-desc">File restoration, memory updates and conversation compaction operate on different representations. Their controls do not remove copies held in other representations. Green/AWS: documented service concept. Blue/DOC: our verification procedure. Orange/EXT: engineering-owned source. Stages are logical explanations, not API status enum values.</desc><g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(18 263)">
+<title>G</title>
+
+<g id="node1" class="node">
+<title>file</title>
+<path fill="#d9f2e5" stroke="#348761" d="M247.5,-245C247.5,-245 31.5,-245 31.5,-245 25.5,-245 19.5,-239 19.5,-233 19.5,-233 19.5,-209 19.5,-209 19.5,-203 25.5,-197 31.5,-197 31.5,-197 247.5,-197 247.5,-197 253.5,-197 259.5,-203 259.5,-209 259.5,-209 259.5,-233 259.5,-233 259.5,-239 253.5,-245 247.5,-245" />
+<text text-anchor="middle" x="139.5" y="-224.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">AWS · Active uploaded file</text>
+<text text-anchor="middle" x="139.5" y="-209.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">Operator-maintained reference</text>
+</g>
+
+<g id="node2" class="node">
+<title>deleted</title>
+<path fill="#d9f2e5" stroke="#348761" d="M169,-141C169,-141 12,-141 12,-141 6,-141 0,-135 0,-129 0,-129 0,-105 0,-105 0,-99 6,-93 12,-93 12,-93 169,-93 169,-93 175,-93 181,-99 181,-105 181,-105 181,-129 181,-129 181,-135 175,-141 169,-141" />
+<text text-anchor="middle" x="90.5" y="-120.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">AWS · Soft-deleted file</text>
+<text text-anchor="middle" x="90.5" y="-105.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">Not active context</text>
+</g>
+
+<g id="edge1" class="edge">
+<title>file-&gt;deleted</title>
+<path fill="none" stroke="#526474" d="M94.5,-196.87C86.85,-190.83 79.94,-183.56 75.5,-175 71.23,-166.77 71.86,-157.22 74.46,-148.32" />
+<polygon fill="#526474" stroke="#526474" points="77.01,-148.99 77.04,-141.04 72.06,-147.24 77.01,-148.99" />
+<text text-anchor="middle" x="93" y="-166.2" font-family="DejaVu Sans" font-size="11.00" fill="#344454">delete</text>
+</g>
+
+<g id="node7" class="node">
+<title>check</title>
+<path fill="#dcebff" stroke="#447ac2" d="M569.5,-48C569.5,-48 191.5,-48 191.5,-48 185.5,-48 179.5,-42 179.5,-36 179.5,-36 179.5,-12 179.5,-12 179.5,-6 185.5,0 191.5,0 191.5,0 569.5,0 569.5,0 575.5,0 581.5,-6 581.5,-12 581.5,-12 581.5,-36 581.5,-36 581.5,-42 575.5,-48 569.5,-48" />
+<text text-anchor="middle" x="380.5" y="-27.8" font-family="DejaVu Sans" font-size="14.00" fill="#183b69">DOC · Test the intended representation</text>
+<text text-anchor="middle" x="380.5" y="-12.8" font-family="DejaVu Sans" font-size="14.00" fill="#183b69">A successful answer alone does not identify its source</text>
+</g>
+
+<g id="edge5" class="edge">
+<title>file-&gt;check</title>
+<path fill="none" stroke="#526474" stroke-dasharray="5,2" d="M156.82,-196.75C177.94,-169.5 215.77,-124.12 255.5,-93 275.86,-77.06 300.47,-62.78 322.44,-51.48" />
+<polygon fill="#526474" stroke="#526474" points="323.67,-53.8 329.17,-48.07 321.3,-49.12 323.67,-53.8" />
+</g>
+
+<g id="edge2" class="edge">
+<title>deleted-&gt;file</title>
+<path fill="none" stroke="#526474" d="M101.97,-141.33C105.38,-148.29 109.11,-155.95 112.5,-163 116.73,-171.8 121.29,-181.38 125.44,-190.14" />
+<polygon fill="#526474" stroke="#526474" points="123.08,-191.29 128.66,-196.95 127.83,-189.05 123.08,-191.29" />
+<text text-anchor="middle" x="138.5" y="-166.2" font-family="DejaVu Sans" font-size="11.00" fill="#344454">restore</text>
+</g>
+
+<g id="node3" class="node">
+<title>memory</title>
+<path fill="#d9f2e5" stroke="#348761" d="M468,-245C468,-245 297,-245 297,-245 291,-245 285,-239 285,-233 285,-233 285,-209 285,-209 285,-203 291,-197 297,-197 297,-197 468,-197 468,-197 474,-197 480,-203 480,-209 480,-209 480,-233 480,-233 480,-239 474,-245 468,-245" />
+<text text-anchor="middle" x="382.5" y="-224.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">AWS · Retained memory</text>
+<text text-anchor="middle" x="382.5" y="-209.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">Preference or correction</text>
+</g>
+
+<g id="node4" class="node">
+<title>updated</title>
+<path fill="#d9f2e5" stroke="#348761" d="M481,-141C481,-141 280,-141 280,-141 274,-141 268,-135 268,-129 268,-129 268,-105 268,-105 268,-99 274,-93 280,-93 280,-93 481,-93 481,-93 487,-93 493,-99 493,-105 493,-105 493,-129 493,-129 493,-135 487,-141 481,-141" />
+<text text-anchor="middle" x="380.5" y="-120.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">AWS · Updated memory</text>
+<text text-anchor="middle" x="380.5" y="-105.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">Remember, update or forget</text>
+</g>
+
+<g id="edge3" class="edge">
+<title>memory-&gt;updated</title>
+<path fill="none" stroke="#526474" d="M382.05,-196.85C381.77,-182.64 381.41,-164.26 381.1,-148.82" />
+<polygon fill="#526474" stroke="#526474" points="383.72,-148.5 380.95,-141.05 378.47,-148.6 383.72,-148.5" />
+<text text-anchor="middle" x="446" y="-166.2" font-family="DejaVu Sans" font-size="11.00" fill="#344454">conversational request</text>
+</g>
+
+<g id="edge6" class="edge">
+<title>updated-&gt;check</title>
+<path fill="none" stroke="#526474" stroke-dasharray="5,2" d="M380.5,-92.57C380.5,-81.33 380.5,-67.73 380.5,-55.69" />
+<polygon fill="#526474" stroke="#526474" points="383.13,-55.54 380.5,-48.04 377.88,-55.54 383.13,-55.54" />
+</g>
+
+<g id="node5" class="node">
+<title>conversation</title>
+<path fill="#d9f2e5" stroke="#348761" d="M766,-245C766,-245 571,-245 571,-245 565,-245 559,-239 559,-233 559,-233 559,-209 559,-209 559,-203 565,-197 571,-197 571,-197 766,-197 766,-197 772,-197 778,-203 778,-209 778,-209 778,-233 778,-233 778,-239 772,-245 766,-245" />
+<text text-anchor="middle" x="668.5" y="-224.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">AWS · Conversation context</text>
+<text text-anchor="middle" x="668.5" y="-209.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">Older and recent messages</text>
+</g>
+
+<g id="node6" class="node">
+<title>summary</title>
+<path fill="#d9f2e5" stroke="#348761" d="M806.5,-141C806.5,-141 530.5,-141 530.5,-141 524.5,-141 518.5,-135 518.5,-129 518.5,-129 518.5,-105 518.5,-105 518.5,-99 524.5,-93 530.5,-93 530.5,-93 806.5,-93 806.5,-93 812.5,-93 818.5,-99 818.5,-105 818.5,-105 818.5,-129 818.5,-129 818.5,-135 812.5,-141 806.5,-141" />
+<text text-anchor="middle" x="668.5" y="-120.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">AWS · Compacted context</text>
+<text text-anchor="middle" x="668.5" y="-105.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">Older summary + recent full messages</text>
+</g>
+
+<g id="edge4" class="edge">
+<title>conversation-&gt;summary</title>
+<path fill="none" stroke="#526474" d="M668.5,-196.85C668.5,-182.64 668.5,-164.26 668.5,-148.82" />
+<polygon fill="#526474" stroke="#526474" points="671.13,-148.55 668.5,-141.05 665.88,-148.55 671.13,-148.55" />
+<text text-anchor="middle" x="737.5" y="-166.2" font-family="DejaVu Sans" font-size="11.00" fill="#344454">context approaches limit</text>
+</g>
+
+<g id="edge7" class="edge">
+<title>summary-&gt;check</title>
+<path fill="none" stroke="#526474" stroke-dasharray="5,2" d="M595.45,-92.92C554.34,-79.93 502.93,-63.69 460.7,-50.34" />
+<polygon fill="#526474" stroke="#526474" points="461.41,-47.81 453.47,-48.06 459.83,-52.82 461.41,-47.81" />
+</g>
+</g>
+</svg>
