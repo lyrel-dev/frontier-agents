@@ -178,15 +178,15 @@ Detailed reference: [Application-context construction and reuse](../guides/secur
 Detailed reference: [Requirement applicability and evaluation](../guides/security.html#S-M03)
 
 
-## 09. Credential retrieval and authenticated test access
+## 09. Authentication reuse and finding personalization
 
 19:00–21:00 · Knowledge and behavior
 
-Credential acquisition, login navigation, and application authorization are distinct stages. A retained login procedure can support later navigation, but actual identity still needs verification.
+Login Optimization reuses navigation. Findings Personalization reuses eligible edits. Neither establishes that the application was repaired.
 
 
 
-![Credential retrieval and authenticated test access](../assets/diagrams/security-authentication.svg)
+![Security reuse: login navigation and finding preferences](../assets/diagrams/mechanism-security-learning.svg)
 
 
 
@@ -195,6 +195,10 @@ Detailed reference: [Credential retrieval and application login](../guides/secur
 
 
 Detailed reference: [Login-workflow retention and reuse](../guides/security.html#S-M02)
+
+
+
+Detailed reference: [Finding review and code remediation](../guides/security.html#S-05)
 
 
 ## 10. Login optimization
@@ -245,15 +249,15 @@ Detailed reference: [Requirement applicability and evaluation](../guides/securit
 Detailed reference: [Requirement generation and replacement](../guides/security.html#S-M04)
 
 
-## 12. Finding, deployment, and revalidation lineage
+## 12. Finding replay and verification boundaries
 
 26:00–28:00 · Execution workflows
 
-The finding, proposed code change, deployed revision, and revalidation job are separate records. Revalidation repeats selected evidence using the current target and authentication configuration.
+Revalidation creates a linked job. Interpret non-reproduction only after checking the actual target, identity and reached path.
 
 
 
-![Finding, deployment, and revalidation lineage](../assets/diagrams/security-revalidation.svg)
+![Finding revalidation: evidence and result boundaries](../assets/diagrams/mechanism-security-replay.svg)
 
 
 
