@@ -12,13 +12,16 @@ DIAGRAMS={
 'mechanism-devops-retrieval':view('Incident memory: production, availability and retrieval',
 'Producing context does not prove a later execution selected it. Activation and applicable attachments control availability; current evidence controls interpretation.',
 ['D-M01','D-M02','D-M07'],r'''
-history [label="AWS · Prior investigation\nEvidence and verified correction"];
+history [label="AWS · Prior investigations\nRecorded evidence and conclusions"];
+feedback [label="AWS · Investigation feedback\nOperator-supplied correction"];
 store [label="AWS · Retained entry\nDescription, content and version"];
 available [label="AWS · Available context\nActive state; applicable attachment"];
 select [label="AWS · Select and read\nStore then entry descriptions"];
 current [label="EXT · Current observations\nNew incident time window",fillcolor="#FCE8D5",color="#C78335",fontcolor="#6D431A"];
-review [label="DOC · Separate checks\nExistence, observed read, correctness",fillcolor="#DCEBFF",color="#447AC2",fontcolor="#183B69"];
-history -> store [label="managed synthesis / correction"];
+review [label="DOC · Memory verification\nEntry identity, observed access, current evidence",fillcolor="#DCEBFF",color="#447AC2",fontcolor="#183B69"];
+history -> store [label="managed synthesis"];
+feedback -> store [label="corrective context"];
+{rank=same;history;feedback}
 store -> available [label="activation and scope"];
 available -> select [label="relevant description"];
 select -> review [label="selected history",style=dashed];
@@ -48,11 +51,11 @@ record -> check [label="inspect actual outcome",style=dashed];
 ['S-M02','S-05'],r'''
 login [label="AWS · Successful login\nCurrent credential and navigation"];
 procedure [label="AWS · Login procedure\nLogin Optimization setting"];
-nextlogin [label="AWS · Later login\nVerify the actual role reached"];
+nextlogin [label="AWS · Later login\nAuthenticated application session"];
 edit [label="AWS · Eligible finding edits\nMost recent completed test run"];
 preference [label="AWS · Finding preferences\nPersonalization enabled at test start"];
 nextfinding [label="AWS · Later similar finding\nOriginal and personalized attributes"];
-review [label="DOC · Independent interpretation\nAuthentication coverage is not finding repair",fillcolor="#DCEBFF",color="#447AC2",fontcolor="#183B69"];
+review [label="DOC · Engineering verification\nConfirm session identity and finding changes",fillcolor="#DCEBFF",color="#447AC2",fontcolor="#183B69"];
 login -> procedure [label="learns navigation"];
 procedure -> nextlogin [label="reuse when enabled"];
 edit -> preference [label="learns eligible changes"];
@@ -92,7 +95,7 @@ memory [label="AWS · Retained memory\nPreference or correction"];
 updated [label="AWS · Updated memory\nRemember, update or forget"];
 conversation [label="AWS · Conversation context\nOlder and recent messages"];
 summary [label="AWS · Compacted context\nOlder summary + recent full messages"];
-check [label="DOC · Test the intended representation\nA successful answer alone does not identify its source",fillcolor="#DCEBFF",color="#447AC2",fontcolor="#183B69"];
+check [label="DOC · Context verification\nCheck file state, retained preference and query constraints",fillcolor="#DCEBFF",color="#447AC2",fontcolor="#183B69"];
 file -> deleted [label="delete"];
 deleted -> file [label="restore"];
 memory -> updated [label="conversational request"];
@@ -104,9 +107,10 @@ summary -> check [style=dashed];
 {rank=same;deleted;updated;summary}
 '''),
 'mechanism-finops-publication':view('FinOps tasks and destination-specific authorization',
-'Task creation, analysis and delivery have independent outcomes. Jira confirmation depends on invocation mode; Slack does not present a per-message confirmation prompt.',
+'Conversations can request publication directly; explicit tasks and automations use the task queue. Jira confirmation depends on invocation mode. Slack has no per-message approval prompt.',
 ['F-03','F-M05','F-M06'],r'''
-manual [label="AWS · Chat / on-demand task"];
+manual [label="AWS · On-demand task request"];
+chat [label="AWS · Conversation analysis\nDirect answer or action request"];
 auto [label="AWS · Schedule / anomaly automation"];
 task [label="AWS · Queued task and analysis\nSource reads and result"];
 jira [label="AWS · Jira action\nInteractive: confirm\nAutomation: setup authorization"];
@@ -114,13 +118,15 @@ slack [label="AWS · Slack action\nNo per-message approval prompt"];
 external [label="EXT · Project / channel record\nExternal audience and retention",fillcolor="#FCE8D5",color="#C78335",fontcolor="#6D431A"];
 check [label="DOC · Delivery verification\nInspect actual destination before retry",fillcolor="#DCEBFF",color="#447AC2",fontcolor="#183B69"];
 manual -> task [label="explicit task request"];
+chat -> jira [label="direct requested action"];
+chat -> slack [label="direct requested action"];
 auto -> task [label="eligible occurrence"];
 task -> jira [label="configured action"];
 task -> slack [label="configured action"];
 jira -> external;
 slack -> external;
 external -> check [style=dashed];
-{rank=same;manual;auto}
+{rank=same;manual;auto;chat}
 {rank=same;jira;slack}
 ''')
 }
