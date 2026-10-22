@@ -54,7 +54,7 @@ class Engine:
             self.store.put_record('workflow_error',entity['id'],{'phase':entity['state'],'at':iso(self.clock()),'reason':reason[:2000]})
             if entity['kind']=='trial':
                 latest=self.store.entity(entity['id'])
-                if latest['data'].get('fis_id'):
+                if latest['data'].get('fis_id') or latest['data'].get('dispatch_preview_id'):
                     state='RESTORE_REQUIRED' if entity['state'] in {'ABORTING','CLEANING'} else 'ABORTING'
                 else: state='CLOSED_BLOCKED'
             elif entity['kind']=='change': state='RESTORE_REQUIRED' if entity['state'] in {'RUNNING','ROLLING_BACK'} else 'BLOCKED'
@@ -180,10 +180,32 @@ class Engine:
             # still cannot prove future AWS efficacy or prevent concurrent admin edits.
             aws.template(fault)
             self._dispatch_approval(trial,'start','start-fault')
+            if fault.native_fis:
+                from .native_fis import target_match, account_contract
+                preview=broker.execute(tid,'dispatch-preview','fault','fis','start_experiment',{'experimentTemplateId':fault.template_id,'experimentOptions':{'actionsMode':'skip-all'}})
+                self.store.update(tid,changes={'dispatch_preview_id':preview['provider_id']})
+                resolved=aws.experiment(preview['provider_id'])
+                remote=resolved['experiment'];ps=remote.get('state',{}).get('status')
+                from .execution_contract import verify_captured_execution
+                verify_captured_execution(self.store,fault,resolved,'skip-all',tid)
+                if ps not in FIS_TERMINAL:
+                    if (now-dt(preview['created_at'])).total_seconds()>180:
+                        Broker(self.store,aws,True).execute(tid,'stop-dispatch-preview','fault','fis','stop_experiment',{'id':preview['provider_id']})
+                        raise Blocked('Dispatch preview exceeded its deadline')
+                    return
+                if ps!='completed' or not target_match(fault,resolved['resolved_targets'],complete=True):
+                    raise Blocked('Fresh preview no longer matches the approved targets; no fault dispatched')
+                if digest(account_contract(resolved.get('target_accounts',[])))!=fault.target_accounts_sha256:
+                    raise Blocked('Fresh target account role configuration changed')
+                self.store.put_record('dispatch_target_check',tid,{'preview_id':preview['provider_id'],'at':iso(now),'target_policy':fault.target_match,
+                    'target_sources':resolved.get('target_sources',[]),'limits':['A preview cannot lock targets against changes between preview and execution.']})
             op=broker.execute(tid,'start-fault','fault','fis','start_experiment',{'experimentTemplateId':fault.template_id,'experimentOptions':{'actionsMode':'run-all'}})
             eid=op['provider_id']
             self.store.update(tid,changes={'fis_id':eid},event='trial.fis_attached')
             status=aws.experiment(eid); value=status['experiment']
+            if fault.native_fis:
+                from .execution_contract import verify_captured_execution
+                verify_captured_execution(self.store,fault,status,'run-all',tid)
             if value.get('state',{}).get('status') in {'failed','stopped'}: raise Blocked('FIS did not start the approved exposure')
             start=value.get('startTime')
             if not start:
@@ -205,10 +227,21 @@ class Engine:
                 # AWS uses targetInformation.arn for resolved resources; retain
                 # the entire source response and reject anything not exactly scoped.
                 target_ok=resolved==sorted(set(fault.target_arns))
+                if fault.native_fis:
+                    from .execution_contract import verify_captured_execution
+                    verify_captured_execution(self.store,fault,status,'run-all',tid)
+                    from .native_fis import target_match, target_identity, account_contract
+                    resolved=sorted({target_identity(r) for r in status['resolved_targets']})
+                    target_ok=target_match(fault,status['resolved_targets'],complete=value.get('state',{}).get('status') in FIS_TERMINAL)
+                    if digest(account_contract(status.get('target_accounts',[])))!=fault.target_accounts_sha256:
+                        raise Blocked('Executed target-account configuration differs from approval')
+                    if value.get('startTime') and (now-dt(value['startTime'])).total_seconds()>fault.max_fault_seconds and value.get('state',{}).get('status') not in FIS_TERMINAL:
+                        self.store.update(tid,state='ABORTING',changes={'aborted':True,'blocking_reason':'Approved FIS runtime budget exceeded'})
+                        return
                 action_states=[a.get('state',{}).get('status') for a in value.get('actions',{}).values()]
                 if any(x in {'skipped','failed','stopped'} for x in action_states) or value.get('state',{}).get('status') in {'failed','stopped'}:
                     self.store.update(tid,state='ABORTING',changes={'aborted':True,'fault_state':value['state']['status'],'blocking_reason':'FIS stopped, failed or skipped a required action'},event='trial.fis_incomplete'); return
-                if resolved and not target_ok: raise Blocked('Actual FIS target set differs from the approved set')
+                if resolved and not target_ok and not fault.native_fis: raise Blocked('Actual FIS target set differs from the approved set')
                 changes={'fault_state':value.get('state',{}).get('status'),'targets_verified':target_ok,'resolved_target_arns':resolved}
                 if value.get('endTime'):
                     changes['fault_end_at']=value['endTime']
@@ -241,6 +274,11 @@ class Engine:
                 self.store.update(tid,changes={'aborted':True}); d=self.store.entity(tid)['data']
             if not d.get('cleanup_started_at'):
                 self.store.update(tid,changes={'cleanup_started_at':iso(now)}); d=self.store.entity(tid)['data']
+            if d.get('dispatch_preview_id'):
+                preview_status=aws.experiment(d['dispatch_preview_id'])['experiment'].get('state',{}).get('status')
+                if preview_status not in FIS_TERMINAL:
+                    safety.execute(tid,'stop-dispatch-preview','fault','fis','stop_experiment',{'id':d['dispatch_preview_id']})
+                    return
             if d.get('fis_id'):
                 status=aws.experiment(d['fis_id']); value=status['experiment']; fis_state=value.get('state',{}).get('status')
                 if fis_state not in FIS_TERMINAL:

@@ -1,4 +1,6 @@
 """Measured exports and a Grafana dashboard for this implementation's instruments."""
+import math
+from copy import deepcopy
 from .util import dt
 
 METRICS={
@@ -25,6 +27,7 @@ def prometheus(store):
            '# These gauges are not native AWS/DevOps Agent metric names.']
     for key,(title,_) in METRICS.items():
         lines.extend(['# HELP agent_validation_'+key+' '+title,'# TYPE agent_validation_'+key+' gauge'])
+    lines.extend(['# HELP agent_validation_business_value Collected scalar business requirement measurement; inspect the pinned requirement and unit.', '# TYPE agent_validation_business_value gauge'])
     for trial in store.entities('trial'):
         ref=trial['data'].get('assessment_id')
         if not ref: continue
@@ -32,12 +35,17 @@ def prometheus(store):
         for key,val in body['metrics'].items():
             if key in METRICS and val is not None:
                 lines.append(f'agent_validation_{key}{{{labels}}} {float(val)}')
+        for check in body.get('business_checks',[]):
+            value=check.get('observed'); definition=body.get('metric_definitions',{}).get('business_'+check['id'],{})
+            if isinstance(value,(int,float)) and not isinstance(value,bool) and math.isfinite(value):
+                extra=f'requirement="{escape(check["id"])}",category="{escape(check["category"])}",unit="{escape(definition.get("unit","unknown"))}"'
+                lines.append(f'agent_validation_business_value{{{labels},{extra}}} {float(value)}')
         timestamp=trial['data'].get('observation_ends_at') or body['evaluated_at']
         lines.append(f'agent_validation_observed_timestamp_seconds{{{labels}}} {dt(timestamp).timestamp()}')
     return '\n'.join(lines)+'\n'
 
 
-def dashboard():
+def dashboard(store=None):
     datasource={'type':'prometheus','uid':'${DS_PROMETHEUS}'}
     panels=[{'id':1,'type':'text','title':'Interpretation','gridPos':{'x':0,'y':0,'w':24,'h':4},
              'options':{'mode':'markdown','content':'Measured local experiment outputs. No seeded observations. Empty series stay **No data**. Diagnosis depends on cited human claim extraction. Timing anchors and unresolved gates are in the console report. No chart proves agent-attributable recovery. Protect the authenticated scrape endpoint; do not publish local tokens.'}}]
@@ -51,7 +59,23 @@ def dashboard():
                        'fieldConfig':{'defaults':{'unit':'percentunit' if unit=='ratio' else unit,'noValue':'No data',
                                      'custom':{'spanNulls':False,'showPoints':'always','drawStyle':'points'}},'overrides':[]},
                        'options':{'tooltip':{'mode':'multi'},'legend':{'displayMode':'table','placement':'bottom'}}})
-    return {'id':None,'uid':'devops-agent-validation-v03','title':'DevOps Agent · measured experiment results',
+    if store is not None:
+        requirements={}
+        for trial in store.entities('trial'):
+            ref=trial['data'].get('assessment_id')
+            if not ref: continue
+            body=store.record(ref)['data']
+            for check in body.get('business_checks',[]):
+                definition=body.get('metric_definitions',{}).get('business_'+check['id'],{})
+                requirements[(check['id'],check['category'],definition.get('unit','unknown'))]=definition.get('title',check['id'])
+        for offset,((requirement,category,unit),title) in enumerate(sorted(requirements.items())):
+            panel=deepcopy(panels[1]);index=len(definitions)+offset
+            panel['id']=index+2;panel['title']=title+' ['+unit+']'
+            panel['gridPos']={'x':12*(index%2),'y':4+8*(index//2),'w':12,'h':8}
+            panel['targets'][0]['expr']='agent_validation_business_value{trial=~"${trial:regex}",requirement="'+escape(requirement)+'",category="'+escape(category)+'",unit="'+escape(unit)+'"}'
+            panel['fieldConfig']['defaults']['unit']={'Count':'short','Seconds':'s','Milliseconds':'ms','Percent':'percent','Bytes':'bytes'}.get(unit,'none')
+            panels.append(panel)
+    return {'id':None,'uid':'devops-agent-validation-v05','title':'DevOps Agent · measured experiment results',
             'schemaVersion':39,'version':1,'timezone':'utc','time':{'from':'now-24h','to':'now'},'refresh':'30s','graphTooltip':2,
             'templating':{'list':[{'name':'DS_PROMETHEUS','type':'datasource','query':'prometheus'},
                {'name':'trial','label':'Trial','type':'query','datasource':datasource,

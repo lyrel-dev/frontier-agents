@@ -1,7 +1,8 @@
 """Strict administrator configuration and immutable experiment contracts.
 
-Browser definitions reference approved instruments by ID. They cannot introduce
-credentials, network destinations, AWS operations, or arbitrary runbook parameters.
+Execution definitions reference approved instruments by ID. Operator onboarding
+can propose network/verifier/runbook configuration, activated only by a separate
+approval. No contract accepts credential material or unrestricted operations.
 """
 from __future__ import annotations
 import ipaddress
@@ -22,7 +23,13 @@ READS = {
     'autoscaling': {'describe_auto_scaling_groups'},
     'elbv2': {'describe_target_health'},
     'ssm': {'get_parameter'},
-    'cloudwatch': {'describe_alarms'},
+    'cloudwatch': {'describe_alarms','get_metric_data'},
+    'elasticache': {'describe_cache_clusters','describe_replication_groups'},
+    'dynamodb': {'describe_table','describe_continuous_backups'},
+    'kinesis': {'describe_stream_summary'},
+    's3': {'get_bucket_replication','get_bucket_versioning'},
+    'directconnect': {'describe_virtual_interfaces','describe_connections'},
+    'cloudformation': {'describe_stacks'},
 }
 
 
@@ -70,6 +77,7 @@ class Probe(Strict):
 
 
 class ReadCheck(Strict):
+    account_id: str | None = Field(default=None, pattern=r'^\d{12}$')
     id: ID
     service: str
     operation: str
@@ -94,6 +102,7 @@ class ReadCheck(Strict):
 
 
 class Metric(Strict):
+    account_id: str | None = Field(default=None, pattern=r'^\d{12}$')
     id: ID
     title: str
     namespace: str
@@ -126,13 +135,21 @@ class Runbook(Strict):
 
 
 class Fault(Strict):
+    native_fis: bool = False
+    preview_record_id: str | None = None
+    target_accounts_sha256: str | None = None
+    resolved_targets: list[dict[str, Any]] = Field(default_factory=list, max_length=1000)
+    target_match: Literal['exact','subset'] = 'exact'
+    minimum_targets: int = Field(default=1, ge=1, le=1000)
+    independent_recovery: str = Field(default='', max_length=6000)
+    action_review: str = Field(default='', max_length=6000)
     id: ID
     title: str
     template_id: str = Field(pattern=r'^[A-Za-z0-9-]{1,64}$')
     template_sha256: HASH
-    target_arns: list[str] = Field(min_length=1, max_length=100)
+    target_arns: list[str] = Field(min_length=1, max_length=1000)
     allowed_action_ids: list[str] = Field(min_length=1, max_length=30)
-    max_fault_seconds: int = Field(ge=1, le=900)
+    max_fault_seconds: int = Field(ge=1, le=86400)
     baseline_checks: list[ID] = Field(min_length=1, max_length=20)
     fault_checks: list[ID] = Field(min_length=1, max_length=20)
     cleanup_checks: list[ID] = Field(min_length=1, max_length=20)
@@ -142,6 +159,7 @@ class Fault(Strict):
 
 
 class Route(Strict):
+    receipt_expression: str | None = Field(default=None, max_length=4000)
     alarm_name: str = Field(min_length=1, max_length=255)
     reference_system: str = Field(min_length=1, max_length=200)
     # Must match the real incident integration; alarm_arn is not universal.
@@ -153,6 +171,7 @@ class Route(Strict):
 
     @model_validator(mode='after')
     def format_contract(self):
+        if self.receipt_expression:jmespath.compile(self.receipt_expression)
         allowed = {'alarm_arn','alarm_name','source_event_id'}
         import string
         names = {f for _, f, _, _ in string.Formatter().parse(self.reference_id_format) if f}
@@ -163,7 +182,13 @@ class Route(Strict):
         return self
 
 
+class TargetAccount(Account):
+    association_id: str = Field(min_length=1, max_length=255)
+
+
 class Binding(Strict):
+    orchestrator: Account | None = None
+    target_accounts: list[TargetAccount] = Field(default_factory=list, max_length=100)
     id: ID
     name: str
     agent: Account
@@ -191,6 +216,15 @@ class Binding(Strict):
         for rows in [self.probes,self.checks,self.faults,self.runbooks,self.metrics]:
             if len({r.id for r in rows}) != len(rows):
                 raise ValueError('Duplicate instrument ID')
+        if len({a.account_id for a in self.target_accounts}) != len(self.target_accounts):
+            raise ValueError('Duplicate target account')
+        if any(a.account_id == self.workload.account_id or a.region != self.workload.region for a in self.target_accounts):
+            raise ValueError('Additional target accounts must be unique and share the workload Region')
+        if self.orchestrator and self.orchestrator.region != self.workload.region:
+            raise ValueError('FIS orchestrator and target accounts must share a Region')
+        permitted_accounts = {self.workload.account_id, *[a.account_id for a in self.target_accounts]}
+        if any(c.account_id and c.account_id not in permitted_accounts for c in [*self.checks, *self.metrics]):
+            raise ValueError('Verifier/metric account is not a configured target account')
         checks = {x.id for x in self.checks}
         books = {x.id for x in self.runbooks}
         for f in self.faults:
@@ -198,8 +232,22 @@ class Binding(Strict):
                 raise ValueError('Fault references an unregistered verifier')
             if f.cleanup_runbook_id and f.cleanup_runbook_id not in books:
                 raise ValueError('Unregistered cleanup runbook')
-            for arn in f.target_arns+f.safety_alarm_arns:
-                self._arn(arn)
+            if f.native_fis:
+                if not f.preview_record_id or not f.target_accounts_sha256 or not f.resolved_targets:
+                    raise ValueError('Native FIS needs a retained preview and account-configuration fingerprint')
+                if len(f.independent_recovery) < 20 or len(f.action_review) < 20:
+                    raise ValueError('Document action prerequisites and independent recovery before execution')
+                for phase in [f.baseline_checks, f.fault_checks, f.cleanup_checks]:
+                    covered = {c.account_id or self.workload.account_id for c in self.checks if c.id in phase}
+                    if not permitted_accounts <= covered:
+                        raise ValueError('Baseline, effect and cleanup checks must cover every target account')
+                for arn in f.safety_alarm_arns:
+                    a = arn.split(':',5)
+                    if len(a)!=6 or a[4]!=(self.orchestrator or self.workload).account_id or a[3]!=self.workload.region or a[2]!='cloudwatch':
+                        raise ValueError('Stop alarms must belong to the FIS orchestrator account/Region')
+            else:
+                for arn in f.target_arns+f.safety_alarm_arns:
+                    self._arn(arn)
         for r in self.runbooks:
             self._arn(r.document_arn)
             if not set(r.before_checks+r.after_checks) <= checks:
@@ -225,6 +273,7 @@ class FISAccount(Strict):
     name: str = Field(min_length=1, max_length=150)
     account_id: str = Field(pattern=r'^\d{12}$')
     profile: str = Field(min_length=1, max_length=150)
+    execution_profile: str | None = Field(default=None, max_length=150)
     regions: list[str] = Field(min_length=1, max_length=30)
 
     @model_validator(mode='after')
@@ -265,7 +314,19 @@ class Oracle(Strict):
     rubric: str = Field(min_length=20, max_length=4000)
 
 
+class BusinessRequirement(Strict):
+    id: ID
+    metric_id: ID
+    category: Literal['data_correctness','collateral_regression','application']
+    aggregation: Literal['maximum','minimum','sum','last']
+    operator: Literal['lte','gte','eq']
+    threshold: float
+    minimum_samples: int = Field(default=1, ge=1, le=1000000)
+    interpretation: str = Field(min_length=20, max_length=2000)
+
+
 class Experiment(Strict):
+    business_requirements: list[BusinessRequirement] = Field(default_factory=list, max_length=30)
     schema_version: Literal['1.0'] = '1.0'
     id: ID
     revision: int = Field(default=1, ge=1)
@@ -275,7 +336,7 @@ class Experiment(Strict):
     probe_id: ID
     mode: Literal['native','assisted'] = 'native'
     baseline_seconds: int = Field(default=60, ge=30, le=600)
-    observation_seconds: int = Field(default=600, ge=60, le=3600)
+    observation_seconds: int = Field(default=600, ge=60, le=172800)
     ingestion_wait_seconds: int = Field(default=120, ge=0, le=600)
     response_deadline_seconds: int = Field(default=300, ge=10, le=1800)
     max_error_ratio: float = Field(ge=0, lt=1)
@@ -289,6 +350,8 @@ class Experiment(Strict):
 
     @model_validator(mode='after')
     def durations(self):
+        if len({r.id for r in self.business_requirements}) != len(self.business_requirements):
+            raise ValueError('Business requirement IDs must be unique')
         if self.response_deadline_seconds > self.observation_seconds:
             raise ValueError('Response deadline exceeds the observation window')
         if self.stable_seconds % self.bucket_seconds or self.observation_seconds % self.bucket_seconds:

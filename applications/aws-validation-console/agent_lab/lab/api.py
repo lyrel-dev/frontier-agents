@@ -38,6 +38,8 @@ def create_app(config:Configuration,store:Store,operator_token:str,approval_toke
         raise ValueError('Two distinct local tokens of at least 24 characters are required')
     app=FastAPI(title='DevOps Agent experiment console',version=__version__,docs_url=None,redoc_url=None,openapi_url=None)
     app.add_middleware(TrustedHostMiddleware,allowed_hosts=['127.0.0.1','localhost','[::1]','testserver'])
+    from .setup import refresh
+    refresh(config,store)
     svc=service or Service(config,store)
 
     @app.middleware('http')
@@ -58,6 +60,7 @@ def create_app(config:Configuration,store:Store,operator_token:str,approval_toke
                 body=await request.body()
                 if len(body)>1_048_576: return JSONResponse({'error':'Request too large'},413)
             request.state.role=role
+            refresh(config,store)
         response=await call_next(request)
         response.headers['Cache-Control']='no-store'
         response.headers['X-Content-Type-Options']='nosniff'
@@ -84,7 +87,7 @@ def create_app(config:Configuration,store:Store,operator_token:str,approval_toke
 
     @app.get('/static/{name}')
     def static(name:str):
-        allowed={'app.js':'text/javascript','charts.js':'text/javascript','style.css':'text/css','aws.js':'text/javascript','aws.css':'text/css'}
+        allowed={'app.js':'text/javascript','charts.js':'text/javascript','style.css':'text/css','aws.js':'text/javascript','aws.css':'text/css','setup.js':'text/javascript','setup.css':'text/css'}
         if name not in allowed: raise HTTPException(404)
         return Response((ROOT/'static'/name).read_text(),media_type=allowed[name])
 
@@ -180,7 +183,9 @@ def create_app(config:Configuration,store:Store,operator_token:str,approval_toke
     @app.get('/api/grafana')
     def grafana():
         from .metrics import dashboard
-        return dashboard()
+        return dashboard(store)
     from .fis_api import install
     install(app, config, store, svc)
+    from .setup_api import install as setup_routes
+    setup_routes(app,config,store,svc)
     return app

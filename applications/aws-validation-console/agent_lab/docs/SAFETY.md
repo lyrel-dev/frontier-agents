@@ -4,7 +4,7 @@ This release is a single-operator, local, **non-production** experiment controll
 
 ## Authority separation
 
-The browser can refer only to administrator-registered instruments. It cannot introduce a credential, URL, SDK operation, shell command, FIS template, runbook parameter, or target ARN. The same local operator can possess both tokens; two bearer tokens are not enterprise separation of duties, authenticated reviewer identity, or a substitute for IAM.
+The browser can propose account/profile bindings, probe URLs/CIDRs, allowlisted typed read checks, measurements and fixed runbook parameters. Only a separate exact approval activates a configuration, and active/uncertain/restoration work blocks reconfiguration. AWS credentials, arbitrary SDK operations, shells, custom service endpoints and arbitrary agent prose are not executable inputs. The same local operator can possess both tokens; two bearer tokens are not enterprise separation of duties, authenticated reviewer identity, or a substitute for IAM.
 
 | Credential | Account | Intended authority |
 |---|---|---|
@@ -21,7 +21,7 @@ The exact API operations are in `lab/aws.py`. The provider write allowlist is li
 
 ## Qualification and approval
 
-FIS qualification requires a pinned template-content hash, single account B, explicit target ARNs with `ALL` selection, no tag/filter/parameter target resolver, fail-on-empty targets, approved finite actions, a conservative action-duration budget, exact stop alarms currently `OK`, healthy selected resource checks, and the real service incident alarm. Random/selector targets, unsupported actions, destructive one-shot actions, and unbounded templates are rejected.
+Guided native FIS qualification requires the pinned AWS definition, actual skip-all target envelope, exact target-account role map, verified observers/associations and baseline/effect/cleanup checks for every account. It verifies the returned action IDs, exact stop alarms currently OK and the incident route. It uses AWS target resolution, not a local tag/pod selector. The original explicit-ARN finite-action restrictions remain only on legacy contracts. Native one-shot actions require action-specific review and independent recovery; a local runtime deadline does not guarantee reversal. See NATIVE_FIS.md for the preview/execution race and preventive IAM boundary.
 
 Automation requires a positive numeric document version, exact content hash, a fixed account-B `AutomationAssumeRole`, fixed parameters, independent after-state checks, and finite step budgets. This executor accepts only linear `aws:executeAwsApi`, `aws:assertAwsResourceProperty`, `aws:waitForAwsResourceProperty` and `aws:sleep`. Scripts, nested execution, branch/jump control flow and custom cancellation branches are rejected. Configure an explicitly reviewed rollback where reversal is required.
 
@@ -35,7 +35,7 @@ SQLite and a local `flock` provide one worker owner on one local filesystem. A n
 
 ## Independent safety and abort
 
-The local process is not the emergency safety boundary. Existing cloud-side FIS alarm stop conditions and finite actions must remain operable without it. Test their behavior before live acceptance. A successful stop does not guarantee reversal of every effect, data recovery, or completion of application cleanup.
+The local process is not the emergency safety boundary. Existing cloud-side FIS alarm stop conditions and independent recovery must remain operable without it. Where a fault has a finite duration, that duration does not establish restoration. Test their behavior before live acceptance. A successful stop does not guarantee reversal of every effect, data recovery, or completion of application cleanup.
 
 An abort stops subsequent trial steps, stops the owned FIS experiment where possible, cancels undispatched interventions, and stops running Automation where supported. Interrupted changes require independently verified restoration or the exact approved rollback. `RESTORE_REQUIRED` is not a successful terminal state and blocks unrelated execution. After investigating provider state, use **Recheck restoration**. This reuses the original stop/cleanup authorization, not an arbitrary new command.
 

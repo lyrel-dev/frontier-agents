@@ -12,8 +12,8 @@ def read_safety_lever(aws):
         response = aws.client('fault', 'fis').get_safety_lever(id='default')
         body = normal(response)
         record = aws.store.put_record('aws', aws.owner, {
-            'side': 'fault', 'account_id': aws.b.workload.account_id,
-            'region': aws.b.workload.region, 'service': 'fis',
+            'side': 'fault', 'account_id': (getattr(aws.b,'orchestrator',None) or aws.b.workload).account_id,
+            'region': (getattr(aws.b,'orchestrator',None) or aws.b.workload).region, 'service': 'fis',
             'operation': 'get_safety_lever', 'parameters': {'id': 'default'},
             'requested_at': at, 'received_at': iso(),
             'request_id': response.get('ResponseMetadata', {}).get('RequestId'),

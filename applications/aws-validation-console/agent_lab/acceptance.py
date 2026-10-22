@@ -31,7 +31,9 @@ def main(argv=None):
     sub = parser.add_subparsers(dest='command', required=True)
     p = sub.add_parser('preflight', help='Offline plan unless --read-aws is explicitly set')
     p.add_argument('--config', default='config.json')
-    p.add_argument('--experiment', help='Your actual Experiment JSON; no example records are inserted')
+    g=p.add_mutually_exclusive_group()
+    g.add_argument('--experiment', help='Your actual Experiment JSON; no example records are inserted')
+    g.add_argument('--experiment-ref', help='Immutable workspace definition created in guided setup')
     p.add_argument('--data', default='data')
     p.add_argument('--output', required=True)
     p.add_argument('--read-aws', action='store_true')
@@ -47,13 +49,20 @@ def main(argv=None):
             raise Blocked('Output already exists; choose a new report filename')
         if args.command == 'preflight':
             config = read_configuration(args.config)
+            workspace=Store(args.data)
+            from lab.setup import refresh
+            refresh(config,workspace)
             spec = None
+            if args.experiment_ref:
+                chosen=workspace.record(args.experiment_ref)
+                if chosen['kind']!='experiment':raise Blocked('Select an experiment definition')
+                spec=Experiment.model_validate(chosen['data'])
             if args.experiment:
                 path = Path(args.experiment)
                 if path.stat().st_size > 1048576:
                     raise Blocked('Experiment file exceeds 1 MiB')
                 spec = Experiment.model_validate_json(path.read_text(encoding='utf-8'))
-            record = run_preflight(config, spec, Store(args.data), read_aws=args.read_aws, probe=args.probe)
+            record = run_preflight(config, spec, workspace, read_aws=args.read_aws, probe=args.probe)
             report = record['data']
             report = {**report, 'record_id': record['id'], 'record_sha256': record['sha256']}
         else:

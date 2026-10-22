@@ -42,15 +42,29 @@ def audit(store, trial_id, campaign_id=None):
     for name in ('challenge', 'measurement', 'delivery', 'cleanup'):
         require(name, dimensions.get(name, {}).get('outcome') == 'pass',
                 'Required captured evidence must be qualified: ' + name)
-    for name in ('response', 'diagnosis'):
-        require(name, dimensions.get(name, {}).get('outcome') in ('pass', 'fail'),
-                'An assessed failure is reviewable; missing or not-assessed evidence is not.')
+    require('response', dimensions.get('response', {}).get('outcome') in ('pass', 'fail'),
+            'An assessed failure is reviewable; missing evidence is not.')
+    final=verify(d['final_observation_id']) if d.get('final_observation_id') else None
+    observations=[store.record(rid) for rid in pinned if store.record(rid)['kind']=='observation'
+                  and store.record(rid)['owner']==trial_id]
+    no_response=bool(final and final['kind']=='observation' and final['owner']==trial_id
+        and final['data'].get('complete') is True and 'task' in final['data']
+        and final['data']['task'] is None and final['data'].get('receipt')
+        and not any(o['data'].get('task') or o['data'].get('correlation')=='ambiguous' for o in observations)
+        and dimensions.get('response',{}).get('outcome')=='fail'
+        and dimensions.get('delivery',{}).get('outcome')=='pass')
+    require('diagnosis', dimensions.get('diagnosis',{}).get('outcome') in ('pass','fail')
+            or (no_response and dimensions.get('diagnosis',{}).get('outcome')=='not_assessed'),
+            'Diagnosis is assessed when a task exists; proved no-response retains not_assessed, never a diagnosis pass.')
     # Require retained AWS read provenance, not only manually entered IDs.
     sources = [store.record(rid) for rid in list(pinned)
                if store.record(rid)['kind'] == 'aws' and store.record(rid)['owner'] == trial_id]
     expected_accounts = {'agent': binding['agent']['account_id'], 'requester': binding['agent']['account_id'],
                          'workload': binding['workload']['account_id'], 'fault': binding['workload']['account_id'],
                          'change': binding['workload']['account_id']}
+    expected_accounts['fault']=(binding.get('orchestrator') or binding['workload'])['account_id']
+    expected_accounts.update({'target:'+a['account_id']:a['account_id'] for a in binding.get('target_accounts',[])})
+    expected_accounts['target:'+binding['workload']['account_id']]=binding['workload']['account_id']
     require('source_account_scope', bool(sources) and all(
         r['data'].get('side') in expected_accounts
         and r['data'].get('account_id') == expected_accounts[r['data']['side']]
@@ -59,9 +73,13 @@ def audit(store, trial_id, campaign_id=None):
         and r['data'].get('response_sha256') == digest(r['data'].get('response')) for r in sources),
         'Captured AWS reads must retain account scope, request IDs and matching response hashes.')
     operations = {(r['data'].get('service'), r['data'].get('operation')) for r in sources}
-    require('source_operations', {('fis', 'get_experiment'), ('fis', 'list_experiment_resolved_targets'),
-                                 ('devops-agent', 'get_backlog_task'), ('devops-agent', 'list_journal_records')} <= operations,
-            'Retain fault, resolved-target, task and journal source responses.')
+    required_operations={('fis','get_experiment'),('fis','list_experiment_resolved_targets')}
+    required_operations.update({('devops-agent','list_backlog_tasks')} if no_response else
+                               {('devops-agent','get_backlog_task'),('devops-agent','list_journal_records')})
+    if binding.get('target_accounts'):
+        required_operations.add(('fis','list_experiment_target_account_configurations'))
+    require('source_operations', required_operations <= operations,
+            'Retain fault/target sources and either exact task/journal reads or complete task-list evidence of no response.')
     scoped_owners = {trial_id}
     campaign = None
     comparison = None
@@ -109,7 +127,7 @@ def audit(store, trial_id, campaign_id=None):
             'entity_snapshots': [store.entity(owner) for owner in sorted(scoped_owners)],
             'response_outcomes': {k: v.get('outcome') for k, v in dimensions.items()},
             'prevention_outcome': comparison['data']['outcome'] if comparison else 'not_assessed',
-            'live_acceptance_certified': False,
+            'confirmed_no_response': no_response, 'live_acceptance_certified': False,
             'limits': ['Local completeness and hash audit, not independent verification of the AWS producer.',
                        'Reviewable does not mean the agent passed; failed response/prevention outcomes are retained.',
                        'An authorized live run and independent review remain necessary. No cloud calls were made by this audit.']}

@@ -70,6 +70,8 @@ class Fleet:
         self.config, self.store = config, store
         self.service = service or Service(config, store)
         self.catalog = catalog or Catalog(config, store)
+        from .native_fis import Previews
+        self.previews=Previews(config,store)
 
     def mapping(self, record_id, spec):
         row = self.store.record(record_id)
@@ -79,11 +81,12 @@ class Fleet:
         if not d['complete'] or scope['state'] != 'COMPLETE':
             raise Blocked('The account/Region catalogue is incomplete; resync before enrollment')
         reasons = execution_gaps(d['template'])
-        if reasons:
-            raise Blocked('; '.join(reasons))
         binding = self.service.binding(spec.binding_id)
         fault = next((f for f in binding.faults if f.id == spec.fault_id), None)
-        if (binding.workload.account_id != d['account_id'] or binding.workload.region != d['region']
+        if reasons and (not fault or not fault.native_fis):
+            raise Blocked('; '.join(reasons))
+        origin=binding.orchestrator or binding.workload
+        if (origin.account_id != d['account_id'] or origin.region != d['region']
                 or fault is None or fault.template_id != d['template_id']
                 or fault.template_sha256 != d['contract_sha256']):
             raise Blocked('No matching approved account/Region/template revision in this agent binding')
@@ -114,6 +117,10 @@ class Fleet:
                     'binding_id':binding.id, 'agent_account':binding.agent.account_id,
                     'agent_region':binding.agent.region, 'agent_space_id':binding.agent_space_id,
                     'service_id':binding.service_id, 'state':'requires_live_qualification_and_approval'})
+            if row['contracts']:
+                row['execution_gaps']=[]
+            else:
+                row['execution_gaps']=['Prepare an approved native FIS plan: preview, account observers, measured effect and cleanup.']
         return view
 
     def create(self, request):
@@ -135,10 +142,15 @@ class Fleet:
             probe = next(p for p in binding.probes if p.id == spec.probe_id)
             # Differences in workload, requirements, verifiers or native route
             # split cohorts rather than silently creating a global leaderboard.
+            fault_comparison=fault.model_dump(mode='json')
+            for key in ('id','title','preview_record_id','safety_review','action_review','independent_recovery'):
+                fault_comparison.pop(key,None)
+            probe_comparison=probe.model_dump(mode='json')
+            for key in ('id','title'):probe_comparison.pop(key,None)
             cohort = {'account_id':binding.workload.account_id,'region':binding.workload.region,
                 'service_id':binding.service_id,'template_contract':row['data']['contract_sha256'],
-                'requirements':measured,'fault':fault.model_dump(mode='json'),
-                'probe':probe.model_dump(mode='json'),'checks':[c.model_dump(mode='json') for c in binding.checks],
+                'requirements':measured,'fault':fault_comparison,
+                'probe':probe_comparison,'checks':[c.model_dump(mode='json') for c in binding.checks],
                 'metrics':[m.model_dump(mode='json') for m in binding.metrics],
                 'route_reference':{'system':binding.route.reference_system,'format':binding.route.reference_id_format,'alarm':binding.route.alarm_name}}
             entries.append({**entry.model_dump(), 'binding_record_id':br['id'], 'binding_sha256':br['sha256'],
@@ -207,6 +219,7 @@ class Fleet:
         if (any(e['state'] in ACTIVE for e in self.store.entities('trial'))
                 or any(e['state'] in {'APPROVED','RUNNING','ROLLBACK_APPROVED','ROLLING_BACK','UNKNOWN_REMOTE_STATE','RESTORE_REQUIRED'} for e in self.store.entities('change'))):
             return
+        self.previews.step()
         self.catalog.step()
 
     def _advance(self, e):

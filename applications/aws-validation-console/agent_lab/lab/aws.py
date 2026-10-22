@@ -77,9 +77,18 @@ class AWS:
         self.write_config=Config(connect_timeout=3,read_timeout=10,retries={'total_max_attempts':1,'mode':'standard'},ignore_configured_endpoint_urls=True)
 
     def side_account(self, side):
+        if side=='fault': return self.b.orchestrator or self.b.workload
+        if side.startswith('target:'):
+            identifier=side.split(':',1)[1]
+            if identifier==self.b.workload.account_id:return self.b.workload
+            found=next((a for a in self.b.target_accounts if a.account_id==identifier),None)
+            if not found:raise Blocked('Unconfigured target account')
+            return found
         return self.b.agent if side in ('agent','requester') else self.b.workload
 
     def profile(self, side):
+        if side.startswith('target:'):return self.side_account(side).profile
+        if side=='fault' and self.b.orchestrator:return self.b.orchestrator.profile
         if side in ('agent','workload'): return getattr(self.b,side).profile
         value=getattr(self.b,{'requester':'requester_profile','fault':'fault_profile','change':'change_profile'}[side])
         if not value: raise Blocked('No explicitly configured '+side+' profile')
@@ -97,7 +106,7 @@ class AWS:
         allowed={
             'sts':{'get_caller_identity'},
             'devops-agent':{'get_agent_space','get_association','list_backlog_tasks','get_backlog_task','list_executions','list_journal_records','list_recommendations','get_recommendation'},
-            'fis':{'get_experiment_template','get_experiment','list_experiments','list_experiment_resolved_targets'},
+            'fis':{'get_experiment_template','get_experiment','list_experiments','list_experiment_resolved_targets','get_action','list_target_account_configurations','list_experiment_target_account_configurations'},
             'ssm':{'get_document','get_automation_execution','list_tags_for_resource','get_parameter'},
             'cloudwatch':{'describe_alarms','describe_alarm_history','get_metric_data'},
             'logs':{'filter_log_events','describe_log_groups'},
@@ -146,7 +155,9 @@ class AWS:
         self.identity('workload'); results=[]
         for identifier in ids:
             spec=next(c for c in self.b.checks if c.id==identifier)
-            body,ref=self.call('workload',spec.service,spec.operation,**spec.parameters)
+            side='target:'+spec.account_id if spec.account_id else 'workload'
+            self.identity(side)
+            body,ref=self.call(side,spec.service,spec.operation,**spec.parameters)
             if any(body.get(k) for k in ('NextToken','nextToken','Marker','NextMarker')):
                 raise Blocked('Verifier response is paginated; narrow the explicit selector')
             if spec.service=='ssm' and body.get('Parameter',{}).get('Type')=='SecureString':
@@ -158,6 +169,9 @@ class AWS:
         return results
 
     def template(self, fault):
+        if fault.native_fis:
+            from .native_fis import native_template
+            return native_template(self,fault)
         self.identity('fault')
         value,ref=self.call('fault','fis','get_experiment_template',id=fault.template_id)
         template=value['experimentTemplate']
@@ -237,6 +251,12 @@ class AWS:
             raise Blocked('Agent Space or association identity mismatch')
         if a.get('status')!='valid' or conf.get('accountType')!='source' or conf.get('accountId')!=self.b.workload.account_id or not conf.get('assumableRoleArn','').startswith(f'arn:aws:iam::{self.b.workload.account_id}:role/'):
             raise Blocked('Secondary-account association is not a valid binding to account B')
+        for target in self.b.target_accounts:
+            self.identity('target:'+target.account_id)
+            extra,_=self.call('agent','devops-agent','get_association',agentSpaceId=self.b.agent_space_id,associationId=target.association_id)
+            entry=extra.get('association',{});configuration=entry.get('configuration',{}).get('sourceAws',{})
+            if entry.get('status')!='valid' or entry.get('agentSpaceId')!=self.b.agent_space_id or entry.get('associationId')!=target.association_id or configuration.get('accountType')!='source' or configuration.get('accountId')!=target.account_id:
+                raise Blocked('An affected target account is not associated with the Agent Space')
         fault=next(f for f in self.b.faults if f.id==experiment.fault_id)
         template=self.template(fault)
         checks=self.checks(fault.baseline_checks)
@@ -277,7 +297,10 @@ class AWS:
         value=body['experiment']
         if value.get('id')!=experiment_id: raise Blocked('FIS experiment identity mismatch')
         targets,refs=self.pages('fault','fis','list_experiment_resolved_targets','resolvedTargets',experimentId=experiment_id,maxResults=100)
-        return {'experiment':value,'resolved_targets':targets,'source_record_id':ref,'target_sources':refs}
+        account_rows=[]
+        if value.get('experimentOptions',{}).get('accountTargeting')=='multi-account':
+            account_rows,_=self.pages('fault','fis','list_experiment_target_account_configurations','targetAccountConfigurations',experimentId=experiment_id)
+        return {'experiment':value,'resolved_targets':targets,'source_record_id':ref,'target_sources':refs,'target_accounts':account_rows}
 
     def automation(self, execution_id):
         self.identity('change')
@@ -354,6 +377,9 @@ class AWS:
             matching=[]; rejected=[]
             for item in receipts:
                 event=item['event']
+                if self.b.route.receipt_expression:
+                    event=jmespath.search(self.b.route.receipt_expression,event)
+                    if not isinstance(event,dict):continue
                 if event.get('schema')!='agent-validation.delivery/v1' or event.get('alarm_arn')!=alarm_arn or event.get('agent_space_id')!=self.b.agent_space_id:
                     continue
                 if event.get('agent_account_id')!=self.b.agent.account_id or event.get('workload_account_id')!=self.b.workload.account_id:
@@ -423,7 +449,9 @@ class AWS:
             if right<=left: continue
             query={'Id':'m1','MetricStat':{'Metric':{'Namespace':metric.namespace,'MetricName':metric.metric_name,
                         'Dimensions':[{'Name':k,'Value':v} for k,v in sorted(metric.dimensions.items())]},'Period':period,'Stat':metric.statistic,'Unit':metric.unit},'ReturnData':True}
-            chunks,_=self.pages('workload','cloudwatch','get_metric_data','MetricDataResults',token='NextToken',
+            side='target:'+metric.account_id if metric.account_id else 'workload'
+            self.identity(side)
+            chunks,_=self.pages(side,'cloudwatch','get_metric_data','MetricDataResults',token='NextToken',
                     MetricDataQueries=[query],StartTime=datetime.fromtimestamp(left,timezone.utc),EndTime=datetime.fromtimestamp(right,timezone.utc),ScanBy='TimestampAscending',MaxDatapoints=10000)
             values={}; complete=bool(chunks)
             for chunk in chunks:
@@ -436,7 +464,7 @@ class AWS:
                     values[stamp]=value
             points=[{'at':iso(datetime.fromtimestamp(t,timezone.utc)),'value':values.get(t)} for t in range(left,right,period)]
             result['metrics'].append({'id':metric.id,'title':metric.title,'unit':metric.unit,'query':query,'complete':complete,
-                                       'period_seconds':period,'points':points,'missing':sum(p['value'] is None for p in points)})
+                                       'account_id':self.side_account(side).account_id,'region':self.side_account(side).region,'period_seconds':period,'points':points,'missing':sum(p['value'] is None for p in points)})
         return result
 
     def recommendations(self, task_id):

@@ -5,9 +5,9 @@ ROOT=Path(__file__).resolve().parent
 
 def build(destination=None):
     text=(ROOT/'static/aws.html').read_text()
-    styles=[(ROOT/'static'/s).read_text() for s in ('style.css','aws.css')]
-    scripts=[(ROOT/'static'/s).read_text() for s in ('charts.js','aws.js')]
-    scripts[1]=scripts[1].replace("offline:location.protocol==='file:'",'offline:true')
+    styles=[(ROOT/'static'/s).read_text() for s in ('style.css','aws.css','setup.css')]
+    scripts=[(ROOT/'static'/s).read_text() for s in ('charts.js','setup.js','aws.js')]
+    scripts=[s.replace("offline:location.protocol==='file:'",'offline:true') for s in scripts]
     text=re.sub(r'<link rel="stylesheet" href="/static/[^\"]+">','',text)
     text=re.sub(r'<script defer src="/static/[^\"]+"></script>','',text)
     hashes=lambda xs:' '.join("'sha256-"+base64.b64encode(hashlib.sha256(s.encode()).digest()).decode()+"'" for s in xs)

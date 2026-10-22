@@ -11,7 +11,7 @@ from datetime import timedelta
 from .models import Experiment
 from .util import dt, iso, digest, Blocked
 
-VERSION='response-experiment-0.3'
+VERSION='response-experiment-0.5'
 
 
 def text_content(value):
@@ -175,12 +175,21 @@ def evaluate_trial(store, trial_id, binding):
         'Recovery followed a verified agent-linked intervention while the fault remained active; uncontrolled confounders still prevent a causal claim.' if temporal else 'Observed recovery is not credited to the agent. Fault expiry, automatic recovery and human actions are alternatives.')
     dimensions['cleanup']=result('pass' if data.get('cleanup_verified') else 'fail' if trial['state']=='RESTORE_REQUIRED' else 'inconclusive',
         'Independent configured restoration checks passed.' if data.get('cleanup_verified') else 'Restoration is not verified; independent recovery may be required.')
+    from .business import evaluate as evaluate_business
+    business_checks,business_dimensions=evaluate_business(spec.business_requirements,last,closed=final_complete and trial['state']=='CLOSED',source_id=data.get('final_observation_id'))
+    dimensions.update(business_dimensions)
+    from .metrics import METRICS
+    metric_definitions={k:{'title':v[0],'unit':v[1]} for k,v in METRICS.items()}
+    for check in business_checks:
+        metrics['business_'+check['id']]=check['observed']
+        instrument=next(m for m in binding.metrics if m.id==check['metric_id'])
+        metric_definitions['business_'+check['id']]={'title':instrument.title+' · '+check['aggregation'],'unit':instrument.unit,'requirement_id':check['id'],'category':check['category']}
     # Whole-window graphs and summaries derive only from captured observations.
     inputs={r['id']:r['sha256'] for r in records}
     inputs[spec_record['id']]=spec_record['sha256']
     inputs[probe_capture['id']]=probe_capture['sha256']
     body={'version':VERSION,'trial_id':trial_id,'lifecycle':trial['state'],'dimensions':dimensions,'metrics':metrics,
-          'probe_buckets':rows,'impact_at':impact,'recovery_at':recovery,'native_alarm_at':alarm['at'] if alarm else None,
+          'business_checks':business_checks,'metric_definitions':metric_definitions,'probe_buckets':rows,'impact_at':impact,'recovery_at':recovery,'native_alarm_at':alarm['at'] if alarm else None,
           'input_hashes':inputs,'probe_input_sha256':digest(samples),'probe_capture_id':probe_capture['id'],'evaluated_at':iso(),
           'limitations':['Results cover this authorized exposure, not general competence or production readiness.',
                          'No automatic causal credit is awarded to the agent.',
@@ -226,6 +235,8 @@ def compare_campaign(store,campaign_id,binding):
         bd,rd=b.get('fault_duration_seconds'),r.get('fault_duration_seconds')
         if not bd or not rd or abs(rd-bd)/bd>spec['traffic_tolerance']: reasons.append('Actual fault duration is not comparable')
         if bm.get('failed_probe_requests',0)==0 and bm.get('bad_probe_seconds',0)==0: reasons.append('Baseline did not reproduce impact')
+        configured_business=ra['data'].get('business_checks',[])
+        if any(c['outcome']=='inconclusive' for c in configured_business):reasons.append('Required replay business/collateral evidence is incomplete')
         outcome='inconclusive'; reason='; '.join(reasons)
         if not reasons:
             bl,rl=bm.get('probe_latency_p95_ms'),rm.get('probe_latency_p95_ms')
@@ -253,6 +264,8 @@ def compare_campaign(store,campaign_id,binding):
                     improvement=(bt-rt)/bt
                     ok=improvement>=spec['minimum_improvement'] and alerts<=spec['maximum_benign_investigations'] and not alarmed and not regression
                     outcome='pass' if ok else 'fail'; reason='Impact-to-native-investigation improvement: '+str(improvement)+'; benign investigations: '+str(alerts)+'. This is earlier investigation, not proof of autonomous detection.'
+        if not reasons and any(c['outcome']=='fail' for c in configured_business):
+            outcome='fail';reason='Replay failed a required business-data or collateral-regression check.'
         pairs.append({'baseline_trial':baseline['id'],'replay_trial':replay['id'],
                       'baseline_assessment':ba['id'],'replay_assessment':ra['id'],'outcome':outcome,'reason':reason,
                       'baseline_metrics':bm,'replay_metrics':rm})
