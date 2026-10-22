@@ -11,3 +11,7 @@ tests
 preview.html
 *.patch
 *.zip
+
+# Private environment definitions and live acceptance evidence.
+*.local.json
+local-acceptance/

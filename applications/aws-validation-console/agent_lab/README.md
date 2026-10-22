@@ -1,109 +1,82 @@
 # AWS DevOps Agent response and prevention lab
 
-**0.3.0-rc1 — executable release candidate; live AWS acceptance is pending.**
+**0.3.0-rc1 — executable release candidate. Live two-account acceptance is pending.**
 
-This is a local experiment controller for an existing Agent Space in **account A** and an authorized **non-production service in account B**. It is not a scenario viewer and does not claim that merely retrieving an investigation validates the agent.
+The local controller tests an existing Agent Space in account A against an authorized non-production service in account B. It drives a measured baseline, an approved finite FIS exposure, native incident correlation, investigation collection, independent workload observation and verified cleanup. Prevention links an actual evaluation and versioned recommendation to an approved implementation and comparable replay.
 
-The worker drives a real baseline, a bounded AWS FIS exposure, the existing incident-delivery path, investigation collection, independent workload observation, cleanup, and a pinned assessment. A prevention campaign requests an actual agent `EVALUATION`, retrieves and pins a recommendation version, links it to an approved SSM Automation implementation, verifies the deployed state, and compares a qualified replay with the baseline.
+The installation is empty. `config.json` disables AWS writes. No account, incident, result or measurement is seeded. Test providers exist only under `tests/` and are not loaded by the application. Legacy workbench results are not imported or upgraded.
 
-**No account, experiment definition, incident, result or measurement is preloaded. AWS writes are disabled in `config.json`. Test fixtures live only under `tests/` and are not loaded by the application.** The offline preview is deliberately empty.
+## Run
 
-## What is implemented
-
-| Operation | Implementation |
-|---|---|
-| Register before exposure | Immutable experiment and campaign definitions; trial exists before an investigation task ID. |
-| Qualify and approve | STS identities, exact secondary-account association, pinned FIS/template and runbook content, resource-state checks, alarm state, exact digest and separate approval credential. |
-| Execute | Durable single-worker phase machine, operation intent before dispatch, original idempotency tokens, actual provider IDs, unknown-outcome reconciliation. |
-| Measure | Actual CIDR-restricted HTTPS GET probes, CloudWatch alarm history and configured metric queries, exact-reference task discovery, journals, optional lifecycle events and sender receipts. |
-| Judge response | Separate delivery, response timing, challenge, measurement, cited diagnosis, intervention, recovery, attribution and cleanup outcomes. No aggregate readiness score. |
-| Test prevention | Baseline → agent evaluation → versioned recommendation → exact approved linear Automation → independent changed-state checks → matched exposure. |
-| Preserve evidence | Local SQLite, append-only source/event records, immutable probe captures, input hashes, dependency-inclusive JSON, interactive offline report, database backup. |
-| Inspect metrics | Interactive SVG charts, keyboard/hover, zoom, series toggles, source samples and CSV. Actual derived Prometheus export and a generated Grafana dashboard. |
-
-The product does **not** execute arbitrary agent prose, provide an unrestricted shell, infer successful incident delivery from timestamp overlap, infer correct diagnosis from summary presence, or credit recovery after fault expiry to the agent.
-
-## Run the empty console
-
-Python 3.13 and a local disk are required. No AWS connection is made by these commands with the distributed empty configuration.
+Use Python 3.13:
 
 ```sh
 python -m venv .venv
 . .venv/bin/activate
 python -m pip install -r requirements.txt
+python build_assets.py
 python run.py --with-worker
 ```
 
-Open `http://127.0.0.1:8787`. The process prints an **operator token** and a different **approval token**. Unlock using the operator token. The approval token is entered only for an exact action approval. Neither is an AWS credential. Keep both private; protect process logs. For a managed deployment, supply `LAB_OPERATOR_TOKEN` and `LAB_APPROVAL_TOKEN` through your local secret mechanism instead of printing generated credentials.
+Open `http://127.0.0.1:8787`. Unlock using the local operator token. The separate approval token authorizes an exact displayed action; neither token is an AWS credential. In managed operation, supply `LAB_OPERATOR_TOKEN` and `LAB_APPROVAL_TOKEN` through the local secret mechanism. Protect logs and data volumes.
 
-To run the API and worker independently, use two processes sharing the same local data directory:
+The API and worker can also run separately against the same local directory:
 
 ```sh
 python run.py --config config.local.json --data data
 python worker.py --config config.local.json --data data
 ```
 
-Only one worker may own a workspace. Browser closure does not stop it. A worker interruption does not extend a FIS action; long observation gaps block a clean result and request stopping/restoration when the worker returns. Independent cloud-side stop conditions and recovery remain mandatory.
+Only one worker can own the workspace. Closing the browser does not stop a trial. Independent cloud-side stop conditions and recovery procedures are mandatory.
 
-## Configure the two-account test
+## Connect the actual environment
 
-1. Copy `config/binding.template.json` to `config.local.json` and replace its placeholders. Complete JSON-string `${ENV_NAME}` placeholders can also be supplied through process environment variables. The template describes a **bounded stop of one existing EC2 instance**, not a claimed universal fault recipe. Replace it with your actual reviewed instruments.
-2. Keep observer profiles in A and B separate from the fault/change profiles in B and the task-creator profile in A. Do not reuse the Agent Space's own service access role. Confirm the exact existing secondary-account association.
-3. Specify the real incident integration's `reference.system` / `reference.referenceId` contract. There is no universal alarm-to-task mapping. Register the service's business-path probe, resource verifiers, safety alarms, limits and cleanup.
-4. Read the already-reviewed FIS template and Automation documents to obtain content fingerprints. These helper operations are read-only:
+Complete `config/binding.template.json` locally. It describes one finite, explicit-target EC2 stop example, not a universal fault recipe. Supply the real account IDs, regions, profiles, Agent Space/association, exact native incident-reference contract, approved targets, pinned instruments, verifiers, business-path probe and service-owned limits. Keep observation, fault execution, change execution and optional task creation identities separate from the agent's own cross-account role.
 
 ```sh
-python configure.py --fingerprint-fis YOUR_TEMPLATE_ID \
-  --profile workload-fault-executor --region YOUR_REGION --account YOUR_WORKLOAD_ACCOUNT
-python configure.py --fingerprint-runbook YOUR_DOCUMENT_ARN --version YOUR_NUMERIC_VERSION \
-  --profile workload-change-executor --region YOUR_REGION --account YOUR_WORKLOAD_ACCOUNT
 python configure.py --check config.local.json
+python acceptance.py preflight --config config.local.json \
+  --experiment experiment.local.json --data data --read-aws \
+  --output local-acceptance/read-checks.json
 ```
 
-5. Add reviewed implementation/rollback runbooks and their **actual deployed-state verifiers** before using prevention. A parameter claiming “deployed” is not a sufficient independent verifier unless it is independently maintained and justified. `config/runbook.template.json` defines the required shape; it is not an executable runbook.
-6. Review [safety](docs/SAFETY.md), [the operation guide](docs/OPERATIONS.md) and [instrument coverage](docs/COVERAGE.md). Set `enable_aws_writes` true only after the administrator approves the instrument configuration. Restart both local processes after configuration changes; they do not hot-reload credentials or instruments from the browser.
+Without `--read-aws`, preflight is an offline plan. Add `--probe` only to send one explicit business-path GET. Preflight never starts a fault, runbook, investigation or evaluation. A successful read check is not execution approval or evidence that the agent can handle an incident. See [ACCEPTANCE_GATE.md](docs/ACCEPTANCE_GATE.md) for report semantics and the required live gates.
 
-## Execute a response trial
+## Execute and evaluate
 
-In **Instruments & access**, inspect the configured accounts and instruments. In **Response trials**, register your actual hypothesis, measurement limits, independent ground truth and diagnosis rubric. Registering creates no observations. Create a trial, **Qualify**, inspect the qualification evidence, approve the exact target/action digest, then **Start**.
+Register the actual experiment before a task exists. Create a response trial, qualify it, inspect the captured prerequisites, approve the exact subject and start. Native mode never creates a substitute investigation when delivery fails. Assisted mode cannot validate native triggering.
 
-The worker must observe a healthy real-traffic baseline before exposure. It starts only an approved finite FIS template; records actual resolved targets; verifies the fault's effect with independent AWS reads; discovers the native investigation using the configured external reference; collects findings and workload evidence; and verifies restoration. Native mode never creates a replacement investigation when incident delivery fails. Assisted mode is explicitly distinct and cannot validate native triggering.
+The worker persists operation intent and idempotency identity before dispatch. Uncertain outcomes require reconciliation; unresolved restoration blocks further unrelated execution. It never executes arbitrary agent prose. A mitigation must map to a registered, version-pinned runbook with separate approval and independent state verification.
 
-Review a real investigation summary against the captured ground-truth records. The structured claim form requires exact quotations and independent source citations. This remains attributed human semantic extraction, not an objective automated language judge.
+Results separate challenge, measurement, native delivery, response, cited diagnosis, intervention, recovery, attribution and cleanup. Diagnosis uses attributed human extraction against the frozen oracle. Recovery following a change is not automatically a causal effect of the agent.
 
-An optional mitigation must quote an actual mitigation summary and map to a pre-registered runbook. A separate exact approval starts that implementation. The UI shows proposal, provider execution, verification and rollback separately. Recovery is not labelled causal: at most it is temporally associated with an intervention while the fault remained active.
+For prevention, register the comparison before baseline, request an approved agent evaluation, pin a recommendation version, verify its approved implementation and run a matched replay. Failed, aborted, excluded and incomplete attempts remain visible. Earlier-investigation claims require a qualified post-change benign control. One pair does not establish general prevention competence.
 
-## Execute a prevention campaign
+## Evidence, graphs and acceptance
 
-Create **Prevention campaign** before the baseline. Choose recurrence prevention, impact reduction or earlier investigation; register the tolerances and the Agent Space history/carryover note. Run all untreated baseline attempts first.
+SQLite retains source records, observations, approvals, provider identities and frozen assessments. Graphs support inspection, zoom, series selection, source tables and CSV without filling missing data. `/api/metrics` and `/api/grafana` expose measured derived gauges and a dashboard proposal behind authentication. Configuration and report exports may contain sensitive resource identifiers.
 
-Request and approve the agent evaluation. Pin one returned recommendation version. Map it to a reviewed implementation artifact, runbook content/version, fixed parameters, and before/after verifiers. Approve the exact change. Only a verified deployment opens **Create matched replay**.
+```sh
+python acceptance.py audit --data data --trial "$BASELINE_TRIAL_ID" \
+  --campaign "$CAMPAIGN_ID" --output local-acceptance/evidence-audit.json
+```
 
-The replay uses the same experiment revision, instrument configuration and exact target set; checks the changed state before and after exposure; and compares actual delivered traffic and actual fault duration. Non-comparable and incomplete attempts are excluded with reasons, not deleted. Additional attempts remain visible. One successful pair proves only that specific measured challenge—not general incident prevention or randomized causal efficacy.
+The audit reads a consistent database snapshot. `reviewable` means local completeness and hash consistency, not live certification or an agent pass. Source authenticity and the authorized live experiment remain independent obligations.
 
-Earlier-investigation comparison uses **impact-to-task time**, not a claim that the agent itself detected the fault. It requires a healthy, fault-free post-change benign control with complete exact service-reference enumeration. Dynamic source-event-ID joins are not automatically qualified for that negative control. No invented zero false-alert rate is emitted.
-
-## Graphs, reports and Grafana
-
-The application graphs actual probes, configured CloudWatch series, derived timings and matched comparisons. A duration observed once is one point, not an invented trend. Missing values are missing. Each report pins its source hashes and a frozen probe capture. Historical reports are not silently updated when delayed samples arrive.
-
-`GET /api/metrics` is an authenticated Prometheus text endpoint for measured derived gauges. `GET /api/grafana` downloads the dashboard. A present gauge does not prove freshness; the dashboard includes source observation age. See `grafana/README.md`. The console does not provide a Prometheus server or claim that the Grafana import/query path was tested in this environment.
-
-## Tests and acceptance
+## Tests
 
 ```sh
 python -m pip install -r requirements-dev.txt
+python build_assets.py
 python -m pytest -q
+python tests/browser_checks.py --native
 python tests/worker_http_acceptance.py
-CHROMIUM_PATH=/path/to/chromium python tests/browser_checks.py --native
 ```
 
-`--native` must use actual browser HTTP navigation and fails if navigation is blocked. The alternative `--bridge` harness injects the DOM and bridges fetch to a real loopback API; it does not establish native CSP/fetch/CORS behavior. The recorded authoring-environment checks identify which method ran.
+Set `CHROMIUM_PATH` as needed. `--native` requires real browser HTTP navigation and does not fall back to a bridge. `--bridge` is an explicitly limited authoring-sandbox harness. Browser tests delay the workspace HTTP response to cover unlock/load ordering. Unit and worker tests use test-only AWS/agent providers; loopback probes make real local requests. Neither validates an AWS account.
 
-AWS operation contracts are checked with botocore Stubber; response/prevention state machines use test-only provider fixtures. Local HTTP probe tests perform actual loopback requests. **No AWS account or live Agent Space has been tested.** Docker/Podman/Kubernetes hosting, actual IAM efficacy, native incident-route correlation and a real recommendation/change/replay remain release acceptance gates. The implementation is a release candidate, not a validated claim about your agent.
+## Documents and repository
 
-See `validation/review.json` for measured results and `docs/LIVE_ACCEPTANCE.md` for the exact live gate. Legacy 0.2.1 workbench records are neither loaded nor upgraded to stronger verdicts.
+[Operations](docs/OPERATIONS.md) · [Safety](docs/SAFETY.md) · [Coverage](docs/COVERAGE.md) · [Deployment](docs/DEPLOYMENT.md) · [API](docs/API.md) · [Live acceptance](docs/LIVE_ACCEPTANCE.md) · [Acceptance commands](docs/ACCEPTANCE_GATE.md)
 
-## Source integration
-
-The supplied patch adds this isolated application under `applications/aws-validation-console/agent_lab/` relative to the published repository baseline `83f65fc50d2f2a39c705356f71715ef1e33ef774`. It does not replace or import the legacy 0.2.1 workspace. No repository commit or merge was performed for this delivery. Test fixtures are shipped for reproducibility, not as runtime data.
+Source is committed on `feat/devops-agent-response-lab` in `lyrel-dev/frontier-agents`, under `applications/aws-validation-console/agent_lab/`. This branch is not merged by the acceptance-tool work. Generated preview, schemas and dashboard are rebuilt with `build_assets.py`; local configuration, credentials and acceptance exports must not be committed.

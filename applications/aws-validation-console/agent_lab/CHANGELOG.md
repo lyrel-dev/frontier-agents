@@ -1,3 +1,12 @@
+# Acceptance tooling follow-up — 22 October 2026
+
+- Added `acceptance.py preflight`: offline by default; optional read-only AWS qualification and an explicitly requested single business-path GET. It cannot start a fault, agent task or runbook.
+- Added FIS safety-lever observation and complete configured-metric checks. Missing or partial data blocks read qualification.
+- Added `acceptance.py audit`: checks a consistent copy of captured evidence, pinned hashes, source scope, native-response obligations and optional prevention lineage. Reviewable evidence is not a passing agent result or authenticated AWS proof.
+- Fixed the native-browser test's unlock/workspace loading race and added delayed-response coverage without weakening CSP or falling back to a bridge.
+- Excluded local environment definitions and acceptance exports from Git and Docker build contexts.
+- The executable baseline is committed on `feat/devops-agent-response-lab`. Live AWS acceptance is still pending; no real account or target was supplied.
+
 # 0.3.0-rc1 — executable replacement, not a migration of historical claims
 
 - Added a persistent experiment worker, real bounded HTTP probes, FIS execution/target confirmation, independent cleanup and restart/unknown-write handling.

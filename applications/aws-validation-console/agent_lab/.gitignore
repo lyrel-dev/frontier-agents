@@ -14,3 +14,7 @@ validation/*.png
 validation/*-run.txt
 validation/*.log
 validation/*.pid
+
+# Private environment definitions and live acceptance evidence.
+*.local.json
+local-acceptance/

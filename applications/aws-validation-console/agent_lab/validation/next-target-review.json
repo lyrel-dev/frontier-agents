@@ -1,0 +1,49 @@
+{
+  "date": "2026-10-22",
+  "baseline_commit": "61346f3ac75893cf8169fc3e5dfa444dda444801",
+  "scope": "Read-only live qualification and frozen local evidence audit; no new fault execution",
+  "local_results": {
+    "python_tests": {
+      "passed": 101,
+      "command": "python -m pytest -q"
+    },
+    "new_acceptance_tests": {
+      "passed": 24
+    },
+    "browser_checks": {
+      "passed": 31,
+      "command": "python tests/browser_checks.py --bridge",
+      "native_navigation": false
+    },
+    "empty_preflight": {
+      "status": "blocked",
+      "aws_client_created": false,
+      "execution_authorized": false
+    }
+  },
+  "prior_ci_failure": "Native browser test read state.workspace before the asynchronous workspace request completed. The corrected harness waits for token, workspace and configuration and adds a deliberate response delay.",
+  "source_sha256": {
+    "lab/preflight.py": "1e5b537e23bdb895fd44473e49c65e719b490e8159dc6e3ef721644772721ce9",
+    "lab/acceptance.py": "ba7cdd5404af739ddf65f5a65ad31187cacf0052f52fd93128d13fd939a9f200",
+    "acceptance.py": "457519cdd9dcc481452cf7b18b30797cef4b7e210deafd96933a5c9b6a440e63",
+    "tests/test_acceptance.py": "0f735d33e095daef5c30970f29e9c04b1608be94c50deb94a50e52f68adf7aec",
+    "tests/browser_checks.py": "f90e2b9f29760e70b0375c52c5d21b4d4dccbc04c5d02ebca0f56766911604d7",
+    "README.md": "063d1c26bbdd4492f0b51e82d12eac50ab61e69ed5f3e9eb7db52d022e1fbcd6",
+    "docs/ACCEPTANCE_GATE.md": "ea56a6022d5ec97d8150127b59581581f5ea4f3f2ed173aab0ed1b914cf4e26b",
+    ".gitignore": "099eb10e9bf0499bb4625b6384fe6e9e0a9ee5ed400bd17a8c0e7cef0ccf3378",
+    ".dockerignore": "fff92a94e7217b55d707e958f7331b0e78b8eeb2264dfe7c19679bec23563655"
+  },
+  "ci": "The branch workflow reruns Python, native-browser and worker HTTP acceptance checks. This local record does not assert the outcome of a later CI run.",
+  "not_verified": [
+    "Live Account A/B identity and association",
+    "Native incident delivery and agent behavior",
+    "Actual FIS or Automation execution",
+    "Recommendation implementation and replay efficacy",
+    "Production IAM, credential refresh or independent recovery"
+  ],
+  "boundaries": [
+    "AWS/agent unit-test sources are fixtures, not live account evidence.",
+    "Local browser checks use DOM injection and a loopback API bridge. Native navigation is blocked by the authoring sandbox.",
+    "A preflight pass grants no execution authority. A reviewable audit is not producer authentication, agent success or live certification."
+  ]
+}

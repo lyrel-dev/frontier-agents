@@ -2,7 +2,7 @@
 """UI checks. --native requires native navigation; --bridge is explicitly limited.
 Only this test harness supplies provider fixtures. Product files contain no demo data.
 """
-import argparse,json,os,socket,sys,tempfile,threading,time,urllib.request,urllib.error
+import argparse,asyncio,json,os,socket,sys,tempfile,threading,time,urllib.request,urllib.error
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 from playwright.sync_api import sync_playwright
@@ -25,6 +25,11 @@ def main():
   checks.append(label);print('PASS',label)
  with tempfile.TemporaryDirectory() as d:
   config=Configuration();store=Store(d);app=create_app(config,store,OP,AP)
+  @app.middleware('http')
+  async def delayed_workspace(request,call_next):
+   # Exercise the unlock/loading race with actual HTTP latency, not a sleep in the test.
+   if request.url.path=='/api/workspace':await asyncio.sleep(.2)
+   return await call_next(request)
   sock=socket.socket();sock.bind(('127.0.0.1',0));port=sock.getsockname()[1];sock.close()
   server=uvicorn.Server(uvicorn.Config(app,host='127.0.0.1',port=port,log_level='error',access_log=False))
   thread=threading.Thread(target=server.run,daemon=True);thread.start()
@@ -56,10 +61,12 @@ def main():
     check('trial registration disabled without binding',page.get_by_role('button',name='Register experiment',exact=True).is_disabled())
     page.screenshot(path=str(output/'empty-desktop.png'),full_page=True)
     page.get_by_role('button',name='Unlock workspace').click();page.get_by_label('Operator token',exact=True).fill(OP);page.get_by_role('button',name='Unlock',exact=True).click()
-    for _ in range(30):
-     if page.get_by_role('button',name='Lock workspace').count():break
+    deadline=time.monotonic()+10
+    while time.monotonic()<deadline:
+     if page.evaluate('Boolean(state.token && state.workspace && state.config)'):break
      time.sleep(.05)
     check('operator token unlocks a real local HTTP backend',page.get_by_role('button',name='Lock workspace').count()==1)
+    check('workspace response completed despite delayed HTTP',page.evaluate('Boolean(state.workspace && state.config)'))
     check('unlocked workspace still has zero experiments',page.evaluate('state.workspace.entities.length')==0)
     for view in ['trials','prevention','evidence','connections','overview']:
      page.locator('[data-view="'+view+'"]').click()
