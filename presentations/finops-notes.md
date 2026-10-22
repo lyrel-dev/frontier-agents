@@ -159,15 +159,15 @@ Detailed reference: [Administrator, service, and operator permissions](../guides
 Detailed reference: [Cost queries and recommendation provenance](../guides/finops.html#F-M01)
 
 
-## 08. Persistent context and session-local working state
+## 08. Files, memory and conversation-context lifecycles
 
 17:00–19:00 · Knowledge and behavior
 
-Uploaded files and conversational memory persist within an instance. They are loaded into an isolated ephemeral session runtime. Older messages may be summarized; that is separate from editing a file or a retained preference.
+Soft deletion and restoration apply to files. Forgetting updates memory. Compaction changes working context; these operations are not interchangeable.
 
 
 
-![Persistent context and session-local working state](../assets/diagrams/finops-context.svg)
+![FinOps context: three independent lifecycle operations](../assets/diagrams/mechanism-finops-context.svg)
 
 
 
@@ -214,15 +214,19 @@ Detailed reference: [Persistent preferences and corrections](../guides/finops.ht
 Detailed reference: [Conversation summarization and context limits](../guides/finops.html#F-M04)
 
 
-## 10. Anomaly-to-task and publication workflow
+## 10. Task execution and destination-specific approval
 
 22:00–24:00 · Execution workflows
 
-A supported anomaly event matches a configured automation and creates a queued task. Result generation and destination publication are separate stages; authorization depends on action and invocation path.
+A matching event or schedule creates work. Analysis and publication are separate; Jira approval depends on invocation mode and Slack has no per-message prompt.
 
 
 
-![Anomaly-to-task and publication workflow](../assets/diagrams/finops-automation.svg)
+![FinOps tasks and destination-specific authorization](../assets/diagrams/mechanism-finops-publication.svg)
+
+
+
+Detailed reference: [Tasks, schedules, and execution history](../guides/finops.html#F-03)
 
 
 
