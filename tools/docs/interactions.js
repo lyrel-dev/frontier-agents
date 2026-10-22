@@ -49,7 +49,7 @@
       const terms=search.value.trim().toLowerCase().split(/\s+/).filter(Boolean);let shown=0;
       entries.forEach(entry=>{
         const text=entry.textContent.toLowerCase();
-        const show=terms.every(term=>text.includes(term))&&selectors.every(([name,el])=>!el.value||el.value===entry.dataset[name]);
+        const show=terms.every(term=>text.includes(term))&&selectors.every(([name,el])=>!el.value||(name==='platform'?entry.dataset.platform.split(' ').includes(el.value):el.value===entry.dataset[name]));
         entry.hidden=!show;if(show)shown++;
       });
       $$('[data-uc-group-block]',root).forEach(group=>group.hidden=!$('.usecase-entry:not([hidden])',group));
