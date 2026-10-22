@@ -294,7 +294,7 @@ Pause the trigger to stop future starts. Cancel the invocation separately; an in
 
 
 
-Detailed reference: [Custom-agent configuration and invocation](../guides/devops.html#D-07)
+Detailed reference: [Operational queries and custom-agent invocations](../guides/devops.html#D-07)
 
 
 ## 14. Configured operational-report workflow
@@ -309,10 +309,10 @@ The team defines the report period and selected evidence. An invocation queries 
 
 
 
-Detailed reference: [Custom-agent configuration and invocation](../guides/devops.html#D-07)
+Detailed reference: [Operational queries and custom-agent invocations](../guides/devops.html#D-07)
 
 
-## 15. Sandbox and directed actions
+## 15. Sandbox execution and directed-action approval
 
 35:00–38:00 · Incident response and operational execution
 
@@ -364,11 +364,11 @@ Detailed reference: [Remote access and release-assurance workflows](../guides/de
 Detailed reference: [Execution limits and diagnostic procedures](../guides/devops.html#D-10)
 
 
-## 17. Incident response outcomes
+## 17. Incident triage, investigation, and mitigation
 
 40:00–43:00 · Operational objectives and implementation
 
-Follow the operational objective through its workflow, configured mechanisms and independent completion evidence. The catalog links each dependency to its detailed guide.
+Triage determines routing. Investigation evaluates current evidence. A mitigation plan is a proposal; execution requires the applicable action authorization and a separate recovery check.
 
 
 
@@ -392,11 +392,11 @@ Detailed reference: [Incident triage, investigation, and prevention](../guides/d
 Detailed reference: [Directed actions and approval scope](../guides/devops.html#D-M06)
 
 
-## 18. Reporting and reliability outcomes
+## 18. Health reporting, deployment review, and prevention
 
 43:00–46:00 · Operational objectives and implementation
 
-Follow the operational objective through its workflow, configured mechanisms and independent completion evidence. The catalog links each dependency to its detailed guide.
+A health report summarizes measurements for a defined period. A deployment review traces actual release records. Pattern analysis and prevention evaluation use multiple investigations to identify and prioritize follow-up work.
 
 
 
@@ -411,7 +411,7 @@ Identify recurring incident patterns | Supporting investigation identities are r
 Prioritize incident-prevention work | Accepted proposals retain source incidents. | Built-in function
 
 
-Detailed reference: [Custom-agent configuration and invocation](../guides/devops.html#D-07)
+Detailed reference: [Operational queries and custom-agent invocations](../guides/devops.html#D-07)
 
 
 
@@ -422,7 +422,7 @@ Detailed reference: [Incident triage, investigation, and prevention](../guides/d
 
 46:00–49:00 · Operational objectives and implementation
 
-Follow the operational objective through its workflow, configured mechanisms and independent completion evidence. The catalog links each dependency to its detailed guide.
+SOP consolidation maintains reviewed procedural content. Topology documentation records discovered and inferred relationships. Release-readiness analysis and active testing apply to different subjects and have different effects.
 
 
 
@@ -454,7 +454,7 @@ Detailed reference: [Remote access and release-assurance workflows](../guides/de
 
 49:00–52:00 · Operational objectives and implementation
 
-One reporting objective has native and configured implementations. Required evidence, optional context and conditional execution remain explicit.
+Current telemetry is required for a health conclusion. Context is optional unless the reporting profile depends on it. A recurring profile adds a trigger; an external destination adds a separate publication operation.
 
 
 
@@ -473,7 +473,7 @@ Detailed reference: [MCP provider registration and tool selection](../guides/dev
 
 
 
-Detailed reference: [Custom-agent configuration and invocation](../guides/devops.html#D-07)
+Detailed reference: [Operational queries and custom-agent invocations](../guides/devops.html#D-07)
 
 
 
