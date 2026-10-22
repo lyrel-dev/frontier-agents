@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="907pt" height="385pt" viewBox="0.00 0.00 907.00 385.00" role="img" aria-labelledby="devops-knowledge-title devops-knowledge-desc" data-diagram="devops-knowledge">
+<title id="devops-knowledge-title">Environment-knowledge consolidation</title><desc id="devops-knowledge-desc">Discovery, connected evidence, and completed investigations feed distinct retained knowledge. A later execution selects the relevant context; it still reads current source evidence.</desc><g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(18 367)">
+<title>G</title>
+
+<g id="node1" class="node">
+<title>sources</title>
+<path fill="#edf5f4" stroke="#496b78" d="M435.5,-349C435.5,-349 125.5,-349 125.5,-349 119.5,-349 113.5,-343 113.5,-337 113.5,-337 113.5,-313 113.5,-313 113.5,-307 119.5,-301 125.5,-301 125.5,-301 435.5,-301 435.5,-301 441.5,-301 447.5,-307 447.5,-313 447.5,-313 447.5,-337 447.5,-337 447.5,-343 441.5,-349 435.5,-349" />
+<text text-anchor="middle" x="280.5" y="-328.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Environment evidence</text>
+<text text-anchor="middle" x="280.5" y="-313.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Resources, repositories, pipelines, telemetry</text>
+</g>
+
+<g id="node3" class="node">
+<title>learning</title>
+<path fill="#edf5f4" stroke="#496b78" d="M517.5,-245C517.5,-245 363.5,-245 363.5,-245 357.5,-245 351.5,-239 351.5,-233 351.5,-233 351.5,-209 351.5,-209 351.5,-203 357.5,-197 363.5,-197 363.5,-197 517.5,-197 517.5,-197 523.5,-197 529.5,-203 529.5,-209 529.5,-209 529.5,-233 529.5,-233 529.5,-239 523.5,-245 517.5,-245" />
+<text text-anchor="middle" x="440.5" y="-224.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Managed learning</text>
+<text text-anchor="middle" x="440.5" y="-209.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Synthesis and refresh</text>
+</g>
+
+<g id="edge1" class="edge">
+<title>sources-&gt;learning</title>
+<path fill="none" stroke="#496b78" d="M316.81,-300.85C340.84,-285.53 372.47,-265.37 397.73,-249.27" />
+<polygon fill="#496b78" stroke="#496b78" points="399.42,-251.3 404.34,-245.05 396.6,-246.87 399.42,-251.3" />
+<text text-anchor="middle" x="419.5" y="-270.2" font-family="DejaVu Sans" font-size="11.00">environment inputs</text>
+</g>
+
+<g id="node2" class="node">
+<title>history</title>
+<path fill="#edf5f4" stroke="#496b78" d="M716.5,-349C716.5,-349 484.5,-349 484.5,-349 478.5,-349 472.5,-343 472.5,-337 472.5,-337 472.5,-313 472.5,-313 472.5,-307 478.5,-301 484.5,-301 484.5,-301 716.5,-301 716.5,-301 722.5,-301 728.5,-307 728.5,-313 728.5,-313 728.5,-337 728.5,-337 728.5,-343 722.5,-349 716.5,-349" />
+<text text-anchor="middle" x="600.5" y="-328.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Completed investigations</text>
+<text text-anchor="middle" x="600.5" y="-313.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Observed tool use and outcomes</text>
+</g>
+
+<g id="edge2" class="edge">
+<title>history-&gt;learning</title>
+<path fill="none" stroke="#496b78" d="M564.19,-300.85C540.16,-285.53 508.53,-265.37 483.27,-249.27" />
+<polygon fill="#496b78" stroke="#496b78" points="484.4,-246.87 476.66,-245.05 481.58,-251.3 484.4,-246.87" />
+<text text-anchor="middle" x="588" y="-270.2" font-family="DejaVu Sans" font-size="11.00">operational experience</text>
+</g>
+
+<g id="node4" class="node">
+<title>map</title>
+<path fill="#edf5f4" stroke="#496b78" d="M273,-152C273,-152 12,-152 12,-152 6,-152 0,-146 0,-140 0,-140 0,-116 0,-116 0,-110 6,-104 12,-104 12,-104 273,-104 273,-104 279,-104 285,-110 285,-116 285,-116 285,-140 285,-140 285,-146 279,-152 273,-152" />
+<text text-anchor="middle" x="142.5" y="-131.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Environment understanding</text>
+<text text-anchor="middle" x="142.5" y="-116.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Services, components, request paths</text>
+</g>
+
+<g id="edge3" class="edge">
+<title>learning-&gt;map</title>
+<path fill="none" stroke="#496b78" d="M364.92,-196.92C322.29,-183.9 268.96,-167.62 225.22,-154.26" />
+<polygon fill="#496b78" stroke="#496b78" points="225.94,-151.74 218,-152.06 224.41,-156.76 225.94,-151.74" />
+</g>
+
+<g id="node5" class="node">
+<title>deps</title>
+<path fill="#edf5f4" stroke="#496b78" d="M558.5,-152C558.5,-152 322.5,-152 322.5,-152 316.5,-152 310.5,-146 310.5,-140 310.5,-140 310.5,-116 310.5,-116 310.5,-110 316.5,-104 322.5,-104 322.5,-104 558.5,-104 558.5,-104 564.5,-104 570.5,-110 570.5,-116 570.5,-116 570.5,-140 570.5,-140 570.5,-146 564.5,-152 558.5,-152" />
+<text text-anchor="middle" x="440.5" y="-131.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Dependencies and pipelines</text>
+<text text-anchor="middle" x="440.5" y="-116.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Relationships and delivery stages</text>
+</g>
+
+<g id="edge4" class="edge">
+<title>learning-&gt;deps</title>
+<path fill="none" stroke="#496b78" d="M440.5,-196.57C440.5,-185.33 440.5,-171.73 440.5,-159.69" />
+<polygon fill="#496b78" stroke="#496b78" points="443.13,-159.54 440.5,-152.04 437.88,-159.54 443.13,-159.54" />
+</g>
+
+<g id="node6" class="node">
+<title>tools</title>
+<path fill="#edf5f4" stroke="#496b78" d="M859,-152C859,-152 608,-152 608,-152 602,-152 596,-146 596,-140 596,-140 596,-116 596,-116 596,-110 602,-104 608,-104 608,-104 859,-104 859,-104 865,-104 871,-110 871,-116 871,-116 871,-140 871,-140 871,-146 865,-152 859,-152" />
+<text text-anchor="middle" x="733.5" y="-131.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Tool-use guidance</text>
+<text text-anchor="middle" x="733.5" y="-116.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Query patterns and recurring errors</text>
+</g>
+
+<g id="edge5" class="edge">
+<title>learning-&gt;tools</title>
+<path fill="none" stroke="#496b78" d="M514.82,-196.92C556.64,-183.93 608.94,-167.69 651.91,-154.34" />
+<polygon fill="#496b78" stroke="#496b78" points="652.88,-156.79 659.26,-152.06 651.32,-151.77 652.88,-156.79" />
+</g>
+
+<g id="node7" class="node">
+<title>selection</title>
+<path fill="#edf5f4" stroke="#496b78" d="M545.5,-48C545.5,-48 335.5,-48 335.5,-48 329.5,-48 323.5,-42 323.5,-36 323.5,-36 323.5,-12 323.5,-12 323.5,-6 329.5,0 335.5,0 335.5,0 545.5,0 545.5,0 551.5,0 557.5,-6 557.5,-12 557.5,-12 557.5,-36 557.5,-36 557.5,-42 551.5,-48 545.5,-48" />
+<text text-anchor="middle" x="440.5" y="-27.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Later execution</text>
+<text text-anchor="middle" x="440.5" y="-12.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Select relevant stored context</text>
+</g>
+
+<g id="edge6" class="edge">
+<title>map-&gt;selection</title>
+<path fill="none" stroke="#496b78" d="M209.75,-103.98C256.2,-88.08 318.01,-66.93 365.97,-50.51" />
+<polygon fill="#496b78" stroke="#496b78" points="366.99,-52.93 373.24,-48.02 365.29,-47.97 366.99,-52.93" />
+<text text-anchor="middle" x="359" y="-73.2" font-family="DejaVu Sans" font-size="11.00">relevant descriptions</text>
+</g>
+
+<g id="edge7" class="edge">
+<title>deps-&gt;selection</title>
+<path fill="none" stroke="#496b78" d="M440.5,-103.85C440.5,-89.64 440.5,-71.26 440.5,-55.82" />
+<polygon fill="#496b78" stroke="#496b78" points="443.13,-55.55 440.5,-48.05 437.88,-55.55 443.13,-55.55" />
+</g>
+
+<g id="edge8" class="edge">
+<title>tools-&gt;selection</title>
+<path fill="none" stroke="#496b78" d="M667.38,-103.98C621.71,-88.08 560.93,-66.93 513.78,-50.51" />
+<polygon fill="#496b78" stroke="#496b78" points="514.58,-48.01 506.63,-48.02 512.85,-52.97 514.58,-48.01" />
+</g>
+</g>
+</svg>
