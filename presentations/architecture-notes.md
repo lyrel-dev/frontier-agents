@@ -1,4 +1,4 @@
-# Shared architecture — HTML presentation reference
+# Shared Architecture — HTML presentation reference
 
 
 
@@ -6,21 +6,23 @@ Open [architecture.html](architecture.html). The timing includes prepared-result
 
 
 
-## 1. The three services expose different resource models
+## 1. Comparison Framework
 
-**Chapter:** Resource and context models. **Schedule:** 00:00–02:00. **Slide budget:** 02:00.
+**Chapter:** Part I · Comparison Framework. **Schedule:** 00:00–02:00. **Slide budget:** 02:00.
 
-Use platform-specific identifiers rather than a universal ambiguous agent ID.
+Cross-platform comparison begins with the actual resource and execution model.
 
 
 
-Layer | DevOps | Security | FinOps
+Question | DevOps Agent | Security Agent | FinOps Agent
 
-Scope | Agent Space | Application + shared resources | Agent instance
+Scope object | Agent Space | Application Agent Space plus shared resources | Agent instance
 
-Configuration | Agents, tools, knowledge | Assessment definitions | Context, automations, connections
+Configuration | Agents, tools and knowledge | Assessment definitions and criteria | Context, tasks, automations and connections
 
-Execution | Investigation / invocation | Run / revalidation job | Conversation / task
+Execution | Investigation or invocation | Run, review or revalidation job | Conversation or task
+
+Primary evidence | Tool results and investigation history | Findings and linked verification | Source query, task and artifact
 
 
 
@@ -28,45 +30,73 @@ Execution | Investigation / invocation | Run / revalidation job | Conversation /
 
 
 
-## 2. Retained context has different producers and lifecycles
+## 2. Use Case Families Across the Three Platforms
 
-**Chapter:** Resource and context models. **Schedule:** 02:00–04:00. **Slide budget:** 02:00.
+**Chapter:** Part I · Comparison Framework. **Schedule:** 02:00–05:00. **Slide budget:** 03:00.
 
-Do not reduce these to one “learning enabled” setting.
-
-
-
-Material | Producer | Consumer
-
-Monitor knowledge | Managed investigation learning | Relevant later investigation
-
-Login skill | Successful authentication navigation | Later login
-
-Reference file | Operator upload | Agent task or conversation
-
-Conversational memory | Preferences/corrections | Later session
+Similar business labels can map to different platform objects and authorization boundaries.
 
 
 
-**Guide:** [A-02](../guides/architecture.html#A-02)
+Family | DevOps Agent | Security Agent | FinOps Agent
+
+Event response | Incident triage and investigation | Assessment run from configured target or source | Anomaly-triggered investigation
+
+Recurring review | Health and operational review report | Scheduled assessment or review workflow | Cost and FinOps review report
+
+Pattern analysis | Recurring causes and prevention recommendations | Requirement and finding trends | Cost drivers and optimization candidates
+
+Documentation | Topology, SOP skills and environment memory | Threat model and requirement packs | Context files and report artifacts
+
+Controlled effect | Directed resource action | Repository remediation or issue tracking | Jira/Slack publication; engineering change outside agent
 
 
 
-## 3. Connectivity is not authorization
-
-**Chapter:** Access and effect boundaries. **Schedule:** 04:00–06:00. **Slide budget:** 02:00.
-
-Test each layer with observed results and an expected denial.
+**Guide:** [A-01](../guides/architecture.html#A-01), [A-07](../guides/architecture.html#A-07)
 
 
 
-Route | Can the endpoint be reached?
+## 3. Resource and Context Models
 
-Identity | Who authenticated?
+**Chapter:** Part II · Resource, Context and Access. **Schedule:** 05:00–07:00. **Slide budget:** 02:00.
 
-Permission | Which operation is allowed?
+The three services do not expose one common memory mechanism.
 
-Behavior | What does prompt guidance request?
+
+
+Material | Producer | Consumer | Lifecycle distinction
+
+Incident memory | Managed learning or corrective feedback | Relevant later investigation | Version, active state and bounded retention
+
+Login procedure | Successful authenticated navigation | Later security test session | Configuration-specific reuse
+
+Requirement pack | Administrator or document generation | Eligible design/code assessment | Enablement and replacement
+
+Reference file | FinOps operator upload | Task or conversation | Soft delete and restore
+
+Conversational memory | Explicit user request | Later FinOps session | Update or forget
+
+
+
+**Guide:** [A-01](../guides/architecture.html#A-01), [A-02](../guides/architecture.html#A-02)
+
+
+
+## 4. Connectivity, Identity and Authorization
+
+**Chapter:** Part II · Resource, Context and Access. **Schedule:** 07:00–09:00. **Slide budget:** 02:00.
+
+Reachability and prompt guidance do not establish authorization for an effect.
+
+
+
+Connectivity | Can the endpoint, repository, account or application be reached?
+
+Identity | Which operator, role, credential or application user authenticated?
+
+Permission | Which read, test, publication or mutation operation is allowed?
+
+Behavioral guidance | Which instructions, skills or prompt rules shape the work?
 
 
 
@@ -74,23 +104,25 @@ Behavior | What does prompt guidance request?
 
 
 
-## 4. The effect determines the relevant approval boundary
+## 5. Execution and Approval Boundaries
 
-**Chapter:** Access and effect boundaries. **Schedule:** 06:00–08:00. **Slide budget:** 02:00.
+**Chapter:** Part III · Execution, Lifecycle and Handoffs. **Schedule:** 09:00–11:00. **Slide budget:** 02:00.
 
-No universal “read-only” or “human-approved” label is sufficient.
+Approval follows the concrete effect; there is no universal human-approved agent mode.
 
 
 
-Effect | Control to inspect
+Effect | Required control | Evidence
 
-Resource mutation | Specific directed-action authorization
+AWS resource mutation | Specific directed-action enablement, role and approval | Approval and resulting resource state
 
-Application testing | Targets, credentials, exclusions and permitted effects
+Application security testing | Authorized target, credentials, exclusions and stop owner | Run identity, requests and findings
 
-Source change | Repository review and deployment controls
+Repository change | Provider access and normal code-review controls | Patch, pull request, tests and reviewer
 
-External publication | Destination and invocation-specific approval
+Jira or Slack publication | Destination and invocation-specific rule | Issue/comment/post and task history
+
+Recommendation only | No execution authority | Proposal and acceptance criteria
 
 
 
@@ -98,19 +130,25 @@ External publication | Destination and invocation-specific approval
 
 
 
-## 5. Configuration, runs and artifacts have separate lifecycles
+## 6. Configuration, Execution and Artifact Lifecycles
 
-**Chapter:** Lifecycle and handoffs. **Schedule:** 08:00–10:00. **Slide budget:** 02:00.
+**Chapter:** Part III · Execution, Lifecycle and Handoffs. **Schedule:** 11:00–13:00. **Slide budget:** 02:00.
 
-Stopping future starts does not reverse completed effects.
+Stopping future starts does not reverse completed effects or delete retained evidence.
 
 
 
-Future work | Pause a schedule or disable an automation.
+Layer | Create or configure | Stop or remove | What may remain
 
-Current work | Cancel the invocation/task using its supported control.
+Configuration | Agent, assessment, automation or connection | Disable, detach or delete | Prior executions and outputs
 
-Retained evidence | Manage versions, findings, files and artifacts according to their own semantics.
+Future execution | Schedule or event trigger | Pause/disable/delete trigger | Existing tasks or runs
+
+Current execution | Invocation, assessment or task | Cancel or stop where supported | Partial results and audit history
+
+Retained context | Memory, requirement or file | Deactivate, replace, forget or soft-delete | Versions or recoverable data
+
+External artifact | Ticket, message or exported report | Destination-specific removal | Copies outside the platform
 
 
 
@@ -118,21 +156,25 @@ Retained evidence | Manage versions, findings, files and artifacts according to 
 
 
 
-## 6. A handoff transfers evidence—not credentials or authority
+## 7. Handoff Record Between Platforms and Teams
 
-**Chapter:** Lifecycle and handoffs. **Schedule:** 10:00–12:00. **Slide budget:** 02:00.
+**Chapter:** Part III · Execution, Lifecycle and Handoffs. **Schedule:** 13:00–15:00. **Slide budget:** 02:00.
 
-The receiving team obtains its own access and makes its own authorization decision.
+A handoff transfers evidence and responsibility, not credentials or authorization.
 
 
 
-Origin | Platform, configuration and execution IDs
+Field | Required content | Reason
 
-Subject | Service, revision and UTC observation window
+Origin | Platform, configuration and execution identifiers | Trace the producing context
 
-Request | Owner, question and permitted effect
+Subject | Service, revision, target and UTC window | Avoid ambiguous scope
 
-Acceptance | Required evidence and unresolved questions
+Evidence | Source links, findings, totals and failed reads | Support independent review
+
+Request | Question, owner, deadline and permitted effect | Bound the receiving work
+
+Acceptance | Required check and unresolved questions | Prevent generated text from becoming automatic closure
 
 
 
@@ -140,37 +182,21 @@ Acceptance | Required evidence and unresolved questions
 
 
 
-## 7. Keep implementation unknowns visible
+## 8. Tabletop: One Operational Symptom, Three Different Jobs
 
-**Chapter:** Evidence boundaries. **Schedule:** 12:00–14:00. **Slide budget:** 02:00.
+**Chapter:** Part IV · Tabletop. **Schedule:** 15:00–19:00. **Slide budget:** 04:00.
 
-An attractive diagram is not evidence of undocumented internals.
-
-
-
-Documented | Resource relationships, selected controls, retention and execution behavior.
-
-Not established | Shared vector database, retrieval-ranking algorithm, cross-agent runtime or model-training pipeline.
+The same business event creates different evidence obligations for each platform.
 
 
 
-**Guide:** [A-07](../guides/architecture.html#A-07)
+0–1 min | Define the observation | Latency, application revision, authorization identity and cost window
 
+1–2 min | Assign DevOps work | Investigate current service evidence and dependency path
 
+2–3 min | Assign Security and FinOps work | Assess the authorized application change; reconcile related cost movement
 
-## 8. Tabletop: three observations, three evidence obligations
-
-**Chapter:** Prepared-result tabletop. **Schedule:** 14:00–18:00. **Slide budget:** 04:00.
-
-Synthetic comparison; no shared runtime or live execution assumed.
-
-
-
-0–1 min | Identify the required inputs | Latency evidence, authorization identity and cost basis
-
-1–3 min | Check consistency | Same intended revision, target and comparable windows
-
-3–4 min | Assign unresolved questions | Do not invent a single shared root cause
+3–4 min | State unresolved questions | No single shared root cause or cross-agent runtime is assumed
 
 
 
@@ -178,19 +204,27 @@ Synthetic comparison; no shared runtime or live execution assumed.
 
 
 
-## 9. Accept documents on operating usefulness
+## 9. Documentation and Presentation Acceptance Criteria
 
-**Chapter:** Acceptance criteria. **Schedule:** 18:00–20:00. **Slide budget:** 02:00.
+**Chapter:** Part V · Acceptance Criteria. **Schedule:** 19:00–22:00. **Slide budget:** 03:00.
 
-Link and layout checks are necessary but do not prove technical completeness.
+A presentation is an indexed technical explanation, not a sequence of slogans.
 
 
 
-Model | Resources and scope are clear before a scenario begins.
+Area | Acceptance criterion | Failure signal
 
-Procedure | Inputs, choices, confirmation and failure paths are described.
+Structure | Resource model, capabilities, use cases, mechanisms and procedures are distinct | A scenario is labeled as a capability
 
-Evidence | Claims have sources; examples and live outcomes are not conflated.
+Use case catalog | Grouped, searchable and classified by delivery mode and availability | Duplicated or unclassified entries
+
+Procedure | Prerequisite, decision, confirmation and failure interpretation are present | Generic “configure and verify” language
+
+Presentation | Descriptive chapter titles and evidence-bearing slides | Slogan titles and empty visual panels
+
+Evidence | Material product claims link to official guidance | Source count used as proof of completeness
+
+Validation | Browser, data and link checks are separated from live product testing | Packaging checks presented as operational proof
 
 
 
