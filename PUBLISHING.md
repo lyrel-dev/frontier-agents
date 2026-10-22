@@ -1,5 +1,5 @@
-# Publication
+# Publishing documentation
 
-Edit canonical Markdown and the curated lesson plan. Rebuild and validate before changing `documentation-build.json` to request a publication run. The workflow renders the guides and slides, runs the documented checks, and commits each changed document or deletion separately. It does not create ZIP distributions or snapshot directories.
+Edit the canonical guide, chapter map or lesson plan, rebuild, then run `python tools/docs_check.py --browser`. Review the generated HTML before committing. The documentation workflow is triggered by `documentation-build.json`; it validates before committing each changed documentation file separately.
 
-The documentation-owned paths are isolated from `applications/` and `.github/workflows/validation-console.yml`. Review the final Git diff and preservation check. No force push or history rewrite is part of publication.
+The report and presentation are both HTML. No compressed distributions or retained historical document copies are produced. Git holds prior revisions. The separate application and its workflow must remain unchanged. Repository publication is not website hosting.
