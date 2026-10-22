@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="555pt" height="396pt" viewBox="0.00 0.00 554.50 396.00" role="img" aria-labelledby="finops-integrations-title finops-integrations-desc" data-diagram="finops-integrations">
+<title id="finops-integrations-title">Data-source access and collaboration connections</title><desc id="finops-integrations-desc">AWS source access is controlled by the agent data role. Collaboration uses account-level registration and an agent-specific destination. Successful source retrieval and successful publication are independent checks.</desc><g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(18 378)">
+<title>G</title>
+
+<g id="node1" class="node">
+<title>dataRole</title>
+<path fill="#edf5f4" stroke="#496b78" d="M249,-360C249,-360 27,-360 27,-360 21,-360 15,-354 15,-348 15,-348 15,-324 15,-324 15,-318 21,-312 27,-312 27,-312 249,-312 249,-312 255,-312 261,-318 261,-324 261,-324 261,-348 261,-348 261,-354 255,-360 249,-360" />
+<text text-anchor="middle" x="138" y="-339.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Agent data role</text>
+<text text-anchor="middle" x="138" y="-324.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Specific AWS actions and scope</text>
+</g>
+
+<g id="node2" class="node">
+<title>aws</title>
+<path fill="#edf5f4" stroke="#496b78" d="M264,-256C264,-256 12,-256 12,-256 6,-256 0,-250 0,-244 0,-244 0,-220 0,-220 0,-214 6,-208 12,-208 12,-208 264,-208 264,-208 270,-208 276,-214 276,-220 276,-220 276,-244 276,-244 276,-250 270,-256 264,-256" />
+<text text-anchor="middle" x="138" y="-235.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">AWS cost and operational services</text>
+<text text-anchor="middle" x="138" y="-220.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Queries and recommendation reads</text>
+</g>
+
+<g id="edge1" class="edge">
+<title>dataRole-&gt;aws</title>
+<path fill="none" stroke="#496b78" d="M138,-311.85C138,-297.64 138,-279.26 138,-263.82" />
+<polygon fill="#496b78" stroke="#496b78" points="140.63,-263.55 138,-256.05 135.38,-263.55 140.63,-263.55" />
+<text text-anchor="middle" x="184.5" y="-281.2" font-family="DejaVu Sans" font-size="11.00">authorizes reads</text>
+</g>
+
+<g id="node3" class="node">
+<title>agent</title>
+<path fill="#edf5f4" stroke="#496b78" d="M242.5,-152C242.5,-152 107.5,-152 107.5,-152 101.5,-152 95.5,-146 95.5,-140 95.5,-140 95.5,-116 95.5,-116 95.5,-110 101.5,-104 107.5,-104 107.5,-104 242.5,-104 242.5,-104 248.5,-104 254.5,-110 254.5,-116 254.5,-116 254.5,-140 254.5,-140 254.5,-146 248.5,-152 242.5,-152" />
+<text text-anchor="middle" x="175" y="-131.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Agent task</text>
+<text text-anchor="middle" x="175" y="-116.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Analysis and result</text>
+</g>
+
+<g id="edge2" class="edge">
+<title>aws-&gt;agent</title>
+<path fill="none" stroke="#496b78" d="M146.4,-207.85C151.6,-193.51 158.34,-174.92 163.97,-159.4" />
+<polygon fill="#496b78" stroke="#496b78" points="166.55,-160 166.64,-152.05 161.61,-158.21 166.55,-160" />
+<text text-anchor="middle" x="205" y="-177.2" font-family="DejaVu Sans" font-size="11.00">returns evidence</text>
+</g>
+
+<g id="node6" class="node">
+<title>action</title>
+<path fill="#edf5f4" stroke="#496b78" d="M415.5,-48C415.5,-48 146.5,-48 146.5,-48 140.5,-48 134.5,-42 134.5,-36 134.5,-36 134.5,-12 134.5,-12 134.5,-6 140.5,0 146.5,0 146.5,0 415.5,0 415.5,0 421.5,0 427.5,-6 427.5,-12 427.5,-12 427.5,-36 427.5,-36 427.5,-42 421.5,-48 415.5,-48" />
+<text text-anchor="middle" x="281" y="-27.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Publication action</text>
+<text text-anchor="middle" x="281" y="-12.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Destination-specific approval behavior</text>
+</g>
+
+<g id="edge5" class="edge">
+<title>agent-&gt;action</title>
+<path fill="none" stroke="#496b78" d="M182.2,-103.99C186.57,-92.76 193.07,-79.63 202,-70 208.12,-63.4 215.44,-57.51 223.11,-52.33" />
+<polygon fill="#496b78" stroke="#496b78" points="224.72,-54.42 229.62,-48.16 221.89,-50 224.72,-54.42" />
+<text text-anchor="middle" x="279.5" y="-73.2" font-family="DejaVu Sans" font-size="11.00">requested result publication</text>
+</g>
+
+<g id="node4" class="node">
+<title>registration</title>
+<path fill="#edf5f4" stroke="#496b78" d="M506.5,-256C506.5,-256 313.5,-256 313.5,-256 307.5,-256 301.5,-250 301.5,-244 301.5,-244 301.5,-220 301.5,-220 301.5,-214 307.5,-208 313.5,-208 313.5,-208 506.5,-208 506.5,-208 512.5,-208 518.5,-214 518.5,-220 518.5,-220 518.5,-244 518.5,-244 518.5,-250 512.5,-256 506.5,-256" />
+<text text-anchor="middle" x="410" y="-235.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Account integration</text>
+<text text-anchor="middle" x="410" y="-220.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Jira site or Slack workspace</text>
+</g>
+
+<g id="node5" class="node">
+<title>connection</title>
+<path fill="#edf5f4" stroke="#496b78" d="M499,-152C499,-152 307,-152 307,-152 301,-152 295,-146 295,-140 295,-140 295,-116 295,-116 295,-110 301,-104 307,-104 307,-104 499,-104 499,-104 505,-104 511,-110 511,-116 511,-116 511,-140 511,-140 511,-146 505,-152 499,-152" />
+<text text-anchor="middle" x="403" y="-131.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Agent connection</text>
+<text text-anchor="middle" x="403" y="-116.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Selected project or channel</text>
+</g>
+
+<g id="edge3" class="edge">
+<title>registration-&gt;connection</title>
+<path fill="none" stroke="#496b78" d="M408.41,-207.85C407.44,-193.64 406.17,-175.26 405.12,-159.82" />
+<polygon fill="#496b78" stroke="#496b78" points="407.71,-159.36 404.58,-152.05 402.48,-159.72 407.71,-159.36" />
+<text text-anchor="middle" x="460" y="-177.2" font-family="DejaVu Sans" font-size="11.00">destination binding</text>
+</g>
+
+<g id="edge4" class="edge">
+<title>connection-&gt;action</title>
+<path fill="none" stroke="#496b78" d="M388.31,-103.91C380.5,-92.8 370.2,-79.79 359,-70 351.59,-63.52 343.11,-57.51 334.53,-52.12" />
+<polygon fill="#496b78" stroke="#496b78" points="335.74,-49.79 327.97,-48.13 333.01,-54.27 335.74,-49.79" />
+<text text-anchor="middle" x="425" y="-73.2" font-family="DejaVu Sans" font-size="11.00">permits destination</text>
+</g>
+</g>
+</svg>
