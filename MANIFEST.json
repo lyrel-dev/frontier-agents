@@ -2,8 +2,8 @@
   "revision": "2026-10-22-product-resource-models",
   "files": {
     ".github/workflows/document-suite.yml": {
-      "bytes": 3216,
-      "sha256": "f6c84b984eadd0376884afb4984cc34a88cb94c735d7a6cd55d7539213ab3d3c"
+      "bytes": 3034,
+      "sha256": "fde17bc3e876735d7058c3b2059e9c15248213d57b6c196277e0b7fbb857c6b1"
     },
     "CHANGELOG.md": {
       "bytes": 834,
