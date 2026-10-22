@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="528pt" height="396pt" viewBox="0.00 0.00 527.50 396.00" role="img" aria-labelledby="mechanism-devops-cancellation-title mechanism-devops-cancellation-desc" data-diagram="mechanism-devops-cancellation">
+<title id="mechanism-devops-cancellation-title">Custom work: future triggers and current invocations</title><desc id="mechanism-devops-cancellation-desc">Pausing a schedule stops future starts. Cancelling an invocation preserves completed evidence and may not interrupt a tool call already in progress. The scheduling window is not a delivery SLA. Green/AWS: documented service concept. Blue/DOC: our verification procedure. Orange/EXT: engineering-owned source. Stages are logical explanations, not API status enum values.</desc><g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(18 378)">
+<title>G</title>
+
+<g id="node1" class="node">
+<title>definition</title>
+<path fill="#d9f2e5" stroke="#348761" d="M244,-360C244,-360 12,-360 12,-360 6,-360 0,-354 0,-348 0,-348 0,-324 0,-324 0,-318 6,-312 12,-312 12,-312 244,-312 244,-312 250,-312 256,-318 256,-324 256,-324 256,-348 256,-348 256,-354 250,-360 244,-360" />
+<text text-anchor="middle" x="128" y="-339.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">AWS · Custom definition</text>
+<text text-anchor="middle" x="128" y="-324.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">Prompt, tools, skills, store access</text>
+</g>
+
+<g id="node3" class="node">
+<title>run</title>
+<path fill="#d9f2e5" stroke="#348761" d="M370,-256C370,-256 132,-256 132,-256 126,-256 120,-250 120,-244 120,-244 120,-220 120,-220 120,-214 126,-208 132,-208 132,-208 370,-208 370,-208 376,-208 382,-214 382,-220 382,-220 382,-244 382,-244 382,-250 376,-256 370,-256" />
+<text text-anchor="middle" x="251" y="-235.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">AWS · Invocation</text>
+<text text-anchor="middle" x="251" y="-220.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">Separate execution and trajectory</text>
+</g>
+
+<g id="edge1" class="edge">
+<title>definition-&gt;run</title>
+<path fill="none" stroke="#526474" d="M155.91,-311.85C174.15,-296.73 198.08,-276.88 217.37,-260.89" />
+<polygon fill="#526474" stroke="#526474" points="219.1,-262.86 223.2,-256.05 215.75,-258.82 219.1,-262.86" />
+<text text-anchor="middle" x="247" y="-281.2" font-family="DejaVu Sans" font-size="11.00" fill="#344454">loads configuration</text>
+</g>
+
+<g id="node2" class="node">
+<title>trigger</title>
+<path fill="#d9f2e5" stroke="#348761" d="M456.5,-360C456.5,-360 293.5,-360 293.5,-360 287.5,-360 281.5,-354 281.5,-348 281.5,-348 281.5,-324 281.5,-324 281.5,-318 287.5,-312 293.5,-312 293.5,-312 456.5,-312 456.5,-312 462.5,-312 468.5,-318 468.5,-324 468.5,-324 468.5,-348 468.5,-348 468.5,-354 462.5,-360 456.5,-360" />
+<text text-anchor="middle" x="375" y="-339.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">AWS · Schedule trigger</text>
+<text text-anchor="middle" x="375" y="-324.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">Active or paused</text>
+</g>
+
+<g id="edge2" class="edge">
+<title>trigger-&gt;run</title>
+<path fill="none" stroke="#526474" d="M347.16,-311.95C334.6,-301.56 319.56,-289.15 306,-278 299.36,-272.54 292.26,-266.72 285.44,-261.14" />
+<polygon fill="#526474" stroke="#526474" points="286.75,-258.82 279.28,-256.1 283.43,-262.88 286.75,-258.82" />
+<text text-anchor="middle" x="389.5" y="-281.2" font-family="DejaVu Sans" font-size="11.00" fill="#344454">eligible future occurrence</text>
+</g>
+
+<g id="node4" class="node">
+<title>call</title>
+<path fill="#fce8d5" stroke="#c78335" d="M229.5,-152C229.5,-152 20.5,-152 20.5,-152 14.5,-152 8.5,-146 8.5,-140 8.5,-140 8.5,-116 8.5,-116 8.5,-110 14.5,-104 20.5,-104 20.5,-104 229.5,-104 229.5,-104 235.5,-104 241.5,-110 241.5,-116 241.5,-116 241.5,-140 241.5,-140 241.5,-146 235.5,-152 229.5,-152" />
+<text text-anchor="middle" x="125" y="-131.8" font-family="DejaVu Sans" font-size="14.00" fill="#6d431a">EXT · Tool operation</text>
+<text text-anchor="middle" x="125" y="-116.8" font-family="DejaVu Sans" font-size="14.00" fill="#6d431a">Already-started external work</text>
+</g>
+
+<g id="edge3" class="edge">
+<title>run-&gt;call</title>
+<path fill="none" stroke="#526474" d="M222.41,-207.85C203.72,-192.73 179.21,-172.88 159.45,-156.89" />
+<polygon fill="#526474" stroke="#526474" points="160.96,-154.73 153.48,-152.05 157.66,-158.81 160.96,-154.73" />
+<text text-anchor="middle" x="213.5" y="-177.2" font-family="DejaVu Sans" font-size="11.00" fill="#344454">invokes</text>
+</g>
+
+<g id="node5" class="node">
+<title>record</title>
+<path fill="#d9f2e5" stroke="#348761" d="M479.5,-152C479.5,-152 278.5,-152 278.5,-152 272.5,-152 266.5,-146 266.5,-140 266.5,-140 266.5,-116 266.5,-116 266.5,-110 272.5,-104 278.5,-104 278.5,-104 479.5,-104 479.5,-104 485.5,-104 491.5,-110 491.5,-116 491.5,-116 491.5,-140 491.5,-140 491.5,-146 485.5,-152 479.5,-152" />
+<text text-anchor="middle" x="379" y="-131.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">AWS · Retained trajectory</text>
+<text text-anchor="middle" x="379" y="-116.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">Completed calls and outputs</text>
+</g>
+
+<g id="edge4" class="edge">
+<title>run-&gt;record</title>
+<path fill="none" stroke="#526474" d="M280.05,-207.85C299.03,-192.73 323.93,-172.88 344.01,-156.89" />
+<polygon fill="#526474" stroke="#526474" points="345.84,-158.78 350.07,-152.05 342.57,-154.67 345.84,-158.78" />
+<text text-anchor="middle" x="402.5" y="-177.2" font-family="DejaVu Sans" font-size="11.00" fill="#344454">cancel retains completed work</text>
+</g>
+
+<g id="node6" class="node">
+<title>check</title>
+<path fill="#dcebff" stroke="#447ac2" d="M366.5,-48C366.5,-48 135.5,-48 135.5,-48 129.5,-48 123.5,-42 123.5,-36 123.5,-36 123.5,-12 123.5,-12 123.5,-6 129.5,0 135.5,0 135.5,0 366.5,0 366.5,0 372.5,0 378.5,-6 378.5,-12 378.5,-12 378.5,-36 378.5,-36 378.5,-42 372.5,-48 366.5,-48" />
+<text text-anchor="middle" x="251" y="-27.8" font-family="DejaVu Sans" font-size="14.00" fill="#183b69">DOC · Stop verification</text>
+<text text-anchor="middle" x="251" y="-12.8" font-family="DejaVu Sans" font-size="14.00" fill="#183b69">Future starts and in-flight effects</text>
+</g>
+
+<g id="edge5" class="edge">
+<title>call-&gt;check</title>
+<path fill="none" stroke="#526474" stroke-dasharray="5,2" d="M133.95,-104C139.28,-92.64 146.98,-79.39 157,-70 164.44,-63.03 173.15,-56.95 182.22,-51.71" />
+<polygon fill="#526474" stroke="#526474" points="183.58,-53.95 188.88,-48.03 181.04,-49.36 183.58,-53.95" />
+<text text-anchor="middle" x="246.5" y="-73.2" font-family="DejaVu Sans" font-size="11.00" fill="#344454">may complete after cancellation</text>
+</g>
+
+<g id="edge6" class="edge">
+<title>record-&gt;check</title>
+<path fill="none" stroke="#526474" stroke-dasharray="5,2" d="M365.95,-103.93C358.77,-92.68 349.07,-79.56 338,-70 330.23,-63.29 321.29,-57.25 312.16,-51.92" />
+<polygon fill="#526474" stroke="#526474" points="313.32,-49.56 305.5,-48.18 310.75,-54.14 313.32,-49.56" />
+<text text-anchor="middle" x="413" y="-73.2" font-family="DejaVu Sans" font-size="11.00" fill="#344454">inspect actual outcome</text>
+</g>
+</g>
+</svg>
