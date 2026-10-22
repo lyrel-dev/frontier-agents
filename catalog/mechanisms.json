@@ -18,7 +18,70 @@
       "process": "Invoke the authorized source with the intended identity, resource and observation period.",
       "effect": "Source read",
       "verification": "Compare returned identifiers and a material measurement with the original source.",
-      "on_failure": "Report the failed read and withhold conclusions that require that source."
+      "on_failure": "Report the failed read and withhold conclusions that require that source.",
+      "review": {
+        "primary_section": "D-03",
+        "kind": "Tool-access mechanism",
+        "inputs": "Registered provider endpoint and authentication; space association; selected operation; resource identifiers and observation interval.",
+        "narrative": [
+          "A successful provider registration establishes a connection, not the result of a particular query. The Agent Space association selects the available tool surface. A custom definition can further restrict that surface. At execution time the source still evaluates the actual credentials and request arguments. This is why a missing metric can be a selection, identity, scope or time-window problem rather than an analytical failure.",
+          "The mechanism ends with a tool response or an explicit error. Interpreting the response is subsequent work. Keep the source identity and observation interval with the response so that a later summary can be checked against the same measurement."
+        ],
+        "configuration": [
+          [
+            "Registration",
+            "Capability Providers → MCP Server → Register; provide HTTPS endpoint and supported authentication.",
+            "Account-level registration"
+          ],
+          [
+            "Association",
+            "Agent Space → Capabilities → MCP Servers → Add; select the registered provider and required tools.",
+            "Space-level tool selection"
+          ],
+          [
+            "Custom execution",
+            "Assign the actual tools to the custom definition.",
+            "Additional definition-level selection"
+          ]
+        ],
+        "lifecycle": [
+          [
+            "Registered",
+            "Associate selected tools",
+            "Tools become available to the space, not necessarily every custom definition."
+          ],
+          [
+            "Associated",
+            "Remove connection",
+            "Future access through that association is removed."
+          ],
+          [
+            "Registered credential changes",
+            "Follow provider re-registration procedure",
+            "Review dependent associations before replacing the registration."
+          ]
+        ],
+        "controls": "Network reachability, authentication, resource permissions and tool selection are separate gates. Use read credentials for this evidence path; mutating tools belong to the directed-action explanation.",
+        "observable_output": "Provider/association configuration and an actual tool result or error; a connection-valid status alone does not prove the intended source query works.",
+        "undocumented": "The platform does not document a universal query planner, response-completeness guarantee or retry/deduplication contract for every connected tool.",
+        "test": [
+          "Use a permitted staging read with a known resource and time interval.",
+          "Reproduce one returned measurement with the same source query.",
+          "Select an unavailable operation or out-of-scope fixture; require an explicit gap, not a healthy result."
+        ],
+        "claims": [
+          {
+            "source": "DS401",
+            "section": "Registering an MCP server; Configuring MCP tools; Managing connections",
+            "assertion": "Registration, association and tool selection are separate; removal and credential replacement have dependent-connection consequences."
+          },
+          {
+            "source": "DS407",
+            "section": "How custom agents work",
+            "assertion": "A custom agent accesses only its assigned tools."
+          }
+        ]
+      }
     },
     {
       "id": "MX-D-TOPOLOGY",
@@ -37,7 +100,70 @@
       "process": "Synthesize environment evidence into service, dependency and delivery context for subsequent work.",
       "effect": "Retained context update",
       "verification": "Check a known changed resource and relationship in the resulting version.",
-      "on_failure": "Mark stale or inferred relationships; do not substitute the graph for current configuration."
+      "on_failure": "Mark stale or inferred relationships; do not substitute the graph for current configuration.",
+      "review": {
+        "primary_section": "D-M08",
+        "kind": "Knowledge-production mechanism",
+        "inputs": "Discovered resources, configuration and observability relationships, connected repository/pipeline context and completed operational work.",
+        "narrative": [
+          "Environment learning turns source evidence into a retained representation. Discovery identifies resources; relationship analysis connects them; learned context describes services and request paths for later work. These products are derived information. They neither replace the deployed configuration nor widen the permission boundary.",
+          "Environment understanding, tool-use guidance and monitor history have different refresh conditions. The current memory guide is authoritative for those conditions; the older topology page still uses learned-skill terminology. Requesting regeneration is therefore followed by inspecting the learning result and its version, not by assuming that every dependent view has already changed."
+        ],
+        "configuration": [
+          [
+            "Discovery",
+            "Connect the relevant accounts and sources; enable Resource Explorer for its documented discovery path.",
+            "Resource and relationship inputs"
+          ],
+          [
+            "Refresh",
+            "Use Topology → Regenerate or request the supported update through Chat.",
+            "Managed learning request"
+          ],
+          [
+            "Inspection",
+            "Inspect the resulting environment memory and summary/topology representation.",
+            "Version and changed relationships"
+          ]
+        ],
+        "lifecycle": [
+          [
+            "Source changed",
+            "Run applicable managed refresh",
+            "New derived understanding may be written."
+          ],
+          [
+            "Refresh requested",
+            "Observe completion and inspect a known changed relationship",
+            "Request acceptance is not completion."
+          ],
+          [
+            "Derived view stale",
+            "Correct source/discovery configuration and refresh",
+            "The graph is not repaired by granting unrelated write access."
+          ]
+        ],
+        "controls": "Authorization belongs to account roles and tool access. A graph omission does not prove a resource is unreadable, and a graph edge does not prove source completeness.",
+        "observable_output": "Updated context version and a reviewed topology/summary with known changed relationships.",
+        "undocumented": "No universal freshness SLA, complete relationship-detection algorithm or consistency guarantee across all derived views is documented.",
+        "test": [
+          "Identify a harmless staging dependency change with authoritative before/after evidence.",
+          "Find that change in the refreshed representation and record the version.",
+          "Leave an input unavailable; require the resulting missing or inferred relationship to remain qualified."
+        ],
+        "claims": [
+          {
+            "source": "DS403",
+            "section": "How topology graphs are created; Resource discovery; Investigation scope beyond topology",
+            "assertion": "Discovery and relationship inference produce a representation that does not bound investigation permissions."
+          },
+          {
+            "source": "DS402",
+            "section": "How memory is built and refreshed",
+            "assertion": "Managed stores have distinct refresh conditions and can be inspected after regeneration."
+          }
+        ]
+      }
     },
     {
       "id": "MX-D-RECALL",
@@ -55,7 +181,66 @@
       "process": "Select a relevant store, inspect its entries and read the content needed by the current task.",
       "effect": "Context read",
       "verification": "Distinguish entry existence, observable retrieval and correctness against current evidence.",
-      "on_failure": "Continue without history when current evidence suffices. Do not infer retrieval merely from answer wording."
+      "on_failure": "Continue without history when current evidence suffices. Do not infer retrieval merely from answer wording.",
+      "review": {
+        "primary_section": "D-M01",
+        "kind": "Knowledge-retrieval mechanism",
+        "inputs": "Current task; available store and entry descriptions; active memory content; applicable custom-agent store attachment.",
+        "narrative": [
+          "Retrieval is a selection process, not automatic loading of all history. The agent first sees available store descriptions, then inspects a relevant store and selects entries before reading their content. A useful description exposes the subject and conditions under which an entry matters. A relevant fact hidden behind an unrelated description may never be read.",
+          "Operationally, distinguish content production, availability to this execution, selection and diagnostic influence. A previous cause is contextual evidence for a new incident. Current measurements can contradict it. Viewing an old version is also different from restoring a deleted store; the current guide does not establish a general backup or undelete service."
+        ],
+        "configuration": [
+          [
+            "Content",
+            "Knowledge → Memories → select store → View entry; inspect description and version.",
+            "Stored informational context"
+          ],
+          [
+            "Availability",
+            "Inspect store and entry activation; inspect custom-agent attachments where applicable.",
+            "Access to retained material"
+          ],
+          [
+            "Description maintenance",
+            "Refine the store/entry description and retest a relevant request.",
+            "Retrieval metadata, not permissions"
+          ]
+        ],
+        "lifecycle": [
+          [
+            "Entry retained",
+            "Deactivate entry or store",
+            "Content remains but active retrieval is suppressed."
+          ],
+          [
+            "Entry edited",
+            "Save updated content",
+            "A new immutable version is created."
+          ],
+          [
+            "Custom store deleted in console",
+            "Confirm deletion",
+            "Store contents are removed; the documented deletion is not reversible."
+          ]
+        ],
+        "controls": "Keep raw incident evidence in its source system. Store access, relevance and answer correctness are separate; memory is not a same-investigation raw-tool cache.",
+        "observable_output": "Entry content/version and, where exposed, a memory read in execution evidence. Output similarity alone does not establish retrieval.",
+        "undocumented": "Embedding model, ranking thresholds, hidden selection policy and model-weight training are not documented by this mechanism.",
+        "test": [
+          "Prepare a harmless known fact and a current observation that contradicts a historical cause.",
+          "Record existence, observable retrieval and supported conclusion separately.",
+          "Deactivate the entry or remove the applicable attachment and verify that unsupported historical claims are not asserted."
+        ],
+        "claims": [
+          {
+            "source": "DS402",
+            "section": "How memories work; Activating and deactivating; Deleting a memory store",
+            "assertion": "Description-led retrieval, immutable versions and activation differ from irreversible custom-store deletion."
+          }
+        ],
+        "diagram": "mechanism-devops-retrieval"
+      }
     },
     {
       "id": "MX-D-FEEDBACK",
@@ -73,7 +258,70 @@
       "process": "Record the actual cause separately from routine synthesis of incident history.",
       "effect": "Retained correction",
       "verification": "Inspect saved feedback and any exposed corrective entry.",
-      "on_failure": "Keep the verified correction in the incident system when downstream use cannot be observed."
+      "on_failure": "Keep the verified correction in the incident system when downstream use cannot be observed.",
+      "review": {
+        "primary_section": "D-M02",
+        "kind": "Corrective-context mechanism",
+        "inputs": "Completed investigation identifier, operator verdict and verified actual cause.",
+        "narrative": [
+          "Feedback supplies a verified correction to a particular investigation. It is not the same input as another occurrence of the alarm and is not the same operation as steering an active investigation. The correction can produce reflection context explaining the discrepancy between the earlier diagnosis and the established cause.",
+          "The operator should preserve the evidence for the actual cause independently. Submitting feedback confirms an input was recorded; it does not prove that a later task selected the resulting context. Sharing the feedback with AWS is a separate confirmation decision."
+        ],
+        "configuration": [
+          [
+            "Feedback",
+            "Completed investigation → Add feedback; supply verdict and actual cause when incorrect, or use the documented Chat path.",
+            "Investigation-specific correction"
+          ],
+          [
+            "Inspection",
+            "Inspect saved feedback and any exposed reflection in Knowledge → Memories.",
+            "Correction versus derived context"
+          ],
+          [
+            "External sharing",
+            "Review the separate AWS-sharing confirmation.",
+            "Separate disclosure decision"
+          ]
+        ],
+        "lifecycle": [
+          [
+            "Completed diagnosis",
+            "Submit correction",
+            "Feedback describes the verified alternative."
+          ],
+          [
+            "Feedback already present",
+            "Submit replacement",
+            "Inspect the saved latest feedback rather than assuming additive history."
+          ],
+          [
+            "Reflection available",
+            "Later relevant investigation reads it",
+            "Later use must be evaluated independently."
+          ]
+        ],
+        "controls": "Do not infer production-change authority from a corrective message. Operator evidence, retained correction and optional external sharing are different records.",
+        "observable_output": "Saved feedback and any visible corrective memory; later retrieval is an additional observation.",
+        "undocumented": "The exact latency from submission to reflection availability and a guaranteed recall rate are not established.",
+        "test": [
+          "Use a completed non-production example with a known corrected cause.",
+          "Confirm saved correction, then inspect later use only if the execution exposes it.",
+          "Supply a different current cause on recurrence; repeating the previous answer is not success."
+        ],
+        "claims": [
+          {
+            "source": "DS404",
+            "section": "Provide feedback on investigations",
+            "assertion": "Feedback records the actual cause; latest feedback and separate sharing confirmation have distinct effects."
+          },
+          {
+            "source": "DS402",
+            "section": "reflections",
+            "assertion": "Corrective lessons are retained for future relevant investigations."
+          }
+        ]
+      }
     },
     {
       "id": "MX-D-INSTRUCTIONS",
@@ -90,7 +338,65 @@
       "process": "Load standing instructions at session start.",
       "effect": "Session context",
       "verification": "Test a new session against the saved instruction version.",
-      "on_failure": "Inspect scope and session start time rather than assuming existing sessions received updates."
+      "on_failure": "Inspect scope and session start time rather than assuming existing sessions received updates.",
+      "review": {
+        "primary_section": "D-M03",
+        "kind": "Session-initialization mechanism",
+        "inputs": "Saved global and applicable agent-specific AGENTS.md text and a newly starting session.",
+        "narrative": [
+          "Standing instructions are loaded at session initialization. The service includes applicable global and agent-specific content without relying on task-relevance selection. Saving a change affects newly started sessions, not the content already loaded by an existing session.",
+          "This makes instructions suitable for persistent reporting conventions. It does not make their content an IAM policy. Use an ordinary output convention as a propagation test and verify actual permissions separately."
+        ],
+        "configuration": [
+          [
+            "Scope",
+            "Edit global or relevant managed-agent instructions using the instruction editor exposed by the operator app.",
+            "Applicable AGENTS.md content"
+          ],
+          [
+            "Propagation",
+            "Save, then start a new session.",
+            "Startup-loaded content"
+          ],
+          [
+            "UI version",
+            "Retrieved guidance shows both Knowledge → Instructions and Agents → Managed agents → Agent definition. Use the editor present in the deployed interface.",
+            "Navigation qualification"
+          ]
+        ],
+        "lifecycle": [
+          [
+            "Saved guidance",
+            "Start session",
+            "Applicable content is loaded."
+          ],
+          [
+            "Session active",
+            "Edit saved guidance",
+            "Active session retains its startup content."
+          ],
+          [
+            "Updated guidance",
+            "Start another session",
+            "New content becomes applicable."
+          ]
+        ],
+        "controls": "An instruction cannot grant a tool, change a trust policy or substitute for action approval.",
+        "observable_output": "Saved instruction content and observable behavior in a newly started session.",
+        "undocumented": "Conflict precedence for contradictory global, agent-specific and task instructions is not fully specified; do not invent it.",
+        "test": [
+          "Add a harmless required heading to a scoped test instruction.",
+          "Compare a new session with one started before the change.",
+          "A denied tool must remain denied even when the instruction asks to use it."
+        ],
+        "claims": [
+          {
+            "source": "DS405",
+            "section": "How agent instructions work; Agent type scoping",
+            "assertion": "Instructions are loaded at session start; existing sessions retain the original content."
+          }
+        ]
+      }
     },
     {
       "id": "MX-D-SKILL",
@@ -107,7 +413,70 @@
       "process": "Make the reviewed procedure and its references available to the intended execution.",
       "effect": "Procedural context",
       "verification": "Test matching and nonmatching requests and inspect exposed procedure or tool-use evidence.",
-      "on_failure": "Correct applicability or missing tools; stop unsupported steps without implicitly widening permissions."
+      "on_failure": "Correct applicability or missing tools; stop unsupported steps without implicitly widening permissions.",
+      "review": {
+        "primary_section": "D-M04",
+        "kind": "Procedural-context mechanism",
+        "inputs": "SKILL.md, applicability description, agent-type targeting and any supporting files; actual tools required by the procedure.",
+        "narrative": [
+          "A skill packages procedural guidance. Its description tells the built-in agent when to select it; targeting limits which agent types can use it. Assigned skills in a custom definition are loaded through that definition, so built-in relevance selection and explicit custom assignment should not be described as identical entry paths.",
+          "The procedure still depends on tools that exist and are authorized. Document-only skills do not create a shell. Executable content requires the separately configured Sandbox surface where supported."
+        ],
+        "configuration": [
+          [
+            "Package",
+            "Knowledge → Skills → add a skill with SKILL.md and a concrete applicability description.",
+            "Reusable procedure"
+          ],
+          [
+            "Target",
+            "Select relevant agent types or assign the skill to the custom definition.",
+            "Consumer scope"
+          ],
+          [
+            "Tool dependencies",
+            "Name real selected operations and expected observations.",
+            "External prerequisites"
+          ]
+        ],
+        "lifecycle": [
+          [
+            "Skill available",
+            "Matching task or assigned custom invocation",
+            "Procedure becomes context."
+          ],
+          [
+            "Procedure updated",
+            "Run a new applicable test",
+            "Check the saved content and actual selection."
+          ],
+          [
+            "Skill disabled or unassigned",
+            "Start subsequent work",
+            "Do not assume the procedure remains available."
+          ]
+        ],
+        "controls": "Skill text is guidance, not authorization; executable-code support is feature-specific.",
+        "observable_output": "Saved skill configuration and exposed execution evidence of procedure/tool use.",
+        "undocumented": "Exact relevance thresholds and a universal selection trace are not guaranteed; unavailable observability remains unverified.",
+        "test": [
+          "Provide one request that matches the described symptom and another that does not.",
+          "Inspect exposed skill/tool-use evidence and the resulting procedure.",
+          "Remove a necessary tool; the task must report the blocked step rather than invent its observation."
+        ],
+        "claims": [
+          {
+            "source": "DS406",
+            "section": "Frontmatter; Creating Skills; Managing Skills",
+            "assertion": "Description, target scope and supported content determine applicability."
+          },
+          {
+            "source": "DS407",
+            "section": "How custom agents work",
+            "assertion": "Custom definitions load assigned skill documents."
+          }
+        ]
+      }
     },
     {
       "id": "MX-D-TRIAGE",
@@ -124,7 +493,70 @@
       "process": "Link the signal, skip it under configured criteria or proceed with independent investigation.",
       "effect": "Investigation linkage",
       "verification": "Inspect the routing decision, reason and resulting investigation identity.",
-      "on_failure": "Correct routing through the supported unlink or unskip operation."
+      "on_failure": "Correct routing through the supported unlink or unskip operation.",
+      "review": {
+        "primary_section": "D-06",
+        "kind": "Incident-routing mechanism",
+        "inputs": "Incoming external signal, active investigations and configured correlation/skip guidance.",
+        "narrative": [
+          "Triage changes the relationship between a signal and investigation work. Linked signals contribute context to an existing investigation; skipped signals match exclusion criteria; proceed decisions schedule independent work. Routing is therefore not the root-cause result.",
+          "Correct a bad relationship at the routing layer. Unlinking or unskipping reschedules independent investigation; changing a hypothesis inside the primary investigation does not repair the original routing decision."
+        ],
+        "configuration": [
+          [
+            "Signal path",
+            "Connect a supported incident source or webhook and inspect the received event.",
+            "Incident initiation"
+          ],
+          [
+            "Routing criteria",
+            "Review the relevant correlation or skip skill.",
+            "Routing guidance"
+          ],
+          [
+            "Correction",
+            "Inspect the triage record and use supported unlink/unskip controls.",
+            "Signal relationship"
+          ]
+        ],
+        "lifecycle": [
+          [
+            "Received signal",
+            "Linked",
+            "Existing investigation receives signal context."
+          ],
+          [
+            "Received signal",
+            "Skipped",
+            "Reason is retained without a new investigation."
+          ],
+          [
+            "Received signal",
+            "Proceed",
+            "Independent investigation is scheduled."
+          ],
+          [
+            "Linked or skipped",
+            "Unlink or unskip",
+            "Independent work is rescheduled."
+          ]
+        ],
+        "controls": "Do not interpret a linked signal as missing work or a skipped signal as proof that the service is healthy.",
+        "observable_output": "Triage outcome, reason and investigation linkage.",
+        "undocumented": "The exact correlation model and an absolute timing guarantee are not specified; a typical lookback is not a universal contract.",
+        "test": [
+          "Submit related and unrelated authorized test events.",
+          "Check linkage and reason against known service/time identity.",
+          "Deliberately review an incorrect skip criterion and verify the correction changes routing, not resource state."
+        ],
+        "claims": [
+          {
+            "source": "DS404",
+            "section": "Incident triage",
+            "assertion": "Linked, Skipped and Proceed are routing outcomes; supported corrections reschedule independent work."
+          }
+        ]
+      }
     },
     {
       "id": "MX-D-INVESTIGATE",
@@ -142,7 +574,70 @@
       "process": "Read observations, examine hypotheses and accept relevant operator steering in the investigation context.",
       "effect": "Investigation record",
       "verification": "Check conclusions against current observations and identify missing evidence.",
-      "on_failure": "Retain competing hypotheses or an inconclusive result instead of inventing certainty."
+      "on_failure": "Retain competing hypotheses or an inconclusive result instead of inventing certainty.",
+      "review": {
+        "primary_section": "D-06",
+        "kind": "Documented service workflow",
+        "inputs": "Incident description, start evidence, actual incident time, service scope and connected source access.",
+        "narrative": [
+          "An investigation has its own scope and evidence record. The service gathers observations and develops an explanation; operator steering can add missing or contrary evidence within that record. This describes the observable workflow, not an undisclosed hypothesis-ranking algorithm.",
+          "Use the incident timestamp rather than the time the operator happened to open the form. Preserve observations that weaken the leading explanation. A revised analysis is useful only when the supporting evidence also changes."
+        ],
+        "configuration": [
+          [
+            "Start",
+            "Incident Response → start a manual investigation; review details, starting point, UTC incident time, name and priority.",
+            "Investigation identity"
+          ],
+          [
+            "Steer",
+            "Supply contrary observations within the active investigation.",
+            "Current execution context"
+          ],
+          [
+            "Conclude",
+            "Review findings and cause; request a mitigation proposal separately.",
+            "Analysis before effects"
+          ]
+        ],
+        "lifecycle": [
+          [
+            "Investigation started",
+            "Read connected evidence",
+            "Observations and gaps accumulate."
+          ],
+          [
+            "Hypothesis present",
+            "Operator supplies contrary evidence",
+            "Analysis can be reconsidered in context."
+          ],
+          [
+            "Investigation completed",
+            "Review or submit feedback",
+            "Later correction is separate from active steering."
+          ]
+        ],
+        "controls": "Steering is not approval for a resource mutation. Missing evidence constrains the conclusion.",
+        "observable_output": "Investigation findings, source observations and any revised conclusion available in the service record.",
+        "undocumented": "No deterministic root-cause accuracy guarantee or complete inference algorithm is published.",
+        "test": [
+          "Use the repository recurring-alarm fixture as a tabletop, not as service telemetry.",
+          "Require the explanation to follow the current dependency measurements.",
+          "Remove the decisive observation; an inconclusive result is preferable to a fabricated cause."
+        ],
+        "claims": [
+          {
+            "source": "DS404",
+            "section": "Starting Investigations; Incident triage",
+            "assertion": "Manual scope and operator context drive a separate investigation record."
+          },
+          {
+            "source": "DS407",
+            "section": "Custom agents compared to built-in capabilities",
+            "assertion": "Incident response is a built-in path, not a mandatory custom-agent task."
+          }
+        ]
+      }
     },
     {
       "id": "MX-D-CUSTOM",
@@ -160,7 +655,76 @@
       "process": "Execute the selected operational work and retain its invocation trajectory.",
       "effect": "Execution and output",
       "verification": "Inspect tool arguments, failures and output against the task scope.",
-      "on_failure": "Mark incomplete output and resolve the failed prerequisite before repeating the run."
+      "on_failure": "Mark incomplete output and resolve the failed prerequisite before repeating the run.",
+      "review": {
+        "primary_section": "D-07",
+        "kind": "Definition-to-execution mechanism",
+        "inputs": "Custom definition with system prompt, selected tools, assigned skills and applicable memory access; optional per-run prompt.",
+        "narrative": [
+          "A custom definition persists across executions. Run Now creates a new invocation; an additional prompt supplies context for that run without replacing the system prompt. The execution loads its configured resources, calls available tools and records results in a trajectory.",
+          "A definition is not a running job. Likewise, an output artifact is not the invocation itself. Diagnose these objects separately when a report is missing: was an invocation created, did its tools complete, and was the requested output produced?"
+        ],
+        "configuration": [
+          [
+            "Define",
+            "Agents → Custom Agents → Create agent; provide goal, approach, constraints and output.",
+            "Reusable definition"
+          ],
+          [
+            "Select",
+            "Assign actual tools through the supported configuration path and applicable skills/stores.",
+            "Scoped execution resources"
+          ],
+          [
+            "Run",
+            "Run Now or Run with prompt; open the invocation in History.",
+            "Independent execution"
+          ]
+        ],
+        "lifecycle": [
+          [
+            "Definition saved",
+            "Run Now",
+            "An invocation starts or is pending."
+          ],
+          [
+            "Invocation active",
+            "Cancel in trajectory or Chat",
+            "Completed evidence is retained; in-flight calls may still finish."
+          ],
+          [
+            "No invocation active",
+            "Invoke again",
+            "A new record is created; do not assume prior transient context is inherited."
+          ]
+        ],
+        "controls": "Only assigned tools are available. The documented execution page permits one invocation at a time per custom agent.",
+        "observable_output": "Invocation identity, status, tool arguments/results/errors and requested output.",
+        "undocumented": "Exactly-once effects and universal rollback after cancellation are not documented.",
+        "test": [
+          "Create a harmless read-only report over a known staging signal.",
+          "Inspect the actual arguments and reconcile a figure in the output.",
+          "Cancel a controlled long read; distinguish cancellation from completion of an already-started external call."
+        ],
+        "claims": [
+          {
+            "source": "DS407",
+            "section": "How custom agents work",
+            "assertion": "Prompt, selected tools and assigned skills are loaded per invocation."
+          },
+          {
+            "source": "DS408",
+            "section": "Running; Canceling an invocation; Tool call results",
+            "assertion": "Runs have history; cancellation preserves completed evidence and may not interrupt in-flight calls."
+          },
+          {
+            "source": "DS414",
+            "section": "Creating a custom agent using the form",
+            "assertion": "Creation and tool assignment are separate setup concerns."
+          }
+        ],
+        "diagram": "mechanism-devops-cancellation"
+      }
     },
     {
       "id": "MX-D-SCHEDULE",
@@ -178,7 +742,75 @@
       "process": "Create future work under the supported scheduling and concurrency constraints.",
       "effect": "Future invocation",
       "verification": "Inspect saved timing and actual start; record the observation window independently.",
-      "on_failure": "Use explicit invocation when timing is critical. Pausing future starts does not cancel current work."
+      "on_failure": "Use explicit invocation when timing is critical. Pausing future starts does not cancel current work.",
+      "review": {
+        "primary_section": "D-07",
+        "kind": "Trigger-to-execution mechanism",
+        "inputs": "Saved custom agent and valid rate/cron trigger; explicit reporting-window rules in task instructions.",
+        "narrative": [
+          "A trigger schedules future invocation opportunities. It does not specify the observation interval used by a report. The API reference further qualifies the timing: custom-agent schedules use a flexible start window of up to 30 minutes. An expression therefore cannot be presented as an exact delivery deadline.",
+          "Pausing the trigger prevents subsequent starts but does not cancel a running invocation. These are two independent control operations and should be inspected separately when retiring recurring work."
+        ],
+        "configuration": [
+          [
+            "Create",
+            "Agents → selected custom agent → Triggers → create; enter a valid rate or cron expression.",
+            "Recurring trigger"
+          ],
+          [
+            "Inspect",
+            "Confirm saved expression, next run and actual start.",
+            "Timing evidence"
+          ],
+          [
+            "Stop",
+            "Pause/delete trigger and, if needed, cancel the current invocation separately.",
+            "Future versus current work"
+          ]
+        ],
+        "lifecycle": [
+          [
+            "Trigger active",
+            "Schedule due",
+            "Eligible future invocation under timing/concurrency constraints."
+          ],
+          [
+            "Trigger active",
+            "Pause",
+            "Future starts disabled until resumed."
+          ],
+          [
+            "Trigger paused",
+            "Resume",
+            "Future schedule becomes active."
+          ],
+          [
+            "Trigger exists",
+            "Delete",
+            "Trigger is removed; existing execution evidence is separate."
+          ]
+        ],
+        "controls": "Schedule variability, one-at-a-time custom execution and external-call completion are independent constraints.",
+        "observable_output": "Trigger configuration plus actual invocation timing and observation interval.",
+        "undocumented": "Missed-occurrence, overlap queueing and exactly-once delivery behavior are not established by the cited schedule pages.",
+        "test": [
+          "Choose a non-time-critical test report and explicit UTC reporting period.",
+          "Compare due time, actual start and the period queried.",
+          "Run longer than the interval in an approved test and record actual behavior rather than assuming queued catch-up."
+        ],
+        "claims": [
+          {
+            "source": "DS408",
+            "section": "Scheduling custom agents; Managing triggers",
+            "assertion": "Rate/cron triggers can be paused or deleted separately from invocations."
+          },
+          {
+            "source": "DS409",
+            "section": "CronSchedule",
+            "assertion": "The schedule anchors a flexible window of up to 30 minutes."
+          }
+        ]
+      }
     },
     {
       "id": "MX-D-PREVENT",
@@ -195,7 +827,65 @@
       "process": "Analyze recurring weaknesses and produce improvement proposals.",
       "effect": "Recommendation",
       "verification": "Trace a proposed theme or improvement to supporting investigations.",
-      "on_failure": "Keep unsupported patterns as hypotheses and separate proposals from implemented changes."
+      "on_failure": "Keep unsupported patterns as hypotheses and separate proposals from implemented changes.",
+      "review": {
+        "primary_section": "D-06",
+        "kind": "Cross-investigation analysis workflow",
+        "inputs": "Recent investigation evidence, existing recommendation backlog and operator disposition feedback.",
+        "narrative": [
+          "Prevention compares incidents to propose changes rather than diagnosing one current alarm. An evaluation produces or updates recommendations; backlog controls describe what the team intends to do with those recommendations. The action that implements a recommendation remains a separate change.",
+          "A kept recommendation is not a deployed fix. A recommendation marked implemented is a tracking state, not independent proof of reduced incidents. Retain the implementation and post-change evidence in the normal change process."
+        ],
+        "configuration": [
+          [
+            "Evaluate",
+            "Improvements → Run Now; inspect linked investigations and proposed effect.",
+            "Evaluation and recommendations"
+          ],
+          [
+            "Control evaluation",
+            "Pause recurring evaluation or Stop Evaluation for current work as appropriate.",
+            "Different scheduling/execution controls"
+          ],
+          [
+            "Disposition",
+            "Use Keep, Discard or Implemented and supply relevant explanation.",
+            "Backlog state"
+          ]
+        ],
+        "lifecycle": [
+          [
+            "Proposal",
+            "Keep",
+            "Retained backlog candidate."
+          ],
+          [
+            "Proposal",
+            "Discard with rationale",
+            "Removed from backlog; feedback informs later recommendations."
+          ],
+          [
+            "Accepted proposal",
+            "Mark Implemented",
+            "Tracking status changes; actual implementation must be verified."
+          ]
+        ],
+        "controls": "Priority and estimated effect do not authorize execution or measure realized improvement.",
+        "observable_output": "Recommendation, supporting investigation references, disposition and observed changes.",
+        "undocumented": "Full ranking weights, exact feedback influence and causal benefit attribution are not specified.",
+        "test": [
+          "Review a candidate tied to several known investigations.",
+          "Trace the common weakness to its supporting evidence.",
+          "A change not deployed must not be reported as completed merely because the recommendation was kept."
+        ],
+        "claims": [
+          {
+            "source": "DS410",
+            "section": "Controlling evaluations; Managing recommendations",
+            "assertion": "Evaluation control and recommendation disposition are separate; unretained recommendations may age out."
+          }
+        ]
+      }
     },
     {
       "id": "MX-D-ACTION",
@@ -212,7 +902,70 @@
       "process": "Execute the specific approved operation through its configured authorization path.",
       "effect": "Resource or external-tool mutation",
       "verification": "Inspect exact approval, attribution and resulting resource state.",
-      "on_failure": "Stop on a failed authorization gate; use the normal approved engineering process rather than bypassing it."
+      "on_failure": "Stop on a failed authorization gate; use the normal approved engineering process rather than bypassing it.",
+      "review": {
+        "primary_section": "D-M06",
+        "kind": "Effect-specific authorization mechanism",
+        "inputs": "Eligible exact operation and resource; Agent Space opt-in; target-account elevated role or selected classified tool; operator approval.",
+        "narrative": [
+          "The requested effect passes several gates. Enabling directed actions opens the capability; the target role supplies a permission ceiling; the approval constrains the specific operation and resource. For AWS calls, the service uses scoped credentials and records attribution. None of these steps is replaced by a mitigation recommendation.",
+          "External-tool classification is part of the control boundary. A tool marked read-only but implemented as mutating can defeat the intended approval path. Review classification against its real effects and permissions rather than its display name."
+        ],
+        "configuration": [
+          [
+            "Enable",
+            "Agent Space settings: enable directed actions; preserve the full preferences map when updating through the API.",
+            "Primary opt-in"
+          ],
+          [
+            "Authorize account",
+            "Register the elevated role with documented trust including source-identity/session tagging support.",
+            "Permission ceiling"
+          ],
+          [
+            "Review exact action",
+            "Inspect target and parameters in Chat approval; reject or narrow as needed.",
+            "Specific execution grant"
+          ]
+        ],
+        "lifecycle": [
+          [
+            "Disabled",
+            "Enable and configure eligible access",
+            "Requests can reach the approval path."
+          ],
+          [
+            "Proposal awaiting decision",
+            "Approve exact operation",
+            "Scoped execution is permitted."
+          ],
+          [
+            "Approval granted",
+            "Different target or operation requested",
+            "Previous approval is not reusable."
+          ],
+          [
+            "Action executed",
+            "Inspect resource and service signals",
+            "Action success and recovery are separate observations."
+          ]
+        ],
+        "controls": "API preference replacement can reset omitted settings. IAM and service guardrails still apply after approval; tool effects require correct classification.",
+        "observable_output": "Approval details, execution attribution and independently inspected resulting state.",
+        "undocumented": "No universal transactional rollback is documented; approved calls can have effects that outlive the conversation.",
+        "test": [
+          "Use an eligible reversible staging operation under narrow permissions.",
+          "Match approval, attribution and target state.",
+          "Request a different target or denied operation; it must not inherit the earlier approval."
+        ],
+        "claims": [
+          {
+            "source": "DS411",
+            "section": "Enabling; Registering elevated role; Categorizing tools; Approving directed actions",
+            "assertion": "Independent opt-ins, operation-specific approval, preference replacement and classification govern mutation."
+          }
+        ]
+      }
     },
     {
       "id": "MX-D-READINESS",
@@ -230,7 +983,70 @@
       "process": "Review the proposed change for the operational risks supported by this preview path.",
       "effect": "Readiness result",
       "verification": "Match findings to the exact candidate and unresolved dependencies.",
-      "on_failure": "Treat unsupported repository or feature access as an unmet prerequisite."
+      "on_failure": "Treat unsupported repository or feature access as an unmet prerequisite.",
+      "review": {
+        "primary_section": "D-09",
+        "kind": "Preview analysis and verification workflow",
+        "inputs": "Candidate branch/commit and connected repository context; optional managed verification environment.",
+        "narrative": [
+          "Readiness analysis examines a proposed code change. Optional verification builds and exercises the code in a managed environment; it is not a test of whichever production revision happens to be running. A report must therefore identify the candidate and whether verification actually ran.",
+          "Insufficient data or permissions are unresolved outcomes, not favorable release decisions. Automated triggers and verification are independently configured, so the presence of a review does not prove that a build/test environment was used."
+        ],
+        "configuration": [
+          [
+            "Eligibility",
+            "Check current release-management Region and repository support.",
+            "Feature-specific preview boundary"
+          ],
+          [
+            "Repository settings",
+            "Configure change-review triggering and automatic verification independently.",
+            "Two separate options"
+          ],
+          [
+            "Private verification",
+            "Select a verification environment with the required private route and runtime role when needed.",
+            "Build dependencies, not unrestricted network access"
+          ]
+        ],
+        "lifecycle": [
+          [
+            "Candidate selected",
+            "Start review",
+            "Analysis record is associated with the candidate."
+          ],
+          [
+            "Verification enabled",
+            "Build and execute tests",
+            "Test evidence is added when execution succeeds."
+          ],
+          [
+            "Access or context missing",
+            "Review reports gaps",
+            "Resolve the prerequisite and rerun; do not interpret as clean review."
+          ]
+        ],
+        "controls": "Code verification and active deployed-application testing have different subjects and effects.",
+        "observable_output": "Readiness report, candidate identity, findings and any Tests-tab results.",
+        "undocumented": "Exact risk-scoring thresholds and guaranteed test coverage are not published; feature availability must be checked.",
+        "test": [
+          "Use a non-production candidate with one known behavior change.",
+          "Compare findings and executed tests with that revision.",
+          "Omit a required build dependency and require an incomplete or failed verification, not a pass."
+        ],
+        "claims": [
+          {
+            "source": "DS412",
+            "section": "Getting started; Performing a code review; Automatic verification testing",
+            "assertion": "Review and verification settings are independent; candidate and verification results are inspectable."
+          },
+          {
+            "source": "DS415",
+            "section": "Feature availability by Region",
+            "assertion": "Release-management eligibility differs from production operations."
+          }
+        ]
+      }
     },
     {
       "id": "MX-D-TEST",
@@ -247,7 +1063,70 @@
       "process": "Send selected test interactions and retain observed behavior.",
       "effect": "Application requests with possible writes",
       "verification": "Inspect target revision, actual interactions, results and effects.",
-      "on_failure": "Stop unexpected effects and retain incomplete coverage."
+      "on_failure": "Stop unexpected effects and retain incomplete coverage.",
+      "review": {
+        "primary_section": "D-09",
+        "kind": "Preview active-test workflow",
+        "inputs": "Test profile, deployed URL, UI/API type, test intent and authorized disposable application data.",
+        "narrative": [
+          "Release testing generates a plan from change context or a stated intent and exercises a running application. Its requests can modify data. The relevant identity is therefore the deployed target and its test account, not just the repository branch.",
+          "Inspect the actual interactions and results. A generated plan is not executed coverage. This guide uses the documented profile and web-app path rather than copying inconsistent action names from different parts of the retrieved pipeline example."
+        ],
+        "configuration": [
+          [
+            "Profile",
+            "Release Manager → Test profiles → Add test profile: name, target URL and UI/API type.",
+            "Saved target definition"
+          ],
+          [
+            "Execution",
+            "Start testing and provide a bounded test intent.",
+            "Active run"
+          ],
+          [
+            "Environment",
+            "Use disposable staging data and suppress unintended downstream effects.",
+            "Team safety prerequisite"
+          ]
+        ],
+        "lifecycle": [
+          [
+            "Profile saved",
+            "Start testing",
+            "Plan generation and active requests begin."
+          ],
+          [
+            "Requests executed",
+            "Review results",
+            "Failures, reproductions and observed behavior become available."
+          ],
+          [
+            "Unexpected effect observed",
+            "Stop further authorized test activity and inspect target",
+            "No automatic undo of prior requests is asserted."
+          ]
+        ],
+        "controls": "Infrastructure read permissions do not make application POST/PUT/DELETE requests harmless.",
+        "observable_output": "Test run, actual target, observed interactions and reproduction details.",
+        "undocumented": "The documentation does not promise exhaustive coverage or transactional rollback of application writes.",
+        "test": [
+          "Prepare a sandboxed checkout endpoint with synthetic records and disabled notifications.",
+          "Inspect expected request effects and one known validation error.",
+          "An unexpected payment/notification path ends the exercise; do not treat later cancellation as rollback."
+        ],
+        "claims": [
+          {
+            "source": "DS413",
+            "section": "How release testing works; Defining test profiles; Reviewing results",
+            "assertion": "Testing sends real requests including writes and reports observed results."
+          },
+          {
+            "source": "DS415",
+            "section": "Feature availability by Region",
+            "assertion": "Release testing is a feature-specific preview path."
+          }
+        ]
+      }
     },
     {
       "id": "MX-S-CONTEXT",
@@ -265,7 +1144,65 @@
       "process": "Read the connected source and documentation relevant to the selected assessment.",
       "effect": "Source read",
       "verification": "Compare source revision and system boundary with the intended subject.",
-      "on_failure": "Exclude mismatched context and document the resulting assessment limitation."
+      "on_failure": "Exclude mismatched context and document the resulting assessment limitation.",
+      "review": {
+        "primary_section": "S-M07",
+        "kind": "Assessment-context mechanism",
+        "inputs": "Connected source/document resources, selected revision or design scope, service-role access and assessment configuration.",
+        "narrative": [
+          "Registration authorizes a provider account; connecting particular resources supplies application-specific evidence. A selected repository can support several assessment types without being independently registered for each. Context assembly must nevertheless use the correct application and revision.",
+          "Read access and publication of comments or proposed changes are separate. A context read can help interpret an application without creating a permission to change its repository. The service documentation describes the evidence inputs but not a universal persistent knowledge store or retrieval algorithm for every assessment."
+        ],
+        "configuration": [
+          [
+            "Register",
+            "Integrations: authorize the supported provider account.",
+            "Account-level registration"
+          ],
+          [
+            "Connect",
+            "Within the intended Agent Space, select repositories or documentation resources.",
+            "Application-scoped evidence"
+          ],
+          [
+            "Configure effects",
+            "Review per-repository write options separately from source reads.",
+            "Optional repository effects"
+          ]
+        ],
+        "lifecycle": [
+          [
+            "Provider registered",
+            "Connect resource to space",
+            "Read context becomes available through that association."
+          ],
+          [
+            "Application changes",
+            "Start assessment against intended sources",
+            "A previous result remains tied to its earlier evidence."
+          ],
+          [
+            "Write option disabled",
+            "Run eligible read analysis",
+            "Read context does not imply comment or repair permission."
+          ]
+        ],
+        "controls": "Keep application boundary and revision explicit. Private source-control access is separate from private target access.",
+        "observable_output": "Selected resource identity and assessment source/preflight evidence.",
+        "undocumented": "Cross-assessment cache freshness, internal ranking and automatic refresh guarantees are not established.",
+        "test": [
+          "Select a repository and design document that describe one known staging application.",
+          "Check that a run identifies that application and revision.",
+          "Supply a mismatched design revision and require an explicit mismatch rather than a merged invented architecture."
+        ],
+        "claims": [
+          {
+            "source": "SS401",
+            "section": "Register once, reuse everywhere; One connection, shared across capabilities",
+            "assertion": "Registration, resource association and write opt-ins are distinct."
+          }
+        ]
+      }
     },
     {
       "id": "MX-S-ACCESS",
@@ -282,7 +1219,70 @@
       "process": "Apply the configured reachability and target rules to assessment access.",
       "effect": "Target connection",
       "verification": "Confirm the permitted surface and exclusions in an authorized environment.",
-      "on_failure": "Stop when scope or owner authorization is unresolved."
+      "on_failure": "Stop when scope or owner authorization is unresolved.",
+      "review": {
+        "primary_section": "S-03",
+        "kind": "Target-selection and reachability mechanism",
+        "inputs": "Verified target domains, supporting accessible domains, excluded paths, applicable VPC route and authorized test scope.",
+        "narrative": [
+          "The test configuration separates attack targets from supporting navigation and excluded paths. A login provider can be reachable without becoming a vulnerability-testing target. A private route supplies connectivity; it does not widen the scope approved by the application owner.",
+          "Treat reachability as a prerequisite. If a target cannot be reached, the missing result is a coverage gap. Broadening the target list or removing an exclusion is a scope change, not a routine network troubleshooting shortcut."
+        ],
+        "configuration": [
+          [
+            "Target",
+            "Create/edit penetration test: select verified target URLs.",
+            "Active test surface"
+          ],
+          [
+            "Supporting access",
+            "List necessary accessible URLs separately.",
+            "Navigation support, not attack targets"
+          ],
+          [
+            "Exclusions and network",
+            "Configure excluded paths and the approved VPC connectivity when required.",
+            "Scope and network controls"
+          ]
+        ],
+        "lifecycle": [
+          [
+            "Configuration saved",
+            "Preflight/connection attempted",
+            "Reachability is checked before meaningful target testing."
+          ],
+          [
+            "Target unreachable",
+            "Correct approved route or name resolution",
+            "Rerun the prerequisite check without broadening authorization."
+          ],
+          [
+            "Scope changed",
+            "Review authorization and save configuration",
+            "A future run has a different assessment surface."
+          ]
+        ],
+        "controls": "Ownership verification and network reachability are not substitutes for owner authorization. Active tests can change application state.",
+        "observable_output": "Preflight outcome and records of the actual target and paths reached.",
+        "undocumented": "The sources do not establish that every reachable path is exercised or that every excluded interaction has a uniform implementation across all targets.",
+        "test": [
+          "Use a non-production target, supporting login host and an explicit excluded fixture path.",
+          "Verify target access and intended application role.",
+          "A denied path or unresolved target must not produce a claim of assessed coverage."
+        ],
+        "claims": [
+          {
+            "source": "SS402",
+            "section": "Configure penetration test scope; Configure VPC resources",
+            "assertion": "Targets, supporting accessible URLs and excluded paths have different purposes."
+          },
+          {
+            "source": "SS418",
+            "section": "Review penetration test findings",
+            "assertion": "Failed preflight stops testing and must be inspected separately."
+          }
+        ]
+      }
     },
     {
       "id": "MX-S-AUTH",
@@ -299,7 +1299,65 @@
       "process": "Obtain the test credential and apply it to the application.",
       "effect": "Authentication requests",
       "verification": "Check the actual application identity and protected route, not only credential retrieval.",
-      "on_failure": "Mark protected paths unassessed when login fails."
+      "on_failure": "Mark protected paths unassessed when login fails.",
+      "review": {
+        "primary_section": "S-M01",
+        "kind": "Credential-resolution and login mechanism",
+        "inputs": "Credential strategy, permitted source resource, access URL, application login instructions and representative test identity.",
+        "narrative": [
+          "Authentication has two stages: retrieve or obtain the credential, then apply it to the application. Secrets Manager or Lambda can succeed while application login fails. The credential name therefore needs to remain associated with the role and protected paths actually reached.",
+          "The login instructions describe how to apply the returned value, not how to bypass an inaccessible identity provider. Use the credential mechanisms currently exposed in the test configuration; older and newer retrieved documentation differ on some authentication options. Do not treat that difference as evidence that every deployed interface supports the same flow."
+        ],
+        "configuration": [
+          [
+            "Strategy",
+            "Choose direct input or a documented AWS-native strategy in the test credential configuration.",
+            "Credential source"
+          ],
+          [
+            "Permissions",
+            "For Secrets Manager, scope GetSecretValue and DescribeSecret; for Lambda, scope InvokeFunction.",
+            "Resource-resolution authority"
+          ],
+          [
+            "Application step",
+            "Provide access URL and login instructions; verify the resulting identity before interpreting findings.",
+            "Authenticated surface"
+          ]
+        ],
+        "lifecycle": [
+          [
+            "Credential source configured",
+            "Resolve credential",
+            "Credential value is obtained or resolution fails."
+          ],
+          [
+            "Credential resolved",
+            "Navigate/apply login",
+            "Application session succeeds or login fails."
+          ],
+          [
+            "Credential rotated or login changed",
+            "Repeat authentication verification",
+            "Source success does not establish current application access."
+          ]
+        ],
+        "controls": "The credential guide requires same-account Secrets Manager/Lambda resources and a credential Lambda completing within 30 seconds. Never place secrets in the documentation examples.",
+        "observable_output": "Resolution and login evidence plus actual application role; secret contents are not required in retained review evidence.",
+        "undocumented": "The documentation does not establish one universal authentication policy, retry algorithm or credential-refresh behavior for all applications.",
+        "test": [
+          "Use a disposable customer-role account and a known protected staging route.",
+          "Record resolution success and the actual role reaching the route.",
+          "Use an expired test credential: distinguish source-read success from failed login."
+        ],
+        "claims": [
+          {
+            "source": "SS403",
+            "section": "Use advanced setting; Configure multiple credentials",
+            "assertion": "Resource retrieval and application login are separate; strategy-specific permissions and limits apply."
+          }
+        ]
+      }
     },
     {
       "id": "MX-S-LOGIN",
@@ -316,7 +1374,71 @@
       "process": "Reuse learned navigation where the setting and current login flow permit it.",
       "effect": "Authentication requests",
       "verification": "Distinguish successful login from observable procedure reuse.",
-      "on_failure": "Retest a changed login flow; failed login is not a clean assessment."
+      "on_failure": "Retest a changed login flow; failed login is not a clean assessment.",
+      "review": {
+        "primary_section": "S-M02",
+        "kind": "Learned authentication-procedure mechanism",
+        "inputs": "Configured test credentials, a successfully discovered login flow and the Login Optimization setting.",
+        "narrative": [
+          "Successful navigation produces a reusable login procedure. Later login sessions can read that procedure instead of rediscovering the path. Reuse concerns navigation; it does not establish that an old credential remains valid or that the application still assigns the intended role.",
+          "This is separate from finding personalization and vulnerability revalidation. A changed login flow calls for a fresh authentication check, while a changed vulnerability calls for assessment or revalidation. Switching off reuse is not a documented deletion of learned material."
+        ],
+        "configuration": [
+          [
+            "Prerequisite",
+            "Configure a credential and complete a successful login.",
+            "Procedure-production input"
+          ],
+          [
+            "Reuse",
+            "Inspect Login Optimization in the penetration-test configuration; the documentation identifies it as enabled by default.",
+            "Reuse control"
+          ],
+          [
+            "Verification",
+            "On later sessions, verify authenticated identity independently from any observable reuse.",
+            "Coverage prerequisite"
+          ]
+        ],
+        "lifecycle": [
+          [
+            "No successful login procedure",
+            "Successful navigation",
+            "A reusable skill file is produced."
+          ],
+          [
+            "Procedure retained; reuse enabled",
+            "Later login",
+            "Saved navigation can be applied."
+          ],
+          [
+            "Reuse disabled",
+            "Later login",
+            "Reuse stops; retained learning is preserved."
+          ],
+          [
+            "Reuse re-enabled",
+            "Later login",
+            "Retained procedure becomes applicable again."
+          ]
+        ],
+        "controls": "Test current credentials and role on each relevant run. Retained navigation is not a general-purpose incident memory.",
+        "observable_output": "Authenticated session and, where exposed, evidence of reuse. Do not infer reuse solely from faster execution.",
+        "undocumented": "No independent public CRUD API or guaranteed invalidation policy for the saved login skill is established.",
+        "test": [
+          "Use an authorized multistep staging login.",
+          "Compare first and later logins while verifying the same application role.",
+          "Change the login form; failure to reach the protected route remains a coverage gap."
+        ],
+        "claims": [
+          {
+            "source": "SS403",
+            "section": "Login Optimization",
+            "assertion": "Successful navigation produces a skill reused in later sessions/runs; disabling reuse preserves learning."
+          }
+        ],
+        "diagram": "mechanism-security-learning"
+      }
     },
     {
       "id": "MX-S-RUN",
@@ -334,7 +1456,70 @@
       "process": "Execute against the current configured target and retain an independent result.",
       "effect": "Active application assessment",
       "verification": "Record actual revision, roles, exclusions, limit and incomplete areas.",
-      "on_failure": "Treat incomplete or failed execution as a coverage gap, not a pass."
+      "on_failure": "Treat incomplete or failed execution as a coverage gap, not a pass.",
+      "review": {
+        "primary_section": "S-04",
+        "kind": "Configuration-to-assessment workflow",
+        "inputs": "Saved penetration-test configuration, current target deployment, credentials, exclusions and execution/work limit.",
+        "narrative": [
+          "A saved penetration-test configuration is reusable; each execution has its own record and findings. Saving the configuration does not freeze a deployment that continues to change. Identify the deployed revision and current credentials for every run.",
+          "Execution begins with prerequisite checks before assessment work. A preflight failure is neither a successful clean assessment nor evidence that the target contains no vulnerabilities. The assessment record should retain incomplete areas along with findings."
+        ],
+        "configuration": [
+          [
+            "Define",
+            "Penetration tests → create: configure target, role, credentials, network and source context.",
+            "Reusable configuration"
+          ],
+          [
+            "Save or start",
+            "Choose the supported save-only or create-and-execute action.",
+            "Definition versus run"
+          ],
+          [
+            "Inspect",
+            "Open the run overview, preflight/logs and findings.",
+            "Execution evidence"
+          ]
+        ],
+        "lifecycle": [
+          [
+            "Configuration saved",
+            "Start execution",
+            "An independent run is created."
+          ],
+          [
+            "Preflight fails",
+            "Resolve prerequisite and start a new run",
+            "No successful runtime coverage is established."
+          ],
+          [
+            "Run completes",
+            "Review findings and coverage",
+            "Further execution uses a new run, not rewritten evidence."
+          ]
+        ],
+        "controls": "Work limits, test scope and owner authorization must remain explicit; budget limits do not guarantee a particular coverage level.",
+        "observable_output": "Run identity, actual target context, logs, discovered/tested endpoints and findings.",
+        "undocumented": "The documented interface does not expose the complete assessment-planning or vulnerability-discovery algorithm.",
+        "test": [
+          "Use a deliberately limited staging target and record its deployed revision.",
+          "Inspect actual reached paths and completed phases.",
+          "Make a required target unreachable; require a preflight failure or explicit coverage gap."
+        ],
+        "claims": [
+          {
+            "source": "SS404",
+            "section": "Penetration testing: reusable configurations with independent executions",
+            "assertion": "One configuration supports separate runs and new findings."
+          },
+          {
+            "source": "SS418",
+            "section": "Create and execute; Review findings",
+            "assertion": "Saving, executing and preflight outcomes are different stages."
+          }
+        ]
+      }
     },
     {
       "id": "MX-S-FINDING",
@@ -351,7 +1536,72 @@
       "process": "Expose the affected context and supporting reproduction or source evidence for review.",
       "effect": "Finding review record",
       "verification": "Give the finding a disposition using evidence, impact and application-owner context.",
-      "on_failure": "Preserve uncertainty and obtain missing evidence before closure."
+      "on_failure": "Preserve uncertainty and obtain missing evidence before closure.",
+      "review": {
+        "primary_section": "S-05",
+        "kind": "Evidence-inspection and disposition workflow",
+        "inputs": "Finding identifier, current/original attributes, validation evidence, assessment revision and application-owner context.",
+        "narrative": [
+          "A finding combines an observation with an interpretation of risk. Inspect the supporting request, response or source evidence before accepting that interpretation. The findings view can hide unverified items, so the visible count depends on the active filter.",
+          "Editing a finding changes its recorded attributes; it does not repair the application. The separately documented Findings Personalization mechanism can also influence later similar findings. Read the original and latest values when determining whether a change reflects new vulnerability evidence or a revised organizational preference."
+        ],
+        "configuration": [
+          [
+            "Inspect",
+            "Completed/in-progress run → Findings → select finding and trace its actions/logs.",
+            "Evidence and affected context"
+          ],
+          [
+            "Visibility",
+            "Review the unverified-findings filter before counting results.",
+            "Display scope"
+          ],
+          [
+            "Disposition",
+            "Review current and original values where edits exist.",
+            "Human decision versus generated attributes"
+          ]
+        ],
+        "lifecycle": [
+          [
+            "Finding observed",
+            "Inspect evidence",
+            "Confidence and supported impact can be assessed."
+          ],
+          [
+            "Finding edited",
+            "Save current values",
+            "Latest attributes change; original view remains available."
+          ],
+          [
+            "Repair proposed",
+            "Review/deploy/verify separately",
+            "An edited status does not establish deployed remediation."
+          ]
+        ],
+        "controls": "Generated reproduction scripts require review and an authorized target before execution. Finding counts and severity alone do not establish risk or coverage.",
+        "observable_output": "Finding identity, supporting evidence, original/latest values and a reviewer disposition.",
+        "undocumented": "No calibrated probability interpretation of confidence or exhaustive false-negative rate is established.",
+        "test": [
+          "Use the synthetic authorization-finding fixture for a tabletop.",
+          "Trace the claim to the supplied identity, request and affected revision.",
+          "Hide/unhide unverified findings and verify that changed visibility is not reported as remediation."
+        ],
+        "claims": [
+          {
+            "source": "SS405",
+            "section": "Default confidence filter; Review finding details; View original agent version",
+            "assertion": "Evidence, display filtering and original/latest attributes are distinct review surfaces."
+          }
+        ]
+      },
+      "related_mechanisms": [
+        {
+          "id": "MX-S-PERSONALIZE",
+          "dependency": "conditional",
+          "condition": "Findings Personalization was enabled at test start and eligible edits are available; it changes finding attributes, not application state."
+        }
+      ]
     },
     {
       "id": "MX-S-FIX",
@@ -368,7 +1618,70 @@
       "process": "Create a supported patch or pull request for engineering review.",
       "effect": "Proposed repository change",
       "verification": "Inspect revision, tests and unrelated changes before accepting the proposal.",
-      "on_failure": "Leave a failed or rejected proposal unfinished; merge is not deployment."
+      "on_failure": "Leave a failed or rejected proposal unfinished; merge is not deployment.",
+      "review": {
+        "primary_section": "S-05",
+        "kind": "Remediation-proposal workflow",
+        "inputs": "Finding, eligible connected repository or S3 source, configured remediation permission and selected source context.",
+        "narrative": [
+          "Remediation produces a proposed source change. Current provider guidance describes pull/merge requests for eligible private repositories and a downloadable diff for S3 sources. Older retrieved text describes a narrower provider/public-repository path; do not generalize either wording to unsupported provider writes.",
+          "The proposal remains separate from review, merge, deployment and finding revalidation. Preserve the original finding relationship through those steps, including any linked Jira record."
+        ],
+        "configuration": [
+          [
+            "Enable",
+            "Enable remediation in the administrative configuration and select the appropriate repositories/source.",
+            "Optional source-write capability"
+          ],
+          [
+            "Start",
+            "From the finding, choose Remediate code or use the configured automatic proposal path.",
+            "Remediation attempt"
+          ],
+          [
+            "Review",
+            "Inspect proposal/diff and its tests before normal deployment.",
+            "Team acceptance"
+          ]
+        ],
+        "lifecycle": [
+          [
+            "Finding confirmed",
+            "Remediation requested",
+            "Attempt and proposed change are produced."
+          ],
+          [
+            "Proposal created",
+            "Engineering review",
+            "Accept, revise or reject without implying deployment."
+          ],
+          [
+            "Repair deployed",
+            "Revalidate finding separately",
+            "Test the actual target rather than the branch."
+          ]
+        ],
+        "controls": "Read-only source access does not grant proposal-write permission. A pull request is not an automatically deployed fix.",
+        "observable_output": "Remediation status, linked proposal/diff and original finding identity.",
+        "undocumented": "No universal guarantee of successful repair, regression coverage or automatic deployment is provided.",
+        "test": [
+          "Use a known authorized fixture finding and isolated test repository.",
+          "Inspect intended diff, tests and unrelated changes.",
+          "A failing build or undeployed merge must keep verification incomplete."
+        ],
+        "claims": [
+          {
+            "source": "SS406",
+            "section": "Start and view code remediation",
+            "assertion": "Current guidance distinguishes private-repository proposals and S3 diffs."
+          },
+          {
+            "source": "SS401",
+            "section": "Write actions are opt-in",
+            "assertion": "Repository writes are separately configured and provider-limited."
+          }
+        ]
+      }
     },
     {
       "id": "MX-S-REVALIDATE",
@@ -385,7 +1698,71 @@
       "process": "Repeat selected finding-validation steps under current test conditions.",
       "effect": "Targeted active test",
       "verification": "Verify reached identity, deployed repair and linked result.",
-      "on_failure": "Record authentication or environment failure as inconclusive verification."
+      "on_failure": "Record authentication or environment failure as inconclusive verification.",
+      "review": {
+        "primary_section": "S-M05",
+        "kind": "Targeted replay and lineage mechanism",
+        "inputs": "Completed test findings, deployed repair on the original target and current authentication configuration.",
+        "narrative": [
+          "Revalidation repeats validation steps for selected existing findings and creates a separate job. The original finding remains available and the result links back to it. This is targeted replay, not new vulnerability discovery.",
+          "An Active result means reproduction succeeded. Resolved means the service could not reproduce the issue during this replay. The engineering review must still confirm that the intended identity and path were reached; a failed login cannot demonstrate a repaired authorization check."
+        ],
+        "configuration": [
+          [
+            "Prepare",
+            "Deploy the reviewed repair to the environment originally tested.",
+            "Current target state"
+          ],
+          [
+            "Select",
+            "Completed run → Multiselect findings for revalidation → select findings → Revalidate findings.",
+            "Selected replay scope"
+          ],
+          [
+            "Inspect",
+            "Open the job, original finding and revalidation history.",
+            "Evidence lineage"
+          ]
+        ],
+        "lifecycle": [
+          [
+            "Original finding",
+            "Start revalidation",
+            "Separate job created."
+          ],
+          [
+            "Validation reproduced",
+            "Active result",
+            "Further remediation remains necessary."
+          ],
+          [
+            "Validation not reproduced",
+            "Resolved result",
+            "Interpret within reached identity and scope."
+          ],
+          [
+            "Another repair deployed",
+            "Repeat selected replay",
+            "A further linked job records a new attempt."
+          ]
+        ],
+        "controls": "Full assessments remain necessary for broader changes; replay does not certify whole-application security.",
+        "observable_output": "Linked job and per-finding replay result; linked Jira issues can receive result comments.",
+        "undocumented": "No exactly-once callback or universal guarantee distinguishing every environmental failure from non-reproduction is established.",
+        "test": [
+          "Use a deployed repair with a known test identity and retained original finding.",
+          "Check the reached identity and link to the replay result.",
+          "Break authentication in a controlled test; record verification as inconclusive rather than celebrating non-reproduction."
+        ],
+        "claims": [
+          {
+            "source": "SS407",
+            "section": "Select findings; Interpret results; Trace history",
+            "assertion": "Replay has separate job identity, selected scope and preserved original finding."
+          }
+        ],
+        "diagram": "mechanism-security-replay"
+      }
     },
     {
       "id": "MX-S-CRITERIA",
@@ -402,7 +1779,70 @@
       "process": "Evaluate supplied evidence against applicable requirements.",
       "effect": "Assessment result",
       "verification": "Check compliant, violating and inapplicable examples.",
-      "on_failure": "Revise ambiguous applicability; do not treat a pack as a compliance certificate."
+      "on_failure": "Revise ambiguous applicability; do not treat a pack as a compliance certificate.",
+      "review": {
+        "primary_section": "S-M03",
+        "kind": "Requirement-applicability mechanism",
+        "inputs": "Enabled pack, requirement applicability/compliance definitions and eligible source/design review evidence.",
+        "narrative": [
+          "Requirement evaluation first needs a criterion that applies to the subject. The compliance assessment then compares the supplied evidence with that criterion. Missing evidence is not the same as a demonstrated violation or an inapplicable requirement.",
+          "Packs are shared policy configuration. Enabling, disabling or editing one affects future eligible reviews, not the historical conclusions of reviews already completed. This shared reach makes requirement maintenance a cross-application change."
+        ],
+        "configuration": [
+          [
+            "Define",
+            "Security requirements → chosen pack → inspect applicability, compliance criteria and optional remediation guidance.",
+            "Evaluation rule"
+          ],
+          [
+            "Enable",
+            "Enable the reviewed pack and select requirement evaluation in the eligible review mode.",
+            "Future assessment behavior"
+          ],
+          [
+            "Inspect",
+            "Review the stated reason for applicability and result.",
+            "Criterion-level evidence"
+          ]
+        ],
+        "lifecycle": [
+          [
+            "Pack disabled",
+            "Enable",
+            "Criteria apply to new eligible reviews."
+          ],
+          [
+            "Requirement edited",
+            "Start new review",
+            "Updated criteria apply prospectively."
+          ],
+          [
+            "Existing result",
+            "Pack changed",
+            "Historical review is not rewritten."
+          ]
+        ],
+        "controls": "Framework labels and managed packs are not compliance certification; applicability is part of the evaluated claim.",
+        "observable_output": "Requirement-linked result and explanation, including missing-data or inapplicable distinctions where exposed.",
+        "undocumented": "Full semantic evaluation rules and a deterministic false-positive/false-negative guarantee are not documented.",
+        "test": [
+          "Prepare compliant, violating and deliberately inapplicable examples for one requirement.",
+          "Check applicability before the compliance verdict.",
+          "Remove decisive design evidence; require an insufficient-evidence interpretation, not assumed compliance."
+        ],
+        "claims": [
+          {
+            "source": "SS408",
+            "section": "Overview; Enable or disable a pack",
+            "assertion": "Enabled packs govern future eligible reviews and have distinct applicability/compliance fields."
+          },
+          {
+            "source": "SS412",
+            "section": "Understand compliance statuses",
+            "assertion": "Design reviews distinguish Insufficient data and Not applicable from compliance/violation."
+          }
+        ]
+      }
     },
     {
       "id": "MX-S-GENERATE",
@@ -419,7 +1859,65 @@
       "process": "Replace pack contents from the selected policy documents for subsequent review.",
       "effect": "Configuration replacement",
       "verification": "Compare with approved policy and prior manually added requirements.",
-      "on_failure": "Do not enable an unreviewed replacement; keep authoritative source in Git."
+      "on_failure": "Do not enable an unreviewed replacement; keep authoritative source in Git.",
+      "review": {
+        "primary_section": "S-M04",
+        "kind": "Requirement-replacement mechanism",
+        "inputs": "Approved policy documents, chosen custom pack and existing requirements including manually authored entries.",
+        "narrative": [
+          "Generation reads policy documents and constructs structured requirements. Running it again for an existing pack replaces the requirements; it is not an append operation. A successful generation therefore establishes a proposed replacement, not approval of every generated rule.",
+          "Reconcile overlapping policies before submission. Review applicability and technical criteria afterward, and explicitly compare the replacement with any manual entries that existed before the upload."
+        ],
+        "configuration": [
+          [
+            "Select",
+            "Security requirements → Custom packs → choose/create the intended pack.",
+            "Replacement target"
+          ],
+          [
+            "Generate",
+            "Upload supported documents and choose Generate requirements; acknowledge replacement when applicable.",
+            "Generation operation"
+          ],
+          [
+            "Accept",
+            "Review/edit resulting requirements before enabling the pack for later assessments.",
+            "Team approval of generated criteria"
+          ]
+        ],
+        "lifecycle": [
+          [
+            "Pack has requirements",
+            "Regenerate from new documents",
+            "Existing requirements, including manual ones, are replaced."
+          ],
+          [
+            "Generation in progress",
+            "Attempt another upload",
+            "The documented workflow blocks another upload until processing finishes."
+          ],
+          [
+            "Generated criteria",
+            "Review and enable",
+            "New eligible reviews use the accepted configuration."
+          ]
+        ],
+        "controls": "Keep authoritative policy and reviewed configuration in Git; do not treat a generated pack as the only source of policy.",
+        "observable_output": "Generated requirement definitions and prospective pack state.",
+        "undocumented": "Automatic merge of old/manual rules and transactional rollback are not documented.",
+        "test": [
+          "Use a disposable pack containing one manual rule and an approved small policy fixture.",
+          "Compare resulting criteria with source and prior contents.",
+          "Confirm replacement behavior without using a production policy pack."
+        ],
+        "claims": [
+          {
+            "source": "SS409",
+            "section": "Generate requirements; Replace requirements with a new upload",
+            "assertion": "Generation replaces existing pack contents and requires review before use."
+          }
+        ]
+      }
     },
     {
       "id": "MX-S-CODE",
@@ -437,7 +1935,70 @@
       "process": "Analyze selected source in the configured vulnerability and requirement modes.",
       "effect": "Source analysis; optional comments separately configured",
       "verification": "Match results to the revision and record unassessed scope.",
-      "on_failure": "Obtain a current result when revision or trigger behavior makes prior evidence stale."
+      "on_failure": "Obtain a current result when revision or trigger behavior makes prior evidence stale.",
+      "review": {
+        "primary_section": "S-06",
+        "kind": "Source-analysis workflow",
+        "inputs": "Exact source revision, full/differential scope, selected review modes, enabled requirements and source-access role.",
+        "narrative": [
+          "Full-source and change-focused reviews use related analysis but different evidence boundaries. Preflight must first obtain the source and prepare the environment. A failure at that stage is not a clean scan.",
+          "Repository-event settings and optional comments are distinct from a manually started full review. The documented filtering file is read from the repository main branch, so changing it only in an unmerged branch may not change the current review behavior."
+        ],
+        "configuration": [
+          [
+            "Full review",
+            "Web app → Code reviews → create: select sources and role; Start review.",
+            "Saved source assessment"
+          ],
+          [
+            "Modes",
+            "Select vulnerability findings, requirement evaluation or both.",
+            "Analysis criteria"
+          ],
+          [
+            "Change guidance",
+            "Review supported provider triggers and .awssecurityagent/filtering.md on the main branch.",
+            "Change scope and filtering"
+          ]
+        ],
+        "lifecycle": [
+          [
+            "Review requested",
+            "Preflight",
+            "Source/environment prerequisites checked."
+          ],
+          [
+            "Preflight fails",
+            "Fix access and start a new run",
+            "Static analysis has not completed."
+          ],
+          [
+            "Source revision changes",
+            "Supported new review/reanalysis",
+            "Prior findings remain revision-specific."
+          ]
+        ],
+        "controls": "Read analysis, posted comments and proposed repairs are different effects. Excluded source is unassessed, not verified safe.",
+        "observable_output": "Preflight results, reviewed revision, findings and any configured provider comments.",
+        "undocumented": "No complete vulnerability-discovery algorithm or exhaustive language/framework coverage is inferred from a successful run.",
+        "test": [
+          "Review a known source fixture with exact commit identity.",
+          "Check that findings reference the expected revision and modes.",
+          "Deny source access or exclude a known fixture path; retain the resulting assessment gap."
+        ],
+        "claims": [
+          {
+            "source": "SS410",
+            "section": "Create and run a code review; Review findings",
+            "assertion": "Source preflight precedes analysis and has inspectable failure outcomes."
+          },
+          {
+            "source": "SS411",
+            "section": "How code review works; Filtering findings",
+            "assertion": "Change-trigger and main-branch filtering behavior are distinct configuration paths."
+          }
+        ]
+      }
     },
     {
       "id": "MX-S-DESIGN",
@@ -454,7 +2015,70 @@
       "process": "Assess the submitted design against relevant criteria.",
       "effect": "Review result",
       "verification": "Separate missing evidence from demonstrated violation.",
-      "on_failure": "Use the documented new-review or clone path for changed design material."
+      "on_failure": "Use the documented new-review or clone path for changed design material.",
+      "review": {
+        "primary_section": "S-06",
+        "kind": "Point-in-time design-review workflow",
+        "inputs": "Current design documents, application context and enabled security criteria.",
+        "narrative": [
+          "Design review evaluates a submitted description of the system. It does not observe whether the deployed implementation actually enforces that description. The review must distinguish a requirement violation from missing design evidence.",
+          "Its lifecycle is one-off rather than a reusable test configuration. Clone or create a new review for revised material so the earlier result remains attributable to its original documents."
+        ],
+        "configuration": [
+          [
+            "Submit",
+            "Select the design-review workflow and current design material.",
+            "Point-in-time subject"
+          ],
+          [
+            "Inspect",
+            "Open findings by requirement and read the compliance explanation.",
+            "Criteria and evidence"
+          ],
+          [
+            "Revise",
+            "Clone/create a new review with updated material.",
+            "Independent later assessment"
+          ]
+        ],
+        "lifecycle": [
+          [
+            "Design submitted",
+            "Review",
+            "Requirement-level findings produced."
+          ],
+          [
+            "Evidence insufficient",
+            "Add the missing design information",
+            "Prepare a new assessment, not a fabricated pass."
+          ],
+          [
+            "Design revised",
+            "Clone/new review",
+            "New point-in-time result; original review remains separate."
+          ]
+        ],
+        "controls": "Design compliance is not implementation verification.",
+        "observable_output": "Reviewed files, requirement result and explanation.",
+        "undocumented": "Automatic refresh of existing design reviews and continuous synchronized system models are not documented.",
+        "test": [
+          "Use a design fixture with an explicit identity boundary and one omitted control.",
+          "Verify the difference between violation and insufficient evidence.",
+          "Revise the document without rerunning; the old result must not be presented as a new assessment."
+        ],
+        "claims": [
+          {
+            "source": "SS404",
+            "section": "Key differences between security capabilities",
+            "assertion": "Design reviews have a different one-off lifecycle."
+          },
+          {
+            "source": "SS412",
+            "section": "Understand statuses; Next steps",
+            "assertion": "Missing evidence and non-compliance differ; cloning creates a new review."
+          }
+        ]
+      }
     },
     {
       "id": "MX-S-THREAT",
@@ -472,7 +2096,65 @@
       "process": "Construct the system model and examine threats to its flows and boundaries.",
       "effect": "Model result",
       "verification": "Review inferred boundaries before interpreting individual threats.",
-      "on_failure": "Correct input scope when the model represents the wrong system."
+      "on_failure": "Correct input scope when the model represents the wrong system.",
+      "review": {
+        "primary_section": "S-06",
+        "kind": "System-model and threat-analysis workflow",
+        "inputs": "Scope documents, selected sources or both, application boundary and service role.",
+        "narrative": [
+          "Scope documents express what should be modeled; source code supplies context for the current system. The output includes a system overview and threats derived for that representation. Review the system boundary and flows before accepting the threats built on them.",
+          "A model of the wrong system can produce plausible but irrelevant threats. Correct the scope or source mismatch and run again rather than dismissing every downstream item individually."
+        ],
+        "configuration": [
+          [
+            "Create",
+            "Threat models → Create threat model: title, scope documents and/or sources, service role and optional log group.",
+            "Reusable model configuration"
+          ],
+          [
+            "Execute",
+            "Start run; inspect Preflight and Logs.",
+            "Independent run"
+          ],
+          [
+            "Review",
+            "Inspect Overview before Threats; review evidence and recommendations.",
+            "System representation and threat records"
+          ]
+        ],
+        "lifecycle": [
+          [
+            "Configuration saved",
+            "Start run",
+            "Preflight and analysis create a system model."
+          ],
+          [
+            "Model produced",
+            "Review boundaries and threats",
+            "Accept, resolve or dismiss findings with rationale."
+          ],
+          [
+            "Scope changes",
+            "Rerun with corrected input",
+            "New result reflects the intended subject."
+          ]
+        ],
+        "controls": "Inferred relationships require owner review; threat status is not proof that a mitigation is deployed.",
+        "observable_output": "System overview, threat statements, classifications, evidence and recommendations.",
+        "undocumented": "The exhaustive threat-generation strategy and completeness of inferred flows are not published.",
+        "test": [
+          "Provide a small design with a known trust boundary and supporting source.",
+          "Check that the overview reflects the known boundary.",
+          "Use a deliberately stale scope document; identify the mismatch before interpreting threat counts."
+        ],
+        "claims": [
+          {
+            "source": "SS413",
+            "section": "Create and run a threat model; Review threats",
+            "assertion": "Scope documents and source context have distinct roles; overview and threats are reviewable."
+          }
+        ]
+      }
     },
     {
       "id": "MX-S-PIPELINE",
@@ -490,7 +2172,65 @@
       "process": "Start and observe the supported assessment independently of the pipeline runner.",
       "effect": "Assessment initiation",
       "verification": "Retain revision and run identity and apply an explicit team gate to incomplete results.",
-      "on_failure": "Block or escalate under the declared gate; missing evidence is not success."
+      "on_failure": "Block or escalate under the declared gate; missing evidence is not success.",
+      "review": {
+        "primary_section": "S-06",
+        "kind": "Post-deployment invocation mechanism",
+        "inputs": "Existing penetration-test configuration with CI/CD mode, source connection, pipeline OIDC identity and deployed change identifiers.",
+        "narrative": [
+          "The pipeline step starts and observes a server-side test of a deployed change. It does not create the application or replace the saved assessment scope, and it does not run the penetration-testing engine inside the delivery runner.",
+          "Configure the release decision before enabling the integration. Invocation failure, unfinished assessment and a completed result above the selected severity threshold need distinct handling. This decision policy is authored team behavior, not a claim that every pipeline fails closed automatically."
+        ],
+        "configuration": [
+          [
+            "Prerequisite",
+            "Verify target and create a test with current credentials/network scope; enable CI/CD mode and record space/test IDs.",
+            "Existing assessment definition"
+          ],
+          [
+            "Identity",
+            "Configure the provider-specific OIDC path and supported integration step.",
+            "Short-lived pipeline authentication"
+          ],
+          [
+            "Decision",
+            "Set accepted threshold and explicit behavior for missing/incomplete results.",
+            "Team promotion policy"
+          ]
+        ],
+        "lifecycle": [
+          [
+            "Deployment completed",
+            "Authorized integration step",
+            "Server-side assessment job starts."
+          ],
+          [
+            "Job running",
+            "Pipeline waits/observes",
+            "Runner completion is not yet assessment completion."
+          ],
+          [
+            "Job result available",
+            "Apply declared gate",
+            "Promote, block or escalate using that result and revision."
+          ]
+        ],
+        "controls": "This preview path is post-deployment assessment, not pull-request static analysis.",
+        "observable_output": "Pipeline execution, deployed change, assessment job and applied promotion decision.",
+        "undocumented": "Exactly-once invocation, universal timeout behavior and identical provider semantics are not established.",
+        "test": [
+          "Use a non-production pipeline with known deployed revision and saved assessment.",
+          "Retain the server job ID with the gate result.",
+          "Simulate unavailable/incomplete result; follow the declared blocking/escalation rule rather than passing silently."
+        ],
+        "claims": [
+          {
+            "source": "SS414",
+            "section": "Before you start; Post-deployment gate",
+            "assertion": "The integration invokes an existing configured test, uses OIDC and observes server-side work."
+          }
+        ]
+      }
     },
     {
       "id": "MX-S-JIRA",
@@ -508,7 +2248,75 @@
       "process": "Publish supported issue or comment content to the configured project.",
       "effect": "External publication",
       "verification": "Inspect actual project audience and original finding linkage.",
-      "on_failure": "Keep the finding owned locally while resolving publication failure."
+      "on_failure": "Keep the finding owned locally while resolving publication failure.",
+      "review": {
+        "primary_section": "S-09",
+        "kind": "Finding-publication mechanism",
+        "inputs": "Connected Jira Cloud site, permitted project/actions, selected finding and reviewed disclosure scope.",
+        "narrative": [
+          "A site registration supplies authorization; a project connection chooses where the Agent Space can create issues or comments. Creating an issue publishes a finding into an external system with its own audience and lifecycle.",
+          "The link matters later: remediation proposals and revalidation outcomes can be attached to the same issue through supported behavior. Removing the integration stops future actions but does not remove tickets already created."
+        ],
+        "configuration": [
+          [
+            "Register",
+            "Integrations → Add integration → Jira; authorize the Forge app and registration.",
+            "Site authorization"
+          ],
+          [
+            "Bind",
+            "Within Agent Space select project and allowed create/comment actions.",
+            "Project-specific effects"
+          ],
+          [
+            "Publish",
+            "Select finding(s) and create issues in a project permitting the Task type.",
+            "One issue per selected finding"
+          ]
+        ],
+        "lifecycle": [
+          [
+            "Finding selected",
+            "Create Jira issue",
+            "External record and finding relationship created."
+          ],
+          [
+            "Linked finding revalidated",
+            "Supported result comment",
+            "External history updated when permitted."
+          ],
+          [
+            "Integration removed",
+            "Future publication attempted",
+            "No further action through that integration; existing issues remain."
+          ]
+        ],
+        "controls": "Issue creation and comment permission are separate. Do not import FinOps approval behavior into Security Agent.",
+        "observable_output": "Actual issue/comment in the intended project and preserved finding link.",
+        "undocumented": "Automatic duplicate suppression and transactional rollback across AWS and Jira are not established.",
+        "test": [
+          "Use a restricted test project and a non-sensitive finding fixture.",
+          "Check audience, issue type and finding link.",
+          "Revoke comment permission; distinguish publication failure from assessment failure and avoid blind duplicate retries."
+        ],
+        "claims": [
+          {
+            "source": "SS415",
+            "section": "Connecting projects to an Agent Space",
+            "assertion": "Create and comment actions are selected per project."
+          },
+          {
+            "source": "SS416",
+            "section": "Creating issues for findings",
+            "assertion": "The selected project must allow Task and receives one issue per selected finding."
+          },
+          {
+            "source": "SS417",
+            "section": "Prerequisites for removal",
+            "assertion": "Previously created issues are not deleted with the integration."
+          }
+        ]
+      }
     },
     {
       "id": "MX-F-QUERY",
@@ -526,7 +2334,70 @@
       "process": "Read the relevant upstream service and interpret its returned evidence.",
       "effect": "Source read",
       "verification": "Reconcile a material result using the same dates, metric, scope and dimensions.",
-      "on_failure": "Withhold unsupported numerical or causal conclusions and identify missing sources."
+      "on_failure": "Withhold unsupported numerical or causal conclusions and identify missing sources.",
+      "review": {
+        "primary_section": "F-M01",
+        "kind": "Source-backed analytical workflow",
+        "inputs": "Question, dates, cost metric, scope, dimensions, currency and permissions to the relevant source service.",
+        "narrative": [
+          "The agent queries the service that owns the requested evidence. Historical cost, forecasts, commitment coverage, anomaly records, optimization recommendations and change events are different inputs. Combining them in one conversation does not turn projected savings into observed spend.",
+          "The analytical result must preserve the query basis. First reconcile amounts, then examine operational evidence for an explanation. A nearby change event is a lead; numerical contribution and causal attribution remain different claims."
+        ],
+        "configuration": [
+          [
+            "Source",
+            "Enable required upstream services and inspect the agent data role.",
+            "Permitted source evidence"
+          ],
+          [
+            "Query",
+            "State complete periods, metric, filters and grouping.",
+            "Explicit analytical basis"
+          ],
+          [
+            "Interpretation",
+            "Identify which source supplied a forecast, anomaly or recommendation.",
+            "Provenance of the returned value"
+          ]
+        ],
+        "lifecycle": [
+          [
+            "Question submitted",
+            "Query upstream service",
+            "Source result or access failure returned."
+          ],
+          [
+            "Scope changed",
+            "Run a new query",
+            "New result is not comparable unless the basis is reconciled."
+          ],
+          [
+            "Recommendation retrieved",
+            "Contextualize for owner review",
+            "No infrastructure change is authorized by retrieval."
+          ]
+        ],
+        "controls": "The service summarizes recommendations from optimization services; it does not independently calculate its own underlying optimization analysis.",
+        "observable_output": "Returned figures, query basis and source/tool evidence.",
+        "undocumented": "Complete inference logic, causal accuracy and guaranteed agreement with differently scoped console queries are not established.",
+        "test": [
+          "Use the supplied synthetic cost fixture or a harmless read-only account query.",
+          "Reconcile components to the total under identical periods and metric.",
+          "Change metric or period deliberately; identify why the totals are not comparable."
+        ],
+        "claims": [
+          {
+            "source": "FS401",
+            "section": "Related services",
+            "assertion": "Cost Explorer, anomaly detection, optimization services and CloudTrail supply distinct evidence."
+          },
+          {
+            "source": "FS407",
+            "section": "Generative AI accuracy considerations",
+            "assertion": "Recommendations are upstream analysis; anomaly causality remains investigative."
+          }
+        ]
+      }
     },
     {
       "id": "MX-F-FILES",
@@ -543,7 +2414,71 @@
       "process": "Read the maintained mapping or reporting convention during relevant work.",
       "effect": "Context read",
       "verification": "Verify a known mapping and expose unmapped records.",
-      "on_failure": "Keep unassigned values visible and update the authoritative file deliberately."
+      "on_failure": "Keep unassigned values visible and update the authoritative file deliberately.",
+      "review": {
+        "primary_section": "F-M02",
+        "kind": "Reference-file loading mechanism",
+        "inputs": "Approved non-sensitive organization mapping or report convention in a supported active file.",
+        "narrative": [
+          "Uploaded context is maintained outside the conversation. The agent can read the file but cannot rewrite or delete it by conversational instruction. A request to forget a preference therefore does not modify a conflicting account-owner mapping in an uploaded file.",
+          "Soft deletion removes a file from active context and Restore makes it active again. This is a documented reversible lifecycle for files, not a claim that every other retained object supports restoration."
+        ],
+        "configuration": [
+          [
+            "Upload",
+            "Context files workspace: upload TXT, CSV, JSON, Markdown, HTML or YAML within documented size limits.",
+            "Instance-visible reference"
+          ],
+          [
+            "Maintain",
+            "Update the governed source and intentionally replace the active uploaded representation.",
+            "Team-managed content"
+          ],
+          [
+            "Deactivate/restore",
+            "Delete soft-deletes; Restore reactivates.",
+            "File availability"
+          ]
+        ],
+        "lifecycle": [
+          [
+            "Active file",
+            "Delete",
+            "Soft-deleted; removed from active context."
+          ],
+          [
+            "Soft-deleted file",
+            "Restore",
+            "Available again."
+          ],
+          [
+            "Similar fact retained in memory",
+            "Edit file",
+            "Memory is a separate representation and may need separate correction."
+          ]
+        ],
+        "controls": "Files are visible to users with access to the agent. Do not upload credentials or sensitive personal information.",
+        "observable_output": "File state and correct application of a known identifier mapping.",
+        "undocumented": "File-versus-memory precedence and exact internal retrieval ranking are not specified.",
+        "test": [
+          "Upload a harmless mapping for a fictitious account label.",
+          "Ask a question requiring that mapping and inspect attribution.",
+          "Soft-delete it and test again; restoring the file is distinct from remembering a new preference."
+        ],
+        "claims": [
+          {
+            "source": "FS402",
+            "section": "Supported file types; Manage context files",
+            "assertion": "Files are agent-read-only, size-limited and support soft deletion/restoration."
+          },
+          {
+            "source": "FS403",
+            "section": "Managing your data",
+            "assertion": "File removal and other object lifecycles differ."
+          }
+        ],
+        "diagram": "mechanism-finops-context"
+      }
     },
     {
       "id": "MX-F-MEMORY",
@@ -560,7 +2495,70 @@
       "process": "Apply retained preferences to subsequent sessions.",
       "effect": "Retained context update and read",
       "verification": "Test a later conversation separately from reference-file retrieval.",
-      "on_failure": "State material query choices explicitly when retention is uncertain."
+      "on_failure": "State material query choices explicitly when retention is uncertain.",
+      "review": {
+        "primary_section": "F-M03",
+        "kind": "Cross-session retained-context mechanism",
+        "inputs": "Preference or correction supplied through conversation; instance-local persistent memory.",
+        "narrative": [
+          "Conversational memory retains preferences and corrections for later work in the same instance. It is not the current conversation transcript and is not an uploaded file. An explicit remember, update or forget instruction targets this retained representation.",
+          "Test it across sessions rather than immediately repeating the fact in the same conversation. Also inspect whether an active reference file supplies the same information; otherwise successful file use can be mistaken for memory recall."
+        ],
+        "configuration": [
+          [
+            "Write/update",
+            "Ask the agent to remember or update one non-sensitive preference.",
+            "Persistent conversational context"
+          ],
+          [
+            "Remove",
+            "Ask it to forget the specific retained fact.",
+            "Memory update, not history deletion"
+          ],
+          [
+            "Verify",
+            "Use a later session without restating the test fact.",
+            "Cross-session behavior"
+          ]
+        ],
+        "lifecycle": [
+          [
+            "Preference supplied",
+            "Remember/update",
+            "Retained context can influence later work."
+          ],
+          [
+            "Preference retained",
+            "Forget",
+            "Memory is updated in place."
+          ],
+          [
+            "Session ends",
+            "Start later session",
+            "Persistent instance data is separate from ephemeral runtime."
+          ]
+        ],
+        "controls": "Each instance isolates its retained content; no shared organization-wide memory is inferred.",
+        "observable_output": "Observed later use of a controlled fact, qualified when no direct memory-inspection evidence is exposed.",
+        "undocumented": "Internal schema, selection precedence and complete deletion of historical conversation occurrences are not established by a forget request.",
+        "test": [
+          "Use a fictitious reporting preference absent from uploaded files.",
+          "Test a later session, then change the preference and test again.",
+          "Forget it; do not claim that earlier reports or conversation history were erased."
+        ],
+        "claims": [
+          {
+            "source": "FS402",
+            "section": "Agent memory across sessions",
+            "assertion": "Remember, update and forget govern retained preferences/corrections."
+          },
+          {
+            "source": "FS403",
+            "section": "Data isolation; Managing your data",
+            "assertion": "Instance isolation and memory updates differ from conversation retention."
+          }
+        ]
+      }
     },
     {
       "id": "MX-F-COMPACT",
@@ -577,7 +2575,60 @@
       "process": "Summarize older context while continuing the conversation.",
       "effect": "Session context change",
       "verification": "Restate the current query basis and unresolved questions.",
-      "on_failure": "Reconstruct critical constraints from authoritative records instead of assuming verbatim recall."
+      "on_failure": "Reconstruct critical constraints from authoritative records instead of assuming verbatim recall.",
+      "review": {
+        "primary_section": "F-M04",
+        "kind": "Session-context compaction mechanism",
+        "inputs": "Growing conversation approaching the model context window.",
+        "narrative": [
+          "Compaction changes the context supplied to continued conversation. Older material is summarized while recent messages remain in full. It preserves a working representation of key decisions, not a verbatim copy of every earlier turn.",
+          "Keep a material cost question explicit after a long exchange: period, metric, filters and unresolved assumptions. Restating those choices is an engineering safeguard, not a control that changes the undocumented compaction algorithm."
+        ],
+        "configuration": [
+          [
+            "Enablement",
+            "Automatic; no administrator threshold or manual compaction switch is established by the cited guide.",
+            "Service-managed context handling"
+          ],
+          [
+            "Operational practice",
+            "Restate critical query constraints and reference authoritative outputs.",
+            "Team verification procedure"
+          ]
+        ],
+        "lifecycle": [
+          [
+            "Context grows",
+            "Approaches context limit",
+            "Older portions summarized."
+          ],
+          [
+            "Compacted context",
+            "Conversation continues",
+            "Recent messages and summary guide subsequent work."
+          ],
+          [
+            "Detail missing",
+            "Reconstruct from authoritative record",
+            "Do not infer verbatim recall from a fluent answer."
+          ]
+        ],
+        "controls": "Compaction is not durable preference management or deletion of stored conversation history.",
+        "observable_output": "Continued conversation and the constraints it actually applies; a direct compaction event may not be exposed.",
+        "undocumented": "Thresholds, summary-selection rules and lossless retention are not documented.",
+        "test": [
+          "Use a non-sensitive long conversation with a recorded query contract.",
+          "Check whether later analysis retains the period and metric.",
+          "Where detail is missing, restore it explicitly and label compaction itself unobserved if no service signal exists."
+        ],
+        "claims": [
+          {
+            "source": "FS402",
+            "section": "Long conversation handling",
+            "assertion": "Automatic summarization replaces older context while recent messages remain in full."
+          }
+        ]
+      }
     },
     {
       "id": "MX-F-TASK",
@@ -594,7 +2645,70 @@
       "process": "Run queued work and retain its separate execution evidence.",
       "effect": "Execution and output",
       "verification": "Match completed results to task identity and requested scope.",
-      "on_failure": "Distinguish absent, queued and failed tasks before retrying."
+      "on_failure": "Distinguish absent, queued and failed tasks before retrying.",
+      "review": {
+        "primary_section": "F-03",
+        "kind": "Explicit request-to-task mechanism",
+        "inputs": "Explicit task request or automation invocation, prompt and permitted data/context.",
+        "narrative": [
+          "An ordinary question can be answered in the conversation. A task is created when explicitly requested or through an automation. The task has its own queue position, execution and output, so a chat acknowledgement is not completion evidence.",
+          "All documented task types share a queue. Inspect whether work was never created, remains queued, failed during analysis or completed but failed to publish. Those failures require different actions."
+        ],
+        "configuration": [
+          [
+            "Create",
+            "Ask explicitly to create a task, or Tasks → Create tasks.",
+            "Separate execution record"
+          ],
+          [
+            "Observe",
+            "Inspect Tasks/history and actual tool results.",
+            "Work status and evidence"
+          ],
+          [
+            "Stop",
+            "Use supported cancellation for current work; control recurring automation separately.",
+            "Execution versus definition"
+          ]
+        ],
+        "lifecycle": [
+          [
+            "Task requested",
+            "Create record",
+            "Work enters the shared queue."
+          ],
+          [
+            "Queued work",
+            "Execute",
+            "Tool results and output accumulate."
+          ],
+          [
+            "Task cancelled",
+            "Inspect retained record",
+            "Cancellation does not delete task history."
+          ]
+        ],
+        "controls": "Cancelling work is not rollback of prior external publication.",
+        "observable_output": "Task identity, execution status, source calls, outputs and separate delivery outcome.",
+        "undocumented": "Queue order, fairness, exactly-once processing and guaranteed cancellation of every in-flight action are not specified.",
+        "test": [
+          "Create a harmless report task with an explicit date range.",
+          "Trace its identity from request to resulting output.",
+          "Cancel controlled work and distinguish preserved history from a deleted task."
+        ],
+        "claims": [
+          {
+            "source": "FS404",
+            "section": "On-demand tasks",
+            "assertion": "Tasks are explicit and run through a shared queue rather than blocking the conversation."
+          },
+          {
+            "source": "FS403",
+            "section": "Managing your data",
+            "assertion": "Cancellation and record removal are different lifecycle operations."
+          }
+        ]
+      }
     },
     {
       "id": "MX-F-SCHEDULE",
@@ -612,7 +2726,70 @@
       "process": "Create a new task on each applicable scheduled occurrence.",
       "effect": "Future tasks",
       "verification": "Inspect trigger and the actual task's reporting window separately.",
-      "on_failure": "Disable future starts and control already-created work separately."
+      "on_failure": "Disable future starts and control already-created work separately.",
+      "review": {
+        "primary_section": "F-03",
+        "kind": "Automation-to-task mechanism",
+        "inputs": "Recurring prompt, explicit schedule and timezone, observation-window rule and optional destination.",
+        "narrative": [
+          "A recurring request creates an automation. Each eligible occurrence creates separate work; the automation is not the historical report. Keep the schedule and reporting basis distinct so a delayed task still queries the intended complete period.",
+          "Disabling an automation controls future starts. Existing tasks and distributed artifacts retain their own lifecycle. When replacing recurring work, inspect old automations to avoid running both definitions unintentionally."
+        ],
+        "configuration": [
+          [
+            "Create",
+            "Describe the recurring work and schedule in conversation.",
+            "Saved automation"
+          ],
+          [
+            "Inspect",
+            "Open Automations and confirm the actual saved schedule and prompt.",
+            "Configuration confirmation"
+          ],
+          [
+            "Disable/delete",
+            "Stop future occurrences through the automation control.",
+            "Not cancellation/deletion of prior tasks"
+          ]
+        ],
+        "lifecycle": [
+          [
+            "Automation active",
+            "Scheduled occurrence",
+            "A new task is created."
+          ],
+          [
+            "Automation active",
+            "Disable",
+            "Future starts stop."
+          ],
+          [
+            "Automation deleted",
+            "Inspect existing tasks/artifacts",
+            "Historical work remains independently retained."
+          ]
+        ],
+        "controls": "Unattended publication has destination-specific authorization; recurrence is not a universal approval bypass for unrelated actions.",
+        "observable_output": "Automation configuration and individual task histories with their queried periods.",
+        "undocumented": "Exact missed-run and timezone-resolution behavior must be inspected; the guide does not establish a universal timing SLA.",
+        "test": [
+          "Create a non-sensitive recurring report only after an on-demand trial.",
+          "Inspect saved timing and the first task observation window.",
+          "Disable the automation and confirm future creation stops without assuming prior artifacts disappear."
+        ],
+        "claims": [
+          {
+            "source": "FS404",
+            "section": "Scheduled tasks",
+            "assertion": "Schedules create automations and new tasks; disabling/deleting stops recurring work."
+          },
+          {
+            "source": "FS403",
+            "section": "Managing your data",
+            "assertion": "Automations and task records have distinct lifecycles."
+          }
+        ]
+      }
     },
     {
       "id": "MX-F-EVENT",
@@ -630,7 +2807,71 @@
       "process": "Match the supported event to its configured response prompt.",
       "effect": "Task creation; publication is a separate configured step",
       "verification": "Trace event, automation, task, analysis and destination result independently.",
-      "on_failure": "Inspect monitor conditions and rule permissions before changing the analytical prompt."
+      "on_failure": "Inspect monitor conditions and rule permissions before changing the analytical prompt.",
+      "review": {
+        "primary_section": "F-M05",
+        "kind": "Anomaly-event matching mechanism",
+        "inputs": "Cost Anomaly Detection monitor, required managed EventBridge permissions, condition, response prompt and optional destination.",
+        "narrative": [
+          "The event path begins in Cost Anomaly Detection. The service creates a managed rule, matches the configured condition and creates a task using the saved prompt. Analysis and delivery occur after task creation; they are not evidence that matching itself was correct.",
+          "Trace the chain one object at a time. A monitor event with no task points toward rule or condition configuration. A completed analysis with no message points toward destination publication. Changing the analytical prompt does not repair an absent event subscription."
+        ],
+        "configuration": [
+          [
+            "Prerequisites",
+            "Configure a monitor and the agent-role EventBridge permissions.",
+            "Event source and managed-rule authority"
+          ],
+          [
+            "Automation",
+            "Describe monitor/scope, threshold and desired response in Chat.",
+            "COST_ANOMALY trigger and prompt"
+          ],
+          [
+            "Verification",
+            "Inspect automation status, last-triggered information, created task and destination result.",
+            "End-to-end observation"
+          ]
+        ],
+        "lifecycle": [
+          [
+            "Matching event arrives",
+            "Automation matches",
+            "Task created in the queue."
+          ],
+          [
+            "Task completes",
+            "Optional publication",
+            "Delivery has its own outcome."
+          ],
+          [
+            "Automation disabled/deleted",
+            "Future event arrives",
+            "No future task from that automation; old records remain."
+          ]
+        ],
+        "controls": "The documented preview event source is Cost Anomaly Detection, not arbitrary events. External publication requires its configured destination.",
+        "observable_output": "Monitor/event identity, automation, task, source analysis and any actual message.",
+        "undocumented": "Event deduplication keys, ordering and universal delivery/retry guarantees are not established.",
+        "test": [
+          "Use a controlled event fixture for tabletop tracing; do not manufacture production spend.",
+          "Verify all chain identities against available service records during an authorized test.",
+          "A missing message must be localized to absent task, failed analysis or failed delivery rather than reported as one undifferentiated error."
+        ],
+        "claims": [
+          {
+            "source": "FS405",
+            "section": "Prerequisites; Verify and manage the automation",
+            "assertion": "Monitor, managed-rule permissions and saved condition create a traceable automation/task path."
+          },
+          {
+            "source": "FS404",
+            "section": "Event-based tasks",
+            "assertion": "The supported preview trigger is a cost-anomaly event."
+          }
+        ],
+        "diagram": "mechanism-finops-publication"
+      }
     },
     {
       "id": "MX-F-ARTIFACT",
@@ -647,7 +2888,70 @@
       "process": "Format supported output and revise it without silently changing analytical scope.",
       "effect": "Report artifact",
       "verification": "Compare displayed figures and period with the reviewed source analysis.",
-      "on_failure": "Do not distribute an artifact that no longer matches its query basis."
+      "on_failure": "Do not distribute an artifact that no longer matches its query basis.",
+      "review": {
+        "primary_section": "F-04",
+        "kind": "Analysis-to-artifact mechanism",
+        "inputs": "Reviewed cost query/results, report instructions, output format and optional sample template.",
+        "narrative": [
+          "Report generation retrieves source data, builds the requested presentation and returns an artifact. A visual quality pass concerns presentation defects; it is not an independent reconciliation of the underlying financial interpretation.",
+          "A follow-up can revise the artifact. Keep the analytical basis explicit when revising it: changing a title or chart layout should not silently change period, cost metric or grouping."
+        ],
+        "configuration": [
+          [
+            "Request",
+            "Specify report audience, source period, metric, required sections and supported format; default is HTML.",
+            "Artifact instruction"
+          ],
+          [
+            "Inspect",
+            "Open/download from Artifacts and compare figures to source results.",
+            "Output review"
+          ],
+          [
+            "Revise",
+            "Reference the existing report in a follow-up and state whether the query basis may change.",
+            "Revision intent"
+          ]
+        ],
+        "lifecycle": [
+          [
+            "Analysis available",
+            "Generate report",
+            "Artifact delivered."
+          ],
+          [
+            "Artifact exists",
+            "Request revision",
+            "Updated presentation can be produced."
+          ],
+          [
+            "Service artifact removed",
+            "External copies remain",
+            "Downloaded or published copies require separate handling."
+          ]
+        ],
+        "controls": "Formatting and completion status do not establish numerical accuracy; distribution is a separate effect.",
+        "observable_output": "Reportable artifact tied by the team to task/query identity and reviewed scope.",
+        "undocumented": "An immutable artifact-version API and universal external-copy deletion are not established by the report guide.",
+        "test": [
+          "Generate a report from the small supplied synthetic cost fixture.",
+          "Reconcile displayed components and totals to the fixture.",
+          "Revise layout only and verify that period, metric and numbers did not change."
+        ],
+        "claims": [
+          {
+            "source": "FS406",
+            "section": "Generating cost reports",
+            "assertion": "Reports are artifacts, default to HTML and can be revised through follow-up."
+          },
+          {
+            "source": "FS403",
+            "section": "Managing your data",
+            "assertion": "Artifacts and other retained objects have distinct controls."
+          }
+        ]
+      }
     },
     {
       "id": "MX-F-JIRA",
@@ -665,7 +2969,70 @@
       "process": "Request approval interactively or on demand; use setup authorization for scheduled or event-driven actions.",
       "effect": "External publication",
       "verification": "Inspect invocation type, action details, destination and resulting issue or comment.",
-      "on_failure": "Stop incorrect destinations. Do not expect an interactive prompt to protect an unattended automation."
+      "on_failure": "Stop incorrect destinations. Do not expect an interactive prompt to protect an unattended automation.",
+      "review": {
+        "primary_section": "F-M06",
+        "kind": "Invocation-dependent publication mechanism",
+        "inputs": "Account Jira registration, per-instance project connection, supported action, payload and invocation mode.",
+        "narrative": [
+          "Jira approval depends on how the action starts. Chat and on-demand tasks present issue/comment details for confirmation; a scheduled or event automation uses authorization established during setup. The same destination does not imply the same per-run approval behavior.",
+          "After approval or preauthorization, inspect the actual external record. A successful analysis is not a successful issue creation, and a retry after an uncertain response can create duplicates unless the operator checks the existing project records."
+        ],
+        "configuration": [
+          [
+            "Connect",
+            "Authorize the Jira Cloud integration, then bind the approved project to this instance.",
+            "Project scope"
+          ],
+          [
+            "Interactive action",
+            "Review project, issue/comment body and target shown for approval.",
+            "Per-action decision"
+          ],
+          [
+            "Automation action",
+            "Review action and audience before enabling recurrence/event handling.",
+            "Setup-time authorization"
+          ]
+        ],
+        "lifecycle": [
+          [
+            "Interactive request",
+            "Confirm/revise action",
+            "Supported publication can execute."
+          ],
+          [
+            "Automation configured",
+            "Matching invocation",
+            "Publication executes without a per-run approval prompt."
+          ],
+          [
+            "Publication uncertain",
+            "Inspect destination before retry",
+            "Avoid assuming an unobserved response means no issue exists."
+          ]
+        ],
+        "controls": "Supported actions do not include arbitrary issue-field changes, deletion or Jira workflow management.",
+        "observable_output": "Actual issue/comment, intended project and task action history.",
+        "undocumented": "Exactly-once external publication and automatic duplicate suppression are not documented.",
+        "test": [
+          "Use a restricted Jira Cloud test project and non-sensitive payload.",
+          "Compare interactive approval with a separately reviewed automation test.",
+          "Deny project access and verify a publication failure does not erase or falsely complete the analysis record."
+        ],
+        "claims": [
+          {
+            "source": "FS407",
+            "section": "Jira issue creation and comment addition",
+            "assertion": "Approval differs between interactive/on-demand and automated invocation."
+          },
+          {
+            "source": "FS408",
+            "section": "Integration model; Capabilities",
+            "assertion": "Project connections and supported actions limit the effect."
+          }
+        ]
+      }
     },
     {
       "id": "MX-F-SLACK",
@@ -683,7 +3050,70 @@
       "process": "Post to the configured channel without a per-message approval prompt.",
       "effect": "External publication",
       "verification": "Review audience before invocation and inspect delivery afterward.",
-      "on_failure": "Keep analysis completion separate from delivery failure; posting does not establish channel-reading capability."
+      "on_failure": "Keep analysis completion separate from delivery failure; posting does not establish channel-reading capability.",
+      "review": {
+        "primary_section": "F-M06",
+        "kind": "One-way destination-publication mechanism",
+        "inputs": "Account workspace registration, instance channel connection, app membership and reviewed message/artifact.",
+        "narrative": [
+          "Slack publication is one-way in the documented preview. Registration authorizes the workspace; the instance connection selects a channel; channel membership permits delivery. Posting does not establish channel reading, command handling or thread interaction.",
+          "There is no per-message approval prompt, including interactive requests. Review the intended channel and content before invocation, then inspect actual delivery. Disconnecting the channel is not a mechanism for deleting previously posted messages."
+        ],
+        "configuration": [
+          [
+            "Register",
+            "Authorize the workspace integration.",
+            "Account-level registration"
+          ],
+          [
+            "Connect",
+            "Add the app to the channel; instance → Add connection → Slack; select integration and channel ID.",
+            "Instance-specific destination"
+          ],
+          [
+            "Publish",
+            "Use the reviewed destination and verify the resulting post.",
+            "External effect"
+          ]
+        ],
+        "lifecycle": [
+          [
+            "Connection active",
+            "Post requested",
+            "Message may be sent without an approval prompt."
+          ],
+          [
+            "App absent from channel",
+            "Post attempted",
+            "Delivery fails despite registration."
+          ],
+          [
+            "Connection removed",
+            "Future request",
+            "Future access changes; existing posts remain externally managed."
+          ]
+        ],
+        "controls": "Review audience before sending. The integration does not provide general edit/delete, channel administration or conversation reading.",
+        "observable_output": "Actual channel post and recorded action/delivery result.",
+        "undocumented": "Deduplicated retries, universal rollback and guaranteed post deletion are not provided by the documented interface.",
+        "test": [
+          "Use a restricted test channel containing the installed app.",
+          "Verify destination and content without expecting a confirmation prompt.",
+          "Remove app membership for an authorized negative test and distinguish delivery failure from task failure."
+        ],
+        "claims": [
+          {
+            "source": "FS409",
+            "section": "Integration and connection model; Capabilities",
+            "assertion": "Connections are per-instance/channel and one-way; membership is required."
+          },
+          {
+            "source": "FS407",
+            "section": "Slack messages",
+            "assertion": "Posting does not prompt for approval even in interactive invocation."
+          }
+        ]
+      }
     },
     {
       "id": "MX-D-QUERY",
@@ -702,7 +3132,349 @@
       "process": "Use the built-in on-demand inquiry path to answer the operational question using available authorized evidence.",
       "effect": "Source read and conversational result",
       "verification": "Inspect scope and reproduce a material observation from the same source query.",
-      "on_failure": "Name the missing source and qualify or withhold the answer; creating a custom agent does not by itself repair source access."
+      "on_failure": "Name the missing source and qualify or withhold the answer; creating a custom agent does not by itself repair source access.",
+      "review": {
+        "primary_section": "D-01",
+        "kind": "Built-in inquiry workflow",
+        "inputs": "Explicit question, service/account scope, observation interval and connected evidence.",
+        "narrative": [
+          "The built-in inquiry path answers an operational question without requiring a separately created custom agent. It still depends on the Agent Space sources and permissions. A custom definition is useful for a recurring or specialized procedure, not a repair for missing read access.",
+          "The response is scoped to evidence actually available to that request. Record the queried period and reproduce a material observation before treating a health summary as an operational fact."
+        ],
+        "configuration": [
+          [
+            "Scope",
+            "Open Chat in the intended Agent Space and state service identifiers and UTC interval.",
+            "Current request"
+          ],
+          [
+            "Evidence",
+            "Check relevant source associations and permission scope.",
+            "Underlying read access"
+          ]
+        ],
+        "lifecycle": [
+          [
+            "Question submitted",
+            "Read available evidence",
+            "Response or source gap is produced."
+          ],
+          [
+            "Question needs recurring execution",
+            "Define a custom task separately",
+            "A new configuration path, not automatic conversion."
+          ]
+        ],
+        "controls": "A conversational request is not permission for a state-changing operation.",
+        "observable_output": "Scoped answer and available supporting tool observations.",
+        "undocumented": "No universal source-completeness or exact query-planning guarantee is provided.",
+        "test": [
+          "Ask for one known staging service measurement in a complete interval.",
+          "Compare it with the monitoring source.",
+          "An unavailable metric must be listed as missing rather than inferred as healthy."
+        ],
+        "claims": [
+          {
+            "source": "DS407",
+            "section": "Custom agents compared to built-in capabilities",
+            "assertion": "On-demand queries are a built-in path; custom agents are separately configured."
+          },
+          {
+            "source": "DS401",
+            "section": "Configuring MCP tools in an Agent Space",
+            "assertion": "Connected evidence remains subject to selected source tools."
+          }
+        ]
+      }
+    },
+    {
+      "id": "MX-S-PERSONALIZE",
+      "platform": "security",
+      "title": "Finding-edit personalization",
+      "features": [
+        "FT-S-FINDINGS"
+      ],
+      "sections": [
+        "S-05"
+      ],
+      "trigger": "Eligible edits from the most recent completed test when personalization was enabled at test start",
+      "state": "Retained finding preferences and original/latest finding attributes",
+      "process": "Apply eligible learned preferences to similar findings in subsequent penetration-test runs.",
+      "effect": "Finding-attribute personalization, not application remediation",
+      "verification": "Inspect original/latest values and the Personalization changes explanation separately from vulnerability evidence.",
+      "on_failure": "Treat unobserved personalization as unverified; a severity change does not establish a repaired application.",
+      "review": {
+        "primary_section": "S-05",
+        "kind": "Learned finding-preference mechanism",
+        "inputs": "Eligible operator edits in the most recent completed penetration-test run and Findings Personalization enabled when the test starts.",
+        "narrative": [
+          "Findings Personalization learns eligible edits and applies preferences to similar findings on later runs. It is distinct from discovering vulnerabilities, retaining a login procedure and replaying a finding. Learned changes can alter finding attributes without proving that application behavior changed.",
+          "Inspect the Personalization changes explanation and original values before interpreting a severity change. For status, the documented learnable signal is marking a finding FALSE_POSITIVE; other status updates are not equivalent learning inputs."
+        ],
+        "configuration": [
+          [
+            "Enablement",
+            "Inspect Findings Personalization in the penetration-test configuration; documented default is enabled.",
+            "Must be enabled at test start for learning"
+          ],
+          [
+            "Eligible input",
+            "Review edits in the most recent completed run.",
+            "Not arbitrary edits from all historical runs"
+          ],
+          [
+            "Inspection",
+            "Compare original/latest attributes and Personalization changes where shown.",
+            "Observed preference application"
+          ]
+        ],
+        "lifecycle": [
+          [
+            "Eligible edited finding",
+            "Next applicable run",
+            "Similar findings can receive personalized attributes."
+          ],
+          [
+            "Later edit",
+            "Subsequent learning",
+            "Most recent edit replaces the earlier preference."
+          ],
+          [
+            "Feature disabled",
+            "Run without personalization",
+            "Raw agent-produced findings are shown; preferences remain retained."
+          ]
+        ],
+        "controls": "Personalized severity is not evidence of a repaired vulnerability. Disabling the feature is not deleting learned preferences.",
+        "observable_output": "Original/latest attributes and a Personalization changes explanation on affected findings.",
+        "undocumented": "Similarity thresholds, internal preference storage and a public preference CRUD resource are not established by the guide.",
+        "test": [
+          "Use a controlled staging finding whose risk context can be changed without modifying the application.",
+          "Inspect whether a later similar finding exposes the personalization change.",
+          "Disable personalization; compare raw output without claiming that retained preferences were deleted."
+        ],
+        "claims": [
+          {
+            "source": "SS405",
+            "section": "How personalization learns from your edits; Enable or disable Findings Personalization",
+            "assertion": "Learning uses eligible edits from the most recent completed run; false-positive status is special, and disabling preserves preferences."
+          }
+        ]
+      }
     }
-  ]
+  ],
+  "review_sources": {
+    "DS401": {
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-connecting-mcp-servers.html",
+      "scope": "MCP registration, authentication, association and removal",
+      "reviewed_on": "2026-10-22"
+    },
+    "DS402": {
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html",
+      "scope": "Memory production, progressive retrieval, versions and lifecycle; newer indexed text reviewed alongside older direct-page text",
+      "reviewed_on": "2026-10-22"
+    },
+    "DS403": {
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-what-is-a-devops-agent-topology.html",
+      "scope": "Discovery and topology representation; legacy learned-skill wording qualified by the current memory guide",
+      "reviewed_on": "2026-10-22"
+    },
+    "DS404": {
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-autonomous-incident-response.html",
+      "scope": "Signal routing, investigation creation, steering and corrective feedback",
+      "reviewed_on": "2026-10-22"
+    },
+    "DS405": {
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-agent-instructions.html",
+      "scope": "Session-start loading and propagation; UI navigation differs between retrieved versions",
+      "reviewed_on": "2026-10-22"
+    },
+    "DS406": {
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-skills.html",
+      "scope": "Skill descriptions, targeting and document/code boundaries",
+      "reviewed_on": "2026-10-22"
+    },
+    "DS407": {
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html",
+      "scope": "Definition loading, selected tools and recorded invocation",
+      "reviewed_on": "2026-10-22"
+    },
+    "DS408": {
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/custom-agents-executing-custom-agents.html",
+      "scope": "Invocation, trigger creation, pause/delete and cancellation",
+      "reviewed_on": "2026-10-22"
+    },
+    "DS409": {
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/APIReference/API_CronSchedule.html",
+      "scope": "Flexible window of up to 30 minutes; indexed API reference retrieved",
+      "reviewed_on": "2026-10-22"
+    },
+    "DS410": {
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-proactive-incident-prevention.html",
+      "scope": "Evaluation, recommendation disposition and recommendation lifecycle",
+      "reviewed_on": "2026-10-22"
+    },
+    "DS411": {
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-working-with-directed-actions.html",
+      "scope": "Independent authorization gates, preference replacement and scoped approval",
+      "reviewed_on": "2026-10-22"
+    },
+    "DS412": {
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/release-management-release-readiness-code-review.html",
+      "scope": "Candidate analysis, independent verification option and result categories",
+      "reviewed_on": "2026-10-22"
+    },
+    "DS413": {
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/release-management-release-testing.html",
+      "scope": "Test profiles, real application requests and results; conflicting action names in the page are not copied",
+      "reviewed_on": "2026-10-22"
+    },
+    "DS414": {
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/custom-agents-creating-a-custom-agent.html",
+      "scope": "Custom definition creation and tool assignment",
+      "reviewed_on": "2026-10-22"
+    },
+    "DS415": {
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-supported-regions.html",
+      "scope": "Feature-specific preview availability",
+      "reviewed_on": "2026-10-22"
+    },
+    "SS401": {
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/about-integrations.html",
+      "scope": "Account registrations, space resource selection and separate write opt-ins",
+      "reviewed_on": "2026-10-22"
+    },
+    "SS402": {
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html",
+      "scope": "Target/access/exclusion distinction, credentials and saved assessment",
+      "reviewed_on": "2026-10-22"
+    },
+    "SS403": {
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html",
+      "scope": "Credential resolution and retained login procedure; navigation/authentication coverage differs across retrieved page versions",
+      "reviewed_on": "2026-10-22"
+    },
+    "SS404": {
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html",
+      "scope": "Configuration/run models and one-off design reviews",
+      "reviewed_on": "2026-10-22"
+    },
+    "SS405": {
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/review-penetration-findings.html",
+      "scope": "Findings, confidence filter, original/latest edits and Findings Personalization; newer indexed official page reviewed",
+      "reviewed_on": "2026-10-22"
+    },
+    "SS406": {
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/remediate-finding.html",
+      "scope": "Private repository proposals and S3 diffs; newer indexed provider wording supersedes older GitHub-only description",
+      "reviewed_on": "2026-10-22"
+    },
+    "SS407": {
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html",
+      "scope": "Selected finding replay, Active/Resolved results and preserved lineage",
+      "reviewed_on": "2026-10-22"
+    },
+    "SS408": {
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/security-requirements.html",
+      "scope": "Pack applicability, evaluation and future-review scope",
+      "reviewed_on": "2026-10-22"
+    },
+    "SS409": {
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/import-security-requirements.html",
+      "scope": "Generation replaces pack contents including manual requirements",
+      "reviewed_on": "2026-10-22"
+    },
+    "SS410": {
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-code-review.html",
+      "scope": "Source selection, scan modes and preflight",
+      "reviewed_on": "2026-10-22"
+    },
+    "SS411": {
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/review-code-findings-github.html",
+      "scope": "Change triggers and repository filtering guidance",
+      "reviewed_on": "2026-10-22"
+    },
+    "SS412": {
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/review-design-findings.html",
+      "scope": "Design statuses including Insufficient data and clone/new review behavior",
+      "reviewed_on": "2026-10-22"
+    },
+    "SS413": {
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-threat-model.html",
+      "scope": "Scope documents, source context, system overview and threat review",
+      "reviewed_on": "2026-10-22"
+    },
+    "SS414": {
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/cicd-pentest.html",
+      "scope": "Saved test prerequisite, CI/CD mode, OIDC, deployed-change scope and server-side execution",
+      "reviewed_on": "2026-10-22"
+    },
+    "SS415": {
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/connect-jira.html",
+      "scope": "Project selection and separate issue/comment permissions",
+      "reviewed_on": "2026-10-22"
+    },
+    "SS416": {
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/export-findings-to-issue-tracker.html",
+      "scope": "One issue per selected finding and Task issue-type prerequisite",
+      "reviewed_on": "2026-10-22"
+    },
+    "SS417": {
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/remove-jira.html",
+      "scope": "Removal blocks future integration actions without deleting existing issues",
+      "reviewed_on": "2026-10-22"
+    },
+    "SS418": {
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart.html",
+      "scope": "Save versus execute, preflight and result inspection",
+      "reviewed_on": "2026-10-22"
+    },
+    "FS401": {
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/what-is.html",
+      "scope": "Source-service responsibilities for observed cost, forecasts, coverage and recommendations",
+      "reviewed_on": "2026-10-22"
+    },
+    "FS402": {
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/context-files-and-memory.html",
+      "scope": "Uploaded files, conversational memory and automatic compaction",
+      "reviewed_on": "2026-10-22"
+    },
+    "FS403": {
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html",
+      "scope": "Session runtime, instance isolation and object-specific removal",
+      "reviewed_on": "2026-10-22"
+    },
+    "FS404": {
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/task-management.html",
+      "scope": "Explicit task requests, shared queue, schedules and event tasks",
+      "reviewed_on": "2026-10-22"
+    },
+    "FS405": {
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/automated-anomaly-response.html",
+      "scope": "Monitor event, managed-rule permissions, automation and destination setup",
+      "reviewed_on": "2026-10-22"
+    },
+    "FS406": {
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/custom-cost-reporting.html",
+      "scope": "Source query to report artifact and follow-up revision",
+      "reviewed_on": "2026-10-22"
+    },
+    "FS407": {
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html",
+      "scope": "Action/invocation-specific approval and analytical boundaries",
+      "reviewed_on": "2026-10-22"
+    },
+    "FS408": {
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/jira-integration.html",
+      "scope": "Account registration, project connections and supported Jira operations",
+      "reviewed_on": "2026-10-22"
+    },
+    "FS409": {
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/slack-integration.html",
+      "scope": "Workspace registration, channel binding, membership and one-way publication",
+      "reviewed_on": "2026-10-22"
+    }
+  },
+  "reviewed_on": "2026-10-22",
+  "review_boundary": "Detailed mechanism prose is maintained here and rendered into delimited guide sections. Tests and failure decisions are proposed engineering guidance, not live results."
 }
