@@ -98,6 +98,7 @@ def sync_guides():
         body=text[:definition_start.start()].rstrip();definitions=text[definition_start.start():].strip()
         boundaries=section_boundaries(body);inserts=[]
         for sid,items in sections.items():
+            if sid=="D-07":items=sorted(items,key=lambda e:e["id"]!="MX-D-QUERY")
             if sid not in boundaries:raise ValueError('Unknown mechanism section '+sid)
             end=boundaries[sid][1]
             content=f'\n\n<!-- mechanism-review:start {sid} -->\n\n'+ '\n\n'.join(block(e) for e in items)+f'\n<!-- mechanism-review:end {sid} -->\n\n'
