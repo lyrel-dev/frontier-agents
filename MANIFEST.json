@@ -1,30 +1,33 @@
 {
-  "revision": "2026-10-22-canonical-guides",
-  "scope": "Documentation files only; application has its own publication records",
+  "revision": "2026-10-22-structured-html",
   "files": {
+    ".github/workflows/document-suite.yml": {
+      "bytes": 1371,
+      "sha256": "d2fbb0649bf11e8f78fe134b62e5dcb1e48218f6a40686389e521f8a3ab54309"
+    },
     "CHANGELOG.md": {
-      "bytes": 727,
-      "sha256": "6545764a2f00e796f7692e467e084371fb0ed4289ea8a2e08a781c3bf5e7f22f"
+      "bytes": 462,
+      "sha256": "64b9341893a9fb7f74176004429c4dadf3917f874d85bcc310693f37ef3c2233"
     },
     "EDITORIAL_STANDARD.md": {
-      "bytes": 1728,
-      "sha256": "918c99d88553f9cdec1ed726aab45fb679b95f8c6cb27ae68df95b80f5fe9dd9"
+      "bytes": 2696,
+      "sha256": "033ed7041f7280fdf8222c6d0decb6b8d1165d84ecb2908d922ba6e49e4e49aa"
     },
     "PUBLISHING.md": {
-      "bytes": 574,
-      "sha256": "b0a63c9ddc146d31134083d5f3755598090e313f9355a5768072ef557ae9986d"
+      "bytes": 595,
+      "sha256": "65336ad0a4260a83f74d34887636c3077c87e0f85bd9164ee884d76cb218cbcb"
     },
     "README.md": {
-      "bytes": 2345,
-      "sha256": "1bf787c4f68afd0a32595b9d2ac1507c2dc730995b2e1caafc4fd721ab312ed9"
+      "bytes": 2919,
+      "sha256": "5eb5f5b02efc5e6c8245c2386a1193c373d8d6ac05856e1c1127a9e9a8a47c8d"
     },
     "SCOPE.md": {
       "bytes": 439,
       "sha256": "ddee4fa9077dfe08e3ed4a64b3d8f4aaa0a947275f67fc878e87995a92358949"
     },
     "VALIDATION.md": {
-      "bytes": 1778,
-      "sha256": "2156e192ac0562eda5f405f0d651810015b9d0aeea54d33ef1811befebfa4616"
+      "bytes": 935,
+      "sha256": "5c9f9ea13f9c1801a95cff29d36baf0d508da30b4d292fb869cacc803808c286"
     },
     "architecture/common-patterns.html": {
       "bytes": 300,
@@ -39,8 +42,8 @@
       "sha256": "9b14e6524672fb5458e24235a6a4d0f816b36f21ed74d69c2f04c92697873815"
     },
     "documentation-build.json": {
-      "bytes": 769,
-      "sha256": "65f4902347c0cea122454b4a612a1f9a50e640c9f41db42e41aee00ecb23918c"
+      "bytes": 923,
+      "sha256": "f60ba5a7eb3139b6d9d4dfe302b91a4df6d60c1c5f7ce4bc31ce236921df7f29"
     },
     "examples/prepared-evidence.json": {
       "bytes": 2346,
@@ -51,44 +54,44 @@
       "sha256": "b41f80cf7d99d1db8b78c4d10635745ae5308a371e3bf0a81d307bc08ec045ea"
     },
     "guides/architecture.html": {
-      "bytes": 60857,
-      "sha256": "4bce2137172e8e7ea0b629daee981c1040a58cf23950731ff3be23e347fa34c5"
+      "bytes": 48814,
+      "sha256": "f953e25a090c0162c4cd583038941616ef97f9d6b9e90c288bdc767c6e846956"
     },
     "guides/architecture.md": {
-      "bytes": 12924,
-      "sha256": "043c836c27b3d07780734ef5bb97f5f26eca5b41eb9d7dedc289f772aafa70f8"
+      "bytes": 13492,
+      "sha256": "fed714fb3cd02cc1321d21da7e941b45356873fb4e1d49f8e323c1f86db998e7"
     },
     "guides/coverage.md": {
-      "bytes": 6353,
-      "sha256": "25a968e37547a85351e1ec41fbe8763f302c9f0b2b7d314db84431818af709ee"
+      "bytes": 9576,
+      "sha256": "93071fa28e3638472b70bc1dffeb1083574e898fb3fb84be651c3806e165b79a"
     },
     "guides/devops.html": {
-      "bytes": 120838,
-      "sha256": "67cf4edad3b03052ba1d93190af5cfa010b5611a7eecd48ed98c9093d4522da2"
+      "bytes": 83101,
+      "sha256": "d29f8250bf4569195869dbaef4fe18dc2fade5fe4418b73919de1b0bfd33e3d7"
     },
     "guides/devops.md": {
-      "bytes": 32203,
-      "sha256": "c631bc1c8ca8b1ecd0e54d03e8f67cf371956335ef764a32c372a0c3ca0c1375"
+      "bytes": 33106,
+      "sha256": "eae6221f2495f2073290d20e1d84da5de7e29c5793d90fb8fcd9b1a416c6fed2"
     },
     "guides/finops.html": {
-      "bytes": 95030,
-      "sha256": "9a85df8501779ba8ebb2087caac884702453d228839200a162e310644556440b"
+      "bytes": 71434,
+      "sha256": "e66ca3cf2e49c1faa67391cb8950d2732f1240cd08de921577a3ac97b443121d"
     },
     "guides/finops.md": {
-      "bytes": 24207,
-      "sha256": "e0e14e22207cb95cb8b41242d5f1dffdc158f0d7df8bd56d864324cfd8984bdd"
+      "bytes": 25062,
+      "sha256": "7c3c0b7c804464e272fb696346958e6dc58504f0a07ec027e17725c58ffcb0aa"
     },
     "guides/security.html": {
-      "bytes": 106003,
-      "sha256": "ed1d525fb332184eabc0555ccb2d30527e79fbf05e735a29f7b68a30e9b6f4c6"
+      "bytes": 74922,
+      "sha256": "e1cf6a8de018fcacb12f770f3873c64551a27eecb3405dc123fa6ab640eccbf1"
     },
     "guides/security.md": {
-      "bytes": 27420,
-      "sha256": "c46200504417e76b58c703999b2b2a6a2619d0b43e0f530dcb6bc4ade9827784"
+      "bytes": 28310,
+      "sha256": "c1fb03f76409b02c20a10c96a92026d6eb035491b2d987924774e3f897f269c3"
     },
     "index.html": {
-      "bytes": 12596,
-      "sha256": "c183459a076734fc7ad7d57e4697fbf74807cbad20862ac8b4d0f65667acbaef"
+      "bytes": 24098,
+      "sha256": "ecfca7786c163f6c5bdcca026ea313e3434bbeb1c180e1c06c9827bc88b0293b"
     },
     "mechanisms/devops.html": {
       "bytes": 291,
@@ -127,40 +130,44 @@
       "sha256": "89efe1a79b5910acd6b846e707f7d69d6ba850eaa9945a1e407cb3018e7aa0db"
     },
     "presentations/architecture-notes.md": {
-      "bytes": 4894,
-      "sha256": "a6baf9231599722bcb74f8115fe8ee65eecd09e83d5b22294aa1c70a4562d0fa"
+      "bytes": 4947,
+      "sha256": "63f143efce61c2fe39520360cd5d6d18e9251d35785ed02b48f0df99ae580678"
     },
-    "presentations/architecture.pptx": {
-      "bytes": 71239,
-      "sha256": "d21e73e7bff39c2f037598b15ecba7cf6760f5e4930b32a413b3ef8945212a64"
+    "presentations/architecture.html": {
+      "bytes": 70651,
+      "sha256": "3e27704dda95281125f02b60533c4337f1b015e8b9fb812f4adb727678730461"
     },
     "presentations/devops-notes.md": {
-      "bytes": 8154,
-      "sha256": "9bb7a6f08d05fac5027e0a42b73094e65ddbef847028858bd66ff5b3a527a6e6"
+      "bytes": 8233,
+      "sha256": "9b7b16710f2c36ae5e651b3fa139973e04000b0d01c1c14c9829bcc677ffeea2"
     },
-    "presentations/devops.pptx": {
-      "bytes": 96758,
-      "sha256": "361b74e5ac9b81bdaa20084f024789ce4f22b3ec040be70a2ef7f6609c804eae"
+    "presentations/devops.html": {
+      "bytes": 112287,
+      "sha256": "7d6575571e5817ed3c58d4fc32160d9b1a5711113fff19725b49cc6dd3d3791c"
     },
     "presentations/finops-notes.md": {
-      "bytes": 6862,
-      "sha256": "ffa4390dfef3e12d2a3dde2694ad65d8d11149497bc1e09fdb0bc072c3f29f8b"
+      "bytes": 6977,
+      "sha256": "7d426431956f8d3b36744f7955a0efb4ec7c61afed227c232c7ad318d6e286ff"
     },
-    "presentations/finops.pptx": {
-      "bytes": 88391,
-      "sha256": "1c51b04fc8dabf4d481ec2100294f3bada1c0b073309aa2957c62acf111fc550"
+    "presentations/finops.html": {
+      "bytes": 89295,
+      "sha256": "97c51a67995ed7fd12c8daecf14719f127d40ba10a4b8ffa88a218cb9af063c4"
+    },
+    "presentations/index.html": {
+      "bytes": 24000,
+      "sha256": "f3d13d3b8d587d28312158549e9804dc286bbee224f61a3cedab5c9dd343a0ea"
     },
     "presentations/security-notes.md": {
-      "bytes": 7810,
-      "sha256": "85016797167b8336740b5297f0ea952ac9e638800a9353f37eb9aacb92f75d46"
+      "bytes": 7956,
+      "sha256": "e10be0cfeb3dda832d3d66edecfe6261da533aba10eaed766462e847b25b8643"
     },
-    "presentations/security.pptx": {
-      "bytes": 93627,
-      "sha256": "bfb3cf33d365a78b69aa9031bad186acb1336cdc33c42b6d7c4b96e88d971bba"
+    "presentations/security.html": {
+      "bytes": 97775,
+      "sha256": "7cfdfe9fe60574cae86a72cb31a57cba7331beef71b614c85920a521fa0caaa6"
     },
     "qa/checks.json": {
-      "bytes": 3031,
-      "sha256": "bea85da137015ffa56182633930545c0b5d112a674792c18c725fadef71cbebb"
+      "bytes": 2587,
+      "sha256": "cdf04f3d85d8d5f4df8f6e8431dd88a6b9d25f4a43289f64a1c9bddbbfc045e7"
     },
     "qa/content-review.md": {
       "bytes": 5562,
@@ -171,16 +178,28 @@
       "sha256": "89efe1a79b5910acd6b846e707f7d69d6ba850eaa9945a1e407cb3018e7aa0db"
     },
     "tools/docs-requirements.txt": {
-      "bytes": 112,
-      "sha256": "4b3919443c71ac9d00f6737261df1c2cbc4b89062d8d96b10acfcb792ed198d6"
+      "bytes": 78,
+      "sha256": "8eca6245c16a677c8cd8162ead8d44b96f615a0eb0fd8c5fe09a3615071dc137"
     },
     "tools/docs_build.py": {
-      "bytes": 37297,
-      "sha256": "bb13fc33d74376178f6fb870ae32d507ea4c664b39c1aa24916a6e2ac28dc91e"
+      "bytes": 27316,
+      "sha256": "906ea5b01c4cf7434017797ce2d98373c5518df3172d32ce9bbe93937f30b236"
     },
     "tools/docs_check.py": {
-      "bytes": 16127,
-      "sha256": "27cd580e1d650893796f4a993660fef1490104589276a2456c1034362b73bdd1"
+      "bytes": 15800,
+      "sha256": "2899f03cc2897cd3f64a92f2b29f5aa5bf7cbea5d31ab997d01c68e4a33b072c"
+    },
+    "tools/docs_interactions.js": {
+      "bytes": 7362,
+      "sha256": "60a799a5a4d14cf94cb2677e24bde960574f350cdadfe51ab9a287fd86857a52"
+    },
+    "tools/docs_structure.py": {
+      "bytes": 6723,
+      "sha256": "06a4dc08efaa293d3590eed54c7e69b9c0687b225a321d8160513a305e55daea"
+    },
+    "tools/docs_styles.css": {
+      "bytes": 12649,
+      "sha256": "1f7afead0293f45dd42bcff0e30d0abe6f14f44be60c0140dfd564d0f46302d8"
     },
     "tools/lesson_plan.py": {
       "bytes": 22101,
@@ -190,6 +209,7 @@
   "excluded": [
     "MANIFEST.json itself",
     "applications/",
-    ".git/"
+    ".git/",
+    "__pycache__/"
   ]
 }
