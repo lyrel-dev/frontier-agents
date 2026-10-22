@@ -4,7 +4,11 @@ Engineering guide • documentation reviewed 22 October 2026
 
 This guide explains the platform from its resources upward: access and connectivity, context, execution, operating procedures, and failure diagnosis. Product behavior is supported by the numbered AWS references. Sections explicitly labeled **engineering procedure** or **synthetic exercise** are recommendations or teaching examples, not additional AWS features. No account configuration or live agent execution was performed for this publication.
 
-## D-01 — Service functions and resource model
+## 01. Platform overview and capabilities
+
+Understand the service functions, configuration objects and reusable capabilities.
+
+### D-01 — Service functions and resource model
 
 The built-in functions are incident investigation, on-demand operational questions, and incident-prevention recommendations. Release-readiness review and release testing are separate preview paths. Custom agents execute operator-defined work; a scheduled health report is an application of that facility, not another independent platform primitive. Availability is feature- and Region-specific. Consult the Region table rather than assuming that the Region of a monitored workload determines where the Agent Space must reside. [DS01] [DS15] [DS18]
 
@@ -24,7 +28,7 @@ Agent Space ── operator access ── people / authorized clients
 
 The graph is an explanatory model of documented resources, not an AWS API schema. Topology helps investigations navigate relationships; it does not constrain all possible reads. IAM permissions and integration authorization determine what resources can actually be accessed. [DS04]
 
-### Reusable capabilities, grouped by responsibility
+#### Reusable capabilities, grouped by responsibility
 
 | Group | Capability | Configurable or inspectable objects | Detailed treatment |
 |---|---|---|---|
@@ -42,7 +46,11 @@ The graph is an explanatory model of documented resources, not an AWS API schema
 
 This table is an index, not a second capability database. The referenced sections are the canonical explanations.
 
-## D-02 — Establish the two access paths
+## 02. Access and integrations
+
+Configure operator access, resource access, external tools and network connectivity.
+
+### D-02 — Establish the two access paths
 
 **Administrator procedure.** In the AWS console, create an Agent Space, give it a name, and configure primary-account resource access. Select an automatically created role, an existing role, or the policy-template route for customized permissions. Configure the Web App role separately, then create the space. The expected confirmation is an **Operator access** button that opens an authenticated web application. Creating a space successfully is not confirmation that a particular telemetry API is readable. [DS02]
 
@@ -55,7 +63,7 @@ This table is an index, not a second capability database. The referenced section
 
 **Engineering procedure:** record the space ID, Region, role ARNs and one tested resource. Keep policy source in Git. Do not publish account secrets or copy broad policy examples without adapting their resource scope. For secondary-account trust and exact IAM statements, use the linked current AWS procedure; this guide does not invent a universal trust policy. [DS19]
 
-## D-03 — Connect an external MCP tool provider
+### D-03 — Connect an external MCP tool provider
 
 **Inbound versus outbound:** this section concerns DevOps Agent calling an external MCP server. A client calling DevOps Agent's own remote endpoint is the opposite integration direction; see D-09.
 
@@ -73,7 +81,7 @@ In the role-less SigV4 option, validation is deferred until association and uses
 
 **Engineering verification:** register a staging provider exposing only a non-mutating `service_status` tool. Ask for a known service identifier, inspect the returned tool arguments/result, and compare the result with the source. Then request a deliberately unselected tool; the test is whether it is unavailable, not whether the model verbally promises restraint. Tool-effect classification is a separate decision under D-M06.
 
-## D-04 — Private connectivity is a network mechanism
+### D-04 — Private connectivity is a network mechanism
 
 AWS uses VPC Lattice and a service-managed resource gateway whose ENIs are placed in selected subnets. Traffic reaches the target from those ENIs, not from the public integration IP list. The private connection and the provider's endpoint URL are separate configuration objects. [DS05]
 
@@ -81,7 +89,11 @@ AWS uses VPC Lattice and a service-managed resource gateway whose ENIs are place
 
 **Illustrative configuration review:** an endpoint `https://metrics.example.internal:8443/mcp` needs a route and port range covering 8443. A successful HTTPS check on port 443 is not evidence that this endpoint works. A firewall rule should identify the selected gateway network path. It should not be copied from an unrelated public-service allowlist. This example is a review checklist, not a deployable AWS resource definition.
 
-## D-05 — Discovery, topology and learned understanding
+## 03. Context, memory and behavior
+
+Distinguish discovery, memory production, correction, retrieval, attachment, instructions and skills.
+
+### D-05 — Discovery, topology and learned understanding
 
 Discovery collects CloudFormation resources and, for tagged resources outside CloudFormation deployments, uses enabled Resource Explorer. Relationship evidence can include configuration, tags, deployment mapping and observability. Learned topology/pipeline views summarize that evidence; raw-resource views expose different levels of granularity. A missing graph node does not prove the agent cannot investigate the resource. [DS04]
 
@@ -89,7 +101,7 @@ The managed Learning agent maintains environment knowledge. Its page provides kn
 
 **Engineering verification:** choose one service, identify its actual deployed resources and repository revision, and compare them with the graph. Record missing or incorrectly inferred edges separately. Inspect a learning run and the output's version after refresh; clicking a refresh control is not the completion evidence. Do not enable additional account writes to repair a read/discovery gap.
 
-## D-M01 — How previous incidents become reusable context
+### D-M01 — How previous incidents become reusable context
 
 **Production and retrieval are distinct.** The managed `monitors` store associates recurring causes and investigation evidence with an alarm or metric. AWS describes a daily learning pass when the space has investigations in the preceding two weeks; entries without updates for two weeks can be removed and full stores evict the oldest item. This is operational context, not permanent incident retention. [DS07]
 
@@ -107,11 +119,11 @@ New signal → store relevance → entry relevance → selected context
 
 **Proposed acceptance test:** retain the old incident's independently established cause, then investigate a new occurrence with deliberately different evidence. Record three separate conclusions: entry exists; retrieval was observable or unverified; current diagnosis matches the new evidence. Do not infer retrieval merely because the answer repeats a familiar phrase.
 
-## D-M02 — Corrective feedback produces a separate lesson
+### D-M02 — Corrective feedback produces a separate lesson
 
 Corrective feedback is not the same producer as monitor-history synthesis. In a completed investigation, **Add feedback** records the verdict and, when wrong, the actual cause; Chat is another entry point. The most recent feedback submission replaces earlier feedback for that investigation. Sharing it with AWS requires separate confirmation. The dated change log describes a `reflections` store for lessons from corrections. [DS08] [DS19]
 
-## D-M07 — Memory attachment and lifecycle
+### D-M07 — Memory attachment and lifecycle
 
 A new custom agent has no store attachments. Its definition selects accessible stores; it can write to attached custom stores, while managed stores are read-only to it. This is narrower than the managed Chat agent's documented memory editing behavior. [DS10]
 
@@ -126,7 +138,7 @@ A new custom agent has no store attachments. Its definition selects accessible s
 
 The last two deletion behaviors and the description-selection model are documented in the newer indexed memory guidance. See the evidence notes for the older/newer-page discrepancy. [DS07]
 
-## D-M03 — Standing instructions enter each new session
+### D-M03 — Standing instructions enter each new session
 
 Global and agent-specific `AGENTS.md` text is supplied at startup; it is not selected by relevance. Changes apply to sessions started after saving. A running session retains its startup content. [DS09]
 
@@ -144,7 +156,7 @@ with conclusions supported by the remaining evidence.
 
 Save this only where applicable. Check an old and a new session to test propagation. An instruction changes prompt context; it does not modify IAM authorization. Keep the authoritative text in Git, rather than retaining manual document snapshots.
 
-## D-M04 — Skills are selected procedures, not standing memory
+### D-M04 — Skills are selected procedures, not standing memory
 
 A skill requires `SKILL.md`; its name, description and agent-type targeting determine applicability. Additional references or data can accompany it. Without Sandbox, the supported material is non-executable; Sandbox adds a code-execution surface for applicable investigations. [DS11]
 
@@ -161,7 +173,11 @@ description: Investigate checkout timeouts involving the inventory dependency.
 
 Add a procedure that compares upstream response time, connection errors and deployment timestamps using the actually connected tools. Record failed reads and distinguish observations from hypotheses. The example frontmatter illustrates applicability; it is not a complete environment-specific runbook. A procedure cannot confer missing tool permissions.
 
-## D-06 — Incident routing and investigation feedback
+## 04. Execution and administration
+
+Trace incident routing, custom-agent runs, computation, approvals and configuration changes.
+
+### D-06 — Incident routing and investigation feedback
 
 An external signal is triaged before an independent investigation is necessarily started. **Linked** adds the signal to existing work; **Skipped** applies configured skip criteria; **Proceed** schedules new work. The web app shows the decision and reason. Unlinking or unskipping reschedules independent investigation; correlation or skip skills can be corrected for future events. [DS08]
 
@@ -171,7 +187,7 @@ For a manual investigation, supply the problem, optional starting evidence, inci
 
 Prevention evaluations analyze multiple investigations into recommendations. The **Improvements** page exposes the latest evaluation summary, manual evaluation and schedule controls; the documented default is weekly. This differs from daily monitor-memory refresh. [DS15]
 
-## D-07 — Custom-agent definitions, schedules and cancellation
+### D-07 — Custom-agent definitions, schedules and cancellation
 
 Define a name, system prompt, selected skills and memory stores. Use Chat for tool assignment and inspect the saved definition before executing. The available tool set is the selected subset of the space's integrations. [DS12]
 
@@ -179,7 +195,7 @@ Define a name, system prompt, selected skills and memory stores. Use Chat for to
 
 **Original system-prompt outline:** “Read the selected staging service's alarm and deployment tools for the previous 24 complete hours. Return resource IDs, the UTC window, failed reads and links to material results. Do not publish to external destinations.” This becomes usable only after real tool names and access have been selected. A schedule without those dependencies is not a reporting capability.
 
-## D-M05 — Investigation-local computation
+### D-M05 — Investigation-local computation
 
 Sandbox provisions a fresh Linux environment per investigation. It can execute code, access configured packages and use account profiles within existing permissions. Its default outbound policy permits AWS service endpoints; other destinations require allowlisting. The reviewed preview does not extend this environment to all chat or custom-agent paths. [DS14]
 
@@ -187,7 +203,7 @@ Sandbox provisions a fresh Linux environment per investigation. It can execute c
 
 **Proposed check:** process a harmless supplied dataset, inspect code and numerical results, and test that an unlisted non-AWS endpoint is unavailable. Do not use production mutation as a connectivity test. Network filtering, AWS permissions and directed-action approvals are distinct controls.
 
-## D-M06 — Directed-action authorization
+### D-M06 — Directed-action authorization
 
 Directed actions require space opt-in, eligible target-account elevated access or integration configuration, and specific operator approval. The approval binds the operation and resource; AWS calls are attributed through CloudTrail. A saved role is a permission ceiling, not a standing approval. [DS16]
 
@@ -195,7 +211,7 @@ Directed actions require space opt-in, eligible target-account elevated access o
 
 When using `UpdateAgentSpace`, supplying `preferences` replaces that complete map; omitted preferences revert to defaults. Read current settings first and verify them afterward. A denied mutation should lead to inspection of enablement, role trust, permission policy, tool category and approval scope—not unconditional elevation. [DS16]
 
-## D-08 — Configuration APIs and update semantics
+### D-08 — Configuration APIs and update semantics
 
 Asset management uses the `devops-agent` CLI/SDK client but `aidevops:` IAM actions. `ListAssetTypes` discovers supported types; other asset operations generally authorize against the Agent Space ARN. Metadata keys use snake_case, while top-level request keys use camelCase. Metadata updates use PATCH semantics; asset type cannot be changed. Custom-agent skill/store references require asset IDs, not names. [DS17]
 
@@ -208,7 +224,7 @@ aws devops-agent list-assets --agent-space-id "$AGENT_SPACE_ID" --region "$AWS_R
 
 Set both variables to your approved environment; these commands were not executed here. Inspect returned metadata before changing it. Asset PATCH behavior must not be generalized to the replacement behavior of the directed-action preference map. For content upload/file operations and deployment templates, follow the type-specific official examples rather than constructing an undocumented payload. [DS17]
 
-## D-09 — Access direction and preview release paths
+### D-09 — Access direction and preview release paths
 
 | Path | Caller → recipient | What it connects |
 |---|---|---|
@@ -221,24 +237,11 @@ Each path has its own authentication and permissions. Connecting a tool server d
 
 Release testing interacts with a deployed application and can create, modify or delete application data. A test profile supplies reusable context; the execution produces evidence about that run. Treat it separately from code/readiness analysis. Use a disposable target and disabled external side effects before trying the preview. [DS21]
 
-## D-10 — Limits and diagnostic decisions
+## 05. Worked example
 
-Selected defaults in the reviewed quota guide: three concurrent investigations per space; five concurrent custom invocations per space but one per custom agent; one-hour custom invocation timeout; 500 allowlisted MCP tools; 50 memory stores, 200 entries per store and 100 KB per entry. Some concurrency quotas are adjustable; the custom-agent and memory limits shown are not. Confirm the effective quota before rollout. [DS22]
+Use prepared evidence to examine a recurring alarm without assuming the previous cause has returned.
 
-| Symptom | Inspect first | Corrective decision / expected evidence |
-|---|---|---|
-| Web app unavailable | Operator identity and role | Repair entry permissions; opening as administrator is not the end-user test |
-| Missing topology resource | CloudFormation/Resource Explorer and readable metadata | Distinguish discovery absence from denied direct access |
-| Provider registers but no tool works | Space association, selected tools, auth mode | For role-less SigV4, verify primary-account validation and invoke permission |
-| Private endpoint times out | Connection failureMessage, DNS, port ranges, gateway ENIs | Correct the network path before rotating a valid secret |
-| Memory is ignored | Store/entry activation, descriptions, agent attachments | Compare availability and observed retrieval separately |
-| Instruction change has no effect | Session start time and instruction scope | Retest in a newly started session |
-| Custom run cannot start | Existing invocation and per-agent concurrency | Cancel or inspect current work; do not duplicate definitions |
-| Mutation is rejected | Opt-in, role, category, approval | Repair the failing layer; preserve the narrow target scope |
-
-This diagnostic ordering is an engineering synthesis of D-02 through D-M06, not an additional AWS troubleshooting API.
-
-## D-U01 — Worked example: recurring alarm, different cause
+### D-U01 — Worked example: recurring alarm, different cause
 
 **Synthetic exercise, not an AWS execution.** The same checkout latency alarm fired in two incidents. In the first, connection exhaustion was verified. The new fixture contains the evidence below; values are invented and are not performance claims.
 
@@ -256,7 +259,32 @@ This diagnostic ordering is an engineering synthesis of D-02 through D-M06, not 
 
 **Failure branch:** when no retrieval evidence is exposed, record memory use as unverified. When current telemetry is inaccessible, report insufficient evidence; do not substitute the old memory for current measurements. This exercise tests the distinction between retention, retrieval and diagnosis, not whether a memorized sentence appears.
 
-## D-11 — Coverage and evidence notes
+## 06. Troubleshooting and limits
+
+Locate the failed prerequisite and distinguish limits from missing access or context.
+
+### D-10 — Limits and diagnostic decisions
+
+Selected defaults in the reviewed quota guide: three concurrent investigations per space; five concurrent custom invocations per space but one per custom agent; one-hour custom invocation timeout; 500 allowlisted MCP tools; 50 memory stores, 200 entries per store and 100 KB per entry. Some concurrency quotas are adjustable; the custom-agent and memory limits shown are not. Confirm the effective quota before rollout. [DS22]
+
+| Symptom | Inspect first | Corrective decision / expected evidence |
+|---|---|---|
+| Web app unavailable | Operator identity and role | Repair entry permissions; opening as administrator is not the end-user test |
+| Missing topology resource | CloudFormation/Resource Explorer and readable metadata | Distinguish discovery absence from denied direct access |
+| Provider registers but no tool works | Space association, selected tools, auth mode | For role-less SigV4, verify primary-account validation and invoke permission |
+| Private endpoint times out | Connection failureMessage, DNS, port ranges, gateway ENIs | Correct the network path before rotating a valid secret |
+| Memory is ignored | Store/entry activation, descriptions, agent attachments | Compare availability and observed retrieval separately |
+| Instruction change has no effect | Session start time and instruction scope | Retest in a newly started session |
+| Custom run cannot start | Existing invocation and per-agent concurrency | Cancel or inspect current work; do not duplicate definitions |
+| Mutation is rejected | Opt-in, role, category, approval | Repair the failing layer; preserve the narrow target scope |
+
+This diagnostic ordering is an engineering synthesis of D-02 through D-M06, not an additional AWS troubleshooting API.
+
+## 07. Coverage and official evidence
+
+Identify detailed coverage, linked subjects and source-version qualifications.
+
+### D-11 — Coverage and evidence notes
 
 | AWS subject | Treatment here | Deliberate boundary |
 |---|---|---|
@@ -270,7 +298,7 @@ This diagnostic ordering is an engineering synthesis of D-02 through D-M06, not 
 
 **Source-version decisions:** older cached pages and newer indexed AWS content differed for instruction navigation, custom-store attachment and learned-knowledge storage. This edition uses the newer indexed managed-agent, memory, asset and dated-change guidance for those points. The Region table was not reproduced as a complete regional inventory. A retrieval date is not a claim that AWS published the page on that date.
 
-### Official sources and reviewed sections
+#### Official sources and reviewed sections
 
 - [DS01] Service/feature eligibility; Supported Regions and Feature availability.
 - [DS02] Space creation; primary account and Web App roles; verification.
