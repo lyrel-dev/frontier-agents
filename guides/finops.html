@@ -656,9 +656,9 @@ accounts:
 </g>
 <g class="node" id="finops-F-M02-fig0-node7">
 <title>check</title>
-<path d="M569.5,-48C569.5,-48 191.5,-48 191.5,-48 185.5,-48 179.5,-42 179.5,-36 179.5,-36 179.5,-12 179.5,-12 179.5,-6 185.5,0 191.5,0 191.5,0 569.5,0 569.5,0 575.5,0 581.5,-6 581.5,-12 581.5,-12 581.5,-36 581.5,-36 581.5,-42 575.5,-48 569.5,-48" fill="#dcebff" stroke="#447ac2"></path>
-<text fill="#183b69" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="380.5" y="-27.8">DOC · Test the intended representation</text>
-<text fill="#183b69" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="380.5" y="-12.8">A successful answer alone does not identify its source</text>
+<path d="M586.5,-48C586.5,-48 174.5,-48 174.5,-48 168.5,-48 162.5,-42 162.5,-36 162.5,-36 162.5,-12 162.5,-12 162.5,-6 168.5,0 174.5,0 174.5,0 586.5,0 586.5,0 592.5,0 598.5,-6 598.5,-12 598.5,-12 598.5,-36 598.5,-36 598.5,-42 592.5,-48 586.5,-48" fill="#dcebff" stroke="#447ac2"></path>
+<text fill="#183b69" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="380.5" y="-27.8">DOC · Context verification</text>
+<text fill="#183b69" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="380.5" y="-12.8">Check file state, retained preference and query constraints</text>
 </g>
 <g class="edge" id="finops-F-M02-fig0-edge5">
 <title>file-&gt;check</title>
@@ -1082,91 +1082,109 @@ accounts:
 <p>The event path begins in Cost Anomaly Detection. The service creates a managed rule, matches the configured condition and creates a task using the saved prompt. Analysis and delivery occur after task creation; they are not evidence that matching itself was correct. <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/automated-anomaly-response.html">FS405</a> <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/task-management.html">FS404</a></p>
 <p>Trace the chain one object at a time. A monitor event with no task points toward rule or condition configuration. A completed analysis with no message points toward destination publication. Changing the analytical prompt does not repair an absent event subscription. <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/automated-anomaly-response.html">FS405</a> <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/task-management.html">FS404</a></p>
 <p><strong>Inputs.</strong> Cost Anomaly Detection monitor, required managed EventBridge permissions, condition, response prompt and optional destination.</p>
-<figure class="diagram" data-diagram-key="mechanism-finops-publication"><div class="diagram-viewport"><svg aria-labelledby="finops-F-M05-fig0-mechanism-finops-publication-title finops-F-M05-fig0-mechanism-finops-publication-desc" data-diagram="mechanism-finops-publication" role="img" viewbox="0.00 0.00 590.00 481.00" xmlns="http://www.w3.org/2000/svg">
-<title id="finops-F-M05-fig0-mechanism-finops-publication-title">FinOps tasks and destination-specific authorization</title><desc id="finops-F-M05-fig0-mechanism-finops-publication-desc">Task creation, analysis and delivery have independent outcomes. Jira confirmation depends on invocation mode; Slack does not present a per-message confirmation prompt. Green/AWS: documented service concept. Blue/DOC: our verification procedure. Orange/EXT: engineering-owned source. Stages are logical explanations, not API status enum values.</desc><g class="graph" id="finops-F-M05-fig0-graph0" transform="scale(1 1) rotate(0) translate(18 463)">
+<figure class="diagram" data-diagram-key="mechanism-finops-publication"><div class="diagram-viewport"><svg aria-labelledby="finops-F-M05-fig0-mechanism-finops-publication-title finops-F-M05-fig0-mechanism-finops-publication-desc" data-diagram="mechanism-finops-publication" role="img" viewbox="0.00 0.00 933.00 493.00" xmlns="http://www.w3.org/2000/svg">
+<title id="finops-F-M05-fig0-mechanism-finops-publication-title">FinOps tasks and destination-specific authorization</title><desc id="finops-F-M05-fig0-mechanism-finops-publication-desc">Conversations can request publication directly; explicit tasks and automations use the task queue. Jira confirmation depends on invocation mode. Slack has no per-message approval prompt. Green/AWS: documented service concept. Blue/DOC: our verification procedure. Orange/EXT: engineering-owned source. Stages are logical explanations, not API status enum values.</desc><g class="graph" id="finops-F-M05-fig0-graph0" transform="scale(1 1) rotate(0) translate(18 475)">
 <title>G</title>
 <g class="node" id="finops-F-M05-fig0-node1">
 <title>manual</title>
-<path d="M226,-445C226,-445 19,-445 19,-445 13,-445 7,-439 7,-433 7,-433 7,-421 7,-421 7,-415 13,-409 19,-409 19,-409 226,-409 226,-409 232,-409 238,-415 238,-421 238,-421 238,-433 238,-433 238,-439 232,-445 226,-445" fill="#d9f2e5" stroke="#348761"></path>
-<text fill="#164d35" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="122.5" y="-423.3">AWS · Chat / on-demand task</text>
+<path d="M569,-451C569,-451 348,-451 348,-451 342,-451 336,-445 336,-439 336,-439 336,-427 336,-427 336,-421 342,-415 348,-415 348,-415 569,-415 569,-415 575,-415 581,-421 581,-427 581,-427 581,-439 581,-439 581,-445 575,-451 569,-451" fill="#d9f2e5" stroke="#348761"></path>
+<text fill="#164d35" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="458.5" y="-429.3">AWS · On-demand task request</text>
 </g>
-<g class="node" id="finops-F-M05-fig0-node3">
+<g class="node" id="finops-F-M05-fig0-node4">
 <title>task</title>
-<path d="M379.5,-353C379.5,-353 151.5,-353 151.5,-353 145.5,-353 139.5,-347 139.5,-341 139.5,-341 139.5,-317 139.5,-317 139.5,-311 145.5,-305 151.5,-305 151.5,-305 379.5,-305 379.5,-305 385.5,-305 391.5,-311 391.5,-317 391.5,-317 391.5,-341 391.5,-341 391.5,-347 385.5,-353 379.5,-353" fill="#d9f2e5" stroke="#348761"></path>
-<text fill="#164d35" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="265.5" y="-332.8">AWS · Queued task and analysis</text>
-<text fill="#164d35" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="265.5" y="-317.8">Source reads and result</text>
+<path d="M622.5,-353C622.5,-353 394.5,-353 394.5,-353 388.5,-353 382.5,-347 382.5,-341 382.5,-341 382.5,-317 382.5,-317 382.5,-311 388.5,-305 394.5,-305 394.5,-305 622.5,-305 622.5,-305 628.5,-305 634.5,-311 634.5,-317 634.5,-317 634.5,-341 634.5,-341 634.5,-347 628.5,-353 622.5,-353" fill="#d9f2e5" stroke="#348761"></path>
+<text fill="#164d35" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="508.5" y="-332.8">AWS · Queued task and analysis</text>
+<text fill="#164d35" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="508.5" y="-317.8">Source reads and result</text>
 </g>
 <g class="edge" id="finops-F-M05-fig0-edge1">
 <title>manual-&gt;task</title>
-<path d="M148.07,-408.84C169.3,-394.58 199.92,-374.03 224.57,-357.48" fill="none" stroke="#526474"></path>
-<polygon fill="#526474" points="226.26,-359.51 231.02,-353.15 223.33,-355.15 226.26,-359.51" stroke="#526474"></polygon>
-<text fill="#344454" font-family="DejaVu Sans" font-size="11.00" text-anchor="middle" x="255" y="-378.2">explicit task request</text>
+<path d="M466.98,-414.7C474.31,-399.74 485.07,-377.8 493.8,-359.99" fill="none" stroke="#526474"></path>
+<polygon fill="#526474" points="496.21,-361.03 497.16,-353.14 491.5,-358.72 496.21,-361.03" stroke="#526474"></polygon>
+<text fill="#344454" font-family="DejaVu Sans" font-size="11.00" text-anchor="middle" x="542" y="-378.2">explicit task request</text>
 </g>
 <g class="node" id="finops-F-M05-fig0-node2">
-<title>auto</title>
-<path d="M542,-445C542,-445 275,-445 275,-445 269,-445 263,-439 263,-433 263,-433 263,-421 263,-421 263,-415 269,-409 275,-409 275,-409 542,-409 542,-409 548,-409 554,-415 554,-421 554,-421 554,-433 554,-433 554,-439 548,-445 542,-445" fill="#d9f2e5" stroke="#348761"></path>
-<text fill="#164d35" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="408.5" y="-423.3">AWS · Schedule / anomaly automation</text>
+<title>chat</title>
+<path d="M248.5,-457C248.5,-457 28.5,-457 28.5,-457 22.5,-457 16.5,-451 16.5,-445 16.5,-445 16.5,-421 16.5,-421 16.5,-415 22.5,-409 28.5,-409 28.5,-409 248.5,-409 248.5,-409 254.5,-409 260.5,-415 260.5,-421 260.5,-421 260.5,-445 260.5,-445 260.5,-451 254.5,-457 248.5,-457" fill="#d9f2e5" stroke="#348761"></path>
+<text fill="#164d35" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="138.5" y="-436.8">AWS · Conversation analysis</text>
+<text fill="#164d35" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="138.5" y="-421.8">Direct answer or action request</text>
 </g>
-<g class="edge" id="finops-F-M05-fig0-edge2">
-<title>auto-&gt;task</title>
-<path d="M382.93,-408.84C361.7,-394.58 331.08,-374.03 306.43,-357.48" fill="none" stroke="#526474"></path>
-<polygon fill="#526474" points="307.67,-355.15 299.98,-353.15 304.74,-359.51 307.67,-355.15" stroke="#526474"></polygon>
-<text fill="#344454" font-family="DejaVu Sans" font-size="11.00" text-anchor="middle" x="401.5" y="-378.2">eligible occurrence</text>
-</g>
-<g class="node" id="finops-F-M05-fig0-node4">
+<g class="node" id="finops-F-M05-fig0-node5">
 <title>jira</title>
 <path d="M239,-249C239,-249 12,-249 12,-249 6,-249 0,-243 0,-237 0,-237 0,-198 0,-198 0,-192 6,-186 12,-186 12,-186 239,-186 239,-186 245,-186 251,-192 251,-198 251,-198 251,-237 251,-237 251,-243 245,-249 239,-249" fill="#d9f2e5" stroke="#348761"></path>
 <text fill="#164d35" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="125.5" y="-228.8">AWS · Jira action</text>
 <text fill="#164d35" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="125.5" y="-213.8">Interactive: confirm</text>
 <text fill="#164d35" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="125.5" y="-198.8">Automation: setup authorization</text>
 </g>
-<g class="edge" id="finops-F-M05-fig0-edge3">
-<title>task-&gt;jira</title>
-<path d="M235.81,-304.78C216.88,-289.97 191.99,-270.5 170.64,-253.8" fill="none" stroke="#526474"></path>
-<polygon fill="#526474" points="172.24,-251.73 164.72,-249.17 169.01,-255.86 172.24,-251.73" stroke="#526474"></polygon>
-<text fill="#344454" font-family="DejaVu Sans" font-size="11.00" text-anchor="middle" x="252.5" y="-274.2">configured action</text>
+<g class="edge" id="finops-F-M05-fig0-edge2">
+<title>chat-&gt;jira</title>
+<path d="M109.74,-408.95C94.32,-394.68 76.82,-374.93 68.5,-353 55.84,-319.63 74.32,-282.31 93.53,-255.46" fill="none" stroke="#526474"></path>
+<polygon fill="#526474" points="95.81,-256.8 98.15,-249.21 91.58,-253.68 95.81,-256.8" stroke="#526474"></polygon>
+<text fill="#344454" font-family="DejaVu Sans" font-size="11.00" text-anchor="middle" x="133" y="-326.2">direct requested action</text>
 </g>
-<g class="node" id="finops-F-M05-fig0-node5">
+<g class="node" id="finops-F-M05-fig0-node6">
 <title>slack</title>
 <path d="M522.5,-241.5C522.5,-241.5 288.5,-241.5 288.5,-241.5 282.5,-241.5 276.5,-235.5 276.5,-229.5 276.5,-229.5 276.5,-205.5 276.5,-205.5 276.5,-199.5 282.5,-193.5 288.5,-193.5 288.5,-193.5 522.5,-193.5 522.5,-193.5 528.5,-193.5 534.5,-199.5 534.5,-205.5 534.5,-205.5 534.5,-229.5 534.5,-229.5 534.5,-235.5 528.5,-241.5 522.5,-241.5" fill="#d9f2e5" stroke="#348761"></path>
 <text fill="#164d35" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="405.5" y="-221.3">AWS · Slack action</text>
 <text fill="#164d35" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="405.5" y="-206.3">No per-message approval prompt</text>
 </g>
-<g class="edge" id="finops-F-M05-fig0-edge4">
-<title>task-&gt;slack</title>
-<path d="M295.19,-304.78C317,-287.72 346.73,-264.47 369.83,-246.4" fill="none" stroke="#526474"></path>
-<polygon fill="#526474" points="371.56,-248.38 375.85,-241.69 368.33,-244.24 371.56,-248.38" stroke="#526474"></polygon>
-<text fill="#344454" font-family="DejaVu Sans" font-size="11.00" text-anchor="middle" x="383.5" y="-274.2">configured action</text>
+<g class="edge" id="finops-F-M05-fig0-edge3">
+<title>chat-&gt;slack</title>
+<path d="M156.21,-408.91C182.68,-374.59 230.51,-313.22 240.5,-305 270.45,-280.35 308.55,-259.82 340.6,-244.95" fill="none" stroke="#526474"></path>
+<polygon fill="#526474" points="342.03,-247.18 347.75,-241.67 339.84,-242.4 342.03,-247.18" stroke="#526474"></polygon>
+<text fill="#344454" font-family="DejaVu Sans" font-size="11.00" text-anchor="middle" x="305" y="-326.2">direct requested action</text>
 </g>
-<g class="node" id="finops-F-M05-fig0-node6">
+<g class="node" id="finops-F-M05-fig0-node3">
+<title>auto</title>
+<path d="M885,-451C885,-451 618,-451 618,-451 612,-451 606,-445 606,-439 606,-439 606,-427 606,-427 606,-421 612,-415 618,-415 618,-415 885,-415 885,-415 891,-415 897,-421 897,-427 897,-427 897,-439 897,-439 897,-445 891,-451 885,-451" fill="#d9f2e5" stroke="#348761"></path>
+<text fill="#164d35" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="751.5" y="-429.3">AWS · Schedule / anomaly automation</text>
+</g>
+<g class="edge" id="finops-F-M05-fig0-edge4">
+<title>auto-&gt;task</title>
+<path d="M710.83,-414.93C672.48,-398.83 614.48,-374.48 570.39,-355.98" fill="none" stroke="#526474"></path>
+<polygon fill="#526474" points="571.37,-353.54 563.44,-353.06 569.34,-358.38 571.37,-353.54" stroke="#526474"></polygon>
+<text fill="#344454" font-family="DejaVu Sans" font-size="11.00" text-anchor="middle" x="689.5" y="-378.2">eligible occurrence</text>
+</g>
+<g class="edge" id="finops-F-M05-fig0-edge5">
+<title>task-&gt;jira</title>
+<path d="M427.74,-304.91C373.12,-289.3 300.19,-268.44 239.65,-251.13" fill="none" stroke="#526474"></path>
+<polygon fill="#526474" points="240.26,-248.58 232.33,-249.04 238.82,-253.63 240.26,-248.58" stroke="#526474"></polygon>
+<text fill="#344454" font-family="DejaVu Sans" font-size="11.00" text-anchor="middle" x="388.5" y="-274.2">configured action</text>
+</g>
+<g class="edge" id="finops-F-M05-fig0-edge6">
+<title>task-&gt;slack</title>
+<path d="M486.66,-304.78C470.95,-288.08 449.67,-265.45 432.84,-247.56" fill="none" stroke="#526474"></path>
+<polygon fill="#526474" points="434.36,-245.35 427.31,-241.69 430.54,-248.95 434.36,-245.35" stroke="#526474"></polygon>
+<text fill="#344454" font-family="DejaVu Sans" font-size="11.00" text-anchor="middle" x="511.5" y="-274.2">configured action</text>
+</g>
+<g class="node" id="finops-F-M05-fig0-node7">
 <title>external</title>
 <path d="M377,-141C377,-141 152,-141 152,-141 146,-141 140,-135 140,-129 140,-129 140,-105 140,-105 140,-99 146,-93 152,-93 152,-93 377,-93 377,-93 383,-93 389,-99 389,-105 389,-105 389,-129 389,-129 389,-135 383,-141 377,-141" fill="#fce8d5" stroke="#c78335"></path>
 <text fill="#6d431a" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="264.5" y="-120.8">EXT · Project / channel record</text>
 <text fill="#6d431a" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="264.5" y="-105.8">External audience and retention</text>
 </g>
-<g class="edge" id="finops-F-M05-fig0-edge5">
+<g class="edge" id="finops-F-M05-fig0-edge7">
 <title>jira-&gt;external</title>
 <path d="M168.72,-185.87C186.89,-173 207.87,-158.13 225.56,-145.6" fill="none" stroke="#526474"></path>
 <polygon fill="#526474" points="227.31,-147.57 231.91,-141.09 224.27,-143.29 227.31,-147.57" stroke="#526474"></polygon>
 </g>
-<g class="edge" id="finops-F-M05-fig0-edge6">
+<g class="edge" id="finops-F-M05-fig0-edge8">
 <title>slack-&gt;external</title>
 <path d="M372.44,-193.41C351.99,-179.12 325.63,-160.7 304.07,-145.64" fill="none" stroke="#526474"></path>
 <polygon fill="#526474" points="305.49,-143.43 297.84,-141.29 302.48,-147.74 305.49,-143.43" stroke="#526474"></polygon>
 </g>
-<g class="node" id="finops-F-M05-fig0-node7">
+<g class="node" id="finops-F-M05-fig0-node8">
 <title>check</title>
 <path d="M398.5,-48C398.5,-48 130.5,-48 130.5,-48 124.5,-48 118.5,-42 118.5,-36 118.5,-36 118.5,-12 118.5,-12 118.5,-6 124.5,0 130.5,0 130.5,0 398.5,0 398.5,0 404.5,0 410.5,-6 410.5,-12 410.5,-12 410.5,-36 410.5,-36 410.5,-42 404.5,-48 398.5,-48" fill="#dcebff" stroke="#447ac2"></path>
 <text fill="#183b69" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="264.5" y="-27.8">DOC · Delivery verification</text>
 <text fill="#183b69" font-family="DejaVu Sans" font-size="14.00" text-anchor="middle" x="264.5" y="-12.8">Inspect actual destination before retry</text>
 </g>
-<g class="edge" id="finops-F-M05-fig0-edge7">
+<g class="edge" id="finops-F-M05-fig0-edge9">
 <title>external-&gt;check</title>
 <path d="M264.5,-92.57C264.5,-81.33 264.5,-67.73 264.5,-55.69" fill="none" stroke="#526474" stroke-dasharray="5,2"></path>
 <polygon fill="#526474" points="267.13,-55.54 264.5,-48.04 261.88,-55.54 267.13,-55.54" stroke="#526474"></polygon>
 </g>
 </g>
-</svg></div><figcaption><strong>FinOps tasks and destination-specific authorization.</strong> Task creation, analysis and delivery have independent outcomes. Jira confirmation depends on invocation mode; Slack does not present a per-message confirmation prompt. Green/AWS: documented service concept. Blue/DOC: our verification procedure. Orange/EXT: engineering-owned source. Stages are logical explanations, not API status enum values. <span class="diagram-scope">Logical model. Entity ownership and relationship qualifications are defined in the resource register.</span> <a href="../assets/diagrams/mechanism-finops-publication.svg" rel="noopener" target="_blank">Open full-size SVG</a></figcaption></figure>
+</svg></div><figcaption><strong>FinOps tasks and destination-specific authorization.</strong> Conversations can request publication directly; explicit tasks and automations use the task queue. Jira confirmation depends on invocation mode. Slack has no per-message approval prompt. Green/AWS: documented service concept. Blue/DOC: our verification procedure. Orange/EXT: engineering-owned source. Stages are logical explanations, not API status enum values. <span class="diagram-scope">Logical model. Entity ownership and relationship qualifications are defined in the resource register.</span> <a href="../assets/diagrams/mechanism-finops-publication.svg" rel="noopener" target="_blank">Open full-size SVG</a></figcaption></figure>
 <p><strong>Configuration</strong></p>
 <ol>
 <li><strong>Prerequisites — Event source and managed-rule authority.</strong> Configure a monitor and the agent-role EventBridge permissions.</li>
