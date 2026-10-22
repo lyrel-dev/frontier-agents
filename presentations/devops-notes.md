@@ -10,7 +10,7 @@ Presentation: 65 minutes, including 8 minutes of prepared-result exercises. Ques
 
 00:00–02:00 · Product-specific resource model
 
-Read the entity kind and ownership label before following the relationship. A question mark leaves exact multiplicity unspecified; the detailed register explains each logical association.
+An Agent Space associates account roles and providers. A custom-agent definition selects tools and context; each invocation records a separate execution. Provider registration and space association are distinct configuration operations.
 
 
 
@@ -21,7 +21,7 @@ Read the entity kind and ownership label before following the relationship. A qu
 Detailed reference: [Agent Space, configuration and execution](../guides/devops.html#D-01)
 
 
-## 02. Resource identities and lifecycle boundaries
+## 02. Agent Space, asset, and invocation identities
 
 02:00–05:00 · Product-specific resource model
 
@@ -49,7 +49,7 @@ Detailed reference: [Configuration identities and knowledge relationships](../gu
 
 05:00–08:00 · Product-specific resource model
 
-Read the entity kind and ownership label before following the relationship. A question mark leaves exact multiplicity unspecified; the detailed register explains each logical association.
+A custom definition references existing skill and memory-store assets. A store contains entries; updates create entry versions. Activation and attachment control availability, while retrieval occurs during execution.
 
 
 
@@ -488,7 +488,7 @@ Detailed reference: [Memory-store access, versions, and retention](../guides/dev
 
 52:00–55:00 · Operational objectives and implementation
 
-Read the entity kind and ownership label before following the relationship. A question mark leaves exact multiplicity unspecified; the detailed register explains each logical association.
+A signal can be linked, skipped, or investigated. Steering changes the active analysis; completed-investigation feedback provides a corrective input. Resource mutation requires its separate approval path.
 
 
 
