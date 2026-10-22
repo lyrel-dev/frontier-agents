@@ -25,9 +25,9 @@
 
 <g id="node7" class="node">
 <title>check</title>
-<path fill="#dcebff" stroke="#447ac2" d="M569.5,-48C569.5,-48 191.5,-48 191.5,-48 185.5,-48 179.5,-42 179.5,-36 179.5,-36 179.5,-12 179.5,-12 179.5,-6 185.5,0 191.5,0 191.5,0 569.5,0 569.5,0 575.5,0 581.5,-6 581.5,-12 581.5,-12 581.5,-36 581.5,-36 581.5,-42 575.5,-48 569.5,-48" />
-<text text-anchor="middle" x="380.5" y="-27.8" font-family="DejaVu Sans" font-size="14.00" fill="#183b69">DOC · Test the intended representation</text>
-<text text-anchor="middle" x="380.5" y="-12.8" font-family="DejaVu Sans" font-size="14.00" fill="#183b69">A successful answer alone does not identify its source</text>
+<path fill="#dcebff" stroke="#447ac2" d="M586.5,-48C586.5,-48 174.5,-48 174.5,-48 168.5,-48 162.5,-42 162.5,-36 162.5,-36 162.5,-12 162.5,-12 162.5,-6 168.5,0 174.5,0 174.5,0 586.5,0 586.5,0 592.5,0 598.5,-6 598.5,-12 598.5,-12 598.5,-36 598.5,-36 598.5,-42 592.5,-48 586.5,-48" />
+<text text-anchor="middle" x="380.5" y="-27.8" font-family="DejaVu Sans" font-size="14.00" fill="#183b69">DOC · Context verification</text>
+<text text-anchor="middle" x="380.5" y="-12.8" font-family="DejaVu Sans" font-size="14.00" fill="#183b69">Check file state, retained preference and query constraints</text>
 </g>
 
 <g id="edge5" class="edge">
