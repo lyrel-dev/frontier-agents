@@ -2,8 +2,8 @@
   "revision": "2026-10-22-mechanism-review",
   "files": {
     ".github/workflows/document-suite.yml": {
-      "bytes": 3346,
-      "sha256": "8491b742ec4ba583ff9f9c27e4c69cfe4a7631c3ad25a2d0f4a1d3ddc7385804"
+      "bytes": 3034,
+      "sha256": "fde17bc3e876735d7058c3b2059e9c15248213d57b6c196277e0b7fbb857c6b1"
     },
     "CHANGELOG.md": {
       "bytes": 1421,
