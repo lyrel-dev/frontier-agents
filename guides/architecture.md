@@ -4,7 +4,7 @@ Engineering comparison • documentation reviewed 22 October 2026
 
 This document compares AWS DevOps Agent, AWS Security Agent and AWS FinOps Agent. It is not an AWS reference architecture or a claim that the services share a runtime, memory implementation, authorization model or orchestrator. Product statements are sourced; proposed team-level interfaces are labeled as engineering design.
 
-## 01. Resource and context models
+## 01. Resource and Context Models
 
 Compare the documented objects and retained information without assuming a common runtime.
 
@@ -35,9 +35,9 @@ These mechanisms are documented separately in the canonical guides: D-M01, D-M02
 
 **Engineering verification:** separate five questions: was relevant input available, was retained content produced, was it accessible to this execution, was its use observable, and was the resulting conclusion correct? The final answer alone cannot resolve all five.
 
-## 02. Access and effect boundaries
+## 02. Connectivity, Identity and Effect Boundaries
 
-Separate reachability, identity and the authority to perform an operation.
+Separate reachability, authenticated identity and authority to perform an operation.
 
 ### A-03 — Connectivity, authentication and authorization are different layers
 
@@ -71,9 +71,9 @@ The common rule is to examine the actual effect, not to label every agent “rea
 
 **Engineering design:** carry a requested effect and intended target in a work item, but never carry credentials or substitute a ticket approval for the receiving service's native authorization.
 
-## 03. Lifecycle and handoffs
+## 03. Execution Lifecycles and Handoff Records
 
-Compare configuration, execution, artifacts and team-composed handoff records.
+Compare configuration, execution, artifacts and team-composed handoffs.
 
 ### A-05 — Configuration, execution and derived artifacts need separate lifecycles
 
@@ -115,9 +115,9 @@ The receiving engineer resolves the internal evidence link, validates the resour
 
 **Failure branch:** a task naming “the latest deployment” without an immutable revision cannot establish which change was assessed. Return the work item for clarification rather than letting each product silently choose a different latest revision.
 
-## 04. Worked comparison
+## 04. Worked Cross-Platform Comparison
 
-Identify different jobs for the three services from the same operational symptom.
+Assign different evidence obligations to the three services for one operational symptom.
 
 ### A-U01 — Worked comparison: one symptom, three different jobs
 
@@ -131,9 +131,9 @@ Identify different jobs for the three services from the same operational symptom
 
 **Four-minute exercise:** spend one minute identifying each product's required input, two minutes checking revision/window/identity consistency across the prepared records, and one minute assigning unresolved questions to owners. A purported single root cause is rejected unless evidence actually connects the observations. No live agents or shared runtime are assumed.
 
-## 05. Coverage and official evidence
+## 05. Documentation Acceptance and Evidence Boundaries
 
-Identify what is documented, recommended and undisclosed.
+Identify what is documented, recommended, tested and undisclosed.
 
 ### A-07 — Coverage, evidence and unresolved implementation details
 
