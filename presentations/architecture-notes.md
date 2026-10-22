@@ -84,7 +84,7 @@ Execution | Investigation or invocation | Run, review or revalidation job | Conv
 Primary evidence | Tool results and investigation history | Findings and linked verification | Source query, task and artifact
 
 
-Detailed reference: [Workspace, configuration, and execution models](../guides/architecture.html#A-01)
+Detailed reference: [Resource identity across service boundaries](../guides/architecture.html#A-01)
 
 
 ## 05. Resource and context models
@@ -108,7 +108,7 @@ Reference file | FinOps operator upload | Task or conversation | Soft delete and
 Conversational memory | Explicit user request | Later FinOps session | Update or forget
 
 
-Detailed reference: [Workspace, configuration, and execution models](../guides/architecture.html#A-01)
+Detailed reference: [Resource identity across service boundaries](../guides/architecture.html#A-01)
 
 
 
@@ -340,7 +340,7 @@ Documentation | Topology, SOP skills and environment memory | Threat model and r
 Controlled effect | Directed resource action | Repository remediation or issue tracking | Jira/Slack publication; engineering change outside agent
 
 
-Detailed reference: [Workspace, configuration, and execution models](../guides/architecture.html#A-01)
+Detailed reference: [Resource identity across service boundaries](../guides/architecture.html#A-01)
 
 
 
