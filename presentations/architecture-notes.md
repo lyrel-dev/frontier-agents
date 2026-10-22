@@ -2,7 +2,7 @@
 
 
 
-Presentation: 26 minutes, including 4 minutes of prepared-result exercises. Questions and breaks are additional.
+Presentation: 34 minutes, including 4 minutes of prepared-result exercises. Questions and breaks are additional.
 
 
 
@@ -71,9 +71,82 @@ Detailed reference: [Workspace, configuration, and execution models](../guides/a
 Detailed reference: [Knowledge construction and retrieval models](../guides/architecture.html#A-02)
 
 
-## 04. Team-managed evidence handoff
+## 04. Operational objectives, mechanisms and features
 
-06:00–08:00 · Integrations and access
+06:00–08:00 · Outcome and implementation relationships
+
+Follow the operational objective through its workflow, configured mechanisms and independent completion evidence. The catalog links each dependency to its detailed guide.
+
+
+
+![Outcome, workflow, mechanism, and feature relationships](../assets/diagrams/workflow-feature-map.svg)
+
+
+
+Detailed reference: [Operational objectives and implementation dependencies](../guides/architecture.html#A-09)
+
+
+## 05. Service-health reporting: required and conditional dependencies
+
+08:00–11:00 · Outcome and implementation relationships
+
+Follow the operational objective through its workflow, configured mechanisms and independent completion evidence. The catalog links each dependency to its detailed guide.
+
+
+
+Element | Purpose | Configuration and evidence
+
+Current telemetry | Required basis for the health conclusion | Selected source tools; verify period and material measurement.
+
+Historical context | Optional interpretation of prior behavior | Available relevant memory; distinguish retrieval from correctness.
+
+Recurring execution | Conditional on the chosen reporting profile | Configured trigger; timing and measurement window differ.
+
+External destination | Optional publication effect | Destination-specific authorization and delivery result.
+
+
+Detailed reference: [Operational objectives and implementation dependencies](../guides/architecture.html#A-09)
+
+
+
+Detailed reference: [Knowledge construction and retrieval models](../guides/architecture.html#A-02)
+
+
+
+Detailed reference: [Authorization of state-changing operations](../guides/architecture.html#A-04)
+
+
+## 06. Operational-review profiles and evidence handoffs
+
+11:00–14:00 · Outcome and implementation relationships
+
+Follow the operational objective through its workflow, configured mechanisms and independent completion evidence. The catalog links each dependency to its detailed guide.
+
+
+
+Profile | Reviewed inputs | Review outcome
+
+Reliability | Health, deployments, incident patterns and prevention proposals | Priorities, owners and evidence needed for closure.
+
+Cost management | Reconciled amounts, anomalies, recommendations and measured outcomes | Decisions with estimates separate from observed benefits.
+
+Combined team review | Independently configured service results | Retained source identities; no shared credentials or approval.
+
+
+Detailed reference: [Cross-team evidence handoffs](../guides/architecture.html#A-06)
+
+
+
+Detailed reference: [Operational objectives and implementation dependencies](../guides/architecture.html#A-09)
+
+
+
+Detailed reference: [Cross-platform operational review: worked example](../guides/architecture.html#A-U01)
+
+
+## 07. Team-managed evidence handoff
+
+14:00–16:00 · Integrations and access
 
 An operational finding can become input to separate security and cost work. Each receiving service uses its own configuration and authorization; only identifiers, evidence references, and decisions are handed over.
 
@@ -90,9 +163,9 @@ Detailed reference: [Integration direction and evidence ownership](../guides/arc
 Detailed reference: [Cross-team evidence handoffs](../guides/architecture.html#A-06)
 
 
-## 05. Connectivity, identity and authorization
+## 08. Connectivity, identity and authorization
 
-08:00–10:00 · Integrations and access
+16:00–18:00 · Integrations and access
 
 Reachability and prompt guidance do not establish authorization for an effect.
 
@@ -110,9 +183,9 @@ Behavioral guidance | Which instructions, skills or prompt rules shape the work?
 Detailed reference: [Network, identity, and tool-access boundaries](../guides/architecture.html#A-03)
 
 
-## 06. Execution and approval boundaries
+## 09. Execution and approval boundaries
 
-10:00–12:00 · Execution workflows
+18:00–20:00 · Execution workflows
 
 Approval follows the concrete effect; there is no universal human-approved agent mode.
 
@@ -134,9 +207,9 @@ Recommendation only | No execution authority | Proposal and acceptance criteria
 Detailed reference: [Authorization of state-changing operations](../guides/architecture.html#A-04)
 
 
-## 07. Configuration, execution and artifact lifecycles
+## 10. Configuration, execution and artifact lifecycles
 
-12:00–14:00 · Execution workflows
+20:00–22:00 · Execution workflows
 
 Stopping future starts does not reverse completed effects or delete retained evidence.
 
@@ -158,9 +231,9 @@ External artifact | Ticket, message or exported report | Destination-specific re
 Detailed reference: [Configuration, execution, and artifact lifecycles](../guides/architecture.html#A-05)
 
 
-## 08. Handoff record between platforms and teams
+## 11. Handoff record between platforms and teams
 
-14:00–16:00 · Execution workflows
+22:00–24:00 · Execution workflows
 
 A handoff transfers evidence and responsibility, not credentials or authorization.
 
@@ -182,9 +255,9 @@ Acceptance | Required check and unresolved questions | Prevent generated text fr
 Detailed reference: [Cross-team evidence handoffs](../guides/architecture.html#A-06)
 
 
-## 09. Tabletop: one operational symptom, three different jobs
+## 12. Tabletop: one operational symptom, three different jobs
 
-16:00–20:00 · Worked example
+24:00–28:00 · Worked example
 
 The same business event creates different evidence obligations for each platform.
 
@@ -202,9 +275,9 @@ The same business event creates different evidence obligations for each platform
 Detailed reference: [Cross-platform operational review: worked example](../guides/architecture.html#A-U01)
 
 
-## 10. Use case families across the three platforms
+## 13. Use case families across the three platforms
 
-20:00–23:00 · Troubleshooting and references
+28:00–31:00 · Troubleshooting and references
 
 Similar business labels can map to different platform objects and authorization boundaries.
 
@@ -230,9 +303,9 @@ Detailed reference: [Workspace, configuration, and execution models](../guides/a
 Detailed reference: [Architecture assumptions and references](../guides/architecture.html#A-07)
 
 
-## 11. Documentation and presentation acceptance criteria
+## 14. Documentation and presentation acceptance criteria
 
-23:00–26:00 · Troubleshooting and references
+31:00–34:00 · Troubleshooting and references
 
 A presentation is an indexed technical explanation, not a sequence of slogans.
 
