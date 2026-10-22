@@ -1,0 +1,524 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Shared architecture</title><style>
+:root{--ink:#172c43;--navy:#142c43;--accent:#096b68;--muted:#526579;--line:#d7e1e8;--pale:#eff4f7}*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:90px}body{margin:0;color:var(--ink);background:#f6f8fa;font:16px/1.65 system-ui,-apple-system,Segoe UI,sans-serif}a{color:#075f98;text-underline-offset:3px}button,input,select{font:inherit;color:inherit;padding:9px 12px;border:1px solid #96a9b8;border-radius:5px;background:white}button{cursor:pointer}button:hover{background:#e9f4f2}:focus-visible{outline:3px solid #b46e08;outline-offset:3px}.topbar{background:var(--navy);color:white;padding:18px 30px;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}.topbar a{color:#dceaff}.brand{font-size:13px;letter-spacing:.09em;text-transform:uppercase;font-weight:700}.topbar nav{display:flex;gap:18px;flex-wrap:wrap}.shell{display:grid;grid-template-columns:265px minmax(0,1fr);gap:32px;max-width:1440px;margin:auto;padding:26px 28px}aside{position:sticky;top:20px;max-height:94vh;overflow:auto;align-self:start;padding:4px 14px 12px 0}aside h2{font-size:13px;text-transform:uppercase;letter-spacing:.1em}aside a{display:block;font-size:13px;line-height:1.4;padding:7px 9px;border-left:2px solid var(--line);text-decoration:none;margin:3px 0}aside a:hover{border-color:var(--accent);background:#e7efef}.content{min-width:0;max-width:1000px}.lead{background:white;padding:30px;border:1px solid var(--line);border-top:5px solid var(--accent);border-radius:8px}h1{font-size:clamp(28px,3.4vw,42px);line-height:1.15;letter-spacing:-.025em;margin:0 0 22px}h2{font-size:26px;line-height:1.25;margin:0 0 20px}h3{font-size:20px;line-height:1.35;margin:26px 0 12px}p{margin:0 0 17px}.report-section{background:white;border:1px solid var(--line);padding:30px;margin:25px 0;border-radius:8px;min-width:0}.section-label{font-size:11px;letter-spacing:.1em;font-weight:700;color:var(--accent);text-transform:uppercase;margin-bottom:9px}.controls{display:flex;gap:10px;flex-wrap:wrap;background:#f6f8fa;padding:15px 0;position:sticky;top:0;z-index:3}.controls input{flex:2;min-width:180px}.controls select{flex:1;min-width:130px}.status{font-size:13px;color:var(--muted);margin:0 0 10px}.table-wrap{overflow-x:auto;margin:20px 0}table{border-collapse:collapse;width:100%;font-size:14px;line-height:1.55}th,td{padding:13px 15px;border:1px solid var(--line);text-align:left;vertical-align:top;min-width:90px}th{background:#e9f0f4;font-weight:700}tr:nth-child(even) td{background:#f8fafb}pre{background:#11283d;color:#eaf2f8;padding:20px;overflow:auto;border-radius:6px;font-size:13px;line-height:1.6}code{font-size:.9em;overflow-wrap:anywhere}blockquote{border-left:4px solid var(--accent);margin:20px 0;padding:5px 20px;background:#eef6f4}li{margin:7px 0}.ref-link{font-size:12px;font-weight:600}footer{font-size:13px;color:var(--muted);padding:22px 0}.toc-toggle{display:none}[hidden]{display:none!important}.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}.card{background:white;border:1px solid var(--line);padding:26px;border-top:4px solid var(--accent);border-radius:8px}.card h2{font-size:24px}.card a{margin-right:12px}.guide-index{max-width:1180px;margin:35px auto;padding:0 24px}.small{font-size:13px;color:var(--muted)}.deck{display:none;max-width:1320px;margin:20px auto;padding:0 24px}.presenting .shell{display:none}.presenting .deck{display:block}.deck-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:15px 0}.deck-controls select{min-width:200px;flex:1}.slide{background:white;border:1px solid var(--line);border-top:6px solid var(--accent);padding:25px 34px;min-height:640px;display:flex;flex-direction:column}.slide .kicker{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}.slide h2{font-size:clamp(26px,3vw,39px);margin:12px 0 28px;max-width:1100px}.slide-body{flex:1;display:flex;align-items:center;min-height:310px}.slide table{font-size:19px}.slide th,.slide td{padding:15px;line-height:1.4}.flow{display:flex;gap:15px;width:100%;align-items:stretch}.node{flex:1;min-width:0;background:var(--pale);border-top:4px solid var(--accent);padding:20px;position:relative}.node:not(:last-child):after{content:'→';position:absolute;right:-15px;top:43%;font-size:23px;color:var(--accent)}.node strong{font-size:21px;display:block;margin-bottom:15px;line-height:1.25}.node p{font-size:19px;line-height:1.5}.columns{display:flex;gap:22px;width:100%}.column{flex:1;border-top:4px solid var(--accent);padding:22px;background:var(--pale);min-width:0}.column strong{font-size:23px;display:block;margin-bottom:18px}.column p{font-size:20px;line-height:1.5}.takeaway{background:var(--navy);color:white;padding:15px 20px;font-size:18px;line-height:1.4;margin:25px 0 10px}.slide-foot{font-size:12px;color:var(--muted);display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap}.notes{background:#f0f4f6;border:1px solid var(--line);padding:24px;margin-top:16px;max-height:500px;overflow:auto}.notes h2{font-size:22px}.notes h3{font-size:17px}.notes table{font-size:13px}.presenting .topbar{position:static}.timer{font-variant-numeric:tabular-nums;font-size:16px;font-weight:700}.source-foot{overflow-wrap:anywhere}
+@media(max-width:900px){.shell{grid-template-columns:1fr;padding:16px;gap:0}aside{position:static;max-height:250px;background:white;border:1px solid var(--line);padding:10px;margin-bottom:16px}.toc-toggle{display:inline-block}.report-section,.lead{padding:22px}.controls{position:static}.cards{grid-template-columns:1fr}.slide{padding:20px;min-height:0}.flow,.columns{flex-direction:column}.node:not(:last-child):after{display:none}.slide table{font-size:16px}.slide-body{min-height:0}.node strong,.column strong{font-size:20px}.node p,.column p{font-size:18px}.deck{padding:0 12px}.slide h2{font-size:27px}.slide .table-wrap{max-width:100%}.topbar{padding:16px}.takeaway{font-size:16px}}
+@media print{body{background:white;font-size:10pt}.topbar,aside,.controls,.deck-controls,.status,.notes,footer{display:none!important}.shell{display:block;padding:0;max-width:none}.content{max-width:none}.lead,.report-section{border:0;padding:0;margin:15px 0;break-inside:auto}.report-section[hidden]{display:block!important}.table-wrap{overflow:visible}pre{white-space:pre-wrap;color:black;background:#eee}table{font-size:9pt}.deck{padding:0;max-width:none}.presenting .slide{display:flex!important;break-after:page;min-height:0;height:95vh;border:0}.presenting .slide[hidden]{display:flex!important}.slide h2{font-size:27pt}.slide table{font-size:16pt}.slide .flow,.slide .columns{flex-direction:row}.slide .node p,.slide .column p{font-size:15pt}.slide .node strong,.slide .column strong{font-size:17pt}.takeaway{color:black;background:#eee}.source-foot{font-size:9pt}}
+</style></head><body><header class="topbar"><span class="brand">Frontier agents · engineering guides</span><nav><a href="../index.html">Collection</a><a href="../EDITORIAL_STANDARD.md">Editorial standard</a><a href="../VALIDATION.md">Validation</a></nav></header><div class="shell"><aside><h2>Contents</h2><a href="#A-01">A-01 · Compare resources before comparing workflows</a><a href="#A-02">A-02 · Separate knowledge producers from consumers</a><a href="#A-03">A-03 · Connectivity, authentication and authorization are different layers</a><a href="#A-04">A-04 · Authorization must follow the effect</a><a href="#A-05">A-05 · Configuration, execution and derived artifacts need separate lifecycles</a><a href="#A-06">A-06 · A handoff is an artifact, not transferred execution authority</a><a href="#A-U01">A-U01 · Worked comparison: one symptom, three different jobs</a><a href="#A-07">A-07 · Coverage, evidence and unresolved implementation details</a></aside><main class="content"><div class="lead"><h1>Shared architecture — three distinct control systems</h1>
+<p>Engineering comparison • documentation reviewed 22 October 2026</p>
+<p>This document compares AWS DevOps Agent, AWS Security Agent and AWS FinOps Agent. It is not an AWS reference architecture or a claim that the services share a runtime, memory implementation, authorization model or orchestrator. Product statements are sourced; proposed team-level interfaces are labeled as engineering design.</p>
+<p class="small"><a href="architecture.md">Markdown source</a> · <a href="../presentations/architecture.pptx">Editable PowerPoint</a> · <a href="../presentations/architecture-notes.md">Presenter reference</a></p></div><div class="controls"><input id="search" aria-label="Search guide" placeholder="Search the guide · / to focus"><select id="kind" aria-label="Section type"><option value="">All sections</option><option value="model">Model</option><option value="procedure">Procedure</option><option value="mechanism">Mechanism</option><option value="troubleshooting">Troubleshooting</option><option value="example">Example</option><option value="reference">Reference</option></select><button id="reset">Reset</button><button id="present">Presentation</button><button data-print>Print</button></div><p id="status" class="status" aria-live="polite"></p><section class="report-section" id="A-01" data-kind="model"><div class="section-label">model</div><h2>A-01 — Compare resources before comparing workflows</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>DevOps Agent</th>
+<th>Security Agent</th>
+<th>FinOps Agent</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Scope</td>
+<td>Agent Space with account/provider associations</td>
+<td>Application Agent Space plus shared account resources</td>
+<td>Agent instance with its own data and connections</td>
+</tr>
+<tr>
+<td>Reusable configuration</td>
+<td>Managed/custom agents, selected tools, knowledge, triggers</td>
+<td>Assessment configurations, requirements, sources, credentials</td>
+<td>Context files, memories, integrations and automations</td>
+</tr>
+<tr>
+<td>Execution</td>
+<td>Investigation, chat, evaluation, custom invocation</td>
+<td>Assessment run or one-off design review; revalidation job</td>
+<td>Conversation, queued task, report generation</td>
+</tr>
+<tr>
+<td>Reviewable state</td>
+<td>Tool results, investigation evidence, knowledge versions</td>
+<td>Findings, test context, model/review results, lineage</td>
+<td>Source queries, task results, report artifacts</td>
+</tr>
+</tbody>
+</table></div>
+<p>The terms differ because the objects differ. A common UI label does not make all Agent Spaces identical. In Security Agent, requirements can be shared across applications; in DevOps Agent, a topology graph is not the complete access boundary; in FinOps Agent, an instance's context can be visible to everyone with access to that instance. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-what-is-a-devops-agent-topology.html" rel="noopener">AS01</a> <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html" rel="noopener">AS02</a> <a class="ref-link" href="https://docs.aws.amazon.com/finops-agent/latest/userguide/creating-an-agent.html" rel="noopener">AS03</a></p>
+<p><strong>Engineering design:</strong> record the platform, account/Region, configuration ID and execution ID separately. Do not put one ambiguous <code>agent_id</code> in every downstream ticket and expect it to identify all four concepts.</p>
+</section><section class="report-section" id="A-02" data-kind="procedure"><div class="section-label">procedure</div><h2>A-02 — Separate knowledge producers from consumers</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Retained material</th>
+<th>Producer</th>
+<th>Consumer and lifecycle</th>
+<th>Do not infer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DevOps monitor history</td>
+<td>Managed learning over investigations</td>
+<td>Selective memory retrieval; bounded refresh/retention</td>
+<td>A permanent incident archive or trained model weights</td>
+</tr>
+<tr>
+<td>DevOps correction</td>
+<td>Operator feedback; reflection knowledge</td>
+<td>Later relevant investigation context</td>
+<td>That feedback instantly changed every derived record</td>
+</tr>
+<tr>
+<td>Security login skill</td>
+<td>Successful authentication navigation</td>
+<td>Reuse on later logins; toggle controls reuse</td>
+<td>General-purpose vulnerability or incident memory</td>
+</tr>
+<tr>
+<td>FinOps reference file</td>
+<td>Operator upload</td>
+<td>Readable contextual source; soft-delete/restore</td>
+<td>Conversational edits rewriting the file</td>
+</tr>
+<tr>
+<td>FinOps memory</td>
+<td>Conversation/task-derived context</td>
+<td>Instance-persistent preferences/corrections</td>
+<td>Verbatim retention of all old conversation messages</td>
+</tr>
+</tbody>
+</table></div>
+<p>These mechanisms are documented separately in the canonical guides: <a href="devops.html#D-M01">D-M01</a>, <a href="devops.html#D-M02">D-M02</a>, <a href="devops.html#D-M07">D-M07</a>, <a href="security.html#S-M02">S-M02</a>, <a href="finops.html#F-M02">F-M02</a> and <a href="finops.html#F-M03">F-M03</a>. Their lifecycle cannot be replaced by a single generic “learning enabled” checkbox. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html" rel="noopener">AS04</a> <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/whats-new.html" rel="noopener">AS05</a> <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html" rel="noopener">AS06</a> <a class="ref-link" href="https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html" rel="noopener">AS07</a></p>
+<p><strong>Engineering verification:</strong> separate five questions: was relevant input available, was retained content produced, was it accessible to this execution, was its use observable, and was the resulting conclusion correct? The final answer alone cannot resolve all five.</p>
+</section><section class="report-section" id="A-03" data-kind="procedure"><div class="section-label">procedure</div><h2>A-03 — Connectivity, authentication and authorization are different layers</h2>
+<p>A private connection supplies a route. Authentication establishes an identity. Authorization determines allowed operations. Prompt instructions describe desired behavior. A successful connection test demonstrates only the layers it actually exercised.</p>
+<p>For DevOps MCP, provider registration and Agent Space tool selection are distinct from private routing and tool-effect classification. Security testing separately resolves credentials and applies them to the application; retrieval may succeed while login fails. FinOps registers an account integration and then binds a destination to an agent. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-connecting-mcp-servers.html" rel="noopener">AS08</a> <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html" rel="noopener">AS06</a> <a class="ref-link" href="https://docs.aws.amazon.com/finops-agent/latest/userguide/jira-integration.html" rel="noopener">AS09</a></p>
+<p><strong>Engineering test matrix:</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Evidence needed</th>
+<th>Failure interpretation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Intended read</td>
+<td>Correct identity, resource, time window and result</td>
+<td>Inspect source access before evaluating the answer</td>
+</tr>
+<tr>
+<td>Unselected operation</td>
+<td>Operation unavailable or rejected</td>
+<td>Do not accept a verbal promise as enforcement evidence</td>
+</tr>
+<tr>
+<td>Authentication</td>
+<td>Actual application role reached</td>
+<td>A fetched secret is insufficient</td>
+</tr>
+<tr>
+<td>External publication</td>
+<td>Correct destination and action record</td>
+<td>Connected integration is insufficient</td>
+</tr>
+<tr>
+<td>Configuration update</td>
+<td>Saved identifiers and current values</td>
+<td>A success message may omit replacement/default consequences</td>
+</tr>
+</tbody>
+</table></div>
+<p>Use a non-production target and non-sensitive fixture. These are proposed tests, not recorded service outcomes.</p>
+</section><section class="report-section" id="A-04" data-kind="procedure"><div class="section-label">procedure</div><h2>A-04 — Authorization must follow the effect</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Effect</th>
+<th>Product control to inspect</th>
+<th>Important exception</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AWS-resource mutation through DevOps</td>
+<td>Directed-action opt-in, target role and operation-specific approval</td>
+<td>Programmatically unclassified external tools can default to read-only classification</td>
+</tr>
+<tr>
+<td>Active application testing</td>
+<td>Target/network/credential configuration and assessment authorization</td>
+<td>Application writes can occur without infrastructure-write access</td>
+</tr>
+<tr>
+<td>Source remediation</td>
+<td>Repository connection and supported proposed-change path</td>
+<td>Proposed patch does not mean deployed repair</td>
+</tr>
+<tr>
+<td>Jira publishing through FinOps</td>
+<td>Invocation-specific approval</td>
+<td>Automations pre-authorize actions that would prompt interactively</td>
+</tr>
+<tr>
+<td>Slack publishing through FinOps</td>
+<td>Destination configuration</td>
+<td>Posting has no per-message approval prompt in reviewed guidance</td>
+</tr>
+</tbody>
+</table></div>
+<p>The common rule is to examine the actual effect, not to label every agent “read-only” or “human-approved.” AWS documents different controls for different paths. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-working-with-directed-actions.html" rel="noopener">AS10</a> <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html" rel="noopener">AS11</a> <a class="ref-link" href="https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html" rel="noopener">AS12</a></p>
+<p><strong>Engineering design:</strong> carry a requested effect and intended target in a work item, but never carry credentials or substitute a ticket approval for the receiving service's native authorization.</p>
+</section><section class="report-section" id="A-05" data-kind="procedure"><div class="section-label">procedure</div><h2>A-05 — Configuration, execution and derived artifacts need separate lifecycles</h2>
+<p>Pause an automation to stop future starts; cancel a current run using its supported operation; remove or deactivate context using its own controls; delete an artifact only when the artifact itself is the intended target. These are different transitions. In-flight calls or retained execution history may remain after a stop action. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/custom-agents-executing-custom-agents.html" rel="noopener">AS13</a> <a class="ref-link" href="https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html" rel="noopener">AS07</a></p>
+<p>Security revalidation deliberately creates a new job linked to the original finding rather than silently rewriting the original assessment. DevOps memories keep immutable versions. FinOps task records and uploaded files have different retention/deletion semantics. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html" rel="noopener">AS14</a> <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html" rel="noopener">AS04</a> <a class="ref-link" href="https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html" rel="noopener">AS07</a></p>
+<p><strong>Engineering design:</strong> retain version identifiers and source revisions in accepted work records. Keep maintained configuration source in Git. Do not create dated snapshot directories or compressed manual distributions as a substitute for version control. The product's own runtime retention is independent of this repository's history policy.</p>
+</section><section class="report-section" id="A-06" data-kind="procedure"><div class="section-label">procedure</div><h2>A-06 — A handoff is an artifact, not transferred execution authority</h2>
+<p>The following is an original team interface, not an AWS schema:</p>
+<pre><code class="language-yaml">schema: engineering-handoff-v1
+origin:
+  platform: aws-devops-agent
+  configuration_id: example-space
+  execution_id: example-investigation
+  observed_window_utc: "2026-10-22T10:00Z/2026-10-22T10:15Z"
+subject:
+  service: checkout-staging
+  revision: demo-r2
+request:
+  owner: service-team
+  question: Verify the inventory dependency latency explanation
+  allowed_effect: review-only
+  excluded_effects: [production-deployment, external-publication]
+evidence:
+  - reference: authorized-internal-record
+    observation: inventory p95 increased while database latency remained low
+    classification: synthetic-training-fixture
+completion:
+  required: current evidence supports or rejects the proposed explanation
+  unresolved: [upstream-log-access]
+</code></pre>
+<p>The receiving engineer resolves the internal evidence link, validates the resource/revision, obtains their own access and decides which product operation is appropriate. There is no implied cross-agent shared session, credential forwarding or automatic trust in the originating conclusion.</p>
+<p><strong>Failure branch:</strong> a task naming “the latest deployment” without an immutable revision cannot establish which change was assessed. Return the work item for clarification rather than letting each product silently choose a different latest revision.</p>
+</section><section class="report-section" id="A-U01" data-kind="example"><div class="section-label">example</div><h2>A-U01 — Worked comparison: one symptom, three different jobs</h2>
+<p><strong>Synthetic tabletop.</strong> A staging release produces elevated request retries, an authorization finding and increased transfer volume. Those observations are distinct; one is not proof of the others.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Specialist question</th>
+<th>Product evidence</th>
+<th>Acceptance boundary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Where did the latency increase originate?</td>
+<td>DevOps current telemetry, historical context and investigation output</td>
+<td>Explain the supported dependency direction; identify missing upstream evidence</td>
+</tr>
+<tr>
+<td>Does the repaired account boundary hold?</td>
+<td>Security finding, deployed revision, actual role and revalidation job</td>
+<td>Verify the selected authorization path, not overall application security</td>
+</tr>
+<tr>
+<td>Which cost components increased?</td>
+<td>FinOps matched queries, quantity/rate decomposition, change evidence</td>
+<td>Reconcile the delta; distinguish numerical contribution from causal attribution</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Four-minute exercise:</strong> spend one minute identifying each product's required input, two minutes checking revision/window/identity consistency across the prepared records, and one minute assigning unresolved questions to owners. A purported single root cause is rejected unless evidence actually connects the observations. No live agents or shared runtime are assumed.</p>
+</section><section class="report-section" id="A-07" data-kind="reference"><div class="section-label">reference</div><h2>A-07 — Coverage, evidence and unresolved implementation details</h2>
+<p>This comparison covers resource scoping, retained context, access layers, effects, lifecycle and handoffs. It does not propose a universal agent framework or reproduce complete IAM policies. The three platform guides carry the detailed procedures and explicit per-product coverage tables.</p>
+<p>The public sources do not justify specifying a shared vector database, embedding strategy, memory-ranking algorithm, foundation-model training pipeline or cross-product identity fabric. Where an implementation detail is not documented, the guide says so rather than completing an attractive architecture diagram with invented components.</p>
+<h3>Official sources and reviewed scope</h3>
+<ul>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-what-is-a-devops-agent-topology.html" rel="noopener">AS01</a> DevOps topology versus investigation access scope.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html" rel="noopener">AS02</a> Security account and application resource hierarchy.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/finops-agent/latest/userguide/creating-an-agent.html" rel="noopener">AS03</a> FinOps creation and instance connections.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html" rel="noopener">AS04</a> DevOps stored knowledge, retrieval and versioning; newer indexed memory guidance.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/whats-new.html" rel="noopener">AS05</a> Dated DevOps correction-memory change.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html" rel="noopener">AS06</a> Security credential resolution and learned login; newer indexed guidance.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html" rel="noopener">AS07</a> FinOps persistent/runtime state and deletion semantics.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-connecting-mcp-servers.html" rel="noopener">AS08</a> DevOps MCP registration, selection and authentication.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/finops-agent/latest/userguide/jira-integration.html" rel="noopener">AS09</a> FinOps integration registration and binding.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-working-with-directed-actions.html" rel="noopener">AS10</a> DevOps directed-action controls and classification.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html" rel="noopener">AS11</a> Security active-target configuration and run boundaries; newer indexed guidance.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html" rel="noopener">AS12</a> FinOps action-specific approval.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/custom-agents-executing-custom-agents.html" rel="noopener">AS13</a> Custom-agent trigger versus invocation cancellation.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html" rel="noopener">AS14</a> Security revalidation lineage.</li>
+</ul>
+</section><footer>Documentation review is separate from configuration and runtime testing. No live AWS execution was performed.</footer></main></div><div class="deck"><div class="deck-controls"><button id="read">Read guide</button><button id="prev">Previous</button><select id="slide-select" aria-label="Select slide"><option value="0">1. The three services expose different resource models</option><option value="1">2. Retained context has different producers and lifecycles</option><option value="2">3. Connectivity is not authorization</option><option value="3">4. The effect determines the relevant approval boundary</option><option value="4">5. Configuration, runs and artifacts have separate lifecycles</option><option value="5">6. A handoff transfers evidence—not credentials or authority</option><option value="6">7. Keep implementation unknowns visible</option><option value="7">8. Tabletop: three observations, three evidence obligations</option><option value="8">9. Accept documents on operating usefulness</option></select><button id="next">Next</button><label><input id="notes-toggle" type="checkbox"> Notes</label><button id="timer-toggle">Start timer</button><button id="timer-reset">Reset timer</button><span id="timer" class="timer">0:00</span><button data-print>Print slides</button></div><p class="small">20 minutes including 4 minutes of prepared-result exercise. Arrow keys navigate; Escape returns to guide.</p><article class="slide" data-seconds="120" data-kind="table"><div class="kicker">Shared architecture · table</div><h2>The three services expose different resource models</h2><div class="slide-body"><div class="table-wrap"><table><thead><tr><th>Layer</th><th>DevOps</th><th>Security</th><th>FinOps</th></tr></thead><tbody><tr><td>Scope</td><td>Agent Space</td><td>Application + shared resources</td><td>Agent instance</td></tr><tr><td>Configuration</td><td>Agents, tools, knowledge</td><td>Assessment definitions</td><td>Context, automations, connections</td></tr><tr><td>Execution</td><td>Investigation / invocation</td><td>Run / revalidation job</td><td>Conversation / task</td></tr></tbody></table></div></div><div class="takeaway">Use platform-specific identifiers rather than a universal ambiguous agent ID.</div><div class="slide-foot"><span>1 / 9 · 00:00–02:00 · 2 min</span><span><a href="#A-01">A-01</a></span></div></article><article class="slide" data-seconds="120" data-kind="table" hidden><div class="kicker">Shared architecture · table</div><h2>Retained context has different producers and lifecycles</h2><div class="slide-body"><div class="table-wrap"><table><thead><tr><th>Material</th><th>Producer</th><th>Consumer</th></tr></thead><tbody><tr><td>Monitor knowledge</td><td>Managed investigation learning</td><td>Relevant later investigation</td></tr><tr><td>Login skill</td><td>Successful authentication navigation</td><td>Later login</td></tr><tr><td>Reference file</td><td>Operator upload</td><td>Agent task or conversation</td></tr><tr><td>Conversational memory</td><td>Preferences/corrections</td><td>Later session</td></tr></tbody></table></div></div><div class="takeaway">Do not reduce these to one “learning enabled” setting.</div><div class="slide-foot"><span>2 / 9 · 02:00–04:00 · 2 min</span><span><a href="#A-02">A-02</a></span></div></article><article class="slide" data-seconds="120" data-kind="flow" hidden><div class="kicker">Shared architecture · flow</div><h2>Connectivity is not authorization</h2><div class="slide-body"><div class="flow"><div class="node"><strong>Route</strong><p>Can the endpoint be reached?</p></div><div class="node"><strong>Identity</strong><p>Who authenticated?</p></div><div class="node"><strong>Permission</strong><p>Which operation is allowed?</p></div><div class="node"><strong>Behavior</strong><p>What does prompt guidance request?</p></div></div></div><div class="takeaway">Test each layer with observed results and an expected denial.</div><div class="slide-foot"><span>3 / 9 · 04:00–06:00 · 2 min</span><span><a href="#A-03">A-03</a></span></div></article><article class="slide" data-seconds="120" data-kind="table" hidden><div class="kicker">Shared architecture · table</div><h2>The effect determines the relevant approval boundary</h2><div class="slide-body"><div class="table-wrap"><table><thead><tr><th>Effect</th><th>Control to inspect</th></tr></thead><tbody><tr><td>Resource mutation</td><td>Specific directed-action authorization</td></tr><tr><td>Application testing</td><td>Targets, credentials, exclusions and permitted effects</td></tr><tr><td>Source change</td><td>Repository review and deployment controls</td></tr><tr><td>External publication</td><td>Destination and invocation-specific approval</td></tr></tbody></table></div></div><div class="takeaway">No universal “read-only” or “human-approved” label is sufficient.</div><div class="slide-foot"><span>4 / 9 · 06:00–08:00 · 2 min</span><span><a href="#A-04">A-04</a></span></div></article><article class="slide" data-seconds="120" data-kind="columns" hidden><div class="kicker">Shared architecture · columns</div><h2>Configuration, runs and artifacts have separate lifecycles</h2><div class="slide-body"><div class="columns"><div class="column"><strong>Future work</strong><p>Pause a schedule or disable an automation.</p></div><div class="column"><strong>Current work</strong><p>Cancel the invocation/task using its supported control.</p></div><div class="column"><strong>Retained evidence</strong><p>Manage versions, findings, files and artifacts according to their own semantics.</p></div></div></div><div class="takeaway">Stopping future starts does not reverse completed effects.</div><div class="slide-foot"><span>5 / 9 · 08:00–10:00 · 2 min</span><span><a href="#A-05">A-05</a></span></div></article><article class="slide" data-seconds="120" data-kind="flow" hidden><div class="kicker">Shared architecture · flow</div><h2>A handoff transfers evidence—not credentials or authority</h2><div class="slide-body"><div class="flow"><div class="node"><strong>Origin</strong><p>Platform, configuration and execution IDs</p></div><div class="node"><strong>Subject</strong><p>Service, revision and UTC observation window</p></div><div class="node"><strong>Request</strong><p>Owner, question and permitted effect</p></div><div class="node"><strong>Acceptance</strong><p>Required evidence and unresolved questions</p></div></div></div><div class="takeaway">The receiving team obtains its own access and makes its own authorization decision.</div><div class="slide-foot"><span>6 / 9 · 10:00–12:00 · 2 min</span><span><a href="#A-06">A-06</a></span></div></article><article class="slide" data-seconds="120" data-kind="columns" hidden><div class="kicker">Shared architecture · columns</div><h2>Keep implementation unknowns visible</h2><div class="slide-body"><div class="columns"><div class="column"><strong>Documented</strong><p>Resource relationships, selected controls, retention and execution behavior.</p></div><div class="column"><strong>Not established</strong><p>Shared vector database, retrieval-ranking algorithm, cross-agent runtime or model-training pipeline.</p></div></div></div><div class="takeaway">An attractive diagram is not evidence of undocumented internals.</div><div class="slide-foot"><span>7 / 9 · 12:00–14:00 · 2 min</span><span><a href="#A-07">A-07</a></span></div></article><article class="slide" data-seconds="240" data-kind="demo" hidden><div class="kicker">Shared architecture · demo</div><h2>Tabletop: three observations, three evidence obligations</h2><div class="slide-body"><div class="table-wrap"><table><thead><tr><th>Time</th><th>Action</th><th>Prepared evidence</th></tr></thead><tbody><tr><td>0–1 min</td><td>Identify the required inputs</td><td>Latency evidence, authorization identity and cost basis</td></tr><tr><td>1–3 min</td><td>Check consistency</td><td>Same intended revision, target and comparable windows</td></tr><tr><td>3–4 min</td><td>Assign unresolved questions</td><td>Do not invent a single shared root cause</td></tr></tbody></table></div></div><div class="takeaway">Synthetic comparison; no shared runtime or live execution assumed.</div><div class="slide-foot"><span>8 / 9 · 14:00–18:00 · 4 min</span><span><a href="#A-U01">A-U01</a></span></div></article><article class="slide" data-seconds="120" data-kind="columns" hidden><div class="kicker">Shared architecture · columns</div><h2>Accept documents on operating usefulness</h2><div class="slide-body"><div class="columns"><div class="column"><strong>Model</strong><p>Resources and scope are clear before a scenario begins.</p></div><div class="column"><strong>Procedure</strong><p>Inputs, choices, confirmation and failure paths are described.</p></div><div class="column"><strong>Evidence</strong><p>Claims have sources; examples and live outcomes are not conflated.</p></div></div></div><div class="takeaway">Link and layout checks are necessary but do not prove technical completeness.</div><div class="slide-foot"><span>9 / 9 · 18:00–20:00 · 2 min</span><span><a href="#A-07">A-07</a></span></div></article><div class="notes" hidden><h2>A-01 — Compare resources before comparing workflows</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>DevOps Agent</th>
+<th>Security Agent</th>
+<th>FinOps Agent</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Scope</td>
+<td>Agent Space with account/provider associations</td>
+<td>Application Agent Space plus shared account resources</td>
+<td>Agent instance with its own data and connections</td>
+</tr>
+<tr>
+<td>Reusable configuration</td>
+<td>Managed/custom agents, selected tools, knowledge, triggers</td>
+<td>Assessment configurations, requirements, sources, credentials</td>
+<td>Context files, memories, integrations and automations</td>
+</tr>
+<tr>
+<td>Execution</td>
+<td>Investigation, chat, evaluation, custom invocation</td>
+<td>Assessment run or one-off design review; revalidation job</td>
+<td>Conversation, queued task, report generation</td>
+</tr>
+<tr>
+<td>Reviewable state</td>
+<td>Tool results, investigation evidence, knowledge versions</td>
+<td>Findings, test context, model/review results, lineage</td>
+<td>Source queries, task results, report artifacts</td>
+</tr>
+</tbody>
+</table></div>
+<p>The terms differ because the objects differ. A common UI label does not make all Agent Spaces identical. In Security Agent, requirements can be shared across applications; in DevOps Agent, a topology graph is not the complete access boundary; in FinOps Agent, an instance's context can be visible to everyone with access to that instance. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-what-is-a-devops-agent-topology.html" rel="noopener">AS01</a> <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html" rel="noopener">AS02</a> <a class="ref-link" href="https://docs.aws.amazon.com/finops-agent/latest/userguide/creating-an-agent.html" rel="noopener">AS03</a></p>
+<p><strong>Engineering design:</strong> record the platform, account/Region, configuration ID and execution ID separately. Do not put one ambiguous <code>agent_id</code> in every downstream ticket and expect it to identify all four concepts.</p>
+</div><div class="notes" hidden><h2>A-02 — Separate knowledge producers from consumers</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Retained material</th>
+<th>Producer</th>
+<th>Consumer and lifecycle</th>
+<th>Do not infer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DevOps monitor history</td>
+<td>Managed learning over investigations</td>
+<td>Selective memory retrieval; bounded refresh/retention</td>
+<td>A permanent incident archive or trained model weights</td>
+</tr>
+<tr>
+<td>DevOps correction</td>
+<td>Operator feedback; reflection knowledge</td>
+<td>Later relevant investigation context</td>
+<td>That feedback instantly changed every derived record</td>
+</tr>
+<tr>
+<td>Security login skill</td>
+<td>Successful authentication navigation</td>
+<td>Reuse on later logins; toggle controls reuse</td>
+<td>General-purpose vulnerability or incident memory</td>
+</tr>
+<tr>
+<td>FinOps reference file</td>
+<td>Operator upload</td>
+<td>Readable contextual source; soft-delete/restore</td>
+<td>Conversational edits rewriting the file</td>
+</tr>
+<tr>
+<td>FinOps memory</td>
+<td>Conversation/task-derived context</td>
+<td>Instance-persistent preferences/corrections</td>
+<td>Verbatim retention of all old conversation messages</td>
+</tr>
+</tbody>
+</table></div>
+<p>These mechanisms are documented separately in the canonical guides: <a href="devops.html#D-M01">D-M01</a>, <a href="devops.html#D-M02">D-M02</a>, <a href="devops.html#D-M07">D-M07</a>, <a href="security.html#S-M02">S-M02</a>, <a href="finops.html#F-M02">F-M02</a> and <a href="finops.html#F-M03">F-M03</a>. Their lifecycle cannot be replaced by a single generic “learning enabled” checkbox. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html" rel="noopener">AS04</a> <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/whats-new.html" rel="noopener">AS05</a> <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html" rel="noopener">AS06</a> <a class="ref-link" href="https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html" rel="noopener">AS07</a></p>
+<p><strong>Engineering verification:</strong> separate five questions: was relevant input available, was retained content produced, was it accessible to this execution, was its use observable, and was the resulting conclusion correct? The final answer alone cannot resolve all five.</p>
+</div><div class="notes" hidden><h2>A-03 — Connectivity, authentication and authorization are different layers</h2>
+<p>A private connection supplies a route. Authentication establishes an identity. Authorization determines allowed operations. Prompt instructions describe desired behavior. A successful connection test demonstrates only the layers it actually exercised.</p>
+<p>For DevOps MCP, provider registration and Agent Space tool selection are distinct from private routing and tool-effect classification. Security testing separately resolves credentials and applies them to the application; retrieval may succeed while login fails. FinOps registers an account integration and then binds a destination to an agent. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-connecting-mcp-servers.html" rel="noopener">AS08</a> <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html" rel="noopener">AS06</a> <a class="ref-link" href="https://docs.aws.amazon.com/finops-agent/latest/userguide/jira-integration.html" rel="noopener">AS09</a></p>
+<p><strong>Engineering test matrix:</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Evidence needed</th>
+<th>Failure interpretation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Intended read</td>
+<td>Correct identity, resource, time window and result</td>
+<td>Inspect source access before evaluating the answer</td>
+</tr>
+<tr>
+<td>Unselected operation</td>
+<td>Operation unavailable or rejected</td>
+<td>Do not accept a verbal promise as enforcement evidence</td>
+</tr>
+<tr>
+<td>Authentication</td>
+<td>Actual application role reached</td>
+<td>A fetched secret is insufficient</td>
+</tr>
+<tr>
+<td>External publication</td>
+<td>Correct destination and action record</td>
+<td>Connected integration is insufficient</td>
+</tr>
+<tr>
+<td>Configuration update</td>
+<td>Saved identifiers and current values</td>
+<td>A success message may omit replacement/default consequences</td>
+</tr>
+</tbody>
+</table></div>
+<p>Use a non-production target and non-sensitive fixture. These are proposed tests, not recorded service outcomes.</p>
+</div><div class="notes" hidden><h2>A-04 — Authorization must follow the effect</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Effect</th>
+<th>Product control to inspect</th>
+<th>Important exception</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AWS-resource mutation through DevOps</td>
+<td>Directed-action opt-in, target role and operation-specific approval</td>
+<td>Programmatically unclassified external tools can default to read-only classification</td>
+</tr>
+<tr>
+<td>Active application testing</td>
+<td>Target/network/credential configuration and assessment authorization</td>
+<td>Application writes can occur without infrastructure-write access</td>
+</tr>
+<tr>
+<td>Source remediation</td>
+<td>Repository connection and supported proposed-change path</td>
+<td>Proposed patch does not mean deployed repair</td>
+</tr>
+<tr>
+<td>Jira publishing through FinOps</td>
+<td>Invocation-specific approval</td>
+<td>Automations pre-authorize actions that would prompt interactively</td>
+</tr>
+<tr>
+<td>Slack publishing through FinOps</td>
+<td>Destination configuration</td>
+<td>Posting has no per-message approval prompt in reviewed guidance</td>
+</tr>
+</tbody>
+</table></div>
+<p>The common rule is to examine the actual effect, not to label every agent “read-only” or “human-approved.” AWS documents different controls for different paths. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-working-with-directed-actions.html" rel="noopener">AS10</a> <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html" rel="noopener">AS11</a> <a class="ref-link" href="https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html" rel="noopener">AS12</a></p>
+<p><strong>Engineering design:</strong> carry a requested effect and intended target in a work item, but never carry credentials or substitute a ticket approval for the receiving service's native authorization.</p>
+</div><div class="notes" hidden><h2>A-05 — Configuration, execution and derived artifacts need separate lifecycles</h2>
+<p>Pause an automation to stop future starts; cancel a current run using its supported operation; remove or deactivate context using its own controls; delete an artifact only when the artifact itself is the intended target. These are different transitions. In-flight calls or retained execution history may remain after a stop action. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/custom-agents-executing-custom-agents.html" rel="noopener">AS13</a> <a class="ref-link" href="https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html" rel="noopener">AS07</a></p>
+<p>Security revalidation deliberately creates a new job linked to the original finding rather than silently rewriting the original assessment. DevOps memories keep immutable versions. FinOps task records and uploaded files have different retention/deletion semantics. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html" rel="noopener">AS14</a> <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html" rel="noopener">AS04</a> <a class="ref-link" href="https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html" rel="noopener">AS07</a></p>
+<p><strong>Engineering design:</strong> retain version identifiers and source revisions in accepted work records. Keep maintained configuration source in Git. Do not create dated snapshot directories or compressed manual distributions as a substitute for version control. The product's own runtime retention is independent of this repository's history policy.</p>
+</div><div class="notes" hidden><h2>A-06 — A handoff is an artifact, not transferred execution authority</h2>
+<p>The following is an original team interface, not an AWS schema:</p>
+<pre><code class="language-yaml">schema: engineering-handoff-v1
+origin:
+  platform: aws-devops-agent
+  configuration_id: example-space
+  execution_id: example-investigation
+  observed_window_utc: "2026-10-22T10:00Z/2026-10-22T10:15Z"
+subject:
+  service: checkout-staging
+  revision: demo-r2
+request:
+  owner: service-team
+  question: Verify the inventory dependency latency explanation
+  allowed_effect: review-only
+  excluded_effects: [production-deployment, external-publication]
+evidence:
+  - reference: authorized-internal-record
+    observation: inventory p95 increased while database latency remained low
+    classification: synthetic-training-fixture
+completion:
+  required: current evidence supports or rejects the proposed explanation
+  unresolved: [upstream-log-access]
+</code></pre>
+<p>The receiving engineer resolves the internal evidence link, validates the resource/revision, obtains their own access and decides which product operation is appropriate. There is no implied cross-agent shared session, credential forwarding or automatic trust in the originating conclusion.</p>
+<p><strong>Failure branch:</strong> a task naming “the latest deployment” without an immutable revision cannot establish which change was assessed. Return the work item for clarification rather than letting each product silently choose a different latest revision.</p>
+</div><div class="notes" hidden><h2>A-07 — Coverage, evidence and unresolved implementation details</h2>
+<p>This comparison covers resource scoping, retained context, access layers, effects, lifecycle and handoffs. It does not propose a universal agent framework or reproduce complete IAM policies. The three platform guides carry the detailed procedures and explicit per-product coverage tables.</p>
+<p>The public sources do not justify specifying a shared vector database, embedding strategy, memory-ranking algorithm, foundation-model training pipeline or cross-product identity fabric. Where an implementation detail is not documented, the guide says so rather than completing an attractive architecture diagram with invented components.</p>
+<h3>Official sources and reviewed scope</h3>
+<ul>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-what-is-a-devops-agent-topology.html" rel="noopener">AS01</a> DevOps topology versus investigation access scope.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html" rel="noopener">AS02</a> Security account and application resource hierarchy.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/finops-agent/latest/userguide/creating-an-agent.html" rel="noopener">AS03</a> FinOps creation and instance connections.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html" rel="noopener">AS04</a> DevOps stored knowledge, retrieval and versioning; newer indexed memory guidance.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/whats-new.html" rel="noopener">AS05</a> Dated DevOps correction-memory change.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html" rel="noopener">AS06</a> Security credential resolution and learned login; newer indexed guidance.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html" rel="noopener">AS07</a> FinOps persistent/runtime state and deletion semantics.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-connecting-mcp-servers.html" rel="noopener">AS08</a> DevOps MCP registration, selection and authentication.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/finops-agent/latest/userguide/jira-integration.html" rel="noopener">AS09</a> FinOps integration registration and binding.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-working-with-directed-actions.html" rel="noopener">AS10</a> DevOps directed-action controls and classification.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html" rel="noopener">AS11</a> Security active-target configuration and run boundaries; newer indexed guidance.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html" rel="noopener">AS12</a> FinOps action-specific approval.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/custom-agents-executing-custom-agents.html" rel="noopener">AS13</a> Custom-agent trigger versus invocation cancellation.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html" rel="noopener">AS14</a> Security revalidation lineage.</li>
+</ul>
+</div><div class="notes" hidden><h2>A-U01 — Worked comparison: one symptom, three different jobs</h2>
+<p><strong>Synthetic tabletop.</strong> A staging release produces elevated request retries, an authorization finding and increased transfer volume. Those observations are distinct; one is not proof of the others.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Specialist question</th>
+<th>Product evidence</th>
+<th>Acceptance boundary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Where did the latency increase originate?</td>
+<td>DevOps current telemetry, historical context and investigation output</td>
+<td>Explain the supported dependency direction; identify missing upstream evidence</td>
+</tr>
+<tr>
+<td>Does the repaired account boundary hold?</td>
+<td>Security finding, deployed revision, actual role and revalidation job</td>
+<td>Verify the selected authorization path, not overall application security</td>
+</tr>
+<tr>
+<td>Which cost components increased?</td>
+<td>FinOps matched queries, quantity/rate decomposition, change evidence</td>
+<td>Reconcile the delta; distinguish numerical contribution from causal attribution</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Four-minute exercise:</strong> spend one minute identifying each product's required input, two minutes checking revision/window/identity consistency across the prepared records, and one minute assigning unresolved questions to owners. A purported single root cause is rejected unless evidence actually connects the observations. No live agents or shared runtime are assumed.</p>
+</div><div class="notes" hidden><h2>A-07 — Coverage, evidence and unresolved implementation details</h2>
+<p>This comparison covers resource scoping, retained context, access layers, effects, lifecycle and handoffs. It does not propose a universal agent framework or reproduce complete IAM policies. The three platform guides carry the detailed procedures and explicit per-product coverage tables.</p>
+<p>The public sources do not justify specifying a shared vector database, embedding strategy, memory-ranking algorithm, foundation-model training pipeline or cross-product identity fabric. Where an implementation detail is not documented, the guide says so rather than completing an attractive architecture diagram with invented components.</p>
+<h3>Official sources and reviewed scope</h3>
+<ul>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-what-is-a-devops-agent-topology.html" rel="noopener">AS01</a> DevOps topology versus investigation access scope.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html" rel="noopener">AS02</a> Security account and application resource hierarchy.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/finops-agent/latest/userguide/creating-an-agent.html" rel="noopener">AS03</a> FinOps creation and instance connections.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html" rel="noopener">AS04</a> DevOps stored knowledge, retrieval and versioning; newer indexed memory guidance.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/whats-new.html" rel="noopener">AS05</a> Dated DevOps correction-memory change.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html" rel="noopener">AS06</a> Security credential resolution and learned login; newer indexed guidance.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html" rel="noopener">AS07</a> FinOps persistent/runtime state and deletion semantics.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-connecting-mcp-servers.html" rel="noopener">AS08</a> DevOps MCP registration, selection and authentication.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/finops-agent/latest/userguide/jira-integration.html" rel="noopener">AS09</a> FinOps integration registration and binding.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-working-with-directed-actions.html" rel="noopener">AS10</a> DevOps directed-action controls and classification.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html" rel="noopener">AS11</a> Security active-target configuration and run boundaries; newer indexed guidance.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html" rel="noopener">AS12</a> FinOps action-specific approval.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/custom-agents-executing-custom-agents.html" rel="noopener">AS13</a> Custom-agent trigger versus invocation cancellation.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html" rel="noopener">AS14</a> Security revalidation lineage.</li>
+</ul>
+</div></div><script>(()=>{const sections=[...document.querySelectorAll('.report-section')],q=document.querySelector('#search'),kind=document.querySelector('#kind'),status=document.querySelector('#status');
+function filter(){let n=0;sections.forEach(s=>{let ok=(!q.value||s.textContent.toLowerCase().includes(q.value.toLowerCase()))&&(!kind.value||kind.value===s.dataset.kind);s.hidden=!ok;n+=ok;});status.textContent=n+' of '+sections.length+' sections shown';}
+if(q){q.addEventListener('input',filter);kind.addEventListener('change',filter);document.querySelector('#reset').onclick=()=>{q.value='';kind.value='';filter();};filter();}
+function reveal(){const s=document.getElementById(decodeURIComponent(location.hash.slice(1)));if(s&&s.classList.contains('report-section')){if(q){q.value='';kind.value='';filter();}document.body.classList.remove('presenting');s.scrollIntoView();}}
+window.addEventListener('hashchange',reveal);reveal();
+const slides=[...document.querySelectorAll('.slide')],select=document.querySelector('#slide-select');let current=0,start=0,elapsed=0,running=false;
+function clock(v){return Math.floor(v/60)+':'+String(v%60).padStart(2,'0');}
+function show(i){if(!slides.length)return;current=Math.max(0,Math.min(slides.length-1,i));slides.forEach((s,j)=>s.hidden=j!==current);select.value=current;document.querySelectorAll('.notes').forEach((n,j)=>n.hidden=j!==current||!document.querySelector('#notes-toggle').checked);}
+if(slides.length){document.querySelector('#present').onclick=()=>{document.body.classList.add('presenting');show(current);window.scrollTo(0,0);};document.querySelector('#read').onclick=()=>document.body.classList.remove('presenting');document.querySelector('#prev').onclick=()=>show(current-1);document.querySelector('#next').onclick=()=>show(current+1);select.onchange=()=>show(Number(select.value));document.querySelector('#notes-toggle').onchange=()=>show(current);document.querySelector('#timer-toggle').onclick=()=>{if(running){elapsed+=Math.floor((Date.now()-start)/1000);running=false;}else{start=Date.now();running=true;}document.querySelector('#timer-toggle').textContent=running?'Pause timer':'Start timer';};document.querySelector('#timer-reset').onclick=()=>{elapsed=0;start=Date.now();};setInterval(()=>{document.querySelector('#timer').textContent=clock(elapsed+(running?Math.floor((Date.now()-start)/1000):0));},250);show(0);}
+document.querySelectorAll('[data-print]').forEach(b=>b.onclick=()=>window.print());document.addEventListener('keydown',e=>{if(['INPUT','SELECT','TEXTAREA'].includes(document.activeElement.tagName))return;if(e.key==='/'&&q){e.preventDefault();q.focus();}if(document.body.classList.contains('presenting')){if(e.key==='ArrowRight'){e.preventDefault();show(current+1);}if(e.key==='ArrowLeft'){e.preventDefault();show(current-1);}if(e.key==='Home'){e.preventDefault();show(0);}if(e.key==='End'){e.preventDefault();show(slides.length-1);}if(e.key==='Escape')document.body.classList.remove('presenting');}});
+})();</script></body></html>
