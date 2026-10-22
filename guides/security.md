@@ -6,7 +6,11 @@ This guide describes application assessment configuration, authentication, execu
 
 Official product behavior is cited. **Engineering procedures** and **synthetic exercises** below are authored recommendations, not additional service functions or records of a live test.
 
-## S-01 — Resources, scopes and functions
+## 01. Platform overview and capabilities
+
+Understand application scope, shared resources, assessment definitions and results.
+
+### S-01 — Resources, scopes and functions
 
 The product functions are application penetration testing, source-code analysis, design review, and threat modeling. Supporting platform capabilities include source connection, reusable configuration, authenticated/private access, requirement management, run observation, remediation and finding revalidation. Do not equate an entire assessment with a single hidden learning mechanism. [SS01] [SS03]
 
@@ -38,7 +42,11 @@ Registration makes an integration available; connecting a repository selects it 
 | Data protection | Customer-managed key, branch key, encryption context, calling identity | S-M06 |
 | Earlier feedback | Full/change-based code review, design review, threat model | S-06 |
 
-## S-02 — Set up identity and source access
+## 02. Identity, sources and target scope
+
+Configure source access and distinguish test targets, dependencies and exclusions.
+
+### S-02 — Set up identity and source access
 
 The console is the administrative surface. The web app is the assessment workspace. IAM-based operators can enter through the console route; IAM Identity Center supports assigned users without requiring ordinary console access. Configure the intended operator identity, not just the administrator who creates the Agent Space. [SS04] [SS05]
 
@@ -48,7 +56,7 @@ For code review, independently review the settings for vulnerability analysis, r
 
 **Engineering verification:** open the web app as the intended user, inspect the connected source and selected branch, and compare the source revision with the deployed test application. Record a known read and an expected denial. Do not place credentials in a repository or presentation to simplify the example.
 
-## S-03 — Define the reachable surface before execution
+### S-03 — Define the reachable surface before execution
 
 Domain verification demonstrates control through a supported verification method, including DNS, HTTP or a private-VPC route. It is a technical prerequisite, not authorization for every downstream system the application can contact. Private testing additionally needs a supported VPC configuration, subnets, routing and security groups. [SS07]
 
@@ -66,7 +74,11 @@ These example names are illustrative, not running targets. Specify the complete 
 
 **Expected confirmation:** the saved configuration identifies the target, network path, credential roles and exclusions. Draft configuration and successful authentication preflight are different states. Neither proves that a complete assessment has run.
 
-## S-M01 — Credential resolution precedes application authentication
+## 03. Authentication, criteria and protection
+
+Examine credential resolution, login reuse, requirement evaluation, regeneration and encryption.
+
+### S-M01 — Credential resolution precedes application authentication
 
 The service first obtains a credential and then follows login instructions to apply it to the application. A successful secret retrieval is not a successful application login. Current configuration requires a credential name, access URL, method and login prompt; **Save & Test** or **Test All** exercises authentication and exposes success/failure information. [SS09] [SS08]
 
@@ -95,7 +107,7 @@ The newer authentication guide includes TOTP and email MFA. Email MFA uses a gen
 
 **Proposed verification:** inspect both credential-test status and the authenticated application's identity/role. Test an intended protected route and an excluded route using approved test data. When access fails, capture which stage failed: source access, credential generation, login navigation, MFA, or authorization inside the application.
 
-## S-M02 — Login Optimization retains a successful procedure
+### S-M02 — Login Optimization retains a successful procedure
 
 The first successful authentication navigation can produce a skill describing the login workflow. Later sessions within the run and subsequent runs reuse it. This is learned procedural navigation, not a general incident-memory store or customer-controlled model retraining. [SS09]
 
@@ -103,41 +115,7 @@ The first successful authentication navigation can produce a skill describing th
 
 **Proposed test:** use a staging login flow that the team controls. Retain first-login and later-login evidence, then make an authorized change to the test flow. Verify the actual authenticated role on every run. Without observable reuse evidence, distinguish a successful login from a proven reuse of the learned procedure.
 
-## S-04 — Configuration, preflight and run lifecycle
-
-A penetration-test configuration can be saved as a draft and completed through wizard steps for details, VPC, credentials, network and additional settings. It is reusable. A run is a separate execution against the then-current configuration and target. **Create** and **Create and execute** are not equivalent actions. [SS08]
-
-Select sources and branch context deliberately: a latest repository branch is not necessarily the deployed revision. For private testing, configure approved network access and optional CloudWatch logging. For repeated tests, inspect the supported scheduling setup and associated Scheduler role rather than assuming that an external cron trigger is the only path. Complete schedule administration is linked to AWS rather than reproduced here. [SS07] [SS08]
-
-Task-hours aggregate work across concurrent tasks; they are not wall-clock duration. The run's configured spending/work limit, account quota and any schedule are different controls. A run reaching its task-hour limit can complete without establishing exhaustive application coverage. Consult pricing before execution; cancelling does not erase work already performed. [SS08] [SS10] [SS11]
-
-**Engineering run record:** capture the configuration ID, target revision, authenticated roles, exclusions, run ID, configured limit, start/end times and incomplete areas. Inspect findings and execution/log evidence while the run operates. Stop on unexpected effects; preserve an incomplete outcome rather than relabeling it a pass. These recordkeeping recommendations do not add product-level guarantees.
-
-## S-05 — Findings, remediation and deployment are different objects
-
-A finding identifies the issue and its supporting evidence in a particular assessment context. The review surface can expose description, code locations, evidence and a suggested fix. Configured remediation can produce a patch or pull request, with provider-specific behavior. For example, the reviewed GitHub path distinguishes private-repository pull requests from a downloadable diff for public repositories. [SS05] [SS12]
-
-**Procedure:** select a material finding, verify the affected source and target revision, inspect reproduction or code evidence, request remediation only when the repository path is configured, then review and test the proposed change through the normal engineering process. A generated patch is neither deployment nor revalidation. [SS12]
-
-**Engineering verification:** before closure, identify the exact deployed revision and re-run relevant regression tests. Retain rejected changes and failed builds as unfinished work. Use the finding ID as the link between assessment, change, deployment and revalidation—not similarity of issue titles.
-
-## S-M05 — Revalidation replays selected finding evidence
-
-After a repair reaches the original test environment, open the completed penetration-test run, choose **Multiselect findings for revalidation**, select findings, and choose **Revalidate findings**. The service starts a separate job using current authentication/configuration and repeats the selected validation steps. It does not conduct broad new discovery. [SS13]
-
-```text
-Original finding + deployed repair
-                  ↓ selected validation steps
-          Separate revalidation job
-                  ↓
-      Active: reproduced / Resolved: not reproduced
-                  ↓
-          linked finding and job history
-```
-
-The original finding is preserved and linked to the new job. A non-reproduction result is scoped to that finding and execution conditions. An authentication or environment failure can undermine its interpretation; inspect reachability before treating a result as evidence of repair. [SS13]
-
-## S-M03 — Requirement evaluation applies reviewed criteria
+### S-M03 — Requirement evaluation applies reviewed criteria
 
 A requirement contains a name/description, applicability, compliance criteria and optional remediation guidance. Applicability can distinguish a violation from a case to which the requirement does not apply. Packs group requirements; managed and custom packs differ in editability. Enabled packs inform subsequent eligible reviews, not retroactive rewrites of completed results. [SS14]
 
@@ -145,27 +123,13 @@ A requirement contains a name/description, applicability, compliance criteria an
 
 **Original example:** require an authorization check before returning an account-owned invoice. Applicability: handlers returning account-owned invoices. Compliance: the authenticated principal must be authorized for the invoice's owning account. A public static-document handler is inapplicable, not automatically compliant with an invoice rule. Test all three cases: compliant, violating and inapplicable.
 
-## S-M04 — Regeneration replaces a pack's contents
+### S-M04 — Regeneration replaces a pack's contents
 
 Generating requirements from uploaded documents is a separate administrative mechanism. Supported input includes DOC, DOCX, Markdown, PDF and text. Select a custom pack, upload policy material, generate, inspect and edit the result, then enable it. [SS15]
 
 Uploading new documents regenerates the pack and replaces existing requirements, including manually added ones. It is not an append operation. Do not start a competing upload while generation is running. Keep the governing policy and reviewed requirement source in Git; inspect the replacement before enabling it. A framework pack is not a compliance certificate. [SS15] [SS14]
 
-## S-06 — Code, design and threat-model workflows
-
-| Assessment | Configuration and execution | Reviewable result |
-|---|---|---|
-| Code review | Connect sources, select vulnerability/requirement modes, start full review or configure supported repository events | Locations, evidence, suggested fixes; preflight failures remain separate |
-| Design review | Submit a design for a one-off assessment; clone to create a new review | Design findings against relevant requirements |
-| Threat model | Create a reusable definition with scope documents and source context, then start a run | System overview, boundaries, data flows and threats |
-
-Code review preflight checks source and execution prerequisites before analysis. Ready-for-review repository events differ from draft changes; inspect the actual provider and configured trigger. Threat-model scope documents define what to analyze, while source documents/code provide system context. Do not treat them as interchangeable fields. [SS03] [SS05] [SS16] [SS17]
-
-**Threat-model procedure:** in the web app, create the model, provide title, scope documents, sources and service role, optionally configure logs, save, then start a run. Review the inferred system model before relying on individual threats. Inspect severity, evidence and dispositions. A model generated from the wrong system boundary is not repaired merely by dismissing inconvenient threats. [SS16]
-
-The full pipeline integration, complete design-review walkthrough and provider-specific remediation matrix are linked coverage, not reproduced procedures in this edition. This is an explicit limit of the guide, not a claim that those functions are absent.
-
-## S-M06 — Customer-managed encryption uses several identities
+### S-M06 — Customer-managed encryption uses several identities
 
 The documented hierarchy uses a customer KMS key to protect a resource-specific branch key held in a service-managed DynamoDB store. The keyring derives wrapping keys used to protect data-encryption keys. Branch-key rotation and rotation of the KMS key are separate processes; old key versions remain necessary to decrypt older data. [SS18]
 
@@ -182,7 +146,84 @@ Resource-specific encryption context and identity determine authorization. The r
 
 **Failure diagnosis:** identify the calling identity and denied KMS action from authorized audit evidence; inspect the matching key policy, grants/role policy and encryption context. Re-enabling a deliberately disabled test key can restore access; deletion can make retained data permanently unavailable. Do not disable a production key merely to demonstrate this mechanism. [SS18]
 
-## S-07 — Operational limits and failure diagnosis
+## 04. Assessment and finding lifecycle
+
+Follow configurations, executions, findings, repairs, revalidation and earlier assessments.
+
+### S-04 — Configuration, preflight and run lifecycle
+
+A penetration-test configuration can be saved as a draft and completed through wizard steps for details, VPC, credentials, network and additional settings. It is reusable. A run is a separate execution against the then-current configuration and target. **Create** and **Create and execute** are not equivalent actions. [SS08]
+
+Select sources and branch context deliberately: a latest repository branch is not necessarily the deployed revision. For private testing, configure approved network access and optional CloudWatch logging. For repeated tests, inspect the supported scheduling setup and associated Scheduler role rather than assuming that an external cron trigger is the only path. Complete schedule administration is linked to AWS rather than reproduced here. [SS07] [SS08]
+
+Task-hours aggregate work across concurrent tasks; they are not wall-clock duration. The run's configured spending/work limit, account quota and any schedule are different controls. A run reaching its task-hour limit can complete without establishing exhaustive application coverage. Consult pricing before execution; cancelling does not erase work already performed. [SS08] [SS10] [SS11]
+
+**Engineering run record:** capture the configuration ID, target revision, authenticated roles, exclusions, run ID, configured limit, start/end times and incomplete areas. Inspect findings and execution/log evidence while the run operates. Stop on unexpected effects; preserve an incomplete outcome rather than relabeling it a pass. These recordkeeping recommendations do not add product-level guarantees.
+
+### S-05 — Findings, remediation and deployment are different objects
+
+A finding identifies the issue and its supporting evidence in a particular assessment context. The review surface can expose description, code locations, evidence and a suggested fix. Configured remediation can produce a patch or pull request, with provider-specific behavior. For example, the reviewed GitHub path distinguishes private-repository pull requests from a downloadable diff for public repositories. [SS05] [SS12]
+
+**Procedure:** select a material finding, verify the affected source and target revision, inspect reproduction or code evidence, request remediation only when the repository path is configured, then review and test the proposed change through the normal engineering process. A generated patch is neither deployment nor revalidation. [SS12]
+
+**Engineering verification:** before closure, identify the exact deployed revision and re-run relevant regression tests. Retain rejected changes and failed builds as unfinished work. Use the finding ID as the link between assessment, change, deployment and revalidation—not similarity of issue titles.
+
+### S-M05 — Revalidation replays selected finding evidence
+
+After a repair reaches the original test environment, open the completed penetration-test run, choose **Multiselect findings for revalidation**, select findings, and choose **Revalidate findings**. The service starts a separate job using current authentication/configuration and repeats the selected validation steps. It does not conduct broad new discovery. [SS13]
+
+```text
+Original finding + deployed repair
+                  ↓ selected validation steps
+          Separate revalidation job
+                  ↓
+      Active: reproduced / Resolved: not reproduced
+                  ↓
+          linked finding and job history
+```
+
+The original finding is preserved and linked to the new job. A non-reproduction result is scoped to that finding and execution conditions. An authentication or environment failure can undermine its interpretation; inspect reachability before treating a result as evidence of repair. [SS13]
+
+### S-06 — Code, design and threat-model workflows
+
+| Assessment | Configuration and execution | Reviewable result |
+|---|---|---|
+| Code review | Connect sources, select vulnerability/requirement modes, start full review or configure supported repository events | Locations, evidence, suggested fixes; preflight failures remain separate |
+| Design review | Submit a design for a one-off assessment; clone to create a new review | Design findings against relevant requirements |
+| Threat model | Create a reusable definition with scope documents and source context, then start a run | System overview, boundaries, data flows and threats |
+
+Code review preflight checks source and execution prerequisites before analysis. Ready-for-review repository events differ from draft changes; inspect the actual provider and configured trigger. Threat-model scope documents define what to analyze, while source documents/code provide system context. Do not treat them as interchangeable fields. [SS03] [SS05] [SS16] [SS17]
+
+**Threat-model procedure:** in the web app, create the model, provide title, scope documents, sources and service role, optionally configure logs, save, then start a run. Review the inferred system model before relying on individual threats. Inspect severity, evidence and dispositions. A model generated from the wrong system boundary is not repaired merely by dismissing inconvenient threats. [SS16]
+
+The full pipeline integration, complete design-review walkthrough and provider-specific remediation matrix are linked coverage, not reproduced procedures in this edition. This is an explicit limit of the guide, not a claim that those functions are absent.
+
+## 05. Worked example
+
+Trace an authorization finding through the deployed repair and prepared revalidation evidence.
+
+### S-U01 — Worked example: a repaired authorization check
+
+**Synthetic, authorized-staging exercise.** Two test users belong to different customer accounts. The illustrative finding is that user A can receive a test invoice owned by account B. No live endpoint, credential or exploit execution is supplied.
+
+| Evidence record | Before repair | Candidate repair | After deployment |
+|---|---|---|---|
+| Application revision | `demo-r1` | `demo-r2` under review | `demo-r2` deployed |
+| Same-account test | Expected invoice returned | Regression test passes | Expected invoice returned |
+| Cross-account test | Test invoice returned unexpectedly | Ownership check added; unit test passes | Access denied in prepared result |
+| Identity evidence | User A / account A | Test principal controlled | User A / account A confirmed |
+
+**Walkthrough:** inspect the original finding and target revision; review the proposed ownership check; verify that the prepared deployment record names `demo-r2`; select the finding for revalidation; inspect the new job and its linkage. The observation that a patch exists is not used as evidence of deployment. The prepared post-deployment denial supports only this tested path and identity.
+
+**Failure branch:** if revalidation instead logs in as a privileged administrator, its result is not the intended test of user A. Correct the credential role and rerun the authorized verification. If no application path was reached, do not interpret the absence of reproduction as proof of repair.
+
+**Expected deliverable:** a finding disposition linking original evidence, reviewed change, deployed revision, actual authenticated identity and targeted result, with untested routes stated explicitly. The fixture teaches evidence lineage; it is not an assessment result or a security guarantee.
+
+## 06. Troubleshooting and limits
+
+Diagnose the failed access, authentication, criteria or execution prerequisite.
+
+### S-07 — Operational limits and failure diagnosis
 
 The reviewed quota page distinguishes assessment capacity from spending controls. Examples include five concurrent penetration tests and five concurrent code-review runs as adjustable quotas, plus 20 requirement packs, 30 requirements per pack and 150 enabled requirements per account/Region as fixed limits. Confirm actual quotas and pricing before large-scale execution; a concurrency limit is not a financial budget. [SS10] [SS11]
 
@@ -200,24 +241,11 @@ The reviewed quota page distinguishes assessment capacity from spending controls
 
 This ordering is engineering guidance derived from the cited procedures. It does not claim that every error message has one unique cause. [SS06] [SS09] [SS18]
 
-## S-U01 — Worked example: a repaired authorization check
+## 07. Coverage and official evidence
 
-**Synthetic, authorized-staging exercise.** Two test users belong to different customer accounts. The illustrative finding is that user A can receive a test invoice owned by account B. No live endpoint, credential or exploit execution is supplied.
+Review coverage decisions and the sources supporting the guide.
 
-| Evidence record | Before repair | Candidate repair | After deployment |
-|---|---|---|---|
-| Application revision | `demo-r1` | `demo-r2` under review | `demo-r2` deployed |
-| Same-account test | Expected invoice returned | Regression test passes | Expected invoice returned |
-| Cross-account test | Test invoice returned unexpectedly | Ownership check added; unit test passes | Access denied in prepared result |
-| Identity evidence | User A / account A | Test principal controlled | User A / account A confirmed |
-
-**Walkthrough:** inspect the original finding and target revision; review the proposed ownership check; verify that the prepared deployment record names `demo-r2`; select the finding for revalidation; inspect the new job and its linkage. The observation that a patch exists is not used as evidence of deployment. The prepared post-deployment denial supports only this tested path and identity.
-
-**Failure branch:** if revalidation instead logs in as a privileged administrator, its result is not the intended test of user A. Correct the credential role and rerun the authorized verification. If no application path was reached, do not interpret the absence of reproduction as proof of repair.
-
-**Expected deliverable:** a finding disposition linking original evidence, reviewed change, deployed revision, actual authenticated identity and targeted result, with untested routes stated explicitly. The fixture teaches evidence lineage; it is not an assessment result or a security guarantee.
-
-## S-08 — Coverage and evidence decisions
+### S-08 — Coverage and evidence decisions
 
 | Official subject | Treatment | Remaining boundary |
 |---|---|---|
@@ -231,7 +259,7 @@ This ordering is engineering guidance derived from the cited procedures. It does
 
 **Version conflicts:** current indexed authentication/wizard pages include email MFA and nonstandard ports. Older cached authentication/troubleshooting pages contradict those points. The newer task-specific pages are used; the older troubleshooting source supports only the remaining diagnostics. Review date means retrieval, not a page publication date.
 
-### Official sources and reviewed sections
+#### Official sources and reviewed sections
 
 - [SS01] Service scope and feature distinctions.
 - [SS02] Documentation history; feature announcements and availability.
