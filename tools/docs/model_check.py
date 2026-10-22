@@ -71,6 +71,13 @@ def schema_errors(cases,mechanisms,features,profiles,aliases,guides):
     if len(objectives)!=len(set(objectives)):errors.append('Primary cases share an identical objective')
     consumers={m for c in cases for s in c['workflow'] if (m:=s['mechanism'])}
     consumers.update(m for p in profiles for m in p['mechanisms'])
+    for m in mechanisms:
+        for related in m.get('related_mechanisms',[]):
+            target=related.get('id')
+            if target not in M:errors.append(m['id']+': unknown related mechanism')
+            elif M[target]['platform']!=m['platform']:errors.append(m['id']+': cross-product related mechanism')
+            if related.get('dependency') not in ('optional','conditional') or not related.get('condition'):errors.append(m['id']+': unqualified related mechanism')
+            consumers.add(target)
     for m in M:
         if m not in consumers:errors.append(m+': mechanism has no workflow or profile consumer')
     used_features={f for m in mechanisms for f in m['features']}
