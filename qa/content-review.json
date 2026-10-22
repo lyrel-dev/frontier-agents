@@ -1,46 +1,20 @@
 {
-  "revision": "2026-10-22-narrative-guides",
-  "removed_superseded_paths": [
-    "architecture/common-patterns.html",
-    "devops/initial-report.html",
-    "devops/validated-report.html",
-    "finops/report.html",
-    "mechanisms/devops.html",
-    "mechanisms/finops.html",
-    "mechanisms/index.html",
-    "mechanisms/overview.html",
-    "mechanisms/security.html",
-    "platforms/devops.html",
-    "platforms/finops.html",
-    "platforms/index.html",
-    "platforms/security.html",
-    "qa/checks.json",
-    "qa/content-review.md",
-    "qa/use-case-catalog.json",
-    "security/report.html",
-    "tools/docs-requirements.txt",
-    "tools/docs_build.py",
-    "tools/docs_check.py",
-    "tools/docs_interactions.js",
-    "tools/docs_structure.py",
-    "tools/docs_styles.css",
-    "tools/lesson_plan.py",
-    "tools/use_case_catalog.py"
+  "revision": "2026-10-22-linked-catalog",
+  "primary_cases": 30,
+  "former_records_mapped": 54,
+  "retained_distinctions": [
+    "planning versus execution",
+    "assessment versus revalidation",
+    "pattern identification versus prioritization",
+    "recommendation versus measured outcome",
+    "forecast versus commitment coverage"
   ],
-  "maintained_source_layout": [
-    "guides/*.md",
-    "catalog/use-cases.json",
-    "tools/docs/structure.py",
-    "tools/docs/presentation.py",
-    "tools/docs/diagrams.py"
+  "changes": [
+    "Outcome narratives normalized without retaining superseded records",
+    "Workflow dependencies declare purpose, actor, condition, feature configuration, effect, verification and failure handling",
+    "Canonical guide explanations linked through searchable mechanism/feature/profile indexes",
+    "Reverse impact links distinguish direct and profile-selected dependencies",
+    "Shared review has distinct reliability and cost-management profiles"
   ],
-  "content_changes": [
-    "Agent and execution model introduced before configuration.",
-    "Named integration providers distinguished by direction and scope.",
-    "Knowledge production, retrieval, correction, and restoration boundaries separated.",
-    "All catalog workflows receive authored multi-paragraph narratives.",
-    "Logical SVG architecture and workflow diagrams replace ASCII sketches.",
-    "Technical guide sections and known source references remain cross-linked."
-  ],
-  "boundary": "Content revision and source-linked logical models, not live service verification."
+  "boundary": "Classification and proposed operational recipes; not live execution or a full upstream source audit."
 }
