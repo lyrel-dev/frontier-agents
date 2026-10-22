@@ -1,0 +1,227 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1212pt" height="664pt" viewBox="0.00 0.00 1212.00 664.00" role="img" aria-labelledby="er-concept-model-title er-concept-model-desc" data-diagram="er-concept-model">
+<title id="er-concept-model-title">The documentation model and its AWS resource bindings</title><desc id="er-concept-model-desc">The blue entities are the approved explanatory vocabulary. Green examples are named product configurations, not equivalent resources. Orange nodes retain the external evidence and review boundary. Product diagrams refine this model.</desc><g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(18 646)">
+<title>G</title>
+<g id="clust1" class="cluster">
+<title>cluster_ownership</title>
+<path fill="transparent" stroke="#b5c2cc" d="M807,-388C807,-388 1156,-388 1156,-388 1162,-388 1168,-394 1168,-400 1168,-400 1168,-608 1168,-608 1168,-614 1162,-620 1156,-620 1156,-620 807,-620 807,-620 801,-620 795,-614 795,-608 795,-608 795,-400 795,-400 795,-394 801,-388 807,-388" />
+<text text-anchor="middle" x="981.5" y="-603.2" font-family="DejaVu Sans" font-size="16.00">Ownership of the definition (not availability)</text>
+</g>
+
+<g id="node1" class="node">
+<title>C-USECASE</title>
+<path fill="#dcebff" stroke="#447ac2" d="M418,-509C418,-509 298,-509 298,-509 292,-509 286,-503 286,-497 286,-497 286,-485 286,-485 286,-479 292,-473 298,-473 298,-473 418,-473 418,-473 424,-473 430,-479 430,-485 430,-485 430,-497 430,-497 430,-503 424,-509 418,-509" />
+<text text-anchor="middle" x="358" y="-494.2" font-family="DejaVu Sans" font-size="11.00" fill="#152636">[DOC] Use case</text>
+<text text-anchor="middle" x="358" y="-482.2" font-family="DejaVu Sans" font-size="11.00" fill="#152636">documentation concept</text>
+</g>
+
+<g id="node2" class="node">
+<title>C-VARIANT</title>
+<path fill="#dcebff" stroke="#447ac2" d="M418.5,-432C418.5,-432 297.5,-432 297.5,-432 291.5,-432 285.5,-426 285.5,-420 285.5,-420 285.5,-408 285.5,-408 285.5,-402 291.5,-396 297.5,-396 297.5,-396 418.5,-396 418.5,-396 424.5,-396 430.5,-402 430.5,-408 430.5,-408 430.5,-420 430.5,-420 430.5,-426 424.5,-432 418.5,-432" />
+<text text-anchor="middle" x="358" y="-417.2" font-family="DejaVu Sans" font-size="11.00" fill="#152636">[DOC] Use-case variant</text>
+<text text-anchor="middle" x="358" y="-405.2" font-family="DejaVu Sans" font-size="11.00" fill="#152636">documentation concept</text>
+</g>
+
+<g id="edge1" class="edge">
+<title>C-USECASE-&gt;C-VARIANT</title>
+<path fill="none" stroke="#496b78" stroke-dasharray="5,2" d="M358,-472.98C358,-463.17 358,-450.67 358,-439.79" />
+<polygon fill="#496b78" stroke="#496b78" points="360.63,-439.71 358,-432.21 355.38,-439.71 360.63,-439.71" />
+<text text-anchor="middle" x="409.5" y="-450" font-family="DejaVu Sans" font-size="10.00">has optional variants</text>
+</g>
+
+<g id="node3" class="node">
+<title>C-WORKFLOW</title>
+<path fill="#dcebff" stroke="#447ac2" d="M774,-432C774,-432 654,-432 654,-432 648,-432 642,-426 642,-420 642,-420 642,-408 642,-408 642,-402 648,-396 654,-396 654,-396 774,-396 774,-396 780,-396 786,-402 786,-408 786,-408 786,-420 786,-420 786,-426 780,-432 774,-432" />
+<text text-anchor="middle" x="714" y="-417.2" font-family="DejaVu Sans" font-size="11.00" fill="#152636">[DOC] Workflow</text>
+<text text-anchor="middle" x="714" y="-405.2" font-family="DejaVu Sans" font-size="11.00" fill="#152636">documentation concept</text>
+</g>
+
+<g id="edge2" class="edge">
+<title>C-USECASE-&gt;C-WORKFLOW</title>
+<path fill="none" stroke="#496b78" stroke-dasharray="5,2" d="M430.04,-474.82C489.3,-462.34 573.18,-444.67 634.41,-431.77" />
+<polygon fill="#496b78" stroke="#496b78" points="634.96,-434.33 641.76,-430.22 633.88,-429.2 634.96,-434.33" />
+<text text-anchor="middle" x="606.5" y="-450" font-family="DejaVu Sans" font-size="10.00">is achieved through</text>
+</g>
+
+<g id="node4" class="node">
+<title>C-STEP</title>
+<path fill="#dcebff" stroke="#447ac2" d="M596,-354C596,-354 476,-354 476,-354 470,-354 464,-348 464,-342 464,-342 464,-330 464,-330 464,-324 470,-318 476,-318 476,-318 596,-318 596,-318 602,-318 608,-324 608,-330 608,-330 608,-342 608,-342 608,-348 602,-354 596,-354" />
+<text text-anchor="middle" x="536" y="-339.2" font-family="DejaVu Sans" font-size="11.00" fill="#152636">[DOC] Workflow step</text>
+<text text-anchor="middle" x="536" y="-327.2" font-family="DejaVu Sans" font-size="11.00" fill="#152636">documentation concept</text>
+</g>
+
+<g id="edge3" class="edge">
+<title>C-WORKFLOW-&gt;C-STEP</title>
+<path fill="none" stroke="#496b78" stroke-dasharray="5,2" d="M691.74,-395.93C679.15,-386.93 662.81,-376.27 647,-369 636.69,-364.26 625.51,-360.05 614.35,-356.37" />
+<polygon fill="#496b78" stroke="#496b78" points="614.97,-353.81 607.03,-354.03 613.37,-358.81 614.97,-353.81" />
+<text text-anchor="middle" x="682.5" y="-372" font-family="DejaVu Sans" font-size="10.00">orders</text>
+</g>
+
+<g id="node6" class="node">
+<title>C-MECHANISM</title>
+<path fill="#dcebff" stroke="#447ac2" d="M664.5,-277C664.5,-277 505.5,-277 505.5,-277 499.5,-277 493.5,-271 493.5,-265 493.5,-265 493.5,-253 493.5,-253 493.5,-247 499.5,-241 505.5,-241 505.5,-241 664.5,-241 664.5,-241 670.5,-241 676.5,-247 676.5,-253 676.5,-253 676.5,-265 676.5,-265 676.5,-271 670.5,-277 664.5,-277" />
+<text text-anchor="middle" x="585" y="-262.2" font-family="DejaVu Sans" font-size="11.00" fill="#152636">[DOC] Mechanism explanation</text>
+<text text-anchor="middle" x="585" y="-250.2" font-family="DejaVu Sans" font-size="11.00" fill="#152636">documentation concept</text>
+</g>
+
+<g id="edge4" class="edge">
+<title>C-STEP-&gt;C-MECHANISM</title>
+<path fill="none" stroke="#496b78" stroke-dasharray="5,2" d="M547.12,-317.98C553.78,-307.79 562.33,-294.7 569.63,-283.53" />
+<polygon fill="#496b78" stroke="#496b78" points="571.85,-284.93 573.76,-277.21 567.46,-282.05 571.85,-284.93" />
+<text text-anchor="middle" x="608.5" y="-295" font-family="DejaVu Sans" font-size="10.00">uses conditionally</text>
+</g>
+
+<g id="node11" class="node">
+<title>X-REVIEW</title>
+<path fill="#fce8d5" stroke="#c78335" d="M463.5,-277C463.5,-277 312.5,-277 312.5,-277 306.5,-277 300.5,-271 300.5,-265 300.5,-265 300.5,-253 300.5,-253 300.5,-247 306.5,-241 312.5,-241 312.5,-241 463.5,-241 463.5,-241 469.5,-241 475.5,-247 475.5,-253 475.5,-253 475.5,-265 475.5,-265 475.5,-271 469.5,-277 463.5,-277" />
+<text text-anchor="middle" x="388" y="-262.2" font-family="DejaVu Sans" font-size="11.00" fill="#152636">[EXT] Engineering review</text>
+<text text-anchor="middle" x="388" y="-250.2" font-family="DejaVu Sans" font-size="11.00" fill="#152636">external evidence or process</text>
+</g>
+
+<g id="edge11" class="edge">
+<title>C-STEP-&gt;X-REVIEW</title>
+<path fill="none" stroke="#496b78" stroke-dasharray="5,2" d="M463.97,-329.47C443.37,-324.86 422.16,-316.83 406,-303 400.4,-298.21 396.51,-291.38 393.81,-284.58" />
+<polygon fill="#496b78" stroke="#496b78" points="396.24,-283.56 391.34,-277.3 391.27,-285.25 396.24,-283.56" />
+<text text-anchor="middle" x="480" y="-295" font-family="DejaVu Sans" font-size="10.00">provides result for acceptance</text>
+</g>
+
+<g id="node5" class="node">
+<title>C-CAPABILITY</title>
+<path fill="#dcebff" stroke="#447ac2" d="M758,-354C758,-354 638,-354 638,-354 632,-354 626,-348 626,-342 626,-342 626,-330 626,-330 626,-324 632,-318 638,-318 638,-318 758,-318 758,-318 764,-318 770,-324 770,-330 770,-330 770,-342 770,-342 770,-348 764,-354 758,-354" />
+<text text-anchor="middle" x="698" y="-339.2" font-family="DejaVu Sans" font-size="11.00" fill="#152636">[DOC] Capability group</text>
+<text text-anchor="middle" x="698" y="-327.2" font-family="DejaVu Sans" font-size="11.00" fill="#152636">documentation concept</text>
+</g>
+
+<g id="edge5" class="edge">
+<title>C-CAPABILITY-&gt;C-MECHANISM</title>
+<path fill="none" stroke="#496b78" stroke-dasharray="5,2" d="M684.52,-317.95C677.08,-309.35 667.29,-299.25 657,-292 650.96,-287.75 644.27,-283.86 637.46,-280.38" />
+<polygon fill="#496b78" stroke="#496b78" points="638.53,-277.98 630.64,-277.04 636.22,-282.7 638.53,-277.98" />
+<text text-anchor="middle" x="720" y="-295" font-family="DejaVu Sans" font-size="10.00">groups explanations</text>
+</g>
+
+<g id="node7" class="node">
+<title>C-FEATURE</title>
+<path fill="#dcebff" stroke="#447ac2" d="M549,-200C549,-200 423,-200 423,-200 417,-200 411,-194 411,-188 411,-188 411,-176 411,-176 411,-170 417,-164 423,-164 423,-164 549,-164 549,-164 555,-164 561,-170 561,-176 561,-176 561,-188 561,-188 561,-194 555,-200 549,-200" />
+<text text-anchor="middle" x="486" y="-185.2" font-family="DejaVu Sans" font-size="11.00" fill="#152636">[DOC] Feature reference</text>
+<text text-anchor="middle" x="486" y="-173.2" font-family="DejaVu Sans" font-size="11.00" fill="#152636">documentation concept</text>
+</g>
+
+<g id="edge6" class="edge">
+<title>C-MECHANISM-&gt;C-FEATURE</title>
+<path fill="none" stroke="#496b78" stroke-dasharray="5,2" d="M562.54,-240.98C548.46,-230.32 530.17,-216.46 515.01,-204.97" />
+<polygon fill="#496b78" stroke="#496b78" points="516.28,-202.65 508.72,-200.21 513.11,-206.83 516.28,-202.65" />
+<text text-anchor="middle" x="608" y="-218" font-family="DejaVu Sans" font-size="10.00">uses documented facilities</text>
+</g>
+
+<g id="node9" class="node">
+<title>C-BINDING</title>
+<path fill="#dcebff" stroke="#447ac2" d="M334.5,-123C334.5,-123 211.5,-123 211.5,-123 205.5,-123 199.5,-117 199.5,-111 199.5,-111 199.5,-99 199.5,-99 199.5,-93 205.5,-87 211.5,-87 211.5,-87 334.5,-87 334.5,-87 340.5,-87 346.5,-93 346.5,-99 346.5,-99 346.5,-111 346.5,-111 346.5,-117 340.5,-123 334.5,-123" />
+<text text-anchor="middle" x="273" y="-108.2" font-family="DejaVu Sans" font-size="11.00" fill="#152636">[DOC] Resource binding</text>
+<text text-anchor="middle" x="273" y="-96.2" font-family="DejaVu Sans" font-size="11.00" fill="#152636">documentation concept</text>
+</g>
+
+<g id="edge9" class="edge">
+<title>C-FEATURE-&gt;C-BINDING</title>
+<path fill="none" stroke="#496b78" stroke-dasharray="5,2" d="M437.67,-163.98C405.24,-152.56 362.43,-137.49 328.59,-125.57" />
+<polygon fill="#496b78" stroke="#496b78" points="329.46,-123.1 321.51,-123.08 327.71,-128.05 329.46,-123.1" />
+<text text-anchor="middle" x="444.5" y="-141" font-family="DejaVu Sans" font-size="10.00">maps to actual types</text>
+</g>
+
+<g id="node8" class="node">
+<title>C-PROFILE</title>
+<path fill="#dcebff" stroke="#447ac2" d="M349.5,-586C349.5,-586 196.5,-586 196.5,-586 190.5,-586 184.5,-580 184.5,-574 184.5,-574 184.5,-562 184.5,-562 184.5,-556 190.5,-550 196.5,-550 196.5,-550 349.5,-550 349.5,-550 355.5,-550 361.5,-556 361.5,-562 361.5,-562 361.5,-574 361.5,-574 361.5,-580 355.5,-586 349.5,-586" />
+<text text-anchor="middle" x="273" y="-571.2" font-family="DejaVu Sans" font-size="11.00" fill="#152636">[DOC] Implementation profile</text>
+<text text-anchor="middle" x="273" y="-559.2" font-family="DejaVu Sans" font-size="11.00" fill="#152636">documentation concept</text>
+</g>
+
+<g id="edge7" class="edge">
+<title>C-PROFILE-&gt;C-USECASE</title>
+<path fill="none" stroke="#496b78" stroke-dasharray="5,2" d="M292.29,-549.98C304.27,-539.41 319.79,-525.71 332.75,-514.28" />
+<polygon fill="#496b78" stroke="#496b78" points="334.61,-516.14 338.49,-509.21 331.13,-512.2 334.61,-516.14" />
+<text text-anchor="middle" x="391.5" y="-527" font-family="DejaVu Sans" font-size="10.00">implements selected variant</text>
+</g>
+
+<g id="edge8" class="edge">
+<title>C-PROFILE-&gt;C-BINDING</title>
+<path fill="none" stroke="#496b78" stroke-dasharray="5,2" d="M267.22,-549.94C262.64,-534.88 257,-512.24 257,-492 257,-492 257,-492 257,-181 257,-163.93 261.02,-145.14 265.02,-130.63" />
+<polygon fill="#496b78" stroke="#496b78" points="267.65,-130.99 267.22,-123.06 262.61,-129.53 267.65,-130.99" />
+<text text-anchor="middle" x="312" y="-333.5" font-family="DejaVu Sans" font-size="10.00">specifies configuration</text>
+</g>
+
+<g id="node12" class="node">
+<title>D-Custom</title>
+<path fill="#d9f2e5" stroke="#348761" d="M172,-41C172,-41 12,-41 12,-41 6,-41 0,-35 0,-29 0,-29 0,-17 0,-17 0,-11 6,-5 12,-5 12,-5 172,-5 172,-5 178,-5 184,-11 184,-17 184,-17 184,-29 184,-29 184,-35 178,-41 172,-41" />
+<text text-anchor="middle" x="92" y="-26.2" font-family="DejaVu Sans" font-size="11.00" fill="#152636">[AWS] Custom-agent definition</text>
+<text text-anchor="middle" x="92" y="-14.2" font-family="DejaVu Sans" font-size="11.00" fill="#152636">asset subtype</text>
+</g>
+
+<g id="edge12" class="edge">
+<title>C-BINDING-&gt;D-Custom</title>
+<path fill="none" stroke="#496b78" stroke-dasharray="5,2" d="M199.28,-92.09C180.89,-87.39 161.67,-80.9 145,-72 133.03,-65.61 121.62,-55.92 112.47,-46.92" />
+<polygon fill="#496b78" stroke="#496b78" points="114.21,-44.95 107.08,-41.44 110.47,-48.63 114.21,-44.95" />
+<text text-anchor="middle" x="207" y="-64" font-family="DejaVu Sans" font-size="10.00">product-specific example</text>
+</g>
+
+<g id="node13" class="node">
+<title>S-Pentest</title>
+<path fill="#d9f2e5" stroke="#348761" d="M331.5,-46C331.5,-46 214.5,-46 214.5,-46 208.5,-46 202.5,-40 202.5,-34 202.5,-34 202.5,-12 202.5,-12 202.5,-6 208.5,0 214.5,0 214.5,0 331.5,0 331.5,0 337.5,0 343.5,-6 343.5,-12 343.5,-12 343.5,-34 343.5,-34 343.5,-40 337.5,-46 331.5,-46" />
+<text text-anchor="middle" x="273" y="-32.2" font-family="DejaVu Sans" font-size="11.00" fill="#152636">[AWS] Penetration-test</text>
+<text text-anchor="middle" x="273" y="-20.2" font-family="DejaVu Sans" font-size="11.00" fill="#152636">configuration</text>
+<text text-anchor="middle" x="273" y="-8.2" font-family="DejaVu Sans" font-size="11.00" fill="#152636">service configuration</text>
+</g>
+
+<g id="edge13" class="edge">
+<title>C-BINDING-&gt;S-Pentest</title>
+<path fill="none" stroke="#496b78" stroke-dasharray="5,2" d="M273,-86.64C273,-77.1 273,-65 273,-53.98" />
+<polygon fill="#496b78" stroke="#496b78" points="275.63,-53.7 273,-46.2 270.38,-53.7 275.63,-53.7" />
+<text text-anchor="middle" x="335" y="-64" font-family="DejaVu Sans" font-size="10.00">product-specific example</text>
+</g>
+
+<g id="node14" class="node">
+<title>F-Automation</title>
+<path fill="#d9f2e5" stroke="#348761" d="M480,-41C480,-41 374,-41 374,-41 368,-41 362,-35 362,-29 362,-29 362,-17 362,-17 362,-11 368,-5 374,-5 374,-5 480,-5 480,-5 486,-5 492,-11 492,-17 492,-17 492,-29 492,-29 492,-35 486,-41 480,-41" />
+<text text-anchor="middle" x="427" y="-26.2" font-family="DejaVu Sans" font-size="11.00" fill="#152636">[AWS] Automation</text>
+<text text-anchor="middle" x="427" y="-14.2" font-family="DejaVu Sans" font-size="11.00" fill="#152636">service configuration</text>
+</g>
+
+<g id="edge14" class="edge">
+<title>C-BINDING-&gt;F-Automation</title>
+<path fill="none" stroke="#496b78" stroke-dasharray="5,2" d="M346.78,-96.38C365.88,-91.65 385.43,-84.07 401,-72 408.84,-65.92 414.62,-56.79 418.7,-48.11" />
+<polygon fill="#496b78" stroke="#496b78" points="421.21,-48.94 421.75,-41.01 416.38,-46.87 421.21,-48.94" />
+<text text-anchor="middle" x="474" y="-64" font-family="DejaVu Sans" font-size="10.00">product-specific example</text>
+</g>
+
+<g id="node10" class="node">
+<title>X-EVIDENCE</title>
+<path fill="#fce8d5" stroke="#c78335" d="M611.5,-432C611.5,-432 460.5,-432 460.5,-432 454.5,-432 448.5,-426 448.5,-420 448.5,-420 448.5,-408 448.5,-408 448.5,-402 454.5,-396 460.5,-396 460.5,-396 611.5,-396 611.5,-396 617.5,-396 623.5,-402 623.5,-408 623.5,-408 623.5,-420 623.5,-420 623.5,-426 617.5,-432 611.5,-432" />
+<text text-anchor="middle" x="536" y="-417.2" font-family="DejaVu Sans" font-size="11.00" fill="#152636">[EXT] Source evidence</text>
+<text text-anchor="middle" x="536" y="-405.2" font-family="DejaVu Sans" font-size="11.00" fill="#152636">external evidence or process</text>
+</g>
+
+<g id="edge10" class="edge">
+<title>X-EVIDENCE-&gt;C-STEP</title>
+<path fill="none" stroke="#496b78" stroke-dasharray="5,2" d="M536,-395.75C536,-385.75 536,-372.97 536,-361.88" />
+<polygon fill="#496b78" stroke="#496b78" points="538.63,-361.68 536,-354.18 533.38,-361.68 538.63,-361.68" />
+<text text-anchor="middle" x="589.5" y="-372" font-family="DejaVu Sans" font-size="10.00">supplies observations</text>
+</g>
+
+<g id="node15" class="node">
+<title>legend_0</title>
+<polygon fill="#dcebff" stroke="#447ac2" points="977,-586 817,-586 817,-550 977,-550 977,-586" />
+<text text-anchor="middle" x="897" y="-565.5" font-family="DejaVu Sans" font-size="10.00" fill="#142c3e">DOC · Documentation-defined</text>
+</g>
+
+<g id="node16" class="node">
+<title>legend_1</title>
+<polygon fill="#d9f2e5" stroke="#348761" points="950.5,-509 843.5,-509 843.5,-473 950.5,-473 950.5,-509" />
+<text text-anchor="middle" x="897" y="-488.5" font-family="DejaVu Sans" font-size="10.00" fill="#142c3e">AWS · AWS-defined</text>
+</g>
+
+
+<g id="node17" class="node">
+<title>legend_2</title>
+<polygon fill="#fce8d5" stroke="#c78335" points="990,-432 804,-432 804,-396 990,-396 990,-432" />
+<text text-anchor="middle" x="897" y="-411.5" font-family="DejaVu Sans" font-size="10.00" fill="#142c3e">EXT · External / engineering-owned</text>
+</g>
+
+</g>
+</svg>
