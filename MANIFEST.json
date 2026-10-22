@@ -2,8 +2,8 @@
   "revision": "2026-10-22-linked-catalog",
   "files": {
     ".github/workflows/document-suite.yml": {
-      "bytes": 3212,
-      "sha256": "1c6b3dfc9e157948e8da40cf81ed2c938d7b6d409cb39a5b0e6ccb50e308daf9"
+      "bytes": 3034,
+      "sha256": "fde17bc3e876735d7058c3b2059e9c15248213d57b6c196277e0b7fbb857c6b1"
     },
     "CHANGELOG.md": {
       "bytes": 1737,
