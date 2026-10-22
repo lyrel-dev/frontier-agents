@@ -283,4 +283,27 @@ def build():
         (out/(key+'.svg')).write_text(ET.tostring(root,encoding='unicode'),encoding='utf-8')
     return len(DIAGRAMS)
 
+
+DIAGRAMS['devops-knowledge']=(
+    'Environment-knowledge consolidation',
+    'Discovery, connected evidence, and completed investigations feed distinct retained knowledge. A later execution selects the relevant context; it still reads current source evidence.',
+    ['D-M08','D-05'],r"""
+rankdir=TB;
+sources [label="Environment evidence\nResources, repositories, pipelines, telemetry"];
+history [label="Completed investigations\nObserved tool use and outcomes"];
+learning [label="Managed learning\nSynthesis and refresh"];
+map [label="Environment understanding\nServices, components, request paths"];
+deps [label="Dependencies and pipelines\nRelationships and delivery stages"];
+tools [label="Tool-use guidance\nQuery patterns and recurring errors"];
+selection [label="Later execution\nSelect relevant stored context"];
+sources -> learning [label="environment inputs"];
+history -> learning [label="operational experience"];
+learning -> map;
+learning -> deps;
+learning -> tools;
+map -> selection [label="relevant descriptions"];
+deps -> selection;
+tools -> selection;
+""")
+
 if __name__=='__main__':print(build())
