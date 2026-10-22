@@ -1,0 +1,88 @@
+{
+  "revision": "2026-10-22-use-case-catalog",
+  "use_cases": 54,
+  "platform_counts": {
+    "devops": 22,
+    "security": 16,
+    "finops": 16
+  },
+  "group_counts": {
+    "Incident operations": 5,
+    "Health reporting and reviews": 5,
+    "Pattern analysis and improvement": 2,
+    "Knowledge and documentation": 5,
+    "Custom operational work": 3,
+    "Release and change assurance": 2,
+    "Application assessment": 4,
+    "Authentication and access": 1,
+    "Findings and remediation": 4,
+    "Shift-left review": 6,
+    "Program operations": 1,
+    "Cost inquiry and reporting": 6,
+    "Anomaly and optimization": 4,
+    "Context and governance": 2,
+    "Automation and collaboration": 4
+  },
+  "delivery_counts": {
+    "Built-in function": 7,
+    "Controlled action": 1,
+    "Configured custom agent": 7,
+    "Built-in mechanism": 2,
+    "Composed workflow": 4,
+    "Configured knowledge": 1,
+    "Built-in function with composed documentation": 1,
+    "Preview function": 2,
+    "Native assessment": 1,
+    "Configured assessment": 3,
+    "Native mechanism": 1,
+    "Native operation": 2,
+    "Configured integration": 4,
+    "Configured remediation": 1,
+    "Preview assessment": 4,
+    "Configured criteria": 1,
+    "Native function": 4,
+    "Native function with context": 1,
+    "Configured recurring task": 1,
+    "Configured automation": 2,
+    "Native function with team review": 1,
+    "Configured context": 1,
+    "Native memory": 1,
+    "Native output": 1
+  },
+  "local_links_checked": 859,
+  "browser": [
+    {
+      "page": "catalog",
+      "width": 390,
+      "javascript_errors": [],
+      "filters": "passed"
+    },
+    {
+      "page": "catalog",
+      "width": 1440,
+      "javascript_errors": [],
+      "filters": "passed"
+    },
+    {
+      "page": "devops-report",
+      "width": 390,
+      "javascript_errors": [],
+      "embedded_catalog": "passed"
+    },
+    {
+      "page": "security-report",
+      "width": 390,
+      "javascript_errors": [],
+      "embedded_catalog": "passed"
+    },
+    {
+      "page": "finops-report",
+      "width": 390,
+      "javascript_errors": [],
+      "embedded_catalog": "passed"
+    }
+  ],
+  "marketing_title_matches": [],
+  "errors": [],
+  "boundary": "Catalog structure, source mapping, local links, HTML controls and slide information density were checked. No live AWS workflow or use-case outcome was executed."
+}
