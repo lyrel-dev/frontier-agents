@@ -1,146 +1,122 @@
 {
-  "revision": "2026-10-22-use-case-catalog",
-  "baseline": "7ed9843ed35f6c78214dd2853df497b670a49995",
-  "reports": 4,
-  "report_chapters": 26,
-  "canonical_sections_preserved": 57,
-  "canonical_content_and_sources_unchanged": true,
+  "revision": "2026-10-22-narrative-guides",
+  "baseline": "c3d6f2dafdd87e083989135690e2f4f169e80fc2",
+  "guides": 4,
+  "canonical_sections": 64,
+  "previous_identifiers_retained": 57,
+  "new_sections": [
+    "A-00",
+    "A-08",
+    "D-12",
+    "D-M08",
+    "F-08",
+    "S-09",
+    "S-M07"
+  ],
+  "authored_use_case_narratives": 54,
+  "narrative_paragraphs": 108,
+  "platform_use_cases": {
+    "devops": 22,
+    "security": 16,
+    "finops": 16
+  },
+  "logical_diagrams": 17,
+  "rendered_diagram_instances": 81,
   "html_presentations": 4,
-  "timed_slides": 51,
-  "programme_minutes": 149,
+  "slides": 71,
+  "programme_minutes": 189,
   "exercise_minutes": 28,
-  "html_files_checked": 25,
-  "local_links_checked": 963,
-  "binary_presentations_remaining": 0,
+  "local_links_checked": 910,
   "browser_checks": [
     {
       "subject": "devops",
       "width": 390,
-      "report_chapters": 7,
-      "slide_count": 14,
+      "technical_sections": 21,
+      "slides": 21,
       "javascript_errors": [],
-      "search_chapter_type_deeplinks_notes_timers_print": "passed"
+      "slides_over_1050px": [],
+      "navigation_filters_hash_notes_timer_print": "passed"
     },
     {
       "subject": "devops",
       "width": 1440,
-      "report_chapters": 7,
-      "slide_count": 14,
+      "technical_sections": 21,
+      "slides": 21,
       "javascript_errors": [],
-      "search_chapter_type_deeplinks_notes_timers_print": "passed"
+      "slides_over_1050px": [],
+      "navigation_filters_hash_notes_timer_print": "passed"
     },
     {
       "subject": "security",
       "width": 390,
-      "report_chapters": 7,
-      "slide_count": 15,
+      "technical_sections": 17,
+      "slides": 21,
       "javascript_errors": [],
-      "search_chapter_type_deeplinks_notes_timers_print": "passed"
+      "slides_over_1050px": [],
+      "navigation_filters_hash_notes_timer_print": "passed"
     },
     {
       "subject": "security",
       "width": 1440,
-      "report_chapters": 7,
-      "slide_count": 15,
+      "technical_sections": 17,
+      "slides": 21,
       "javascript_errors": [],
-      "search_chapter_type_deeplinks_notes_timers_print": "passed"
+      "slides_over_1050px": [],
+      "navigation_filters_hash_notes_timer_print": "passed"
     },
     {
       "subject": "finops",
       "width": 390,
-      "report_chapters": 7,
-      "slide_count": 13,
+      "technical_sections": 16,
+      "slides": 18,
       "javascript_errors": [],
-      "search_chapter_type_deeplinks_notes_timers_print": "passed"
+      "slides_over_1050px": [],
+      "navigation_filters_hash_notes_timer_print": "passed"
     },
     {
       "subject": "finops",
       "width": 1440,
-      "report_chapters": 7,
-      "slide_count": 13,
+      "technical_sections": 16,
+      "slides": 18,
       "javascript_errors": [],
-      "search_chapter_type_deeplinks_notes_timers_print": "passed"
+      "slides_over_1050px": [],
+      "navigation_filters_hash_notes_timer_print": "passed"
     },
     {
       "subject": "architecture",
       "width": 390,
-      "report_chapters": 5,
-      "slide_count": 9,
+      "technical_sections": 10,
+      "slides": 11,
       "javascript_errors": [],
-      "search_chapter_type_deeplinks_notes_timers_print": "passed"
+      "slides_over_1050px": [],
+      "navigation_filters_hash_notes_timer_print": "passed"
     },
     {
       "subject": "architecture",
       "width": 1440,
-      "report_chapters": 5,
-      "slide_count": 9,
+      "technical_sections": 10,
+      "slides": 11,
       "javascript_errors": [],
-      "search_chapter_type_deeplinks_notes_timers_print": "passed"
+      "slides_over_1050px": [],
+      "navigation_filters_hash_notes_timer_print": "passed"
+    },
+    {
+      "subject": "catalog",
+      "width": 390,
+      "narratives": 54,
+      "filters_and_cross_product_hash": "passed",
+      "javascript_errors": []
+    },
+    {
+      "subject": "catalog",
+      "width": 1440,
+      "narratives": 54,
+      "filters_and_cross_product_hash": "passed",
+      "javascript_errors": []
     }
   ],
-  "synthetic_fixture_checks": [
-    "FinOps quantity/rate arithmetic and guide-table consistency",
-    "DevOps contradictory current evidence",
-    "Security revision and identity consistency"
-  ],
-  "excluded_scope_hits": [],
   "application_changes": [],
+  "excluded_scope_hits": [],
   "errors": [],
-  "boundary": "Organization, preserved source content, HTML behavior and timing checks only. No new external product audit or live AWS execution.",
-  "use_case_catalog": {
-    "revision": "2026-10-22-use-case-catalog",
-    "use_cases": 54,
-    "platform_counts": {
-      "devops": 22,
-      "security": 16,
-      "finops": 16
-    },
-    "group_counts": {
-      "Incident operations": 5,
-      "Health reporting and reviews": 5,
-      "Pattern analysis and improvement": 2,
-      "Knowledge and documentation": 5,
-      "Custom operational work": 3,
-      "Release and change assurance": 2,
-      "Application assessment": 4,
-      "Authentication and access": 1,
-      "Findings and remediation": 4,
-      "Shift-left review": 6,
-      "Program operations": 1,
-      "Cost inquiry and reporting": 6,
-      "Anomaly and optimization": 4,
-      "Context and governance": 2,
-      "Automation and collaboration": 4
-    },
-    "delivery_counts": {
-      "Built-in function": 7,
-      "Controlled action": 1,
-      "Configured custom agent": 7,
-      "Built-in mechanism": 2,
-      "Composed workflow": 4,
-      "Configured knowledge": 1,
-      "Built-in function with composed documentation": 1,
-      "Preview function": 2,
-      "Native assessment": 1,
-      "Configured assessment": 3,
-      "Native mechanism": 1,
-      "Native operation": 2,
-      "Configured integration": 4,
-      "Configured remediation": 1,
-      "Preview assessment": 4,
-      "Configured criteria": 1,
-      "Native function": 4,
-      "Native function with context": 1,
-      "Configured recurring task": 1,
-      "Configured automation": 2,
-      "Native function with team review": 1,
-      "Configured context": 1,
-      "Native memory": 1,
-      "Native output": 1
-    },
-    "local_links_checked": 859,
-    "marketing_title_matches": [],
-    "boundary": "Catalog structure, source mapping, local links, HTML controls and slide information density were checked. No live AWS workflow or use-case outcome was executed.",
-    "browser_checks": 5
-  }
+  "boundary": "Source mapping, narrative presence/uniqueness, logical SVG accessibility, examples, and HTML behavior were checked. These checks do not establish factual completeness, live AWS operation, agent accuracy, or measured outcomes."
 }
