@@ -1,0 +1,144 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="916pt" height="416pt" viewBox="0.00 0.00 916.10 416.00" role="img" aria-labelledby="er-finops-work-title er-finops-work-desc" data-diagram="er-finops-work">
+<title id="er-finops-work-title">FinOps Agent: conversation, automation and task records</title><desc id="er-finops-work-desc">Colors identify concept ownership; labels distinguish resources, configuration members and derived state. An edge shows source-count : target-count; ? means unspecified. Dashed edges are logical or editorial relationships, not asserted service foreign keys. See the relationship register for qualifications.</desc><g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(18 398)">
+<title>G</title>
+<g id="clust1" class="cluster">
+<title>cluster_ownership</title>
+<path fill="transparent" stroke="#b5c2cc" d="M511.1,-102C511.1,-102 860.1,-102 860.1,-102 866.1,-102 872.1,-108 872.1,-114 872.1,-114 872.1,-360 872.1,-360 872.1,-366 866.1,-372 860.1,-372 860.1,-372 511.1,-372 511.1,-372 505.1,-372 499.1,-366 499.1,-360 499.1,-360 499.1,-114 499.1,-114 499.1,-108 505.1,-102 511.1,-102" />
+<text text-anchor="middle" x="685.6" y="-355.2" font-family="DejaVu Sans" font-size="16.00">Ownership of the definition (not availability)</text>
+</g>
+
+<g id="node1" class="node">
+<title>F-Agent</title>
+<path fill="#d9f2e5" stroke="#348761" d="M226.6,-339C226.6,-339 65.6,-339 65.6,-339 59.6,-339 53.6,-333 53.6,-327 53.6,-327 53.6,-313 53.6,-313 53.6,-307 59.6,-301 65.6,-301 65.6,-301 226.6,-301 226.6,-301 232.6,-301 238.6,-307 238.6,-313 238.6,-313 238.6,-327 238.6,-327 238.6,-333 232.6,-339 226.6,-339" />
+<text text-anchor="middle" x="146.1" y="-323.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[AWS] FinOps agent instance</text>
+<text text-anchor="middle" x="146.1" y="-310.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">service resource</text>
+</g>
+
+<g id="node2" class="node">
+<title>F-Conversation</title>
+<path fill="#d9f2e5" stroke="#348761" d="M232.6,-243C232.6,-243 123.6,-243 123.6,-243 117.6,-243 111.6,-237 111.6,-231 111.6,-231 111.6,-217 111.6,-217 111.6,-211 117.6,-205 123.6,-205 123.6,-205 232.6,-205 232.6,-205 238.6,-205 244.6,-211 244.6,-217 244.6,-217 244.6,-231 244.6,-231 244.6,-237 238.6,-243 232.6,-243" />
+<text text-anchor="middle" x="178.1" y="-227.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[AWS] Conversation</text>
+<text text-anchor="middle" x="178.1" y="-214.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">interaction record</text>
+</g>
+
+<g id="edge1" class="edge">
+<title>F-Agent-&gt;F-Conversation</title>
+<path fill="none" stroke="#496b78" d="M144.68,-300.91C144.39,-289.16 145.24,-273.73 150.1,-261 151.62,-257.02 153.74,-253.13 156.13,-249.46" />
+<polygon fill="#496b78" stroke="#496b78" points="158.44,-250.75 160.67,-243.13 154.17,-247.69 158.44,-250.75" />
+<text text-anchor="middle" x="167.1" y="-275" font-family="DejaVu Sans" font-size="10.00">retains</text>
+<text text-anchor="middle" x="167.1" y="-264" font-family="DejaVu Sans" font-size="10.00">1 : 0..*</text>
+</g>
+
+<g id="node3" class="node">
+<title>F-Automation</title>
+<path fill="#d9f2e5" stroke="#348761" d="M391.1,-243C391.1,-243 277.1,-243 277.1,-243 271.1,-243 265.1,-237 265.1,-231 265.1,-231 265.1,-217 265.1,-217 265.1,-211 271.1,-205 277.1,-205 277.1,-205 391.1,-205 391.1,-205 397.1,-205 403.1,-211 403.1,-217 403.1,-217 403.1,-231 403.1,-231 403.1,-237 397.1,-243 391.1,-243" />
+<text text-anchor="middle" x="334.1" y="-227.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[AWS] Automation</text>
+<text text-anchor="middle" x="334.1" y="-214.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">service configuration</text>
+</g>
+
+<g id="edge3" class="edge">
+<title>F-Agent-&gt;F-Automation</title>
+<path fill="none" stroke="#496b78" d="M166.04,-300.99C183.81,-285.06 207.81,-263.9 213.1,-261 226.81,-253.49 242.27,-247.37 257.45,-242.44" />
+<polygon fill="#496b78" stroke="#496b78" points="258.49,-244.87 264.87,-240.12 256.93,-239.86 258.49,-244.87" />
+<text text-anchor="middle" x="277.6" y="-275" font-family="DejaVu Sans" font-size="10.00">contains future-work rules</text>
+<text text-anchor="middle" x="277.6" y="-264" font-family="DejaVu Sans" font-size="10.00">1 : 0..*</text>
+</g>
+
+<g id="node5" class="node">
+<title>F-Task</title>
+<path fill="#d9f2e5" stroke="#348761" d="M223.1,-147C223.1,-147 133.1,-147 133.1,-147 127.1,-147 121.1,-141 121.1,-135 121.1,-135 121.1,-121 121.1,-121 121.1,-115 127.1,-109 133.1,-109 133.1,-109 223.1,-109 223.1,-109 229.1,-109 235.1,-115 235.1,-121 235.1,-121 235.1,-135 235.1,-135 235.1,-141 229.1,-147 223.1,-147" />
+<text text-anchor="middle" x="178.1" y="-131.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[AWS] Task</text>
+<text text-anchor="middle" x="178.1" y="-118.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">execution record</text>
+</g>
+
+<g id="edge2" class="edge">
+<title>F-Agent-&gt;F-Task</title>
+<path fill="none" stroke="#496b78" d="M91.57,-300.96C41.76,-281.36 -20.28,-247.13 7.1,-205 30.5,-168.99 75.33,-149.91 113.22,-139.87" />
+<polygon fill="#496b78" stroke="#496b78" points="114.07,-142.36 120.69,-137.98 112.78,-137.27 114.07,-142.36" />
+<text text-anchor="middle" x="54.1" y="-227" font-family="DejaVu Sans" font-size="10.00">queues and retains</text>
+<text text-anchor="middle" x="54.1" y="-216" font-family="DejaVu Sans" font-size="10.00">1 : 0..*</text>
+</g>
+
+<g id="edge5" class="edge">
+<title>F-Conversation-&gt;F-Task</title>
+<path fill="none" stroke="#496b78" d="M178.1,-204.88C178.1,-190.7 178.1,-170.81 178.1,-154.94" />
+<polygon fill="#496b78" stroke="#496b78" points="180.73,-154.57 178.1,-147.07 175.48,-154.57 180.73,-154.57" />
+<text text-anchor="middle" x="233.1" y="-179" font-family="DejaVu Sans" font-size="10.00">may explicitly request</text>
+<text text-anchor="middle" x="233.1" y="-168" font-family="DejaVu Sans" font-size="10.00">? : 0..*</text>
+</g>
+
+<g id="edge4" class="edge">
+<title>F-Automation-&gt;F-Task</title>
+<path fill="none" stroke="#496b78" stroke-dasharray="5,2" d="M325.37,-204.87C318.32,-192.03 307.26,-175.31 293.1,-165 278.3,-154.22 260.19,-146.61 242.75,-141.25" />
+<polygon fill="#496b78" stroke="#496b78" points="243.26,-138.67 235.33,-139.09 241.8,-143.71 243.26,-138.67" />
+<text text-anchor="middle" x="370.1" y="-179" font-family="DejaVu Sans" font-size="10.00">creates on each match</text>
+<text text-anchor="middle" x="370.1" y="-168" font-family="DejaVu Sans" font-size="10.00">0..1 : 0..*</text>
+</g>
+
+<g id="node4" class="node">
+<title>F-Rule</title>
+<path fill="#d9f2e5" stroke="#348761" d="M457.6,-339C457.6,-339 270.6,-339 270.6,-339 264.6,-339 258.6,-333 258.6,-327 258.6,-327 258.6,-313 258.6,-313 258.6,-307 264.6,-301 270.6,-301 270.6,-301 457.6,-301 457.6,-301 463.6,-301 469.6,-307 469.6,-313 469.6,-313 469.6,-327 469.6,-327 469.6,-333 463.6,-339 457.6,-339" />
+<text text-anchor="middle" x="364.1" y="-323.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[AWS] EventBridge managed rule</text>
+<text text-anchor="middle" x="364.1" y="-310.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">cross-service resource</text>
+</g>
+
+<g id="edge6" class="edge">
+<title>F-Rule-&gt;F-Automation</title>
+<path fill="none" stroke="#496b78" d="M358.32,-300.88C353.75,-286.57 347.33,-266.44 342.24,-250.51" />
+<polygon fill="#496b78" stroke="#496b78" points="344.65,-249.42 339.87,-243.07 339.65,-251.01 344.65,-249.42" />
+<text text-anchor="middle" x="415.6" y="-275" font-family="DejaVu Sans" font-size="10.00">delivers supported events</text>
+<text text-anchor="middle" x="415.6" y="-264" font-family="DejaVu Sans" font-size="10.00">? : ?</text>
+</g>
+
+<g id="node6" class="node">
+<title>F-Artifact</title>
+<path fill="#d9f2e5" stroke="#348761" d="M139.6,-44.5C139.6,-44.5 24.6,-44.5 24.6,-44.5 18.6,-44.5 12.6,-38.5 12.6,-32.5 12.6,-32.5 12.6,-18.5 12.6,-18.5 12.6,-12.5 18.6,-6.5 24.6,-6.5 24.6,-6.5 139.6,-6.5 139.6,-6.5 145.6,-6.5 151.6,-12.5 151.6,-18.5 151.6,-18.5 151.6,-32.5 151.6,-32.5 151.6,-38.5 145.6,-44.5 139.6,-44.5" />
+<text text-anchor="middle" x="82.1" y="-29.3" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[AWS] Report artifact</text>
+<text text-anchor="middle" x="82.1" y="-16.3" font-family="DejaVu Sans" font-size="11.50" fill="#152636">output record</text>
+</g>
+
+<g id="edge7" class="edge">
+<title>F-Task-&gt;F-Artifact</title>
+<path fill="none" stroke="#496b78" stroke-dasharray="5,2" d="M160.49,-108.57C144.93,-92.27 122.13,-68.4 105.12,-50.6" />
+<polygon fill="#496b78" stroke="#496b78" points="106.68,-48.43 99.6,-44.82 102.88,-52.05 106.68,-48.43" />
+<text text-anchor="middle" x="190.6" y="-83" font-family="DejaVu Sans" font-size="10.00">can produce reports</text>
+<text text-anchor="middle" x="190.6" y="-72" font-family="DejaVu Sans" font-size="10.00">? : 0..*</text>
+</g>
+
+<g id="node7" class="node">
+<title>F-Source</title>
+<path fill="#dcebff" stroke="#447ac2" d="M364.1,-51C364.1,-51 184.1,-51 184.1,-51 178.1,-51 172.1,-45 172.1,-39 172.1,-39 172.1,-12 172.1,-12 172.1,-6 178.1,0 184.1,0 184.1,0 364.1,0 364.1,0 370.1,0 376.1,-6 376.1,-12 376.1,-12 376.1,-39 376.1,-39 376.1,-45 370.1,-51 364.1,-51" />
+<text text-anchor="middle" x="274.1" y="-35.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[DOC] AWS cost and operational</text>
+<text text-anchor="middle" x="274.1" y="-22.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">evidence</text>
+<text text-anchor="middle" x="274.1" y="-9.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">normalized evidence family</text>
+</g>
+
+<g id="edge8" class="edge">
+<title>F-Task-&gt;F-Source</title>
+<path fill="none" stroke="#496b78" d="M220.73,-108.97C229.19,-104.02 237.49,-98.04 244.1,-91 252.77,-81.76 259.3,-69.58 264.02,-58.29" />
+<polygon fill="#496b78" stroke="#496b78" points="266.57,-58.98 266.87,-51.04 261.69,-57.06 266.57,-58.98" />
+<text text-anchor="middle" x="328.6" y="-83" font-family="DejaVu Sans" font-size="10.00">queries authorized evidence</text>
+<text text-anchor="middle" x="328.6" y="-72" font-family="DejaVu Sans" font-size="10.00">? : ?</text>
+</g>
+
+<g id="node8" class="node">
+<title>legend_0</title>
+<polygon fill="#dcebff" stroke="#447ac2" points="767.1,-338 603.1,-338 603.1,-302 767.1,-302 767.1,-338" />
+<text text-anchor="middle" x="685.1" y="-317.5" font-family="DejaVu Sans" font-size="10.00" fill="#142c3e">DOC · Documentation-defined</text>
+</g>
+
+<g id="node9" class="node">
+<title>legend_1</title>
+<polygon fill="#d9f2e5" stroke="#348761" points="740.6,-242 629.6,-242 629.6,-206 740.6,-206 740.6,-242" />
+<text text-anchor="middle" x="685.1" y="-221.5" font-family="DejaVu Sans" font-size="10.00" fill="#142c3e">AWS · AWS-defined</text>
+</g>
+
+
+<g id="node10" class="node">
+<title>legend_2</title>
+<polygon fill="#fce8d5" stroke="#c78335" points="780.1,-146 590.1,-146 590.1,-110 780.1,-110 780.1,-146" />
+<text text-anchor="middle" x="685.1" y="-125.5" font-family="DejaVu Sans" font-size="10.00" fill="#142c3e">EXT · External / engineering-owned</text>
+</g>
+
+</g>
+</svg>
