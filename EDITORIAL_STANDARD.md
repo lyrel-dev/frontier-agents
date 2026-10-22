@@ -39,3 +39,10 @@ Check source mapping and content consistency separately from HTML behavior. Chec
 ## Product resource model
 
 Use ownership labels and colors consistently: DOC blue for this collection, AWS green for documented product concepts, EXT orange for external systems and engineering artifacts. Always state entity kind: resource, configuration member, execution record, retained state or derived view. A green label does not imply independent CRUD operations. Qualify relationship multiplicity; unknown remains unknown. Product namespace is part of identity. Keep configuration, execution, original evidence and acceptance distinct. The resource register binds features to objects without replacing or rewriting approved use cases.
+
+
+## Mechanism explanations
+
+Maintain detailed mechanism narratives in the review field of the mechanism registry. The build renders the same explanation inside its primary guide section and includes that section in relevant presenter notes. Do not hand-edit the delimited generated blocks. A mechanism record identifies observable service behavior separately from undisclosed internals. Configuration and lifecycle steps vary in number with the subject. State labels are explanatory unless an exact service enum is cited. Tests are proposed engineering checks until separately executed and recorded.
+
+A conditional related-mechanism link can document behavior such as finding personalization without adding an outcome or changing the approved use-case workflow. Eligibility for a mechanism is not evidence that it ran. Material product assertions have section-specific official references; retrieval-version conflicts are recorded rather than silently resolved.
