@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1038pt" height="329pt" viewBox="0.00 0.00 1037.50 328.50" role="img" aria-labelledby="er-devops-incidents-title er-devops-incidents-desc" data-diagram="er-devops-incidents">
+<title id="er-devops-incidents-title">DevOps Agent: incident records and directed-action boundary</title><desc id="er-devops-incidents-desc">Colors identify concept ownership; labels distinguish resources, configuration members and derived state. An edge shows source-count : target-count; ? means unspecified. Dashed edges are logical or editorial relationships, not asserted service foreign keys. See the relationship register for qualifications.</desc><g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(18 310.5)">
+<title>G</title>
+<g id="clust1" class="cluster">
+<title>cluster_ownership</title>
+<path fill="transparent" stroke="#b5c2cc" d="M632.5,-8C632.5,-8 981.5,-8 981.5,-8 987.5,-8 993.5,-14 993.5,-20 993.5,-20 993.5,-272.5 993.5,-272.5 993.5,-278.5 987.5,-284.5 981.5,-284.5 981.5,-284.5 632.5,-284.5 632.5,-284.5 626.5,-284.5 620.5,-278.5 620.5,-272.5 620.5,-272.5 620.5,-20 620.5,-20 620.5,-14 626.5,-8 632.5,-8" />
+<text text-anchor="middle" x="807" y="-267.7" font-family="DejaVu Sans" font-size="16.00">Ownership of the definition (not availability)</text>
+</g>
+
+<g id="node1" class="node">
+<title>D-Signal</title>
+<path fill="#d9f2e5" stroke="#348761" d="M243.5,-251.5C243.5,-251.5 125.5,-251.5 125.5,-251.5 119.5,-251.5 113.5,-245.5 113.5,-239.5 113.5,-239.5 113.5,-225.5 113.5,-225.5 113.5,-219.5 119.5,-213.5 125.5,-213.5 125.5,-213.5 243.5,-213.5 243.5,-213.5 249.5,-213.5 255.5,-219.5 255.5,-225.5 255.5,-225.5 255.5,-239.5 255.5,-239.5 255.5,-245.5 249.5,-251.5 243.5,-251.5" />
+<text text-anchor="middle" x="184.5" y="-236.3" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[AWS] Incident signal</text>
+<text text-anchor="middle" x="184.5" y="-223.3" font-family="DejaVu Sans" font-size="11.50" fill="#152636">operational record</text>
+</g>
+
+<g id="node2" class="node">
+<title>D-Investigation</title>
+<path fill="#d9f2e5" stroke="#348761" d="M238.5,-155.5C238.5,-155.5 130.5,-155.5 130.5,-155.5 124.5,-155.5 118.5,-149.5 118.5,-143.5 118.5,-143.5 118.5,-129.5 118.5,-129.5 118.5,-123.5 124.5,-117.5 130.5,-117.5 130.5,-117.5 238.5,-117.5 238.5,-117.5 244.5,-117.5 250.5,-123.5 250.5,-129.5 250.5,-129.5 250.5,-143.5 250.5,-143.5 250.5,-149.5 244.5,-155.5 238.5,-155.5" />
+<text text-anchor="middle" x="184.5" y="-140.3" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[AWS] Investigation</text>
+<text text-anchor="middle" x="184.5" y="-127.3" font-family="DejaVu Sans" font-size="11.50" fill="#152636">execution record</text>
+</g>
+
+<g id="edge1" class="edge">
+<title>D-Signal-&gt;D-Investigation</title>
+<path fill="none" stroke="#496b78" stroke-dasharray="5,2" d="M184.5,-213.38C184.5,-199.2 184.5,-179.31 184.5,-163.44" />
+<polygon fill="#496b78" stroke="#496b78" points="187.13,-163.07 184.5,-155.57 181.88,-163.07 187.13,-163.07" />
+<text text-anchor="middle" x="218" y="-187.5" font-family="DejaVu Sans" font-size="10.00">links or starts</text>
+<text text-anchor="middle" x="218" y="-176.5" font-family="DejaVu Sans" font-size="10.00">0..* : 0..1</text>
+</g>
+
+<g id="node3" class="node">
+<title>D-Feedback</title>
+<path fill="#d9f2e5" stroke="#348761" d="M175,-53C175,-53 12,-53 12,-53 6,-53 0,-47 0,-41 0,-41 0,-27 0,-27 0,-21 6,-15 12,-15 12,-15 175,-15 175,-15 181,-15 187,-21 187,-27 187,-27 187,-41 187,-41 187,-47 181,-53 175,-53" />
+<text text-anchor="middle" x="93.5" y="-37.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[AWS] Investigation feedback</text>
+<text text-anchor="middle" x="93.5" y="-24.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">operational record</text>
+</g>
+
+<g id="edge2" class="edge">
+<title>D-Investigation-&gt;D-Feedback</title>
+<path fill="none" stroke="#496b78" d="M167.81,-117.07C153.06,-100.77 131.44,-76.9 115.32,-59.1" />
+<polygon fill="#496b78" stroke="#496b78" points="117.06,-57.11 110.08,-53.32 113.17,-60.64 117.06,-57.11" />
+<text text-anchor="middle" x="197.5" y="-91.5" font-family="DejaVu Sans" font-size="10.00">receives correction</text>
+<text text-anchor="middle" x="197.5" y="-80.5" font-family="DejaVu Sans" font-size="10.00">1 : ?</text>
+</g>
+
+<g id="node4" class="node">
+<title>D-Memory</title>
+<path fill="#d9f2e5" stroke="#348761" d="M332,-53C332,-53 219,-53 219,-53 213,-53 207,-47 207,-41 207,-41 207,-27 207,-27 207,-21 213,-15 219,-15 219,-15 332,-15 332,-15 338,-15 344,-21 344,-27 344,-27 344,-41 344,-41 344,-47 338,-53 332,-53" />
+<text text-anchor="middle" x="275.5" y="-37.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[AWS] Memory entry</text>
+<text text-anchor="middle" x="275.5" y="-24.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">asset subtype</text>
+</g>
+
+<g id="edge3" class="edge">
+<title>D-Investigation-&gt;D-Memory</title>
+<path fill="none" stroke="#496b78" d="M227.09,-117.43C235.3,-112.51 243.26,-106.55 249.5,-99.5 259.26,-88.46 265.62,-73.29 269.61,-60.43" />
+<polygon fill="#496b78" stroke="#496b78" points="272.15,-61.11 271.69,-53.18 267.1,-59.66 272.15,-61.11" />
+<text text-anchor="middle" x="320" y="-91.5" font-family="DejaVu Sans" font-size="10.00">informs later synthesis</text>
+<text text-anchor="middle" x="320" y="-80.5" font-family="DejaVu Sans" font-size="10.00">? : ?</text>
+</g>
+
+<g id="node5" class="node">
+<title>D-Chat</title>
+<path fill="#d9f2e5" stroke="#348761" d="M538,-251.5C538,-251.5 401,-251.5 401,-251.5 395,-251.5 389,-245.5 389,-239.5 389,-239.5 389,-225.5 389,-225.5 389,-219.5 395,-213.5 401,-213.5 401,-213.5 538,-213.5 538,-213.5 544,-213.5 550,-219.5 550,-225.5 550,-225.5 550,-239.5 550,-239.5 550,-245.5 544,-251.5 538,-251.5" />
+<text text-anchor="middle" x="469.5" y="-236.3" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[AWS] Chat conversation</text>
+<text text-anchor="middle" x="469.5" y="-223.3" font-family="DejaVu Sans" font-size="11.50" fill="#152636">interaction record</text>
+</g>
+
+<g id="node6" class="node">
+<title>D-Approval</title>
+<path fill="#d9f2e5" stroke="#348761" d="M556.5,-155.5C556.5,-155.5 382.5,-155.5 382.5,-155.5 376.5,-155.5 370.5,-149.5 370.5,-143.5 370.5,-143.5 370.5,-129.5 370.5,-129.5 370.5,-123.5 376.5,-117.5 382.5,-117.5 382.5,-117.5 556.5,-117.5 556.5,-117.5 562.5,-117.5 568.5,-123.5 568.5,-129.5 568.5,-129.5 568.5,-143.5 568.5,-143.5 568.5,-149.5 562.5,-155.5 556.5,-155.5" />
+<text text-anchor="middle" x="469.5" y="-140.3" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[AWS] Directed-action approval</text>
+<text text-anchor="middle" x="469.5" y="-127.3" font-family="DejaVu Sans" font-size="11.50" fill="#152636">authorization event</text>
+</g>
+
+<g id="edge4" class="edge">
+<title>D-Chat-&gt;D-Approval</title>
+<path fill="none" stroke="#496b78" d="M469.5,-213.38C469.5,-199.2 469.5,-179.31 469.5,-163.44" />
+<polygon fill="#496b78" stroke="#496b78" points="472.13,-163.07 469.5,-155.57 466.88,-163.07 472.13,-163.07" />
+<text text-anchor="middle" x="541" y="-187.5" font-family="DejaVu Sans" font-size="10.00">requests action authorization</text>
+<text text-anchor="middle" x="541" y="-176.5" font-family="DejaVu Sans" font-size="10.00">? : 0..*</text>
+</g>
+
+<g id="node7" class="node">
+<title>D-Role</title>
+<path fill="#d9f2e5" stroke="#348761" d="M563,-59.5C563,-59.5 376,-59.5 376,-59.5 370,-59.5 364,-53.5 364,-47.5 364,-47.5 364,-20.5 364,-20.5 364,-14.5 370,-8.5 376,-8.5 376,-8.5 563,-8.5 563,-8.5 569,-8.5 575,-14.5 575,-20.5 575,-20.5 575,-47.5 575,-47.5 575,-53.5 569,-59.5 563,-59.5" />
+<text text-anchor="middle" x="469.5" y="-44.3" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[AWS] Resource and operator IAM</text>
+<text text-anchor="middle" x="469.5" y="-31.3" font-family="DejaVu Sans" font-size="11.50" fill="#152636">roles</text>
+<text text-anchor="middle" x="469.5" y="-18.3" font-family="DejaVu Sans" font-size="11.50" fill="#152636">cross-service resource</text>
+</g>
+
+<g id="edge5" class="edge">
+<title>D-Approval-&gt;D-Role</title>
+<path fill="none" stroke="#496b78" d="M469.5,-117.07C469.5,-103.24 469.5,-83.94 469.5,-67.54" />
+<polygon fill="#496b78" stroke="#496b78" points="472.13,-67.25 469.5,-59.75 466.88,-67.25 472.13,-67.25" />
+<text text-anchor="middle" x="517.5" y="-91.5" font-family="DejaVu Sans" font-size="10.00">permits scoped use</text>
+<text text-anchor="middle" x="517.5" y="-80.5" font-family="DejaVu Sans" font-size="10.00">? : ?</text>
+</g>
+
+<g id="node8" class="node">
+<title>legend_0</title>
+<polygon fill="#dcebff" stroke="#447ac2" points="888.5,-250.5 724.5,-250.5 724.5,-214.5 888.5,-214.5 888.5,-250.5" />
+<text text-anchor="middle" x="806.5" y="-230" font-family="DejaVu Sans" font-size="10.00" fill="#142c3e">DOC · Documentation-defined</text>
+</g>
+
+<g id="node9" class="node">
+<title>legend_1</title>
+<polygon fill="#d9f2e5" stroke="#348761" points="862,-154.5 751,-154.5 751,-118.5 862,-118.5 862,-154.5" />
+<text text-anchor="middle" x="806.5" y="-134" font-family="DejaVu Sans" font-size="10.00" fill="#142c3e">AWS · AWS-defined</text>
+</g>
+
+
+<g id="node10" class="node">
+<title>legend_2</title>
+<polygon fill="#fce8d5" stroke="#c78335" points="901.5,-52 711.5,-52 711.5,-16 901.5,-16 901.5,-52" />
+<text text-anchor="middle" x="806.5" y="-31.5" font-family="DejaVu Sans" font-size="10.00" fill="#142c3e">EXT · External / engineering-owned</text>
+</g>
+
+</g>
+</svg>
