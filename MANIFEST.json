@@ -2,8 +2,8 @@
   "revision": "2026-10-22-narrative-guides",
   "files": {
     ".github/workflows/document-suite.yml": {
-      "bytes": 2611,
-      "sha256": "0071c7edc1a5e1fffbc533a29e6519acbf8030116e9a0610448016f2cbf6c4cb"
+      "bytes": 4966,
+      "sha256": "1d0dba8a5341dc06066788e2cb624e646fe33c4573bdb54350a789ed2375620e"
     },
     "CHANGELOG.md": {
       "bytes": 692,
@@ -111,7 +111,7 @@
     },
     "documentation-build.json": {
       "bytes": 723,
-      "sha256": "e9e408b96f19b879b9bb4430ea0415c85e5b53dac93402153f582082071303a9"
+      "sha256": "10a303c7241cfada9c0bed66caa7a100efd042310ac145debf71b676ffb28290"
     },
     "examples/prepared-evidence.json": {
       "bytes": 2346,
@@ -166,12 +166,12 @@
       "sha256": "a3e5418f130cac8ba319643b970a77381d33093c64ad76fc00143daf54ad33ba"
     },
     "presentations/devops-notes.md": {
-      "bytes": 20632,
-      "sha256": "38ab8bfae7653dbbc2ab7513c9938326ded9997aeafa85d115e0392ee83cc584"
+      "bytes": 20773,
+      "sha256": "79f4b4c3284fd2ecb4f2c155f051a860aee102b2a9416f4aa40dc3bf2108d83c"
     },
     "presentations/devops.html": {
-      "bytes": 453266,
-      "sha256": "e6ff855ae805ceb81e621db81a2d2357d59994234a8e6e5db56ebe84187b42f8"
+      "bytes": 453475,
+      "sha256": "c854ccadf41f2434d19f9288d0c137150fa18629ce9036732a7367db77241942"
     },
     "presentations/finops-notes.md": {
       "bytes": 16977,
@@ -202,8 +202,8 @@
       "sha256": "62528c510c2f7c06bf768baf95ad3504c97e5f2cf058118a9dba670efe109eb5"
     },
     "qa/source-review.json": {
-      "bytes": 3900,
-      "sha256": "4eef155cd847fda033252aeabc4d58bba8bab500b8199eff0be37369288f2bbc"
+      "bytes": 10333,
+      "sha256": "eadd34910844d92c1330b19b58ef5f28d3d099c5738f62f176d09186cf1ed4f0"
     },
     "tools/docs/build.py": {
       "bytes": 33360,
@@ -222,16 +222,16 @@
       "sha256": "eff90b5af39852be32acba5010ab590a17f7badf4b1363ce95538752b9c420c8"
     },
     "tools/docs/presentation.py": {
-      "bytes": 107709,
-      "sha256": "280586fea22d8daa9fe368cc279b1646b3dbf60f9cbaac76360fec5cc8f40936"
+      "bytes": 107705,
+      "sha256": "1a808518e706fb25fad4d4eedb73ed2e8468641df0b03aa2f65d3188a3ff13e9"
     },
     "tools/docs/requirements.txt": {
       "bytes": 78,
       "sha256": "8eca6245c16a677c8cd8162ead8d44b96f615a0eb0fd8c5fe09a3615071dc137"
     },
     "tools/docs/structure.py": {
-      "bytes": 13151,
-      "sha256": "211aff7fce74a2f5050fc699324bc098c0bab89936823722326bce462d25e52e"
+      "bytes": 13175,
+      "sha256": "6be1dd9daf3ac5ac87e92e3471a406e9f7682c2bc43aab3d8a41aa2f97a4fa15"
     },
     "tools/docs/styles.css": {
       "bytes": 13689,
