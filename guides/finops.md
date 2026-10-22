@@ -6,9 +6,9 @@ AWS FinOps Agent is documented as preview. It queries permitted cost and operati
 
 This guide explains platform objects before showing their application. Product behavior has official references. **Engineering procedures** and **synthetic exercises** are original recommendations or examples; none is a live account result or a measured saving.
 
-## 01. Platform overview and capabilities
+## 01. Product Functions and Resource Model
 
-Distinguish the agent instance, permissions, retained context, tasks and outputs.
+Distinguish the agent instance, access roles, retained context, queued work and outputs.
 
 ### F-01 — Resource and authority model
 
@@ -38,9 +38,9 @@ An integration is registered at account level; a connection binds it to an agent
 
 The recommendations underlying optimization analysis originate in Cost Optimization Hub and Compute Optimizer. The agent contextualizes those recommendations; its prose is not a new independent optimization calculation. [FS01] [FS06]
 
-## 02. Access, sources and integrations
+## 02. Access Roles, Source Data and Integrations
 
-Establish role responsibilities, source-data dependencies and destination connections.
+Establish policy responsibilities, data-source dependencies and external destinations.
 
 ### F-02 — Configure four policy responsibilities and two service roles
 
@@ -96,9 +96,9 @@ Register the integration, complete authorization, then add the agent-specific co
 
 **Engineering procedure:** use designated test destinations, post a non-sensitive test result and record its actual location. Confirm that only the intended users can see it. API retries described in the integration guide address transient failures; they do not turn a permission or invalid-destination error into a successful publication.
 
-## 03. Reference files, memory and compaction
+## 03. Reference Files, Memory and Conversation Context
 
-Separate operator-maintained inputs, cross-session memory and within-session summaries.
+Separate operator-maintained inputs, cross-session memory and within-session compaction.
 
 ### F-M02 — Uploaded reference files are operator-maintained context
 
@@ -134,9 +134,9 @@ As a conversation approaches its context limit, older messages are summarized wh
 
 **Engineering procedure:** put critical constraints in a concise current task specification and reference the authoritative file or source record. When resuming a long conversation, ask the agent to restate the comparison basis and unresolved questions, then correct any discrepancy before requesting another calculation. This tests retained context; it does not prove that every earlier message remains available.
 
-## 04. Tasks, publication and lifecycle
+## 04. Tasks, Automations, Publication and Data Lifecycle
 
-Trace task creation, event matching, report artifacts, approval and object-specific removal.
+Trace task creation, event matching, report artifacts, approvals and object-specific removal.
 
 ### F-03 — On-demand tasks, schedules and observation
 
@@ -199,9 +199,9 @@ Use the operation matching the intended outcome. In particular, cancel, forget, 
 
 For data-location decisions, document both persistent storage (`us-east-1` in the reviewed preview) and cross-Region US inference. Do not describe the chosen console Region as the complete processing boundary. [FS09]
 
-## 05. Worked example
+## 05. Worked Cost Analysis
 
-Reconcile cost components before assessing the limited evidence for a causal explanation.
+Reconcile cost components before assessing limited evidence for a causal explanation.
 
 ### F-U01 — Worked example: decompose a cost increase
 
@@ -224,9 +224,9 @@ The delta is 574, or 41%. Component contributions are 200 storage, 100 requests 
 
 The repository's deterministic fixture test verifies the arithmetic. It is not a test of the AWS service, recommendation quality or causal inference.
 
-## 06. Troubleshooting and limits
+## 06. Troubleshooting, Limits and Failure Modes
 
-Test the data, context, execution and destination layers separately.
+Test the query, retained context, execution and publication layers separately.
 
 ### F-06 — Limits and troubleshooting decisions
 
@@ -246,9 +246,9 @@ Selected documented defaults are one agent per account/Region, 100 MB artifact s
 
 The table is engineering troubleshooting guidance based on the cited configuration and integration pages. It is not a claim of a native unified diagnostic workflow.
 
-## 07. Coverage and official evidence
+## 07. Coverage and Source Notes
 
-Review scope exclusions and the source-review record.
+Review scope exclusions, preview boundaries and the source-review record.
 
 ### F-07 — Coverage and source-review record
 
