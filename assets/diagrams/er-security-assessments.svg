@@ -1,0 +1,136 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1413pt" height="307pt" viewBox="0.00 0.00 1413.00 306.50" role="img" aria-labelledby="er-security-assessments-title er-security-assessments-desc" data-diagram="er-security-assessments">
+<title id="er-security-assessments-title">Security Agent: assessment configurations and executions</title><desc id="er-security-assessments-desc">Colors identify concept ownership; labels distinguish resources, configuration members and derived state. An edge shows source-count : target-count; ? means unspecified. Dashed edges are logical or editorial relationships, not asserted service foreign keys. See the relationship register for qualifications.</desc><g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(18 288.5)">
+<title>G</title>
+<g id="clust1" class="cluster">
+<title>cluster_ownership</title>
+<path fill="transparent" stroke="#b5c2cc" d="M1008,-8C1008,-8 1357,-8 1357,-8 1363,-8 1369,-14 1369,-20 1369,-20 1369,-250.5 1369,-250.5 1369,-256.5 1363,-262.5 1357,-262.5 1357,-262.5 1008,-262.5 1008,-262.5 1002,-262.5 996,-256.5 996,-250.5 996,-250.5 996,-20 996,-20 996,-14 1002,-8 1008,-8" />
+<text text-anchor="middle" x="1182.5" y="-245.7" font-family="DejaVu Sans" font-size="16.00">Ownership of the definition (not availability)</text>
+</g>
+
+<g id="node1" class="node">
+<title>S-Pentest</title>
+<path fill="#d9f2e5" stroke="#348761" d="M148.5,-236C148.5,-236 23.5,-236 23.5,-236 17.5,-236 11.5,-230 11.5,-224 11.5,-224 11.5,-197 11.5,-197 11.5,-191 17.5,-185 23.5,-185 23.5,-185 148.5,-185 148.5,-185 154.5,-185 160.5,-191 160.5,-197 160.5,-197 160.5,-224 160.5,-224 160.5,-230 154.5,-236 148.5,-236" />
+<text text-anchor="middle" x="86" y="-220.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[AWS] Penetration-test</text>
+<text text-anchor="middle" x="86" y="-207.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">configuration</text>
+<text text-anchor="middle" x="86" y="-194.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">service configuration</text>
+</g>
+
+<g id="node2" class="node">
+<title>S-Run</title>
+<path fill="#d9f2e5" stroke="#348761" d="M160,-127C160,-127 12,-127 12,-127 6,-127 0,-121 0,-115 0,-115 0,-101 0,-101 0,-95 6,-89 12,-89 12,-89 160,-89 160,-89 166,-89 172,-95 172,-101 172,-101 172,-115 172,-115 172,-121 166,-127 160,-127" />
+<text text-anchor="middle" x="86" y="-111.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[AWS] Penetration-test run</text>
+<text text-anchor="middle" x="86" y="-98.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">execution record</text>
+</g>
+
+<g id="edge1" class="edge">
+<title>S-Pentest-&gt;S-Run</title>
+<path fill="none" stroke="#496b78" d="M86,-184.91C86,-169.67 86,-150.13 86,-134.68" />
+<polygon fill="#496b78" stroke="#496b78" points="88.63,-134.53 86,-127.03 83.38,-134.53 88.63,-134.53" />
+<text text-anchor="middle" x="121" y="-159" font-family="DejaVu Sans" font-size="10.00">is executed as</text>
+<text text-anchor="middle" x="121" y="-148" font-family="DejaVu Sans" font-size="10.00">1 : 0..*</text>
+</g>
+
+<g id="node3" class="node">
+<title>S-CodeConfig</title>
+<path fill="#d9f2e5" stroke="#348761" d="M351,-236C351,-236 225,-236 225,-236 219,-236 213,-230 213,-224 213,-224 213,-197 213,-197 213,-191 219,-185 225,-185 225,-185 351,-185 351,-185 357,-185 363,-191 363,-197 363,-197 363,-224 363,-224 363,-230 357,-236 351,-236" />
+<text text-anchor="middle" x="288" y="-220.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[AWS] Full-code review</text>
+<text text-anchor="middle" x="288" y="-207.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">configuration</text>
+<text text-anchor="middle" x="288" y="-194.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">service configuration</text>
+</g>
+
+<g id="node4" class="node">
+<title>S-CodeRun</title>
+<path fill="#d9f2e5" stroke="#348761" d="M373,-127C373,-127 269,-127 269,-127 263,-127 257,-121 257,-115 257,-115 257,-101 257,-101 257,-95 263,-89 269,-89 269,-89 373,-89 373,-89 379,-89 385,-95 385,-101 385,-101 385,-115 385,-115 385,-121 379,-127 373,-127" />
+<text text-anchor="middle" x="321" y="-111.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[AWS] Code review</text>
+<text text-anchor="middle" x="321" y="-98.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">execution record</text>
+</g>
+
+<g id="edge2" class="edge">
+<title>S-CodeConfig-&gt;S-CodeRun</title>
+<path fill="none" stroke="#496b78" d="M283.88,-184.83C282.82,-172.48 283.13,-157.52 288,-145 289.61,-140.85 291.96,-136.89 294.66,-133.21" />
+<polygon fill="#496b78" stroke="#496b78" points="296.77,-134.77 299.48,-127.31 292.7,-131.45 296.77,-134.77" />
+<text text-anchor="middle" x="345" y="-159" font-family="DejaVu Sans" font-size="10.00">starts full-source scans</text>
+<text text-anchor="middle" x="345" y="-148" font-family="DejaVu Sans" font-size="10.00">? : 0..*</text>
+</g>
+
+<g id="node5" class="node">
+<title>S-Design</title>
+<path fill="#d9f2e5" stroke="#348761" d="M630.5,-127C630.5,-127 515.5,-127 515.5,-127 509.5,-127 503.5,-121 503.5,-115 503.5,-115 503.5,-101 503.5,-101 503.5,-95 509.5,-89 515.5,-89 515.5,-89 630.5,-89 630.5,-89 636.5,-89 642.5,-95 642.5,-101 642.5,-101 642.5,-115 642.5,-115 642.5,-121 636.5,-127 630.5,-127" />
+<text text-anchor="middle" x="573" y="-111.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[AWS] Design review</text>
+<text text-anchor="middle" x="573" y="-98.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">one-off assessment</text>
+</g>
+
+<g id="edge3" class="edge">
+<title>S-Design-&gt;S-Design</title>
+<path fill="none" stroke="#496b78" stroke-dasharray="5,2" d="M642.8,-114.27C654.46,-113.4 662.5,-111.3 662.5,-108 662.5,-105.47 657.78,-103.65 650.34,-102.54" />
+<polygon fill="#496b78" stroke="#496b78" points="650.54,-99.92 642.8,-101.73 649.97,-105.14 650.54,-99.92" />
+<text text-anchor="middle" x="719" y="-111" font-family="DejaVu Sans" font-size="10.00">clones to a new review</text>
+<text text-anchor="middle" x="719" y="-100" font-family="DejaVu Sans" font-size="10.00">0..1 : 0..*</text>
+</g>
+
+<g id="node6" class="node">
+<title>S-ThreatConfig</title>
+<path fill="#d9f2e5" stroke="#348761" d="M976,-229.5C976,-229.5 786,-229.5 786,-229.5 780,-229.5 774,-223.5 774,-217.5 774,-217.5 774,-203.5 774,-203.5 774,-197.5 780,-191.5 786,-191.5 786,-191.5 976,-191.5 976,-191.5 982,-191.5 988,-197.5 988,-203.5 988,-203.5 988,-217.5 988,-217.5 988,-223.5 982,-229.5 976,-229.5" />
+<text text-anchor="middle" x="881" y="-214.3" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[AWS] Threat-model configuration</text>
+<text text-anchor="middle" x="881" y="-201.3" font-family="DejaVu Sans" font-size="11.50" fill="#152636">service configuration</text>
+</g>
+
+<g id="node7" class="node">
+<title>S-ThreatRun</title>
+<path fill="#d9f2e5" stroke="#348761" d="M956.5,-127C956.5,-127 805.5,-127 805.5,-127 799.5,-127 793.5,-121 793.5,-115 793.5,-115 793.5,-101 793.5,-101 793.5,-95 799.5,-89 805.5,-89 805.5,-89 956.5,-89 956.5,-89 962.5,-89 968.5,-95 968.5,-101 968.5,-101 968.5,-115 968.5,-115 968.5,-121 962.5,-127 956.5,-127" />
+<text text-anchor="middle" x="881" y="-111.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[AWS] Threat-model run</text>
+<text text-anchor="middle" x="881" y="-98.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">execution and result record</text>
+</g>
+
+<g id="edge4" class="edge">
+<title>S-ThreatConfig-&gt;S-ThreatRun</title>
+<path fill="none" stroke="#496b78" d="M881,-191.07C881,-175.34 881,-152.55 881,-134.98" />
+<polygon fill="#496b78" stroke="#496b78" points="883.63,-134.82 881,-127.32 878.38,-134.82 883.63,-134.82" />
+<text text-anchor="middle" x="916" y="-159" font-family="DejaVu Sans" font-size="10.00">is executed as</text>
+<text text-anchor="middle" x="916" y="-148" font-family="DejaVu Sans" font-size="10.00">1 : 0..*</text>
+</g>
+
+<g id="node8" class="node">
+<title>S-Pack</title>
+<path fill="#d9f2e5" stroke="#348761" d="M623.5,-229.5C623.5,-229.5 438.5,-229.5 438.5,-229.5 432.5,-229.5 426.5,-223.5 426.5,-217.5 426.5,-217.5 426.5,-203.5 426.5,-203.5 426.5,-197.5 432.5,-191.5 438.5,-191.5 438.5,-191.5 623.5,-191.5 623.5,-191.5 629.5,-191.5 635.5,-197.5 635.5,-203.5 635.5,-203.5 635.5,-217.5 635.5,-217.5 635.5,-223.5 629.5,-229.5 623.5,-229.5" />
+<text text-anchor="middle" x="531" y="-214.3" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[AWS] Security requirement pack</text>
+<text text-anchor="middle" x="531" y="-201.3" font-family="DejaVu Sans" font-size="11.50" fill="#152636">service configuration</text>
+</g>
+
+<g id="edge5" class="edge">
+<title>S-Pack-&gt;S-CodeRun</title>
+<path fill="none" stroke="#496b78" d="M470.81,-191.4C454.52,-185.05 437.43,-176.96 423,-167 412.12,-159.5 413.73,-152.71 403,-145 395.43,-139.56 386.91,-134.69 378.29,-130.42" />
+<polygon fill="#496b78" stroke="#496b78" points="379.28,-127.99 371.38,-127.14 377.02,-132.73 379.28,-127.99" />
+<text text-anchor="middle" x="483.5" y="-159" font-family="DejaVu Sans" font-size="10.00">supplies enabled criteria</text>
+<text text-anchor="middle" x="483.5" y="-148" font-family="DejaVu Sans" font-size="10.00">? : ?</text>
+</g>
+
+<g id="edge6" class="edge">
+<title>S-Pack-&gt;S-Design</title>
+<path fill="none" stroke="#496b78" d="M538.74,-191.31C541.93,-183.79 545.66,-174.98 549,-167 553.5,-156.24 558.44,-144.34 562.65,-134.14" />
+<polygon fill="#496b78" stroke="#496b78" points="565.14,-134.98 565.58,-127.04 560.29,-132.97 565.14,-134.98" />
+<text text-anchor="middle" x="618.5" y="-159" font-family="DejaVu Sans" font-size="10.00">supplies enabled criteria</text>
+<text text-anchor="middle" x="618.5" y="-148" font-family="DejaVu Sans" font-size="10.00">? : ?</text>
+</g>
+
+<g id="node9" class="node">
+<title>legend_0</title>
+<polygon fill="#dcebff" stroke="#447ac2" points="1264,-228.5 1100,-228.5 1100,-192.5 1264,-192.5 1264,-228.5" />
+<text text-anchor="middle" x="1182" y="-208" font-family="DejaVu Sans" font-size="10.00" fill="#142c3e">DOC · Documentation-defined</text>
+</g>
+
+<g id="node10" class="node">
+<title>legend_1</title>
+<polygon fill="#d9f2e5" stroke="#348761" points="1237.5,-126 1126.5,-126 1126.5,-90 1237.5,-90 1237.5,-126" />
+<text text-anchor="middle" x="1182" y="-105.5" font-family="DejaVu Sans" font-size="10.00" fill="#142c3e">AWS · AWS-defined</text>
+</g>
+
+
+<g id="node11" class="node">
+<title>legend_2</title>
+<polygon fill="#fce8d5" stroke="#c78335" points="1277,-52 1087,-52 1087,-16 1277,-16 1277,-52" />
+<text text-anchor="middle" x="1182" y="-31.5" font-family="DejaVu Sans" font-size="10.00" fill="#142c3e">EXT · External / engineering-owned</text>
+</g>
+
+</g>
+</svg>
