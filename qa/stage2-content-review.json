@@ -1,0 +1,31 @@
+{
+  "revision": "2026-10-22-product-resource-models",
+  "baseline": "cd65b98e04e20e7a4bcf59165db7f98315417964",
+  "scope": "Product-specific resource validation and model-led guide restructuring",
+  "approved_catalog_sources": "Preserved byte-for-byte; enforced by resource-model validator",
+  "guide_sections": {
+    "overviews_rewritten": [
+      "D-01",
+      "S-01",
+      "F-01"
+    ],
+    "added": [
+      "D-13",
+      "D-14",
+      "S-10",
+      "S-11",
+      "F-09",
+      "F-10",
+      "A-10",
+      "A-11"
+    ]
+  },
+  "important_distinctions": [
+    "Managed and custom DevOps agents are different administrative concepts",
+    "Security design review is one-off; full-code and repository-triggered settings are distinct",
+    "Finding/job result is a documentation-defined association",
+    "FinOps instance uses service-specific AgentSpace IAM names",
+    "Derived state is not automatically a separately addressable AWS resource"
+  ],
+  "boundary": "Targeted official-source review; not exhaustive re-audit, runtime discovery, access validation or executed use-case test."
+}
