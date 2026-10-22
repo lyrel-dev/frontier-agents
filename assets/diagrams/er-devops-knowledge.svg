@@ -1,0 +1,135 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="882pt" height="499pt" viewBox="0.00 0.00 881.50 499.00" role="img" aria-labelledby="er-devops-knowledge-title er-devops-knowledge-desc" data-diagram="er-devops-knowledge">
+<title id="er-devops-knowledge-title">DevOps Agent: stored knowledge and configuration references</title><desc id="er-devops-knowledge-desc">Colors identify concept ownership; labels distinguish resources, configuration members and derived state. An edge shows source-count : target-count; ? means unspecified. Dashed edges are logical or editorial relationships, not asserted service foreign keys. See the relationship register for qualifications.</desc><g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(18 481)">
+<title>G</title>
+<g id="clust1" class="cluster">
+<title>cluster_ownership</title>
+<path fill="transparent" stroke="#b5c2cc" d="M476.5,-185C476.5,-185 825.5,-185 825.5,-185 831.5,-185 837.5,-191 837.5,-197 837.5,-197 837.5,-443 837.5,-443 837.5,-449 831.5,-455 825.5,-455 825.5,-455 476.5,-455 476.5,-455 470.5,-455 464.5,-449 464.5,-443 464.5,-443 464.5,-197 464.5,-197 464.5,-191 470.5,-185 476.5,-185" />
+<text text-anchor="middle" x="651" y="-438.2" font-family="DejaVu Sans" font-size="16.00">Ownership of the definition (not availability)</text>
+</g>
+
+<g id="node1" class="node">
+<title>D-Space</title>
+<path fill="#d9f2e5" stroke="#348761" d="M264.5,-422C264.5,-422 158.5,-422 158.5,-422 152.5,-422 146.5,-416 146.5,-410 146.5,-410 146.5,-396 146.5,-396 146.5,-390 152.5,-384 158.5,-384 158.5,-384 264.5,-384 264.5,-384 270.5,-384 276.5,-390 276.5,-396 276.5,-396 276.5,-410 276.5,-410 276.5,-416 270.5,-422 264.5,-422" />
+<text text-anchor="middle" x="211.5" y="-406.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[AWS] Agent Space</text>
+<text text-anchor="middle" x="211.5" y="-393.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">service resource</text>
+</g>
+
+<g id="node2" class="node">
+<title>D-Custom</title>
+<path fill="#d9f2e5" stroke="#348761" d="M229,-326C229,-326 56,-326 56,-326 50,-326 44,-320 44,-314 44,-314 44,-300 44,-300 44,-294 50,-288 56,-288 56,-288 229,-288 229,-288 235,-288 241,-294 241,-300 241,-300 241,-314 241,-314 241,-320 235,-326 229,-326" />
+<text text-anchor="middle" x="142.5" y="-310.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[AWS] Custom-agent definition</text>
+<text text-anchor="middle" x="142.5" y="-297.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">asset subtype</text>
+</g>
+
+<g id="edge1" class="edge">
+<title>D-Space-&gt;D-Custom</title>
+<path fill="none" stroke="#496b78" d="M198.2,-383.88C187.41,-369.18 172.11,-348.34 160.27,-332.21" />
+<polygon fill="#496b78" stroke="#496b78" points="162.32,-330.56 155.76,-326.07 158.09,-333.67 162.32,-330.56" />
+<text text-anchor="middle" x="200" y="-358" font-family="DejaVu Sans" font-size="10.00">stores</text>
+<text text-anchor="middle" x="200" y="-347" font-family="DejaVu Sans" font-size="10.00">1 : 0..*</text>
+</g>
+
+<g id="node4" class="node">
+<title>D-Store</title>
+<path fill="#d9f2e5" stroke="#348761" d="M290.5,-230C290.5,-230 178.5,-230 178.5,-230 172.5,-230 166.5,-224 166.5,-218 166.5,-218 166.5,-204 166.5,-204 166.5,-198 172.5,-192 178.5,-192 178.5,-192 290.5,-192 290.5,-192 296.5,-192 302.5,-198 302.5,-204 302.5,-204 302.5,-218 302.5,-218 302.5,-224 296.5,-230 290.5,-230" />
+<text text-anchor="middle" x="234.5" y="-214.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[AWS] Memory store</text>
+<text text-anchor="middle" x="234.5" y="-201.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">asset subtype</text>
+</g>
+
+<g id="edge4" class="edge">
+<title>D-Space-&gt;D-Store</title>
+<path fill="none" stroke="#496b78" d="M222.72,-383.64C236.99,-358.91 260.47,-313.03 266.5,-270 267.86,-260.32 269.97,-257.14 266.5,-248 264.9,-243.79 262.56,-239.77 259.86,-236.03" />
+<polygon fill="#496b78" stroke="#496b78" points="261.79,-234.23 255.04,-230.02 257.69,-237.52 261.79,-234.23" />
+<text text-anchor="middle" x="280.5" y="-310" font-family="DejaVu Sans" font-size="10.00">scopes</text>
+<text text-anchor="middle" x="280.5" y="-299" font-family="DejaVu Sans" font-size="10.00">1 : 0..*</text>
+</g>
+
+<g id="node3" class="node">
+<title>D-Skill</title>
+<path fill="#d9f2e5" stroke="#348761" d="M87,-230C87,-230 12,-230 12,-230 6,-230 0,-224 0,-218 0,-218 0,-204 0,-204 0,-198 6,-192 12,-192 12,-192 87,-192 87,-192 93,-192 99,-198 99,-204 99,-204 99,-218 99,-218 99,-224 93,-230 87,-230" />
+<text text-anchor="middle" x="49.5" y="-214.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[AWS] Skill</text>
+<text text-anchor="middle" x="49.5" y="-201.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">asset subtype</text>
+</g>
+
+<g id="edge2" class="edge">
+<title>D-Custom-&gt;D-Skill</title>
+<path fill="none" stroke="#496b78" d="M74.89,-287.8C67.01,-283.15 59.88,-277.31 54.5,-270 47.8,-260.89 46,-248.67 46.1,-237.8" />
+<polygon fill="#496b78" stroke="#496b78" points="48.73,-237.8 46.46,-230.18 43.48,-237.55 48.73,-237.8" />
+<text text-anchor="middle" x="104.5" y="-262" font-family="DejaVu Sans" font-size="10.00">references asset IDs</text>
+<text text-anchor="middle" x="104.5" y="-251" font-family="DejaVu Sans" font-size="10.00">0..* : 0..*</text>
+</g>
+
+<g id="edge3" class="edge">
+<title>D-Custom-&gt;D-Store</title>
+<path fill="none" stroke="#496b78" d="M149.49,-287.94C154.92,-275.62 163.4,-259.51 174.5,-248 179.33,-242.99 185,-238.42 190.9,-234.35" />
+<polygon fill="#496b78" stroke="#496b78" points="192.52,-236.42 197.36,-230.12 189.64,-232.03 192.52,-236.42" />
+<text text-anchor="middle" x="220" y="-262" font-family="DejaVu Sans" font-size="10.00">attaches asset IDs</text>
+<text text-anchor="middle" x="220" y="-251" font-family="DejaVu Sans" font-size="10.00">0..* : 0..*</text>
+</g>
+
+<g id="node5" class="node">
+<title>D-Memory</title>
+<path fill="#d9f2e5" stroke="#348761" d="M368,-134C368,-134 255,-134 255,-134 249,-134 243,-128 243,-122 243,-122 243,-108 243,-108 243,-102 249,-96 255,-96 255,-96 368,-96 368,-96 374,-96 380,-102 380,-108 380,-108 380,-122 380,-122 380,-128 374,-134 368,-134" />
+<text text-anchor="middle" x="311.5" y="-118.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[AWS] Memory entry</text>
+<text text-anchor="middle" x="311.5" y="-105.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">asset subtype</text>
+</g>
+
+<g id="edge5" class="edge">
+<title>D-Store-&gt;D-Memory</title>
+<path fill="none" stroke="#496b78" d="M249.35,-191.88C261.38,-177.18 278.46,-156.34 291.66,-140.21" />
+<polygon fill="#496b78" stroke="#496b78" points="293.98,-141.53 296.7,-134.07 289.92,-138.21 293.98,-141.53" />
+<text text-anchor="middle" x="297.5" y="-166" font-family="DejaVu Sans" font-size="10.00">groups</text>
+<text text-anchor="middle" x="297.5" y="-155" font-family="DejaVu Sans" font-size="10.00">1 : 0..*</text>
+</g>
+
+<g id="node6" class="node">
+<title>D-Version</title>
+<path fill="#d9f2e5" stroke="#348761" d="M397.5,-38C397.5,-38 225.5,-38 225.5,-38 219.5,-38 213.5,-32 213.5,-26 213.5,-26 213.5,-12 213.5,-12 213.5,-6 219.5,0 225.5,0 225.5,0 397.5,0 397.5,0 403.5,0 409.5,-6 409.5,-12 409.5,-12 409.5,-26 409.5,-26 409.5,-32 403.5,-38 397.5,-38" />
+<text text-anchor="middle" x="311.5" y="-22.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[AWS] Memory content version</text>
+<text text-anchor="middle" x="311.5" y="-9.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">version record</text>
+</g>
+
+<g id="edge6" class="edge">
+<title>D-Memory-&gt;D-Version</title>
+<path fill="none" stroke="#496b78" d="M311.5,-95.88C311.5,-81.7 311.5,-61.81 311.5,-45.94" />
+<polygon fill="#496b78" stroke="#496b78" points="314.13,-45.57 311.5,-38.07 308.88,-45.57 314.13,-45.57" />
+<text text-anchor="middle" x="362.5" y="-70" font-family="DejaVu Sans" font-size="10.00">has content versions</text>
+<text text-anchor="middle" x="362.5" y="-59" font-family="DejaVu Sans" font-size="10.00">1 : 1..*</text>
+</g>
+
+<g id="node7" class="node">
+<title>D-Investigation</title>
+<path fill="#d9f2e5" stroke="#348761" d="M442.5,-230C442.5,-230 334.5,-230 334.5,-230 328.5,-230 322.5,-224 322.5,-218 322.5,-218 322.5,-204 322.5,-204 322.5,-198 328.5,-192 334.5,-192 334.5,-192 442.5,-192 442.5,-192 448.5,-192 454.5,-198 454.5,-204 454.5,-204 454.5,-218 454.5,-218 454.5,-224 448.5,-230 442.5,-230" />
+<text text-anchor="middle" x="388.5" y="-214.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[AWS] Investigation</text>
+<text text-anchor="middle" x="388.5" y="-201.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">execution record</text>
+</g>
+
+<g id="edge7" class="edge">
+<title>D-Investigation-&gt;D-Memory</title>
+<path fill="none" stroke="#496b78" d="M373.65,-191.88C361.62,-177.18 344.54,-156.34 331.34,-140.21" />
+<polygon fill="#496b78" stroke="#496b78" points="333.08,-138.21 326.3,-134.07 329.02,-141.53 333.08,-138.21" />
+<text text-anchor="middle" x="414" y="-166" font-family="DejaVu Sans" font-size="10.00">informs later synthesis</text>
+<text text-anchor="middle" x="414" y="-155" font-family="DejaVu Sans" font-size="10.00">? : ?</text>
+</g>
+
+<g id="node8" class="node">
+<title>legend_0</title>
+<polygon fill="#dcebff" stroke="#447ac2" points="651.5,-421 487.5,-421 487.5,-385 651.5,-385 651.5,-421" />
+<text text-anchor="middle" x="569.5" y="-400.5" font-family="DejaVu Sans" font-size="10.00" fill="#142c3e">DOC · Documentation-defined</text>
+</g>
+
+<g id="node9" class="node">
+<title>legend_1</title>
+<polygon fill="#d9f2e5" stroke="#348761" points="625,-325 514,-325 514,-289 625,-289 625,-325" />
+<text text-anchor="middle" x="569.5" y="-304.5" font-family="DejaVu Sans" font-size="10.00" fill="#142c3e">AWS · AWS-defined</text>
+</g>
+
+
+<g id="node10" class="node">
+<title>legend_2</title>
+<polygon fill="#fce8d5" stroke="#c78335" points="664.5,-229 474.5,-229 474.5,-193 664.5,-193 664.5,-229" />
+<text text-anchor="middle" x="569.5" y="-208.5" font-family="DejaVu Sans" font-size="10.00" fill="#142c3e">EXT · External / engineering-owned</text>
+</g>
+
+</g>
+</svg>
