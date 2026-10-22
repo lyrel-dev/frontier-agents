@@ -95,20 +95,24 @@ The shared operational-review case combines reviewed reliability or cost-managem
 
 
 
-### A-01 — Workspace, configuration, and execution models
+### A-01 — Resource identity across service boundaries
 
-A comparison begins with the objects each product actually exposes. The three services all separate configuration from execution, but their scopes and resource relationships are not interchangeable. The table below compares those documented objects without proposing a new universal agent schema.
+A useful cross-service record preserves the original identity instead of replacing every object with a generic agent ID. The configured workspace identifies the operating scope, the definition identifies reusable settings, and the execution identifies a particular result. An external source revision or observation period identifies what that result describes. These responsibilities are separate even when a user interface displays them together. [AS50] [AS51] [AS52]
 
-| Layer | DevOps Agent | Security Agent | FinOps Agent |
-|---|---|---|---|
-| Scope | Agent Space with account/provider associations | Application Agent Space plus shared account resources | Agent instance with its own data and connections |
-| Reusable configuration | Managed/custom agents, selected tools, knowledge, triggers | Assessment configurations, requirements, sources, credentials | Context files, memories, integrations and automations |
-| Execution | Investigation, chat, evaluation, custom invocation | Assessment run or one-off design review; revalidation job | Conversation, queued task, report generation |
-| Reviewable state | Tool results, investigation evidence, knowledge versions | Findings, test context, model/review results, lineage | Source queries, task results, report artifacts |
+For example, an incident handoff should distinguish the operational space from its investigation. A security handoff should retain the assessment and original finding, not just the application name. A cost report should retain its query basis and task or conversation context rather than claiming that the agent instance itself identifies the analysis. The following fields are an authored evidence convention, not an AWS API request schema.
 
-The terms differ because the objects differ. A common UI label does not make all Agent Spaces identical. In Security Agent, requirements can be shared across applications; in DevOps Agent, a topology graph is not the complete access boundary; in FinOps Agent, an instance's context can be visible to everyone with access to that instance. [AS01] [AS02] [AS03]
+| Identity component | Purpose | Interpretation |
+|---|---|---|
+| Product and scope | Identify the service, account/Region and relevant space or instance | Similar resource labels in different namespaces remain different objects |
+| Configuration reference | Identify the selected definition or settings where applicable | A configuration can outlive and create several executions |
+| Execution reference | Identify the investigation, run, review, job or task | Status describes this piece of work, not every subsequent action |
+| Source identity | Preserve resource IDs, query basis, revision and observation window | The source system remains the authority for original observations |
+| Result and review | Connect the output to the accepted interpretation and residual uncertainty | A completed execution does not establish outcome correctness |
 
-**Engineering design:** record the platform, account/Region, configuration ID and execution ID separately. Do not put one ambiguous `agent_id` in every downstream ticket and expect it to identify all four concepts.
+Use native identifiers where documented and meaningful context otherwise. Do not invent an ARN or parent field for a derived view, a retained procedure or a normalized relationship. In particular, the FinOps instance has its own AgentSpace IAM naming within the finops-agent service; that naming does not make a DevOps policy or API interchangeable with it. [AS53]
+
+A-11 provides the product responsibility crosswalk, while the resource register supplies the detailed entity and relationship dictionary. This section concerns how identities survive an engineering handoff, not a second definition of the product hierarchies. [AS50] [AS51]
+
 
 
 
