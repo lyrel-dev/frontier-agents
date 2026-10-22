@@ -1,20 +1,16 @@
 # AWS Security Agent
 
-Architecture, application context, assessment, and finding verification
+Application scope, assessment configuration, findings, and revalidation
 
-AWS Security Agent assesses an application using the sources, access, criteria, and target scope configured for it. The useful starting point is therefore the application: which revision is being assessed, which documents explain its boundaries, which identities may reach protected routes, and which requirements apply. The service’s current documentation places it within AWS Continuum. Availability remains specific to the assessment feature and Region. [SS01] [SS02]
+AWS Security Agent analyzes source code and design material, constructs threat models, and performs application penetration tests. An Agent Space selects application sources and assessment configuration. Assessment results, remediation proposals, deployed revisions, and revalidation jobs have separate identities and lifecycles. Feature availability and provider support must be checked for the selected assessment. [SS01] [SS02]
 
-The chapters follow the preparation of an assessment through execution and finding verification. First they establish the Agent Space and supported integrations. Next they explain how source material, credentials, login procedures, and requirements supply different kinds of context. Finally they trace a finding through a proposed repair, deployment, and targeted revalidation. These are separate records with separate evidence.
+The guide defines shared and application-scoped resources before describing repository access, target rules, authentication, requirements, assessment execution, and finding management. The worked example traces an authorization finding through a proposed repair and targeted revalidation.
 
-Diagrams show the documented logical relationships; they are not a claim of a universal security-agent runtime. Engineering guidance and the worked example are explicitly distinguished from product functions. The use-case catalog provides applications of these functions without implying that a successful assessment proves complete security.
-
-
+**Reading conventions.** Product statements link to official AWS documentation. Configuration recommendations and verification procedures are team guidance; the proposed tests and synthetic examples have not been executed against AWS. Lifecycle tables describe service behavior and operator actions, not an API status enumeration unless explicitly cited. DOC (blue), AWS (green), and EXT (orange) identify concept ownership. Source-review dates and qualifications are recorded in the source registers.
 
 ## 01. Resource model and scope
 
 Begin with the product-specific entities, their scope and their relationships. Configuration, executions, knowledge and external evidence are distinct objects with different lifecycles.
-
-
 
 ### S-01 — Shared configuration, Agent Spaces and assessments
 
@@ -31,8 +27,6 @@ Application context, criteria and access play different roles. Code and document
 Green nodes below and in the resource index denote AWS-defined concepts; their subtitles distinguish reusable configuration, a run, a result and managed state. Orange denotes the actual repository, test application or external issue. Blue denotes our normalized associations and review structure, not service resources. This distinction becomes important when tracing one original finding through several revalidation jobs.
 
 The next section explains the assessment-specific relationships. Later chapters configure sources and targets, examine authentication and criteria, and follow the existing assessment, remediation and verification use cases. The [product resource index](../catalog/resource-models.html#model-security) records entity identities and the evidence supporting each relationship.
-
-
 
 ### S-10 — Assessment configurations, runs and result identities
 
@@ -59,13 +53,9 @@ These differences determine both operation and failure diagnosis. A draft config
 
 Some relationships deliberately remain unspecified. The public guidance documents retained login reuse but does not establish an independently editable skill resource for it. The diagrams use `?` where counts or parent fields are not documented, rather than inventing a universal resource schema. See the [qualified relationship register](../catalog/resource-models.html#model-security) before translating any diagram into implementation assumptions.
 
-
-
 ## 02. Application sources and target access
 
 Application evidence and a reachable test target are separate prerequisites. The source inventory is followed by user access and the explicit boundaries of a dynamic test.
-
-
 
 ### S-09 — Supported source and collaboration integrations
 
@@ -78,11 +68,14 @@ Security assessment needs both application evidence and a reachable test surface
 | GitLab | Cloud-hosted GitLab | Selected repositories | Provider-specific review comments and remediation configuration |
 | GitLab Self-Managed | Self-hosted instance | Selected repositories and reachable endpoint | Authentication and private routing require their own setup |
 | Bitbucket | Bitbucket Cloud | Selected repositories | Do not extend Cloud support to self-hosted editions |
+| Azure DevOps | Git repositories; TFVC unsupported | Authorized organization and selected repositories | Entra service principal and Azure DevOps permissions; review comments and remediation configured separately [SS490] |
 | Confluence | Confluence Cloud | Selected pages | Read-only documentation context, not a source-code repository |
 | Amazon S3 | Connected same-account buckets or prefixes | Resources selected for an assessment | Code-review sources use supported source archives; supporting documents have their own formats |
 | Jira | Jira Cloud | Selected projects | Finding issue creation and comments are independently allowed per project |
 
 Connecting a repository grants read context to the eligible assessment functions that share the space. Code-review comments and code-remediation changes are enabled separately per repository. The integration overview excludes these write actions for public repositories; do not interpret read access as permission to publish a patch or comment. [SS30]
+
+For Azure DevOps, registration authorizes the Microsoft Entra application. Add its service principal to the Azure DevOps organization and grant repository and service-hook permissions before selecting repositories in an Agent Space. Public-repository remediation is not supported. The provider guide describes project limits and required permissions; registration alone does not complete access setup. [SS490]
 
 ![Application-source registration and selection](../assets/diagrams/security-integrations.svg)
 
@@ -96,49 +89,43 @@ Private source-control access, penetration-test network access, and credential r
 
 #### MX-S-JIRA — Finding publication to Jira
 
-**Classification:** Finding-publication mechanism. **Inputs:** Connected Jira Cloud site, permitted project/actions, selected finding and reviewed disclosure scope.
-
 A site registration supplies authorization; a project connection chooses where the Agent Space can create issues or comments. Creating an issue publishes a finding into an external system with its own audience and lifecycle. [SS415] [SS416] [SS417]
 
 The link matters later: remediation proposals and revalidation outcomes can be attached to the same issue through supported behavior. Removing the integration stops future actions but does not remove tickets already created. [SS415] [SS416] [SS417]
 
-**Configuration and enablement**
+**Inputs.** Connected Jira Cloud site, permitted project/actions, selected finding and reviewed disclosure scope.
 
-1. **Register.** Integrations → Add integration → Jira; authorize the Forge app and registration. Applies to: Site authorization.
-2. **Bind.** Within Agent Space select project and allowed create/comment actions. Applies to: Project-specific effects.
-3. **Publish.** Select finding(s) and create issues in a project permitting the Task type. Applies to: One issue per selected finding.
+**Configuration**
+
+1. **Register — Site authorization.** Integrations → Add integration → Jira; authorize the Forge app and registration.
+2. **Bind — Project-specific effects.** Within Agent Space select project and allowed create/comment actions.
+3. **Publish — One issue per selected finding.** Select finding(s) and create issues in a project permitting the Task type.
 
 [SS415] [SS416] [SS417]
 
-**Lifecycle and state changes**
+**Lifecycle and operator actions**
 
-The rows describe documented consequences and logical stages; they are not an invented SDK status enumeration.
-
-| Starting condition | Operation or event | Consequence |
+| Initial condition | Operation or event | Result |
 |---|---|---|
 | Finding selected | Create Jira issue | External record and finding relationship created. |
 | Linked finding revalidated | Supported result comment | External history updated when permitted. |
 | Integration removed | Future publication attempted | No further action through that integration; existing issues remain. |
 
-[SS415] [SS416] [SS417]
+**Constraints.** Issue creation and comment permission are separate. Do not import FinOps approval behavior into Security Agent.
 
-**Controls.** Issue creation and comment permission are separate. Do not import FinOps approval behavior into Security Agent.
+**Inspection points.** Actual issue/comment in the intended project and preserved finding link.
 
-**Observable output.** Actual issue/comment in the intended project and preserved finding link.
+**Implementation limits.** Automatic duplicate suppression and transactional rollback across AWS and Jira are not established.
 
-**Not established by the reviewed sources.** Automatic duplicate suppression and transactional rollback across AWS and Jira are not established.
-
-**Proposed verification — not executed**
+**Verification procedure (proposed)**
 
 1. Use a restricted test project and a non-sensitive finding fixture.
 2. Check audience, issue type and finding link.
 3. Revoke comment permission; distinguish publication failure from assessment failure and avoid blind duplicate retries.
 
-The verification procedure is authored engineering guidance. A failed or unobservable check must remain unresolved; no live AWS outcome is represented here.
+**Source mapping**
 
-**Official evidence for the product assertions**
-
-| Reference | Reviewed section | Supported assertion |
+| Reference | Documentation section | Supported behavior |
 |---|---|---|
 | [SS415] | Connecting projects to an Agent Space | Create and comment actions are selected per project. |
 | [SS416] | Creating issues for findings | The selected project must allow Task and receives one issue per selected finding. |
@@ -158,8 +145,6 @@ For code review, independently review the settings for vulnerability analysis, r
 
 **Engineering verification:** open the web app as the intended user, inspect the connected source and selected branch, and compare the source revision with the deployed test application. Record a known read and an expected denial. Do not place credentials in a repository or presentation to simplify the example.
 
-
-
 ### S-03 — Test targets, dependencies, and exclusions
 
 A dynamic assessment is defined by what it may reach and what it may test. Some endpoints are application targets, while others are dependencies needed only for authentication or supporting content. Explicit exclusions keep that supporting access from expanding the test into an unintended environment.
@@ -174,7 +159,7 @@ The current penetration-test wizard separates three network rule classes. [SS08]
 | Accessible | May be accessed to support the assessment, not attacked as a target | Approved login-provider or static-content endpoint |
 | Out of scope | Must not be accessed; exclusions take precedence | A payment or production callback path |
 
-These example names are illustrative, not running targets. Specify the complete scheme and nonstandard port when applicable. The current wizard supports explicit nonstandard ports; an older troubleshooting page states only 80/443. This guide follows the newer task-specific wizard and records the conflict rather than repeating the older restriction. [SS08] [SS06]
+These example names are illustrative, not running targets. Specify the complete scheme and nonstandard port when applicable. The current wizard supports explicit nonstandard ports; an older troubleshooting page states only 80/443. This guide follows the task-specific wizard and records the conflict rather than repeating the older restriction. [SS08] [SS06]
 
 **Configuration procedure:** prepare the verified target and explicit exclusions; choose public or private connectivity; add representative test credentials; complete the network rules after authentication discovery; inspect suggested extra domains before accepting them. Keep essential login dependencies reachable without turning them into attack targets. Only execute against systems and effects that their owners have authorized. [SS07] [SS08]
 
@@ -184,49 +169,43 @@ These example names are illustrative, not running targets. Specify the complete 
 
 #### MX-S-ACCESS — Target scope and network access
 
-**Classification:** Target-selection and reachability mechanism. **Inputs:** Verified target domains, supporting accessible domains, excluded paths, applicable VPC route and authorized test scope.
-
 The test configuration separates attack targets from supporting navigation and excluded paths. A login provider can be reachable without becoming a vulnerability-testing target. A private route supplies connectivity; it does not widen the scope approved by the application owner. [SS402] [SS418]
 
 Treat reachability as a prerequisite. If a target cannot be reached, the missing result is a coverage gap. Broadening the target list or removing an exclusion is a scope change, not a routine network troubleshooting shortcut. [SS402] [SS418]
 
-**Configuration and enablement**
+**Inputs.** Verified target domains, supporting accessible domains, excluded paths, applicable VPC route and authorized test scope.
 
-1. **Target.** Create/edit penetration test: select verified target URLs. Applies to: Active test surface.
-2. **Supporting access.** List necessary accessible URLs separately. Applies to: Navigation support, not attack targets.
-3. **Exclusions and network.** Configure excluded paths and the approved VPC connectivity when required. Applies to: Scope and network controls.
+**Configuration**
+
+1. **Target — Active test surface.** Create/edit penetration test: select verified target URLs.
+2. **Supporting access — Navigation support, not attack targets.** List necessary accessible URLs separately.
+3. **Exclusions and network — Scope and network controls.** Configure excluded paths and the approved VPC connectivity when required.
 
 [SS402] [SS418]
 
-**Lifecycle and state changes**
+**Lifecycle and operator actions**
 
-The rows describe documented consequences and logical stages; they are not an invented SDK status enumeration.
-
-| Starting condition | Operation or event | Consequence |
+| Initial condition | Operation or event | Result |
 |---|---|---|
 | Configuration saved | Preflight/connection attempted | Reachability is checked before meaningful target testing. |
 | Target unreachable | Correct approved route or name resolution | Rerun the prerequisite check without broadening authorization. |
 | Scope changed | Review authorization and save configuration | A future run has a different assessment surface. |
 
-[SS402] [SS418]
+**Constraints.** Ownership verification and network reachability are not substitutes for owner authorization. Active tests can change application state.
 
-**Controls.** Ownership verification and network reachability are not substitutes for owner authorization. Active tests can change application state.
+**Inspection points.** Preflight outcome and records of the actual target and paths reached.
 
-**Observable output.** Preflight outcome and records of the actual target and paths reached.
+**Implementation limits.** The sources do not establish that every reachable path is exercised or that every excluded interaction has a uniform implementation across all targets.
 
-**Not established by the reviewed sources.** The sources do not establish that every reachable path is exercised or that every excluded interaction has a uniform implementation across all targets.
-
-**Proposed verification — not executed**
+**Verification procedure (proposed)**
 
 1. Use a non-production target, supporting login host and an explicit excluded fixture path.
 2. Verify target access and intended application role.
 3. A denied path or unresolved target must not produce a claim of assessed coverage.
 
-The verification procedure is authored engineering guidance. A failed or unobservable check must remain unresolved; no live AWS outcome is represented here.
+**Source mapping**
 
-**Official evidence for the product assertions**
-
-| Reference | Reviewed section | Supported assertion |
+| Reference | Documentation section | Supported behavior |
 |---|---|---|
 | [SS402] | Configure penetration test scope; Configure VPC resources | Targets, supporting accessible URLs and excluded paths have different purposes. |
 | [SS418] | Review penetration test findings | Failed preflight stops testing and must be inspected separately. |
@@ -236,8 +215,6 @@ The verification procedure is authored engineering guidance. A failed or unobser
 ## 03. Application knowledge and assessment criteria
 
 Source context explains the application, requirements supply criteria, and authentication provides a reachable identity. Their reuse mechanisms differ and are described separately.
-
-
 
 ### S-M07 — Application-context construction and reuse
 
@@ -257,49 +234,43 @@ A practical verification starts with a small known boundary: two application rol
 
 #### MX-S-CONTEXT — Application-context assembly
 
-**Classification:** Assessment-context mechanism. **Inputs:** Connected source/document resources, selected revision or design scope, service-role access and assessment configuration.
-
 Registration authorizes a provider account; connecting particular resources supplies application-specific evidence. A selected repository can support several assessment types without being independently registered for each. Context assembly must nevertheless use the correct application and revision. [SS401]
 
 Read access and publication of comments or proposed changes are separate. A context read can help interpret an application without creating a permission to change its repository. The service documentation describes the evidence inputs but not a universal persistent knowledge store or retrieval algorithm for every assessment. [SS401]
 
-**Configuration and enablement**
+**Inputs.** Connected source/document resources, selected revision or design scope, service-role access and assessment configuration.
 
-1. **Register.** Integrations: authorize the supported provider account. Applies to: Account-level registration.
-2. **Connect.** Within the intended Agent Space, select repositories or documentation resources. Applies to: Application-scoped evidence.
-3. **Configure effects.** Review per-repository write options separately from source reads. Applies to: Optional repository effects.
+**Configuration**
+
+1. **Register — Account-level registration.** Integrations: authorize the supported provider account.
+2. **Connect — Application-scoped evidence.** Within the intended Agent Space, select repositories or documentation resources.
+3. **Configure effects — Optional repository effects.** Review per-repository write options separately from source reads.
 
 [SS401]
 
-**Lifecycle and state changes**
+**Lifecycle and operator actions**
 
-The rows describe documented consequences and logical stages; they are not an invented SDK status enumeration.
-
-| Starting condition | Operation or event | Consequence |
+| Initial condition | Operation or event | Result |
 |---|---|---|
 | Provider registered | Connect resource to space | Read context becomes available through that association. |
 | Application changes | Start assessment against intended sources | A previous result remains tied to its earlier evidence. |
 | Write option disabled | Run eligible read analysis | Read context does not imply comment or repair permission. |
 
-[SS401]
+**Constraints.** Keep application boundary and revision explicit. Private source-control access is separate from private target access.
 
-**Controls.** Keep application boundary and revision explicit. Private source-control access is separate from private target access.
+**Inspection points.** Selected resource identity and assessment source/preflight evidence.
 
-**Observable output.** Selected resource identity and assessment source/preflight evidence.
+**Implementation limits.** Cross-assessment cache freshness, internal ranking and automatic refresh guarantees are not established.
 
-**Not established by the reviewed sources.** Cross-assessment cache freshness, internal ranking and automatic refresh guarantees are not established.
-
-**Proposed verification — not executed**
+**Verification procedure (proposed)**
 
 1. Select a repository and design document that describe one known staging application.
 2. Check that a run identifies that application and revision.
 3. Supply a mismatched design revision and require an explicit mismatch rather than a merged invented architecture.
 
-The verification procedure is authored engineering guidance. A failed or unobservable check must remain unresolved; no live AWS outcome is represented here.
+**Source mapping**
 
-**Official evidence for the product assertions**
-
-| Reference | Reviewed section | Supported assertion |
+| Reference | Documentation section | Supported behavior |
 |---|---|---|
 | [SS401] | Register once, reuse everywhere; One connection, shared across capabilities | Registration, resource association and write opt-ins are distinct. |
 
@@ -340,49 +311,43 @@ The newer authentication guide includes TOTP and email MFA. Email MFA uses a gen
 
 #### MX-S-AUTH — Credential resolution and application login
 
-**Classification:** Credential-resolution and login mechanism. **Inputs:** Credential strategy, permitted source resource, access URL, application login instructions and representative test identity.
-
 Authentication has two stages: retrieve or obtain the credential, then apply it to the application. Secrets Manager or Lambda can succeed while application login fails. The credential name therefore needs to remain associated with the role and protected paths actually reached. [SS403]
 
 The login instructions describe how to apply the returned value, not how to bypass an inaccessible identity provider. Use the credential mechanisms currently exposed in the test configuration; older and newer retrieved documentation differ on some authentication options. Do not treat that difference as evidence that every deployed interface supports the same flow. [SS403]
 
-**Configuration and enablement**
+**Inputs.** Credential strategy, permitted source resource, access URL, application login instructions and representative test identity.
 
-1. **Strategy.** Choose direct input or a documented AWS-native strategy in the test credential configuration. Applies to: Credential source.
-2. **Permissions.** For Secrets Manager, scope GetSecretValue and DescribeSecret; for Lambda, scope InvokeFunction. Applies to: Resource-resolution authority.
-3. **Application step.** Provide access URL and login instructions; verify the resulting identity before interpreting findings. Applies to: Authenticated surface.
+**Configuration**
+
+1. **Strategy — Credential source.** Choose direct input or a documented AWS-native strategy in the test credential configuration.
+2. **Permissions — Resource-resolution authority.** For Secrets Manager, scope GetSecretValue and DescribeSecret; for Lambda, scope InvokeFunction.
+3. **Application step — Authenticated surface.** Provide access URL and login instructions; verify the resulting identity before interpreting findings.
 
 [SS403]
 
-**Lifecycle and state changes**
+**Lifecycle and operator actions**
 
-The rows describe documented consequences and logical stages; they are not an invented SDK status enumeration.
-
-| Starting condition | Operation or event | Consequence |
+| Initial condition | Operation or event | Result |
 |---|---|---|
 | Credential source configured | Resolve credential | Credential value is obtained or resolution fails. |
 | Credential resolved | Navigate/apply login | Application session succeeds or login fails. |
 | Credential rotated or login changed | Repeat authentication verification | Source success does not establish current application access. |
 
-[SS403]
+**Constraints.** The credential guide requires same-account Secrets Manager/Lambda resources and a credential Lambda completing within 30 seconds. Never place secrets in the documentation examples.
 
-**Controls.** The credential guide requires same-account Secrets Manager/Lambda resources and a credential Lambda completing within 30 seconds. Never place secrets in the documentation examples.
+**Inspection points.** Resolution and login evidence plus actual application role; secret contents are not required in retained review evidence.
 
-**Observable output.** Resolution and login evidence plus actual application role; secret contents are not required in retained review evidence.
+**Implementation limits.** The documentation does not establish one universal authentication policy, retry algorithm or credential-refresh behavior for all applications.
 
-**Not established by the reviewed sources.** The documentation does not establish one universal authentication policy, retry algorithm or credential-refresh behavior for all applications.
-
-**Proposed verification — not executed**
+**Verification procedure (proposed)**
 
 1. Use a disposable customer-role account and a known protected staging route.
 2. Record resolution success and the actual role reaching the route.
 3. Use an expired test credential: distinguish source-read success from failed login.
 
-The verification procedure is authored engineering guidance. A failed or unobservable check must remain unresolved; no live AWS outcome is represented here.
+**Source mapping**
 
-**Official evidence for the product assertions**
-
-| Reference | Reviewed section | Supported assertion |
+| Reference | Documentation section | Supported behavior |
 |---|---|---|
 | [SS403] | Use advanced setting; Configure multiple credentials | Resource retrieval and application login are separate; strategy-specific permissions and limits apply. |
 
@@ -402,52 +367,46 @@ The first successful authentication navigation can produce a skill describing th
 
 #### MX-S-LOGIN — Successful login-procedure reuse
 
-**Classification:** Learned authentication-procedure mechanism. **Inputs:** Configured test credentials, a successfully discovered login flow and the Login Optimization setting.
-
 Successful navigation produces a reusable login procedure. Later login sessions can read that procedure instead of rediscovering the path. Reuse concerns navigation; it does not establish that an old credential remains valid or that the application still assigns the intended role. [SS403]
 
 This is separate from finding personalization and vulnerability revalidation. A changed login flow calls for a fresh authentication check, while a changed vulnerability calls for assessment or revalidation. Switching off reuse is not a documented deletion of learned material. [SS403]
 
+**Inputs.** Configured test credentials, a successfully discovered login flow and the Login Optimization setting.
+
 ![Successful login-procedure reuse: state and control paths](../assets/diagrams/mechanism-security-learning.svg)
 
-**Configuration and enablement**
+**Configuration**
 
-1. **Prerequisite.** Configure a credential and complete a successful login. Applies to: Procedure-production input.
-2. **Reuse.** Inspect Login Optimization in the penetration-test configuration; the documentation identifies it as enabled by default. Applies to: Reuse control.
-3. **Verification.** On later sessions, verify authenticated identity independently from any observable reuse. Applies to: Coverage prerequisite.
+1. **Prerequisite — Procedure-production input.** Configure a credential and complete a successful login.
+2. **Reuse — Reuse control.** Inspect Login Optimization in the penetration-test configuration; the documentation identifies it as enabled by default.
+3. **Verification — Coverage prerequisite.** On later sessions, verify authenticated identity independently from any observable reuse.
 
 [SS403]
 
-**Lifecycle and state changes**
+**Lifecycle and operator actions**
 
-The rows describe documented consequences and logical stages; they are not an invented SDK status enumeration.
-
-| Starting condition | Operation or event | Consequence |
+| Initial condition | Operation or event | Result |
 |---|---|---|
 | No successful login procedure | Successful navigation | A reusable skill file is produced. |
 | Procedure retained; reuse enabled | Later login | Saved navigation can be applied. |
 | Reuse disabled | Later login | Reuse stops; retained learning is preserved. |
 | Reuse re-enabled | Later login | Retained procedure becomes applicable again. |
 
-[SS403]
+**Constraints.** Test current credentials and role on each relevant run. Retained navigation is not a general-purpose incident memory.
 
-**Controls.** Test current credentials and role on each relevant run. Retained navigation is not a general-purpose incident memory.
+**Inspection points.** Authenticated session and, where exposed, evidence of reuse. Do not infer reuse solely from faster execution.
 
-**Observable output.** Authenticated session and, where exposed, evidence of reuse. Do not infer reuse solely from faster execution.
+**Implementation limits.** No independent public CRUD API or guaranteed invalidation policy for the saved login skill is established.
 
-**Not established by the reviewed sources.** No independent public CRUD API or guaranteed invalidation policy for the saved login skill is established.
-
-**Proposed verification — not executed**
+**Verification procedure (proposed)**
 
 1. Use an authorized multistep staging login.
 2. Compare first and later logins while verifying the same application role.
 3. Change the login form; failure to reach the protected route remains a coverage gap.
 
-The verification procedure is authored engineering guidance. A failed or unobservable check must remain unresolved; no live AWS outcome is represented here.
+**Source mapping**
 
-**Official evidence for the product assertions**
-
-| Reference | Reviewed section | Supported assertion |
+| Reference | Documentation section | Supported behavior |
 |---|---|---|
 | [SS403] | Login Optimization | Successful navigation produces a skill reused in later sessions/runs; disabling reuse preserves learning. |
 
@@ -467,49 +426,43 @@ A requirement contains a name/description, applicability, compliance criteria an
 
 #### MX-S-CRITERIA — Requirement applicability and evaluation
 
-**Classification:** Requirement-applicability mechanism. **Inputs:** Enabled pack, requirement applicability/compliance definitions and eligible source/design review evidence.
-
 Requirement evaluation first needs a criterion that applies to the subject. The compliance assessment then compares the supplied evidence with that criterion. Missing evidence is not the same as a demonstrated violation or an inapplicable requirement. [SS408] [SS412]
 
 Packs are shared policy configuration. Enabling, disabling or editing one affects future eligible reviews, not the historical conclusions of reviews already completed. This shared reach makes requirement maintenance a cross-application change. [SS408] [SS412]
 
-**Configuration and enablement**
+**Inputs.** Enabled pack, requirement applicability/compliance definitions and eligible source/design review evidence.
 
-1. **Define.** Security requirements → chosen pack → inspect applicability, compliance criteria and optional remediation guidance. Applies to: Evaluation rule.
-2. **Enable.** Enable the reviewed pack and select requirement evaluation in the eligible review mode. Applies to: Future assessment behavior.
-3. **Inspect.** Review the stated reason for applicability and result. Applies to: Criterion-level evidence.
+**Configuration**
+
+1. **Define — Evaluation rule.** Security requirements → chosen pack → inspect applicability, compliance criteria and optional remediation guidance.
+2. **Enable — Future assessment behavior.** Enable the reviewed pack and select requirement evaluation in the eligible review mode.
+3. **Inspect — Criterion-level evidence.** Review the stated reason for applicability and result.
 
 [SS408] [SS412]
 
-**Lifecycle and state changes**
+**Lifecycle and operator actions**
 
-The rows describe documented consequences and logical stages; they are not an invented SDK status enumeration.
-
-| Starting condition | Operation or event | Consequence |
+| Initial condition | Operation or event | Result |
 |---|---|---|
 | Pack disabled | Enable | Criteria apply to new eligible reviews. |
 | Requirement edited | Start new review | Updated criteria apply prospectively. |
 | Existing result | Pack changed | Historical review is not rewritten. |
 
-[SS408] [SS412]
+**Constraints.** Framework labels and managed packs are not compliance certification; applicability is part of the evaluated claim.
 
-**Controls.** Framework labels and managed packs are not compliance certification; applicability is part of the evaluated claim.
+**Inspection points.** Requirement-linked result and explanation, including missing-data or inapplicable distinctions where exposed.
 
-**Observable output.** Requirement-linked result and explanation, including missing-data or inapplicable distinctions where exposed.
+**Implementation limits.** Full semantic evaluation rules and a deterministic false-positive/false-negative guarantee are not documented.
 
-**Not established by the reviewed sources.** Full semantic evaluation rules and a deterministic false-positive/false-negative guarantee are not documented.
-
-**Proposed verification — not executed**
+**Verification procedure (proposed)**
 
 1. Prepare compliant, violating and deliberately inapplicable examples for one requirement.
 2. Check applicability before the compliance verdict.
 3. Remove decisive design evidence; require an insufficient-evidence interpretation, not assumed compliance.
 
-The verification procedure is authored engineering guidance. A failed or unobservable check must remain unresolved; no live AWS outcome is represented here.
+**Source mapping**
 
-**Official evidence for the product assertions**
-
-| Reference | Reviewed section | Supported assertion |
+| Reference | Documentation section | Supported behavior |
 |---|---|---|
 | [SS408] | Overview; Enable or disable a pack | Enabled packs govern future eligible reviews and have distinct applicability/compliance fields. |
 | [SS412] | Understand compliance statuses | Design reviews distinguish Insufficient data and Not applicable from compliance/violation. |
@@ -528,49 +481,43 @@ Uploading new documents regenerates the pack and replaces existing requirements,
 
 #### MX-S-GENERATE — Requirement-pack regeneration
 
-**Classification:** Requirement-replacement mechanism. **Inputs:** Approved policy documents, chosen custom pack and existing requirements including manually authored entries.
-
 Generation reads policy documents and constructs structured requirements. Running it again for an existing pack replaces the requirements; it is not an append operation. A successful generation therefore establishes a proposed replacement, not approval of every generated rule. [SS409]
 
 Reconcile overlapping policies before submission. Review applicability and technical criteria afterward, and explicitly compare the replacement with any manual entries that existed before the upload. [SS409]
 
-**Configuration and enablement**
+**Inputs.** Documents submitted for a custom requirement pack. The team reviews the policy source and replacement before enabling the pack.
 
-1. **Select.** Security requirements → Custom packs → choose/create the intended pack. Applies to: Replacement target.
-2. **Generate.** Upload supported documents and choose Generate requirements; acknowledge replacement when applicable. Applies to: Generation operation.
-3. **Accept.** Review/edit resulting requirements before enabling the pack for later assessments. Applies to: Team approval of generated criteria.
+**Configuration**
+
+1. **Select — Replacement target.** Security requirements → Custom packs → choose/create the intended pack.
+2. **Generate — Generation operation.** Upload supported documents and choose Generate requirements; acknowledge replacement when applicable.
+3. **Accept — Team approval of generated criteria.** Review/edit resulting requirements before enabling the pack for later assessments.
 
 [SS409]
 
-**Lifecycle and state changes**
+**Lifecycle and operator actions**
 
-The rows describe documented consequences and logical stages; they are not an invented SDK status enumeration.
-
-| Starting condition | Operation or event | Consequence |
+| Initial condition | Operation or event | Result |
 |---|---|---|
 | Pack has requirements | Regenerate from new documents | Existing requirements, including manual ones, are replaced. |
 | Generation in progress | Attempt another upload | The documented workflow blocks another upload until processing finishes. |
 | Generated criteria | Review and enable | New eligible reviews use the accepted configuration. |
 
-[SS409]
+**Constraints.** Keep authoritative policy and reviewed configuration in Git; do not treat a generated pack as the only source of policy.
 
-**Controls.** Keep authoritative policy and reviewed configuration in Git; do not treat a generated pack as the only source of policy.
+**Inspection points.** Generated requirement definitions and prospective pack state.
 
-**Observable output.** Generated requirement definitions and prospective pack state.
+**Implementation limits.** Automatic merge of old/manual rules and transactional rollback are not documented.
 
-**Not established by the reviewed sources.** Automatic merge of old/manual rules and transactional rollback are not documented.
-
-**Proposed verification — not executed**
+**Verification procedure (proposed)**
 
 1. Use a disposable pack containing one manual rule and an approved small policy fixture.
 2. Compare resulting criteria with source and prior contents.
 3. Confirm replacement behavior without using a production policy pack.
 
-The verification procedure is authored engineering guidance. A failed or unobservable check must remain unresolved; no live AWS outcome is represented here.
+**Source mapping**
 
-**Official evidence for the product assertions**
-
-| Reference | Reviewed section | Supported assertion |
+| Reference | Documentation section | Supported behavior |
 |---|---|---|
 | [SS409] | Generate requirements; Replace requirements with a new upload | Generation replaces existing pack contents and requires review before use. |
 
@@ -595,13 +542,9 @@ Resource-specific encryption context and identity determine authorization. The r
 
 **Failure diagnosis:** identify the calling identity and denied KMS action from authorized audit evidence; inspect the matching key policy, grants/role policy and encryption context. Re-enabling a deliberately disabled test key can restore access; deletion can make retained data permanently unavailable. Do not disable a production key merely to demonstrate this mechanism. [SS18]
 
-
-
 ## 04. Assessment and finding workflows
 
 A run produces findings under particular conditions. Proposed changes, deployed revisions, and subsequent verification remain linked but distinct steps in the engineering workflow.
-
-
 
 ### S-04 — Assessment configuration and run lifecycle
 
@@ -619,49 +562,43 @@ Task-hours aggregate work across concurrent tasks; they are not wall-clock durat
 
 #### MX-S-RUN — Saved assessment and independent execution
 
-**Classification:** Configuration-to-assessment workflow. **Inputs:** Saved penetration-test configuration, current target deployment, credentials, exclusions and execution/work limit.
-
 A saved penetration-test configuration is reusable; each execution has its own record and findings. Saving the configuration does not freeze a deployment that continues to change. Identify the deployed revision and current credentials for every run. [SS404] [SS418]
 
 Execution begins with prerequisite checks before assessment work. A preflight failure is neither a successful clean assessment nor evidence that the target contains no vulnerabilities. The assessment record should retain incomplete areas along with findings. [SS404] [SS418]
 
-**Configuration and enablement**
+**Inputs.** Saved penetration-test configuration, current target deployment, credentials, exclusions and execution/work limit.
 
-1. **Define.** Penetration tests → create: configure target, role, credentials, network and source context. Applies to: Reusable configuration.
-2. **Save or start.** Choose the supported save-only or create-and-execute action. Applies to: Definition versus run.
-3. **Inspect.** Open the run overview, preflight/logs and findings. Applies to: Execution evidence.
+**Configuration**
+
+1. **Define — Reusable configuration.** Penetration tests → create: configure target, role, credentials, network and source context.
+2. **Save or start — Definition versus run.** Choose the supported save-only or create-and-execute action.
+3. **Inspect — Execution evidence.** Open the run overview, preflight/logs and findings.
 
 [SS404] [SS418]
 
-**Lifecycle and state changes**
+**Lifecycle and operator actions**
 
-The rows describe documented consequences and logical stages; they are not an invented SDK status enumeration.
-
-| Starting condition | Operation or event | Consequence |
+| Initial condition | Operation or event | Result |
 |---|---|---|
 | Configuration saved | Start execution | An independent run is created. |
 | Preflight fails | Resolve prerequisite and start a new run | No successful runtime coverage is established. |
 | Run completes | Review findings and coverage | Further execution uses a new run, not rewritten evidence. |
 
-[SS404] [SS418]
+**Constraints.** Work limits, test scope and owner authorization must remain explicit; budget limits do not guarantee a particular coverage level.
 
-**Controls.** Work limits, test scope and owner authorization must remain explicit; budget limits do not guarantee a particular coverage level.
+**Inspection points.** Run identity, actual target context, logs, discovered/tested endpoints and findings.
 
-**Observable output.** Run identity, actual target context, logs, discovered/tested endpoints and findings.
+**Implementation limits.** The documented interface does not expose the complete assessment-planning or vulnerability-discovery algorithm.
 
-**Not established by the reviewed sources.** The documented interface does not expose the complete assessment-planning or vulnerability-discovery algorithm.
-
-**Proposed verification — not executed**
+**Verification procedure (proposed)**
 
 1. Use a deliberately limited staging target and record its deployed revision.
 2. Inspect actual reached paths and completed phases.
 3. Make a required target unreachable; require a preflight failure or explicit coverage gap.
 
-The verification procedure is authored engineering guidance. A failed or unobservable check must remain unresolved; no live AWS outcome is represented here.
+**Source mapping**
 
-**Official evidence for the product assertions**
-
-| Reference | Reviewed section | Supported assertion |
+| Reference | Documentation section | Supported behavior |
 |---|---|---|
 | [SS404] | Penetration testing: reusable configurations with independent executions | One configuration supports separate runs and new findings. |
 | [SS418] | Create and execute; Review findings | Saving, executing and preflight outcomes are different stages. |
@@ -682,150 +619,130 @@ A finding identifies the issue and its supporting evidence in a particular asses
 
 #### MX-S-FINDING — Finding evidence inspection
 
-**Classification:** Evidence-inspection and disposition workflow. **Inputs:** Finding identifier, current/original attributes, validation evidence, assessment revision and application-owner context.
-
 A finding combines an observation with an interpretation of risk. Inspect the supporting request, response or source evidence before accepting that interpretation. The findings view can hide unverified items, so the visible count depends on the active filter. [SS405]
 
 Editing a finding changes its recorded attributes; it does not repair the application. The separately documented Findings Personalization mechanism can also influence later similar findings. Read the original and latest values when determining whether a change reflects new vulnerability evidence or a revised organizational preference. [SS405]
 
-**Configuration and enablement**
+**Inputs.** Finding identifier, current/original attributes, validation evidence, assessment revision and application-owner context.
 
-1. **Inspect.** Completed/in-progress run → Findings → select finding and trace its actions/logs. Applies to: Evidence and affected context.
-2. **Visibility.** Review the unverified-findings filter before counting results. Applies to: Display scope.
-3. **Disposition.** Review current and original values where edits exist. Applies to: Human decision versus generated attributes.
+**Configuration**
+
+1. **Inspect — Evidence and affected context.** Completed/in-progress run → Findings → select finding and trace its actions/logs.
+2. **Visibility — Display scope.** Review the unverified-findings filter before counting results.
+3. **Disposition — Human decision versus generated attributes.** Review current and original values where edits exist.
 
 [SS405]
 
-**Lifecycle and state changes**
+**Lifecycle and operator actions**
 
-The rows describe documented consequences and logical stages; they are not an invented SDK status enumeration.
-
-| Starting condition | Operation or event | Consequence |
+| Initial condition | Operation or event | Result |
 |---|---|---|
 | Finding observed | Inspect evidence | Confidence and supported impact can be assessed. |
 | Finding edited | Save current values | Latest attributes change; original view remains available. |
 | Repair proposed | Review/deploy/verify separately | An edited status does not establish deployed remediation. |
 
-[SS405]
+**Constraints.** Generated reproduction scripts require review and an authorized target before execution. Finding counts and severity alone do not establish risk or coverage.
 
-**Controls.** Generated reproduction scripts require review and an authorized target before execution. Finding counts and severity alone do not establish risk or coverage.
+**Inspection points.** Finding identity, supporting evidence, original/latest values and a reviewer disposition.
 
-**Observable output.** Finding identity, supporting evidence, original/latest values and a reviewer disposition.
+**Implementation limits.** No calibrated probability interpretation of confidence or exhaustive false-negative rate is established.
 
-**Not established by the reviewed sources.** No calibrated probability interpretation of confidence or exhaustive false-negative rate is established.
-
-**Proposed verification — not executed**
+**Verification procedure (proposed)**
 
 1. Use the synthetic authorization-finding fixture for a tabletop.
 2. Trace the claim to the supplied identity, request and affected revision.
 3. Hide/unhide unverified findings and verify that changed visibility is not reported as remediation.
 
-The verification procedure is authored engineering guidance. A failed or unobservable check must remain unresolved; no live AWS outcome is represented here.
+**Related mechanism.** [MX-S-PERSONALIZE](../catalog/mechanisms.html#MX-S-PERSONALIZE): conditional — Findings Personalization was enabled at test start and eligible edits are available; it changes finding attributes, not application state.
 
-**Related process.** [MX-S-PERSONALIZE](../catalog/mechanisms.html#MX-S-PERSONALIZE): conditional — Findings Personalization was enabled at test start and eligible edits are available; it changes finding attributes, not application state.
+**Source mapping**
 
-**Official evidence for the product assertions**
-
-| Reference | Reviewed section | Supported assertion |
+| Reference | Documentation section | Supported behavior |
 |---|---|---|
 | [SS405] | Default confidence filter; Review finding details; View original agent version | Evidence, display filtering and original/latest attributes are distinct review surfaces. |
 
-
 #### MX-S-FIX — Repository repair proposal
-
-**Classification:** Remediation-proposal workflow. **Inputs:** Finding, eligible connected repository or S3 source, configured remediation permission and selected source context.
 
 Remediation produces a proposed source change. Current provider guidance describes pull/merge requests for eligible private repositories and a downloadable diff for S3 sources. Older retrieved text describes a narrower provider/public-repository path; do not generalize either wording to unsupported provider writes. [SS406] [SS401]
 
 The proposal remains separate from review, merge, deployment and finding revalidation. Preserve the original finding relationship through those steps, including any linked Jira record. [SS406] [SS401]
 
-**Configuration and enablement**
+**Inputs.** Finding, eligible connected repository or S3 source, configured remediation permission and selected source context.
 
-1. **Enable.** Enable remediation in the administrative configuration and select the appropriate repositories/source. Applies to: Optional source-write capability.
-2. **Start.** From the finding, choose Remediate code or use the configured automatic proposal path. Applies to: Remediation attempt.
-3. **Review.** Inspect proposal/diff and its tests before normal deployment. Applies to: Team acceptance.
+**Configuration**
+
+1. **Enable — Optional source-write capability.** Enable remediation in the administrative configuration and select the appropriate repositories/source.
+2. **Start — Remediation attempt.** From the finding, choose Remediate code or use the configured automatic proposal path.
+3. **Review — Team acceptance.** Inspect proposal/diff and its tests before normal deployment.
 
 [SS406] [SS401]
 
-**Lifecycle and state changes**
+**Lifecycle and operator actions**
 
-The rows describe documented consequences and logical stages; they are not an invented SDK status enumeration.
-
-| Starting condition | Operation or event | Consequence |
+| Initial condition | Operation or event | Result |
 |---|---|---|
 | Finding confirmed | Remediation requested | Attempt and proposed change are produced. |
 | Proposal created | Engineering review | Accept, revise or reject without implying deployment. |
 | Repair deployed | Revalidate finding separately | Test the actual target rather than the branch. |
 
-[SS406] [SS401]
+**Constraints.** Read-only source access does not grant proposal-write permission. A pull request is not an automatically deployed fix.
 
-**Controls.** Read-only source access does not grant proposal-write permission. A pull request is not an automatically deployed fix.
+**Inspection points.** Remediation status, linked proposal/diff and original finding identity.
 
-**Observable output.** Remediation status, linked proposal/diff and original finding identity.
+**Implementation limits.** No universal guarantee of successful repair, regression coverage or automatic deployment is provided.
 
-**Not established by the reviewed sources.** No universal guarantee of successful repair, regression coverage or automatic deployment is provided.
-
-**Proposed verification — not executed**
+**Verification procedure (proposed)**
 
 1. Use a known authorized fixture finding and isolated test repository.
 2. Inspect intended diff, tests and unrelated changes.
 3. A failing build or undeployed merge must keep verification incomplete.
 
-The verification procedure is authored engineering guidance. A failed or unobservable check must remain unresolved; no live AWS outcome is represented here.
+**Source mapping**
 
-**Official evidence for the product assertions**
-
-| Reference | Reviewed section | Supported assertion |
+| Reference | Documentation section | Supported behavior |
 |---|---|---|
 | [SS406] | Start and view code remediation | Current guidance distinguishes private-repository proposals and S3 diffs. |
 | [SS401] | Write actions are opt-in | Repository writes are separately configured and provider-limited. |
 
-
 #### MX-S-PERSONALIZE — Finding-edit personalization
-
-**Classification:** Learned finding-preference mechanism. **Inputs:** Eligible operator edits in the most recent completed penetration-test run and Findings Personalization enabled when the test starts.
 
 Findings Personalization learns eligible edits and applies preferences to similar findings on later runs. It is distinct from discovering vulnerabilities, retaining a login procedure and replaying a finding. Learned changes can alter finding attributes without proving that application behavior changed. [SS405]
 
 Inspect the Personalization changes explanation and original values before interpreting a severity change. For status, the documented learnable signal is marking a finding FALSE_POSITIVE; other status updates are not equivalent learning inputs. [SS405]
 
-**Configuration and enablement**
+**Inputs.** Eligible operator edits in the most recent completed penetration-test run and Findings Personalization enabled when the test starts.
 
-1. **Enablement.** Inspect Findings Personalization in the penetration-test configuration; documented default is enabled. Applies to: Must be enabled at test start for learning.
-2. **Eligible input.** Review edits in the most recent completed run. Applies to: Not arbitrary edits from all historical runs.
-3. **Inspection.** Compare original/latest attributes and Personalization changes where shown. Applies to: Observed preference application.
+**Configuration**
+
+1. **Enablement — Must be enabled at test start for learning.** Inspect Findings Personalization in the penetration-test configuration; documented default is enabled.
+2. **Eligible input — Not arbitrary edits from all historical runs.** Review edits in the most recent completed run.
+3. **Inspection — Observed preference application.** Compare original/latest attributes and Personalization changes where shown.
 
 [SS405]
 
-**Lifecycle and state changes**
+**Lifecycle and operator actions**
 
-The rows describe documented consequences and logical stages; they are not an invented SDK status enumeration.
-
-| Starting condition | Operation or event | Consequence |
+| Initial condition | Operation or event | Result |
 |---|---|---|
 | Eligible edited finding | Next applicable run | Similar findings can receive personalized attributes. |
 | Later edit | Subsequent learning | Most recent edit replaces the earlier preference. |
 | Feature disabled | Run without personalization | Raw agent-produced findings are shown; preferences remain retained. |
 
-[SS405]
+**Constraints.** Personalized severity is not evidence of a repaired vulnerability. Disabling the feature is not deleting learned preferences.
 
-**Controls.** Personalized severity is not evidence of a repaired vulnerability. Disabling the feature is not deleting learned preferences.
+**Inspection points.** Original/latest attributes and a Personalization changes explanation on affected findings.
 
-**Observable output.** Original/latest attributes and a Personalization changes explanation on affected findings.
+**Implementation limits.** Similarity thresholds, internal preference storage and a public preference CRUD resource are not established by the guide.
 
-**Not established by the reviewed sources.** Similarity thresholds, internal preference storage and a public preference CRUD resource are not established by the guide.
-
-**Proposed verification — not executed**
+**Verification procedure (proposed)**
 
 1. Use a controlled staging finding whose risk context can be changed without modifying the application.
 2. Inspect whether a later similar finding exposes the personalization change.
 3. Disable personalization; compare raw output without claiming that retained preferences were deleted.
 
-The verification procedure is authored engineering guidance. A failed or unobservable check must remain unresolved; no live AWS outcome is represented here.
+**Source mapping**
 
-**Official evidence for the product assertions**
-
-| Reference | Reviewed section | Supported assertion |
+| Reference | Documentation section | Supported behavior |
 |---|---|---|
 | [SS405] | How personalization learns from your edits; Enable or disable Findings Personalization | Learning uses eligible edits from the most recent completed run; false-positive status is special, and disabling preserves preferences. |
 
@@ -843,52 +760,46 @@ The original finding is preserved and linked to the new job. A non-reproduction 
 
 #### MX-S-REVALIDATE — Selected finding replay and lineage
 
-**Classification:** Targeted replay and lineage mechanism. **Inputs:** Completed test findings, deployed repair on the original target and current authentication configuration.
-
 Revalidation repeats validation steps for selected existing findings and creates a separate job. The original finding remains available and the result links back to it. This is targeted replay, not new vulnerability discovery. [SS407]
 
 An Active result means reproduction succeeded. Resolved means the service could not reproduce the issue during this replay. The engineering review must still confirm that the intended identity and path were reached; a failed login cannot demonstrate a repaired authorization check. [SS407]
 
+**Inputs.** Completed test findings, deployed repair on the original target and current authentication configuration.
+
 ![Selected finding replay and lineage: state and control paths](../assets/diagrams/mechanism-security-replay.svg)
 
-**Configuration and enablement**
+**Configuration**
 
-1. **Prepare.** Deploy the reviewed repair to the environment originally tested. Applies to: Current target state.
-2. **Select.** Completed run → Multiselect findings for revalidation → select findings → Revalidate findings. Applies to: Selected replay scope.
-3. **Inspect.** Open the job, original finding and revalidation history. Applies to: Evidence lineage.
+1. **Prepare — Current target state.** Deploy the reviewed repair to the environment originally tested.
+2. **Select — Selected replay scope.** Completed run → Multiselect findings for revalidation → select findings → Revalidate findings.
+3. **Inspect — Evidence lineage.** Open the job, original finding and revalidation history.
 
 [SS407]
 
-**Lifecycle and state changes**
+**Lifecycle and operator actions**
 
-The rows describe documented consequences and logical stages; they are not an invented SDK status enumeration.
-
-| Starting condition | Operation or event | Consequence |
+| Initial condition | Operation or event | Result |
 |---|---|---|
 | Original finding | Start revalidation | Separate job created. |
 | Validation reproduced | Active result | Further remediation remains necessary. |
 | Validation not reproduced | Resolved result | Interpret within reached identity and scope. |
 | Another repair deployed | Repeat selected replay | A further linked job records a new attempt. |
 
-[SS407]
+**Constraints.** Full assessments remain necessary for broader changes; replay does not certify whole-application security.
 
-**Controls.** Full assessments remain necessary for broader changes; replay does not certify whole-application security.
+**Inspection points.** Linked job and per-finding replay result; linked Jira issues can receive result comments.
 
-**Observable output.** Linked job and per-finding replay result; linked Jira issues can receive result comments.
+**Implementation limits.** No exactly-once callback or universal guarantee distinguishing every environmental failure from non-reproduction is established.
 
-**Not established by the reviewed sources.** No exactly-once callback or universal guarantee distinguishing every environmental failure from non-reproduction is established.
-
-**Proposed verification — not executed**
+**Verification procedure (proposed)**
 
 1. Use a deployed repair with a known test identity and retained original finding.
 2. Check the reached identity and link to the replay result.
 3. Break authentication in a controlled test; record verification as inconclusive rather than celebrating non-reproduction.
 
-The verification procedure is authored engineering guidance. A failed or unobservable check must remain unresolved; no live AWS outcome is represented here.
+**Source mapping**
 
-**Official evidence for the product assertions**
-
-| Reference | Reviewed section | Supported assertion |
+| Reference | Documentation section | Supported behavior |
 |---|---|---|
 | [SS407] | Select findings; Interpret results; Trace history | Replay has separate job identity, selected scope and preserved original finding. |
 
@@ -914,198 +825,171 @@ The full pipeline integration, complete design-review walkthrough and provider-s
 
 #### MX-S-CODE — Full-source or change-focused code assessment
 
-**Classification:** Source-analysis workflow. **Inputs:** Exact source revision, full/differential scope, selected review modes, enabled requirements and source-access role.
-
 Full-source and change-focused reviews use related analysis but different evidence boundaries. Preflight must first obtain the source and prepare the environment. A failure at that stage is not a clean scan. [SS410] [SS411]
 
 Repository-event settings and optional comments are distinct from a manually started full review. The documented filtering file is read from the repository main branch, so changing it only in an unmerged branch may not change the current review behavior. [SS410] [SS411]
 
-**Configuration and enablement**
+**Inputs.** Exact source revision, full/differential scope, selected review modes, enabled requirements and source-access role.
 
-1. **Full review.** Web app → Code reviews → create: select sources and role; Start review. Applies to: Saved source assessment.
-2. **Modes.** Select vulnerability findings, requirement evaluation or both. Applies to: Analysis criteria.
-3. **Change guidance.** Review supported provider triggers and .awssecurityagent/filtering.md on the main branch. Applies to: Change scope and filtering.
+**Configuration**
+
+1. **Full review — Saved source assessment.** Web app → Code reviews → create: select sources and role; Start review.
+2. **Modes — Analysis criteria.** Select vulnerability findings, requirement evaluation or both.
+3. **Change guidance — Change scope and filtering.** Review supported provider triggers and .awssecurityagent/filtering.md on the main branch.
 
 [SS410] [SS411]
 
-**Lifecycle and state changes**
+**Lifecycle and operator actions**
 
-The rows describe documented consequences and logical stages; they are not an invented SDK status enumeration.
-
-| Starting condition | Operation or event | Consequence |
+| Initial condition | Operation or event | Result |
 |---|---|---|
 | Review requested | Preflight | Source/environment prerequisites checked. |
 | Preflight fails | Fix access and start a new run | Static analysis has not completed. |
 | Source revision changes | Supported new review/reanalysis | Prior findings remain revision-specific. |
 
-[SS410] [SS411]
+**Constraints.** Read analysis, posted comments and proposed repairs are different effects. Excluded source is unassessed, not verified safe.
 
-**Controls.** Read analysis, posted comments and proposed repairs are different effects. Excluded source is unassessed, not verified safe.
+**Inspection points.** Preflight results, reviewed revision, findings and any configured provider comments.
 
-**Observable output.** Preflight results, reviewed revision, findings and any configured provider comments.
+**Implementation limits.** No complete vulnerability-discovery algorithm or exhaustive language/framework coverage is inferred from a successful run.
 
-**Not established by the reviewed sources.** No complete vulnerability-discovery algorithm or exhaustive language/framework coverage is inferred from a successful run.
-
-**Proposed verification — not executed**
+**Verification procedure (proposed)**
 
 1. Review a known source fixture with exact commit identity.
 2. Check that findings reference the expected revision and modes.
 3. Deny source access or exclude a known fixture path; retain the resulting assessment gap.
 
-The verification procedure is authored engineering guidance. A failed or unobservable check must remain unresolved; no live AWS outcome is represented here.
+**Source mapping**
 
-**Official evidence for the product assertions**
-
-| Reference | Reviewed section | Supported assertion |
+| Reference | Documentation section | Supported behavior |
 |---|---|---|
 | [SS410] | Create and run a code review; Review findings | Source preflight precedes analysis and has inspectable failure outcomes. |
 | [SS411] | How code review works; Filtering findings | Change-trigger and main-branch filtering behavior are distinct configuration paths. |
 
-
 #### MX-S-DESIGN — Point-in-time design assessment
-
-**Classification:** Point-in-time design-review workflow. **Inputs:** Current design documents, application context and enabled security criteria.
 
 Design review evaluates a submitted description of the system. It does not observe whether the deployed implementation actually enforces that description. The review must distinguish a requirement violation from missing design evidence. [SS404] [SS412]
 
 Its lifecycle is one-off rather than a reusable test configuration. Clone or create a new review for revised material so the earlier result remains attributable to its original documents. [SS404] [SS412]
 
-**Configuration and enablement**
+**Inputs.** Current design documents, application context and enabled security criteria.
 
-1. **Submit.** Select the design-review workflow and current design material. Applies to: Point-in-time subject.
-2. **Inspect.** Open findings by requirement and read the compliance explanation. Applies to: Criteria and evidence.
-3. **Revise.** Clone/create a new review with updated material. Applies to: Independent later assessment.
+**Configuration**
+
+1. **Submit — Point-in-time subject.** Select the design-review workflow and current design material.
+2. **Inspect — Criteria and evidence.** Open findings by requirement and read the compliance explanation.
+3. **Revise — Independent later assessment.** Clone/create a new review with updated material.
 
 [SS404] [SS412]
 
-**Lifecycle and state changes**
+**Lifecycle and operator actions**
 
-The rows describe documented consequences and logical stages; they are not an invented SDK status enumeration.
-
-| Starting condition | Operation or event | Consequence |
+| Initial condition | Operation or event | Result |
 |---|---|---|
 | Design submitted | Review | Requirement-level findings produced. |
 | Evidence insufficient | Add the missing design information | Prepare a new assessment, not a fabricated pass. |
 | Design revised | Clone/new review | New point-in-time result; original review remains separate. |
 
-[SS404] [SS412]
+**Constraints.** Design compliance is not implementation verification.
 
-**Controls.** Design compliance is not implementation verification.
+**Inspection points.** Reviewed files, requirement result and explanation.
 
-**Observable output.** Reviewed files, requirement result and explanation.
+**Implementation limits.** Automatic refresh of existing design reviews and continuous synchronized system models are not documented.
 
-**Not established by the reviewed sources.** Automatic refresh of existing design reviews and continuous synchronized system models are not documented.
-
-**Proposed verification — not executed**
+**Verification procedure (proposed)**
 
 1. Use a design fixture with an explicit identity boundary and one omitted control.
 2. Verify the difference between violation and insufficient evidence.
 3. Revise the document without rerunning; the old result must not be presented as a new assessment.
 
-The verification procedure is authored engineering guidance. A failed or unobservable check must remain unresolved; no live AWS outcome is represented here.
+**Source mapping**
 
-**Official evidence for the product assertions**
-
-| Reference | Reviewed section | Supported assertion |
+| Reference | Documentation section | Supported behavior |
 |---|---|---|
 | [SS404] | Key differences between security capabilities | Design reviews have a different one-off lifecycle. |
 | [SS412] | Understand statuses; Next steps | Missing evidence and non-compliance differ; cloning creates a new review. |
 
-
 #### MX-S-THREAT — System-model construction and threat analysis
-
-**Classification:** System-model and threat-analysis workflow. **Inputs:** Scope documents, selected sources or both, application boundary and service role.
 
 Scope documents express what should be modeled; source code supplies context for the current system. The output includes a system overview and threats derived for that representation. Review the system boundary and flows before accepting the threats built on them. [SS413]
 
 A model of the wrong system can produce plausible but irrelevant threats. Correct the scope or source mismatch and run again rather than dismissing every downstream item individually. [SS413]
 
-**Configuration and enablement**
+**Inputs.** Scope documents, selected sources or both, application boundary and service role.
 
-1. **Create.** Threat models → Create threat model: title, scope documents and/or sources, service role and optional log group. Applies to: Reusable model configuration.
-2. **Execute.** Start run; inspect Preflight and Logs. Applies to: Independent run.
-3. **Review.** Inspect Overview before Threats; review evidence and recommendations. Applies to: System representation and threat records.
+**Configuration**
+
+1. **Create — Reusable model configuration.** Threat models → Create threat model: title, scope documents and/or sources, service role and optional log group.
+2. **Execute — Independent run.** Start run; inspect Preflight and Logs.
+3. **Review — System representation and threat records.** Inspect Overview before Threats; review evidence and recommendations.
 
 [SS413]
 
-**Lifecycle and state changes**
+**Lifecycle and operator actions**
 
-The rows describe documented consequences and logical stages; they are not an invented SDK status enumeration.
-
-| Starting condition | Operation or event | Consequence |
+| Initial condition | Operation or event | Result |
 |---|---|---|
 | Configuration saved | Start run | Preflight and analysis create a system model. |
 | Model produced | Review boundaries and threats | Accept, resolve or dismiss findings with rationale. |
 | Scope changes | Rerun with corrected input | New result reflects the intended subject. |
 
-[SS413]
+**Constraints.** Inferred relationships require owner review; threat status is not proof that a mitigation is deployed.
 
-**Controls.** Inferred relationships require owner review; threat status is not proof that a mitigation is deployed.
+**Inspection points.** System overview, threat statements, classifications, evidence and recommendations.
 
-**Observable output.** System overview, threat statements, classifications, evidence and recommendations.
+**Implementation limits.** The exhaustive threat-generation strategy and completeness of inferred flows are not published.
 
-**Not established by the reviewed sources.** The exhaustive threat-generation strategy and completeness of inferred flows are not published.
-
-**Proposed verification — not executed**
+**Verification procedure (proposed)**
 
 1. Provide a small design with a known trust boundary and supporting source.
 2. Check that the overview reflects the known boundary.
 3. Use a deliberately stale scope document; identify the mismatch before interpreting threat counts.
 
-The verification procedure is authored engineering guidance. A failed or unobservable check must remain unresolved; no live AWS outcome is represented here.
+**Source mapping**
 
-**Official evidence for the product assertions**
-
-| Reference | Reviewed section | Supported assertion |
+| Reference | Documentation section | Supported behavior |
 |---|---|---|
 | [SS413] | Create and run a threat model; Review threats | Scope documents and source context have distinct roles; overview and threats are reviewable. |
 
-
 #### MX-S-PIPELINE — Pipeline invocation and result observation
-
-**Classification:** Post-deployment invocation mechanism. **Inputs:** Existing penetration-test configuration with CI/CD mode, source connection, pipeline OIDC identity and deployed change identifiers.
 
 The pipeline step starts and observes a server-side test of a deployed change. It does not create the application or replace the saved assessment scope, and it does not run the penetration-testing engine inside the delivery runner. [SS414]
 
 Configure the release decision before enabling the integration. Invocation failure, unfinished assessment and a completed result above the selected severity threshold need distinct handling. This decision policy is authored team behavior, not a claim that every pipeline fails closed automatically. [SS414]
 
-**Configuration and enablement**
+**Inputs.** Existing penetration-test configuration with CI/CD mode, source connection, pipeline OIDC identity and deployed change identifiers.
 
-1. **Prerequisite.** Verify target and create a test with current credentials/network scope; enable CI/CD mode and record space/test IDs. Applies to: Existing assessment definition.
-2. **Identity.** Configure the provider-specific OIDC path and supported integration step. Applies to: Short-lived pipeline authentication.
-3. **Decision.** Set accepted threshold and explicit behavior for missing/incomplete results. Applies to: Team promotion policy.
+**Configuration**
+
+1. **Prerequisite — Existing assessment definition.** Verify target and create a test with current credentials/network scope; enable CI/CD mode and record space/test IDs.
+2. **Identity — Short-lived pipeline authentication.** Configure the provider-specific OIDC path and supported integration step.
+3. **Decision — Team promotion policy.** Set accepted threshold and explicit behavior for missing/incomplete results.
 
 [SS414]
 
-**Lifecycle and state changes**
+**Lifecycle and operator actions**
 
-The rows describe documented consequences and logical stages; they are not an invented SDK status enumeration.
-
-| Starting condition | Operation or event | Consequence |
+| Initial condition | Operation or event | Result |
 |---|---|---|
 | Deployment completed | Authorized integration step | Server-side assessment job starts. |
 | Job running | Pipeline waits/observes | Runner completion is not yet assessment completion. |
 | Job result available | Apply declared gate | Promote, block or escalate using that result and revision. |
 
-[SS414]
+**Constraints.** This preview path is post-deployment assessment, not pull-request static analysis.
 
-**Controls.** This preview path is post-deployment assessment, not pull-request static analysis.
+**Inspection points.** Pipeline execution, deployed change, assessment job and applied promotion decision.
 
-**Observable output.** Pipeline execution, deployed change, assessment job and applied promotion decision.
+**Implementation limits.** Exactly-once invocation, universal timeout behavior and identical provider semantics are not established.
 
-**Not established by the reviewed sources.** Exactly-once invocation, universal timeout behavior and identical provider semantics are not established.
-
-**Proposed verification — not executed**
+**Verification procedure (proposed)**
 
 1. Use a non-production pipeline with known deployed revision and saved assessment.
 2. Retain the server job ID with the gate result.
 3. Simulate unavailable/incomplete result; follow the declared blocking/escalation rule rather than passing silently.
 
-The verification procedure is authored engineering guidance. A failed or unobservable check must remain unresolved; no live AWS outcome is represented here.
+**Source mapping**
 
-**Official evidence for the product assertions**
-
-| Reference | Reviewed section | Supported assertion |
+| Reference | Documentation section | Supported behavior |
 |---|---|---|
 | [SS414] | Before you start; Post-deployment gate | The integration invokes an existing configured test, uses OIDC and observes server-side work. |
 
@@ -1114,8 +998,6 @@ The verification procedure is authored engineering guidance. A failed or unobser
 ## 05. Applying the model to operational outcomes
 
 Trace the approved use cases through their concrete configuration and execution objects, then examine the prepared evidence. The examples remain synthetic, not live AWS results.
-
-
 
 ### S-11 — Finding lineage from assessment to repair verification
 
@@ -1141,8 +1023,6 @@ The blue Finding-to-revalidation result node is introduced by this documentation
 
 These acceptance questions are authored engineering procedure. AWS documents the assessment, proposal and revalidation operations; the team decides whether the evidence is sufficient to accept the outcome. A linked Jira issue is another external record with its own audience and lifecycle. Removing the integration does not erase the previously published finding details. [SS54] [SS58]
 
-
-
 ### S-U01 — Authorization-finding remediation: worked example
 
 **Synthetic, authorized-staging exercise.** Two test users belong to different customer accounts. The illustrative finding is that user A can receive a test invoice owned by account B. No live endpoint, credential or exploit execution is supplied.
@@ -1160,13 +1040,9 @@ These acceptance questions are authored engineering procedure. AWS documents the
 
 **Expected deliverable:** a finding disposition linking original evidence, reviewed change, deployed revision, actual authenticated identity and targeted result, with untested routes stated explicitly. The fixture teaches evidence lineage; it is not an assessment result or a security guarantee.
 
-
-
 ## 06. Troubleshooting and operating limits
 
 An incomplete assessment may reflect an inaccessible source, failed authentication, a wrong criterion, or an execution limit. These cases require different corrective actions.
-
-
 
 ### S-07 — Assessment failures and operating limits
 
@@ -1186,13 +1062,9 @@ The reviewed quota page distinguishes assessment capacity from spending controls
 
 This ordering is engineering guidance derived from the cited procedures. It does not claim that every error message has one unique cause. [SS06] [SS09] [SS18]
 
-
-
 ## 07. Documentation coverage
 
 The source register separates documented product behavior from authored engineering examples and identifies linked procedures.
-
-
 
 ### S-08 — Documentation coverage and references
 
@@ -1296,6 +1168,8 @@ The source register supports product behavior rather than the synthetic applicat
 [SS57]: https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-threat-model.html
 
 [SS58]: https://docs.aws.amazon.com/securityagent/latest/userguide/connect-jira.html
+
+[SS490]: https://docs.aws.amazon.com/securityagent/latest/userguide/connect-azure-devops.html
 [SS401]: https://docs.aws.amazon.com/securityagent/latest/userguide/about-integrations.html
 [SS402]: https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html
 [SS403]: https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html
