@@ -2,8 +2,8 @@
   "revision": "2026-10-22-narrative-guides",
   "files": {
     ".github/workflows/document-suite.yml": {
-      "bytes": 4966,
-      "sha256": "1d0dba8a5341dc06066788e2cb624e646fe33c4573bdb54350a789ed2375620e"
+      "bytes": 2574,
+      "sha256": "8d51997b562905a35e6041f93ac4315aca6e744c9597271311d3d1216f13b51c"
     },
     "CHANGELOG.md": {
       "bytes": 692,
@@ -200,6 +200,10 @@
     "qa/content-review.json": {
       "bytes": 1613,
       "sha256": "62528c510c2f7c06bf768baf95ad3504c97e5f2cf058118a9dba670efe109eb5"
+    },
+    "qa/rebuild.json": {
+      "bytes": 245,
+      "sha256": "85e424a9c3ab5b53e7da7bc11b4ee2faea0a107453a4f5e7793a3e1b1c3cd95a"
     },
     "qa/source-review.json": {
       "bytes": 10333,
