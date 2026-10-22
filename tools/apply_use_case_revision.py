@@ -61,6 +61,20 @@ for old, new in replacements.items():
     check_text = check_text.replace(old, new)
 check_path.write_text(check_text, encoding="utf-8")
 
+build_path = ROOT / "tools/docs_build.py"
+build_text = build_path.read_text(encoding="utf-8")
+build_replacements = {
+    "allowed={'tools','guides','presentations','qa','examples','devops','security','finops','architecture','mechanisms','platforms'}":
+        "allowed={'tools','guides','presentations','qa','examples','devops','security','finops','architecture','mechanisms','platforms','catalog'}",
+    "Preserved all canonical section bodies and the existing 124-minute schedule.":
+        "Preserved all canonical section bodies; the revised presentation duration is recorded in the validation output.",
+}
+for old, new in build_replacements.items():
+    if old not in build_text:
+        raise RuntimeError(f"Expected build source was not found: {old[:90]}")
+    build_text = build_text.replace(old, new)
+build_path.write_text(build_text, encoding="utf-8")
+
 for path in (ROOT / "tools").glob(".usecase-payload-*"):
     path.unlink()
 Path(__file__).unlink()
