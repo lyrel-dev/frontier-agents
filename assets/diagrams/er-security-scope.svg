@@ -1,0 +1,144 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1060pt" height="416pt" viewBox="0.00 0.00 1059.50 416.00" role="img" aria-labelledby="er-security-scope-title er-security-scope-desc" data-diagram="er-security-scope">
+<title id="er-security-scope-title">Security Agent: shared configuration and application scope</title><desc id="er-security-scope-desc">Colors identify concept ownership; labels distinguish resources, configuration members and derived state. An edge shows source-count : target-count; ? means unspecified. Dashed edges are logical or editorial relationships, not asserted service foreign keys. See the relationship register for qualifications.</desc><g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(18 398)">
+<title>G</title>
+<g id="clust1" class="cluster">
+<title>cluster_ownership</title>
+<path fill="transparent" stroke="#b5c2cc" d="M654.5,-95.5C654.5,-95.5 1003.5,-95.5 1003.5,-95.5 1009.5,-95.5 1015.5,-101.5 1015.5,-107.5 1015.5,-107.5 1015.5,-360 1015.5,-360 1015.5,-366 1009.5,-372 1003.5,-372 1003.5,-372 654.5,-372 654.5,-372 648.5,-372 642.5,-366 642.5,-360 642.5,-360 642.5,-107.5 642.5,-107.5 642.5,-101.5 648.5,-95.5 654.5,-95.5" />
+<text text-anchor="middle" x="829" y="-355.2" font-family="DejaVu Sans" font-size="16.00">Ownership of the definition (not availability)</text>
+</g>
+
+<g id="node1" class="node">
+<title>S-Tenant</title>
+<path fill="#d9f2e5" stroke="#348761" d="M405.5,-339C405.5,-339 251.5,-339 251.5,-339 245.5,-339 239.5,-333 239.5,-327 239.5,-327 239.5,-313 239.5,-313 239.5,-307 245.5,-301 251.5,-301 251.5,-301 405.5,-301 405.5,-301 411.5,-301 417.5,-307 417.5,-313 417.5,-313 417.5,-327 417.5,-327 417.5,-333 411.5,-339 405.5,-339" />
+<text text-anchor="middle" x="328.5" y="-323.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[AWS] Shared service scope</text>
+<text text-anchor="middle" x="328.5" y="-310.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">documented scope</text>
+</g>
+
+<g id="node2" class="node">
+<title>S-Space</title>
+<path fill="#d9f2e5" stroke="#348761" d="M182.5,-243C182.5,-243 76.5,-243 76.5,-243 70.5,-243 64.5,-237 64.5,-231 64.5,-231 64.5,-217 64.5,-217 64.5,-211 70.5,-205 76.5,-205 76.5,-205 182.5,-205 182.5,-205 188.5,-205 194.5,-211 194.5,-217 194.5,-217 194.5,-231 194.5,-231 194.5,-237 188.5,-243 182.5,-243" />
+<text text-anchor="middle" x="129.5" y="-227.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[AWS] Agent Space</text>
+<text text-anchor="middle" x="129.5" y="-214.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">service resource</text>
+</g>
+
+<g id="edge1" class="edge">
+<title>S-Tenant-&gt;S-Space</title>
+<path fill="none" stroke="#496b78" stroke-dasharray="5,2" d="M290.13,-300.88C257.09,-285.27 209.38,-262.73 174.54,-246.27" />
+<polygon fill="#496b78" stroke="#496b78" points="175.65,-243.9 167.75,-243.07 173.41,-248.65 175.65,-243.9" />
+<text text-anchor="middle" x="318.5" y="-275" font-family="DejaVu Sans" font-size="10.00">organizes application scopes</text>
+<text text-anchor="middle" x="318.5" y="-264" font-family="DejaVu Sans" font-size="10.00">1 : 0..*</text>
+</g>
+
+<g id="node6" class="node">
+<title>S-Pack</title>
+<path fill="#d9f2e5" stroke="#348761" d="M622,-243C622,-243 437,-243 437,-243 431,-243 425,-237 425,-231 425,-231 425,-217 425,-217 425,-211 431,-205 437,-205 437,-205 622,-205 622,-205 628,-205 634,-211 634,-217 634,-217 634,-231 634,-231 634,-237 628,-243 622,-243" />
+<text text-anchor="middle" x="529.5" y="-227.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[AWS] Security requirement pack</text>
+<text text-anchor="middle" x="529.5" y="-214.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">service configuration</text>
+</g>
+
+<g id="edge5" class="edge">
+<title>S-Tenant-&gt;S-Pack</title>
+<path fill="none" stroke="#496b78" d="M367.25,-300.88C400.62,-285.27 448.82,-262.73 484.01,-246.27" />
+<polygon fill="#496b78" stroke="#496b78" points="485.18,-248.62 490.86,-243.07 482.96,-243.87 485.18,-248.62" />
+<text text-anchor="middle" x="482.5" y="-275" font-family="DejaVu Sans" font-size="10.00">shares criteria</text>
+<text text-anchor="middle" x="482.5" y="-264" font-family="DejaVu Sans" font-size="10.00">1 : 0..*</text>
+</g>
+
+<g id="node4" class="node">
+<title>S-Connection</title>
+<path fill="#d9f2e5" stroke="#348761" d="M356,-147C356,-147 209,-147 209,-147 203,-147 197,-141 197,-135 197,-135 197,-108 197,-108 197,-102 203,-96 209,-96 209,-96 356,-96 356,-96 362,-96 368,-102 368,-108 368,-108 368,-135 368,-135 368,-141 362,-147 356,-147" />
+<text text-anchor="middle" x="282.5" y="-131.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[AWS] Agent Space source</text>
+<text text-anchor="middle" x="282.5" y="-118.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">connection</text>
+<text text-anchor="middle" x="282.5" y="-105.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">configuration association</text>
+</g>
+
+<g id="edge3" class="edge">
+<title>S-Space-&gt;S-Connection</title>
+<path fill="none" stroke="#496b78" d="M158.02,-204.87C166.61,-199.26 176.01,-192.99 184.5,-187 197.72,-177.68 200.15,-174.14 213.5,-165 220.25,-160.37 227.5,-155.66 234.67,-151.12" />
+<polygon fill="#496b78" stroke="#496b78" points="236.25,-153.23 241.22,-147.03 233.47,-148.78 236.25,-153.23" />
+<text text-anchor="middle" x="251.5" y="-179" font-family="DejaVu Sans" font-size="10.00">selects sources</text>
+<text text-anchor="middle" x="251.5" y="-168" font-family="DejaVu Sans" font-size="10.00">1 : 0..*</text>
+</g>
+
+<g id="node8" class="node">
+<title>S-Pentest</title>
+<path fill="#d9f2e5" stroke="#348761" d="M137,-147C137,-147 12,-147 12,-147 6,-147 0,-141 0,-135 0,-135 0,-108 0,-108 0,-102 6,-96 12,-96 12,-96 137,-96 137,-96 143,-96 149,-102 149,-108 149,-108 149,-135 149,-135 149,-141 143,-147 137,-147" />
+<text text-anchor="middle" x="74.5" y="-131.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[AWS] Penetration-test</text>
+<text text-anchor="middle" x="74.5" y="-118.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">configuration</text>
+<text text-anchor="middle" x="74.5" y="-105.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">service configuration</text>
+</g>
+
+<g id="edge7" class="edge">
+<title>S-Space-&gt;S-Pentest</title>
+<path fill="none" stroke="#496b78" d="M90.88,-204.94C84.3,-200.07 78.35,-194.13 74.5,-187 69.27,-177.33 68.05,-165.59 68.54,-154.79" />
+<polygon fill="#496b78" stroke="#496b78" points="71.17,-154.83 69.16,-147.14 65.94,-154.4 71.17,-154.83" />
+<text text-anchor="middle" x="129" y="-179" font-family="DejaVu Sans" font-size="10.00">contains configuration</text>
+<text text-anchor="middle" x="129" y="-168" font-family="DejaVu Sans" font-size="10.00">1 : 0..*</text>
+</g>
+
+<g id="node3" class="node">
+<title>S-Registration</title>
+<path fill="#d9f2e5" stroke="#348761" d="M392.5,-243C392.5,-243 226.5,-243 226.5,-243 220.5,-243 214.5,-237 214.5,-231 214.5,-231 214.5,-217 214.5,-217 214.5,-211 220.5,-205 226.5,-205 226.5,-205 392.5,-205 392.5,-205 398.5,-205 404.5,-211 404.5,-217 404.5,-217 404.5,-231 404.5,-231 404.5,-237 398.5,-243 392.5,-243" />
+<text text-anchor="middle" x="309.5" y="-227.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[AWS] Integration registration</text>
+<text text-anchor="middle" x="309.5" y="-214.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">service configuration</text>
+</g>
+
+<g id="edge2" class="edge">
+<title>S-Registration-&gt;S-Connection</title>
+<path fill="none" stroke="#496b78" d="M304.55,-204.57C300.8,-190.61 295.55,-171.09 291.12,-154.59" />
+<polygon fill="#496b78" stroke="#496b78" points="293.63,-153.82 289.15,-147.25 288.56,-155.18 293.63,-153.82" />
+<text text-anchor="middle" x="349" y="-179" font-family="DejaVu Sans" font-size="10.00">authorizes selection</text>
+<text text-anchor="middle" x="349" y="-168" font-family="DejaVu Sans" font-size="10.00">? : 0..*</text>
+</g>
+
+<g id="node5" class="node">
+<title>S-Repository</title>
+<path fill="#fce8d5" stroke="#c78335" d="M376,-38C376,-38 189,-38 189,-38 183,-38 177,-32 177,-26 177,-26 177,-12 177,-12 177,-6 183,0 189,0 189,0 376,0 376,0 382,0 388,-6 388,-12 388,-12 388,-26 388,-26 388,-32 382,-38 376,-38" />
+<text text-anchor="middle" x="282.5" y="-22.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[EXT] Repository or design source</text>
+<text text-anchor="middle" x="282.5" y="-9.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">source artifact</text>
+</g>
+
+<g id="edge4" class="edge">
+<title>S-Connection-&gt;S-Repository</title>
+<path fill="none" stroke="#496b78" d="M282.5,-95.91C282.5,-80.67 282.5,-61.13 282.5,-45.68" />
+<polygon fill="#496b78" stroke="#496b78" points="285.13,-45.53 282.5,-38.03 279.88,-45.53 285.13,-45.53" />
+<text text-anchor="middle" x="326.5" y="-70" font-family="DejaVu Sans" font-size="10.00">references source</text>
+<text text-anchor="middle" x="326.5" y="-59" font-family="DejaVu Sans" font-size="10.00">0..* : ?</text>
+</g>
+
+<g id="node7" class="node">
+<title>S-Requirement</title>
+<path fill="#d9f2e5" stroke="#348761" d="M606.5,-140.5C606.5,-140.5 452.5,-140.5 452.5,-140.5 446.5,-140.5 440.5,-134.5 440.5,-128.5 440.5,-128.5 440.5,-114.5 440.5,-114.5 440.5,-108.5 446.5,-102.5 452.5,-102.5 452.5,-102.5 606.5,-102.5 606.5,-102.5 612.5,-102.5 618.5,-108.5 618.5,-114.5 618.5,-114.5 618.5,-128.5 618.5,-128.5 618.5,-134.5 612.5,-140.5 606.5,-140.5" />
+<text text-anchor="middle" x="529.5" y="-125.3" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[AWS] Security requirement</text>
+<text text-anchor="middle" x="529.5" y="-112.3" font-family="DejaVu Sans" font-size="11.50" fill="#152636">configuration item</text>
+</g>
+
+<g id="edge6" class="edge">
+<title>S-Pack-&gt;S-Requirement</title>
+<path fill="none" stroke="#496b78" d="M529.5,-204.57C529.5,-188.84 529.5,-166.05 529.5,-148.48" />
+<polygon fill="#496b78" stroke="#496b78" points="532.13,-148.32 529.5,-140.82 526.88,-148.32 532.13,-148.32" />
+<text text-anchor="middle" x="550.5" y="-179" font-family="DejaVu Sans" font-size="10.00">contains</text>
+<text text-anchor="middle" x="550.5" y="-168" font-family="DejaVu Sans" font-size="10.00">1 : 0..*</text>
+</g>
+
+<g id="node9" class="node">
+<title>legend_0</title>
+<polygon fill="#dcebff" stroke="#447ac2" points="910.5,-338 746.5,-338 746.5,-302 910.5,-302 910.5,-338" />
+<text text-anchor="middle" x="828.5" y="-317.5" font-family="DejaVu Sans" font-size="10.00" fill="#142c3e">DOC · Documentation-defined</text>
+</g>
+
+<g id="node10" class="node">
+<title>legend_1</title>
+<polygon fill="#d9f2e5" stroke="#348761" points="884,-242 773,-242 773,-206 884,-206 884,-242" />
+<text text-anchor="middle" x="828.5" y="-221.5" font-family="DejaVu Sans" font-size="10.00" fill="#142c3e">AWS · AWS-defined</text>
+</g>
+
+
+<g id="node11" class="node">
+<title>legend_2</title>
+<polygon fill="#fce8d5" stroke="#c78335" points="923.5,-139.5 733.5,-139.5 733.5,-103.5 923.5,-103.5 923.5,-139.5" />
+<text text-anchor="middle" x="828.5" y="-119" font-family="DejaVu Sans" font-size="10.00" fill="#142c3e">EXT · External / engineering-owned</text>
+</g>
+
+</g>
+</svg>
