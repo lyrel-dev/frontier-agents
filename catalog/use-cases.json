@@ -1,0 +1,1239 @@
+{
+  "revision": "2026-10-22-use-case-catalog",
+  "description": "Day-to-day use cases for AWS DevOps Agent, AWS Security Agent and AWS FinOps Agent. Delivery mode distinguishes built-in functions, configured workflows, controlled actions and team-composed procedures.",
+  "entries": [
+    {
+      "id": "D-UC01",
+      "platform": "devops",
+      "group": "Incident operations",
+      "title": "Incident signal triage",
+      "summary": "Classify an incoming alert or ticket as linked to existing work, skipped by an approved rule, or eligible for a new investigation.",
+      "delivery": "Built-in function",
+      "cadence": "Event-driven",
+      "availability": "GA production operations",
+      "inputs": "Incident identity, correlation evidence, skip criteria and active investigations.",
+      "output": "Triage decision, reason and resulting investigation linkage.",
+      "sections": [
+        "D-06"
+      ],
+      "constraints": "A triage decision is not a diagnosis. Incorrect linking or skipping requires a routing correction.",
+      "example": "Explain why this alert was linked, skipped or scheduled for a new investigation.",
+      "keywords": [
+        "triage",
+        "alert",
+        "ticket",
+        "linked",
+        "skipped"
+      ]
+    },
+    {
+      "id": "D-UC02",
+      "platform": "devops",
+      "group": "Incident operations",
+      "title": "Root-cause investigation",
+      "summary": "Correlate available metrics, logs, traces, code changes, deployment history and topology for a scoped production incident.",
+      "delivery": "Built-in function",
+      "cadence": "Event-driven or on demand",
+      "availability": "GA production operations",
+      "inputs": "Incident signal, service scope, UTC window, connected telemetry and deployment context.",
+      "output": "Investigation record with observations, hypotheses, root-cause versions and evidence.",
+      "sections": [
+        "D-01",
+        "D-06"
+      ],
+      "constraints": "The output remains an investigation result to verify against current source data.",
+      "example": "Investigate the checkout 5xx increase for the stated service and UTC window; separate observations, hypotheses and missing data.",
+      "keywords": [
+        "incident",
+        "root cause",
+        "metrics",
+        "logs",
+        "traces"
+      ]
+    },
+    {
+      "id": "D-UC03",
+      "platform": "devops",
+      "group": "Incident operations",
+      "title": "Investigation steering and hypothesis review",
+      "summary": "Provide contrary evidence or missing context during an active investigation and obtain a revised analysis.",
+      "delivery": "Built-in function",
+      "cadence": "On demand",
+      "availability": "GA production operations",
+      "inputs": "Active investigation, operator question, new evidence or rejected hypothesis.",
+      "output": "Updated investigation or root-cause version that records the steering input.",
+      "sections": [
+        "D-06"
+      ],
+      "constraints": "Steering changes analysis; it does not authorize a production action.",
+      "example": "The database pool is healthy. Re-evaluate the upstream dependency hypothesis and cite the current evidence.",
+      "keywords": [
+        "steering",
+        "hypothesis",
+        "contrary evidence",
+        "review"
+      ]
+    },
+    {
+      "id": "D-UC04",
+      "platform": "devops",
+      "group": "Incident operations",
+      "title": "Mitigation plan preparation",
+      "summary": "Produce a reviewable mitigation candidate with target, expected effect, risks, rollback and verification steps.",
+      "delivery": "Built-in function",
+      "cadence": "On demand",
+      "availability": "GA production operations",
+      "inputs": "Reviewed incident evidence and a specific operational objective.",
+      "output": "Mitigation proposal suitable for operator approval or normal runbook execution.",
+      "sections": [
+        "D-06",
+        "D-M06"
+      ],
+      "constraints": "A proposal is not permission to execute. Unsupported or high-risk actions remain outside the action path.",
+      "example": "Propose the lowest-risk mitigation, including blast radius, rollback and recovery checks.",
+      "keywords": [
+        "mitigation",
+        "rollback",
+        "recovery",
+        "proposal"
+      ]
+    },
+    {
+      "id": "D-UC05",
+      "platform": "devops",
+      "group": "Incident operations",
+      "title": "Approved directed mitigation",
+      "summary": "Execute an eligible state-changing AWS or connected-tool operation after layered enablement and exact operator approval.",
+      "delivery": "Controlled action",
+      "cadence": "On demand",
+      "availability": "GA operations; directed actions require opt-in",
+      "inputs": "Directed-action enablement, eligible role or integration, correct tool classification and exact operation/resource approval.",
+      "output": "Attributed action record and independently checked resulting state.",
+      "sections": [
+        "D-M06"
+      ],
+      "constraints": "Approval is scoped to a particular operation and resource. Tool misclassification can change expected approval behavior.",
+      "example": "After showing the exact target and parameters, request approval for the narrowly scoped change.",
+      "keywords": [
+        "directed action",
+        "approval",
+        "mutation",
+        "CloudTrail"
+      ]
+    },
+    {
+      "id": "D-UC06",
+      "platform": "devops",
+      "group": "Health reporting and reviews",
+      "title": "On-demand service health query",
+      "summary": "Answer a scoped operational question using current and historical telemetry, alarms, deployments and incident context.",
+      "delivery": "Built-in function",
+      "cadence": "On demand",
+      "availability": "GA production operations",
+      "inputs": "Service identity, reporting window and connected metrics/logs/alarms/deployment sources.",
+      "output": "Timestamped health answer with source scope and missing signals.",
+      "sections": [
+        "D-01",
+        "D-05"
+      ],
+      "constraints": "A conversational health answer does not replace monitoring or prove complete signal coverage.",
+      "example": "Summarize checkout health for the previous 60 minutes and state every unavailable signal.",
+      "keywords": [
+        "health",
+        "metrics",
+        "logs",
+        "alarms",
+        "on demand"
+      ]
+    },
+    {
+      "id": "D-UC07",
+      "platform": "devops",
+      "group": "Health reporting and reviews",
+      "title": "Minute-by-minute incident status report",
+      "summary": "Generate a concise rolling update for an active incident from current logs, metrics and investigation state.",
+      "delivery": "Configured custom agent",
+      "cadence": "On demand or short schedule",
+      "availability": "GA custom agents",
+      "inputs": "Custom agent, selected telemetry and incident tools, explicit five- or ten-minute window and output contract.",
+      "output": "Delta-focused status update: changed observations, open hypotheses, owner and next check.",
+      "sections": [
+        "D-03",
+        "D-07"
+      ],
+      "constraints": "This is a configured workflow, not a native fixed-cadence report. Schedule cadence and data window are separate.",
+      "example": "Every five minutes, report only what changed in the active checkout incident and name the next verification step.",
+      "keywords": [
+        "minute report",
+        "incident update",
+        "rolling status",
+        "custom agent"
+      ]
+    },
+    {
+      "id": "D-UC08",
+      "platform": "devops",
+      "group": "Health reporting and reviews",
+      "title": "Daily or weekly service health report",
+      "summary": "Produce a recurring report covering service health, incidents, deployments, trends and missing data.",
+      "delivery": "Configured custom agent",
+      "cadence": "Scheduled",
+      "availability": "GA custom agents",
+      "inputs": "Named services, reporting period, selected tools, reporting standard and recipients.",
+      "output": "Structured health report or artifact with evidence links and data-quality notes.",
+      "sections": [
+        "D-07",
+        "D-M07"
+      ],
+      "constraints": "The agent can report only from attached memory and selected tools. A schedule does not define report scope by itself.",
+      "example": "Generate the weekly payments health report for complete UTC days, including error, latency, incidents, deployments and data gaps.",
+      "keywords": [
+        "daily report",
+        "weekly report",
+        "health summary",
+        "scheduled"
+      ]
+    },
+    {
+      "id": "D-UC09",
+      "platform": "devops",
+      "group": "Health reporting and reviews",
+      "title": "Deployment and change activity report",
+      "summary": "Summarize deployments, failed releases, rollback events and affected services over a defined period.",
+      "delivery": "Configured custom agent",
+      "cadence": "On demand or scheduled",
+      "availability": "GA custom agents",
+      "inputs": "CI/CD integration, service ownership, revision identifiers and complete reporting window.",
+      "output": "Deployment report with revisions, outcomes, affected services and unresolved follow-up.",
+      "sections": [
+        "D-03",
+        "D-07"
+      ],
+      "constraints": "Requires connected pipeline tools and explicit interpretation of deployment states.",
+      "example": "List production deployments in the last seven complete days, including failed changes and linked incidents.",
+      "keywords": [
+        "deployment report",
+        "change report",
+        "CI/CD"
+      ]
+    },
+    {
+      "id": "D-UC10",
+      "platform": "devops",
+      "group": "Health reporting and reviews",
+      "title": "Operational review pack",
+      "summary": "Assemble a weekly or monthly review combining service health, incident trends, prevention work, deployments and action owners.",
+      "delivery": "Configured custom agent",
+      "cadence": "Scheduled",
+      "availability": "GA custom agents",
+      "inputs": "Review template, selected data sources, attached reporting context and named audience.",
+      "output": "Review agenda, evidence summary, decisions required and owned follow-up.",
+      "sections": [
+        "D-07",
+        "D-M07"
+      ],
+      "constraints": "This is a team-defined workflow. The report contract, recipients and stop owner must be configured.",
+      "example": "Prepare the weekly operational review pack with health, incidents, improvements, deployments, decisions and owners.",
+      "keywords": [
+        "operational review",
+        "weekly review",
+        "review pack"
+      ]
+    },
+    {
+      "id": "D-UC11",
+      "platform": "devops",
+      "group": "Pattern analysis and improvement",
+      "title": "Incident pattern identification",
+      "summary": "Analyze investigation history to identify recurring causes, similar incidents and systemic operational themes.",
+      "delivery": "Built-in function",
+      "cadence": "Periodic or on demand",
+      "availability": "GA production operations",
+      "inputs": "Recent investigation history and managed learning context.",
+      "output": "Pattern summary, recurring-cause context and candidate prevention themes.",
+      "sections": [
+        "D-M01",
+        "D-06"
+      ],
+      "constraints": "Historical similarity does not establish the cause of a new incident.",
+      "example": "Identify recurring checkout incident patterns and cite the investigations that support each pattern.",
+      "keywords": [
+        "incident pattern",
+        "recurring cause",
+        "similar incidents"
+      ]
+    },
+    {
+      "id": "D-UC12",
+      "platform": "devops",
+      "group": "Pattern analysis and improvement",
+      "title": "Prevention recommendation backlog",
+      "summary": "Review, prioritize and track recommendations across observability, infrastructure, governance and code optimization.",
+      "delivery": "Built-in function",
+      "cadence": "Weekly or on demand",
+      "availability": "GA production operations",
+      "inputs": "Multiple incident investigations, team priorities and recommendation evaluation.",
+      "output": "Ranked recommendations with source incidents, expected effect and backlog state.",
+      "sections": [
+        "D-06"
+      ],
+      "constraints": "Recommendations are not automatically implemented and may age out when not kept or implemented.",
+      "example": "Run a prevention evaluation and return the highest-priority recommendations with affected incidents and owners.",
+      "keywords": [
+        "prevention",
+        "improvements",
+        "recommendations",
+        "backlog"
+      ]
+    },
+    {
+      "id": "D-UC13",
+      "platform": "devops",
+      "group": "Knowledge and documentation",
+      "title": "Recurring root-cause recall",
+      "summary": "Use monitor-specific memory from previous investigations as contextual evidence in a later incident.",
+      "delivery": "Built-in mechanism",
+      "cadence": "Event-driven",
+      "availability": "GA managed memory",
+      "inputs": "Prior completed investigations, active monitor memory and current incident evidence.",
+      "output": "Retrieved historical context considered alongside current telemetry.",
+      "sections": [
+        "D-M01"
+      ],
+      "constraints": "Memory existence, retrieval and diagnostic correctness are separate observations.",
+      "example": "Compare this alarm with relevant prior causes, then list the current evidence that supports or contradicts each one.",
+      "keywords": [
+        "memory",
+        "recurring root cause",
+        "historical context"
+      ]
+    },
+    {
+      "id": "D-UC14",
+      "platform": "devops",
+      "group": "Knowledge and documentation",
+      "title": "SOP consolidation into reusable skills",
+      "summary": "Convert an approved operational procedure into a targeted skill with applicability rules and supporting references.",
+      "delivery": "Composed workflow",
+      "cadence": "On demand",
+      "availability": "GA skills",
+      "inputs": "Reviewed SOP, target agent types, actual tool names and expected evidence.",
+      "output": "Version-controlled SKILL.md bundle and a matching/nonmatching selection test.",
+      "sections": [
+        "D-M04"
+      ],
+      "constraints": "Consolidation and review are team work. A skill supplies procedure; it does not grant tools or permissions.",
+      "example": "Create a skill from the approved checkout timeout SOP and state when it should and should not load.",
+      "keywords": [
+        "SOP",
+        "runbook",
+        "skill",
+        "procedure consolidation"
+      ]
+    },
+    {
+      "id": "D-UC15",
+      "platform": "devops",
+      "group": "Knowledge and documentation",
+      "title": "Standing operational policy",
+      "summary": "Apply always-on guidance such as evidence formatting, escalation or safety rules to new sessions.",
+      "delivery": "Configured knowledge",
+      "cadence": "Per session",
+      "availability": "GA instructions",
+      "inputs": "Reviewed global or agent-specific AGENTS.md content.",
+      "output": "New sessions that include the standing guidance.",
+      "sections": [
+        "D-M03"
+      ],
+      "constraints": "Instructions guide behavior but do not enforce IAM authorization. Existing sessions retain their startup content.",
+      "example": "Apply the evidence-output contract to new incident RCA sessions and compare with an existing session.",
+      "keywords": [
+        "instructions",
+        "policy",
+        "AGENTS.md",
+        "standing guidance"
+      ]
+    },
+    {
+      "id": "D-UC16",
+      "platform": "devops",
+      "group": "Knowledge and documentation",
+      "title": "Topology documentation and dependency map",
+      "summary": "Use discovered resources and inferred relationships to document service, repository, pipeline and dependency context.",
+      "delivery": "Built-in function with composed documentation",
+      "cadence": "On demand or refreshed",
+      "availability": "GA production operations",
+      "inputs": "Connected accounts, discovery, Resource Explorer where applicable and relevant integrations.",
+      "output": "Topology view and environment summary that can support architecture documentation.",
+      "sections": [
+        "D-05"
+      ],
+      "constraints": "Topology is a representation, not an authorization boundary or guaranteed complete inventory.",
+      "example": "Document the payments service containers, downstream dependencies, repositories and deployment boundaries; mark inferred relationships.",
+      "keywords": [
+        "topology",
+        "dependency map",
+        "architecture documentation"
+      ]
+    },
+    {
+      "id": "D-UC17",
+      "platform": "devops",
+      "group": "Knowledge and documentation",
+      "title": "Environment summary and topology refresh",
+      "summary": "Refresh learned environment understanding after integration or infrastructure changes and inspect the new version.",
+      "delivery": "Built-in mechanism",
+      "cadence": "On demand or platform-managed",
+      "availability": "GA production operations",
+      "inputs": "Changed resources or integrations and managed learning capability.",
+      "output": "Updated environment summary, topology and versioned knowledge.",
+      "sections": [
+        "D-05"
+      ],
+      "constraints": "A refresh request is not completion evidence. Managed learning schedules are platform-owned.",
+      "example": "Refresh the environment understanding after the new inventory integration and report the resulting version and changed relationships.",
+      "keywords": [
+        "topology refresh",
+        "environment summary",
+        "learning"
+      ]
+    },
+    {
+      "id": "D-UC18",
+      "platform": "devops",
+      "group": "Custom operational work",
+      "title": "Configuration audit",
+      "summary": "Periodically compare selected resource configurations with organizational standards and produce findings.",
+      "delivery": "Configured custom agent",
+      "cadence": "Scheduled",
+      "availability": "GA custom agents",
+      "inputs": "Read-only configuration tools, approved standard, selected resource scope and report format.",
+      "output": "Audit findings with resource identifiers, rule and observed value.",
+      "sections": [
+        "D-07",
+        "D-M04"
+      ],
+      "constraints": "Requires explicit tools and standards. It is not a built-in universal compliance engine.",
+      "example": "Audit staging security-group and logging settings against the attached operations standard; do not change resources.",
+      "keywords": [
+        "configuration audit",
+        "compliance audit",
+        "standards"
+      ]
+    },
+    {
+      "id": "D-UC19",
+      "platform": "devops",
+      "group": "Custom operational work",
+      "title": "Metrics and error trend analysis",
+      "summary": "Analyze a defined time series for trend, seasonality, error-pattern or capacity changes.",
+      "delivery": "Configured custom agent",
+      "cadence": "On demand or scheduled",
+      "availability": "GA custom agents",
+      "inputs": "Selected metric/log tools, complete time range, aggregation and comparison basis.",
+      "output": "Trend report with material changes, possible explanations and missing evidence.",
+      "sections": [
+        "D-03",
+        "D-07"
+      ],
+      "constraints": "The workflow must define aggregation and avoid treating correlation as cause.",
+      "example": "Analyze checkout latency and error trends for the last four complete weeks and identify material changes.",
+      "keywords": [
+        "trend analysis",
+        "metrics",
+        "errors",
+        "capacity"
+      ]
+    },
+    {
+      "id": "D-UC20",
+      "platform": "devops",
+      "group": "Custom operational work",
+      "title": "Cross-tool operational correlation",
+      "summary": "Combine observability, deployment, ticketing and AWS resource data to answer a bounded operational question.",
+      "delivery": "Configured custom agent",
+      "cadence": "On demand",
+      "availability": "GA custom agents",
+      "inputs": "Selected tools from multiple providers, shared identifiers and explicit question.",
+      "output": "Evidence table linking signals across systems and unresolved mismatches.",
+      "sections": [
+        "D-03",
+        "D-07"
+      ],
+      "constraints": "Tool availability and identity mapping must be explicit; similar timestamps do not prove causality.",
+      "example": "Correlate the error increase with deployments, alerts and tickets using service and revision identifiers.",
+      "keywords": [
+        "cross-tool",
+        "correlation",
+        "observability",
+        "deployment"
+      ]
+    },
+    {
+      "id": "D-UC21",
+      "platform": "devops",
+      "group": "Release and change assurance",
+      "title": "Release readiness review",
+      "summary": "Review a proposed code change, dependencies and operational risk before release.",
+      "delivery": "Preview function",
+      "cadence": "On demand or repository-triggered",
+      "availability": "Preview; feature and repository eligibility specific",
+      "inputs": "Candidate revision, repositories, topology and release context.",
+      "output": "Readiness findings, risk explanations and recommended actions.",
+      "sections": [
+        "D-09"
+      ],
+      "constraints": "Do not apply production-operations GA status to this preview path.",
+      "example": "Review the retry-policy change for dependency, IAM, resilience and operational risks.",
+      "keywords": [
+        "release readiness",
+        "code review",
+        "preview"
+      ]
+    },
+    {
+      "id": "D-UC22",
+      "platform": "devops",
+      "group": "Release and change assurance",
+      "title": "Active release testing",
+      "summary": "Exercise a deployed web application or API in an authorized test environment and record observed behavior.",
+      "delivery": "Preview function",
+      "cadence": "On demand",
+      "availability": "Preview",
+      "inputs": "Disposable staging target, test identities, disabled external effects and explicit allowed operations.",
+      "output": "Test results, reproduction detail and residual risk.",
+      "sections": [
+        "D-09"
+      ],
+      "constraints": "Requests can create, modify or delete application data. Infrastructure write controls do not make application testing read-only.",
+      "example": "Test the staging checkout API with synthetic data; avoid production endpoints and external notifications.",
+      "keywords": [
+        "release testing",
+        "application test",
+        "API test",
+        "preview"
+      ]
+    },
+    {
+      "id": "S-UC01",
+      "platform": "security",
+      "group": "Application assessment",
+      "title": "On-demand application penetration test",
+      "summary": "Run an authorized application-focused penetration test against configured non-production targets.",
+      "delivery": "Native assessment",
+      "cadence": "On demand",
+      "availability": "GA on-demand penetration testing",
+      "inputs": "Agent Space, verified target, written authority, test data and stop owner.",
+      "output": "Assessment run with findings, evidence and coverage record.",
+      "sections": [
+        "S-01",
+        "S-03",
+        "S-04"
+      ],
+      "constraints": "Testing sends real requests and can change application state. Domain verification is not sufficient authorization.",
+      "example": "Run the authorized staging penetration test with the stated target, exclusions and test identities.",
+      "keywords": [
+        "penetration test",
+        "dynamic assessment",
+        "staging"
+      ]
+    },
+    {
+      "id": "S-UC02",
+      "platform": "security",
+      "group": "Application assessment",
+      "title": "Authenticated workflow assessment",
+      "summary": "Assess protected application routes using representative test identities and current login instructions.",
+      "delivery": "Configured assessment",
+      "cadence": "On demand",
+      "availability": "GA penetration testing",
+      "inputs": "Credential strategy, login instructions, protected routes and representative roles.",
+      "output": "Findings and coverage tied to the actual authenticated identity.",
+      "sections": [
+        "S-M01",
+        "S-03"
+      ],
+      "constraints": "Credential retrieval and application authentication are separate steps.",
+      "example": "Assess the invoice workflow as the test customer role and record the identity and routes reached.",
+      "keywords": [
+        "authenticated testing",
+        "credentials",
+        "role"
+      ]
+    },
+    {
+      "id": "S-UC03",
+      "platform": "security",
+      "group": "Application assessment",
+      "title": "Private application assessment",
+      "summary": "Assess an authorized application reachable only through configured VPC connectivity.",
+      "delivery": "Configured assessment",
+      "cadence": "On demand",
+      "availability": "GA penetration testing",
+      "inputs": "Target rules, VPC route, DNS, security groups and application credentials.",
+      "output": "Reachability record and assessment findings for the private target.",
+      "sections": [
+        "S-03",
+        "S-M01"
+      ],
+      "constraints": "Private reachability does not broaden the authorized target list or credential scope.",
+      "example": "Assess the private staging endpoint and confirm that the production callback remains out of scope.",
+      "keywords": [
+        "private application",
+        "VPC",
+        "network"
+      ]
+    },
+    {
+      "id": "S-UC04",
+      "platform": "security",
+      "group": "Application assessment",
+      "title": "Recurring penetration test",
+      "summary": "Run the same saved penetration-test configuration on a recurring schedule to obtain separate assessment runs.",
+      "delivery": "Configured assessment",
+      "cadence": "Scheduled",
+      "availability": "Feature-specific; verify current availability",
+      "inputs": "Stable saved configuration, current test credentials, authorized target and schedule.",
+      "output": "Separate scheduled run records and findings.",
+      "sections": [
+        "S-04"
+      ],
+      "constraints": "Each run reflects the then-current target and credentials; a schedule does not guarantee successful authentication.",
+      "example": "Schedule the staging penetration test weekly and retain each run as a separate evidence record.",
+      "keywords": [
+        "scheduled pentest",
+        "recurring assessment"
+      ]
+    },
+    {
+      "id": "S-UC05",
+      "platform": "security",
+      "group": "Authentication and access",
+      "title": "Login procedure reuse",
+      "summary": "Reuse a previously successful authentication navigation workflow in later test sessions and runs.",
+      "delivery": "Native mechanism",
+      "cadence": "Per session/run",
+      "availability": "GA penetration testing",
+      "inputs": "At least one successful login, saved penetration-test configuration and Login Optimization enabled.",
+      "output": "Reused login skill and observed authenticated identity.",
+      "sections": [
+        "S-M02"
+      ],
+      "constraints": "The learned procedure concerns login navigation, not general vulnerability learning.",
+      "example": "Compare first-run and later login behavior, then verify the actual application role.",
+      "keywords": [
+        "login optimization",
+        "authentication reuse"
+      ]
+    },
+    {
+      "id": "S-UC06",
+      "platform": "security",
+      "group": "Findings and remediation",
+      "title": "Finding review and prioritization",
+      "summary": "Review impact, confidence, reproduction steps, affected data and business context before disposition.",
+      "delivery": "Native operation",
+      "cadence": "On demand",
+      "availability": "Feature-specific",
+      "inputs": "Completed assessment findings and application-owner context.",
+      "output": "Prioritized finding with owner, disposition and remediation plan.",
+      "sections": [
+        "S-05"
+      ],
+      "constraints": "Finding count or severity alone is not an adequate risk decision.",
+      "example": "Prioritize the findings using impact, confidence, affected role and reproduction evidence.",
+      "keywords": [
+        "finding triage",
+        "prioritization",
+        "CVSS"
+      ]
+    },
+    {
+      "id": "S-UC07",
+      "platform": "security",
+      "group": "Findings and remediation",
+      "title": "Jira remediation tracking",
+      "summary": "Create a Jira issue for an accepted finding and keep remediation and revalidation updates linked.",
+      "delivery": "Configured integration",
+      "cadence": "On demand",
+      "availability": "Feature-specific",
+      "inputs": "Finding, connected Jira project and approved disclosure scope.",
+      "output": "Jira issue linked to the finding, with later revalidation comments when supported.",
+      "sections": [
+        "S-05"
+      ],
+      "constraints": "Sensitive assessment details should not be published to an inappropriate project or audience.",
+      "example": "Create a Jira issue for this accepted finding with the evidence, affected revision and acceptance test.",
+      "keywords": [
+        "Jira",
+        "remediation tracking",
+        "ticket"
+      ]
+    },
+    {
+      "id": "S-UC08",
+      "platform": "security",
+      "group": "Findings and remediation",
+      "title": "Proposed code remediation",
+      "summary": "Generate a repository change proposal for an accepted finding and send it through normal engineering review.",
+      "delivery": "Configured remediation",
+      "cadence": "On demand",
+      "availability": "Feature-specific; provider support applies",
+      "inputs": "Accepted finding, repository access and remediation configuration.",
+      "output": "Patch or pull request linked to the finding.",
+      "sections": [
+        "S-05"
+      ],
+      "constraints": "A proposed patch is not a reviewed, deployed or verified repair.",
+      "example": "Prepare a remediation change for the authorization finding and include tests; do not merge automatically.",
+      "keywords": [
+        "code remediation",
+        "patch",
+        "pull request"
+      ]
+    },
+    {
+      "id": "S-UC09",
+      "platform": "security",
+      "group": "Findings and remediation",
+      "title": "Finding revalidation",
+      "summary": "Retest selected existing findings after the repair is deployed to the original authorized target.",
+      "delivery": "Native operation",
+      "cadence": "On demand",
+      "availability": "GA penetration testing",
+      "inputs": "Completed original finding, deployed repair and current authentication configuration.",
+      "output": "Separate revalidation job linked to the original finding with Active or Resolved result.",
+      "sections": [
+        "S-M05"
+      ],
+      "constraints": "Revalidation does not rediscover unrelated vulnerabilities or establish whole-application security.",
+      "example": "Revalidate the selected finding against the deployed revision and record the actual test identity.",
+      "keywords": [
+        "revalidation",
+        "verification",
+        "finding lineage"
+      ]
+    },
+    {
+      "id": "S-UC10",
+      "platform": "security",
+      "group": "Shift-left review",
+      "title": "Repository code review",
+      "summary": "Analyze a configured repository or supported source package for vulnerabilities and enabled security requirements.",
+      "delivery": "Preview assessment",
+      "cadence": "On demand",
+      "availability": "Preview",
+      "inputs": "Connected repository or S3 source, review mode and applicable requirement packs.",
+      "output": "Code findings with evidence, location and possible remediation.",
+      "sections": [
+        "S-06",
+        "S-M03"
+      ],
+      "constraints": "Provider, source and availability limits apply. Completed review is not complete application coverage.",
+      "example": "Review the repository for vulnerability findings and the enabled authorization requirements.",
+      "keywords": [
+        "code review",
+        "repository",
+        "preview"
+      ]
+    },
+    {
+      "id": "S-UC11",
+      "platform": "security",
+      "group": "Shift-left review",
+      "title": "Change-focused code review",
+      "summary": "Assess a pull request, merge request or differential source so findings are tied to a specific change.",
+      "delivery": "Preview assessment",
+      "cadence": "Event-triggered or on demand",
+      "availability": "Preview",
+      "inputs": "Supported change event or differential source, repository context and criteria.",
+      "output": "Revision-specific findings and optional remediation path.",
+      "sections": [
+        "S-06"
+      ],
+      "constraints": "Subsequent changes may require a new review; support differs by provider and trigger path.",
+      "example": "Review this change for security findings and enabled requirements; identify the exact revision.",
+      "keywords": [
+        "pull request review",
+        "differential scan",
+        "change review"
+      ]
+    },
+    {
+      "id": "S-UC12",
+      "platform": "security",
+      "group": "Shift-left review",
+      "title": "Security requirement evaluation",
+      "summary": "Evaluate design or code evidence against reviewed applicability and compliance criteria.",
+      "delivery": "Configured criteria",
+      "cadence": "On demand",
+      "availability": "Preview workflows",
+      "inputs": "Enabled requirement pack and eligible assessment configured for requirement evaluation.",
+      "output": "Requirement-level compliant, violating or inapplicable result.",
+      "sections": [
+        "S-M03"
+      ],
+      "constraints": "A framework or generated pack is not a compliance certification.",
+      "example": "Evaluate the ownership-check requirement and show why it is applicable, compliant or violated.",
+      "keywords": [
+        "requirements",
+        "policy evaluation",
+        "compliance criteria"
+      ]
+    },
+    {
+      "id": "S-UC13",
+      "platform": "security",
+      "group": "Shift-left review",
+      "title": "Security requirement consolidation",
+      "summary": "Generate or consolidate a requirement pack from authoritative policy documents and review the replacement before enablement.",
+      "delivery": "Composed workflow",
+      "cadence": "On demand",
+      "availability": "Preview workflows",
+      "inputs": "Governed policy sources, existing pack and reviewer.",
+      "output": "Reviewed replacement requirement pack and external change record.",
+      "sections": [
+        "S-M04"
+      ],
+      "constraints": "Regeneration replaces existing requirements, including manual entries. Keep the authoritative source outside the generated pack.",
+      "example": "Regenerate the pack from the approved policy documents and identify which existing requirements would be replaced.",
+      "keywords": [
+        "requirement generation",
+        "policy consolidation",
+        "pack"
+      ]
+    },
+    {
+      "id": "S-UC14",
+      "platform": "security",
+      "group": "Shift-left review",
+      "title": "Design review",
+      "summary": "Assess a design document against security requirements before implementation or release.",
+      "delivery": "Preview assessment",
+      "cadence": "On demand",
+      "availability": "Preview",
+      "inputs": "Current design material, application context and enabled requirement packs.",
+      "output": "Design findings and reviewed assumptions.",
+      "sections": [
+        "S-06"
+      ],
+      "constraints": "Design review uses a different one-off lifecycle from reusable run configurations.",
+      "example": "Review the new payment design against the enabled security requirements and list unsupported assumptions.",
+      "keywords": [
+        "design review",
+        "architecture review",
+        "preview"
+      ]
+    },
+    {
+      "id": "S-UC15",
+      "platform": "security",
+      "group": "Shift-left review",
+      "title": "Threat modeling",
+      "summary": "Build and review a threat model from connected architecture and scope material.",
+      "delivery": "Preview assessment",
+      "cadence": "On demand",
+      "availability": "Preview",
+      "inputs": "Architecture documents, code/context sources and explicit system boundary.",
+      "output": "Assets, trust boundaries, flows, threats and model findings.",
+      "sections": [
+        "S-06"
+      ],
+      "constraints": "Inferred system context requires review; the model is not a complete guarantee of threat coverage.",
+      "example": "Create a threat model for the checkout service and mark inferred flows that require owner confirmation.",
+      "keywords": [
+        "threat model",
+        "trust boundary",
+        "data flow"
+      ]
+    },
+    {
+      "id": "S-UC16",
+      "platform": "security",
+      "group": "Program operations",
+      "title": "CI/CD assessment integration",
+      "summary": "Start a previously configured assessment from a delivery workflow and record the server-side job result.",
+      "delivery": "Configured integration",
+      "cadence": "Pipeline-triggered",
+      "availability": "Preview",
+      "inputs": "Saved assessment configuration, pipeline credentials and explicit pass/fail policy.",
+      "output": "Assessment job and auditable delivery decision.",
+      "sections": [
+        "S-06"
+      ],
+      "constraints": "The pipeline runner is not the assessment engine. Missing or inconclusive evidence needs an explicit gate policy.",
+      "example": "Start the configured staging assessment from the release pipeline and fail safely on missing evidence.",
+      "keywords": [
+        "CI/CD",
+        "pipeline gate",
+        "integration"
+      ]
+    },
+    {
+      "id": "F-UC01",
+      "platform": "finops",
+      "group": "Cost inquiry and reporting",
+      "title": "Natural-language cost inquiry",
+      "summary": "Ask a bounded cost question in plain language using authorized cost and usage data.",
+      "delivery": "Native function",
+      "cadence": "On demand",
+      "availability": "Preview",
+      "inputs": "Dates, cost metric, currency, account scope and requested dimension.",
+      "output": "Answer with figures, filters and source context.",
+      "sections": [
+        "F-M01"
+      ],
+      "constraints": "A fluent answer is not a substitute for a reproducible source query.",
+      "example": "Show production storage cost for the last complete week by account and Region; state the metric and filters.",
+      "keywords": [
+        "cost inquiry",
+        "natural language",
+        "cost explorer"
+      ]
+    },
+    {
+      "id": "F-UC02",
+      "platform": "finops",
+      "group": "Cost inquiry and reporting",
+      "title": "Cost variance decomposition",
+      "summary": "Compare complete periods and quantify the service, usage or rate components contributing to the change.",
+      "delivery": "Native function",
+      "cadence": "On demand",
+      "availability": "Preview",
+      "inputs": "Comparable windows, same cost basis, grouping dimensions and source permissions.",
+      "output": "Reconciled delta and ranked contributors.",
+      "sections": [
+        "F-M01",
+        "F-U01"
+      ],
+      "constraints": "Contribution arithmetic does not by itself establish the operational cause.",
+      "example": "Compare the last two complete weeks and decompose the cost delta into usage and rate changes.",
+      "keywords": [
+        "variance",
+        "delta",
+        "usage",
+        "rate"
+      ]
+    },
+    {
+      "id": "F-UC03",
+      "platform": "finops",
+      "group": "Cost inquiry and reporting",
+      "title": "Cost breakdown by ownership dimension",
+      "summary": "Group cost by account, service, Region, tag or organization-specific owner mapping.",
+      "delivery": "Native function with context",
+      "cadence": "On demand",
+      "availability": "Preview",
+      "inputs": "Authorized cost data, grouping dimension and optional context file mapping.",
+      "output": "Dimensioned totals and unmapped items.",
+      "sections": [
+        "F-M01",
+        "F-M02"
+      ],
+      "constraints": "Owner mappings require maintained context; tags and account metadata may be incomplete.",
+      "example": "Break down this cost by service owner and list every unmapped account or tag.",
+      "keywords": [
+        "cost breakdown",
+        "account",
+        "region",
+        "tag",
+        "owner"
+      ]
+    },
+    {
+      "id": "F-UC04",
+      "platform": "finops",
+      "group": "Cost inquiry and reporting",
+      "title": "Forecast and commitment coverage review",
+      "summary": "Review forecasts or commitment coverage as separate analytical questions from historical cost.",
+      "delivery": "Native function",
+      "cadence": "On demand",
+      "availability": "Preview",
+      "inputs": "Forecast horizon, commitment scope and relevant upstream source.",
+      "output": "Forecast or coverage summary with assumptions.",
+      "sections": [
+        "F-M01"
+      ],
+      "constraints": "Forecast and recommendation values are not observed spend and should not be combined without qualification.",
+      "example": "Summarize the next-month forecast and current commitment coverage; separate observed and projected values.",
+      "keywords": [
+        "forecast",
+        "commitment coverage",
+        "savings plans"
+      ]
+    },
+    {
+      "id": "F-UC05",
+      "platform": "finops",
+      "group": "Cost inquiry and reporting",
+      "title": "Daily, weekly or monthly cost report",
+      "summary": "Generate a recurring cost report with a fixed basis, sections, audience and downloadable artifact.",
+      "delivery": "Configured recurring task",
+      "cadence": "Scheduled",
+      "availability": "Preview",
+      "inputs": "Report contract, schedule, source scope, context and recipients.",
+      "output": "HTML, PDF or editable presentation artifact.",
+      "sections": [
+        "F-03",
+        "F-04"
+      ],
+      "constraints": "Schedule, source window and audience are separate settings. Report values still require reconciliation.",
+      "example": "Create a weekly cost report with service totals, anomalies, recommendations, owners and unresolved gaps.",
+      "keywords": [
+        "recurring report",
+        "daily report",
+        "weekly report",
+        "monthly report"
+      ]
+    },
+    {
+      "id": "F-UC06",
+      "platform": "finops",
+      "group": "Cost inquiry and reporting",
+      "title": "FinOps operational review pack",
+      "summary": "Assemble a cross-functional review of cost movement, anomalies, recommendations, decisions and measured outcomes.",
+      "delivery": "Composed workflow",
+      "cadence": "Scheduled",
+      "availability": "Preview",
+      "inputs": "Recurring report, owner mappings, recommendation status and review template.",
+      "output": "Review agenda, decision log and owner/action table.",
+      "sections": [
+        "F-03",
+        "F-04",
+        "F-M02"
+      ],
+      "constraints": "The review process and acceptance criteria are team-defined, not a separate native feature.",
+      "example": "Prepare the monthly FinOps review pack with decisions required, owners and prior action outcomes.",
+      "keywords": [
+        "FinOps review",
+        "operational review",
+        "management report"
+      ]
+    },
+    {
+      "id": "F-UC07",
+      "platform": "finops",
+      "group": "Anomaly and optimization",
+      "title": "On-demand cost anomaly investigation",
+      "summary": "Investigate a detected cost anomaly and rank root causes by cost impact.",
+      "delivery": "Native function",
+      "cadence": "On demand",
+      "availability": "Preview",
+      "inputs": "Cost Anomaly Detection record, Cost Explorer access and optional CloudTrail permission.",
+      "output": "Anomaly explanation with affected services, usage/rate analysis and correlated changes.",
+      "sections": [
+        "F-M01"
+      ],
+      "constraints": "CloudTrail events are correlated activity, not automatic proof of cause.",
+      "example": "Investigate the MemoryDB anomaly and separate usage, rate and correlated change evidence.",
+      "keywords": [
+        "anomaly investigation",
+        "root cause",
+        "Cost Anomaly Detection"
+      ]
+    },
+    {
+      "id": "F-UC08",
+      "platform": "finops",
+      "group": "Anomaly and optimization",
+      "title": "Event-triggered anomaly response",
+      "summary": "Automatically create a task when a matching cost anomaly event occurs and publish or retain the result.",
+      "delivery": "Configured automation",
+      "cadence": "Event-driven",
+      "availability": "Preview",
+      "inputs": "Anomaly monitor, event-rule permission, automation condition and optional destination.",
+      "output": "Task history, investigation result and delivery status.",
+      "sections": [
+        "F-M05",
+        "F-03"
+      ],
+      "constraints": "The documented event source is Cost Anomaly Detection. Removing the automation stops future tasks, not existing records.",
+      "example": "When a production anomaly exceeds the threshold, investigate it and post the result to the approved channel.",
+      "keywords": [
+        "event automation",
+        "anomaly response",
+        "EventBridge"
+      ]
+    },
+    {
+      "id": "F-UC09",
+      "platform": "finops",
+      "group": "Anomaly and optimization",
+      "title": "Optimization recommendation triage",
+      "summary": "Review upstream optimization recommendations against service constraints and overlapping estimates.",
+      "delivery": "Native function with team review",
+      "cadence": "On demand",
+      "availability": "Preview",
+      "inputs": "Cost Optimization Hub or Compute Optimizer recommendation, workload evidence and owner constraints.",
+      "output": "Prioritized candidate, rejected/deferred reason and accepted next step.",
+      "sections": [
+        "F-M01"
+      ],
+      "constraints": "The agent contextualizes upstream recommendations; it does not independently calculate or authorize the change.",
+      "example": "Review the storage recommendations, identify overlapping savings and list the reliability constraints.",
+      "keywords": [
+        "optimization",
+        "recommendation",
+        "Compute Optimizer"
+      ]
+    },
+    {
+      "id": "F-UC10",
+      "platform": "finops",
+      "group": "Anomaly and optimization",
+      "title": "Post-change savings measurement",
+      "summary": "Measure an independently authorized change using comparable cost and service-health windows.",
+      "delivery": "Composed workflow",
+      "cadence": "Periodic after change",
+      "availability": "Preview service; team process",
+      "inputs": "Implemented change record, comparable periods and service indicators.",
+      "output": "Measured outcome with attribution limits.",
+      "sections": [
+        "F-U01",
+        "F-M01"
+      ],
+      "constraints": "A lower bill does not prove the change caused the decrease; traffic, prices and allocation may differ.",
+      "example": "Compare the post-change period with a matched baseline and state what cannot be attributed to the change.",
+      "keywords": [
+        "savings measurement",
+        "post change",
+        "outcome"
+      ]
+    },
+    {
+      "id": "F-UC11",
+      "platform": "finops",
+      "group": "Context and governance",
+      "title": "Cost ownership and allocation context",
+      "summary": "Provide account-to-team mappings, reporting basis and organizational conventions through maintained reference files.",
+      "delivery": "Configured context",
+      "cadence": "As needed",
+      "availability": "Preview",
+      "inputs": "Supported context file with non-sensitive ownership and allocation data.",
+      "output": "Context available to relevant tasks and conversations.",
+      "sections": [
+        "F-M02"
+      ],
+      "constraints": "Files are visible to agent users, cannot be conversationally rewritten and have file/total size limits.",
+      "example": "Use the approved account-owner mapping and list every cost item that lacks an owner.",
+      "keywords": [
+        "context file",
+        "ownership",
+        "allocation"
+      ]
+    },
+    {
+      "id": "F-UC12",
+      "platform": "finops",
+      "group": "Context and governance",
+      "title": "Persistent reporting preferences",
+      "summary": "Retain non-sensitive preferences, corrections and owner details across conversations.",
+      "delivery": "Native memory",
+      "cadence": "Across sessions",
+      "availability": "Preview",
+      "inputs": "Explicit remember, update or forget request.",
+      "output": "Agent-instance memory applied in later sessions.",
+      "sections": [
+        "F-M03"
+      ],
+      "constraints": "Memory is distinct from reference files and should be tested independently.",
+      "example": "Remember that executive reports use amortized cost and update the preference when the policy changes.",
+      "keywords": [
+        "memory",
+        "preference",
+        "correction"
+      ]
+    },
+    {
+      "id": "F-UC13",
+      "platform": "finops",
+      "group": "Automation and collaboration",
+      "title": "Scheduled recurring task",
+      "summary": "Create a schedule that produces a new queued task at each interval.",
+      "delivery": "Configured automation",
+      "cadence": "Scheduled",
+      "availability": "Preview",
+      "inputs": "Prompt, schedule, tools/data permissions and output expectations.",
+      "output": "Automation record and separate task history.",
+      "sections": [
+        "F-03"
+      ],
+      "constraints": "Deleting an automation stops future starts but does not delete existing tasks or messages.",
+      "example": "Run the weekly optimization review every Monday at the stated UTC time.",
+      "keywords": [
+        "scheduled task",
+        "automation",
+        "queue"
+      ]
+    },
+    {
+      "id": "F-UC14",
+      "platform": "finops",
+      "group": "Automation and collaboration",
+      "title": "Jira follow-up creation",
+      "summary": "Create an issue or comment that turns a reviewed cost analysis into owned follow-up.",
+      "delivery": "Configured integration",
+      "cadence": "On demand or automated",
+      "availability": "Preview",
+      "inputs": "Connected Jira project, reviewed content and owner.",
+      "output": "Jira issue/comment and task history.",
+      "sections": [
+        "F-05",
+        "F-M06"
+      ],
+      "constraints": "Interactive and on-demand Jira actions require approval; automation actions are pre-authorized at setup.",
+      "example": "Create a Jira issue for the accepted storage optimization with evidence, owner and acceptance criteria.",
+      "keywords": [
+        "Jira",
+        "ticket",
+        "follow-up"
+      ]
+    },
+    {
+      "id": "F-UC15",
+      "platform": "finops",
+      "group": "Automation and collaboration",
+      "title": "Slack publication",
+      "summary": "Post a reviewed cost or anomaly summary to a configured Slack channel.",
+      "delivery": "Configured integration",
+      "cadence": "On demand or automated",
+      "availability": "Preview",
+      "inputs": "Registered workspace, agent connection, channel and reviewed message scope.",
+      "output": "Slack post and delivery result.",
+      "sections": [
+        "F-05",
+        "F-M06"
+      ],
+      "constraints": "Slack posting has no approval prompt, including interactive use; channel membership and sensitive content must be reviewed.",
+      "example": "Post the approved anomaly summary to the FinOps incident channel.",
+      "keywords": [
+        "Slack",
+        "publication",
+        "channel"
+      ]
+    },
+    {
+      "id": "F-UC16",
+      "platform": "finops",
+      "group": "Automation and collaboration",
+      "title": "Downloadable report artifact",
+      "summary": "Generate, revise and retain a report artifact for review or distribution.",
+      "delivery": "Native output",
+      "cadence": "On demand or scheduled",
+      "availability": "Preview",
+      "inputs": "Source query, report instructions and desired format.",
+      "output": "HTML, PDF or editable presentation artifact.",
+      "sections": [
+        "F-04"
+      ],
+      "constraints": "Formatting quality does not establish numerical or causal accuracy; external copies have their own lifecycle.",
+      "example": "Generate an editable monthly cost report and include the query basis for every chart.",
+      "keywords": [
+        "report artifact",
+        "HTML",
+        "PDF",
+        "presentation"
+      ]
+    }
+  ]
+}
