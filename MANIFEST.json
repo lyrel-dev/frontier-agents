@@ -1,426 +1,195 @@
 {
-  "revision": "2026-10-21-platform-reference-1",
+  "revision": "2026-10-22-canonical-guides",
+  "scope": "Documentation files only; application has its own publication records",
   "files": {
-    ".github/workflows/document-suite.yml": {
-      "bytes": 1858,
-      "sha256": "24b5b02427dc5797ba21afbb611c181c0c83cf4abd03e9bfd615ab1f3a2fee3b"
-    },
-    ".gitignore": {
-      "bytes": 33,
-      "sha256": "fa5b2d4433b835933b22140e01833a4972a0ee8532d76951286e3dd071994af0"
-    },
     "CHANGELOG.md": {
-      "bytes": 1293,
-      "sha256": "14fbe9721cffc675bbc110ce275944c47780fcb128e39dbe6cf60a595aaf0951"
+      "bytes": 727,
+      "sha256": "6545764a2f00e796f7692e467e084371fb0ed4289ea8a2e08a781c3bf5e7f22f"
     },
     "EDITORIAL_STANDARD.md": {
-      "bytes": 12429,
-      "sha256": "f68cf09b8a5d06abe4361500130bb905ea31845cba0b3737a1cdcdd53d40772d"
-    },
-    "FORMAT_IMPLEMENTATION.md": {
-      "bytes": 611,
-      "sha256": "d37a46461f3ef6a35bb3b11e31a72982be35590816c2cae09ba65f0d7bac7060"
+      "bytes": 1728,
+      "sha256": "918c99d88553f9cdec1ed726aab45fb679b95f8c6cb27ae68df95b80f5fe9dd9"
     },
     "PUBLISHING.md": {
-      "bytes": 645,
-      "sha256": "9d2c86fd27d9143407ee6a3727dbfd90c1ebad6e0cf5758ea73630281c31ed60"
+      "bytes": 574,
+      "sha256": "b0a63c9ddc146d31134083d5f3755598090e313f9355a5768072ef557ae9986d"
     },
     "README.md": {
-      "bytes": 4525,
-      "sha256": "8b088276512b6e8d373f67846651495423c1e76d331eace147bc463992c81b02"
+      "bytes": 2345,
+      "sha256": "1bf787c4f68afd0a32595b9d2ac1507c2dc730995b2e1caafc4fd721ab312ed9"
     },
     "SCOPE.md": {
-      "bytes": 707,
-      "sha256": "616e67d15a8e2636e86eb4615d3714ce3150725881815a33319e405cf34da930"
+      "bytes": 439,
+      "sha256": "ddee4fa9077dfe08e3ed4a64b3d8f4aaa0a947275f67fc878e87995a92358949"
     },
     "VALIDATION.md": {
-      "bytes": 2027,
-      "sha256": "086577a8fd61dbb90d0489cab0c800ed294c282aed0b7be02a6725f9573e26f3"
+      "bytes": 1778,
+      "sha256": "2156e192ac0562eda5f405f0d651810015b9d0aeea54d33ef1811befebfa4616"
     },
     "architecture/common-patterns.html": {
-      "bytes": 208290,
-      "sha256": "0d4ae82d2cafa68672dffdfabfdb529eea44b42a423887dceb23ff8586de20d4"
-    },
-    "architecture/presentation-transcript.md": {
-      "bytes": 19823,
-      "sha256": "77f247847e1cdacfb60500bef679d9cf9a10df1f061b580cd16569309ec181a0"
-    },
-    "architecture/report.md": {
-      "bytes": 28039,
-      "sha256": "9affcae46790910da87e9e8edfdffaa882aaa3ebaecbf043c12e915e00ee0864"
-    },
-    "assets/report.css": {
-      "bytes": 15591,
-      "sha256": "0bb2d3d9b13a7ed478920905540c77f1c9b32f71312249216dcfdae21917509d"
-    },
-    "assets/report.js": {
-      "bytes": 7074,
-      "sha256": "5c8e825c2fe62f12310bbd3ac08e4c0baaae860dc198cab73f545081cfad7031"
-    },
-    "content/architecture-evidence.json": {
-      "bytes": 44562,
-      "sha256": "0292f5d497cadf13a9953875a3dd5abad343658a0435e52cc73e2cacad786cfd"
-    },
-    "content/architecture-presentation.json": {
-      "bytes": 31705,
-      "sha256": "ddb692ad364874cc4df3024024a43c0b3ee054ea3bff525a1b310b283fb7bea1"
-    },
-    "content/devops-evidence.json": {
-      "bytes": 18369,
-      "sha256": "cad3812d69a0f722504b9104427aca0a576409b7c8607f3ad4f09a10a5c2fdcb"
-    },
-    "content/devops-presentation.json": {
-      "bytes": 30288,
-      "sha256": "c73d036262c8cb6adf060ba9cffe3693bad0b8b517e292a75cbca5da5a85464f"
-    },
-    "content/finops-evidence.json": {
-      "bytes": 23834,
-      "sha256": "8f54c83dfb00968855b858df43db575cbaaacd46a37c0f714a18bf0829a91f11"
-    },
-    "content/finops-presentation.json": {
-      "bytes": 24855,
-      "sha256": "787935fd39be1480c07e941286a90a3ebc8dc26cbb7880bf967e07ec28a9a240"
-    },
-    "content/format-annotations.json": {
-      "bytes": 7642,
-      "sha256": "84d35dc9d3c69df7c2a7dbb75bea356048b67133754a9bd01de452ca61b151ac"
-    },
-    "content/mechanisms.json": {
-      "bytes": 87981,
-      "sha256": "b0729bb3c03d056ec0f9659c1f447adf2557741d8188ceff22a9a576f2f5040a"
-    },
-    "content/narratives.json": {
-      "bytes": 43572,
-      "sha256": "7c95d0b6f11bfde2ff42519808b74b7cf15928560dc04c1f49ebc28c73aef512"
-    },
-    "content/narratives/architecture.json": {
-      "bytes": 10378,
-      "sha256": "281c251c93c55c5ddb639f18edc6ecff82a9fb4b56a8e58c397f3eb4c98f907e"
-    },
-    "content/narratives/devops.json": {
-      "bytes": 10580,
-      "sha256": "a8bde98b170ff52fedb76af42d5518356452c2d70c4fecfb788ffb91827169d4"
-    },
-    "content/narratives/finops.json": {
-      "bytes": 10105,
-      "sha256": "ed01877074eb46e77a644bb6771f61b8641e890c1b2e627de710b2c579b64ded"
-    },
-    "content/narratives/security.json": {
-      "bytes": 10249,
-      "sha256": "a0ec4bc854ea1487114c7f9b65323937a19df7a31c41874642be8f8ba2f40a7d"
-    },
-    "content/platforms/devops.json": {
-      "bytes": 19828,
-      "sha256": "90b85545e5de05617ced0a6f26707356ca9830d68d1b1cbebb4a6c7fc0457427"
-    },
-    "content/platforms/finops.json": {
-      "bytes": 15159,
-      "sha256": "6466f54ea54c15c1d80639accfabce697feff9387d215237cd74a28d4bf78179"
-    },
-    "content/platforms/security.json": {
-      "bytes": 14195,
-      "sha256": "f3649a9d4864d3b796dd42c1deee9e49ec5f57b225252e65ae7d2c72618dfb30"
-    },
-    "content/security-evidence.json": {
-      "bytes": 33614,
-      "sha256": "ed2f9e5cbd50f1411fea4d64d03477dd096ccad1532307dd037ed333af626599"
-    },
-    "content/security-presentation.json": {
-      "bytes": 30877,
-      "sha256": "8c295837f247912aa39b2507f0ecabe16b5427bc3a4ce19cc492e53bb91bbb38"
-    },
-    "demo-assets/agent-handoff.example.yaml": {
-      "bytes": 503,
-      "sha256": "e900a166455a1db4b363ad98a8867bab658c708d490aba98d47b0abd264508ba"
-    },
-    "demo-assets/finops-fixture-guide.md": {
-      "bytes": 479,
-      "sha256": "f9ea49f635507d4d9dc99634e21c98c659b4dca0c7a45de54aae7d96dbc31fc3"
-    },
-    "demo-assets/finops-storage-cost-synthetic.csv": {
-      "bytes": 852,
-      "sha256": "e775c0d92e6161b802d97725f28cffe88c27460086d07182f9eaf61e023d3b19"
+      "bytes": 300,
+      "sha256": "19295599b8dee56eb881ea166f1bed6b3965edc121cbab014bc1cd3842ad608d"
     },
     "devops/initial-report.html": {
-      "bytes": 341,
-      "sha256": "8c7d5a2959241997c33113f6af44bc155d6797e73c221d0a9a2a5335b96bd8ff"
-    },
-    "devops/presentation-transcript.md": {
-      "bytes": 20646,
-      "sha256": "de3fc42326be03317c092ccb2bdf8a4bcc35eb29b7545280a4799fbbb37908c4"
-    },
-    "devops/report.md": {
-      "bytes": 21297,
-      "sha256": "c447a99c5ff5e12b36a71371b4bc053c1e790b7909b1d96c7d465a29bfdd6a93"
+      "bytes": 291,
+      "sha256": "9b14e6524672fb5458e24235a6a4d0f816b36f21ed74d69c2f04c92697873815"
     },
     "devops/validated-report.html": {
-      "bytes": 179207,
-      "sha256": "6588cf45d2cf1619a5fd5d22a4a593140b9485b2cdbc07dfb15eb9f0ff736243"
-    },
-    "devops/validation-record.md": {
-      "bytes": 8260,
-      "sha256": "01fb7648a79d2952c251ad4d7cf8e90fc1cdc55dd599691026a68b6b58c148d4"
+      "bytes": 291,
+      "sha256": "9b14e6524672fb5458e24235a6a4d0f816b36f21ed74d69c2f04c92697873815"
     },
     "documentation-build.json": {
-      "bytes": 795,
-      "sha256": "b2e003c74a19b6cc1ce35319fc2b34f932cd4a3f76904d14386d9aea6d38efe5"
+      "bytes": 769,
+      "sha256": "65f4902347c0cea122454b4a612a1f9a50e640c9f41db42e41aee00ecb23918c"
     },
-    "finops/presentation-transcript.md": {
-      "bytes": 15625,
-      "sha256": "23b9b9d328c9177474718fd5e23daeeedc19f1b2f48c04691e95aaad7a1057f3"
+    "examples/prepared-evidence.json": {
+      "bytes": 2346,
+      "sha256": "1ad6d10aa456827131f7087a4e3a58a5283a0cd75a39a9e6c9219f7b71463983"
     },
     "finops/report.html": {
-      "bytes": 183511,
-      "sha256": "8784869236a58676b1506ab17f406d06cd0432c1effbe1a0b37b9cbc5e43749f"
+      "bytes": 291,
+      "sha256": "b41f80cf7d99d1db8b78c4d10635745ae5308a371e3bf0a81d307bc08ec045ea"
     },
-    "finops/report.md": {
-      "bytes": 25437,
-      "sha256": "534a75afe3c0fff788100109aa6738efc63105a7865e8d8cd66da022886be2b3"
+    "guides/architecture.html": {
+      "bytes": 60857,
+      "sha256": "4bce2137172e8e7ea0b629daee981c1040a58cf23950731ff3be23e347fa34c5"
     },
-    "finops/validation-record.md": {
-      "bytes": 12679,
-      "sha256": "a9a1878f65f71309afef0128ae5cb8538a6137f0e1cdb4b86dcb4d9dc5d28bbd"
+    "guides/architecture.md": {
+      "bytes": 12924,
+      "sha256": "043c836c27b3d07780734ef5bb97f5f26eca5b41eb9d7dedc289f772aafa70f8"
+    },
+    "guides/coverage.md": {
+      "bytes": 6353,
+      "sha256": "25a968e37547a85351e1ec41fbe8763f302c9f0b2b7d314db84431818af709ee"
+    },
+    "guides/devops.html": {
+      "bytes": 120838,
+      "sha256": "67cf4edad3b03052ba1d93190af5cfa010b5611a7eecd48ed98c9093d4522da2"
+    },
+    "guides/devops.md": {
+      "bytes": 32203,
+      "sha256": "c631bc1c8ca8b1ecd0e54d03e8f67cf371956335ef764a32c372a0c3ca0c1375"
+    },
+    "guides/finops.html": {
+      "bytes": 95030,
+      "sha256": "9a85df8501779ba8ebb2087caac884702453d228839200a162e310644556440b"
+    },
+    "guides/finops.md": {
+      "bytes": 24207,
+      "sha256": "e0e14e22207cb95cb8b41242d5f1dffdc158f0d7df8bd56d864324cfd8984bdd"
+    },
+    "guides/security.html": {
+      "bytes": 106003,
+      "sha256": "ed1d525fb332184eabc0555ccb2d30527e79fbf05e735a29f7b68a30e9b6f4c6"
+    },
+    "guides/security.md": {
+      "bytes": 27420,
+      "sha256": "c46200504417e76b58c703999b2b2a6a2619d0b43e0f530dcb6bc4ade9827784"
     },
     "index.html": {
-      "bytes": 32274,
-      "sha256": "1f9cdca4ed22be17a0bf871f9e4c5e746c8a0cd84b36ce74af8bc29675909924"
-    },
-    "mechanisms/VALIDATION.md": {
-      "bytes": 1819,
-      "sha256": "0147ce0a85d2c4af1c0306b9cc2e549a17f564f077325d877c61a9e25e7d8032"
-    },
-    "mechanisms/devops-presentation-notes.md": {
-      "bytes": 12225,
-      "sha256": "39184e9de93f1e81cd102755a91111aa276735fd39ddb012a026f19b1c17d2e4"
+      "bytes": 12596,
+      "sha256": "c183459a076734fc7ad7d57e4697fbf74807cbad20862ac8b4d0f65667acbaef"
     },
     "mechanisms/devops.html": {
-      "bytes": 100712,
-      "sha256": "d413b026d9177af6810042d5ff934ec7c04ccc521561cd3c546907a8cf9ef3a7"
-    },
-    "mechanisms/devops.md": {
-      "bytes": 26479,
-      "sha256": "dfc12bf4fb1213962f376d2ca4f47c4362e6a3e6d04a65df538adf3263cbb5c8"
-    },
-    "mechanisms/finops-presentation-notes.md": {
-      "bytes": 7491,
-      "sha256": "5a3260d1ec52429647d322b5c11cc49d4e08c2bbb98edce138cb0e0e72a06b4a"
+      "bytes": 291,
+      "sha256": "9b14e6524672fb5458e24235a6a4d0f816b36f21ed74d69c2f04c92697873815"
     },
     "mechanisms/finops.html": {
-      "bytes": 68900,
-      "sha256": "db3e7c6f7a924b3766f51bdc5e7ac72e5fbcbc3ee619b7dd2765252a39259957"
-    },
-    "mechanisms/finops.md": {
-      "bytes": 16857,
-      "sha256": "49e347fb0610c4d6b26a78b593d959ee65dee98497041d6b802f872a529cb980"
+      "bytes": 291,
+      "sha256": "b41f80cf7d99d1db8b78c4d10635745ae5308a371e3bf0a81d307bc08ec045ea"
     },
     "mechanisms/index.html": {
-      "bytes": 108025,
-      "sha256": "8feb080d3d176863f9ea786683ac8c74125ee5f7f82164a1a90dc67b098f293e"
-    },
-    "mechanisms/overview-presentation-notes.md": {
-      "bytes": 3578,
-      "sha256": "6d29618c71dedb7c8ed143f70dcbf9c0eadf9c875dfe2bf833c6518f70d02272"
+      "bytes": 200,
+      "sha256": "86a362ea941583f0fe2922b87fae861a4270a70c35e60d67e6adab2224767a38"
     },
     "mechanisms/overview.html": {
-      "bytes": 108025,
-      "sha256": "8feb080d3d176863f9ea786683ac8c74125ee5f7f82164a1a90dc67b098f293e"
-    },
-    "mechanisms/overview.md": {
-      "bytes": 5062,
-      "sha256": "2390acb3b23b8a254d2259c07bf603a99705159d3e71c91185a668e76f016d1d"
-    },
-    "mechanisms/security-presentation-notes.md": {
-      "bytes": 7105,
-      "sha256": "8b88fdb2b96ea156964d0b7d10271259923851b09fe9bd5fd320b3b2bd80cc34"
+      "bytes": 214,
+      "sha256": "3b3fc7363b15d8b7f3b163b6abbd358af4937aa51984e213787d909c9edf6cbf"
     },
     "mechanisms/security.html": {
-      "bytes": 66259,
-      "sha256": "02e18f65a9be3bdc75570708323cf88c3fc2a92d9ecadc2898753eb81efa29d7"
-    },
-    "mechanisms/security.md": {
-      "bytes": 15833,
-      "sha256": "fd82524791c0b079461bccaa9cf4ec3ef54c1330e0e71427d0b132ae862942d2"
-    },
-    "mechanisms/source-register.json": {
-      "bytes": 7858,
-      "sha256": "f96d310431972a54741065838b8a1bb243e93473259331f13088fef6f5523b7b"
-    },
-    "platforms/TAXONOMY.md": {
-      "bytes": 1286,
-      "sha256": "141560a053e7c609f73bf1687e990bcccb74150bf684f8c05fbd0bb6fb1c182f"
-    },
-    "platforms/VALIDATION.md": {
-      "bytes": 1506,
-      "sha256": "2f2a3fc56bd9234899e85605cb4a3073d3aec053e1c78338dd985d4a782dc573"
+      "bytes": 295,
+      "sha256": "89efe1a79b5910acd6b846e707f7d69d6ba850eaa9945a1e407cb3018e7aa0db"
     },
     "platforms/devops.html": {
-      "bytes": 66335,
-      "sha256": "9f336cfc1edf3710e29b0d07127b43f0605e08d7631123a03776af9d9963bf00"
-    },
-    "platforms/devops.md": {
-      "bytes": 25190,
-      "sha256": "654cde6835bbf9d5bd48723d7b5358aa62e753a6b1c0a6aa089c069908083af5"
+      "bytes": 291,
+      "sha256": "9b14e6524672fb5458e24235a6a4d0f816b36f21ed74d69c2f04c92697873815"
     },
     "platforms/finops.html": {
-      "bytes": 51884,
-      "sha256": "913a6860e79f85a51b6b24092ebe2d4ccdc0ce5cd40bf55fe5a5865a87b58e17"
-    },
-    "platforms/finops.md": {
-      "bytes": 18734,
-      "sha256": "0eb08d90b6ed5a8904968c247614e0a18870481165078afcab45707b09997e19"
+      "bytes": 291,
+      "sha256": "b41f80cf7d99d1db8b78c4d10635745ae5308a371e3bf0a81d307bc08ec045ea"
     },
     "platforms/index.html": {
-      "bytes": 10388,
-      "sha256": "d78479022112ed5084ea9cd3b6fa7ba5e49e9e8fd4d3d10c5f43a6659e13fff6"
+      "bytes": 200,
+      "sha256": "86a362ea941583f0fe2922b87fae861a4270a70c35e60d67e6adab2224767a38"
     },
     "platforms/security.html": {
-      "bytes": 48543,
-      "sha256": "3c139528f002b30ee40407a23f2df73e805b7cc82c576d8adec12a6dffb264aa"
+      "bytes": 295,
+      "sha256": "89efe1a79b5910acd6b846e707f7d69d6ba850eaa9945a1e407cb3018e7aa0db"
     },
-    "platforms/security.md": {
-      "bytes": 17156,
-      "sha256": "2a4f31115cf6d7c88ca7f54ec94f5f3e234bada3d5483bb879e32cce9089fe49"
+    "presentations/architecture-notes.md": {
+      "bytes": 4894,
+      "sha256": "a6baf9231599722bcb74f8115fe8ee65eecd09e83d5b22294aa1c70a4562d0fa"
     },
-    "presentations/aws-devops-agent-presentation.pptx": {
-      "bytes": 133828,
-      "sha256": "e15029b950f4a5cd219c64c42aca8072172bbb1934d1728f36a9ec77d5efd08b"
+    "presentations/architecture.pptx": {
+      "bytes": 71239,
+      "sha256": "d21e73e7bff39c2f037598b15ecba7cf6760f5e4930b32a413b3ef8945212a64"
     },
-    "presentations/aws-finops-agent-presentation.pptx": {
-      "bytes": 142950,
-      "sha256": "6e3a01136229847a507eec2a14596829cb9177d8d22d290aa40cb7bc3983b7ba"
+    "presentations/devops-notes.md": {
+      "bytes": 8154,
+      "sha256": "9bb7a6f08d05fac5027e0a42b73094e65ddbef847028858bd66ff5b3a527a6e6"
     },
-    "presentations/aws-frontier-agents-common-architecture-presentation.pptx": {
-      "bytes": 151615,
-      "sha256": "9613b7df171a791e07050fa142125b10ec3a0958056c202a0a07efe3b0a215eb"
+    "presentations/devops.pptx": {
+      "bytes": 96758,
+      "sha256": "361b74e5ac9b81bdaa20084f024789ce4f22b3ec040be70a2ef7f6609c804eae"
     },
-    "presentations/aws-security-agent-presentation.pptx": {
-      "bytes": 167195,
-      "sha256": "73bb498bb746ab92a53c0fe62cfe7f8542de2a57f1800211a81a1b79a07ef330"
+    "presentations/finops-notes.md": {
+      "bytes": 6862,
+      "sha256": "ffa4390dfef3e12d2a3dde2694ad65d8d11149497bc1e09fdb0bc072c3f29f8b"
     },
-    "presentations/devops-mechanisms-reference.pptx": {
-      "bytes": 91821,
-      "sha256": "9e5244c7f3f443d5626bcc37d9695a1527e732796846d6cda56c7b2ebf87f335"
+    "presentations/finops.pptx": {
+      "bytes": 88391,
+      "sha256": "1c51b04fc8dabf4d481ec2100294f3bada1c0b073309aa2957c62acf111fc550"
     },
-    "presentations/devops-platform-reference.pptx": {
-      "bytes": 136704,
-      "sha256": "fd66d3c58bf96bd8b0dc786e65f4421caead6327b3962ab944458af9be9065b8"
+    "presentations/security-notes.md": {
+      "bytes": 7810,
+      "sha256": "85016797167b8336740b5297f0ea952ac9e638800a9353f37eb9aacb92f75d46"
     },
-    "presentations/finops-mechanisms-reference.pptx": {
-      "bytes": 76094,
-      "sha256": "a2354f671adde47050c4b6fe46dedb8c41d7a25fb4f1812327f87f51059af75a"
+    "presentations/security.pptx": {
+      "bytes": 93627,
+      "sha256": "bfb3cf33d365a78b69aa9031bad186acb1336cdc33c42b6d7c4b96e88d971bba"
     },
-    "presentations/finops-platform-reference.pptx": {
-      "bytes": 109767,
-      "sha256": "6c891fc5475be34ac28b131e736aca552f84aeb546cc0055568cf02d6e84dfff"
+    "qa/checks.json": {
+      "bytes": 3031,
+      "sha256": "bea85da137015ffa56182633930545c0b5d112a674792c18c725fadef71cbebb"
     },
-    "presentations/overview-mechanisms-reference.pptx": {
-      "bytes": 63925,
-      "sha256": "08fa885ff2ebfcda0b1767776fe0b912142623aca9af704017ffdd944915516f"
-    },
-    "presentations/security-mechanisms-reference.pptx": {
-      "bytes": 72166,
-      "sha256": "ca8ff2bd751ad0f094c13abdde4d27693412604e8c967ce59e1b75fe95f9ce07"
-    },
-    "presentations/security-platform-reference.pptx": {
-      "bytes": 101900,
-      "sha256": "13ecd08d8ed1a7232ec4afdd5bafac5ae719b8df60339af9b247590b84c34b8b"
-    },
-    "qa/build-validation.json": {
-      "bytes": 264,
-      "sha256": "3905675d38d353be302fd0201c7ad111c163b17b35de8c06f27492ed0e346bcc"
-    },
-    "qa/editorial-interaction-validation.json": {
-      "bytes": 933,
-      "sha256": "749bf0346fabfc451a0f00615c67f12e85f71b62da6378362a132ce73c931805"
-    },
-    "qa/editorial-lint.json": {
-      "bytes": 914,
-      "sha256": "d4c282105b491425c06bf1d64ba270fa65e13a01638a640d9df44fa08b9b59fe"
-    },
-    "qa/mechanism-browser-validation.json": {
-      "bytes": 1205,
-      "sha256": "269499583e968b481ec1eae2a6cb215a4b82908437fb6c97e208590b4da7c2ec"
-    },
-    "qa/mechanism-validation.json": {
-      "bytes": 382,
-      "sha256": "b0edde0f6f79bbf3efd18e8415d85c6623362c17b5ed865d6383dfaa48989f1a"
-    },
-    "qa/platform-publication-validation.json": {
-      "bytes": 286,
-      "sha256": "7b58a628ab7ba35881ce9b0e128159326e379329058cfde14ae92b6493b7d577"
-    },
-    "qa/platform-validation.json": {
-      "bytes": 3511,
-      "sha256": "cbbb1d8722dec88750d710ef1a576d9a7c93730cbe2945012ac5c334ded77b18"
-    },
-    "qa/scope-validation.json": {
-      "bytes": 2445,
-      "sha256": "b15f2e8d35b5a3f0442826686f831e49ed99adb34d5c4a67e042bb7c541a816f"
-    },
-    "qa/source-validation.json": {
-      "bytes": 728,
-      "sha256": "198b8290d028df8bb8a0e3ccf1d9551b609ede370d8445c5c44d6509073ed9fa"
-    },
-    "security/presentation-transcript.md": {
-      "bytes": 19452,
-      "sha256": "5f2ed56be1c282a5cfaa4a628b132f1d2c97c84ba076442ecfa486b5da091110"
+    "qa/content-review.md": {
+      "bytes": 5562,
+      "sha256": "f610e72210b3bcb85c83fd9c09dfd9df43c0c50f9ca9dc6dcd468a49f5e102c3"
     },
     "security/report.html": {
-      "bytes": 218003,
-      "sha256": "5889c0d950097403c83550f971fc17fb4182fb69215f3170b0c20caac213a1e1"
+      "bytes": 295,
+      "sha256": "89efe1a79b5910acd6b846e707f7d69d6ba850eaa9945a1e407cb3018e7aa0db"
     },
-    "security/report.md": {
-      "bytes": 31452,
-      "sha256": "2245a1a850ee764714b5ea01eabf69826fddc24781d895f504240576b42262ad"
+    "tools/docs-requirements.txt": {
+      "bytes": 112,
+      "sha256": "4b3919443c71ac9d00f6737261df1c2cbc4b89062d8d96b10acfcb792ed198d6"
     },
-    "security/validation-record.md": {
-      "bytes": 17293,
-      "sha256": "f829f05b4aa98cd027079c60230e7fb3729045596c999e77036452d7869cceeb"
+    "tools/docs_build.py": {
+      "bytes": 37297,
+      "sha256": "bb13fc33d74376178f6fb870ae32d507ea4c664b39c1aa24916a6e2ac28dc91e"
     },
-    "style-guide.html": {
-      "bytes": 22607,
-      "sha256": "1d9fb6c6c3cec486a94bf9959e12d1da2ac5675241066798add28f3e20497fc8"
+    "tools/docs_check.py": {
+      "bytes": 16127,
+      "sha256": "27cd580e1d650893796f4a993660fef1490104589276a2456c1034362b73bdd1"
     },
-    "tools/assemble_content.py": {
-      "bytes": 1758,
-      "sha256": "499a0c56996b83f456074358ed596a0f5080a7422986c8108b1000a8c3debd0e"
-    },
-    "tools/build_mechanisms.py": {
-      "bytes": 42220,
-      "sha256": "09264d3d0a9107df6a316a15bacb30dd50171d277687ce542fe235852f92e9e3"
-    },
-    "tools/build_platform_references.py": {
-      "bytes": 32700,
-      "sha256": "3b28ece6df2264bebe552ea1719309e7b111ed6d5c65eba3426be75df964ceea"
-    },
-    "tools/build_presentations.py": {
-      "bytes": 12439,
-      "sha256": "1bf53f135ed8d51b7a7b6a93e4605f106be2f476218f5270954a34a4d9fd3850"
-    },
-    "tools/build_suite.py": {
-      "bytes": 54052,
-      "sha256": "4c6607ace39bd0c074412bed5789afdf8f134af59d6ca0cf75a2c122ba3e0396"
-    },
-    "tools/editorial_lint.py": {
-      "bytes": 4023,
-      "sha256": "4fbb9bbb912336b035c922dcbad49cf3da0d82a5097aa27fdcabd79ab9c1da29"
-    },
-    "tools/finalize_platform_publication.py": {
-      "bytes": 2736,
-      "sha256": "4db2f504800c5a4132aa9032385bfb88c88496ed05c2e8067f74cf63b565b0d5"
-    },
-    "tools/qa_format.py": {
-      "bytes": 3305,
-      "sha256": "caf06214a4c4e93a2a0e4903df1b6d1e634339599cecddea3c2a4c1fda1c2fed"
-    },
-    "tools/qa_mechanisms_browser.py": {
-      "bytes": 4852,
-      "sha256": "2aa19062541b896dcba371b03b2bc829c4f824c84b47a404e3f7ddb0d18c3025"
-    },
-    "tools/validate_scope.py": {
-      "bytes": 7231,
-      "sha256": "3184ff9d7e1898b24c91d48e3b23b3d6d9fa713f89104ee9d4296708fbb78fa6"
+    "tools/lesson_plan.py": {
+      "bytes": 22101,
+      "sha256": "d6b497ea82b2a8698eedcf9c2d45b278098214db06971d8ba3db7b9106e8f238"
     }
   },
-  "boundary": "File hashes identify this working-tree publication. They do not establish external documentation accuracy or runtime product behavior."
+  "excluded": [
+    "MANIFEST.json itself",
+    "applications/",
+    ".git/"
+  ]
 }
