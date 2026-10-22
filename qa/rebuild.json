@@ -1,6 +1,6 @@
 {
   "revision": "2026-10-22-linked-catalog",
-  "files_compared": 47,
+  "files_compared": 51,
   "identical_repeated_build": true,
   "boundary": "Same committed inputs and same runner environment; not cross-version reproducibility."
 }
