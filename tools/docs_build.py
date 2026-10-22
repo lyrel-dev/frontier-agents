@@ -242,7 +242,7 @@ def metadata(guides):
                 s=g['sections'][sid];coverage.append(f'| [{sid}]({k}.html#{sid}) | {s["title"]} | {LABELS[section_type(sid)]} | '+', '.join(s['sources'])+' |')
     write('guides/coverage.md','\n'.join(coverage)+'\n')
     write('PUBLISHING.md','# Publishing documentation\n\nEdit the canonical guide, chapter map or lesson plan, rebuild, then run `python tools/docs_check.py --browser`. Review the generated HTML before committing. The documentation workflow is triggered by `documentation-build.json`; it validates before committing each changed documentation file separately.\n\nThe report and presentation are both HTML. No compressed distributions or retained historical document copies are produced. Git holds prior revisions. The separate application and its workflow must remain unchanged. Repository publication is not website hosting.\n')
-    write('CHANGELOG.md','# Documentation changes\n\n## 22 October 2026 — structured HTML edition\n\nRestored explicit chapters and nested section navigation in every report. Added standalone HTML presentations with chapter agendas, source-linked notes, session/slide timers and printing. Removed generated binary decks and their build dependencies. Preserved all canonical section bodies and the existing 124-minute schedule. Git retains earlier versions; no manual archives are produced.\n')
+    write('CHANGELOG.md','# Documentation changes\n\n## 22 October 2026 — structured HTML edition\n\nRestored explicit chapters and nested section navigation in every report. Added standalone HTML presentations with chapter agendas, source-linked notes, session/slide timers and printing. Removed generated binary decks and their build dependencies. Preserved all canonical section bodies; the revised presentation duration is recorded in the validation output. Git retains earlier versions; no manual archives are produced.\n')
 
 def build():
     guides=load_guides()
@@ -253,7 +253,7 @@ def build():
     print(json.dumps({'revision':REVISION,'reports':len(guides),'sections':sum(len(g['sections']) for g in guides.values()),'html_presentations':len(DECKS),'slides':sum(len(d['slides']) for d in DECKS.values())},indent=2))
 
 def commit():
-    allowed={'tools','guides','presentations','qa','examples','devops','security','finops','architecture','mechanisms','platforms'}
+    allowed={'tools','guides','presentations','qa','examples','devops','security','finops','architecture','mechanisms','platforms','catalog'}
     root_files={'README.md','CHANGELOG.md','MANIFEST.json','VALIDATION.md','PUBLISHING.md','EDITORIAL_STANDARD.md','SCOPE.md','index.html','documentation-build.json'}
     raw=subprocess.check_output(['git','status','--porcelain=v1','-z','--untracked-files=all'],cwd=ROOT)
     paths=[]
