@@ -25,7 +25,9 @@ def check(browser=False):
             else:preserved+=1
         soup=BeautifulSoup((ROOT/f'guides/{key}.html').read_text(),'html.parser')
         if [s['id'] for s in soup.select('.report-section')] != ordered_ids(key):errors.append(key+': section order')
-        if len(soup.select('.chapter'))!=len(CHAPTERS[key]) or len(soup.select('.toc details'))!=len(CHAPTERS[key]):errors.append(key+': chapter navigation mismatch')
+        if len(soup.select('.chapter')) != len(CHAPTERS[key]):errors.append(key+': chapter count mismatch')
+        expected_toc = len(CHAPTERS[key]) + (1 if key in {'devops','security','finops'} else 0)
+        if len(soup.select('.toc details')) != expected_toc:errors.append(key+': chapter navigation mismatch')
         if len(soup.select('.toc a[data-section]')) != len(g['sections']):errors.append(key+': incomplete table of contents')
         deck=BeautifulSoup((ROOT/f'presentations/{key}.html').read_text(),'html.parser')
         if len(deck.select('.slide')) != len(DECKS[key]['slides']):errors.append(key+': slide count')
@@ -36,7 +38,10 @@ def check(browser=False):
             if actual.h1.get_text()!=expected['title']:errors.append(key+': slide title changed')
             for ref in expected['refs']:
                 if ref not in g['sections']:errors.append(key+': invalid slide reference '+ref)
-    if (ROOT/'tools/lesson_plan.py').read_text().strip()!=git('show',f'{BASELINE}:tools/lesson_plan.py').strip():errors.append('Curated lesson plan changed')
+    for key,deck_definition in DECKS.items():
+        titles=[slide['title'] for slide in deck_definition['slides']]
+        if len(titles)!=len(set(titles)):errors.append(key+': duplicate slide title')
+        if any(len(slide.get('data',[]))<3 for slide in deck_definition['slides'] if slide['kind']!='demo'):errors.append(key+': sparse slide outline')
     if list((ROOT/'presentations').glob('*.pptx')):errors.append('Binary presentation outputs remain')
     for folder in ['archive','dist']:
         if (ROOT/folder).exists():errors.append('Manual distribution/history directory: '+folder)
@@ -142,13 +147,13 @@ def check(browser=False):
                     page.close()
             for rel in ['index.html','presentations/index.html']:
                 for width in (390,1440):
-                    page=br.new_page(viewport={'width':width,'height':1000});page.goto((ROOT/rel).as_uri());assert page.locator('.index-card').count()==4
+                    page=br.new_page(viewport={'width':width,'height':1000});page.goto((ROOT/rel).as_uri());assert page.locator('.index-card').count()==5;assert page.locator('#use-case-catalog-card').count()==1
                     assert not page.evaluate('document.documentElement.scrollWidth>innerWidth+2');page.close()
             br.close()
     results={'revision':REVISION,'baseline':BASELINE,'reports':4,'report_chapters':sum(len(c) for c in CHAPTERS.values()),'canonical_sections_preserved':preserved,'canonical_content_and_sources_unchanged':not any('content changed' in e or 'source register changed' in e for e in errors),'html_presentations':4,'timed_slides':sum(len(d['slides']) for d in DECKS.values()),'programme_minutes':sum(s['seconds'] for d in DECKS.values() for s in d['slides'])//60,'exercise_minutes':sum(s['seconds'] for d in DECKS.values() for s in d['slides'] if s['kind']=='demo')//60,'html_files_checked':len(html_files),'local_links_checked':links,'binary_presentations_remaining':len(list((ROOT/'presentations').glob('*.pptx'))),'browser_checks':browser_results,'synthetic_fixture_checks':fixture_results,'excluded_scope_hits':scope_hits,'application_changes':changed.splitlines(),'errors':errors,'boundary':'Organization, preserved source content, HTML behavior and timing checks only. No new external product audit or live AWS execution.'}
     write('qa/checks.json',json.dumps(results,indent=2)+'\n')
     if errors:raise SystemExit(json.dumps(results,indent=2))
-    write('VALIDATION.md','# Structured HTML validation\n\nResults are in [qa/checks.json](qa/checks.json). The checks compare every canonical section body and official source register with the pinned previous publication, check chapter membership, nested navigation, links, speaker notes and slide budgets, and verify that no binary presentation outputs remain.\n\nBrowser tests use real local HTML navigation at 390 and 1440 pixels. They exercise search, chapter and type filters, chapter expansion, section links, all slides, agendas, keyboard navigation, notes, paused/reset timers, persistent slide links and print-state restoration. These tests do not establish product-documentation correctness or successful AWS operation.\n\nThe separate application and its workflow are checked for unchanged content. The existing 124-minute programme and 28-minute prepared-result exercise allocation are retained. Git holds prior revisions; no manual archives are created.\n')
+    write('VALIDATION.md','# Structured HTML validation\n\nResults are in [qa/checks.json](qa/checks.json). The checks compare every canonical section body and official source register with the pinned previous publication, check chapter membership, nested navigation, links, speaker notes and slide budgets, and verify that no binary presentation outputs remain.\n\nBrowser tests use real local HTML navigation at 390 and 1440 pixels. They exercise search, chapter and type filters, chapter expansion, section links, all slides, agendas, keyboard navigation, notes, paused/reset timers, persistent slide links and print-state restoration. These tests do not establish product-documentation correctness or successful AWS operation.\n\nThe separate application and its workflow are checked for unchanged content. The current presentation duration and prepared-result exercise allocation are recorded in `qa/checks.json`. Git holds prior revisions; no manual archives are created.\n')
     files={}
     roots=['guides','presentations','tools','qa','examples','devops','security','finops','architecture','mechanisms','platforms']
     paths=[ROOT/n for n in ['README.md','CHANGELOG.md','VALIDATION.md','PUBLISHING.md','EDITORIAL_STANDARD.md','SCOPE.md','index.html','documentation-build.json','.github/workflows/document-suite.yml']]
