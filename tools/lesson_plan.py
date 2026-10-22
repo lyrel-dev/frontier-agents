@@ -1,114 +1,799 @@
-"""Curated presentation outlines. References resolve to canonical guide sections."""
+"""Curated HTML presentation outlines.
+
+Titles are descriptive section headings. Every slide references canonical guide
+sections; use-case catalog entries remain a separate structured data set.
+"""
+
+
 def slide(title, minutes, refs, kind, data, message):
-    return dict(title=title, seconds=int(minutes*60), refs=refs.split(), kind=kind, data=data, message=message)
+    return dict(
+        title=title,
+        seconds=int(minutes * 60),
+        refs=refs.split(),
+        kind=kind,
+        data=data,
+        message=message,
+    )
+
+
 def deck(title, subtitle, prefix, slides):
     return dict(title=title, subtitle=subtitle, prefix=prefix, slides=slides)
+
+
 DECKS = {
-'devops': deck('AWS DevOps Agent', 'Resources, context and controlled execution', 'D', [
-slide('An Agent Space connects configuration to executions',2,'D-01','flow',[
-['Account registrations','Providers and AWS account access'],['Agent Space','Associations, selected tools and operator access'],['Agent definition','Managed behavior or custom prompt and attachments'],['Execution','Investigation, invocation and observable tool results']], 'Configuration, execution and evidence are different objects.'),
-slide('Two access paths need separate verification',2,'D-02','table',[
-['Path','Purpose','Acceptance check'],['Resource role','Read authorized AWS sources','Known resource and identity are correct'],['Operator role','Let people use the space','Intended user—not only administrator—can enter'],['Connected provider','Access selected external tools','Arguments and returned source agree']], 'A created workspace is not proof that its data sources are readable.'),
-slide('MCP setup has authentication-specific decisions',3,'D-03','table',[
-['Method','Required decisions'],['OAuth','Token/authorization endpoints, client and scopes'],['API key / secret headers','Actual header names and supported rotation path'],['SigV4','Signing Region, service and role option'],['Association','Select tools in the Agent Space; verify there']], 'Role-less SigV4 validation is deferred to association.'),
-slide('Private routing and provider identity are separate',2,'D-04','flow',[
-['Agent service','Uses configured private connection'],['Resource gateway','ENIs in selected VPC subnets'],['Endpoint route','DNS, host and allowed port ranges'],['Authenticated tool','Provider authentication and selected operation']], 'Check the gateway path and target port before rotating a valid secret.'),
-slide('Topology is a representation, not an access boundary',2,'D-05','columns',[
-['Discovery','CloudFormation resources and enabled Resource Explorer supply inventory.'],['Relationships','Configuration, tags, pipeline mapping and observability supply evidence.'],['Verification','Compare one service/repository edge with the deployed configuration.']], 'A missing graph node does not establish that a direct resource read is denied.'),
-slide('Past incidents become selected contextual evidence',3,'D-M01','flow',[
-['Investigations','Earlier outcomes and evidence'],['Learning process','Synthesizes monitor-specific knowledge'],['Memory store','Descriptions, entries, versions and active state'],['New investigation','Selects relevant context and checks current evidence']], 'Retention, retrieval and diagnostic correctness require separate observations.'),
-slide('Corrections and access attachments solve different problems',2,'D-M02 D-M07','columns',[
-['Correct a diagnosis','Submit verified feedback; inspect the resulting lesson. AWS sharing is a separate choice.'],['Attach context','New custom agents start without stores. Attach only required stores; managed stores are read-only to them.']], 'Feedback changes contextual knowledge; attachment changes which context an agent may use.'),
-slide('Instructions and skills enter the session differently',2,'D-M03 D-M04','table',[
-['Control','Loading behavior','Configuration test'],['Instructions','Applicable text at session startup','Compare an existing and new session'],['Skill','Procedure selected by description and scope','Compare a matching and nonmatching request'],['Permissions','Enforced by the connected systems','Test an expected denial separately']], 'Prompt guidance does not grant or revoke IAM permissions.'),
-slide('Inspect triage before diagnosing a missing investigation',2,'D-06','table',[
-['Decision','Meaning','Operator response'],['Linked','Signal belongs to existing work','Inspect the primary investigation; unlink if wrong'],['Skipped','Configured criteria excluded it','Inspect rule/skill; unskip if wrong'],['Proceed','Independent work is scheduled','Inspect execution and evidence']], 'Routing correction and root-cause feedback are different operations.'),
-slide('A trigger creates work; cancellation affects a run',2,'D-07','flow',[
-['Definition','Prompt, selected tools, skills and stores'],['Trigger','Manual, rate or cron; inspect next run'],['Invocation','History shows status and tool trajectory'],['Stop controls','Pause future starts; cancel existing work separately']], 'In-flight calls may finish after cancellation; a schedule is not the data window.'),
-slide('Sandbox and directed actions have different boundaries',3,'D-M05 D-M06','columns',[
-['Sandbox','Fresh investigation-local environment; configured packages and outbound rules. Empty allowlist still permits AWS endpoints.'],['Directed actions','Space opt-in, eligible access and specific operation/resource approval. Inspect classification and final state.']], 'Application or tool effects must be reviewed; “read-only” is not a universal agent label.'),
-slide('Update semantics are part of the operational contract',2,'D-08 D-M06','table',[
-['Object','Update behavior','Avoid'],['Asset metadata','PATCH semantics','Assuming names can replace required asset IDs'],['Space preferences map','Replacement when supplied','Dropping existing values unintentionally'],['Memory entry','New immutable version','Treating edits as erased history']], 'Read current configuration first, then verify the saved result.'),
-slide('Exercise: same alarm, different evidence',8,'D-U01 D-M01 D-M02','demo',[
-['0–2 min','Inspect historical memory','Earlier database pool saturation'],['2–4 min','Compare new fixture','DB 34/100 connections; query p95 18 ms'],['4–6 min','Evaluate current lead','Inventory p95 2,900 ms; checkout 3,100 ms'],['6–8 min','Record the boundary','Upstream lead supported; internal cause unresolved']], 'Synthetic prepared-result exercise. Do not claim observed AWS recall or a proven deployment cause.'),
-slide('Diagnose the failing layer, then retest',2,'D-10 D-11','columns',[
-['Access and connectivity','Check operator identity, source role, provider association, route and endpoint port.'],['Context and execution','Check activation, descriptions, attachments, session start and concurrency.'],['Changes and coverage','Check exact approval and update semantics; consult current quotas and feature eligibility.']], 'Full remote-protocol and release-profile procedures remain linked scope, not completed live tests.')
-]),
-'security': deck('AWS Security Agent', 'Assessment resources, authentication and evidence lineage', 'S', [
-slide('Application resources sit beneath shared account configuration',2,'S-01','flow',[
-['Account resources','Integrations, identity and requirement packs'],['Agent Space','Application sources, users and settings'],['Configuration','Target, authentication, criteria and limits'],['Run and evidence','Assessment results and linked verification']], 'Requirements and integrations can have broader scope than a single application.'),
-slide('Registration is not repository connection',2,'S-02','table',[
-['Action','Establishes','Inspect'],['Register integration','Available source provider','Account type and authorization'],['Connect repository','Application source selection','Repository and branch identity'],['Enable feature','Selected assessment behavior','Modes, comments and remediation settings'],['Open as operator','Usable assessment access','Intended user rather than setup administrator']], 'Verify the deployed revision separately from the latest source branch.'),
-slide('Network rules separate targets, dependencies and exclusions',2,'S-03','table',[
-['Rule','Permitted purpose','Example'],['Target','Access and testing','Authorized staging application'],['Accessible','Supporting access; not attack target','Approved login dependency'],['Out of scope','No access; exclusion precedence','Production callback or payment path']], 'A verified domain is not authorization for every downstream effect.'),
-slide('Obtaining a credential is not logging into the application',3,'S-M01','flow',[
-['Credential source','Direct input, secret, role or Lambda'],['Service access','Required trust and read/invoke permissions'],['Login instructions','How credentials and MFA apply'],['Authenticated role','Observed identity and protected routes']], 'Save & Test verifies the configured flow; inspect where authentication fails.'),
-slide('Learned login navigation is a specific reuse mechanism',2,'S-M02','flow',[
-['First successful login','Navigation is discovered'],['Saved skill','Successful procedure is retained'],['Later session','Procedure can be reused'],['Setting / flow change','Toggle reuse; verify actual identity again']], 'Login Optimization is not a universal vulnerability-memory service.'),
-slide('A reusable configuration produces distinct executions',2,'S-04','table',[
-['Object','Meaning'],['Draft','Incomplete configuration, not a completed test'],['Saved configuration','Reusable target, credentials and execution choices'],['Run','Assessment against then-current target/configuration'],['Task-hour limit','Cumulative task work, not elapsed wall time']], 'A completed status does not establish exhaustive coverage.'),
-slide('Requirement evaluation starts with applicability',2,'S-M03','columns',[
-['Applicable and compliant','The required ownership check exists and supporting evidence is present.'],['Applicable and violating','A handler returns account-owned data without the required authorization.'],['Inapplicable','The requirement does not govern the evaluated component.']], 'Configure requirement evaluation explicitly; vulnerability analysis alone is different.'),
-slide('Regeneration replaces requirements; it does not append',2,'S-M04','flow',[
-['Source policy','Reviewed governing documents'],['Generate','Replace the pack contents'],['Review','Inspect generated and formerly manual rules'],['Enable','Use the reviewed replacement in later assessments']], 'Keep authoritative requirement source in Git and review replacement before enabling.'),
-slide('A proposed repair is not a deployed repair',2,'S-05','flow',[
-['Finding','Evidence and affected revision'],['Proposed change','Provider-specific patch or pull request'],['Engineering review','Tests and approval'],['Deployment','Known revision on the authorized target']], 'Use the finding ID to connect the records, not similarity of titles.'),
-slide('Revalidation preserves the original finding',2,'S-M05','flow',[
-['Selected finding','Original completed assessment'],['New job','Current credentials; repeat selected steps'],['Result','Reproduced or not reproduced'],['History','Original finding linked to new evidence']], 'A non-reproduction result is scoped; failed authentication can invalidate its interpretation.'),
-slide('Earlier assessments use different resource lifecycles',2,'S-06','table',[
-['Assessment','Configuration model','Result focus'],['Code','Full scan or supported change trigger','Locations, evidence and suggested fixes'],['Design','One-off review; clone for new work','Design findings against requirements'],['Threat model','Reusable configuration and runs','System boundary, flows and threats']], 'Review inferred system context before relying on individual findings.'),
-slide('Encryption requires the correct identity and context',2,'S-M06','flow',[
-['Customer KMS key','Protects resource branch keys'],['Branch key','Service-managed stored key material'],['Derived wrapping key','Protects data-encryption keys'],['Authorized request','Caller, action and encryption context must match']], 'Administrator, web-app role, assessment role and asynchronous service access are distinct.'),
-slide('Exercise: verify the repaired account boundary',8,'S-U01 S-M05','demo',[
-['0–2 min','Inspect the finding','User A received account B’s test invoice in demo-r1'],['2–4 min','Inspect the change','Ownership check reviewed; demo-r2 deployed'],['4–6 min','Inspect revalidation','Actual user A role and selected path reached'],['6–8 min','State the result scope','Prepared denial supports that path, not whole-app security']], 'Synthetic staging evidence only. No live penetration test or exploit execution.'),
-slide('Troubleshooting follows the failed prerequisite',2,'S-07 S-08','columns',[
-['Access','Separate repository connection, secret retrieval, application login and private routing.'],['Criteria','Check pack activation, applicability, regeneration and evaluation mode.'],['Evidence','Check deployment, actual identity, reachable path and linked job before closing a finding.']], 'Full provider/pipeline and GenAI exception setup remains explicitly linked coverage.')
-]),
-'finops': deck('AWS FinOps Agent', 'Source queries, retained context, tasks and publication', 'F', [
-slide('Instance configuration and task execution are separate',2,'F-01','flow',[
-['Access','Agent data role and operator entry'],['Context','Uploaded files, memory and conversation'],['Work','Automation or request creates a queued task'],['Output','Answer, artifact or configured external action']], 'Preview service; storage and inference geography must be reviewed separately.'),
-slide('Four permission responsibilities are not one role',3,'F-02','table',[
-['Responsibility','Purpose'],['Administrator','Create/configure service resources and permitted roles'],['Agent data role','Call authorized data services and manage required rules'],['Operator role','Supported web-app operations'],['User permission','Enter the configured agent as the intended person']], 'Test data access and team access independently.'),
-slide('Numerical contribution and cause are different conclusions',2,'F-M01','table',[
-['Source','What it can support'],['Cost query','Amount for fixed dates, metric and dimensions'],['Anomaly record','Detected deviation under the monitor'],['Recommendation','Upstream candidate and assumptions'],['Change event','Recorded operation at a time']], 'A nearby deployment alone does not explain the entire cost delta.'),
-slide('Files are reviewed reference inputs',2,'F-M02','columns',[
-['Preparation','Use actual account identifiers, owners and reporting basis. Keep the maintained source in Git.'],['Controls','Upload/soft-delete/restore in the workspace. The agent reads but does not conversationally rewrite the file.'],['Limits','Supported formats, 10 MB per file and total context quota matter.']], 'Everyone with access to the agent can see its context files.'),
-slide('Memory and file retrieval need different tests',2,'F-M03','flow',[
-['Remember','State a harmless preference'],['New session','Observe its application'],['Correct / forget','Change the retained memory'],['Retest','Check separately from uploaded source files']], 'Updating memory does not establish that a reference file changed.'),
-slide('Compaction summarizes a conversation, not all persistent state',1,'F-M04','columns',[
-['What changes','Older messages are summarized as the conversation context fills. Recent messages remain in full.'],['How to review','Restate the current cost contract and unresolved questions before another material calculation.']], 'Do not infer verbatim retention or a documented hidden precedence algorithm.'),
-slide('A task runs; an automation creates future tasks',2,'F-03','flow',[
-['Definition','Schedule or supported event condition'],['Task creation','A separate execution record'],['Shared queue','On-demand and automated work'],['Result','Status, source evidence and artifacts']], 'Removing an automation does not delete existing tasks or messages.'),
-slide('Trace an anomaly through the complete event path',2,'F-M05','flow',[
-['Monitor','Cost Anomaly Detection'],['Managed rule','EventBridge condition and permissions'],['Automation','COST_ANOMALY trigger creates task'],['Execution','Inspect result and destination separately']], 'No task and no delivered message are different failures.'),
-slide('Integration registration precedes destination binding',2,'F-05','table',[
-['Layer','Jira','Slack'],['Registration','Supported Cloud authorization','Workspace authorization'],['Agent connection','Selected project/space','Channel; app membership required'],['Boundary','No arbitrary workflow editing','One-way posting, not channel reading']], 'Inspect connection state and the actual destination.'),
-slide('Approval rules depend on effect and invocation',2,'F-M06','table',[
-['Effect','Interactive / on-demand','Automation'],['Jira issue or comment','Approval prompt','Pre-authorized during setup'],['Slack post','No approval prompt','No approval prompt']], 'Schedule setup can authorize publication; review content and audience at that point.'),
-slide('Stop and delete mean different things for different objects',2,'F-M07 F-04','table',[
-['Object','Control','What may remain'],['Context file','Soft delete / restore','Retained file content'],['Task','Cancel execution','Task record'],['Automation','Disable/delete future starts','Existing tasks'],['Artifact','Delete artifact','External published copies']], 'Whole-agent deletion is not an ordinary lifecycle demonstration.'),
-slide('Exercise: reconcile the 41% increase before explaining it',8,'F-U01','demo',[
-['0–2 min','Check comparison contract','Two complete windows, same scope and cost basis'],['2–4 min','Reconcile component totals','1,400 → 1,974; delta 574'],['4–6 min','Attribute arithmetic','Storage +200; requests +100; transfer +274'],['6–8 min','Evaluate prepared evidence','Extra export supports transfer only; other causes unresolved']], 'Synthetic quantities and rates—not AWS prices or a measured saving.'),
-slide('Validate each layer rather than one fluent answer',2,'F-06 F-07','columns',[
-['Data','Reproduce totals with identical metric, dates, filters and units.'],['State and execution','Test file retrieval, memory, event matching and queue status separately.'],['Effects','Inspect destination, approval path and retained records after a stop operation.']], 'Complete current policies and quotas remain the authoritative linked reference.')
-]),
-'architecture': deck('Shared architecture', 'Compare mechanisms without inventing a common runtime', 'A', [
-slide('The three services expose different resource models',2,'A-01','table',[
-['Layer','DevOps','Security','FinOps'],['Scope','Agent Space','Application + shared resources','Agent instance'],['Configuration','Agents, tools, knowledge','Assessment definitions','Context, automations, connections'],['Execution','Investigation / invocation','Run / revalidation job','Conversation / task']], 'Use platform-specific identifiers rather than a universal ambiguous agent ID.'),
-slide('Retained context has different producers and lifecycles',2,'A-02','table',[
-['Material','Producer','Consumer'],['Monitor knowledge','Managed investigation learning','Relevant later investigation'],['Login skill','Successful authentication navigation','Later login'],['Reference file','Operator upload','Agent task or conversation'],['Conversational memory','Preferences/corrections','Later session']], 'Do not reduce these to one “learning enabled” setting.'),
-slide('Connectivity is not authorization',2,'A-03','flow',[
-['Route','Can the endpoint be reached?'],['Identity','Who authenticated?'],['Permission','Which operation is allowed?'],['Behavior','What does prompt guidance request?']], 'Test each layer with observed results and an expected denial.'),
-slide('The effect determines the relevant approval boundary',2,'A-04','table',[
-['Effect','Control to inspect'],['Resource mutation','Specific directed-action authorization'],['Application testing','Targets, credentials, exclusions and permitted effects'],['Source change','Repository review and deployment controls'],['External publication','Destination and invocation-specific approval']], 'No universal “read-only” or “human-approved” label is sufficient.'),
-slide('Configuration, runs and artifacts have separate lifecycles',2,'A-05','columns',[
-['Future work','Pause a schedule or disable an automation.'],['Current work','Cancel the invocation/task using its supported control.'],['Retained evidence','Manage versions, findings, files and artifacts according to their own semantics.']], 'Stopping future starts does not reverse completed effects.'),
-slide('A handoff transfers evidence—not credentials or authority',2,'A-06','flow',[
-['Origin','Platform, configuration and execution IDs'],['Subject','Service, revision and UTC observation window'],['Request','Owner, question and permitted effect'],['Acceptance','Required evidence and unresolved questions']], 'The receiving team obtains its own access and makes its own authorization decision.'),
-slide('Keep implementation unknowns visible',2,'A-07','columns',[
-['Documented','Resource relationships, selected controls, retention and execution behavior.'],['Not established','Shared vector database, retrieval-ranking algorithm, cross-agent runtime or model-training pipeline.']], 'An attractive diagram is not evidence of undocumented internals.'),
-slide('Tabletop: three observations, three evidence obligations',4,'A-U01','demo',[
-['0–1 min','Identify the required inputs','Latency evidence, authorization identity and cost basis'],['1–3 min','Check consistency','Same intended revision, target and comparable windows'],['3–4 min','Assign unresolved questions','Do not invent a single shared root cause']], 'Synthetic comparison; no shared runtime or live execution assumed.'),
-slide('Accept documents on operating usefulness',2,'A-07','columns',[
-['Model','Resources and scope are clear before a scenario begins.'],['Procedure','Inputs, choices, confirmation and failure paths are described.'],['Evidence','Claims have sources; examples and live outcomes are not conflated.']], 'Link and layout checks are necessary but do not prove technical completeness.')
-])}
+    'devops': deck(
+        'AWS DevOps Agent',
+        'Functions, use cases, mechanisms and operating controls',
+        'D',
+        [
+            slide(
+                'Product Functions and Agent Space Resource Model',
+                3,
+                'D-01',
+                'table',
+                [
+                    ['Layer', 'Primary objects', 'Operational purpose', 'Evidence to inspect'],
+                    ['Account and Region', 'Provider registrations; AWS account roles', 'Make selected sources and tools available', 'Registered provider, role ARN, Region'],
+                    ['Agent Space', 'Associations; selected tools; operator access', 'Define the operational boundary', 'Space ID, integrations, operator role'],
+                    ['Knowledge and behavior', 'Topology; memory; instructions; skills', 'Provide environment context and procedures', 'Version, active state, attachment'],
+                    ['Execution', 'Investigation; custom-agent invocation; evaluation', 'Perform a bounded task', 'Trajectory, tool results, status'],
+                    ['Effect', 'Recommendation; approval; directed action', 'Separate advice from state change', 'Approval identity and resulting state'],
+                ],
+                'Configuration objects, executions and effects must be reviewed as separate records.',
+            ),
+            slide(
+                'Use Case Taxonomy and Delivery Modes',
+                2,
+                'D-01 D-06 D-07',
+                'table',
+                [
+                    ['Delivery mode', 'Meaning', 'Representative use cases', 'Required configuration'],
+                    ['Built-in function', 'AWS-managed incident, query or prevention behavior', 'Triage, investigation, on-demand health, pattern analysis', 'Agent Space, sources and operator access'],
+                    ['Configured custom agent', 'Operator-defined prompt, tools, skills, memory and schedule', 'Health reports, operational reviews, audits, trend reports', 'Custom-agent definition and trigger'],
+                    ['Configured knowledge', 'Reusable context or procedure', 'SOP consolidation, report standards, topology notes', 'Memory, skill or instructions'],
+                    ['Controlled action', 'Explicitly authorized state change', 'Approved mitigation', 'Directed actions, role, classification and approval'],
+                    ['Preview function', 'Feature-specific pre-production path', 'Release readiness and release testing', 'Eligibility, Region and test target'],
+                ],
+                'The catalog distinguishes native functions from configured and team-composed workflows.',
+            ),
+            slide(
+                'Incident Operations Use Cases',
+                3,
+                'D-06 D-M06 D-10',
+                'table',
+                [
+                    ['Use case', 'Initiation', 'Primary inputs', 'Reviewable output'],
+                    ['Incident signal triage', 'Alert, ticket or webhook', 'Signal identity, correlation and skip criteria', 'Linked, skipped or proceed decision with reason'],
+                    ['Root-cause investigation', 'Automatic or manual investigation', 'Metrics, logs, traces, changes and topology', 'Evidence, hypotheses, root-cause versions'],
+                    ['Investigation steering', 'Operator follow-up in context', 'Contrary evidence or missing source', 'Revised analysis and new root-cause version'],
+                    ['Mitigation planning', 'Completed or active investigation', 'Proposed effect, target, risk and rollback', 'Reviewable mitigation proposal'],
+                    ['Approved mitigation', 'Explicit operator approval', 'Exact operation and resource', 'Attributed action and independently checked state'],
+                ],
+                'Triage, diagnosis, recommendation and execution are different stages with different records.',
+            ),
+            slide(
+                'Operational Reporting and Review Use Cases',
+                3,
+                'D-07 D-03 D-05',
+                'table',
+                [
+                    ['Use case', 'Cadence', 'Source scope', 'Expected output'],
+                    ['On-demand service health', 'Ad hoc', 'Selected service metrics, alarms and deployments', 'Timestamped health answer with missing signals'],
+                    ['Minute incident status report', 'On demand or short schedule', 'Current logs, metrics and active investigation', 'Changed observations, open hypotheses and next check'],
+                    ['Daily or weekly health report', 'Scheduled', 'Named services and complete reporting window', 'Trend summary, incidents, deployments and data gaps'],
+                    ['Deployment activity report', 'Scheduled or ad hoc', 'CI/CD history and service ownership', 'Revision list, failed changes and affected services'],
+                    ['Operational review pack', 'Weekly or monthly', 'Health, incidents, prevention and changes', 'Review agenda, decisions and owned follow-up'],
+                ],
+                'Recurring reports are custom-agent workflows; the report contract and data window must be explicit.',
+            ),
+            slide(
+                'Knowledge and Documentation Use Cases',
+                3,
+                'D-05 D-M01 D-M02 D-M03 D-M04 D-M07',
+                'table',
+                [
+                    ['Use case', 'Primary mechanism', 'Maintained object', 'Boundary'],
+                    ['Incident pattern identification', 'Managed learning and prevention evaluation', 'Monitor memory and recommendation', 'Historical pattern is not the current cause'],
+                    ['SOP consolidation', 'Skill and supporting resources', 'Reviewed SKILL.md bundle', 'Team workflow; procedure does not grant tools'],
+                    ['Standing operational policy', 'Agent instructions', 'Global or agent-specific AGENTS.md', 'Prompt context, not IAM enforcement'],
+                    ['Topology documentation', 'Discovery and learned understanding', 'Topology and environment summary', 'Graph is not an access-control boundary'],
+                    ['Service-specific context', 'Custom memory store', 'Descriptions, entries and versions', 'Attachment and active state control access'],
+                ],
+                'Memory, instructions, skills and topology serve different documentation purposes and lifecycles.',
+            ),
+            slide(
+                'Access Roles, Tool Providers and Private Connectivity',
+                3,
+                'D-02 D-03 D-04',
+                'table',
+                [
+                    ['Configuration area', 'Decision', 'Confirmation', 'Typical failure'],
+                    ['Resource access', 'Allowed accounts, actions and resources', 'Known resource can be read under expected identity', 'Missing source data'],
+                    ['Operator access', 'Who can enter and operate the space', 'Intended operator signs in', 'Administrator-only access works'],
+                    ['MCP provider', 'Endpoint, authentication and registration', 'Provider validates or associates successfully', 'Wrong token endpoint or SigV4 fields'],
+                    ['Tool association', 'Selected tools for the space or custom agent', 'Expected tool visible; excluded tool absent', 'Provider registered but tool unavailable'],
+                    ['Private connection', 'VPC, subnets, security groups and ports', 'Target host and port reachable', 'Route or port failure mistaken for credential failure'],
+                ],
+                'Reachability, authentication, tool selection and authorization must each be tested.',
+            ),
+            slide(
+                'Memory, Instructions and Skills',
+                3,
+                'D-M01 D-M02 D-M03 D-M04 D-M07',
+                'table',
+                [
+                    ['Mechanism', 'When loaded', 'Typical content', 'Lifecycle control'],
+                    ['Managed memory', 'Selected by description during relevant work', 'Recurring causes and environment understanding', 'Version, active state and managed refresh'],
+                    ['Custom memory', 'Selected after store attachment', 'Team or service context', 'Create, edit, deactivate, detach or delete'],
+                    ['Corrective reflection', 'Future investigation of the alarm', 'Verified correction to an earlier diagnosis', 'Latest feedback and visible memory'],
+                    ['Agent instructions', 'Every new applicable session', 'Standing policies and output rules', 'Edit and start a new session'],
+                    ['Skill', 'When description and agent scope match', 'Specialized procedure and references', 'Edit description, content and targeting'],
+                ],
+                'Availability, selection and diagnostic influence are separate questions for retained context.',
+            ),
+            slide(
+                'Custom Agents, Schedules and Invocation Records',
+                3,
+                'D-07 D-08',
+                'table',
+                [
+                    ['Object', 'Configuration', 'Run-time behavior', 'Stop or change control'],
+                    ['Custom agent', 'System prompt, selected tools, skills and stores', 'Loads only assigned resources', 'Edit or disable definition'],
+                    ['Schedule trigger', 'Rate or cron expression', 'Creates future invocations', 'Pause or delete trigger'],
+                    ['Invocation', 'Run Now, prompt or trigger', 'Produces status, trajectory and outputs', 'Cancel current invocation'],
+                    ['Artifact or recommendation', 'Generated by assigned skills/tools', 'Separate output object', 'Review and manage independently'],
+                    ['Asset API', 'IDs, metadata, files and versions', 'Programmatic configuration management', 'Respect PATCH/replacement semantics'],
+                ],
+                'A schedule creates future work; it does not define the data window or cancel an existing run.',
+            ),
+            slide(
+                'Incident Triage and Investigation Lifecycle',
+                3,
+                'D-06',
+                'flow',
+                [
+                    ['Incoming signal', 'Alert, ticket, webhook or manual request with incident context.'],
+                    ['Triage decision', 'Linked, skipped or proceed; inspect the reason before diagnosing absence.'],
+                    ['Investigation', 'Evidence collection, hypotheses, root-cause versions and steering.'],
+                    ['Closure and feedback', 'Mitigation decision, recovery evidence and correction of routing or diagnosis.'],
+                ],
+                'Routing correction, diagnosis correction and mitigation approval are distinct operations.',
+            ),
+            slide(
+                'Incident Pattern Analysis and Prevention Recommendations',
+                3,
+                'D-M01 D-M02 D-06',
+                'table',
+                [
+                    ['Stage', 'Input', 'Output', 'Operator decision'],
+                    ['Monitor memory refresh', 'Recent completed investigations', 'Monitor-specific recurring-cause context', 'Inspect version and relevance'],
+                    ['Prevention evaluation', 'Multiple incident investigations', 'Observability, infrastructure, governance or code recommendations', 'Run, stop or wait for scheduled evaluation'],
+                    ['Recommendation review', 'Incident evidence and expected impact', 'Keep, discard or implemented state', 'Assign owner and acceptance criteria'],
+                    ['Corrective feedback', 'Verified diagnosis correction', 'Reflection for future investigations', 'Separate local learning from AWS sharing'],
+                ],
+                'Incident pattern identification produces context and recommendations, not an automatically implemented fix.',
+            ),
+            slide(
+                'Sandbox and Directed Actions',
+                3,
+                'D-M05 D-M06',
+                'table',
+                [
+                    ['Execution surface', 'Purpose', 'Primary controls', 'Evidence'],
+                    ['Sandbox', 'Investigation-local computation and data processing', 'Packages, network rules and existing AWS permissions', 'Code, outputs and failed network calls'],
+                    ['Directed AWS action', 'Eligible resource mutation', 'Space opt-in, elevated role and specific approval', 'Approval, CloudTrail and resulting resource state'],
+                    ['External MCP mutation', 'Tool-defined effect', 'Tool classification, selected tool and approval behavior', 'Tool arguments and external result'],
+                    ['Recommendation only', 'Describe a possible change', 'No execution authorization', 'Proposal, risk, rollback and verification plan'],
+                ],
+                'Execution authority depends on the specific effect; there is no universal read-only agent mode.',
+            ),
+            slide(
+                'Release Readiness Review and Release Testing',
+                2,
+                'D-09 D-10',
+                'table',
+                [
+                    ['Preview path', 'Subject', 'Primary output', 'Important boundary'],
+                    ['Release readiness review', 'Code change and dependency context', 'Risk findings and recommended actions', 'Feature and repository eligibility are specific'],
+                    ['Managed verification', 'Build or test evidence for the change', 'Verification task and results', 'Not equivalent to production recovery evidence'],
+                    ['Active release testing', 'Running web application or API', 'Observed application behavior', 'Requests can create, modify or delete application data'],
+                    ['Custom-agent release tools', 'Release Manager tasks and reports', 'Created or analyzed release task', 'Use selected tools and inspect task state'],
+                ],
+                'Readiness review, managed verification and active application testing are separate preview operations.',
+            ),
+            slide(
+                'Worked Example: Recurring Alarm with Different Current Evidence',
+                8,
+                'D-U01 D-M01 D-M02',
+                'demo',
+                [
+                    ['0–2 min', 'Inspect prior context', 'Earlier database pool saturation and its verified evidence'],
+                    ['2–4 min', 'Compare current database signals', '34/100 connections and query p95 of 18 ms'],
+                    ['4–6 min', 'Evaluate current dependency signals', 'Inventory p95 of 2,900 ms and checkout p95 of 3,100 ms'],
+                    ['6–8 min', 'Record the conclusion', 'Historical memory is relevant; upstream latency is the current lead; cause remains bounded'],
+                ],
+                'Prepared evidence demonstrates how historical context can be useful without becoming the current diagnosis.',
+            ),
+            slide(
+                'Troubleshooting Matrix and Operating Limits',
+                2,
+                'D-10 D-11',
+                'table',
+                [
+                    ['Symptom', 'First object to inspect', 'Second check', 'Do not do first'],
+                    ['No investigation', 'Triage decision and incident link', 'Concurrency and trigger status', 'Broaden all permissions'],
+                    ['Missing data', 'Resource role and source connection', 'Time window and resource identity', 'Assume the source has no data'],
+                    ['Memory not used', 'Store/entry active state and description', 'Agent attachment and new session', 'Claim retrieval from answer wording'],
+                    ['Tool unavailable', 'Provider association and selected tools', 'Authentication and private route', 'Rotate a valid secret without network evidence'],
+                    ['Mutation denied', 'Directed-action enablement and classification', 'Role trust, exact operation and approval', 'Treat a chat request as authorization'],
+                ],
+                'Diagnose the failed layer and retest the smallest relevant operation.',
+            ),
+        ],
+    ),
+    'security': deck(
+        'AWS Security Agent',
+        'Assessment use cases, authentication mechanisms and evidence lifecycle',
+        'S',
+        [
+            slide(
+                'Product Functions and Security Resource Model',
+                3,
+                'S-01',
+                'table',
+                [
+                    ['Layer', 'Primary objects', 'Purpose', 'Evidence'],
+                    ['Account resources', 'Integrations, identity and requirement packs', 'Shared setup and reusable criteria', 'Provider registration and enabled packs'],
+                    ['Agent Space', 'Application sources, users and settings', 'Application-specific boundary', 'Space ID and source connections'],
+                    ['Assessment configuration', 'Targets, credentials, criteria and limits', 'Reusable definition for eligible assessment types', 'Saved configuration and revision'],
+                    ['Execution', 'Run, job or review', 'Assess the current target or source', 'Status, identity and findings'],
+                    ['Finding lifecycle', 'Finding, remediation, Jira link and revalidation', 'Track evidence through repair', 'Original and linked verification records'],
+                ],
+                'Application scope, assessment configuration, execution and finding lifecycle are different resource layers.',
+            ),
+            slide(
+                'Security Use Case Taxonomy and Availability',
+                2,
+                'S-01 S-04 S-06',
+                'table',
+                [
+                    ['Use case family', 'Representative work', 'Delivery', 'Availability boundary'],
+                    ['Dynamic assessment', 'On-demand, authenticated and private penetration testing', 'Native assessment', 'On-demand penetration testing GA'],
+                    ['Finding operations', 'Review, Jira tracking, remediation and revalidation', 'Native plus integrations', 'Feature-specific'],
+                    ['Source review', 'Full, change-focused or differential code review', 'Configured review', 'Preview'],
+                    ['Design analysis', 'Design review and threat modeling', 'Configured assessment', 'Preview'],
+                    ['Security criteria', 'Requirement packs and policy evaluation', 'Configured reusable criteria', 'Preview workflows'],
+                ],
+                'Availability must be checked for the exact assessment type and integration.',
+            ),
+            slide(
+                'Application Assessment Use Cases',
+                3,
+                'S-03 S-M01 S-M02 S-04',
+                'table',
+                [
+                    ['Use case', 'Required scope', 'Authentication', 'Output'],
+                    ['On-demand penetration test', 'Verified staging target and written authority', 'Optional or required by route', 'Run findings and evidence'],
+                    ['Authenticated workflow assessment', 'Representative test roles and protected routes', 'Direct or AWS-native credential strategy', 'Coverage by actual identity'],
+                    ['Private application assessment', 'VPC route, DNS and security groups', 'Same application login model', 'Reachability and findings'],
+                    ['Recurring assessment', 'Stable configuration and schedule', 'Current credentials at execution time', 'Separate scheduled runs'],
+                    ['Login procedure reuse', 'Successful first authentication flow', 'Login Optimization enabled', 'Saved procedure used by later sessions'],
+                ],
+                'Domain verification, network access, credential retrieval and application login are separate prerequisites.',
+            ),
+            slide(
+                'Findings, Remediation and Verification Use Cases',
+                3,
+                'S-05 S-M05',
+                'table',
+                [
+                    ['Use case', 'Input', 'Output', 'Closure evidence'],
+                    ['Finding review and prioritization', 'Impact, confidence, reproduction and affected role', 'Disposition and remediation owner', 'Recorded decision and scope'],
+                    ['Jira remediation tracking', 'Finding and approved project', 'Issue linked to finding', 'Issue state and comments'],
+                    ['Proposed code remediation', 'Accepted finding and repository access', 'Patch or pull request', 'Independent review and tests'],
+                    ['Finding revalidation', 'Deployed fix and selected original finding', 'Separate revalidation job', 'Linked Active or Resolved result'],
+                    ['Broader regression assessment', 'Material application change', 'New full penetration test', 'New run rather than narrow replay'],
+                ],
+                'A proposed patch, deployed revision and revalidation result are separate records.',
+            ),
+            slide(
+                'Shift-Left Review Use Cases',
+                3,
+                'S-M03 S-M04 S-06',
+                'table',
+                [
+                    ['Use case', 'Primary input', 'Evaluation basis', 'Output'],
+                    ['Repository code review', 'Repository or supported source package', 'Vulnerability analysis and configured requirements', 'Code findings and locations'],
+                    ['Change-focused review', 'Pull request, merge request or differential source', 'Changed code and configured criteria', 'Revision-specific findings'],
+                    ['Security requirement evaluation', 'Enabled requirement pack', 'Applicability and compliance criteria', 'Requirement findings'],
+                    ['Design review', 'Current design material', 'Security requirements and design evidence', 'Design findings'],
+                    ['Threat model', 'Architecture and scope sources', 'Assets, trust boundaries, flows and threats', 'Reusable model and findings'],
+                ],
+                'Code, design, threat-model and requirement workflows have different inputs and lifecycles.',
+            ),
+            slide(
+                'Identity, Repository and Target Configuration',
+                3,
+                'S-02 S-03',
+                'table',
+                [
+                    ['Configuration area', 'Decision', 'Confirmation', 'Typical failure'],
+                    ['Operator identity', 'Who can use the web application', 'Intended user can open the space', 'Setup administrator only'],
+                    ['Repository registration', 'Provider authorization at account level', 'Integration visible', 'Registered but not connected to application'],
+                    ['Repository connection', 'Repository and branch/source selection', 'Expected revision available', 'Latest branch differs from deployed target'],
+                    ['Target rules', 'Target, accessible dependency and out-of-scope entries', 'Preflight shows intended reachability', 'Dependency accidentally treated as attack target'],
+                    ['Private access', 'VPC route, DNS and security groups', 'Application endpoint reachable', 'Network error mistaken for login error'],
+                ],
+                'Registration, connection, reachability and authorization must be validated separately.',
+            ),
+            slide(
+                'Credential Resolution and Application Authentication',
+                3,
+                'S-M01',
+                'table',
+                [
+                    ['Credential strategy', 'Service access requirement', 'Application step', 'Evidence'],
+                    ['Direct test credential', 'Configured test account', 'Enter through documented login flow', 'Observed application role'],
+                    ['Secrets Manager', 'Read access and same-account resource', 'Map secret fields to login controls', 'Successful retrieval and login'],
+                    ['Role assumption', 'Trust and role permissions', 'Use returned temporary credentials', 'Assumed identity and protected path'],
+                    ['Credential Lambda', 'Invoke permission and response contract', 'Apply dynamic credential within timeout', 'Invocation result and login'],
+                    ['MFA/login instruction', 'Current instructions and required factors', 'Complete the application-specific flow', 'Save & Test result'],
+                ],
+                'Credential retrieval can succeed while application authentication still fails.',
+            ),
+            slide(
+                'Login Optimization',
+                2,
+                'S-M02',
+                'flow',
+                [
+                    ['First successful login', 'The service discovers the authorized navigation and authentication sequence.'],
+                    ['Saved login procedure', 'The successful workflow is retained as a skill for the assessment configuration.'],
+                    ['Later session or run', 'The retained procedure can be reused instead of rediscovering the login path.'],
+                    ['Changed application flow', 'Verify the actual authenticated identity and update behavior rather than assuming reuse remains valid.'],
+                ],
+                'Login Optimization reuses authentication navigation; it is not general vulnerability memory.',
+            ),
+            slide(
+                'Assessment Configuration and Run Lifecycle',
+                2,
+                'S-04',
+                'table',
+                [
+                    ['Object or state', 'Meaning', 'Operator action', 'Evidence'],
+                    ['Draft', 'Incomplete setup', 'Finish prerequisites or discard', 'Missing fields'],
+                    ['Saved configuration', 'Reusable target, credentials and options', 'Review before each run', 'Configuration revision'],
+                    ['Run', 'Assessment against then-current target', 'Monitor, stop or inspect', 'Run ID, task hours and findings'],
+                    ['Scheduled run', 'Future execution from the configuration', 'Review schedule and current credentials', 'Separate run history'],
+                    ['Design review', 'Different one-off lifecycle', 'Clone to create new work', 'Independent review record'],
+                ],
+                'A completed run confirms execution, not exhaustive route or vulnerability-class coverage.',
+            ),
+            slide(
+                'Security Requirements and Requirement Packs',
+                3,
+                'S-M03 S-M04',
+                'table',
+                [
+                    ['Operation', 'Input', 'State change', 'Control'],
+                    ['Create or edit requirement', 'Applicability, compliance and remediation text', 'Pack content changes', 'Human review of criteria'],
+                    ['Enable pack', 'Reviewed requirements', 'Available to subsequent eligible reviews', 'Assessment must select requirement evaluation'],
+                    ['Evaluate requirement', 'Component evidence and enabled pack', 'Compliant, violating or inapplicable result', 'Inspect applicability and evidence'],
+                    ['Generate from documents', 'Authoritative policy sources', 'Pack contents are regenerated', 'Replacement review before enablement'],
+                    ['Version outside service', 'Governed source in Git or policy system', 'Independent change history', 'Do not rely on generated pack as sole authority'],
+                ],
+                'Requirement generation replaces pack contents; evaluation applies the reviewed criteria to an assessment.',
+            ),
+            slide(
+                'Finding Lineage, Remediation and Revalidation',
+                3,
+                'S-05 S-M05',
+                'flow',
+                [
+                    ['Original finding', 'Affected target, revision, identity and validation steps.'],
+                    ['Remediation change', 'Reviewed code or configuration change linked to the finding.'],
+                    ['Deployed repair', 'Known revision on the same authorized test environment.'],
+                    ['Revalidation job', 'Current credentials repeat selected validation steps and preserve the original finding.'],
+                ],
+                'A Resolved revalidation result applies to the selected finding and execution conditions.',
+            ),
+            slide(
+                'Repository, Pipeline and External Tracking Integrations',
+                2,
+                'S-02 S-05 S-06',
+                'table',
+                [
+                    ['Integration', 'Primary use', 'Trigger or action', 'Boundary'],
+                    ['Repository provider', 'Source access and code review', 'Configured scan or supported change event', 'Provider and source support vary'],
+                    ['S3 source', 'Code package or design/context material', 'Selected when creating assessment', 'Shared across supported capabilities'],
+                    ['CI/CD pipeline', 'Start configured assessment from delivery workflow', 'Server-side job invocation', 'Runner is not the assessment engine'],
+                    ['Jira', 'Track findings and revalidation updates', 'Create issue or add result comment', 'Project and audience must be appropriate'],
+                    ['Evidence export', 'Point-in-time review or audit record', 'Download supported report or finding content', 'Export is not a security certificate'],
+                ],
+                'Integrations move source material, triggers and evidence; they do not broaden the authorized target scope.',
+            ),
+            slide(
+                'Customer-Managed Encryption and Service Identities',
+                2,
+                'S-M06',
+                'table',
+                [
+                    ['Element', 'Role in the mechanism', 'Review question'],
+                    ['Customer KMS key', 'Protects service branch keys', 'Does the policy allow the intended service identities?'],
+                    ['Branch key', 'Resource-specific stored key material', 'Which resource and encryption context apply?'],
+                    ['Derived wrapping key', 'Protects data-encryption keys', 'Is the expected context present?'],
+                    ['Administrator identity', 'Configures resources and key use', 'Is setup authority separated from daily use?'],
+                    ['Web app / assessment / async identity', 'Performs different data operations', 'Does each path have the required and only required access?'],
+                ],
+                'Encryption configuration and processing geography are separate controls.',
+            ),
+            slide(
+                'Worked Example: Authorization Finding Through Revalidation',
+                8,
+                'S-U01 S-M05',
+                'demo',
+                [
+                    ['0–2 min', 'Inspect original finding', 'User A received account B test invoice in revision demo-r1'],
+                    ['2–4 min', 'Inspect reviewed change', 'Ownership check added and revision demo-r2 deployed'],
+                    ['4–6 min', 'Inspect revalidation context', 'Actual user A identity and selected path reached'],
+                    ['6–8 min', 'Interpret result', 'Prepared denial supports the selected path; it does not establish whole-application security'],
+                ],
+                'Prepared staging evidence traces the finding, deployed repair and scoped revalidation result.',
+            ),
+            slide(
+                'Troubleshooting Matrix and Assessment Limits',
+                2,
+                'S-07 S-08',
+                'table',
+                [
+                    ['Symptom', 'First object to inspect', 'Second check', 'Interpretation'],
+                    ['No source available', 'Integration registration and repository connection', 'Branch or source package', 'Source setup failure'],
+                    ['Target unreachable', 'Target/access/out-of-scope rules', 'VPC route, DNS and security groups', 'Network scope failure'],
+                    ['Credential obtained, login failed', 'Login instructions and application changes', 'Actual test identity', 'Authentication failure'],
+                    ['Requirement not evaluated', 'Pack enabled state', 'Assessment review mode', 'Criteria setup failure'],
+                    ['Revalidation inconclusive', 'Deployment revision and target', 'Authentication and reached path', 'Do not close finding'],
+                ],
+                'Troubleshooting follows the first failed prerequisite in the assessment chain.',
+            ),
+        ],
+    ),
+    'finops': deck(
+        'AWS FinOps Agent',
+        'Cost use cases, retained context, task automation and publication controls',
+        'F',
+        [
+            slide(
+                'Product Functions and Agent Instance Resource Model',
+                3,
+                'F-01',
+                'table',
+                [
+                    ['Layer', 'Primary objects', 'Purpose', 'Evidence'],
+                    ['Access', 'Administrator, agent role, operator role and user permission', 'Separate configuration, data and daily-use authority', 'Role ARN, policy and successful sign-in'],
+                    ['Context', 'Reference files, memory and conversation', 'Supply organizational facts and preferences', 'File state, remembered item and current conversation'],
+                    ['Work', 'On-demand task, schedule or event automation', 'Create queued execution', 'Task and automation records'],
+                    ['Data sources', 'Cost, recommendation, anomaly and change APIs', 'Supply source evidence', 'Query filters and source provenance'],
+                    ['Outputs', 'Answer, report artifact, Jira issue or Slack post', 'Deliver reviewable result', 'Artifact and destination history'],
+                ],
+                'Agent configuration, source evidence, queued work and publication effects are separate layers.',
+            ),
+            slide(
+                'FinOps Use Case Taxonomy and Delivery Modes',
+                2,
+                'F-01 F-03 F-04 F-05',
+                'table',
+                [
+                    ['Use case family', 'Representative work', 'Delivery', 'Primary control'],
+                    ['Cost inquiry', 'Breakdowns, comparisons, trends and forecasts', 'Conversational native function', 'Query contract and source permissions'],
+                    ['Anomaly and optimization', 'Root-cause analysis and recommendation triage', 'Native function using upstream services', 'Source provenance and operational review'],
+                    ['Recurring reporting', 'Daily, weekly, monthly and operational review packs', 'Scheduled task and report artifact', 'Schedule, audience and report basis'],
+                    ['Event automation', 'Investigate matching anomaly and publish result', 'Cost Anomaly Detection plus managed rule', 'Automation condition and destination'],
+                    ['Collaboration', 'Jira follow-up and Slack publication', 'Configured integration', 'Action- and invocation-specific approval'],
+                ],
+                'The catalog separates analytical functions from scheduled execution and external publication.',
+            ),
+            slide(
+                'Cost Inquiry and Reporting Use Cases',
+                3,
+                'F-M01 F-04',
+                'table',
+                [
+                    ['Use case', 'Required query contract', 'Output', 'Independent check'],
+                    ['Cost breakdown', 'Dates, metric, currency, accounts and dimension', 'Service/account/Region/tag totals', 'Reproduce a material total'],
+                    ['Period comparison', 'Complete comparable windows and same cost basis', 'Delta and ranked contributors', 'Check arithmetic and filters'],
+                    ['Forecast review', 'Forecast horizon and source assumptions', 'Forecast and uncertainty', 'Separate forecast from observed spend'],
+                    ['Commitment coverage review', 'Relevant commitment and utilization scope', 'Coverage and candidate gaps', 'Inspect source recommendation'],
+                    ['Custom report', 'Audience, sections, figures and source basis', 'HTML, PDF or editable presentation artifact', 'Reconcile displayed values'],
+                ],
+                'A usable report begins with a reproducible cost-query definition.',
+            ),
+            slide(
+                'Anomaly Investigation and Cost Driver Analysis',
+                3,
+                'F-M01 F-M05',
+                'table',
+                [
+                    ['Evidence source', 'Question answered', 'Typical conclusion', 'Limit'],
+                    ['Cost Anomaly Detection', 'What deviation was detected?', 'Affected service, account and impact', 'Detection is not causal proof'],
+                    ['Cost Explorer', 'Was movement usage, rate or both?', 'Dimensioned contribution', 'Depends on chosen basis and filters'],
+                    ['CloudTrail event history', 'Which API activity occurred nearby?', 'Candidate operational change', 'Temporal correlation only'],
+                    ['Workload owner evidence', 'Did behavior or volume change?', 'Service-specific explanation', 'May remain unavailable'],
+                    ['Automation history', 'Was the event matched and processed?', 'Task and delivery result', 'Delivery failure differs from investigation failure'],
+                ],
+                'Numerical contribution, correlated change and established cause are different conclusions.',
+            ),
+            slide(
+                'Optimization Recommendation Review',
+                2,
+                'F-M01',
+                'table',
+                [
+                    ['Review element', 'Source', 'Decision question', 'Record'],
+                    ['Recommendation', 'Cost Optimization Hub or Compute Optimizer', 'What action and assumptions are proposed?', 'Recommendation ID and source'],
+                    ['Estimated benefit', 'Upstream recommendation model', 'Does it overlap with another candidate?', 'Estimate and exclusions'],
+                    ['Operational constraint', 'Service owner and telemetry', 'What reliability, performance or recovery requirement applies?', 'Accepted constraint'],
+                    ['Authorization', 'Normal engineering and financial process', 'Who approves the change or commitment?', 'Change or purchase record'],
+                    ['Measurement', 'Post-change cost and service data', 'Was the expected effect observed on a comparable basis?', 'Measured outcome and attribution limit'],
+                ],
+                'The agent surfaces and contextualizes recommendations; it does not authorize infrastructure or financial changes.',
+            ),
+            slide(
+                'Recurring Reports and Operational Reviews',
+                3,
+                'F-03 F-04',
+                'table',
+                [
+                    ['Use case', 'Cadence', 'Core content', 'Audience'],
+                    ['Daily cost pulse', 'Daily', 'Material movement, anomaly status and unresolved gaps', 'FinOps operations'],
+                    ['Weekly service report', 'Weekly', 'Cost by service, owner, driver and recommendation status', 'Engineering and FinOps owners'],
+                    ['Monthly management report', 'Monthly', 'Trend, forecast, commitment and actions', 'Leadership and finance'],
+                    ['FinOps operational review', 'Weekly or monthly', 'Decisions, owners, rejected items and measured outcomes', 'Cross-functional review'],
+                    ['Optimization backlog report', 'Scheduled', 'Candidate, source, estimated benefit, constraint and status', 'Platform and workload owners'],
+                ],
+                'Report cadence, source window, audience and ownership should be configured explicitly.',
+            ),
+            slide(
+                'Context Files, Memory and Conversation Compaction',
+                3,
+                'F-M02 F-M03 F-M04',
+                'table',
+                [
+                    ['Mechanism', 'Producer', 'Typical content', 'Lifecycle'],
+                    ['Reference file', 'Operator upload', 'Account ownership, allocation rules and reporting standards', 'Upload, soft delete and restore'],
+                    ['Conversational memory', 'Explicit remember/update/forget request', 'Preferences, corrections and ownership details', 'Update or forget across sessions'],
+                    ['Conversation context', 'Current interaction', 'Recent messages and summarized older messages', 'Compaction near context limit'],
+                    ['Ephemeral runtime', 'Service execution', 'Loaded persistent context for a session', 'Destroyed after session'],
+                    ['Agent-instance boundary', 'Agent configuration', 'Instance-specific files, memory and queue', 'No shared memory across instances'],
+                ],
+                'File retrieval, cross-session memory and within-session compaction require separate tests.',
+            ),
+            slide(
+                'Tasks, Schedules and Event Automations',
+                3,
+                'F-03 F-M05',
+                'table',
+                [
+                    ['Object', 'Creation path', 'Execution behavior', 'Stop control'],
+                    ['On-demand task', 'User request', 'Enters shared task queue', 'Cancel running task where supported'],
+                    ['Scheduled automation', 'Prompt plus schedule', 'Creates a task at each match', 'Disable or delete future starts'],
+                    ['Event automation', 'Prompt plus COST_ANOMALY trigger', 'Managed rule creates a task for matching event', 'Disable/delete automation'],
+                    ['Task record', 'Created by request or automation', 'Tracks status and result', 'Record remains after automation removal'],
+                    ['Delivery result', 'Task invokes configured destination', 'Records post/issue outcome', 'Inspect independently from analysis result'],
+                ],
+                'An automation is a task factory; it is not the task or the external message.',
+            ),
+            slide(
+                'Jira and Slack Publication Controls',
+                2,
+                'F-05 F-M06',
+                'table',
+                [
+                    ['Action', 'Interactive or on-demand', 'Scheduled or event automation', 'Review point'],
+                    ['Create Jira issue', 'Approval prompt', 'Pre-authorized during setup', 'Project, content and owner'],
+                    ['Add Jira comment', 'Approval prompt', 'Pre-authorized during setup', 'Issue and disclosure scope'],
+                    ['Post Slack message', 'No approval prompt', 'No approval prompt', 'Channel and sensitive content'],
+                    ['Register integration', 'Account-level authorization', 'Same registration reused', 'Provider account/workspace'],
+                    ['Bind destination', 'Agent-specific project or channel', 'Automation uses this binding', 'Actual connection and app membership'],
+                ],
+                'Approval behavior depends on both the action and the invocation path.',
+            ),
+            slide(
+                'Report Artifacts and Data Lifecycle',
+                2,
+                'F-04 F-M07',
+                'table',
+                [
+                    ['Object', 'Create or revise', 'Remove or stop', 'What may remain'],
+                    ['Report artifact', 'Generate and request revision', 'Delete artifact', 'Externally copied report'],
+                    ['Context file', 'Upload and restore', 'Soft delete', 'Retained recoverable content'],
+                    ['Memory item', 'Remember or update', 'Forget', 'Independent file or conversation text'],
+                    ['Task', 'Request or automation', 'Cancel execution', 'Task record and published output'],
+                    ['Automation', 'Schedule or event trigger', 'Disable or delete', 'Previously created tasks'],
+                    ['Agent instance', 'Create and configure', 'Delete whole instance', 'External artifacts and destinations'],
+                ],
+                'Stopping future work, cancelling current work and removing retained data are different operations.',
+            ),
+            slide(
+                'Access Roles and Source Dependencies',
+                3,
+                'F-02 F-M01',
+                'table',
+                [
+                    ['Responsibility', 'Purpose', 'Source dependency', 'Acceptance test'],
+                    ['Administrator permission', 'Create agent and permitted roles', 'Service setup APIs', 'Configured instance exists'],
+                    ['Agent data role', 'Read cost, recommendation and event sources', 'Cost Explorer, CloudTrail and optimization services', 'Known query and source provenance'],
+                    ['Operator role', 'Use supported web-app operations', 'Agent web application', 'Intended operator performs task'],
+                    ['User permission', 'Enter the specific agent', 'Identity Center or IAM access', 'Non-admin user signs in'],
+                    ['Event-rule permission', 'Manage service-owned matching rule', 'EventBridge and anomaly monitor', 'Automation and managed rule visible'],
+                ],
+                'Data access and team access should be tested independently and with known expected results.',
+            ),
+            slide(
+                'Worked Example: Cost Increase Decomposition',
+                8,
+                'F-U01',
+                'demo',
+                [
+                    ['0–2 min', 'Confirm comparison contract', 'Two complete windows, same scope, metric, currency and basis'],
+                    ['2–4 min', 'Reconcile totals', '1,400 baseline; 1,974 comparison; delta 574'],
+                    ['4–6 min', 'Attribute arithmetic', 'Storage +200; requests +100; transfer +274'],
+                    ['6–8 min', 'Assess causal evidence', 'Prepared export evidence supports transfer only; storage and request causes remain unresolved'],
+                ],
+                'Prepared quantities and rates demonstrate reconciliation, not AWS pricing or realized savings.',
+            ),
+            slide(
+                'Troubleshooting Matrix and Preview Limits',
+                2,
+                'F-06 F-07',
+                'table',
+                [
+                    ['Symptom', 'First object to inspect', 'Second check', 'Interpretation'],
+                    ['Total differs', 'Metric, dates, filters and dimensions', 'Accessible source and currency', 'Query contract failure'],
+                    ['Context ignored', 'File state or memory item', 'New session and exact preference', 'Retrieval/retention failure'],
+                    ['Automation did not run', 'Trigger, status and last-triggered time', 'Managed rule and event condition', 'Event matching failure'],
+                    ['Task ran, no message', 'Task result', 'Destination connection and action result', 'Publication failure'],
+                    ['Unexpected write', 'Action and invocation approval rule', 'Destination and automation setup', 'Control-model misunderstanding'],
+                ],
+                'Validate data, retained context, execution and external effects as separate layers.',
+            ),
+        ],
+    ),
+    'architecture': deck(
+        'Shared Architecture',
+        'Resource models, use-case boundaries and cross-platform controls',
+        'A',
+        [
+            slide(
+                'Comparison Framework',
+                2,
+                'A-01',
+                'table',
+                [
+                    ['Question', 'DevOps Agent', 'Security Agent', 'FinOps Agent'],
+                    ['Scope object', 'Agent Space', 'Application Agent Space plus shared resources', 'Agent instance'],
+                    ['Configuration', 'Agents, tools and knowledge', 'Assessment definitions and criteria', 'Context, tasks, automations and connections'],
+                    ['Execution', 'Investigation or invocation', 'Run, review or revalidation job', 'Conversation or task'],
+                    ['Primary evidence', 'Tool results and investigation history', 'Findings and linked verification', 'Source query, task and artifact'],
+                ],
+                'Cross-platform comparison begins with the actual resource and execution model.',
+            ),
+            slide(
+                'Use Case Families Across the Three Platforms',
+                3,
+                'A-01 A-07',
+                'table',
+                [
+                    ['Family', 'DevOps Agent', 'Security Agent', 'FinOps Agent'],
+                    ['Event response', 'Incident triage and investigation', 'Assessment run from configured target or source', 'Anomaly-triggered investigation'],
+                    ['Recurring review', 'Health and operational review report', 'Scheduled assessment or review workflow', 'Cost and FinOps review report'],
+                    ['Pattern analysis', 'Recurring causes and prevention recommendations', 'Requirement and finding trends', 'Cost drivers and optimization candidates'],
+                    ['Documentation', 'Topology, SOP skills and environment memory', 'Threat model and requirement packs', 'Context files and report artifacts'],
+                    ['Controlled effect', 'Directed resource action', 'Repository remediation or issue tracking', 'Jira/Slack publication; engineering change outside agent'],
+                ],
+                'Similar business labels can map to different platform objects and authorization boundaries.',
+            ),
+            slide(
+                'Resource and Context Models',
+                2,
+                'A-01 A-02',
+                'table',
+                [
+                    ['Material', 'Producer', 'Consumer', 'Lifecycle distinction'],
+                    ['Incident memory', 'Managed learning or corrective feedback', 'Relevant later investigation', 'Version, active state and bounded retention'],
+                    ['Login procedure', 'Successful authenticated navigation', 'Later security test session', 'Configuration-specific reuse'],
+                    ['Requirement pack', 'Administrator or document generation', 'Eligible design/code assessment', 'Enablement and replacement'],
+                    ['Reference file', 'FinOps operator upload', 'Task or conversation', 'Soft delete and restore'],
+                    ['Conversational memory', 'Explicit user request', 'Later FinOps session', 'Update or forget'],
+                ],
+                'The three services do not expose one common memory mechanism.',
+            ),
+            slide(
+                'Connectivity, Identity and Authorization',
+                2,
+                'A-03',
+                'flow',
+                [
+                    ['Connectivity', 'Can the endpoint, repository, account or application be reached?'],
+                    ['Identity', 'Which operator, role, credential or application user authenticated?'],
+                    ['Permission', 'Which read, test, publication or mutation operation is allowed?'],
+                    ['Behavioral guidance', 'Which instructions, skills or prompt rules shape the work?'],
+                ],
+                'Reachability and prompt guidance do not establish authorization for an effect.',
+            ),
+            slide(
+                'Execution and Approval Boundaries',
+                2,
+                'A-04',
+                'table',
+                [
+                    ['Effect', 'Required control', 'Evidence'],
+                    ['AWS resource mutation', 'Specific directed-action enablement, role and approval', 'Approval and resulting resource state'],
+                    ['Application security testing', 'Authorized target, credentials, exclusions and stop owner', 'Run identity, requests and findings'],
+                    ['Repository change', 'Provider access and normal code-review controls', 'Patch, pull request, tests and reviewer'],
+                    ['Jira or Slack publication', 'Destination and invocation-specific rule', 'Issue/comment/post and task history'],
+                    ['Recommendation only', 'No execution authority', 'Proposal and acceptance criteria'],
+                ],
+                'Approval follows the concrete effect; there is no universal human-approved agent mode.',
+            ),
+            slide(
+                'Configuration, Execution and Artifact Lifecycles',
+                2,
+                'A-05',
+                'table',
+                [
+                    ['Layer', 'Create or configure', 'Stop or remove', 'What may remain'],
+                    ['Configuration', 'Agent, assessment, automation or connection', 'Disable, detach or delete', 'Prior executions and outputs'],
+                    ['Future execution', 'Schedule or event trigger', 'Pause/disable/delete trigger', 'Existing tasks or runs'],
+                    ['Current execution', 'Invocation, assessment or task', 'Cancel or stop where supported', 'Partial results and audit history'],
+                    ['Retained context', 'Memory, requirement or file', 'Deactivate, replace, forget or soft-delete', 'Versions or recoverable data'],
+                    ['External artifact', 'Ticket, message or exported report', 'Destination-specific removal', 'Copies outside the platform'],
+                ],
+                'Stopping future starts does not reverse completed effects or delete retained evidence.',
+            ),
+            slide(
+                'Handoff Record Between Platforms and Teams',
+                2,
+                'A-06',
+                'table',
+                [
+                    ['Field', 'Required content', 'Reason'],
+                    ['Origin', 'Platform, configuration and execution identifiers', 'Trace the producing context'],
+                    ['Subject', 'Service, revision, target and UTC window', 'Avoid ambiguous scope'],
+                    ['Evidence', 'Source links, findings, totals and failed reads', 'Support independent review'],
+                    ['Request', 'Question, owner, deadline and permitted effect', 'Bound the receiving work'],
+                    ['Acceptance', 'Required check and unresolved questions', 'Prevent generated text from becoming automatic closure'],
+                ],
+                'A handoff transfers evidence and responsibility, not credentials or authorization.',
+            ),
+            slide(
+                'Tabletop: One Operational Symptom, Three Different Jobs',
+                4,
+                'A-U01',
+                'demo',
+                [
+                    ['0–1 min', 'Define the observation', 'Latency, application revision, authorization identity and cost window'],
+                    ['1–2 min', 'Assign DevOps work', 'Investigate current service evidence and dependency path'],
+                    ['2–3 min', 'Assign Security and FinOps work', 'Assess the authorized application change; reconcile related cost movement'],
+                    ['3–4 min', 'State unresolved questions', 'No single shared root cause or cross-agent runtime is assumed'],
+                ],
+                'The same business event creates different evidence obligations for each platform.',
+            ),
+            slide(
+                'Documentation and Presentation Acceptance Criteria',
+                3,
+                'A-07',
+                'table',
+                [
+                    ['Area', 'Acceptance criterion', 'Failure signal'],
+                    ['Structure', 'Resource model, capabilities, use cases, mechanisms and procedures are distinct', 'A scenario is labeled as a capability'],
+                    ['Use case catalog', 'Grouped, searchable and classified by delivery mode and availability', 'Duplicated or unclassified entries'],
+                    ['Procedure', 'Prerequisite, decision, confirmation and failure interpretation are present', 'Generic “configure and verify” language'],
+                    ['Presentation', 'Descriptive chapter titles and evidence-bearing slides', 'Slogan titles and empty visual panels'],
+                    ['Evidence', 'Material product claims link to official guidance', 'Source count used as proof of completeness'],
+                    ['Validation', 'Browser, data and link checks are separated from live product testing', 'Packaging checks presented as operational proof'],
+                ],
+                'A presentation is an indexed technical explanation, not a sequence of slogans.',
+            ),
+        ],
+    ),
+}
