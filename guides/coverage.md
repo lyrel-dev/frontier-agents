@@ -1,172 +1,99 @@
-# Coverage and claim-to-source map
-
-Canonical sections retain their existing references and review boundaries. The chapter structure below is editorial navigation, not a new product classification or external audit.
-
+# Guide and source coverage
+The source map below identifies the references attached to each maintained section. It is not a claim that every upstream page was freshly audited. New integration and scheduling material and selected knowledge mechanisms were reviewed on 22 October 2026; retained sections keep their earlier references. See [the source-review record](../qa/source-review.json).
 ## AWS DevOps Agent
-
-### 01. Product Functions and Resource Model
-| Section | Subject | Type | Source identifiers |
-|---|---|---|---|
-| [D-01](devops.html#D-01) | Service functions and resource model | Overview and capabilities | DS01, DS02, DS03, DS04, DS10, DS15, DS18 |
-
-### 02. Access Roles and Tool Connections
-| Section | Subject | Type | Source identifiers |
-|---|---|---|---|
-| [D-02](devops.html#D-02) | Establish the two access paths | Configuration | DS02, DS19 |
-| [D-03](devops.html#D-03) | Connect an external MCP tool provider | Configuration | DS03 |
-| [D-04](devops.html#D-04) | Private connectivity is a network mechanism | Mechanism | DS05, DS19 |
-
-### 03. Knowledge, Memory and Operational Procedures
-| Section | Subject | Type | Source identifiers |
-|---|---|---|---|
-| [D-05](devops.html#D-05) | Discovery, topology and learned understanding | Mechanism | DS04, DS06, DS19 |
-| [D-M01](devops.html#D-M01) | How previous incidents become reusable context | Mechanism | DS07, DS19 |
-| [D-M02](devops.html#D-M02) | Corrective feedback produces a separate lesson | Mechanism | DS08, DS19 |
-| [D-M07](devops.html#D-M07) | Memory attachment and lifecycle | Mechanism | DS07, DS10 |
-| [D-M03](devops.html#D-M03) | Standing instructions enter each new session | Mechanism | DS06, DS09 |
-| [D-M04](devops.html#D-M04) | Skills are selected procedures, not standing memory | Mechanism | DS11 |
-
-### 04. Incident Operations and Controlled Execution
-| Section | Subject | Type | Source identifiers |
-|---|---|---|---|
-| [D-06](devops.html#D-06) | Incident routing and investigation feedback | Operation | DS08, DS15 |
-| [D-07](devops.html#D-07) | Custom-agent definitions, schedules and cancellation | Operation | DS12, DS13 |
-| [D-M05](devops.html#D-M05) | Investigation-local computation | Mechanism | DS14 |
-| [D-M06](devops.html#D-M06) | Directed-action authorization | Mechanism | DS16 |
-| [D-08](devops.html#D-08) | Configuration APIs and update semantics | Operation | DS17 |
-| [D-09](devops.html#D-09) | Access direction and preview release paths | Reference | DS20, DS21 |
-
-### 05. Worked Incident Analysis
-| Section | Subject | Type | Source identifiers |
-|---|---|---|---|
-| [D-U01](devops.html#D-U01) | Worked example: recurring alarm, different cause | Worked example |  |
-
-### 06. Troubleshooting, Limits and Failure Modes
-| Section | Subject | Type | Source identifiers |
-|---|---|---|---|
-| [D-10](devops.html#D-10) | Limits and diagnostic decisions | Troubleshooting | DS22 |
-
-### 07. Coverage and Source Notes
-| Section | Subject | Type | Source identifiers |
-|---|---|---|---|
-| [D-11](devops.html#D-11) | Coverage and evidence notes | Official evidence | DS01, DS02, DS03, DS04, DS05, DS06, DS07, DS08, DS09, DS10, DS11, DS12, DS13, DS14, DS15, DS16, DS17, DS18, DS19, DS20, DS21, DS22 |
-
+| Section | Subject | Official references |
+|---|---|---|
+| [D-01](devops.html#D-01) | The agent, Agent Space, and investigation | [DS01](https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-supported-regions.html), [DS02](https://docs.aws.amazon.com/devopsagent/latest/userguide/getting-started-with-aws-devops-agent-creating-an-agent-space.html), [DS06](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-managed-agents.html), [DS10](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html), [DS18](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html) |
+| [D-12](devops.html#D-12) | Supported integrations and connection directions | [DS30](https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge.html), [DS31](https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-connecting-telemetry-sources-index.html), [DS32](https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-connecting-azure-index.html) |
+| [D-02](devops.html#D-02) | Resource roles and operator roles | [DS02](https://docs.aws.amazon.com/devopsagent/latest/userguide/getting-started-with-aws-devops-agent-creating-an-agent-space.html), [DS19](https://docs.aws.amazon.com/devopsagent/latest/userguide/whats-new.html) |
+| [D-03](devops.html#D-03) | MCP provider registration and tool selection | [DS03](https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-connecting-mcp-servers.html) |
+| [D-04](devops.html#D-04) | Private network connections | [DS05](https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-connecting-to-privately-hosted-tools.html), [DS19](https://docs.aws.amazon.com/devopsagent/latest/userguide/whats-new.html) |
+| [D-05](devops.html#D-05) | Resource discovery and topology construction | [DS04](https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-what-is-a-devops-agent-topology.html), [DS06](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-managed-agents.html), [DS19](https://docs.aws.amazon.com/devopsagent/latest/userguide/whats-new.html) |
+| [D-M08](devops.html#D-M08) | Environment-knowledge consolidation and refresh | [DS04](https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-what-is-a-devops-agent-topology.html), [DS06](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-managed-agents.html), [DS07](https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html), [DS10](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html), [DS19](https://docs.aws.amazon.com/devopsagent/latest/userguide/whats-new.html) |
+| [D-M01](devops.html#D-M01) | Incident-memory construction and retrieval | [DS07](https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html), [DS08](https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-autonomous-incident-response.html), [DS10](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html), [DS19](https://docs.aws.amazon.com/devopsagent/latest/userguide/whats-new.html) |
+| [D-M02](devops.html#D-M02) | Investigation feedback and corrective memory | [DS08](https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-autonomous-incident-response.html), [DS19](https://docs.aws.amazon.com/devopsagent/latest/userguide/whats-new.html) |
+| [D-M07](devops.html#D-M07) | Memory-store access, versions, and retention | [DS07](https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html), [DS10](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html) |
+| [D-M03](devops.html#D-M03) | Global and agent-specific instructions | [DS06](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-managed-agents.html), [DS09](https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-agent-instructions.html) |
+| [D-M04](devops.html#D-M04) | Runbook skills and applicability rules | [DS11](https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-skills.html) |
+| [D-06](devops.html#D-06) | Incident triage, investigation, and prevention | [DS08](https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-autonomous-incident-response.html), [DS15](https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-proactive-incident-prevention.html) |
+| [D-07](devops.html#D-07) | Custom-agent configuration and invocation | [DS12](https://docs.aws.amazon.com/devopsagent/latest/userguide/custom-agents-creating-a-custom-agent.html), [DS13](https://docs.aws.amazon.com/devopsagent/latest/userguide/custom-agents-executing-custom-agents.html), [DS33](https://docs.aws.amazon.com/devopsagent/latest/APIReference/API_CronSchedule.html) |
+| [D-M05](devops.html#D-M05) | Sandbox computation and network policy | [DS14](https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-sandbox.html) |
+| [D-M06](devops.html#D-M06) | Directed actions and approval scope | [DS16](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-working-with-directed-actions.html) |
+| [D-08](devops.html#D-08) | Configuration APIs and update semantics | [DS17](https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-managing-assets.html) |
+| [D-09](devops.html#D-09) | Remote access and release-assurance workflows | [DS20](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-accessing-devops-agent-index.html), [DS21](https://docs.aws.amazon.com/devopsagent/latest/userguide/release-management-release-testing.html) |
+| [D-U01](devops.html#D-U01) | Recurring-alarm investigation: worked example |  |
+| [D-10](devops.html#D-10) | Execution limits and diagnostic procedures | [DS22](https://docs.aws.amazon.com/devopsagent/latest/userguide/quotas.html) |
+| [D-11](devops.html#D-11) | Documentation coverage and references | [DS01](https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-supported-regions.html), [DS02](https://docs.aws.amazon.com/devopsagent/latest/userguide/getting-started-with-aws-devops-agent-creating-an-agent-space.html), [DS03](https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-connecting-mcp-servers.html), [DS04](https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-what-is-a-devops-agent-topology.html), [DS05](https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-connecting-to-privately-hosted-tools.html), [DS06](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-managed-agents.html), [DS07](https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html), [DS08](https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-autonomous-incident-response.html), [DS09](https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-agent-instructions.html), [DS10](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html), [DS11](https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-skills.html), [DS12](https://docs.aws.amazon.com/devopsagent/latest/userguide/custom-agents-creating-a-custom-agent.html), [DS13](https://docs.aws.amazon.com/devopsagent/latest/userguide/custom-agents-executing-custom-agents.html), [DS14](https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-sandbox.html), [DS15](https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-proactive-incident-prevention.html), [DS16](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-working-with-directed-actions.html), [DS17](https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-managing-assets.html), [DS18](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html), [DS19](https://docs.aws.amazon.com/devopsagent/latest/userguide/whats-new.html), [DS20](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-accessing-devops-agent-index.html), [DS21](https://docs.aws.amazon.com/devopsagent/latest/userguide/release-management-release-testing.html), [DS22](https://docs.aws.amazon.com/devopsagent/latest/userguide/quotas.html) |
 ## AWS Security Agent
-
-### 01. Product Functions and Resource Model
-| Section | Subject | Type | Source identifiers |
-|---|---|---|---|
-| [S-01](security.html#S-01) | Resources, scopes and functions | Overview and capabilities | SS01, SS03 |
-
-### 02. Identity, Sources and Target Boundaries
-| Section | Subject | Type | Source identifiers |
-|---|---|---|---|
-| [S-02](security.html#S-02) | Set up identity and source access | Configuration | SS03, SS04, SS05, SS06 |
-| [S-03](security.html#S-03) | Define the reachable surface before execution | Configuration | SS06, SS07, SS08 |
-
-### 03. Authentication, Criteria and Protection Mechanisms
-| Section | Subject | Type | Source identifiers |
-|---|---|---|---|
-| [S-M01](security.html#S-M01) | Credential resolution precedes application authentication | Mechanism | SS08, SS09 |
-| [S-M02](security.html#S-M02) | Login Optimization retains a successful procedure | Mechanism | SS09 |
-| [S-M03](security.html#S-M03) | Requirement evaluation applies reviewed criteria | Mechanism | SS05, SS14 |
-| [S-M04](security.html#S-M04) | Regeneration replaces a pack's contents | Mechanism | SS14, SS15 |
-| [S-M06](security.html#S-M06) | Customer-managed encryption uses several identities | Mechanism | SS18 |
-
-### 04. Assessment, Remediation and Evidence Lifecycle
-| Section | Subject | Type | Source identifiers |
-|---|---|---|---|
-| [S-04](security.html#S-04) | Configuration, preflight and run lifecycle | Operation | SS07, SS08, SS10, SS11 |
-| [S-05](security.html#S-05) | Findings, remediation and deployment are different objects | Operation | SS05, SS12 |
-| [S-M05](security.html#S-M05) | Revalidation replays selected finding evidence | Mechanism | SS13 |
-| [S-06](security.html#S-06) | Code, design and threat-model workflows | Operation | SS03, SS05, SS16, SS17 |
-
-### 05. Worked Finding Revalidation
-| Section | Subject | Type | Source identifiers |
-|---|---|---|---|
-| [S-U01](security.html#S-U01) | Worked example: a repaired authorization check | Worked example |  |
-
-### 06. Troubleshooting, Limits and Failure Modes
-| Section | Subject | Type | Source identifiers |
-|---|---|---|---|
-| [S-07](security.html#S-07) | Operational limits and failure diagnosis | Troubleshooting | SS06, SS09, SS10, SS11, SS18 |
-
-### 07. Coverage and Source Notes
-| Section | Subject | Type | Source identifiers |
-|---|---|---|---|
-| [S-08](security.html#S-08) | Coverage and evidence decisions | Official evidence | SS01, SS02, SS03, SS04, SS05, SS06, SS07, SS08, SS09, SS10, SS11, SS12, SS13, SS14, SS15, SS16, SS17, SS18 |
-
+| Section | Subject | Official references |
+|---|---|---|
+| [S-01](security.html#S-01) | The agent, application space, and assessment | [SS01](https://docs.aws.amazon.com/securityagent/latest/userguide/what-is.html), [SS03](https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html), [SS09](https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html), [SS30](https://docs.aws.amazon.com/securityagent/latest/userguide/about-integrations.html) |
+| [S-09](security.html#S-09) | Supported source and collaboration integrations | [SS30](https://docs.aws.amazon.com/securityagent/latest/userguide/about-integrations.html), [SS31](https://docs.aws.amazon.com/securityagent/latest/userguide/enable-s3-bucket.html), [SS32](https://docs.aws.amazon.com/securityagent/latest/userguide/connect-jira.html), [SS33](https://docs.aws.amazon.com/securityagent/latest/userguide/connect-confluence.html) |
+| [S-02](security.html#S-02) | User access and repository connections | [SS03](https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html), [SS04](https://docs.aws.amazon.com/securityagent/latest/userguide/how-it-works.html), [SS05](https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-code-review.html), [SS06](https://docs.aws.amazon.com/securityagent/latest/userguide/troubleshooting.html) |
+| [S-03](security.html#S-03) | Test targets, dependencies, and exclusions | [SS06](https://docs.aws.amazon.com/securityagent/latest/userguide/troubleshooting.html), [SS07](https://docs.aws.amazon.com/securityagent/latest/userguide/enable-penetration-test.html), [SS08](https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html) |
+| [S-M07](security.html#S-M07) | Application-context construction and reuse | [SS03](https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html), [SS09](https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html), [SS13](https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html), [SS14](https://docs.aws.amazon.com/securityagent/latest/userguide/security-requirements.html), [SS16](https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-threat-model.html), [SS31](https://docs.aws.amazon.com/securityagent/latest/userguide/enable-s3-bucket.html), [SS34](https://docs.aws.amazon.com/securityagent/latest/userguide/how-it-works.html) |
+| [S-M01](security.html#S-M01) | Credential retrieval and application login | [SS08](https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html), [SS09](https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html) |
+| [S-M02](security.html#S-M02) | Login-workflow retention and reuse | [SS09](https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html) |
+| [S-M03](security.html#S-M03) | Requirement applicability and evaluation | [SS05](https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-code-review.html), [SS14](https://docs.aws.amazon.com/securityagent/latest/userguide/security-requirements.html) |
+| [S-M04](security.html#S-M04) | Requirement generation and replacement | [SS14](https://docs.aws.amazon.com/securityagent/latest/userguide/security-requirements.html), [SS15](https://docs.aws.amazon.com/securityagent/latest/userguide/import-security-requirements.html) |
+| [S-M06](security.html#S-M06) | Encryption keys, identities, and access | [SS18](https://docs.aws.amazon.com/securityagent/latest/userguide/customer-managed-keys.html) |
+| [S-04](security.html#S-04) | Assessment configuration and run lifecycle | [SS07](https://docs.aws.amazon.com/securityagent/latest/userguide/enable-penetration-test.html), [SS08](https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html), [SS10](https://docs.aws.amazon.com/securityagent/latest/userguide/quotas.html), [SS11](https://docs.aws.amazon.com/securityagent/latest/userguide/pricing.html) |
+| [S-05](security.html#S-05) | Finding review and code remediation | [SS05](https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-code-review.html), [SS12](https://docs.aws.amazon.com/securityagent/latest/userguide/remediate-finding.html) |
+| [S-M05](security.html#S-M05) | Finding revalidation and evidence lineage | [SS13](https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html) |
+| [S-06](security.html#S-06) | Code review, design review, and threat modeling | [SS03](https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html), [SS05](https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-code-review.html), [SS16](https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-threat-model.html), [SS17](https://docs.aws.amazon.com/securityagent/latest/userguide/review-code-findings-github.html) |
+| [S-U01](security.html#S-U01) | Authorization-finding remediation: worked example |  |
+| [S-07](security.html#S-07) | Assessment failures and operating limits | [SS06](https://docs.aws.amazon.com/securityagent/latest/userguide/troubleshooting.html), [SS09](https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html), [SS10](https://docs.aws.amazon.com/securityagent/latest/userguide/quotas.html), [SS11](https://docs.aws.amazon.com/securityagent/latest/userguide/pricing.html), [SS18](https://docs.aws.amazon.com/securityagent/latest/userguide/customer-managed-keys.html) |
+| [S-08](security.html#S-08) | Documentation coverage and references | [SS01](https://docs.aws.amazon.com/securityagent/latest/userguide/what-is.html), [SS02](https://docs.aws.amazon.com/securityagent/latest/userguide/doc-history.html), [SS03](https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html), [SS04](https://docs.aws.amazon.com/securityagent/latest/userguide/how-it-works.html), [SS05](https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-code-review.html), [SS06](https://docs.aws.amazon.com/securityagent/latest/userguide/troubleshooting.html), [SS07](https://docs.aws.amazon.com/securityagent/latest/userguide/enable-penetration-test.html), [SS08](https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html), [SS09](https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html), [SS10](https://docs.aws.amazon.com/securityagent/latest/userguide/quotas.html), [SS11](https://docs.aws.amazon.com/securityagent/latest/userguide/pricing.html), [SS12](https://docs.aws.amazon.com/securityagent/latest/userguide/remediate-finding.html), [SS13](https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html), [SS14](https://docs.aws.amazon.com/securityagent/latest/userguide/security-requirements.html), [SS15](https://docs.aws.amazon.com/securityagent/latest/userguide/import-security-requirements.html), [SS16](https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-threat-model.html), [SS17](https://docs.aws.amazon.com/securityagent/latest/userguide/review-code-findings-github.html), [SS18](https://docs.aws.amazon.com/securityagent/latest/userguide/customer-managed-keys.html) |
 ## AWS FinOps Agent
-
-### 01. Product Functions and Resource Model
-| Section | Subject | Type | Source identifiers |
-|---|---|---|---|
-| [F-01](finops.html#F-01) | Resource and authority model | Overview and capabilities | FS01, FS02, FS03, FS06, FS08 |
-
-### 02. Access Roles, Source Data and Integrations
-| Section | Subject | Type | Source identifiers |
-|---|---|---|---|
-| [F-02](finops.html#F-02) | Configure four policy responsibilities and two service roles | Configuration | FS02, FS03, FS06 |
-| [F-M01](finops.html#F-M01) | Source-backed analysis and recommendation provenance | Mechanism | FS01, FS03, FS06, FS14 |
-| [F-05](finops.html#F-05) | Integration registration and destination connections | Configuration | FS12, FS13 |
-
-### 03. Reference Files, Memory and Conversation Context
-| Section | Subject | Type | Source identifiers |
-|---|---|---|---|
-| [F-M02](finops.html#F-M02) | Uploaded reference files are operator-maintained context | Mechanism | FS04, FS10 |
-| [F-M03](finops.html#F-M03) | Conversational memory survives sessions; it is not a file update | Mechanism | FS04, FS08 |
-| [F-M04](finops.html#F-M04) | Conversation compaction manages a bounded context | Mechanism | FS04 |
-
-### 04. Tasks, Automations, Publication and Data Lifecycle
-| Section | Subject | Type | Source identifiers |
-|---|---|---|---|
-| [F-03](finops.html#F-03) | On-demand tasks, schedules and observation | Operation | FS05, FS08 |
-| [F-M05](finops.html#F-M05) | Anomaly events become queued work through a managed rule | Mechanism | FS03, FS05, FS07 |
-| [F-04](finops.html#F-04) | Report artifacts and revision | Operation | FS06, FS08, FS10, FS11 |
-| [F-M06](finops.html#F-M06) | Approval depends on the action and invocation path | Mechanism | FS05, FS06 |
-| [F-M07](finops.html#F-M07) | Data lifecycle follows the object, not a single delete command | Mechanism | FS02, FS08, FS09 |
-
-### 05. Worked Cost Analysis
-| Section | Subject | Type | Source identifiers |
-|---|---|---|---|
-| [F-U01](finops.html#F-U01) | Worked example: decompose a cost increase | Worked example |  |
-
-### 06. Troubleshooting, Limits and Failure Modes
-| Section | Subject | Type | Source identifiers |
-|---|---|---|---|
-| [F-06](finops.html#F-06) | Limits and troubleshooting decisions | Troubleshooting | FS10 |
-
-### 07. Coverage and Source Notes
-| Section | Subject | Type | Source identifiers |
-|---|---|---|---|
-| [F-07](finops.html#F-07) | Coverage and source-review record | Official evidence | FS01, FS02, FS03, FS04, FS05, FS06, FS07, FS08, FS09, FS10, FS11, FS12, FS13, FS14 |
-
+| Section | Subject | Official references |
+|---|---|---|
+| [F-01](finops.html#F-01) | The agent instance and its execution environment | [FS01](https://docs.aws.amazon.com/finops-agent/latest/userguide/what-is.html), [FS02](https://docs.aws.amazon.com/finops-agent/latest/userguide/creating-an-agent.html), [FS03](https://docs.aws.amazon.com/finops-agent/latest/userguide/setting-up.html), [FS05](https://docs.aws.amazon.com/finops-agent/latest/userguide/task-management.html), [FS06](https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html), [FS08](https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html), [FS12](https://docs.aws.amazon.com/finops-agent/latest/userguide/jira-integration.html), [FS13](https://docs.aws.amazon.com/finops-agent/latest/userguide/slack-integration.html) |
+| [F-08](finops.html#F-08) | Supported data sources and publication destinations | [FS01](https://docs.aws.amazon.com/finops-agent/latest/userguide/what-is.html), [FS03](https://docs.aws.amazon.com/finops-agent/latest/userguide/setting-up.html), [FS08](https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html), [FS12](https://docs.aws.amazon.com/finops-agent/latest/userguide/jira-integration.html), [FS13](https://docs.aws.amazon.com/finops-agent/latest/userguide/slack-integration.html) |
+| [F-02](finops.html#F-02) | Administrator, service, and operator permissions | [FS02](https://docs.aws.amazon.com/finops-agent/latest/userguide/creating-an-agent.html), [FS03](https://docs.aws.amazon.com/finops-agent/latest/userguide/setting-up.html), [FS06](https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html) |
+| [F-M01](finops.html#F-M01) | Cost queries and recommendation provenance | [FS01](https://docs.aws.amazon.com/finops-agent/latest/userguide/what-is.html), [FS03](https://docs.aws.amazon.com/finops-agent/latest/userguide/setting-up.html), [FS06](https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html), [FS14](https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_GetCostAndUsage.html) |
+| [F-05](finops.html#F-05) | Jira projects and Slack channel connections | [FS12](https://docs.aws.amazon.com/finops-agent/latest/userguide/jira-integration.html), [FS13](https://docs.aws.amazon.com/finops-agent/latest/userguide/slack-integration.html) |
+| [F-M02](finops.html#F-M02) | Context-file preparation and management | [FS04](https://docs.aws.amazon.com/finops-agent/latest/userguide/context-files-and-memory.html), [FS10](https://docs.aws.amazon.com/finops-agent/latest/userguide/quotas.html) |
+| [F-M03](finops.html#F-M03) | Persistent preferences and corrections | [FS04](https://docs.aws.amazon.com/finops-agent/latest/userguide/context-files-and-memory.html), [FS08](https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html) |
+| [F-M04](finops.html#F-M04) | Conversation summarization and context limits | [FS04](https://docs.aws.amazon.com/finops-agent/latest/userguide/context-files-and-memory.html) |
+| [F-03](finops.html#F-03) | Tasks, schedules, and execution history | [FS05](https://docs.aws.amazon.com/finops-agent/latest/userguide/task-management.html), [FS08](https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html) |
+| [F-M05](finops.html#F-M05) | Anomaly events and task creation | [FS03](https://docs.aws.amazon.com/finops-agent/latest/userguide/setting-up.html), [FS05](https://docs.aws.amazon.com/finops-agent/latest/userguide/task-management.html), [FS07](https://docs.aws.amazon.com/finops-agent/latest/userguide/automated-anomaly-response.html) |
+| [F-04](finops.html#F-04) | Report generation and artifact management | [FS06](https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html), [FS08](https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html), [FS10](https://docs.aws.amazon.com/finops-agent/latest/userguide/quotas.html), [FS11](https://docs.aws.amazon.com/finops-agent/latest/userguide/custom-cost-reporting.html) |
+| [F-M06](finops.html#F-M06) | Publication permissions and approvals | [FS05](https://docs.aws.amazon.com/finops-agent/latest/userguide/task-management.html), [FS06](https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html) |
+| [F-M07](finops.html#F-M07) | Retention, cancellation, and deletion | [FS02](https://docs.aws.amazon.com/finops-agent/latest/userguide/creating-an-agent.html), [FS08](https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html), [FS09](https://docs.aws.amazon.com/finops-agent/latest/userguide/cross-region-inference.html) |
+| [F-U01](finops.html#F-U01) | Cost-variance analysis: worked example |  |
+| [F-06](finops.html#F-06) | Data, task, and integration failures | [FS10](https://docs.aws.amazon.com/finops-agent/latest/userguide/quotas.html) |
+| [F-07](finops.html#F-07) | Documentation coverage and references | [FS01](https://docs.aws.amazon.com/finops-agent/latest/userguide/what-is.html), [FS02](https://docs.aws.amazon.com/finops-agent/latest/userguide/creating-an-agent.html), [FS03](https://docs.aws.amazon.com/finops-agent/latest/userguide/setting-up.html), [FS04](https://docs.aws.amazon.com/finops-agent/latest/userguide/context-files-and-memory.html), [FS05](https://docs.aws.amazon.com/finops-agent/latest/userguide/task-management.html), [FS06](https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html), [FS07](https://docs.aws.amazon.com/finops-agent/latest/userguide/automated-anomaly-response.html), [FS08](https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html), [FS09](https://docs.aws.amazon.com/finops-agent/latest/userguide/cross-region-inference.html), [FS10](https://docs.aws.amazon.com/finops-agent/latest/userguide/quotas.html), [FS11](https://docs.aws.amazon.com/finops-agent/latest/userguide/custom-cost-reporting.html), [FS12](https://docs.aws.amazon.com/finops-agent/latest/userguide/jira-integration.html), [FS13](https://docs.aws.amazon.com/finops-agent/latest/userguide/slack-integration.html), [FS14](https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_GetCostAndUsage.html) |
 ## Shared Architecture
-
-### 01. Resource and Context Models
-| Section | Subject | Type | Source identifiers |
-|---|---|---|---|
-| [A-01](architecture.html#A-01) | Compare resources before comparing workflows | Overview and capabilities | AS01, AS02, AS03 |
-| [A-02](architecture.html#A-02) | Separate knowledge producers from consumers | Mechanism | AS04, AS05, AS06, AS07 |
-
-### 02. Connectivity, Identity and Effect Boundaries
-| Section | Subject | Type | Source identifiers |
-|---|---|---|---|
-| [A-03](architecture.html#A-03) | Connectivity, authentication and authorization are different layers | Mechanism | AS06, AS08, AS09 |
-| [A-04](architecture.html#A-04) | Authorization must follow the effect | Mechanism | AS10, AS11, AS12 |
-
-### 03. Execution Lifecycles and Handoff Records
-| Section | Subject | Type | Source identifiers |
-|---|---|---|---|
-| [A-05](architecture.html#A-05) | Configuration, execution and derived artifacts need separate lifecycles | Operation | AS04, AS07, AS13, AS14 |
-| [A-06](architecture.html#A-06) | A handoff is an artifact, not transferred execution authority | Operation |  |
-
-### 04. Worked Cross-Platform Comparison
-| Section | Subject | Type | Source identifiers |
-|---|---|---|---|
-| [A-U01](architecture.html#A-U01) | Worked comparison: one symptom, three different jobs | Worked example |  |
-
-### 05. Documentation Acceptance and Evidence Boundaries
-| Section | Subject | Type | Source identifiers |
-|---|---|---|---|
-| [A-07](architecture.html#A-07) | Coverage, evidence and unresolved implementation details | Official evidence | AS01, AS02, AS03, AS04, AS05, AS06, AS07, AS08, AS09, AS10, AS11, AS12, AS13, AS14 |
+| Section | Subject | Official references |
+|---|---|---|
+| [A-00](architecture.html#A-00) | Agents, tools, context, and executions | [AS30](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html), [AS31](https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html), [AS32](https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html) |
+| [A-01](architecture.html#A-01) | Workspace, configuration, and execution models | [AS01](https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-what-is-a-devops-agent-topology.html), [AS02](https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html), [AS03](https://docs.aws.amazon.com/finops-agent/latest/userguide/creating-an-agent.html) |
+| [A-02](architecture.html#A-02) | Knowledge construction and retrieval models | [AS04](https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html), [AS05](https://docs.aws.amazon.com/devopsagent/latest/userguide/whats-new.html), [AS06](https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html), [AS07](https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html) |
+| [A-08](architecture.html#A-08) | Integration direction and evidence ownership | [AS30](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html), [AS31](https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html), [AS32](https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html) |
+| [A-03](architecture.html#A-03) | Network, identity, and tool-access boundaries | [AS06](https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html), [AS08](https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-connecting-mcp-servers.html), [AS09](https://docs.aws.amazon.com/finops-agent/latest/userguide/jira-integration.html) |
+| [A-04](architecture.html#A-04) | Authorization of state-changing operations | [AS10](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-working-with-directed-actions.html), [AS11](https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html), [AS12](https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html) |
+| [A-05](architecture.html#A-05) | Configuration, execution, and artifact lifecycles | [AS04](https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html), [AS07](https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html), [AS13](https://docs.aws.amazon.com/devopsagent/latest/userguide/custom-agents-executing-custom-agents.html), [AS14](https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html) |
+| [A-06](architecture.html#A-06) | Cross-team evidence handoffs | [AS30](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html), [AS31](https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html), [AS32](https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html) |
+| [A-U01](architecture.html#A-U01) | Cross-platform operational review: worked example |  |
+| [A-07](architecture.html#A-07) | Architecture assumptions and references | [AS01](https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-what-is-a-devops-agent-topology.html), [AS02](https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html), [AS03](https://docs.aws.amazon.com/finops-agent/latest/userguide/creating-an-agent.html), [AS04](https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html), [AS05](https://docs.aws.amazon.com/devopsagent/latest/userguide/whats-new.html), [AS06](https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html), [AS07](https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html), [AS08](https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-connecting-mcp-servers.html), [AS09](https://docs.aws.amazon.com/finops-agent/latest/userguide/jira-integration.html), [AS10](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-working-with-directed-actions.html), [AS11](https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html), [AS12](https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html), [AS13](https://docs.aws.amazon.com/devopsagent/latest/userguide/custom-agents-executing-custom-agents.html), [AS14](https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html) |
+## Diagram scope
+Figures are logical models of the documented resource relationships and workflow steps, not descriptions of undisclosed infrastructure. Dashed cross-product handoffs are team-composed.
+| Figure | Detailed guide |
+|---|---|
+| [Agent execution and evidence cycle](../assets/diagrams/agent-execution.svg) | A-00 |
+| [DevOps Agent resource and execution architecture](../assets/diagrams/devops-architecture.svg) | D-01 |
+| [Provider registration and Agent Space association](../assets/diagrams/devops-integrations.svg) | D-12, D-03 |
+| [Incident knowledge production and selective retrieval](../assets/diagrams/devops-memory.svg) | D-M01, D-M02, D-M07 |
+| [Incident triage and investigation workflow](../assets/diagrams/devops-incident.svg) | D-06 |
+| [Configured operational-report workflow](../assets/diagrams/devops-reporting.svg) | D-07 |
+| [Security Agent application and assessment architecture](../assets/diagrams/security-architecture.svg) | S-01, S-09 |
+| [Application-source registration and selection](../assets/diagrams/security-integrations.svg) | S-09 |
+| [Application context and assessment criteria](../assets/diagrams/security-context.svg) | S-M07, S-M03 |
+| [Credential retrieval and authenticated test access](../assets/diagrams/security-authentication.svg) | S-M01, S-M02 |
+| [Finding, deployment, and revalidation lineage](../assets/diagrams/security-revalidation.svg) | S-M05, S-05 |
+| [FinOps Agent instance and execution architecture](../assets/diagrams/finops-architecture.svg) | F-01, F-08 |
+| [Data-source access and collaboration connections](../assets/diagrams/finops-integrations.svg) | F-08, F-05 |
+| [Persistent context and session-local working state](../assets/diagrams/finops-context.svg) | F-M02, F-M03, F-M04 |
+| [Anomaly-to-task and publication workflow](../assets/diagrams/finops-automation.svg) | F-M05, F-M06 |
+| [Team-managed evidence handoff](../assets/diagrams/shared-handoff.svg) | A-08, A-06 |
+| [Environment-knowledge consolidation](../assets/diagrams/devops-knowledge.svg) | D-M08, D-05 |
