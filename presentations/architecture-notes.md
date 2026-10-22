@@ -1,8 +1,8 @@
-# Shared Architecture: presentation notes
+# Cross-service architecture: presentation notes
 
 
 
-Presentation: 40 minutes, including 4 minutes of prepared-result exercises. Questions and breaks are additional.
+Presentation: 38 minutes, including 4 minutes of prepared-result exercises. Questions and breaks are additional.
 
 
 
@@ -65,31 +65,9 @@ A task and its configuration guide an execution. Authorized tools return observa
 Detailed reference: [Agents, tools, context, and executions](../guides/architecture.html#A-00)
 
 
-## 04. Comparison framework
+## 04. Retained context: producers, consumers, and lifecycle
 
 08:00–10:00 · Concept model and product specialization
-
-Cross-platform comparison begins with the actual resource and execution model.
-
-
-
-Question | DevOps Agent | Security Agent | FinOps Agent
-
-Scope object | Agent Space | Application Agent Space plus shared resources | Agent instance
-
-Configuration | Agents, tools and knowledge | Assessment definitions and criteria | Context, tasks, automations and connections
-
-Execution | Investigation or invocation | Run, review or revalidation job | Conversation or task
-
-Primary evidence | Tool results and investigation history | Findings and linked verification | Source query, task and artifact
-
-
-Detailed reference: [Resource identity across service boundaries](../guides/architecture.html#A-01)
-
-
-## 05. Resource and context models
-
-10:00–12:00 · Concept model and product specialization
 
 The three services do not expose one common memory mechanism.
 
@@ -105,7 +83,7 @@ Requirement pack | Administrator or document generation | Eligible design/code a
 
 Reference file | FinOps operator upload | Task or conversation | Soft delete and restore
 
-Conversational memory | Explicit user request | Later FinOps session | Update or forget
+Conversational memory | Conversation preferences, corrections and task outcomes | Later FinOps session | Update or forget
 
 
 Detailed reference: [Resource identity across service boundaries](../guides/architecture.html#A-01)
@@ -115,11 +93,11 @@ Detailed reference: [Resource identity across service boundaries](../guides/arch
 Detailed reference: [Knowledge construction and retrieval models](../guides/architecture.html#A-02)
 
 
-## 06. Operational objectives, mechanisms and features
+## 05. Operational objectives, mechanisms and features
 
-12:00–14:00 · Outcome and implementation relationships
+10:00–12:00 · Outcome and implementation relationships
 
-Follow the operational objective through its workflow, configured mechanisms and independent completion evidence. The catalog links each dependency to its detailed guide.
+The use case supplies the objective and completion criteria. Each workflow step links to a mechanism and its product feature. The implementation profile supplies environment-specific configuration and verification steps.
 
 
 
@@ -130,11 +108,11 @@ Follow the operational objective through its workflow, configured mechanisms and
 Detailed reference: [Operational objectives and implementation dependencies](../guides/architecture.html#A-09)
 
 
-## 07. Service-health reporting: required and conditional dependencies
+## 06. Service-health reporting: required and conditional dependencies
 
-14:00–17:00 · Outcome and implementation relationships
+12:00–15:00 · Outcome and implementation relationships
 
-Follow the operational objective through its workflow, configured mechanisms and independent completion evidence. The catalog links each dependency to its detailed guide.
+A missing required data source blocks the corresponding conclusion. Optional history changes the available context. Schedule and destination dependencies apply only to profiles that enable them.
 
 
 
@@ -160,11 +138,11 @@ Detailed reference: [Knowledge construction and retrieval models](../guides/arch
 Detailed reference: [Authorization of state-changing operations](../guides/architecture.html#A-04)
 
 
-## 08. Operational-review profiles and evidence handoffs
+## 07. Operational-review profiles and evidence handoffs
 
-17:00–20:00 · Outcome and implementation relationships
+15:00–18:00 · Outcome and implementation relationships
 
-Follow the operational objective through its workflow, configured mechanisms and independent completion evidence. The catalog links each dependency to its detailed guide.
+The reliability profile uses service measurements and incident records. The cost profile uses reconciled amounts and recommendations. Both produce decisions, assigned owners, and unresolved evidence requests; neither transfers service permissions.
 
 
 
@@ -188,9 +166,9 @@ Detailed reference: [Operational objectives and implementation dependencies](../
 Detailed reference: [Cross-platform operational review: worked example](../guides/architecture.html#A-U01)
 
 
-## 09. Team-managed evidence handoff
+## 08. Team-managed evidence handoff
 
-20:00–22:00 · Integrations and access
+18:00–20:00 · Integrations and access
 
 An operational finding can become input to separate security and cost work. Each receiving service uses its own configuration and authorization; only identifiers, evidence references, and decisions are handed over.
 
@@ -207,9 +185,9 @@ Detailed reference: [Integration direction and evidence ownership](../guides/arc
 Detailed reference: [Cross-team evidence handoffs](../guides/architecture.html#A-06)
 
 
-## 10. Connectivity, identity and authorization
+## 09. Connectivity, identity and authorization
 
-22:00–24:00 · Integrations and access
+20:00–22:00 · Integrations and access
 
 Reachability and prompt guidance do not establish authorization for an effect.
 
@@ -227,9 +205,9 @@ Behavioral guidance | Which instructions, skills or prompt rules shape the work?
 Detailed reference: [Network, identity, and tool-access boundaries](../guides/architecture.html#A-03)
 
 
-## 11. Execution and approval boundaries
+## 10. Execution and approval boundaries
 
-24:00–26:00 · Execution workflows
+22:00–24:00 · Execution workflows
 
 Approval follows the concrete effect; there is no universal human-approved agent mode.
 
@@ -251,9 +229,9 @@ Recommendation only | No execution authority | Proposal and acceptance criteria
 Detailed reference: [Authorization of state-changing operations](../guides/architecture.html#A-04)
 
 
-## 12. Configuration, execution and artifact lifecycles
+## 11. Configuration, execution and artifact lifecycles
 
-26:00–28:00 · Execution workflows
+24:00–26:00 · Execution workflows
 
 Stopping future starts does not reverse completed effects or delete retained evidence.
 
@@ -275,9 +253,9 @@ External artifact | Ticket, message or exported report | Destination-specific re
 Detailed reference: [Configuration, execution, and artifact lifecycles](../guides/architecture.html#A-05)
 
 
-## 13. Handoff record between platforms and teams
+## 12. Handoff record between platforms and teams
 
-28:00–30:00 · Execution workflows
+26:00–28:00 · Execution workflows
 
 A handoff transfers evidence and responsibility, not credentials or authorization.
 
@@ -299,9 +277,9 @@ Acceptance | Required check and unresolved questions | Prevent generated text fr
 Detailed reference: [Cross-team evidence handoffs](../guides/architecture.html#A-06)
 
 
-## 14. Tabletop: one operational symptom, three different jobs
+## 13. Exercise: incident, security, and cost evidence handoff
 
-30:00–34:00 · Worked example
+28:00–32:00 · Worked example
 
 The same business event creates different evidence obligations for each platform.
 
@@ -319,9 +297,9 @@ The same business event creates different evidence obligations for each platform
 Detailed reference: [Cross-platform operational review: worked example](../guides/architecture.html#A-U01)
 
 
-## 15. Use case families across the three platforms
+## 14. Use case families across the three platforms
 
-34:00–37:00 · Troubleshooting and references
+32:00–35:00 · Troubleshooting and references
 
 Similar business labels can map to different platform objects and authorization boundaries.
 
@@ -333,7 +311,7 @@ Event response | Incident triage and investigation | Assessment run from configu
 
 Recurring review | Health and operational review report | Scheduled assessment or review workflow | Cost and FinOps review report
 
-Pattern analysis | Recurring causes and prevention recommendations | Requirement and finding trends | Cost drivers and optimization candidates
+Pattern analysis | Recurring causes and prevention recommendations | Finding personalization; cross-run trend analysis is team-composed | Cost drivers and optimization candidates
 
 Documentation | Topology, SOP skills and environment memory | Threat model and requirement packs | Context files and report artifacts
 
@@ -347,27 +325,41 @@ Detailed reference: [Resource identity across service boundaries](../guides/arch
 Detailed reference: [Architecture assumptions and references](../guides/architecture.html#A-07)
 
 
-## 16. Documentation and presentation acceptance criteria
 
-37:00–40:00 · Troubleshooting and references
-
-A presentation is an indexed technical explanation, not a sequence of slogans.
+Detailed reference: [Knowledge construction and retrieval models](../guides/architecture.html#A-02)
 
 
+## 15. Operational prerequisites and verification records
 
-Area | Acceptance criterion | Failure signal
+35:00–38:00 · Troubleshooting and references
 
-Structure | Resource model, capabilities, use cases, mechanisms and procedures are distinct | A scenario is labeled as a capability
-
-Use case catalog | Grouped, searchable and classified by delivery mode and availability | Duplicated or unclassified entries
-
-Procedure | Prerequisite, decision, confirmation and failure interpretation are present | Generic “configure and verify” language
-
-Presentation | Descriptive chapter titles and evidence-bearing slides | Slogan titles and empty visual panels
-
-Evidence | Material product claims link to official guidance | Source count used as proof of completeness
-
-Validation | Browser, data and link checks are separated from live product testing | Packaging checks presented as operational proof
+Check access, execution scope, context, effects, and result evidence separately. Record unmet prerequisites and unresolved results before handing work to the next owner.
 
 
-Detailed reference: [Architecture assumptions and references](../guides/architecture.html#A-07)
+
+Check | Record to inspect | Failure interpretation
+
+Source access | Calling identity, selected operation and returned resource | An inaccessible source leaves an evidence gap.
+
+Execution scope | Configuration ID, revision, target and observation period | A completed run against the wrong subject is not acceptance.
+
+Retained context | Applicable file, memory or procedural state | Availability and observed use are separate checks.
+
+State-changing operation | Target, permitted effect and required approval | A generated recommendation is not authorization.
+
+Result and handoff | Source references, execution ID, reviewer and unresolved items | Completion and delivery do not establish correctness.
+
+
+Detailed reference: [Network, identity, and tool-access boundaries](../guides/architecture.html#A-03)
+
+
+
+Detailed reference: [Authorization of state-changing operations](../guides/architecture.html#A-04)
+
+
+
+Detailed reference: [Configuration, execution, and artifact lifecycles](../guides/architecture.html#A-05)
+
+
+
+Detailed reference: [Cross-team evidence handoffs](../guides/architecture.html#A-06)
