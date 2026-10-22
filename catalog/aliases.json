@@ -1,0 +1,438 @@
+{
+  "schema_version": 2,
+  "entries": [
+    {
+      "id": "D-UC01",
+      "title": "Incident signal triage",
+      "disposition": "Retained outcome or consolidated variant",
+      "targets": [
+        "UC-D01"
+      ]
+    },
+    {
+      "id": "D-UC02",
+      "title": "Root-cause investigation",
+      "disposition": "Retained outcome or consolidated variant",
+      "targets": [
+        "UC-D02"
+      ]
+    },
+    {
+      "id": "D-UC03",
+      "title": "Investigation steering and hypothesis review",
+      "disposition": "Retained outcome or consolidated variant",
+      "targets": [
+        "UC-D02"
+      ]
+    },
+    {
+      "id": "D-UC04",
+      "title": "Mitigation plan preparation",
+      "disposition": "Retained outcome or consolidated variant",
+      "targets": [
+        "UC-D03"
+      ]
+    },
+    {
+      "id": "D-UC05",
+      "title": "Approved directed mitigation",
+      "disposition": "Retained outcome or consolidated variant",
+      "targets": [
+        "UC-D04"
+      ]
+    },
+    {
+      "id": "D-UC06",
+      "title": "On-demand service health query",
+      "disposition": "Retained outcome or consolidated variant",
+      "targets": [
+        "UC-D06"
+      ]
+    },
+    {
+      "id": "D-UC07",
+      "title": "Incident status bulletin",
+      "disposition": "Retained outcome or consolidated variant",
+      "targets": [
+        "UC-D05"
+      ]
+    },
+    {
+      "id": "D-UC08",
+      "title": "Daily or weekly service health report",
+      "disposition": "Retained outcome or consolidated variant",
+      "targets": [
+        "UC-D06"
+      ]
+    },
+    {
+      "id": "D-UC09",
+      "title": "Deployment and change activity report",
+      "disposition": "Retained outcome or consolidated variant",
+      "targets": [
+        "UC-D07"
+      ]
+    },
+    {
+      "id": "D-UC10",
+      "title": "Operational review pack",
+      "disposition": "Retained outcome or consolidated variant",
+      "targets": [
+        "UC-G01"
+      ]
+    },
+    {
+      "id": "D-UC11",
+      "title": "Incident pattern identification",
+      "disposition": "Retained outcome or consolidated variant",
+      "targets": [
+        "UC-D08"
+      ]
+    },
+    {
+      "id": "D-UC12",
+      "title": "Prevention recommendation backlog",
+      "disposition": "Retained outcome or consolidated variant",
+      "targets": [
+        "UC-D09"
+      ]
+    },
+    {
+      "id": "D-UC13",
+      "title": "Recurring-alarm investigation with historical context",
+      "disposition": "Retained outcome or consolidated variant",
+      "targets": [
+        "UC-D02"
+      ]
+    },
+    {
+      "id": "D-UC14",
+      "title": "SOP consolidation into reusable skills",
+      "disposition": "Retained outcome or consolidated variant",
+      "targets": [
+        "UC-D10"
+      ]
+    },
+    {
+      "id": "D-UC15",
+      "title": "Applying incident reporting conventions",
+      "disposition": "Supporting mechanism or configuration procedure",
+      "targets": [
+        "MX-D-INSTRUCTIONS"
+      ]
+    },
+    {
+      "id": "D-UC16",
+      "title": "Topology documentation and dependency map",
+      "disposition": "Retained outcome or consolidated variant",
+      "targets": [
+        "UC-D11"
+      ]
+    },
+    {
+      "id": "D-UC17",
+      "title": "Environment summary and topology refresh",
+      "disposition": "Supporting mechanism or configuration procedure",
+      "targets": [
+        "MX-D-TOPOLOGY"
+      ]
+    },
+    {
+      "id": "D-UC18",
+      "title": "Configuration audit",
+      "disposition": "Retained outcome or consolidated variant",
+      "targets": [
+        "UC-D12"
+      ]
+    },
+    {
+      "id": "D-UC19",
+      "title": "Metrics and error trend analysis",
+      "disposition": "Retained outcome or consolidated variant",
+      "targets": [
+        "UC-D06"
+      ]
+    },
+    {
+      "id": "D-UC20",
+      "title": "Cross-tool operational correlation",
+      "disposition": "Supporting mechanism or configuration procedure",
+      "targets": [
+        "PR-EVIDENCE"
+      ]
+    },
+    {
+      "id": "D-UC21",
+      "title": "Release readiness review",
+      "disposition": "Retained outcome or consolidated variant",
+      "targets": [
+        "UC-D13"
+      ]
+    },
+    {
+      "id": "D-UC22",
+      "title": "Active release testing",
+      "disposition": "Retained outcome or consolidated variant",
+      "targets": [
+        "UC-D14"
+      ]
+    },
+    {
+      "id": "F-UC01",
+      "title": "Natural-language cost inquiry",
+      "disposition": "Retained outcome or consolidated variant",
+      "targets": [
+        "UC-F01"
+      ]
+    },
+    {
+      "id": "F-UC02",
+      "title": "Cost variance decomposition",
+      "disposition": "Retained outcome or consolidated variant",
+      "targets": [
+        "UC-F01"
+      ]
+    },
+    {
+      "id": "F-UC03",
+      "title": "Cost breakdown by ownership dimension",
+      "disposition": "Retained outcome or consolidated variant",
+      "targets": [
+        "UC-F01"
+      ]
+    },
+    {
+      "id": "F-UC04",
+      "title": "Forecast and commitment coverage review",
+      "disposition": "Split: forecast and commitment coverage have different completion criteria",
+      "targets": [
+        "UC-F02",
+        "UC-F03"
+      ]
+    },
+    {
+      "id": "F-UC05",
+      "title": "Daily, weekly or monthly cost report",
+      "disposition": "Retained outcome or consolidated variant",
+      "targets": [
+        "UC-F04"
+      ]
+    },
+    {
+      "id": "F-UC06",
+      "title": "FinOps operational review pack",
+      "disposition": "Retained outcome or consolidated variant",
+      "targets": [
+        "UC-G01"
+      ]
+    },
+    {
+      "id": "F-UC07",
+      "title": "On-demand cost anomaly investigation",
+      "disposition": "Retained outcome or consolidated variant",
+      "targets": [
+        "UC-F05"
+      ]
+    },
+    {
+      "id": "F-UC08",
+      "title": "Event-triggered anomaly response",
+      "disposition": "Retained outcome or consolidated variant",
+      "targets": [
+        "UC-F05"
+      ]
+    },
+    {
+      "id": "F-UC09",
+      "title": "Optimization recommendation triage",
+      "disposition": "Retained outcome or consolidated variant",
+      "targets": [
+        "UC-F06"
+      ]
+    },
+    {
+      "id": "F-UC10",
+      "title": "Post-change savings measurement",
+      "disposition": "Retained outcome or consolidated variant",
+      "targets": [
+        "UC-F07"
+      ]
+    },
+    {
+      "id": "F-UC11",
+      "title": "Cost ownership and allocation context",
+      "disposition": "Supporting mechanism or configuration procedure",
+      "targets": [
+        "MX-F-FILES"
+      ]
+    },
+    {
+      "id": "F-UC12",
+      "title": "Persistent reporting preferences",
+      "disposition": "Supporting mechanism or configuration procedure",
+      "targets": [
+        "MX-F-MEMORY"
+      ]
+    },
+    {
+      "id": "F-UC13",
+      "title": "Scheduled recurring task",
+      "disposition": "Supporting mechanism or configuration procedure",
+      "targets": [
+        "MX-F-SCHEDULE"
+      ]
+    },
+    {
+      "id": "F-UC14",
+      "title": "Jira follow-up creation",
+      "disposition": "Supporting mechanism or configuration procedure",
+      "targets": [
+        "MX-F-JIRA"
+      ]
+    },
+    {
+      "id": "F-UC15",
+      "title": "Slack publication",
+      "disposition": "Supporting mechanism or configuration procedure",
+      "targets": [
+        "MX-F-SLACK"
+      ]
+    },
+    {
+      "id": "F-UC16",
+      "title": "Downloadable report artifact",
+      "disposition": "Supporting mechanism or configuration procedure",
+      "targets": [
+        "MX-F-ARTIFACT"
+      ]
+    },
+    {
+      "id": "S-UC01",
+      "title": "On-demand application penetration test",
+      "disposition": "Retained outcome or consolidated variant",
+      "targets": [
+        "UC-S01"
+      ]
+    },
+    {
+      "id": "S-UC02",
+      "title": "Authenticated workflow assessment",
+      "disposition": "Retained outcome or consolidated variant",
+      "targets": [
+        "UC-S01"
+      ]
+    },
+    {
+      "id": "S-UC03",
+      "title": "Private application assessment",
+      "disposition": "Retained outcome or consolidated variant",
+      "targets": [
+        "UC-S01"
+      ]
+    },
+    {
+      "id": "S-UC04",
+      "title": "Recurring penetration test",
+      "disposition": "Retained outcome or consolidated variant",
+      "targets": [
+        "UC-S01"
+      ]
+    },
+    {
+      "id": "S-UC05",
+      "title": "Repeated assessment with retained login procedure",
+      "disposition": "Supporting mechanism or configuration procedure",
+      "targets": [
+        "MX-S-LOGIN"
+      ]
+    },
+    {
+      "id": "S-UC06",
+      "title": "Finding review and prioritization",
+      "disposition": "Retained outcome or consolidated variant",
+      "targets": [
+        "UC-S05"
+      ]
+    },
+    {
+      "id": "S-UC07",
+      "title": "Jira remediation tracking",
+      "disposition": "Supporting mechanism or configuration procedure",
+      "targets": [
+        "MX-S-JIRA"
+      ]
+    },
+    {
+      "id": "S-UC08",
+      "title": "Proposed code remediation",
+      "disposition": "Retained outcome or consolidated variant",
+      "targets": [
+        "UC-S06"
+      ]
+    },
+    {
+      "id": "S-UC09",
+      "title": "Finding revalidation",
+      "disposition": "Retained outcome or consolidated variant",
+      "targets": [
+        "UC-S07"
+      ]
+    },
+    {
+      "id": "S-UC10",
+      "title": "Repository code review",
+      "disposition": "Retained outcome or consolidated variant",
+      "targets": [
+        "UC-S02"
+      ]
+    },
+    {
+      "id": "S-UC11",
+      "title": "Change-focused code review",
+      "disposition": "Retained outcome or consolidated variant",
+      "targets": [
+        "UC-S02"
+      ]
+    },
+    {
+      "id": "S-UC12",
+      "title": "Security requirement evaluation",
+      "disposition": "Supporting mechanism or configuration procedure",
+      "targets": [
+        "MX-S-CRITERIA"
+      ]
+    },
+    {
+      "id": "S-UC13",
+      "title": "Security requirement consolidation",
+      "disposition": "Retained outcome or consolidated variant",
+      "targets": [
+        "UC-S08"
+      ]
+    },
+    {
+      "id": "S-UC14",
+      "title": "Design review",
+      "disposition": "Retained outcome or consolidated variant",
+      "targets": [
+        "UC-S03"
+      ]
+    },
+    {
+      "id": "S-UC15",
+      "title": "Threat modeling",
+      "disposition": "Retained outcome or consolidated variant",
+      "targets": [
+        "UC-S04"
+      ]
+    },
+    {
+      "id": "S-UC16",
+      "title": "CI/CD assessment integration",
+      "disposition": "Supporting mechanism or configuration procedure",
+      "targets": [
+        "PR-S-PIPELINE"
+      ]
+    }
+  ]
+}
