@@ -1,4 +1,4 @@
-"""HTML lessons with reviewed mechanism lifecycles; timing budgets remain unchanged."""
+"""HTML presentations: product resources, mechanisms, and operational procedures."""
 DECKS={'devops': {'title': 'AWS DevOps Agent',
             'subtitle': 'Architecture, integrations, knowledge, and operational workflows',
             'prefix': 'D',
@@ -8,11 +8,11 @@ DECKS={'devops': {'title': 'AWS DevOps Agent',
                         'kind': 'diagram',
                         'diagram': 'er-devops-scope',
                         'data': [],
-                        'message': 'Read the entity kind and ownership label before following the '
-                                   'relationship. A question mark leaves exact multiplicity '
-                                   'unspecified; the detailed register explains each logical '
-                                   'association.'},
-                       {'title': 'Resource identities and lifecycle boundaries',
+                        'message': 'An Agent Space associates account roles and providers. A '
+                                   'custom-agent definition selects tools and context; each invocation '
+                                   'records a separate execution. Provider registration and space '
+                                   'association are distinct configuration operations.'},
+                       {'title': 'Agent Space, asset, and invocation identities',
                         'seconds': 180,
                         'refs': ['D-13'],
                         'kind': 'table',
@@ -41,10 +41,10 @@ DECKS={'devops': {'title': 'AWS DevOps Agent',
                         'kind': 'diagram',
                         'diagram': 'er-devops-knowledge',
                         'data': [],
-                        'message': 'Read the entity kind and ownership label before following the '
-                                   'relationship. A question mark leaves exact multiplicity '
-                                   'unspecified; the detailed register explains each logical '
-                                   'association.'},
+                        'message': 'A custom definition references existing skill and memory-store '
+                                   'assets. A store contains entries; updates create entry versions. '
+                                   'Activation and attachment control availability, while retrieval '
+                                   'occurs during execution.'},
                        {'title': 'Provider registration and Agent Space association',
                         'seconds': 120,
                         'refs': ['D-12', 'D-03'],
@@ -367,10 +367,10 @@ DECKS={'devops': {'title': 'AWS DevOps Agent',
                         'kind': 'diagram',
                         'diagram': 'er-devops-incidents',
                         'data': [],
-                        'message': 'Read the entity kind and ownership label before following the '
-                                   'relationship. A question mark leaves exact multiplicity '
-                                   'unspecified; the detailed register explains each logical '
-                                   'association.'},
+                        'message': 'A signal can be linked, skipped, or investigated. Steering changes '
+                                   'the active analysis; completed-investigation feedback provides a '
+                                   'corrective input. Resource mutation requires its separate approval '
+                                   'path.'},
                        {'title': 'Worked example: recurring alarm with different current evidence',
                         'seconds': 480,
                         'refs': ['D-U01', 'D-M01', 'D-M02'],
@@ -429,11 +429,11 @@ DECKS={'devops': {'title': 'AWS DevOps Agent',
                           'kind': 'diagram',
                           'diagram': 'er-security-scope',
                           'data': [],
-                          'message': 'Read the entity kind and ownership label before following the '
-                                     'relationship. A question mark leaves exact multiplicity '
-                                     'unspecified; the detailed register explains each logical '
-                                     'association.'},
-                         {'title': 'Resource identities and lifecycle boundaries',
+                          'message': 'Shared registrations and requirement packs are separate from '
+                                     'application-scoped configuration. An Agent Space selects sources '
+                                     'and users. The target application and published issue retain '
+                                     'external ownership.'},
+                         {'title': 'Assessment configuration, run, and finding identities',
                           'seconds': 180,
                           'refs': ['S-10'],
                           'kind': 'table',
@@ -462,10 +462,10 @@ DECKS={'devops': {'title': 'AWS DevOps Agent',
                           'kind': 'diagram',
                           'diagram': 'er-security-assessments',
                           'data': [],
-                          'message': 'Read the entity kind and ownership label before following the '
-                                     'relationship. A question mark leaves exact multiplicity '
-                                     'unspecified; the detailed register explains each logical '
-                                     'association.'},
+                          'message': 'Penetration tests, full-code reviews, and threat models have '
+                                     'reusable configurations and separate runs. A design review is a '
+                                     'one-off assessment. Record the assessed revision and scope for '
+                                     'each execution.'},
                          {'title': 'Application-source registration and selection',
                           'seconds': 120,
                           'refs': ['S-09'],
@@ -480,9 +480,10 @@ DECKS={'devops': {'title': 'AWS DevOps Agent',
                           'seconds': 120,
                           'refs': ['S-09'],
                           'kind': 'table',
-                          'message': 'Account-level registration authorizes a provider; '
-                                     'application-level selection supplies resources. Repository writes '
-                                     'and Jira effects require their own settings.',
+                          'message': 'Register the provider, grant its required permissions, and select '
+                                     'application resources. Repository comments, remediation '
+                                     'proposals, and Jira publication are separate configured '
+                                     'operations.',
                           'data': [['Provider family', 'Documented support', 'Selection or effect'],
                                    ['GitHub',
                                     'Cloud-hosted GitHub and Enterprise; self-hosted Enterprise Server',
@@ -492,6 +493,10 @@ DECKS={'devops': {'title': 'AWS DevOps Agent',
                                     'GitLab cloud and Self-Managed; Bitbucket Cloud',
                                     'Provider-specific repository context and eligible '
                                     'review/remediation settings.'],
+                                   ['Azure DevOps',
+                                    'Git repositories; TFVC unsupported',
+                                    'Entra authorization, organization permissions, repository '
+                                    'selection; writes configured separately.'],
                                    ['Documentation',
                                     'Confluence Cloud',
                                     'Selected pages provide read-only application context.'],
@@ -576,7 +581,7 @@ DECKS={'devops': {'title': 'AWS DevOps Agent',
                           'message': 'Login Optimization reuses navigation. Findings Personalization '
                                      'reuses eligible edits. Neither establishes that the application '
                                      'was repaired.'},
-                         {'title': 'Login optimization',
+                         {'title': 'Login Optimization and retained authentication procedures',
                           'seconds': 120,
                           'refs': ['S-M02'],
                           'kind': 'flow',
@@ -795,10 +800,10 @@ DECKS={'devops': {'title': 'AWS DevOps Agent',
                           'kind': 'diagram',
                           'diagram': 'er-security-lineage',
                           'data': [],
-                          'message': 'Read the entity kind and ownership label before following the '
-                                     'relationship. A question mark leaves exact multiplicity '
-                                     'unspecified; the detailed register explains each logical '
-                                     'association.'},
+                          'message': 'Preserve the original finding identity through proposal, '
+                                     'deployment, and revalidation. The documentation-defined result '
+                                     'association records the outcome of a particular revalidation job; '
+                                     'it is not an additional AWS API resource.'},
                          {'title': 'Worked example: authorization finding through revalidation',
                           'seconds': 480,
                           'refs': ['S-U01', 'S-M05'],
@@ -857,11 +862,10 @@ DECKS={'devops': {'title': 'AWS DevOps Agent',
                         'kind': 'diagram',
                         'diagram': 'er-finops-scope',
                         'data': [],
-                        'message': 'Read the entity kind and ownership label before following the '
-                                   'relationship. A question mark leaves exact multiplicity '
-                                   'unspecified; the detailed register explains each logical '
-                                   'association.'},
-                       {'title': 'Resource identities and lifecycle boundaries',
+                        'message': 'The instance uses separate data-access and operator roles. '
+                                   'Account-level Jira or Slack registration is followed by an '
+                                   'instance-specific project or channel connection.'},
+                       {'title': 'Instance, conversation, task, and artifact identities',
                         'seconds': 180,
                         'refs': ['F-09'],
                         'kind': 'table',
@@ -890,10 +894,9 @@ DECKS={'devops': {'title': 'AWS DevOps Agent',
                         'kind': 'diagram',
                         'diagram': 'er-finops-work',
                         'data': [],
-                        'message': 'Read the entity kind and ownership label before following the '
-                                   'relationship. A question mark leaves exact multiplicity '
-                                   'unspecified; the detailed register explains each logical '
-                                   'association.'},
+                        'message': 'A conversation may answer directly. An explicit task has a separate '
+                                   'queue and execution record. An automation creates future tasks. '
+                                   'Report artifacts can originate from a conversation or task.'},
                        {'title': 'Data-source access and collaboration connections',
                         'seconds': 120,
                         'refs': ['F-08', 'F-05'],
@@ -1208,10 +1211,9 @@ DECKS={'devops': {'title': 'AWS DevOps Agent',
                         'kind': 'diagram',
                         'diagram': 'er-finops-context',
                         'data': [],
-                        'message': 'Read the entity kind and ownership label before following the '
-                                   'relationship. A question mark leaves exact multiplicity '
-                                   'unspecified; the detailed register explains each logical '
-                                   'association.'},
+                        'message': 'Files, retained preferences, and conversation summaries supply '
+                                   'different context. File restoration, memory correction, and '
+                                   'conversation compaction operate on different state.'},
                        {'title': 'Worked example: cost increase decomposition',
                         'seconds': 480,
                         'refs': ['F-U01'],
