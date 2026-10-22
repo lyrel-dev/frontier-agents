@@ -1,6 +1,6 @@
 {
-  "revision": "2026-10-22-narrative-guides",
-  "files_compared": 38,
+  "revision": "2026-10-22-linked-catalog",
+  "files_compared": 47,
   "identical_repeated_build": true,
-  "boundary": "Same committed inputs and same runner environment; not a claim of reproducibility across different dependency versions."
+  "boundary": "Same committed inputs and same runner environment; not cross-version reproducibility."
 }
