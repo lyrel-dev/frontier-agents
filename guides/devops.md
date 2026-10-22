@@ -4,9 +4,9 @@ Engineering guide • documentation reviewed 22 October 2026
 
 This guide explains the platform from its resources upward: access and connectivity, context, execution, operating procedures, and failure diagnosis. Product behavior is supported by the numbered AWS references. Sections explicitly labeled **engineering procedure** or **synthetic exercise** are recommendations or teaching examples, not additional AWS features. No account configuration or live agent execution was performed for this publication.
 
-## 01. Platform overview and capabilities
+## 01. Product Functions and Resource Model
 
-Understand the service functions, configuration objects and reusable capabilities.
+Define the built-in functions, configuration objects and execution records before applying them to operational work.
 
 ### D-01 — Service functions and resource model
 
@@ -46,9 +46,9 @@ The graph is an explanatory model of documented resources, not an AWS API schema
 
 This table is an index, not a second capability database. The referenced sections are the canonical explanations.
 
-## 02. Access and integrations
+## 02. Access Roles and Tool Connections
 
-Configure operator access, resource access, external tools and network connectivity.
+Configure operator access, AWS resource access, external tools and private network paths.
 
 ### D-02 — Establish the two access paths
 
@@ -89,9 +89,9 @@ AWS uses VPC Lattice and a service-managed resource gateway whose ENIs are place
 
 **Illustrative configuration review:** an endpoint `https://metrics.example.internal:8443/mcp` needs a route and port range covering 8443. A successful HTTPS check on port 443 is not evidence that this endpoint works. A firewall rule should identify the selected gateway network path. It should not be copied from an unrelated public-service allowlist. This example is a review checklist, not a deployable AWS resource definition.
 
-## 03. Context, memory and behavior
+## 03. Knowledge, Memory and Operational Procedures
 
-Distinguish discovery, memory production, correction, retrieval, attachment, instructions and skills.
+Separate discovery, recurring-cause memory, corrections, attachments, instructions and skills.
 
 ### D-05 — Discovery, topology and learned understanding
 
@@ -173,9 +173,9 @@ description: Investigate checkout timeouts involving the inventory dependency.
 
 Add a procedure that compares upstream response time, connection errors and deployment timestamps using the actually connected tools. Record failed reads and distinguish observations from hypotheses. The example frontmatter illustrates applicability; it is not a complete environment-specific runbook. A procedure cannot confer missing tool permissions.
 
-## 04. Execution and administration
+## 04. Incident Operations and Controlled Execution
 
-Trace incident routing, custom-agent runs, computation, approvals and configuration changes.
+Trace triage, investigations, custom-agent work, sandbox computation, approvals and configuration updates.
 
 ### D-06 — Incident routing and investigation feedback
 
@@ -237,7 +237,7 @@ Each path has its own authentication and permissions. Connecting a tool server d
 
 Release testing interacts with a deployed application and can create, modify or delete application data. A test profile supplies reusable context; the execution produces evidence about that run. Treat it separately from code/readiness analysis. Use a disposable target and disabled external side effects before trying the preview. [DS21]
 
-## 05. Worked example
+## 05. Worked Incident Analysis
 
 Use prepared evidence to examine a recurring alarm without assuming the previous cause has returned.
 
@@ -259,9 +259,9 @@ Use prepared evidence to examine a recurring alarm without assuming the previous
 
 **Failure branch:** when no retrieval evidence is exposed, record memory use as unverified. When current telemetry is inaccessible, report insufficient evidence; do not substitute the old memory for current measurements. This exercise tests the distinction between retention, retrieval and diagnosis, not whether a memorized sentence appears.
 
-## 06. Troubleshooting and limits
+## 06. Troubleshooting, Limits and Failure Modes
 
-Locate the failed prerequisite and distinguish limits from missing access or context.
+Locate the first failed prerequisite and distinguish limits from missing access, context or approval.
 
 ### D-10 — Limits and diagnostic decisions
 
@@ -280,9 +280,9 @@ Selected defaults in the reviewed quota guide: three concurrent investigations p
 
 This diagnostic ordering is an engineering synthesis of D-02 through D-M06, not an additional AWS troubleshooting API.
 
-## 07. Coverage and official evidence
+## 07. Coverage and Source Notes
 
-Identify detailed coverage, linked subjects and source-version qualifications.
+Identify detailed coverage, linked subjects, deferred procedures and source-version qualifications.
 
 ### D-11 — Coverage and evidence notes
 
