@@ -4,265 +4,270 @@ import subprocess
 from xml.etree import ElementTree as ET
 
 ROOT=Path(__file__).resolve().parents[2]
-DIAGRAMS={
-'agent-execution':('Agent execution and evidence cycle','A task and its configuration guide an execution. Authorized tools return observations. Those observations can lead to another step or a result. Retention is a separate, product-specific path.',['A-00'],r'''
-rankdir=LR;
-request [label="Request or event\nTask and scope"];
-context [label="Applicable configuration\nInstructions and context"];
-run [label="Agent execution\nSelect the next step"];
-tool [label="Authorized tool or assessment\nQuery or permitted operation"];
-result [label="Result\nAnswer, finding, or artifact"];
-request -> run [label="starts"];
-context -> run [label="supplies context"];
-run -> tool [label="invokes"];
-tool -> run [label="returns observations"];
-run -> result [label="produces"];
-'''),
-'devops-architecture':('DevOps Agent resource and execution architecture','Account-level providers and roles are associated with an Agent Space. An execution uses the selected tools and context; learning creates knowledge for later executions.',['D-01'],r'''
-rankdir=TB;
-subgraph cluster_account {label="Account configuration";color="#a9bbc7";style="rounded";providers [label="Provider registrations\nAuthentication and endpoints"];roles [label="AWS account roles\nResource and operator access"];}
-space [label="Agent Space\nAssociations and selected tools"];
-definition [label="Agent configuration\nInstructions, skills, store access"];
-run [label="Investigation or invocation\nCurrent task and evidence"];
-sources [label="Connected sources\nTelemetry, code, deployment data"];
-learning [label="Managed learning\nEnvironment and incident context"];
-memory [label="Knowledge and memory\nDescriptions, content, versions"];
-output [label="Execution record\nFindings, tool results, status"];
-providers -> space [label="associate"];
-roles -> space [label="scope access"];
-space -> definition [label="configures"];
-definition -> run [label="used by"];
-run -> sources [label="authorized queries"];
-sources -> run [label="observations"];
-run -> output [label="records"];
-output -> learning [label="prior work"];
-learning -> memory [label="synthesizes"];
-memory -> run [label="selected context",style=dashed];
-'''),
-'devops-integrations':('Provider registration and Agent Space association','Provider authentication is registered at account level. Association and tool selection make an explicit subset available to the Agent Space. The invocation still needs a working authenticated route.',['D-12','D-03'],r'''
-rankdir=LR;
-provider [label="External provider\nTelemetry, code, or tool service"];
-registration [label="Account registration\nEndpoint and authentication"];
-association [label="Agent Space association\nSelected resources or tools"];
-invocation [label="Tool invocation\nArguments and execution identity"];
-observation [label="Source result\nResource ID and timestamp"];
-provider -> registration [label="authorize"];
-registration -> association [label="associate"];
-association -> invocation [label="permits selected tool"];
-invocation -> observation [label="query result"];
-'''),
-'devops-memory':('Incident knowledge production and selective retrieval','Prior investigations and corrective feedback are separate producers. Available store descriptions lead to relevant entry selection. Current telemetry is needed to evaluate historical context in the next investigation.',['D-M01','D-M02','D-M07'],r'''
-rankdir=TB;
-history [label="Prior investigations\nOutcomes and evidence"];
-feedback [label="Verified correction\nActual cause and feedback"];
-learning [label="Managed learning\nRecurring monitor causes"];
-monitor [label="Monitor memory\nVersioned retained context"];
-reflection [label="Corrective memory\nLesson from feedback"];
-select [label="Retrieval\nStore and entry descriptions"];
-run [label="New investigation\nHistorical context + current evidence"];
-telemetry [label="Current telemetry\nNew time window and measurements"];
-history -> learning [label="analyzed"];
-learning -> monitor [label="synthesized"];
-feedback -> reflection [label="recorded correction"];
-monitor -> select [label="when available"];
-reflection -> select [label="when relevant"];
-select -> run [label="selected content"];
-telemetry -> run [label="supports or contradicts"];
-'''),
-'devops-incident':('Incident triage and investigation workflow','A signal can be linked, skipped, or investigated independently. Steering affects the current analysis; completed-investigation feedback supplies a separate corrective input.',['D-06'],r'''
-rankdir=TB;
-signal [label="Incident signal\nIdentity, service, and time"];
-triage [label="Triage decision\nCorrelation and skip criteria",shape=diamond];
-linked [label="Linked\nExisting primary investigation"];
-skipped [label="Skipped\nRecorded criterion and reason"];
-new [label="Proceed\nIndependent investigation"];
-evidence [label="Investigation\nTool observations and hypotheses"];
-operator [label="Operator steering\nAdditional or contrary evidence"];
-result [label="Investigation result\nCause and mitigation proposal"];
-feedback [label="Completed-run feedback\nVerdict and verified correction"];
-signal -> triage;
-triage -> linked [label="correlated"];
-triage -> skipped [label="criterion matches"];
-triage -> new [label="new work"];
-new -> evidence;
-operator -> evidence [label="steers"];
-evidence -> result;
-result -> feedback [label="review"];
-linked -> new [label="unlink",style=dashed];
-skipped -> new [label="unskip",style=dashed];
-'''),
-'devops-reporting':('Configured operational-report workflow','The team defines the report period and selected evidence. An invocation queries sources, produces a report, and exposes results for review. Schedule timing and the reporting window are separate configuration decisions.',['D-07'],r'''
-rankdir=TB;
-contract [label="Report specification\nService, window, aggregation, audience"];
-definition [label="Custom-agent definition\nPrompt, tools, skills, memory"];
-trigger [label="On-demand or scheduled start\nFlexible schedule window applies"];
-query [label="Invocation\nQuery selected logs and metrics"];
-report [label="Report\nMeasured changes and missing signals"];
-review [label="Engineering review\nReproduce a material observation"];
-publication [label="Approved destination\nOnly when separately configured"];
-contract -> definition [label="defines the task"];
-definition -> query [label="supplies configuration"];
-trigger -> query [label="starts work"];
-query -> report [label="synthesizes evidence"];
-report -> review [label="checked"];
-review -> publication [label="team publication path",style=dashed];
-'''),
-'security-architecture':('Security Agent application and assessment architecture','Shared account resources are selected for an application Agent Space. Assessment configuration combines sources, criteria, and authorized target access. Runs produce findings that can be reviewed and revalidated.',['S-01','S-09'],r'''
-rankdir=TB;
-subgraph cluster_shared {label="Shared configuration";color="#a9bbc7";style="rounded";integrations [label="Registered integrations\nRepositories and documentation"];requirements [label="Requirement packs\nApplicability and criteria"];}
-space [label="Application Agent Space\nSelected sources and assigned users"];
-config [label="Assessment configuration\nScope and selected evidence"];
-access [label="Dynamic-test access\nTargets, exclusions, credentials"];
-run [label="Assessment run\nCurrent source and target state"];
-finding [label="Findings\nEvidence and affected revision"];
-repair [label="Engineering remediation\nReview, test, deploy"];
-revalidate [label="Revalidation job\nSelected existing finding"];
-integrations -> space [label="select resources"];
-space -> config;
-requirements -> config [label="eligible criteria"];
-access -> run [label="authorized reachability"];
-config -> run [label="execute"];
-run -> finding [label="records"];
-finding -> repair [label="accepted work"];
-repair -> revalidate [label="deployed change"];
-finding -> revalidate [label="original evidence",style=dashed];
-'''),
-'security-integrations':('Application-source registration and selection','The account registration authorizes a provider. The application selects resources from it. Sources are shared across eligible assessments, while repository write actions are separately enabled.',['S-09'],r'''
-rankdir=TB;
-providers [label="Provider account\nGitHub, GitLab, Bitbucket, Confluence"];
-register [label="Account registration\nAuthorized provider connection"];
-resources [label="Agent Space selection\nRepositories or pages"];
-read [label="Read context\nEligible assessment inputs"];
-write [label="Optional repository writes\nComments or remediation"];
-s3 [label="Connected S3 resources\nSelected source objects"];
-providers -> register [label="authorize"];
-register -> resources [label="select"];
-resources -> read [label="shared source context"];
-resources -> write [label="separate opt-in",style=dashed];
-s3 -> read [label="selected objects"];
-'''),
-'security-context':('Application context and assessment criteria','Source evidence and scope documents have different jobs. The assessment uses selected evidence and applicable criteria; a finding is an output of that execution rather than an automatically shared memory.',['S-M07','S-M03'],r'''
-rankdir=TB;
-code [label="Implementation evidence\nRepository revision and API material"];
-design [label="Design context\nDocuments and connected pages"];
-scope [label="Assessment scope\nApplication and system boundary"];
-model [label="Selected application context\nSystem components and relationships"];
-criteria [label="Applicable requirements\nReviewed criteria"];
-assessment [label="Assessment run\nAnalysis or authorized active test"];
-finding [label="Finding or model result\nEvidence, assumptions, and limits"];
-code -> model;
-design -> model;
-scope -> model [label="bounds the question"];
-model -> assessment [label="context"];
-criteria -> assessment [label="eligible evaluation"];
-assessment -> finding;
-'''),
-'security-authentication':('Credential retrieval and authenticated test access','Credential acquisition, login navigation, and application authorization are distinct stages. A retained login procedure can support later navigation, but actual identity still needs verification.',['S-M01','S-M02'],r'''
-rankdir=TB;
-source [label="Credential source\nDirect input, secret, role, or Lambda"];
-resolve [label="Credential acquisition\nRead, assume, or invoke permission"];
-login [label="Application login\nURL, instructions, MFA"];
-role [label="Authenticated application identity\nProtected routes and permissions"];
-skill [label="Login Optimization\nRetained successful procedure"];
-test [label="Authorized assessment\nTarget and exclusion rules"];
-source -> resolve;
-resolve -> login [label="credential"];
-login -> role [label="successful authentication"];
-login -> skill [label="successful procedure"];
-skill -> login [label="later reuse",style=dashed];
-role -> test [label="actual access"];
-'''),
-'security-revalidation':('Finding, deployment, and revalidation lineage','The finding, proposed code change, deployed revision, and revalidation job are separate records. Revalidation repeats selected evidence using the current target and authentication configuration.',['S-M05','S-05'],r'''
-rankdir=LR;
-finding [label="Original finding\nEvidence and affected revision"];
-change [label="Reviewed repair\nPatch and regression tests"];
-deploy [label="Deployed revision\nOriginal authorized environment"];
-job [label="Revalidation job\nCurrent credentials; selected steps"];
-result [label="Scoped result\nReproduced or not reproduced"];
-finding -> change [label="accepted work"];
-change -> deploy [label="release process"];
-deploy -> job [label="target state"];
-finding -> job [label="selected finding",style=dashed];
-job -> result [label="linked evidence"];
-'''),
-'finops-architecture':('FinOps Agent instance and execution architecture','The instance owns its roles, context, queue, and connections. Data sources supply evidence to a session or task, which produces an answer or artifact and may publish through a configured destination.',['F-01','F-08'],r'''
-rankdir=TB;
-roles [label="Access configuration\nAgent data role and operator entry"];
-instance [label="Agent instance\nContext, memory, tasks, connections"];
-sources [label="Authorized AWS sources\nCosts, anomalies, recommendations, changes"];
-runtime [label="Conversation or task runtime\nInterpret retrieved evidence"];
-context [label="Instance-local context\nFiles and retained preferences"];
-result [label="Result or report artifact\nQuery basis and source evidence"];
-destination [label="Connected project or channel\nAction-specific publication rules"];
-roles -> instance;
-instance -> runtime [label="execution configuration"];
-sources -> runtime [label="query results"];
-context -> runtime [label="loaded context"];
-runtime -> result;
-result -> destination [label="when configured"];
-'''),
-'finops-integrations':('Data-source access and collaboration connections','AWS source access is controlled by the agent data role. Collaboration uses account-level registration and an agent-specific destination. Successful source retrieval and successful publication are independent checks.',['F-08','F-05'],r'''
-rankdir=TB;
-dataRole [label="Agent data role\nSpecific AWS actions and scope"];
-aws [label="AWS cost and operational services\nQueries and recommendation reads"];
-agent [label="Agent task\nAnalysis and result"];
-registration [label="Account integration\nJira site or Slack workspace"];
-connection [label="Agent connection\nSelected project or channel"];
-action [label="Publication action\nDestination-specific approval behavior"];
-dataRole -> aws [label="authorizes reads"];
-aws -> agent [label="returns evidence"];
-registration -> connection [label="destination binding"];
-connection -> action [label="permits destination"];
-agent -> action [label="requested result publication"];
-'''),
-'finops-context':('Persistent context and session-local working state','Uploaded files and conversational memory persist within an instance. They are loaded into an isolated ephemeral session runtime. Older messages may be summarized; that is separate from editing a file or a retained preference.',['F-M02','F-M03','F-M04'],r'''
-rankdir=TB;
-files [label="Uploaded context files\nOperator-maintained reference"];
-memory [label="Persistent memory\nPreferences and corrections"];
-conversation [label="Conversation history\nMessages and current task"];
-runtime [label="Isolated session runtime\nWorking context and tool observations"];
-summary [label="Context compaction\nOlder messages summarized"];
-result [label="Task result or artifact\nRetained output record"];
-files -> runtime [label="loaded / read"];
-memory -> runtime [label="loaded / applied"];
-conversation -> runtime [label="session context"];
-conversation -> summary [label="context limit"];
-summary -> runtime [label="condensed history"];
-runtime -> result;
-'''),
-'finops-automation':('Anomaly-to-task and publication workflow','A supported anomaly event matches a configured automation and creates a queued task. Result generation and destination publication are separate stages; authorization depends on action and invocation path.',['F-M05','F-M06'],r'''
-rankdir=TB;
-monitor [label="Cost Anomaly Detection\nMonitor produces event"];
-rule [label="Managed EventBridge rule\nEvent and permission conditions"];
-automation [label="Automation\nInvestigation and destination definition"];
-queue [label="Shared task queue\nDistinct task execution"];
-analysis [label="Source-backed analysis\nCosts, recommendations, changes"];
-result [label="Result and artifact\nEvidence and unresolved questions"];
-jira [label="Jira publication\nAutomation pre-authorization"];
-slack [label="Slack publication\nNo per-action approval prompt"];
-monitor -> rule [label="event"];
-rule -> automation [label="matches"];
-automation -> queue [label="creates task"];
-queue -> analysis;
-analysis -> result;
-result -> jira [label="configured Jira action"];
-result -> slack [label="configured Slack action"];
-'''),
-'shared-handoff':('Team-managed evidence handoff','An operational finding can become input to separate security and cost work. Each receiving service uses its own configuration and authorization; only identifiers, evidence references, and decisions are handed over.',['A-08','A-06'],r'''
-rankdir=TB;
-incident [label="Operational investigation\nService, time window, revision"];
-handoff [label="Reviewed handoff\nEvidence references and open questions"];
-security [label="Security assessment\nIts own application scope and identity"];
-finops [label="Cost investigation\nIts own query basis and data role"];
-owner [label="Engineering owners\nReview results and authorize changes"];
-verification [label="Independent verification\nSource measurements and scoped tests"];
-incident -> handoff [label="team review"];
-handoff -> security [label="application evidence",style=dashed];
-handoff -> finops [label="service and period",style=dashed];
-security -> owner [label="finding evidence"];
-finops -> owner [label="cost evidence"];
-owner -> verification [label="controlled follow-up"];
-''')}
+DIAGRAMS={'agent-execution': ('Agent execution and evidence cycle',
+                     'A task and its configuration guide an execution. Authorized tools return '
+                     'observations. Those observations can lead to another step or a result. Retention '
+                     'is a separate, product-specific path.',
+                     ['A-00'],
+                     '\n'
+                     'rankdir=LR;\n'
+                     'request [label="Request or event\\nTask and scope"];\n'
+                     'context [label="Applicable configuration\\nInstructions and context"];\n'
+                     'run [label="Agent execution\\nSelect the next step"];\n'
+                     'tool [label="Authorized tool or assessment\\nQuery or permitted operation"];\n'
+                     'result [label="Result\\nAnswer, finding, or artifact"];\n'
+                     'request -> run [label="starts"];\n'
+                     'context -> run [label="supplies context"];\n'
+                     'run -> tool [label="invokes"];\n'
+                     'tool -> run [label="returns observations"];\n'
+                     'run -> result [label="produces"];\n'),
+ 'devops-integrations': ('Provider registration and Agent Space association',
+                         'Provider authentication is registered at account level. Association and tool '
+                         'selection make an explicit subset available to the Agent Space. The '
+                         'invocation still needs a working authenticated route.',
+                         ['D-12', 'D-03'],
+                         '\n'
+                         'rankdir=LR;\n'
+                         'provider [label="External provider\\nTelemetry, code, or tool service"];\n'
+                         'registration [label="Account registration\\nEndpoint and authentication"];\n'
+                         'association [label="Agent Space association\\nSelected resources or tools"];\n'
+                         'invocation [label="Tool invocation\\nArguments and execution identity"];\n'
+                         'observation [label="Source result\\nResource ID and timestamp"];\n'
+                         'provider -> registration [label="authorize"];\n'
+                         'registration -> association [label="associate"];\n'
+                         'association -> invocation [label="permits selected tool"];\n'
+                         'invocation -> observation [label="query result"];\n'),
+ 'devops-memory': ('Incident knowledge production and selective retrieval',
+                   'Prior investigations and corrective feedback are separate producers. Available '
+                   'store descriptions lead to relevant entry selection. Current telemetry is needed to '
+                   'evaluate historical context in the next investigation.',
+                   ['D-M01', 'D-M02', 'D-M07'],
+                   '\n'
+                   'rankdir=TB;\n'
+                   'history [label="Prior investigations\\nOutcomes and evidence"];\n'
+                   'feedback [label="Verified correction\\nActual cause and feedback"];\n'
+                   'learning [label="Managed learning\\nRecurring monitor causes"];\n'
+                   'monitor [label="Monitor memory\\nVersioned retained context"];\n'
+                   'reflection [label="Corrective memory\\nLesson from feedback"];\n'
+                   'select [label="Retrieval\\nStore and entry descriptions"];\n'
+                   'run [label="New investigation\\nHistorical context + current evidence"];\n'
+                   'telemetry [label="Current telemetry\\nNew time window and measurements"];\n'
+                   'history -> learning [label="analyzed"];\n'
+                   'learning -> monitor [label="synthesized"];\n'
+                   'feedback -> reflection [label="recorded correction"];\n'
+                   'monitor -> select [label="when available"];\n'
+                   'reflection -> select [label="when relevant"];\n'
+                   'select -> run [label="selected content"];\n'
+                   'telemetry -> run [label="supports or contradicts"];\n'),
+ 'devops-incident': ('Incident triage and investigation workflow',
+                     'A signal can be linked, skipped, or investigated independently. Steering affects '
+                     'the current analysis; completed-investigation feedback supplies a separate '
+                     'corrective input.',
+                     ['D-06'],
+                     '\n'
+                     'rankdir=TB;\n'
+                     'signal [label="Incident signal\\nIdentity, service, and time"];\n'
+                     'triage [label="Triage decision\\nCorrelation and skip criteria",shape=diamond];\n'
+                     'linked [label="Linked\\nExisting primary investigation"];\n'
+                     'skipped [label="Skipped\\nRecorded criterion and reason"];\n'
+                     'new [label="Proceed\\nIndependent investigation"];\n'
+                     'evidence [label="Investigation\\nTool observations and hypotheses"];\n'
+                     'operator [label="Operator steering\\nAdditional or contrary evidence"];\n'
+                     'result [label="Investigation result\\nCause and mitigation proposal"];\n'
+                     'feedback [label="Completed-run feedback\\nVerdict and verified correction"];\n'
+                     'signal -> triage;\n'
+                     'triage -> linked [label="correlated"];\n'
+                     'triage -> skipped [label="criterion matches"];\n'
+                     'triage -> new [label="new work"];\n'
+                     'new -> evidence;\n'
+                     'operator -> evidence [label="steers"];\n'
+                     'evidence -> result;\n'
+                     'result -> feedback [label="review"];\n'
+                     'linked -> new [label="unlink",style=dashed];\n'
+                     'skipped -> new [label="unskip",style=dashed];\n'),
+ 'devops-reporting': ('Configured operational-report workflow',
+                      'The team defines the report period and selected evidence. An invocation queries '
+                      'sources, produces a report, and exposes results for review. Schedule timing and '
+                      'the reporting window are separate configuration decisions.',
+                      ['D-07'],
+                      '\n'
+                      'rankdir=TB;\n'
+                      'contract [label="Report specification\\nService, window, aggregation, '
+                      'audience"];\n'
+                      'definition [label="Custom-agent definition\\nPrompt, tools, skills, memory"];\n'
+                      'trigger [label="On-demand or scheduled start\\nFlexible schedule window '
+                      'applies"];\n'
+                      'query [label="Invocation\\nQuery selected logs and metrics"];\n'
+                      'report [label="Report\\nMeasured changes and missing signals"];\n'
+                      'review [label="Engineering review\\nReproduce a material observation"];\n'
+                      'publication [label="Approved destination\\nOnly when separately configured"];\n'
+                      'contract -> definition [label="defines the task"];\n'
+                      'definition -> query [label="supplies configuration"];\n'
+                      'trigger -> query [label="starts work"];\n'
+                      'query -> report [label="synthesizes evidence"];\n'
+                      'report -> review [label="checked"];\n'
+                      'review -> publication [label="team publication path",style=dashed];\n'),
+ 'security-integrations': ('Application-source registration and selection',
+                           'The account registration authorizes a provider. The application selects '
+                           'resources from it. Sources are shared across eligible assessments, while '
+                           'repository write actions are separately enabled.',
+                           ['S-09'],
+                           '\n'
+                           'rankdir=TB;\n'
+                           'providers [label="Provider account\\nGitHub, GitLab, Bitbucket, '
+                           'Confluence"];\n'
+                           'register [label="Account registration\\nAuthorized provider connection"];\n'
+                           'resources [label="Agent Space selection\\nRepositories or pages"];\n'
+                           'read [label="Read context\\nEligible assessment inputs"];\n'
+                           'write [label="Optional repository writes\\nComments or remediation"];\n'
+                           's3 [label="Connected S3 resources\\nSelected source objects"];\n'
+                           'providers -> register [label="authorize"];\n'
+                           'register -> resources [label="select"];\n'
+                           'resources -> read [label="shared source context"];\n'
+                           'resources -> write [label="separate opt-in",style=dashed];\n'
+                           's3 -> read [label="selected objects"];\n'),
+ 'security-context': ('Application context and assessment criteria',
+                      'Source evidence and scope documents have different jobs. The assessment uses '
+                      'selected evidence and applicable criteria; a finding is an output of that '
+                      'execution rather than an automatically shared memory.',
+                      ['S-M07', 'S-M03'],
+                      '\n'
+                      'rankdir=TB;\n'
+                      'code [label="Implementation evidence\\nRepository revision and API material"];\n'
+                      'design [label="Design context\\nDocuments and connected pages"];\n'
+                      'scope [label="Assessment scope\\nApplication and system boundary"];\n'
+                      'model [label="Selected application context\\nSystem components and '
+                      'relationships"];\n'
+                      'criteria [label="Applicable requirements\\nReviewed criteria"];\n'
+                      'assessment [label="Assessment run\\nAnalysis or authorized active test"];\n'
+                      'finding [label="Finding or model result\\nEvidence, assumptions, and limits"];\n'
+                      'code -> model;\n'
+                      'design -> model;\n'
+                      'scope -> model [label="bounds the question"];\n'
+                      'model -> assessment [label="context"];\n'
+                      'criteria -> assessment [label="eligible evaluation"];\n'
+                      'assessment -> finding;\n'),
+ 'security-authentication': ('Credential retrieval and authenticated test access',
+                             'Credential acquisition, login navigation, and application authorization '
+                             'are distinct stages. A retained login procedure can support later '
+                             'navigation, but actual identity still needs verification.',
+                             ['S-M01', 'S-M02'],
+                             '\n'
+                             'rankdir=TB;\n'
+                             'source [label="Credential source\\nDirect input, secret, role, or '
+                             'Lambda"];\n'
+                             'resolve [label="Credential acquisition\\nRead, assume, or invoke '
+                             'permission"];\n'
+                             'login [label="Application login\\nURL, instructions, MFA"];\n'
+                             'role [label="Authenticated application identity\\nProtected routes and '
+                             'permissions"];\n'
+                             'skill [label="Login Optimization\\nRetained successful procedure"];\n'
+                             'test [label="Authorized assessment\\nTarget and exclusion rules"];\n'
+                             'source -> resolve;\n'
+                             'resolve -> login [label="credential"];\n'
+                             'login -> role [label="successful authentication"];\n'
+                             'login -> skill [label="successful procedure"];\n'
+                             'skill -> login [label="later reuse",style=dashed];\n'
+                             'role -> test [label="actual access"];\n'),
+ 'security-revalidation': ('Finding, deployment, and revalidation lineage',
+                           'The finding, proposed code change, deployed revision, and revalidation job '
+                           'are separate records. Revalidation repeats selected evidence using the '
+                           'current target and authentication configuration.',
+                           ['S-M05', 'S-05'],
+                           '\n'
+                           'rankdir=LR;\n'
+                           'finding [label="Original finding\\nEvidence and affected revision"];\n'
+                           'change [label="Reviewed repair\\nPatch and regression tests"];\n'
+                           'deploy [label="Deployed revision\\nOriginal authorized environment"];\n'
+                           'job [label="Revalidation job\\nCurrent credentials; selected steps"];\n'
+                           'result [label="Scoped result\\nReproduced or not reproduced"];\n'
+                           'finding -> change [label="accepted work"];\n'
+                           'change -> deploy [label="release process"];\n'
+                           'deploy -> job [label="target state"];\n'
+                           'finding -> job [label="selected finding",style=dashed];\n'
+                           'job -> result [label="linked evidence"];\n'),
+ 'finops-integrations': ('Data-source access and collaboration connections',
+                         'AWS source access is controlled by the agent data role. Collaboration uses '
+                         'account-level registration and an agent-specific destination. Successful '
+                         'source retrieval and successful publication are independent checks.',
+                         ['F-08', 'F-05'],
+                         '\n'
+                         'rankdir=TB;\n'
+                         'dataRole [label="Agent data role\\nSpecific AWS actions and scope"];\n'
+                         'aws [label="AWS cost and operational services\\nQueries and recommendation '
+                         'reads"];\n'
+                         'agent [label="Agent task\\nAnalysis and result"];\n'
+                         'registration [label="Account integration\\nJira site or Slack workspace"];\n'
+                         'connection [label="Agent connection\\nSelected project or channel"];\n'
+                         'action [label="Publication action\\nDestination-specific approval '
+                         'behavior"];\n'
+                         'dataRole -> aws [label="authorizes reads"];\n'
+                         'aws -> agent [label="returns evidence"];\n'
+                         'registration -> connection [label="destination binding"];\n'
+                         'connection -> action [label="permits destination"];\n'
+                         'agent -> action [label="requested result publication"];\n'),
+ 'finops-context': ('Persistent context and session-local working state',
+                    'Uploaded files and conversational memory persist within an instance. They are '
+                    'loaded into an isolated ephemeral session runtime. Older messages may be '
+                    'summarized; that is separate from editing a file or a retained preference.',
+                    ['F-M02', 'F-M03', 'F-M04'],
+                    '\n'
+                    'rankdir=TB;\n'
+                    'files [label="Uploaded context files\\nOperator-maintained reference"];\n'
+                    'memory [label="Persistent memory\\nPreferences and corrections"];\n'
+                    'conversation [label="Conversation history\\nMessages and current task"];\n'
+                    'runtime [label="Isolated session runtime\\nWorking context and tool '
+                    'observations"];\n'
+                    'summary [label="Context compaction\\nOlder messages summarized"];\n'
+                    'result [label="Task result or artifact\\nRetained output record"];\n'
+                    'files -> runtime [label="loaded / read"];\n'
+                    'memory -> runtime [label="loaded / applied"];\n'
+                    'conversation -> runtime [label="session context"];\n'
+                    'conversation -> summary [label="context limit"];\n'
+                    'summary -> runtime [label="condensed history"];\n'
+                    'runtime -> result;\n'),
+ 'finops-automation': ('Anomaly-to-task and publication workflow',
+                       'A supported anomaly event matches a configured automation and creates a queued '
+                       'task. Result generation and destination publication are separate stages; '
+                       'authorization depends on action and invocation path.',
+                       ['F-M05', 'F-M06'],
+                       '\n'
+                       'rankdir=TB;\n'
+                       'monitor [label="Cost Anomaly Detection\\nMonitor produces event"];\n'
+                       'rule [label="Managed EventBridge rule\\nEvent and permission conditions"];\n'
+                       'automation [label="Automation\\nInvestigation and destination definition"];\n'
+                       'queue [label="Shared task queue\\nDistinct task execution"];\n'
+                       'analysis [label="Source-backed analysis\\nCosts, recommendations, changes"];\n'
+                       'result [label="Result and artifact\\nEvidence and unresolved questions"];\n'
+                       'jira [label="Jira publication\\nAutomation pre-authorization"];\n'
+                       'slack [label="Slack publication\\nNo per-action approval prompt"];\n'
+                       'monitor -> rule [label="event"];\n'
+                       'rule -> automation [label="matches"];\n'
+                       'automation -> queue [label="creates task"];\n'
+                       'queue -> analysis;\n'
+                       'analysis -> result;\n'
+                       'result -> jira [label="configured Jira action"];\n'
+                       'result -> slack [label="configured Slack action"];\n'),
+ 'shared-handoff': ('Team-managed evidence handoff',
+                    'An operational finding can become input to separate security and cost work. Each '
+                    'receiving service uses its own configuration and authorization; only identifiers, '
+                    'evidence references, and decisions are handed over.',
+                    ['A-08', 'A-06'],
+                    '\n'
+                    'rankdir=TB;\n'
+                    'incident [label="Operational investigation\\nService, time window, revision"];\n'
+                    'handoff [label="Reviewed handoff\\nEvidence references and open questions"];\n'
+                    'security [label="Security assessment\\nIts own application scope and identity"];\n'
+                    'finops [label="Cost investigation\\nIts own query basis and data role"];\n'
+                    'owner [label="Engineering owners\\nReview results and authorize changes"];\n'
+                    'verification [label="Independent verification\\nSource measurements and scoped '
+                    'tests"];\n'
+                    'incident -> handoff [label="team review"];\n'
+                    'handoff -> security [label="application evidence",style=dashed];\n'
+                    'handoff -> finops [label="service and period",style=dashed];\n'
+                    'security -> owner [label="finding evidence"];\n'
+                    'finops -> owner [label="cost evidence"];\n'
+                    'owner -> verification [label="controlled follow-up"];\n')}
 
 
 def build():
@@ -328,8 +333,11 @@ recipe -> step [label="binds to environment"];
 step -> evidence [label="accepted using"];
 """)
 
-if __name__=='__main__':print(build())
+
 
 # The canonical resource register supplies specialized ER figures.
 from resource_model import diagram_definitions
 DIAGRAMS.update(diagram_definitions())
+
+if __name__=='__main__':
+    print(build())
