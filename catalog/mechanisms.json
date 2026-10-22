@@ -1,45 +1,708 @@
 {
-  "schema_version":2,
-  "boundary":"This dependency index summarizes documented processes. Detailed explanations remain in the referenced guide sections. Verification and failure decisions are authored engineering checks, not executed tests.",
-  "entries":[
-    {"id":"MX-D-READ","platform":"devops","title":"Evidence retrieval through selected tools","features":["FT-D-SOURCES"],"sections":["D-03","D-12"],"trigger":"Scoped operational request","state":"Provider association and selected tools","process":"Invoke the authorized source with the intended identity, resource and observation period.","effect":"Source read","verification":"Compare returned identifiers and a material measurement with the original source.","on_failure":"Report the failed read and withhold conclusions that require that source."},
-    {"id":"MX-D-TOPOLOGY","platform":"devops","title":"Environment-knowledge construction and refresh","features":["FT-D-TOPOLOGY","FT-D-MEMORY"],"sections":["D-05","D-M08"],"trigger":"Discovery or applicable managed refresh","state":"Learned relationships and retained context versions","process":"Synthesize environment evidence into service, dependency and delivery context for subsequent work.","effect":"Retained context update","verification":"Check a known changed resource and relationship in the resulting version.","on_failure":"Mark stale or inferred relationships; do not substitute the graph for current configuration."},
-    {"id":"MX-D-RECALL","platform":"devops","title":"Selective incident-context retrieval","features":["FT-D-MEMORY"],"sections":["D-M01","D-M07"],"trigger":"A task identifies relevant available store descriptions","state":"Active stores, entry descriptions, versions and applicable attachments","process":"Select a relevant store, inspect its entries and read the content needed by the current task.","effect":"Context read","verification":"Distinguish entry existence, observable retrieval and correctness against current evidence.","on_failure":"Continue without history when current evidence suffices. Do not infer retrieval merely from answer wording."},
-    {"id":"MX-D-FEEDBACK","platform":"devops","title":"Corrective investigation feedback","features":["FT-D-INCIDENT","FT-D-MEMORY"],"sections":["D-M02"],"trigger":"Operator supplies a verified correction","state":"Investigation feedback and documented corrective context","process":"Record the actual cause separately from routine synthesis of incident history.","effect":"Retained correction","verification":"Inspect saved feedback and any exposed corrective entry.","on_failure":"Keep the verified correction in the incident system when downstream use cannot be observed."},
-    {"id":"MX-D-INSTRUCTIONS","platform":"devops","title":"Standing instruction loading","features":["FT-D-INSTRUCTIONS"],"sections":["D-M03"],"trigger":"New applicable session","state":"Saved global or agent-specific guidance","process":"Load standing instructions at session start.","effect":"Session context","verification":"Test a new session against the saved instruction version.","on_failure":"Inspect scope and session start time rather than assuming existing sessions received updates."},
-    {"id":"MX-D-SKILL","platform":"devops","title":"Runbook applicability and procedural loading","features":["FT-D-SKILLS"],"sections":["D-M04"],"trigger":"Applicable task or assigned procedural configuration","state":"Skill content, description and agent scope","process":"Make the reviewed procedure and its references available to the intended execution.","effect":"Procedural context","verification":"Test matching and nonmatching requests and inspect exposed procedure or tool-use evidence.","on_failure":"Correct applicability or missing tools; stop unsupported steps without implicitly widening permissions."},
-    {"id":"MX-D-TRIAGE","platform":"devops","title":"Incident routing","features":["FT-D-INCIDENT"],"sections":["D-06"],"trigger":"Incoming incident signal","state":"Signal and investigation relationships","process":"Link the signal, skip it under configured criteria or proceed with independent investigation.","effect":"Investigation linkage","verification":"Inspect the routing decision, reason and resulting investigation identity.","on_failure":"Correct routing through the supported unlink or unskip operation."},
-    {"id":"MX-D-INVESTIGATE","platform":"devops","title":"Investigation and operator steering","features":["FT-D-INCIDENT","FT-D-SOURCES"],"sections":["D-06"],"trigger":"Selected incident or manual investigation","state":"Current evidence and evolving conclusions","process":"Read observations, examine hypotheses and accept relevant operator steering in the investigation context.","effect":"Investigation record","verification":"Check conclusions against current observations and identify missing evidence.","on_failure":"Retain competing hypotheses or an inconclusive result instead of inventing certainty."},
-    {"id":"MX-D-CUSTOM","platform":"devops","title":"Configured custom-agent invocation","features":["FT-D-CUSTOM","FT-D-HISTORY"],"sections":["D-07"],"trigger":"Manual invocation or configured trigger","state":"Definition, invocation and tool results","process":"Execute the selected operational work and retain its invocation trajectory.","effect":"Execution and output","verification":"Inspect tool arguments, failures and output against the task scope.","on_failure":"Mark incomplete output and resolve the failed prerequisite before repeating the run."},
-    {"id":"MX-D-SCHEDULE","platform":"devops","title":"Schedule-to-invocation creation","features":["FT-D-SCHEDULE","FT-D-HISTORY"],"sections":["D-07"],"trigger":"Configured schedule becomes due","state":"Trigger and independently managed invocation","process":"Create future work under the supported scheduling and concurrency constraints.","effect":"Future invocation","verification":"Inspect saved timing and actual start; record the observation window independently.","on_failure":"Use explicit invocation when timing is critical. Pausing future starts does not cancel current work."},
-    {"id":"MX-D-PREVENT","platform":"devops","title":"Cross-investigation prevention evaluation","features":["FT-D-PREVENTION"],"sections":["D-06"],"trigger":"Manual or configured evaluation","state":"Investigation evidence and recommendations","process":"Analyze recurring weaknesses and produce improvement proposals.","effect":"Recommendation","verification":"Trace a proposed theme or improvement to supporting investigations.","on_failure":"Keep unsupported patterns as hypotheses and separate proposals from implemented changes."},
-    {"id":"MX-D-ACTION","platform":"devops","title":"Operation-specific directed authorization","features":["FT-D-ACTIONS"],"sections":["D-M06"],"trigger":"Operator requests an eligible state-changing operation","state":"Opt-in, role, category and approval","process":"Execute the specific approved operation through its configured authorization path.","effect":"Resource or external-tool mutation","verification":"Inspect exact approval, attribution and resulting resource state.","on_failure":"Stop on a failed authorization gate; use the normal approved engineering process rather than bypassing it."},
-    {"id":"MX-D-READINESS","platform":"devops","title":"Candidate release analysis","features":["FT-D-READINESS","FT-D-SOURCES"],"sections":["D-09"],"trigger":"Eligible readiness-review request","state":"Candidate revision and dependency context","process":"Review the proposed change for the operational risks supported by this preview path.","effect":"Readiness result","verification":"Match findings to the exact candidate and unresolved dependencies.","on_failure":"Treat unsupported repository or feature access as an unmet prerequisite."},
-    {"id":"MX-D-TEST","platform":"devops","title":"Active deployed-application testing","features":["FT-D-TEST"],"sections":["D-09"],"trigger":"Authorized test execution","state":"Test profile and deployed target","process":"Send selected test interactions and retain observed behavior.","effect":"Application requests with possible writes","verification":"Inspect target revision, actual interactions, results and effects.","on_failure":"Stop unexpected effects and retain incomplete coverage."},
-    {"id":"MX-S-CONTEXT","platform":"security","title":"Application-context assembly","features":["FT-S-SOURCES"],"sections":["S-09","S-M07"],"trigger":"Assessment setup or execution","state":"Selected sources and application scope","process":"Read the connected source and documentation relevant to the selected assessment.","effect":"Source read","verification":"Compare source revision and system boundary with the intended subject.","on_failure":"Exclude mismatched context and document the resulting assessment limitation."},
-    {"id":"MX-S-ACCESS","platform":"security","title":"Target scope and network access","features":["FT-S-TARGET"],"sections":["S-03"],"trigger":"Configuration and target connection","state":"Targets, support paths, exclusions and private route","process":"Apply the configured reachability and target rules to assessment access.","effect":"Target connection","verification":"Confirm the permitted surface and exclusions in an authorized environment.","on_failure":"Stop when scope or owner authorization is unresolved."},
-    {"id":"MX-S-AUTH","platform":"security","title":"Credential resolution and application login","features":["FT-S-AUTH"],"sections":["S-M01"],"trigger":"Authenticated assessment","state":"Credential strategy and login instructions","process":"Obtain the test credential and apply it to the application.","effect":"Authentication requests","verification":"Check the actual application identity and protected route, not only credential retrieval.","on_failure":"Mark protected paths unassessed when login fails."},
-    {"id":"MX-S-LOGIN","platform":"security","title":"Successful login-procedure reuse","features":["FT-S-LOGIN"],"sections":["S-M02"],"trigger":"Later eligible authentication session","state":"Retained login procedure and reuse setting","process":"Reuse learned navigation where the setting and current login flow permit it.","effect":"Authentication requests","verification":"Distinguish successful login from observable procedure reuse.","on_failure":"Retest a changed login flow; failed login is not a clean assessment."},
-    {"id":"MX-S-RUN","platform":"security","title":"Saved assessment and independent execution","features":["FT-S-RUNS","FT-S-FINDINGS"],"sections":["S-04"],"trigger":"Manual or supported recurring/external invocation","state":"Configuration, run and findings","process":"Execute against the current configured target and retain an independent result.","effect":"Active application assessment","verification":"Record actual revision, roles, exclusions, limit and incomplete areas.","on_failure":"Treat incomplete or failed execution as a coverage gap, not a pass."},
-    {"id":"MX-S-FINDING","platform":"security","title":"Finding evidence inspection","features":["FT-S-FINDINGS"],"sections":["S-05"],"trigger":"Assessment returns a finding","state":"Finding identity and evidence","process":"Expose the affected context and supporting reproduction or source evidence for review.","effect":"Finding review record","verification":"Give the finding a disposition using evidence, impact and application-owner context.","on_failure":"Preserve uncertainty and obtain missing evidence before closure."},
-    {"id":"MX-S-FIX","platform":"security","title":"Repository repair proposal","features":["FT-S-FIX"],"sections":["S-05"],"trigger":"Accepted finding and configured source access","state":"Finding and proposed change","process":"Create a supported patch or pull request for engineering review.","effect":"Proposed repository change","verification":"Inspect revision, tests and unrelated changes before accepting the proposal.","on_failure":"Leave a failed or rejected proposal unfinished; merge is not deployment."},
-    {"id":"MX-S-REVALIDATE","platform":"security","title":"Selected finding replay and lineage","features":["FT-S-REVALIDATION"],"sections":["S-M05"],"trigger":"Repair deployed to the authorized target","state":"Original finding and separate revalidation job","process":"Repeat selected finding-validation steps under current test conditions.","effect":"Targeted active test","verification":"Verify reached identity, deployed repair and linked result.","on_failure":"Record authentication or environment failure as inconclusive verification."},
-    {"id":"MX-S-CRITERIA","platform":"security","title":"Requirement applicability and evaluation","features":["FT-S-REQUIREMENTS"],"sections":["S-M03"],"trigger":"Eligible review with requirement mode enabled","state":"Reviewed pack and criteria","process":"Evaluate supplied evidence against applicable requirements.","effect":"Assessment result","verification":"Check compliant, violating and inapplicable examples.","on_failure":"Revise ambiguous applicability; do not treat a pack as a compliance certificate."},
-    {"id":"MX-S-GENERATE","platform":"security","title":"Requirement-pack regeneration","features":["FT-S-REQUIREMENTS"],"sections":["S-M04"],"trigger":"Approved policy source is submitted","state":"Existing custom pack and generated replacement","process":"Replace pack contents from the selected policy documents for subsequent review.","effect":"Configuration replacement","verification":"Compare with approved policy and prior manually added requirements.","on_failure":"Do not enable an unreviewed replacement; keep authoritative source in Git."},
-    {"id":"MX-S-CODE","platform":"security","title":"Full-source or change-focused code assessment","features":["FT-S-CODE","FT-S-SOURCES"],"sections":["S-06"],"trigger":"Eligible source-review invocation","state":"Revision, review mode and findings","process":"Analyze selected source in the configured vulnerability and requirement modes.","effect":"Source analysis; optional comments separately configured","verification":"Match results to the revision and record unassessed scope.","on_failure":"Obtain a current result when revision or trigger behavior makes prior evidence stale."},
-    {"id":"MX-S-DESIGN","platform":"security","title":"Point-in-time design assessment","features":["FT-S-DESIGN"],"sections":["S-06"],"trigger":"Current design submission","state":"One-off review and design evidence","process":"Assess the submitted design against relevant criteria.","effect":"Review result","verification":"Separate missing evidence from demonstrated violation.","on_failure":"Use the documented new-review or clone path for changed design material."},
-    {"id":"MX-S-THREAT","platform":"security","title":"System-model construction and threat analysis","features":["FT-S-THREAT","FT-S-SOURCES"],"sections":["S-06"],"trigger":"Scoped threat-model run","state":"Scope, system representation and threats","process":"Construct the system model and examine threats to its flows and boundaries.","effect":"Model result","verification":"Review inferred boundaries before interpreting individual threats.","on_failure":"Correct input scope when the model represents the wrong system."},
-    {"id":"MX-S-PIPELINE","platform":"security","title":"Pipeline invocation and result observation","features":["FT-S-PIPELINE"],"sections":["S-06","S-09"],"trigger":"Authorized delivery step","state":"Pipeline execution and server-side job","process":"Start and observe the supported assessment independently of the pipeline runner.","effect":"Assessment initiation","verification":"Retain revision and run identity and apply an explicit team gate to incomplete results.","on_failure":"Block or escalate under the declared gate; missing evidence is not success."},
-    {"id":"MX-S-JIRA","platform":"security","title":"Finding publication to Jira","features":["FT-S-JIRA"],"sections":["S-09","S-M07"],"trigger":"Reviewed finding selected for tracking","state":"Connection, project and finding relationship","process":"Publish supported issue or comment content to the configured project.","effect":"External publication","verification":"Inspect actual project audience and original finding linkage.","on_failure":"Keep the finding owned locally while resolving publication failure."},
-    {"id":"MX-F-QUERY","platform":"finops","title":"Source-backed cost analysis","features":["FT-F-SOURCES"],"sections":["F-M01","F-08"],"trigger":"Bounded cost, forecast, coverage or recommendation question","state":"Query contract and source response","process":"Read the relevant upstream service and interpret its returned evidence.","effect":"Source read","verification":"Reconcile a material result using the same dates, metric, scope and dimensions.","on_failure":"Withhold unsupported numerical or causal conclusions and identify missing sources."},
-    {"id":"MX-F-FILES","platform":"finops","title":"Uploaded reference-file use","features":["FT-F-FILES"],"sections":["F-M02"],"trigger":"Task needs organizational context","state":"Active uploaded reference","process":"Read the maintained mapping or reporting convention during relevant work.","effect":"Context read","verification":"Verify a known mapping and expose unmapped records.","on_failure":"Keep unassigned values visible and update the authoritative file deliberately."},
-    {"id":"MX-F-MEMORY","platform":"finops","title":"Cross-session preference retention","features":["FT-F-MEMORY"],"sections":["F-M03"],"trigger":"Explicit remember, update or forget request","state":"Instance-local retained preference","process":"Apply retained preferences to subsequent sessions.","effect":"Retained context update and read","verification":"Test a later conversation separately from reference-file retrieval.","on_failure":"State material query choices explicitly when retention is uncertain."},
-    {"id":"MX-F-COMPACT","platform":"finops","title":"Conversation compaction","features":["FT-F-CONTEXT"],"sections":["F-M04"],"trigger":"Conversation approaches its context limit","state":"Summary of older material and recent full messages","process":"Summarize older context while continuing the conversation.","effect":"Session context change","verification":"Restate the current query basis and unresolved questions.","on_failure":"Reconstruct critical constraints from authoritative records instead of assuming verbatim recall."},
-    {"id":"MX-F-TASK","platform":"finops","title":"Queued task execution and observation","features":["FT-F-TASKS"],"sections":["F-03"],"trigger":"Explicit task request or automation","state":"Task status, source results and outputs","process":"Run queued work and retain its separate execution evidence.","effect":"Execution and output","verification":"Match completed results to task identity and requested scope.","on_failure":"Distinguish absent, queued and failed tasks before retrying."},
-    {"id":"MX-F-SCHEDULE","platform":"finops","title":"Scheduled task creation","features":["FT-F-AUTOMATIONS","FT-F-TASKS"],"sections":["F-03"],"trigger":"Saved recurring schedule","state":"Automation and independently retained tasks","process":"Create a new task on each applicable scheduled occurrence.","effect":"Future tasks","verification":"Inspect trigger and the actual task's reporting window separately.","on_failure":"Disable future starts and control already-created work separately."},
-    {"id":"MX-F-EVENT","platform":"finops","title":"Anomaly-event matching and task creation","features":["FT-F-AUTOMATIONS","FT-F-TASKS"],"sections":["F-M05"],"trigger":"Matching Cost Anomaly Detection event","state":"Managed rule, automation and queued task","process":"Match the supported event to its configured response prompt.","effect":"Task creation; publication is a separate configured step","verification":"Trace event, automation, task, analysis and destination result independently.","on_failure":"Inspect monitor conditions and rule permissions before changing the analytical prompt."},
-    {"id":"MX-F-ARTIFACT","platform":"finops","title":"Report generation and revision","features":["FT-F-ARTIFACTS"],"sections":["F-04"],"trigger":"Analysis requires a report artifact","state":"Artifact linked to a task and query basis","process":"Format supported output and revise it without silently changing analytical scope.","effect":"Report artifact","verification":"Compare displayed figures and period with the reviewed source analysis.","on_failure":"Do not distribute an artifact that no longer matches its query basis."},
-    {"id":"MX-F-JIRA","platform":"finops","title":"Invocation-dependent Jira approval","features":["FT-F-JIRA"],"sections":["F-05","F-M06"],"trigger":"Supported issue or comment request","state":"Destination and invocation-specific authorization","process":"Request approval interactively or on demand; use setup authorization for scheduled or event-driven actions.","effect":"External publication","verification":"Inspect invocation type, action details, destination and resulting issue or comment.","on_failure":"Stop incorrect destinations. Do not expect an interactive prompt to protect an unattended automation."},
-    {"id":"MX-F-SLACK","platform":"finops","title":"Direct Slack publication","features":["FT-F-SLACK"],"sections":["F-05","F-M06"],"trigger":"Supported message request","state":"Workspace, channel connection and membership","process":"Post to the configured channel without a per-message approval prompt.","effect":"External publication","verification":"Review audience before invocation and inspect delivery afterward.","on_failure":"Keep analysis completion separate from delivery failure; posting does not establish channel-reading capability."}
+  "schema_version": 2,
+  "boundary": "This dependency index summarizes documented processes. Detailed explanations remain in the referenced guide sections. Verification and failure decisions are authored engineering checks, not executed tests.",
+  "entries": [
+    {
+      "id": "MX-D-READ",
+      "platform": "devops",
+      "title": "Evidence retrieval through selected tools",
+      "features": [
+        "FT-D-SOURCES"
+      ],
+      "sections": [
+        "D-03",
+        "D-12"
+      ],
+      "trigger": "Scoped operational request",
+      "state": "Provider association and selected tools",
+      "process": "Invoke the authorized source with the intended identity, resource and observation period.",
+      "effect": "Source read",
+      "verification": "Compare returned identifiers and a material measurement with the original source.",
+      "on_failure": "Report the failed read and withhold conclusions that require that source."
+    },
+    {
+      "id": "MX-D-TOPOLOGY",
+      "platform": "devops",
+      "title": "Environment-knowledge construction and refresh",
+      "features": [
+        "FT-D-TOPOLOGY",
+        "FT-D-MEMORY"
+      ],
+      "sections": [
+        "D-05",
+        "D-M08"
+      ],
+      "trigger": "Discovery or applicable managed refresh",
+      "state": "Learned relationships and retained context versions",
+      "process": "Synthesize environment evidence into service, dependency and delivery context for subsequent work.",
+      "effect": "Retained context update",
+      "verification": "Check a known changed resource and relationship in the resulting version.",
+      "on_failure": "Mark stale or inferred relationships; do not substitute the graph for current configuration."
+    },
+    {
+      "id": "MX-D-RECALL",
+      "platform": "devops",
+      "title": "Selective incident-context retrieval",
+      "features": [
+        "FT-D-MEMORY"
+      ],
+      "sections": [
+        "D-M01",
+        "D-M07"
+      ],
+      "trigger": "A task identifies relevant available store descriptions",
+      "state": "Active stores, entry descriptions, versions and applicable attachments",
+      "process": "Select a relevant store, inspect its entries and read the content needed by the current task.",
+      "effect": "Context read",
+      "verification": "Distinguish entry existence, observable retrieval and correctness against current evidence.",
+      "on_failure": "Continue without history when current evidence suffices. Do not infer retrieval merely from answer wording."
+    },
+    {
+      "id": "MX-D-FEEDBACK",
+      "platform": "devops",
+      "title": "Corrective investigation feedback",
+      "features": [
+        "FT-D-INCIDENT",
+        "FT-D-MEMORY"
+      ],
+      "sections": [
+        "D-M02"
+      ],
+      "trigger": "Operator supplies a verified correction",
+      "state": "Investigation feedback and documented corrective context",
+      "process": "Record the actual cause separately from routine synthesis of incident history.",
+      "effect": "Retained correction",
+      "verification": "Inspect saved feedback and any exposed corrective entry.",
+      "on_failure": "Keep the verified correction in the incident system when downstream use cannot be observed."
+    },
+    {
+      "id": "MX-D-INSTRUCTIONS",
+      "platform": "devops",
+      "title": "Standing instruction loading",
+      "features": [
+        "FT-D-INSTRUCTIONS"
+      ],
+      "sections": [
+        "D-M03"
+      ],
+      "trigger": "New applicable session",
+      "state": "Saved global or agent-specific guidance",
+      "process": "Load standing instructions at session start.",
+      "effect": "Session context",
+      "verification": "Test a new session against the saved instruction version.",
+      "on_failure": "Inspect scope and session start time rather than assuming existing sessions received updates."
+    },
+    {
+      "id": "MX-D-SKILL",
+      "platform": "devops",
+      "title": "Runbook applicability and procedural loading",
+      "features": [
+        "FT-D-SKILLS"
+      ],
+      "sections": [
+        "D-M04"
+      ],
+      "trigger": "Applicable task or assigned procedural configuration",
+      "state": "Skill content, description and agent scope",
+      "process": "Make the reviewed procedure and its references available to the intended execution.",
+      "effect": "Procedural context",
+      "verification": "Test matching and nonmatching requests and inspect exposed procedure or tool-use evidence.",
+      "on_failure": "Correct applicability or missing tools; stop unsupported steps without implicitly widening permissions."
+    },
+    {
+      "id": "MX-D-TRIAGE",
+      "platform": "devops",
+      "title": "Incident routing",
+      "features": [
+        "FT-D-INCIDENT"
+      ],
+      "sections": [
+        "D-06"
+      ],
+      "trigger": "Incoming incident signal",
+      "state": "Signal and investigation relationships",
+      "process": "Link the signal, skip it under configured criteria or proceed with independent investigation.",
+      "effect": "Investigation linkage",
+      "verification": "Inspect the routing decision, reason and resulting investigation identity.",
+      "on_failure": "Correct routing through the supported unlink or unskip operation."
+    },
+    {
+      "id": "MX-D-INVESTIGATE",
+      "platform": "devops",
+      "title": "Investigation and operator steering",
+      "features": [
+        "FT-D-INCIDENT",
+        "FT-D-SOURCES"
+      ],
+      "sections": [
+        "D-06"
+      ],
+      "trigger": "Selected incident or manual investigation",
+      "state": "Current evidence and evolving conclusions",
+      "process": "Read observations, examine hypotheses and accept relevant operator steering in the investigation context.",
+      "effect": "Investigation record",
+      "verification": "Check conclusions against current observations and identify missing evidence.",
+      "on_failure": "Retain competing hypotheses or an inconclusive result instead of inventing certainty."
+    },
+    {
+      "id": "MX-D-CUSTOM",
+      "platform": "devops",
+      "title": "Configured custom-agent invocation",
+      "features": [
+        "FT-D-CUSTOM",
+        "FT-D-HISTORY"
+      ],
+      "sections": [
+        "D-07"
+      ],
+      "trigger": "Manual invocation or configured trigger",
+      "state": "Definition, invocation and tool results",
+      "process": "Execute the selected operational work and retain its invocation trajectory.",
+      "effect": "Execution and output",
+      "verification": "Inspect tool arguments, failures and output against the task scope.",
+      "on_failure": "Mark incomplete output and resolve the failed prerequisite before repeating the run."
+    },
+    {
+      "id": "MX-D-SCHEDULE",
+      "platform": "devops",
+      "title": "Schedule-to-invocation creation",
+      "features": [
+        "FT-D-SCHEDULE",
+        "FT-D-HISTORY"
+      ],
+      "sections": [
+        "D-07"
+      ],
+      "trigger": "Configured schedule becomes due",
+      "state": "Trigger and independently managed invocation",
+      "process": "Create future work under the supported scheduling and concurrency constraints.",
+      "effect": "Future invocation",
+      "verification": "Inspect saved timing and actual start; record the observation window independently.",
+      "on_failure": "Use explicit invocation when timing is critical. Pausing future starts does not cancel current work."
+    },
+    {
+      "id": "MX-D-PREVENT",
+      "platform": "devops",
+      "title": "Cross-investigation prevention evaluation",
+      "features": [
+        "FT-D-PREVENTION"
+      ],
+      "sections": [
+        "D-06"
+      ],
+      "trigger": "Manual or configured evaluation",
+      "state": "Investigation evidence and recommendations",
+      "process": "Analyze recurring weaknesses and produce improvement proposals.",
+      "effect": "Recommendation",
+      "verification": "Trace a proposed theme or improvement to supporting investigations.",
+      "on_failure": "Keep unsupported patterns as hypotheses and separate proposals from implemented changes."
+    },
+    {
+      "id": "MX-D-ACTION",
+      "platform": "devops",
+      "title": "Operation-specific directed authorization",
+      "features": [
+        "FT-D-ACTIONS"
+      ],
+      "sections": [
+        "D-M06"
+      ],
+      "trigger": "Operator requests an eligible state-changing operation",
+      "state": "Opt-in, role, category and approval",
+      "process": "Execute the specific approved operation through its configured authorization path.",
+      "effect": "Resource or external-tool mutation",
+      "verification": "Inspect exact approval, attribution and resulting resource state.",
+      "on_failure": "Stop on a failed authorization gate; use the normal approved engineering process rather than bypassing it."
+    },
+    {
+      "id": "MX-D-READINESS",
+      "platform": "devops",
+      "title": "Candidate release analysis",
+      "features": [
+        "FT-D-READINESS",
+        "FT-D-SOURCES"
+      ],
+      "sections": [
+        "D-09"
+      ],
+      "trigger": "Eligible readiness-review request",
+      "state": "Candidate revision and dependency context",
+      "process": "Review the proposed change for the operational risks supported by this preview path.",
+      "effect": "Readiness result",
+      "verification": "Match findings to the exact candidate and unresolved dependencies.",
+      "on_failure": "Treat unsupported repository or feature access as an unmet prerequisite."
+    },
+    {
+      "id": "MX-D-TEST",
+      "platform": "devops",
+      "title": "Active deployed-application testing",
+      "features": [
+        "FT-D-TEST"
+      ],
+      "sections": [
+        "D-09"
+      ],
+      "trigger": "Authorized test execution",
+      "state": "Test profile and deployed target",
+      "process": "Send selected test interactions and retain observed behavior.",
+      "effect": "Application requests with possible writes",
+      "verification": "Inspect target revision, actual interactions, results and effects.",
+      "on_failure": "Stop unexpected effects and retain incomplete coverage."
+    },
+    {
+      "id": "MX-S-CONTEXT",
+      "platform": "security",
+      "title": "Application-context assembly",
+      "features": [
+        "FT-S-SOURCES"
+      ],
+      "sections": [
+        "S-09",
+        "S-M07"
+      ],
+      "trigger": "Assessment setup or execution",
+      "state": "Selected sources and application scope",
+      "process": "Read the connected source and documentation relevant to the selected assessment.",
+      "effect": "Source read",
+      "verification": "Compare source revision and system boundary with the intended subject.",
+      "on_failure": "Exclude mismatched context and document the resulting assessment limitation."
+    },
+    {
+      "id": "MX-S-ACCESS",
+      "platform": "security",
+      "title": "Target scope and network access",
+      "features": [
+        "FT-S-TARGET"
+      ],
+      "sections": [
+        "S-03"
+      ],
+      "trigger": "Configuration and target connection",
+      "state": "Targets, support paths, exclusions and private route",
+      "process": "Apply the configured reachability and target rules to assessment access.",
+      "effect": "Target connection",
+      "verification": "Confirm the permitted surface and exclusions in an authorized environment.",
+      "on_failure": "Stop when scope or owner authorization is unresolved."
+    },
+    {
+      "id": "MX-S-AUTH",
+      "platform": "security",
+      "title": "Credential resolution and application login",
+      "features": [
+        "FT-S-AUTH"
+      ],
+      "sections": [
+        "S-M01"
+      ],
+      "trigger": "Authenticated assessment",
+      "state": "Credential strategy and login instructions",
+      "process": "Obtain the test credential and apply it to the application.",
+      "effect": "Authentication requests",
+      "verification": "Check the actual application identity and protected route, not only credential retrieval.",
+      "on_failure": "Mark protected paths unassessed when login fails."
+    },
+    {
+      "id": "MX-S-LOGIN",
+      "platform": "security",
+      "title": "Successful login-procedure reuse",
+      "features": [
+        "FT-S-LOGIN"
+      ],
+      "sections": [
+        "S-M02"
+      ],
+      "trigger": "Later eligible authentication session",
+      "state": "Retained login procedure and reuse setting",
+      "process": "Reuse learned navigation where the setting and current login flow permit it.",
+      "effect": "Authentication requests",
+      "verification": "Distinguish successful login from observable procedure reuse.",
+      "on_failure": "Retest a changed login flow; failed login is not a clean assessment."
+    },
+    {
+      "id": "MX-S-RUN",
+      "platform": "security",
+      "title": "Saved assessment and independent execution",
+      "features": [
+        "FT-S-RUNS",
+        "FT-S-FINDINGS"
+      ],
+      "sections": [
+        "S-04"
+      ],
+      "trigger": "Manual or supported recurring/external invocation",
+      "state": "Configuration, run and findings",
+      "process": "Execute against the current configured target and retain an independent result.",
+      "effect": "Active application assessment",
+      "verification": "Record actual revision, roles, exclusions, limit and incomplete areas.",
+      "on_failure": "Treat incomplete or failed execution as a coverage gap, not a pass."
+    },
+    {
+      "id": "MX-S-FINDING",
+      "platform": "security",
+      "title": "Finding evidence inspection",
+      "features": [
+        "FT-S-FINDINGS"
+      ],
+      "sections": [
+        "S-05"
+      ],
+      "trigger": "Assessment returns a finding",
+      "state": "Finding identity and evidence",
+      "process": "Expose the affected context and supporting reproduction or source evidence for review.",
+      "effect": "Finding review record",
+      "verification": "Give the finding a disposition using evidence, impact and application-owner context.",
+      "on_failure": "Preserve uncertainty and obtain missing evidence before closure."
+    },
+    {
+      "id": "MX-S-FIX",
+      "platform": "security",
+      "title": "Repository repair proposal",
+      "features": [
+        "FT-S-FIX"
+      ],
+      "sections": [
+        "S-05"
+      ],
+      "trigger": "Accepted finding and configured source access",
+      "state": "Finding and proposed change",
+      "process": "Create a supported patch or pull request for engineering review.",
+      "effect": "Proposed repository change",
+      "verification": "Inspect revision, tests and unrelated changes before accepting the proposal.",
+      "on_failure": "Leave a failed or rejected proposal unfinished; merge is not deployment."
+    },
+    {
+      "id": "MX-S-REVALIDATE",
+      "platform": "security",
+      "title": "Selected finding replay and lineage",
+      "features": [
+        "FT-S-REVALIDATION"
+      ],
+      "sections": [
+        "S-M05"
+      ],
+      "trigger": "Repair deployed to the authorized target",
+      "state": "Original finding and separate revalidation job",
+      "process": "Repeat selected finding-validation steps under current test conditions.",
+      "effect": "Targeted active test",
+      "verification": "Verify reached identity, deployed repair and linked result.",
+      "on_failure": "Record authentication or environment failure as inconclusive verification."
+    },
+    {
+      "id": "MX-S-CRITERIA",
+      "platform": "security",
+      "title": "Requirement applicability and evaluation",
+      "features": [
+        "FT-S-REQUIREMENTS"
+      ],
+      "sections": [
+        "S-M03"
+      ],
+      "trigger": "Eligible review with requirement mode enabled",
+      "state": "Reviewed pack and criteria",
+      "process": "Evaluate supplied evidence against applicable requirements.",
+      "effect": "Assessment result",
+      "verification": "Check compliant, violating and inapplicable examples.",
+      "on_failure": "Revise ambiguous applicability; do not treat a pack as a compliance certificate."
+    },
+    {
+      "id": "MX-S-GENERATE",
+      "platform": "security",
+      "title": "Requirement-pack regeneration",
+      "features": [
+        "FT-S-REQUIREMENTS"
+      ],
+      "sections": [
+        "S-M04"
+      ],
+      "trigger": "Approved policy source is submitted",
+      "state": "Existing custom pack and generated replacement",
+      "process": "Replace pack contents from the selected policy documents for subsequent review.",
+      "effect": "Configuration replacement",
+      "verification": "Compare with approved policy and prior manually added requirements.",
+      "on_failure": "Do not enable an unreviewed replacement; keep authoritative source in Git."
+    },
+    {
+      "id": "MX-S-CODE",
+      "platform": "security",
+      "title": "Full-source or change-focused code assessment",
+      "features": [
+        "FT-S-CODE",
+        "FT-S-SOURCES"
+      ],
+      "sections": [
+        "S-06"
+      ],
+      "trigger": "Eligible source-review invocation",
+      "state": "Revision, review mode and findings",
+      "process": "Analyze selected source in the configured vulnerability and requirement modes.",
+      "effect": "Source analysis; optional comments separately configured",
+      "verification": "Match results to the revision and record unassessed scope.",
+      "on_failure": "Obtain a current result when revision or trigger behavior makes prior evidence stale."
+    },
+    {
+      "id": "MX-S-DESIGN",
+      "platform": "security",
+      "title": "Point-in-time design assessment",
+      "features": [
+        "FT-S-DESIGN"
+      ],
+      "sections": [
+        "S-06"
+      ],
+      "trigger": "Current design submission",
+      "state": "One-off review and design evidence",
+      "process": "Assess the submitted design against relevant criteria.",
+      "effect": "Review result",
+      "verification": "Separate missing evidence from demonstrated violation.",
+      "on_failure": "Use the documented new-review or clone path for changed design material."
+    },
+    {
+      "id": "MX-S-THREAT",
+      "platform": "security",
+      "title": "System-model construction and threat analysis",
+      "features": [
+        "FT-S-THREAT",
+        "FT-S-SOURCES"
+      ],
+      "sections": [
+        "S-06"
+      ],
+      "trigger": "Scoped threat-model run",
+      "state": "Scope, system representation and threats",
+      "process": "Construct the system model and examine threats to its flows and boundaries.",
+      "effect": "Model result",
+      "verification": "Review inferred boundaries before interpreting individual threats.",
+      "on_failure": "Correct input scope when the model represents the wrong system."
+    },
+    {
+      "id": "MX-S-PIPELINE",
+      "platform": "security",
+      "title": "Pipeline invocation and result observation",
+      "features": [
+        "FT-S-PIPELINE"
+      ],
+      "sections": [
+        "S-06",
+        "S-09"
+      ],
+      "trigger": "Authorized delivery step",
+      "state": "Pipeline execution and server-side job",
+      "process": "Start and observe the supported assessment independently of the pipeline runner.",
+      "effect": "Assessment initiation",
+      "verification": "Retain revision and run identity and apply an explicit team gate to incomplete results.",
+      "on_failure": "Block or escalate under the declared gate; missing evidence is not success."
+    },
+    {
+      "id": "MX-S-JIRA",
+      "platform": "security",
+      "title": "Finding publication to Jira",
+      "features": [
+        "FT-S-JIRA"
+      ],
+      "sections": [
+        "S-09",
+        "S-M07"
+      ],
+      "trigger": "Reviewed finding selected for tracking",
+      "state": "Connection, project and finding relationship",
+      "process": "Publish supported issue or comment content to the configured project.",
+      "effect": "External publication",
+      "verification": "Inspect actual project audience and original finding linkage.",
+      "on_failure": "Keep the finding owned locally while resolving publication failure."
+    },
+    {
+      "id": "MX-F-QUERY",
+      "platform": "finops",
+      "title": "Source-backed cost analysis",
+      "features": [
+        "FT-F-SOURCES"
+      ],
+      "sections": [
+        "F-M01",
+        "F-08"
+      ],
+      "trigger": "Bounded cost, forecast, coverage or recommendation question",
+      "state": "Query contract and source response",
+      "process": "Read the relevant upstream service and interpret its returned evidence.",
+      "effect": "Source read",
+      "verification": "Reconcile a material result using the same dates, metric, scope and dimensions.",
+      "on_failure": "Withhold unsupported numerical or causal conclusions and identify missing sources."
+    },
+    {
+      "id": "MX-F-FILES",
+      "platform": "finops",
+      "title": "Uploaded reference-file use",
+      "features": [
+        "FT-F-FILES"
+      ],
+      "sections": [
+        "F-M02"
+      ],
+      "trigger": "Task needs organizational context",
+      "state": "Active uploaded reference",
+      "process": "Read the maintained mapping or reporting convention during relevant work.",
+      "effect": "Context read",
+      "verification": "Verify a known mapping and expose unmapped records.",
+      "on_failure": "Keep unassigned values visible and update the authoritative file deliberately."
+    },
+    {
+      "id": "MX-F-MEMORY",
+      "platform": "finops",
+      "title": "Cross-session preference retention",
+      "features": [
+        "FT-F-MEMORY"
+      ],
+      "sections": [
+        "F-M03"
+      ],
+      "trigger": "Explicit remember, update or forget request",
+      "state": "Instance-local retained preference",
+      "process": "Apply retained preferences to subsequent sessions.",
+      "effect": "Retained context update and read",
+      "verification": "Test a later conversation separately from reference-file retrieval.",
+      "on_failure": "State material query choices explicitly when retention is uncertain."
+    },
+    {
+      "id": "MX-F-COMPACT",
+      "platform": "finops",
+      "title": "Conversation compaction",
+      "features": [
+        "FT-F-CONTEXT"
+      ],
+      "sections": [
+        "F-M04"
+      ],
+      "trigger": "Conversation approaches its context limit",
+      "state": "Summary of older material and recent full messages",
+      "process": "Summarize older context while continuing the conversation.",
+      "effect": "Session context change",
+      "verification": "Restate the current query basis and unresolved questions.",
+      "on_failure": "Reconstruct critical constraints from authoritative records instead of assuming verbatim recall."
+    },
+    {
+      "id": "MX-F-TASK",
+      "platform": "finops",
+      "title": "Queued task execution and observation",
+      "features": [
+        "FT-F-TASKS"
+      ],
+      "sections": [
+        "F-03"
+      ],
+      "trigger": "Explicit task request or automation",
+      "state": "Task status, source results and outputs",
+      "process": "Run queued work and retain its separate execution evidence.",
+      "effect": "Execution and output",
+      "verification": "Match completed results to task identity and requested scope.",
+      "on_failure": "Distinguish absent, queued and failed tasks before retrying."
+    },
+    {
+      "id": "MX-F-SCHEDULE",
+      "platform": "finops",
+      "title": "Scheduled task creation",
+      "features": [
+        "FT-F-AUTOMATIONS",
+        "FT-F-TASKS"
+      ],
+      "sections": [
+        "F-03"
+      ],
+      "trigger": "Saved recurring schedule",
+      "state": "Automation and independently retained tasks",
+      "process": "Create a new task on each applicable scheduled occurrence.",
+      "effect": "Future tasks",
+      "verification": "Inspect trigger and the actual task's reporting window separately.",
+      "on_failure": "Disable future starts and control already-created work separately."
+    },
+    {
+      "id": "MX-F-EVENT",
+      "platform": "finops",
+      "title": "Anomaly-event matching and task creation",
+      "features": [
+        "FT-F-AUTOMATIONS",
+        "FT-F-TASKS"
+      ],
+      "sections": [
+        "F-M05"
+      ],
+      "trigger": "Matching Cost Anomaly Detection event",
+      "state": "Managed rule, automation and queued task",
+      "process": "Match the supported event to its configured response prompt.",
+      "effect": "Task creation; publication is a separate configured step",
+      "verification": "Trace event, automation, task, analysis and destination result independently.",
+      "on_failure": "Inspect monitor conditions and rule permissions before changing the analytical prompt."
+    },
+    {
+      "id": "MX-F-ARTIFACT",
+      "platform": "finops",
+      "title": "Report generation and revision",
+      "features": [
+        "FT-F-ARTIFACTS"
+      ],
+      "sections": [
+        "F-04"
+      ],
+      "trigger": "Analysis requires a report artifact",
+      "state": "Artifact linked to a task and query basis",
+      "process": "Format supported output and revise it without silently changing analytical scope.",
+      "effect": "Report artifact",
+      "verification": "Compare displayed figures and period with the reviewed source analysis.",
+      "on_failure": "Do not distribute an artifact that no longer matches its query basis."
+    },
+    {
+      "id": "MX-F-JIRA",
+      "platform": "finops",
+      "title": "Invocation-dependent Jira approval",
+      "features": [
+        "FT-F-JIRA"
+      ],
+      "sections": [
+        "F-05",
+        "F-M06"
+      ],
+      "trigger": "Supported issue or comment request",
+      "state": "Destination and invocation-specific authorization",
+      "process": "Request approval interactively or on demand; use setup authorization for scheduled or event-driven actions.",
+      "effect": "External publication",
+      "verification": "Inspect invocation type, action details, destination and resulting issue or comment.",
+      "on_failure": "Stop incorrect destinations. Do not expect an interactive prompt to protect an unattended automation."
+    },
+    {
+      "id": "MX-F-SLACK",
+      "platform": "finops",
+      "title": "Direct Slack publication",
+      "features": [
+        "FT-F-SLACK"
+      ],
+      "sections": [
+        "F-05",
+        "F-M06"
+      ],
+      "trigger": "Supported message request",
+      "state": "Workspace, channel connection and membership",
+      "process": "Post to the configured channel without a per-message approval prompt.",
+      "effect": "External publication",
+      "verification": "Review audience before invocation and inspect delivery afterward.",
+      "on_failure": "Keep analysis completion separate from delivery failure; posting does not establish channel-reading capability."
+    },
+    {
+      "id": "MX-D-QUERY",
+      "platform": "devops",
+      "title": "Built-in operational inquiry",
+      "features": [
+        "FT-D-QUERY",
+        "FT-D-SOURCES"
+      ],
+      "sections": [
+        "D-01",
+        "D-12"
+      ],
+      "trigger": "A scoped conversational question",
+      "state": "Request context and connected source evidence",
+      "process": "Use the built-in on-demand inquiry path to answer the operational question using available authorized evidence.",
+      "effect": "Source read and conversational result",
+      "verification": "Inspect scope and reproduce a material observation from the same source query.",
+      "on_failure": "Name the missing source and qualify or withhold the answer; creating a custom agent does not by itself repair source access."
+    }
   ]
 }
