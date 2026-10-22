@@ -1,5 +1,5 @@
 {
-  "revision": "2026-10-22-mechanism-review",
+  "revision": "2026-10-23-technical-editorial-review",
   "files_compared": 62,
   "identical_repeated_build": true,
   "boundary": "Same committed inputs and same runner environment; not cross-version reproducibility."
