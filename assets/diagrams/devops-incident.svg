@@ -1,0 +1,135 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="788pt" height="734pt" viewBox="0.00 0.00 787.50 734.00" role="img" aria-labelledby="devops-incident-title devops-incident-desc" data-diagram="devops-incident">
+<title id="devops-incident-title">Incident triage and investigation workflow</title><desc id="devops-incident-desc">A signal can be linked, skipped, or investigated independently. Steering affects the current analysis; completed-investigation feedback supplies a separate corrective input.</desc><g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(18 716)">
+<title>G</title>
+
+<g id="node1" class="node">
+<title>signal</title>
+<path fill="#edf5f4" stroke="#496b78" d="M470,-698C470,-698 285,-698 285,-698 279,-698 273,-692 273,-686 273,-686 273,-662 273,-662 273,-656 279,-650 285,-650 285,-650 470,-650 470,-650 476,-650 482,-656 482,-662 482,-662 482,-686 482,-686 482,-692 476,-698 470,-698" />
+<text text-anchor="middle" x="377.5" y="-677.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Incident signal</text>
+<text text-anchor="middle" x="377.5" y="-662.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Identity, service, and time</text>
+</g>
+
+<g id="node2" class="node">
+<title>triage</title>
+<path fill="#edf5f4" stroke="#496b78" d="M365.78,-602.43C365.78,-602.43 170.22,-559.57 170.22,-559.57 164.36,-558.28 164.36,-555.72 170.22,-554.43 170.22,-554.43 365.78,-511.57 365.78,-511.57 371.64,-510.28 383.36,-510.28 389.22,-511.57 389.22,-511.57 584.78,-554.43 584.78,-554.43 590.64,-555.72 590.64,-558.28 584.78,-559.57 584.78,-559.57 389.22,-602.43 389.22,-602.43 383.36,-603.72 371.64,-603.72 365.78,-602.43" />
+<text text-anchor="middle" x="377.5" y="-560.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Triage decision</text>
+<text text-anchor="middle" x="377.5" y="-545.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Correlation and skip criteria</text>
+</g>
+
+<g id="edge1" class="edge">
+<title>signal-&gt;triage</title>
+<path fill="none" stroke="#496b78" d="M377.5,-649.73C377.5,-639.08 377.5,-625.98 377.5,-613.04" />
+<polygon fill="#496b78" stroke="#496b78" points="380.13,-612.96 377.5,-605.46 374.88,-612.96 380.13,-612.96" />
+</g>
+
+<g id="node3" class="node">
+<title>linked</title>
+<path fill="#edf5f4" stroke="#496b78" d="M223,-453C223,-453 12,-453 12,-453 6,-453 0,-447 0,-441 0,-441 0,-417 0,-417 0,-411 6,-405 12,-405 12,-405 223,-405 223,-405 229,-405 235,-411 235,-417 235,-417 235,-441 235,-441 235,-447 229,-453 223,-453" />
+<text text-anchor="middle" x="117.5" y="-432.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Linked</text>
+<text text-anchor="middle" x="117.5" y="-417.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Existing primary investigation</text>
+</g>
+
+<g id="edge2" class="edge">
+<title>triage-&gt;linked</title>
+<path fill="none" stroke="#496b78" d="M310.54,-523.55C267.59,-502.74 212.52,-476.05 172.2,-456.51" />
+<polygon fill="#496b78" stroke="#496b78" points="173.25,-454.1 165.35,-453.19 170.96,-458.82 173.25,-454.1" />
+<text text-anchor="middle" x="261" y="-478.2" font-family="DejaVu Sans" font-size="11.00">correlated</text>
+</g>
+
+<g id="node4" class="node">
+<title>skipped</title>
+<path fill="#edf5f4" stroke="#496b78" d="M483,-453C483,-453 272,-453 272,-453 266,-453 260,-447 260,-441 260,-441 260,-417 260,-417 260,-411 266,-405 272,-405 272,-405 483,-405 483,-405 489,-405 495,-411 495,-417 495,-417 495,-441 495,-441 495,-447 489,-453 483,-453" />
+<text text-anchor="middle" x="377.5" y="-432.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Skipped</text>
+<text text-anchor="middle" x="377.5" y="-417.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Recorded criterion and reason</text>
+</g>
+
+<g id="edge3" class="edge">
+<title>triage-&gt;skipped</title>
+<path fill="none" stroke="#496b78" d="M377.5,-508.72C377.5,-492.7 377.5,-475.22 377.5,-460.82" />
+<polygon fill="#496b78" stroke="#496b78" points="380.13,-460.66 377.5,-453.16 374.88,-460.66 380.13,-460.66" />
+<text text-anchor="middle" x="426" y="-478.2" font-family="DejaVu Sans" font-size="11.00">criterion matches</text>
+</g>
+
+<g id="node5" class="node">
+<title>new</title>
+<path fill="#edf5f4" stroke="#496b78" d="M470,-349C470,-349 285,-349 285,-349 279,-349 273,-343 273,-337 273,-337 273,-313 273,-313 273,-307 279,-301 285,-301 285,-301 470,-301 470,-301 476,-301 482,-307 482,-313 482,-313 482,-337 482,-337 482,-343 476,-349 470,-349" />
+<text text-anchor="middle" x="377.5" y="-328.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Proceed</text>
+<text text-anchor="middle" x="377.5" y="-313.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Independent investigation</text>
+</g>
+
+<g id="edge4" class="edge">
+<title>triage-&gt;new</title>
+<path fill="none" stroke="#496b78" d="M439.89,-522.46C484.58,-493.71 532.77,-449.92 507.5,-405 494.54,-381.95 471.83,-364.85 448.98,-352.57" />
+<polygon fill="#496b78" stroke="#496b78" points="450.09,-350.19 442.22,-349.07 447.68,-354.85 450.09,-350.19" />
+<text text-anchor="middle" x="540" y="-426.2" font-family="DejaVu Sans" font-size="11.00">new work</text>
+</g>
+
+<g id="edge9" class="edge">
+<title>linked-&gt;new</title>
+<path fill="none" stroke="#496b78" stroke-dasharray="5,2" d="M176.17,-404.98C216.38,-389.21 269.78,-368.26 311.48,-351.9" />
+<polygon fill="#496b78" stroke="#496b78" points="312.57,-354.29 318.59,-349.11 310.65,-349.41 312.57,-354.29" />
+<text text-anchor="middle" x="272" y="-374.2" font-family="DejaVu Sans" font-size="11.00">unlink</text>
+</g>
+
+<g id="edge10" class="edge">
+<title>skipped-&gt;new</title>
+<path fill="none" stroke="#496b78" stroke-dasharray="5,2" d="M377.5,-404.85C377.5,-390.64 377.5,-372.26 377.5,-356.82" />
+<polygon fill="#496b78" stroke="#496b78" points="380.13,-356.55 377.5,-349.05 374.88,-356.55 380.13,-356.55" />
+<text text-anchor="middle" x="395.5" y="-374.2" font-family="DejaVu Sans" font-size="11.00">unskip</text>
+</g>
+
+<g id="node6" class="node">
+<title>evidence</title>
+<path fill="#edf5f4" stroke="#496b78" d="M622.5,-245C622.5,-245 384.5,-245 384.5,-245 378.5,-245 372.5,-239 372.5,-233 372.5,-233 372.5,-209 372.5,-209 372.5,-203 378.5,-197 384.5,-197 384.5,-197 622.5,-197 622.5,-197 628.5,-197 634.5,-203 634.5,-209 634.5,-209 634.5,-233 634.5,-233 634.5,-239 628.5,-245 622.5,-245" />
+<text text-anchor="middle" x="503.5" y="-224.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Investigation</text>
+<text text-anchor="middle" x="503.5" y="-209.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Tool observations and hypotheses</text>
+</g>
+
+<g id="edge5" class="edge">
+<title>new-&gt;evidence</title>
+<path fill="none" stroke="#496b78" d="M406.09,-300.85C424.78,-285.73 449.29,-265.88 469.05,-249.89" />
+<polygon fill="#496b78" stroke="#496b78" points="470.84,-251.81 475.02,-245.05 467.54,-247.73 470.84,-251.81" />
+</g>
+
+<g id="node8" class="node">
+<title>result</title>
+<path fill="#edf5f4" stroke="#496b78" d="M610.5,-152C610.5,-152 396.5,-152 396.5,-152 390.5,-152 384.5,-146 384.5,-140 384.5,-140 384.5,-116 384.5,-116 384.5,-110 390.5,-104 396.5,-104 396.5,-104 610.5,-104 610.5,-104 616.5,-104 622.5,-110 622.5,-116 622.5,-116 622.5,-140 622.5,-140 622.5,-146 616.5,-152 610.5,-152" />
+<text text-anchor="middle" x="503.5" y="-131.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Investigation result</text>
+<text text-anchor="middle" x="503.5" y="-116.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Cause and mitigation proposal</text>
+</g>
+
+<g id="edge7" class="edge">
+<title>evidence-&gt;result</title>
+<path fill="none" stroke="#496b78" d="M503.5,-196.57C503.5,-185.33 503.5,-171.73 503.5,-159.69" />
+<polygon fill="#496b78" stroke="#496b78" points="506.13,-159.54 503.5,-152.04 500.88,-159.54 506.13,-159.54" />
+</g>
+
+<g id="node7" class="node">
+<title>operator</title>
+<path fill="#edf5f4" stroke="#496b78" d="M739.5,-349C739.5,-349 519.5,-349 519.5,-349 513.5,-349 507.5,-343 507.5,-337 507.5,-337 507.5,-313 507.5,-313 507.5,-307 513.5,-301 519.5,-301 519.5,-301 739.5,-301 739.5,-301 745.5,-301 751.5,-307 751.5,-313 751.5,-313 751.5,-337 751.5,-337 751.5,-343 745.5,-349 739.5,-349" />
+<text text-anchor="middle" x="629.5" y="-328.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Operator steering</text>
+<text text-anchor="middle" x="629.5" y="-313.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Additional or contrary evidence</text>
+</g>
+
+<g id="edge6" class="edge">
+<title>operator-&gt;evidence</title>
+<path fill="none" stroke="#496b78" d="M600.91,-300.85C582.22,-285.73 557.71,-265.88 537.95,-249.89" />
+<polygon fill="#496b78" stroke="#496b78" points="539.46,-247.73 531.98,-245.05 536.16,-251.81 539.46,-247.73" />
+<text text-anchor="middle" x="587" y="-270.2" font-family="DejaVu Sans" font-size="11.00">steers</text>
+</g>
+
+<g id="node9" class="node">
+<title>feedback</title>
+<path fill="#edf5f4" stroke="#496b78" d="M608.5,-48C608.5,-48 398.5,-48 398.5,-48 392.5,-48 386.5,-42 386.5,-36 386.5,-36 386.5,-12 386.5,-12 386.5,-6 392.5,0 398.5,0 398.5,0 608.5,0 608.5,0 614.5,0 620.5,-6 620.5,-12 620.5,-12 620.5,-36 620.5,-36 620.5,-42 614.5,-48 608.5,-48" />
+<text text-anchor="middle" x="503.5" y="-27.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Completed-run feedback</text>
+<text text-anchor="middle" x="503.5" y="-12.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Verdict and verified correction</text>
+</g>
+
+<g id="edge8" class="edge">
+<title>result-&gt;feedback</title>
+<path fill="none" stroke="#496b78" d="M503.5,-103.85C503.5,-89.64 503.5,-71.26 503.5,-55.82" />
+<polygon fill="#496b78" stroke="#496b78" points="506.13,-55.55 503.5,-48.05 500.88,-55.55 506.13,-55.55" />
+<text text-anchor="middle" x="522" y="-73.2" font-family="DejaVu Sans" font-size="11.00">review</text>
+</g>
+</g>
+</svg>
