@@ -1,52 +1,70 @@
-# AWS Security Agent — configuration and operation
+# AWS Security Agent
 
-Engineering guide • documentation reviewed 22 October 2026
+Architecture, application context, assessment, and finding verification
 
-This guide describes application assessment configuration, authentication, execution, findings and evidence. The current guide identifies AWS Security Agent as part of AWS Continuum. On-demand penetration testing and the design, code, threat-model and pipeline paths have different availability. Confirm the selected feature and Region before adoption; a generally available penetration test does not make every assessment path generally available. [SS01] [SS02]
+AWS Security Agent assesses an application using the sources, access, criteria, and target scope configured for it. The useful starting point is therefore the application: which revision is being assessed, which documents explain its boundaries, which identities may reach protected routes, and which requirements apply. The service’s current documentation places it within AWS Continuum. Availability remains specific to the assessment feature and Region. [SS01] [SS02]
 
-Official product behavior is cited. **Engineering procedures** and **synthetic exercises** below are authored recommendations, not additional service functions or records of a live test.
+The chapters follow the preparation of an assessment through execution and finding verification. First they establish the Agent Space and supported integrations. Next they explain how source material, credentials, login procedures, and requirements supply different kinds of context. Finally they trace a finding through a proposed repair, deployment, and targeted revalidation. These are separate records with separate evidence.
 
-## 01. Product Functions and Resource Model
+Diagrams show the documented logical relationships; they are not a claim of a universal security-agent runtime. Engineering guidance and the worked example are explicitly distinguished from product functions. The use-case catalog provides applications of these functions without implying that a successful assessment proves complete security.
 
-Define application scope, shared resources, assessment configurations, executions and findings.
+## 01. Service architecture
 
-### S-01 — Resources, scopes and functions
+The application space, assessment configuration, and run have different responsibilities. Establishing that model makes later findings and revalidation records interpretable.
 
-The product functions are application penetration testing, source-code analysis, design review, and threat modeling. Supporting platform capabilities include source connection, reusable configuration, authenticated/private access, requirement management, run observation, remediation and finding revalidation. Do not equate an entire assessment with a single hidden learning mechanism. [SS01] [SS03]
+### S-01 — The agent, application space, and assessment
 
-```text
-Account / organization resources
-  ├─ registered source integrations
-  ├─ security requirement packs
-  └─ identity configuration
-              ↓ connect / assign / enable
-Application Agent Space
-  ├─ repositories, documents, user access, service settings
-  ├─ penetration-test configuration → runs → findings → revalidation jobs
-  ├─ code-review configuration → full scans / change-triggered reviews
-  ├─ threat-model configuration → runs and model results
-  └─ one-off design reviews → clone when a new assessment is needed
-```
+AWS Security Agent is organized around an application and the assessments performed against it. The Agent Space connects the application’s sources and users. A saved penetration-test, code-review, or threat-model configuration describes reusable setup; a run records one assessment under particular conditions. Design review has a different one-off lifecycle. These distinctions matter when deciding what to update, repeat, or compare. [SS01] [SS03]
 
-Registration makes an integration available; connecting a repository selects it for a space; enabling the assessment configures its use. These are separate actions. Requirements are shared resources, so the application boundary is not an isolation claim for every object. [SS03]
+![Security Agent logical architecture](../assets/diagrams/security-architecture.svg)
 
-| Capability group | Resources and operators | Canonical sections |
+The architecture has three kinds of input. Application sources provide implementation and design context. Security requirements state the criteria for eligible reviews. Target and credential configuration defines what a dynamic test may actually reach. Assessment results and findings belong to a particular execution, while the configured resources can be reused. Shared account registrations or requirement packs should not be mistaken for application-private resources merely because a run is attached to one space. [SS03] [SS30]
+
+The product functions include application penetration testing, source-code review, design review, and threat modeling. Supporting capabilities supply source selection, authentication, reusable criteria, execution observation, proposed remediation, and revalidation. An assessment function is broader than any one mechanism. Login-procedure reuse, for example, supports authenticated testing but is not itself a substitute for that test. [SS01] [SS09]
+
+| Responsibility | Principal resources | Explanation |
 |---|---|---|
-| Identity and sources | Administrator, operator, Agent Space, integration, connected repository | S-02 |
-| Target access | Verified domains, VPC route, target rules, credential definitions | S-03, S-M01 |
-| Procedure reuse | Login Optimization and its learned skill | S-M02 |
-| Assessment criteria | Managed/custom requirement packs and applicability | S-M03, S-M04 |
-| Execution | Configuration, preflight, run, task-hour limit, logs | S-04 |
-| Findings and repair | Finding evidence, proposed patch, deployed revision | S-05 |
-| Targeted verification | Revalidation job and finding lineage | S-M05 |
-| Data protection | Customer-managed key, branch key, encryption context, calling identity | S-M06 |
-| Earlier feedback | Full/change-based code review, design review, threat model | S-06 |
+| Application and identity | Agent Space, user assignment, source connections | S-02, S-09 |
+| Evidence and scope | Repository revision, documents, target and exclusions | S-M07, S-03 |
+| Authentication | Credential definition, login instructions, learned login skill | S-M01, S-M02 |
+| Criteria | Requirement and requirement pack | S-M03, S-M04 |
+| Assessment | Saved configuration, run, work limit, logs | S-04 |
+| Finding lifecycle | Finding, proposed repair, deployed revision, revalidation job | S-05, S-M05 |
 
-## 02. Identity, Sources and Target Boundaries
+A practical setup follows this resource model. Establish the intended user’s access, connect the application’s evidence, define the authorized target, and then select the assessment. The following integration inventory makes explicit which providers and resource types the service documents; the context chapter explains how their information is used.
 
-Configure operator identity, repository sources, target rules and private access.
+## 02. Application sources and target access
 
-### S-02 — Set up identity and source access
+Application evidence and a reachable test target are separate prerequisites. The source inventory is followed by user access and the explicit boundaries of a dynamic test.
+
+### S-09 — Supported source and collaboration integrations
+
+Security assessment needs both application evidence and a reachable test surface. A repository explains code; a design page explains intent; a deployed endpoint exposes actual behavior. Connecting one of those sources does not substitute for the others. The account-level integration is registered once, while each Agent Space selects the repositories, pages, buckets, or projects appropriate to its application. [SS30]
+
+| Source or destination | Documented support | Selection in the application space | Effect boundary |
+|---|---|---|---|
+| GitHub | Cloud-hosted GitHub and cloud-hosted GitHub Enterprise | Connected repositories | Read analysis; repository write features are separate opt-ins |
+| GitHub Enterprise Server | Self-hosted server | Selected repositories and configured reachability | Private connectivity may be necessary |
+| GitLab | Cloud-hosted GitLab | Selected repositories | Provider-specific review comments and remediation configuration |
+| GitLab Self-Managed | Self-hosted instance | Selected repositories and reachable endpoint | Authentication and private routing require their own setup |
+| Bitbucket | Bitbucket Cloud | Selected repositories | Do not extend Cloud support to self-hosted editions |
+| Confluence | Confluence Cloud | Selected pages | Read-only documentation context, not a source-code repository |
+| Amazon S3 | Connected same-account buckets or prefixes | Resources selected for an assessment | Code-review sources use supported source archives; supporting documents have their own formats |
+| Jira | Jira Cloud | Selected projects | Finding issue creation and comments are independently allowed per project |
+
+Connecting a repository grants read context to the eligible assessment functions that share the space. Code-review comments and code-remediation changes are enabled separately per repository. The integration overview excludes these write actions for public repositories; do not interpret read access as permission to publish a patch or comment. [SS30]
+
+![Application-source registration and selection](../assets/diagrams/security-integrations.svg)
+
+To configure a source, first authorize its supported provider account from Integrations. Open the application Agent Space, select resources from that registration, and save the selection. Then configure the assessment that consumes those resources. For Confluence, selecting a page supplies read context; there are no per-page assessment toggles. For S3, connect the bucket or prefix once and select the needed resources when authoring an assessment. The S3 guide specifies same-account buckets and separate requirements for code-review sources. [SS31] [SS33]
+
+Jira follows a related but action-oriented sequence. Install and authorize the documented Forge application, register the Jira Cloud site, then choose projects for the Agent Space. Allow issue creation, comments, or both according to the workflow. Existing Jira issues are external records: removing the connection does not remove the issues already created. [SS32]
+
+Private source-control access, penetration-test network access, and credential retrieval are separate paths. A reachable repository does not prove that the test runner can reach a private application. Similarly, a readable secret does not establish that its contents successfully log in to that application. The next chapter follows these distinctions through authentication and context construction.
+
+### S-02 — User access and repository connections
+
+An administrator prepares the application workspace; an operator performs assessments within it. Source-provider registration authorizes a provider account, while repository connection selects application material. Treat these as distinct setup milestones so an inaccessible repository is not confused with a user-access failure.
 
 The console is the administrative surface. The web app is the assessment workspace. IAM-based operators can enter through the console route; IAM Identity Center supports assigned users without requiring ordinary console access. Configure the intended operator identity, not just the administrator who creates the Agent Space. [SS04] [SS05]
 
@@ -56,7 +74,9 @@ For code review, independently review the settings for vulnerability analysis, r
 
 **Engineering verification:** open the web app as the intended user, inspect the connected source and selected branch, and compare the source revision with the deployed test application. Record a known read and an expected denial. Do not place credentials in a repository or presentation to simplify the example.
 
-### S-03 — Define the reachable surface before execution
+### S-03 — Test targets, dependencies, and exclusions
+
+A dynamic assessment is defined by what it may reach and what it may test. Some endpoints are application targets, while others are dependencies needed only for authentication or supporting content. Explicit exclusions keep that supporting access from expanding the test into an unintended environment.
 
 Domain verification demonstrates control through a supported verification method, including DNS, HTTP or a private-VPC route. It is a technical prerequisite, not authorization for every downstream system the application can contact. Private testing additionally needs a supported VPC configuration, subnets, routing and security groups. [SS07]
 
@@ -74,11 +94,29 @@ These example names are illustrative, not running targets. Specify the complete 
 
 **Expected confirmation:** the saved configuration identifies the target, network path, credential roles and exclusions. Draft configuration and successful authentication preflight are different states. Neither proves that a complete assessment has run.
 
-## 03. Authentication, Criteria and Protection Mechanisms
+## 03. Application knowledge and assessment criteria
 
-Examine credential resolution, login reuse, requirement evaluation, regeneration and encryption.
+Source context explains the application, requirements supply criteria, and authentication provides a reachable identity. Their reuse mechanisms differ and are described separately.
 
-### S-M01 — Credential resolution precedes application authentication
+### S-M07 — Application-context construction and reuse
+
+An assessment starts with the application material selected for that task. Source code supplies implementation evidence; API and design documents describe interfaces and intended relationships; scope documents delimit what a threat model should analyze. The Agent Space makes connected material available, but the assessment configuration still determines what is relevant to a particular run. An engineering record should identify the source revision and document version used rather than simply say that the agent knows the application. [SS03] [SS16] [SS31]
+
+![Application context, assessment criteria, and findings](../assets/diagrams/security-context.svg)
+
+The context is consolidated into an assessment of the selected system. In a threat-model workflow, this can include a system overview, data flows, trust boundaries, and candidate threats. In a penetration test, source and documentation context supports exploration of the authorized deployed target. Review the inferred model before evaluating its conclusions: a missing identity boundary or a document for the wrong release changes the question being answered. [SS16] [SS34]
+
+Three different forms of reuse must remain distinct. A saved assessment configuration retains reusable setup. A requirement pack supplies criteria to later eligible reviews. Login Optimization retains a successful authentication procedure. None of these establishes the DevOps Agent monitor-memory mechanism for Security Agent. The reviewed guidance does not describe a universal customer-editable vulnerability-memory store or an automatic model-training process across all assessments. [SS03] [SS09] [SS14]
+
+For an application change, reconnect or select the current sources, update the scope where necessary, and create the next run. For a wrong requirement, edit the governing criteria; for a changed login, test the current credential flow. Historical findings remain evidence of earlier executions, not a substitute for the new source and target state. A revalidation job retrieves selected existing finding evidence and tests that finding again; it is narrower than reconstructing or rescanning the whole application. [SS13]
+
+A practical verification starts with a small known boundary: two application roles, one protected resource, and the repository revision deployed to staging. Inspect whether the inferred system and the resulting finding refer to those same roles and revision. When the evidence does not expose which document or procedure was used, record that limitation rather than infer it from plausible output.
+
+### S-M01 — Credential retrieval and application login
+
+![Workflow: Credential retrieval and application login](../assets/diagrams/security-authentication.svg)
+
+Authentication has two stages. The service must obtain a valid test credential, then apply it through the application’s login flow. The second stage may involve navigation and MFA even when the first stage is a straightforward secret read. The evidence should identify which stage succeeded.
 
 The service first obtains a credential and then follows login instructions to apply it to the application. A successful secret retrieval is not a successful application login. Current configuration requires a credential name, access URL, method and login prompt; **Save & Test** or **Test All** exercises authentication and exposes success/failure information. [SS09] [SS08]
 
@@ -107,7 +145,9 @@ The newer authentication guide includes TOTP and email MFA. Email MFA uses a gen
 
 **Proposed verification:** inspect both credential-test status and the authenticated application's identity/role. Test an intended protected route and an excluded route using approved test data. When access fails, capture which stage failed: source access, credential generation, login navigation, MFA, or authorization inside the application.
 
-### S-M02 — Login Optimization retains a successful procedure
+### S-M02 — Login-workflow retention and reuse
+
+Repeated authentication can reuse a procedure learned from an earlier successful login. This retained procedure concerns navigation through the login flow, not a standing proof that every later run reached the same application role. The role and protected routes remain part of assessment evidence.
 
 The first successful authentication navigation can produce a skill describing the login workflow. Later sessions within the run and subsequent runs reuse it. This is learned procedural navigation, not a general incident-memory store or customer-controlled model retraining. [SS09]
 
@@ -115,7 +155,9 @@ The first successful authentication navigation can produce a skill describing th
 
 **Proposed test:** use a staging login flow that the team controls. Retain first-login and later-login evidence, then make an authorized change to the test flow. Verify the actual authenticated role on every run. Without observable reuse evidence, distinguish a successful login from a proven reuse of the learned procedure.
 
-### S-M03 — Requirement evaluation applies reviewed criteria
+### S-M03 — Requirement applicability and evaluation
+
+Security criteria are useful only when their applicability is explicit. A rule about authorization of account-owned invoices should not be evaluated as though it governed every public handler. Requirement packs provide the criteria, while an eligible assessment supplies the evidence against which they are evaluated.
 
 A requirement contains a name/description, applicability, compliance criteria and optional remediation guidance. Applicability can distinguish a violation from a case to which the requirement does not apply. Packs group requirements; managed and custom packs differ in editability. Enabled packs inform subsequent eligible reviews, not retroactive rewrites of completed results. [SS14]
 
@@ -123,13 +165,17 @@ A requirement contains a name/description, applicability, compliance criteria an
 
 **Original example:** require an authorization check before returning an account-owned invoice. Applicability: handlers returning account-owned invoices. Compliance: the authenticated principal must be authorized for the invoice's owning account. A public static-document handler is inapplicable, not automatically compliant with an invoice rule. Test all three cases: compliant, violating and inapplicable.
 
-### S-M04 — Regeneration replaces a pack's contents
+### S-M04 — Requirement generation and replacement
+
+Generating criteria from policy documents is an administrative authoring operation. The generated pack needs review because policy language can be ambiguous and because replacement changes what later assessments evaluate. It is separate from evaluating a codebase against an already approved pack.
 
 Generating requirements from uploaded documents is a separate administrative mechanism. Supported input includes DOC, DOCX, Markdown, PDF and text. Select a custom pack, upload policy material, generate, inspect and edit the result, then enable it. [SS15]
 
 Uploading new documents regenerates the pack and replaces existing requirements, including manually added ones. It is not an append operation. Do not start a competing upload while generation is running. Keep the governing policy and reviewed requirement source in Git; inspect the replacement before enabling it. A framework pack is not a compliance certificate. [SS15] [SS14]
 
-### S-M06 — Customer-managed encryption uses several identities
+### S-M06 — Encryption keys, identities, and access
+
+Encryption controls concern both key material and the identity requesting access. A valid key selected in a console is not sufficient when the relevant runtime or asynchronous identity lacks the required permission. The documented hierarchy explains which object each key protects and which policy path to inspect.
 
 The documented hierarchy uses a customer KMS key to protect a resource-specific branch key held in a service-managed DynamoDB store. The keyring derives wrapping keys used to protect data-encryption keys. Branch-key rotation and rotation of the KMS key are separate processes; old key versions remain necessary to decrypt older data. [SS18]
 
@@ -146,11 +192,13 @@ Resource-specific encryption context and identity determine authorization. The r
 
 **Failure diagnosis:** identify the calling identity and denied KMS action from authorized audit evidence; inspect the matching key policy, grants/role policy and encryption context. Re-enabling a deliberately disabled test key can restore access; deletion can make retained data permanently unavailable. Do not disable a production key merely to demonstrate this mechanism. [SS18]
 
-## 04. Assessment, Remediation and Evidence Lifecycle
+## 04. Assessment and finding workflows
 
-Follow saved configurations, runs, findings, repairs, revalidation and shift-left assessments.
+A run produces findings under particular conditions. Proposed changes, deployed revisions, and subsequent verification remain linked but distinct steps in the engineering workflow.
 
-### S-04 — Configuration, preflight and run lifecycle
+### S-04 — Assessment configuration and run lifecycle
+
+A saved configuration describes how an assessment should run; a run describes what happened under those settings at a particular time. Reuse saves setup effort but does not freeze the target application, source revision, or credentials. Those inputs still need to be identified for each execution.
 
 A penetration-test configuration can be saved as a draft and completed through wizard steps for details, VPC, credentials, network and additional settings. It is reusable. A run is a separate execution against the then-current configuration and target. **Create** and **Create and execute** are not equivalent actions. [SS08]
 
@@ -160,7 +208,9 @@ Task-hours aggregate work across concurrent tasks; they are not wall-clock durat
 
 **Engineering run record:** capture the configuration ID, target revision, authenticated roles, exclusions, run ID, configured limit, start/end times and incomplete areas. Inspect findings and execution/log evidence while the run operates. Stop on unexpected effects; preserve an incomplete outcome rather than relabeling it a pass. These recordkeeping recommendations do not add product-level guarantees.
 
-### S-05 — Findings, remediation and deployment are different objects
+### S-05 — Finding review and code remediation
+
+A finding begins an engineering decision rather than ending it. Its evidence identifies the affected behavior or code, a proposed repair changes a revision, and deployment makes that revision available to a later test. Linking these objects prevents an unmerged patch from being recorded as a resolved application defect.
 
 A finding identifies the issue and its supporting evidence in a particular assessment context. The review surface can expose description, code locations, evidence and a suggested fix. Configured remediation can produce a patch or pull request, with provider-specific behavior. For example, the reviewed GitHub path distinguishes private-repository pull requests from a downloadable diff for public repositories. [SS05] [SS12]
 
@@ -168,23 +218,19 @@ A finding identifies the issue and its supporting evidence in a particular asses
 
 **Engineering verification:** before closure, identify the exact deployed revision and re-run relevant regression tests. Retain rejected changes and failed builds as unfinished work. Use the finding ID as the link between assessment, change, deployment and revalidation—not similarity of issue titles.
 
-### S-M05 — Revalidation replays selected finding evidence
+### S-M05 — Finding revalidation and evidence lineage
+
+![Workflow: Finding revalidation and evidence lineage](../assets/diagrams/security-revalidation.svg)
+
+Revalidation answers a narrower question than a new assessment: can the selected existing finding still be reproduced under the current test configuration? It preserves the original finding and creates a new execution record, allowing the team to inspect what changed between observations.
 
 After a repair reaches the original test environment, open the completed penetration-test run, choose **Multiselect findings for revalidation**, select findings, and choose **Revalidate findings**. The service starts a separate job using current authentication/configuration and repeats the selected validation steps. It does not conduct broad new discovery. [SS13]
 
-```text
-Original finding + deployed repair
-                  ↓ selected validation steps
-          Separate revalidation job
-                  ↓
-      Active: reproduced / Resolved: not reproduced
-                  ↓
-          linked finding and job history
-```
-
 The original finding is preserved and linked to the new job. A non-reproduction result is scoped to that finding and execution conditions. An authentication or environment failure can undermine its interpretation; inspect reachability before treating a result as evidence of repair. [SS13]
 
-### S-06 — Code, design and threat-model workflows
+### S-06 — Code review, design review, and threat modeling
+
+Code, design, and threat-model reviews examine different representations of an application. Their inputs and resource lifecycles therefore differ. Source analysis should identify the exact revision; design review should identify the document being reviewed; threat modeling should establish the intended system boundary before assessing individual threats.
 
 | Assessment | Configuration and execution | Reviewable result |
 |---|---|---|
@@ -198,11 +244,11 @@ Code review preflight checks source and execution prerequisites before analysis.
 
 The full pipeline integration, complete design-review walkthrough and provider-specific remediation matrix are linked coverage, not reproduced procedures in this edition. This is an explicit limit of the guide, not a claim that those functions are absent.
 
-## 05. Worked Finding Revalidation
+## 05. Authorization-finding analysis
 
-Trace an authorization finding through a deployed repair and prepared revalidation evidence.
+The synthetic example follows one account-authorization defect from the original observation to a deployed repair and scoped revalidation.
 
-### S-U01 — Worked example: a repaired authorization check
+### S-U01 — Authorization-finding remediation: worked example
 
 **Synthetic, authorized-staging exercise.** Two test users belong to different customer accounts. The illustrative finding is that user A can receive a test invoice owned by account B. No live endpoint, credential or exploit execution is supplied.
 
@@ -219,11 +265,11 @@ Trace an authorization finding through a deployed repair and prepared revalidati
 
 **Expected deliverable:** a finding disposition linking original evidence, reviewed change, deployed revision, actual authenticated identity and targeted result, with untested routes stated explicitly. The fixture teaches evidence lineage; it is not an assessment result or a security guarantee.
 
-## 06. Troubleshooting, Limits and Failure Modes
+## 06. Troubleshooting and operating limits
 
-Diagnose the failed access, authentication, criteria, execution or evidence prerequisite.
+An incomplete assessment may reflect an inaccessible source, failed authentication, a wrong criterion, or an execution limit. These cases require different corrective actions.
 
-### S-07 — Operational limits and failure diagnosis
+### S-07 — Assessment failures and operating limits
 
 The reviewed quota page distinguishes assessment capacity from spending controls. Examples include five concurrent penetration tests and five concurrent code-review runs as adjustable quotas, plus 20 requirement packs, 30 requirements per pack and 150 enabled requirements per account/Region as fixed limits. Confirm actual quotas and pricing before large-scale execution; a concurrency limit is not a financial budget. [SS10] [SS11]
 
@@ -241,11 +287,15 @@ The reviewed quota page distinguishes assessment capacity from spending controls
 
 This ordering is engineering guidance derived from the cited procedures. It does not claim that every error message has one unique cause. [SS06] [SS09] [SS18]
 
-## 07. Coverage and Source Notes
+## 07. Documentation coverage
 
-Review coverage decisions, availability boundaries and official sources.
+The source register separates documented product behavior from authored engineering examples and identifies linked procedures.
 
-### S-08 — Coverage and evidence decisions
+### S-08 — Documentation coverage and references
+
+The assessment chapters connect application sources, target access, criteria, executions, and finding verification. The following coverage table identifies which procedures are explained and which require the provider-specific official guide. Availability belongs to an individual assessment or integration feature, not to the collection as a whole.
+
+The source register supports product behavior rather than the synthetic application example or the team decisions proposed around it. Integration inventories and selected authentication and context mechanisms were rechecked on 22 October 2026; this is not a new exhaustive audit of every historical statement. The diagrams are logical models and do not assert undisclosed runtime internals.
 
 | Official subject | Treatment | Remaining boundary |
 |---|---|---|
@@ -298,3 +348,8 @@ Review coverage decisions, availability boundaries and official sources.
 [SS16]: https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-threat-model.html
 [SS17]: https://docs.aws.amazon.com/securityagent/latest/userguide/review-code-findings-github.html
 [SS18]: https://docs.aws.amazon.com/securityagent/latest/userguide/customer-managed-keys.html
+[SS30]: https://docs.aws.amazon.com/securityagent/latest/userguide/about-integrations.html
+[SS31]: https://docs.aws.amazon.com/securityagent/latest/userguide/enable-s3-bucket.html
+[SS32]: https://docs.aws.amazon.com/securityagent/latest/userguide/connect-jira.html
+[SS33]: https://docs.aws.amazon.com/securityagent/latest/userguide/connect-confluence.html
+[SS34]: https://docs.aws.amazon.com/securityagent/latest/userguide/how-it-works.html
