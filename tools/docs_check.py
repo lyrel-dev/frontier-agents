@@ -137,8 +137,16 @@ def check(browser=False):
                             page.locator('#slide-select').select_option(str(i));assert page.locator('.slide:visible').count()==1
                             assert not page.evaluate('document.documentElement.scrollWidth>innerWidth+2'),(key,width,i,'slide overflow')
                         page.locator('#next').focus();page.keyboard.press('Home');assert page.locator('#slide-select').input_value()=='0'
-                        page.locator('#timer-toggle').click();page.wait_for_timeout(1150);page.locator('#timer-toggle').click();assert page.locator('#timer').inner_text()!='0:00'
-                        page.locator('#timer-reset').click();page.wait_for_timeout(300);assert page.locator('#timer').inner_text()=='0:00'
+                        page.locator('#timer-toggle').click()
+                        page.wait_for_function("document.querySelector('#timer').textContent !== '0:00'",timeout=5000)
+                        page.locator('#timer-toggle').click()
+                        assert page.locator('#timer-toggle').inner_text()=='Start timer'
+                        page.wait_for_timeout(300)
+                        paused=page.locator('#timer').inner_text()
+                        page.wait_for_timeout(1100)
+                        assert page.locator('#timer').inner_text()==paused,(key,width,'paused timer changed')
+                        page.locator('#timer-reset').click()
+                        page.wait_for_function("document.querySelector('#timer').textContent === '0:00'",timeout=2000)
                         page.emulate_media(media='print');assert page.locator('.slide:visible').count()==len(DECKS[key]['slides']);page.emulate_media(media='screen');assert page.locator('.slide:visible').count()==1
                         page.keyboard.press('Escape');assert page.locator('.shell').is_visible()
                     errors.extend(js_errors);browser_results.append({'page':key,'width':width,'javascript_errors':js_errors,'horizontal_overflow':False,'interaction_checks':key!='index'});page.close()
