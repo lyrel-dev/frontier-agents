@@ -6,9 +6,9 @@ This guide describes application assessment configuration, authentication, execu
 
 Official product behavior is cited. **Engineering procedures** and **synthetic exercises** below are authored recommendations, not additional service functions or records of a live test.
 
-## 01. Platform overview and capabilities
+## 01. Product Functions and Resource Model
 
-Understand application scope, shared resources, assessment definitions and results.
+Define application scope, shared resources, assessment configurations, executions and findings.
 
 ### S-01 — Resources, scopes and functions
 
@@ -42,9 +42,9 @@ Registration makes an integration available; connecting a repository selects it 
 | Data protection | Customer-managed key, branch key, encryption context, calling identity | S-M06 |
 | Earlier feedback | Full/change-based code review, design review, threat model | S-06 |
 
-## 02. Identity, sources and target scope
+## 02. Identity, Sources and Target Boundaries
 
-Configure source access and distinguish test targets, dependencies and exclusions.
+Configure operator identity, repository sources, target rules and private access.
 
 ### S-02 — Set up identity and source access
 
@@ -74,7 +74,7 @@ These example names are illustrative, not running targets. Specify the complete 
 
 **Expected confirmation:** the saved configuration identifies the target, network path, credential roles and exclusions. Draft configuration and successful authentication preflight are different states. Neither proves that a complete assessment has run.
 
-## 03. Authentication, criteria and protection
+## 03. Authentication, Criteria and Protection Mechanisms
 
 Examine credential resolution, login reuse, requirement evaluation, regeneration and encryption.
 
@@ -146,9 +146,9 @@ Resource-specific encryption context and identity determine authorization. The r
 
 **Failure diagnosis:** identify the calling identity and denied KMS action from authorized audit evidence; inspect the matching key policy, grants/role policy and encryption context. Re-enabling a deliberately disabled test key can restore access; deletion can make retained data permanently unavailable. Do not disable a production key merely to demonstrate this mechanism. [SS18]
 
-## 04. Assessment and finding lifecycle
+## 04. Assessment, Remediation and Evidence Lifecycle
 
-Follow configurations, executions, findings, repairs, revalidation and earlier assessments.
+Follow saved configurations, runs, findings, repairs, revalidation and shift-left assessments.
 
 ### S-04 — Configuration, preflight and run lifecycle
 
@@ -198,9 +198,9 @@ Code review preflight checks source and execution prerequisites before analysis.
 
 The full pipeline integration, complete design-review walkthrough and provider-specific remediation matrix are linked coverage, not reproduced procedures in this edition. This is an explicit limit of the guide, not a claim that those functions are absent.
 
-## 05. Worked example
+## 05. Worked Finding Revalidation
 
-Trace an authorization finding through the deployed repair and prepared revalidation evidence.
+Trace an authorization finding through a deployed repair and prepared revalidation evidence.
 
 ### S-U01 — Worked example: a repaired authorization check
 
@@ -219,9 +219,9 @@ Trace an authorization finding through the deployed repair and prepared revalida
 
 **Expected deliverable:** a finding disposition linking original evidence, reviewed change, deployed revision, actual authenticated identity and targeted result, with untested routes stated explicitly. The fixture teaches evidence lineage; it is not an assessment result or a security guarantee.
 
-## 06. Troubleshooting and limits
+## 06. Troubleshooting, Limits and Failure Modes
 
-Diagnose the failed access, authentication, criteria or execution prerequisite.
+Diagnose the failed access, authentication, criteria, execution or evidence prerequisite.
 
 ### S-07 — Operational limits and failure diagnosis
 
@@ -241,9 +241,9 @@ The reviewed quota page distinguishes assessment capacity from spending controls
 
 This ordering is engineering guidance derived from the cited procedures. It does not claim that every error message has one unique cause. [SS06] [SS09] [SS18]
 
-## 07. Coverage and official evidence
+## 07. Coverage and Source Notes
 
-Review coverage decisions and the sources supporting the guide.
+Review coverage decisions, availability boundaries and official sources.
 
 ### S-08 — Coverage and evidence decisions
 
