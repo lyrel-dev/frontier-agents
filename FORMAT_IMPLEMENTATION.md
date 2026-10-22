@@ -1,3 +1,0 @@
-# Format implementation
-
-All four interactive reports now use fixed capability records (documented function, prerequisites, proposed retained record, independent acceptance, limits and official evidence). Each use-case step specifies a proposed role, related documented mechanisms and a review gate. The 70 timed presentation slides remain within their existing allocations; 50 untimed capability reference slides are appended across the HTML and PowerPoint presentation views. These slides are reference material and do not extend session times. See [EDITORIAL_STANDARD.md](EDITORIAL_STANDARD.md) for details.
