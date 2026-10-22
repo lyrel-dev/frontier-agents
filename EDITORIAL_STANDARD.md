@@ -46,3 +46,11 @@ Use ownership labels and colors consistently: DOC blue for this collection, AWS 
 Maintain detailed mechanism narratives in the review field of the mechanism registry. The build renders the same explanation inside its primary guide section and includes that section in relevant presenter notes. Do not hand-edit the delimited generated blocks. A mechanism record identifies observable service behavior separately from undisclosed internals. Configuration and lifecycle steps vary in number with the subject. State labels are explanatory unless an exact service enum is cited. Tests are proposed engineering checks until separately executed and recorded.
 
 A conditional related-mechanism link can document behavior such as finding personalization without adding an outcome or changing the approved use-case workflow. Eligibility for a mechanism is not evidence that it ran. Material product assertions have section-specific official references; retrieval-version conflicts are recorded rather than silently resolved.
+
+## Technical language and evidence status
+
+Use the product object, operation, input, output, and condition as the subject of each explanation. Replace unmeasured benefit claims with documented behavior. Avoid slogans, rhetorical questions, evaluative adjectives, conversational asides, and repeated statements about the quality of the document. Retain exact AWS feature names even where their wording differs from house style.
+
+Separate product prerequisites from team procedures. A recommended approval is not a native service gate; a proposed acceptance test is not a recorded result. Describe cancellation, deletion, publication, and permission effects for the specific object. Use one reading-conventions paragraph per guide; retain mechanism-specific constraints next to the operation.
+
+Do not declare one retrieved documentation version newer solely because it was indexed more recently. Record conflicting content and qualify the affected procedure. Targeted rechecks do not update the review date of all retained claims. An editorial checker detects selected regressions; it does not establish technical completeness or writing quality.
