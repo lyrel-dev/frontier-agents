@@ -1,32 +1,27 @@
 {
-  "revision": "2026-10-22-narrative-guides",
-  "baseline": "c3d6f2dafdd87e083989135690e2f4f169e80fc2",
+  "revision": "2026-10-22-linked-catalog",
+  "baseline": "71a14e8ba76561d65345a696e6de3280b7c8dd00",
   "guides": 4,
-  "canonical_sections": 64,
-  "previous_identifiers_retained": 57,
+  "canonical_sections": 65,
+  "previous_identifiers_retained": 64,
   "new_sections": [
-    "A-00",
-    "A-08",
-    "D-12",
-    "D-M08",
-    "F-08",
-    "S-09",
-    "S-M07"
+    "A-09"
   ],
-  "authored_use_case_narratives": 54,
-  "narrative_paragraphs": 108,
+  "authored_use_case_narratives": 30,
+  "narrative_paragraphs": 60,
   "platform_use_cases": {
-    "devops": 22,
-    "security": 16,
-    "finops": 16
+    "devops": 14,
+    "security": 8,
+    "finops": 7,
+    "architecture": 1
   },
-  "logical_diagrams": 17,
-  "rendered_diagram_instances": 81,
+  "logical_diagrams": 18,
+  "rendered_diagram_instances": 88,
   "html_presentations": 4,
-  "slides": 71,
-  "programme_minutes": 189,
+  "slides": 73,
+  "programme_minutes": 197,
   "exercise_minutes": 28,
-  "local_links_checked": 910,
+  "local_links_checked": 2648,
   "browser_checks": [
     {
       "subject": "devops",
@@ -50,7 +45,7 @@
       "subject": "security",
       "width": 390,
       "technical_sections": 17,
-      "slides": 21,
+      "slides": 20,
       "javascript_errors": [],
       "slides_over_1050px": [],
       "navigation_filters_hash_notes_timer_print": "passed"
@@ -59,7 +54,7 @@
       "subject": "security",
       "width": 1440,
       "technical_sections": 17,
-      "slides": 21,
+      "slides": 20,
       "javascript_errors": [],
       "slides_over_1050px": [],
       "navigation_filters_hash_notes_timer_print": "passed"
@@ -85,8 +80,8 @@
     {
       "subject": "architecture",
       "width": 390,
-      "technical_sections": 10,
-      "slides": 11,
+      "technical_sections": 11,
+      "slides": 14,
       "javascript_errors": [],
       "slides_over_1050px": [],
       "navigation_filters_hash_notes_timer_print": "passed"
@@ -94,8 +89,8 @@
     {
       "subject": "architecture",
       "width": 1440,
-      "technical_sections": 10,
-      "slides": 11,
+      "technical_sections": 11,
+      "slides": 14,
       "javascript_errors": [],
       "slides_over_1050px": [],
       "navigation_filters_hash_notes_timer_print": "passed"
@@ -103,14 +98,14 @@
     {
       "subject": "catalog",
       "width": 390,
-      "narratives": 54,
+      "narratives": 30,
       "filters_and_cross_product_hash": "passed",
       "javascript_errors": []
     },
     {
       "subject": "catalog",
       "width": 1440,
-      "narratives": 54,
+      "narratives": 30,
       "filters_and_cross_product_hash": "passed",
       "javascript_errors": []
     }
@@ -118,5 +113,50 @@
   "application_changes": [],
   "excluded_scope_hits": [],
   "errors": [],
-  "boundary": "Source mapping, narrative presence/uniqueness, logical SVG accessibility, examples, and HTML behavior were checked. These checks do not establish factual completeness, live AWS operation, agent accuracy, or measured outcomes."
+  "boundary": "Source mapping, narrative presence/uniqueness, logical SVG accessibility, examples, and HTML behavior were checked. These checks do not establish factual completeness, live AWS operation, agent accuracy, or measured outcomes.",
+  "relationship_model": {
+    "schema_version": 2,
+    "primary_cases": 30,
+    "primary_distribution": {
+      "devops": 14,
+      "security": 8,
+      "finops": 7,
+      "architecture": 1
+    },
+    "mechanisms": 40,
+    "features": 37,
+    "implementation_profiles": 15,
+    "former_identifiers_mapped": 54,
+    "workflow_steps": 94,
+    "mechanism_bindings": 73,
+    "supporting_records_reclassified": 13,
+    "regression_checks": [
+      "Unknown mechanism rejected",
+      "Ambiguous split cannot silently resolve to one outcome",
+      "Missing failure handling rejected",
+      "Cross-product configuration assumption rejected"
+    ],
+    "browser": [
+      {
+        "width": 390,
+        "reference_filters": "passed",
+        "outcome_mechanism_feature_reverse_navigation": "passed",
+        "former_case_and_support_aliases": "passed",
+        "forecast_coverage_choice": "passed",
+        "shared_profile_filters": "passed",
+        "javascript_errors": []
+      },
+      {
+        "width": 1440,
+        "reference_filters": "passed",
+        "outcome_mechanism_feature_reverse_navigation": "passed",
+        "former_case_and_support_aliases": "passed",
+        "forecast_coverage_choice": "passed",
+        "shared_profile_filters": "passed",
+        "javascript_errors": []
+      }
+    ],
+    "errors": [],
+    "boundary": "Document dependency and navigation checks. Not a live AWS readiness test, exhaustive source audit or evidence of operational improvement."
+  }
 }
