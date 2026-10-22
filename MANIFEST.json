@@ -2,16 +2,16 @@
   "revision": "2026-10-22-linked-catalog",
   "files": {
     ".github/workflows/document-suite.yml": {
-      "bytes": 3179,
-      "sha256": "f64b1aeb0aa22cd2e40c42e383bd28d0c4b279484732aa59b5608afd36a79227"
+      "bytes": 3212,
+      "sha256": "1c6b3dfc9e157948e8da40cf81ed2c938d7b6d409cb39a5b0e6ccb50e308daf9"
     },
     "CHANGELOG.md": {
-      "bytes": 692,
-      "sha256": "395a228946df740add7f4209d8482106b0723f066ce32ce3ff23de04bde38025"
+      "bytes": 1737,
+      "sha256": "f407c507c3010ce267284129a5bcacce01666fc30ccd8bdec1ec249dab31cb57"
     },
     "EDITORIAL_STANDARD.md": {
-      "bytes": 1917,
-      "sha256": "29db3983580e653db936f667a2728e3117ed62bb35201157ddbe3d23276eb8b0"
+      "bytes": 3667,
+      "sha256": "75fa0ca9f8970e87406e5b12704e701c63dcbbe859e5a05f2ee7ba85e2c1221c"
     },
     "PUBLISHING.md": {
       "bytes": 971,
@@ -147,7 +147,7 @@
     },
     "documentation-build.json": {
       "bytes": 899,
-      "sha256": "abd42103d67721383e04b7159bef4f0f6c3ea3142f8ad43463454b0dde7c2174"
+      "sha256": "b1753d03c06d34a62300b81f862647ecdc789c1b7a999eac0a767d66867d531d"
     },
     "examples/prepared-evidence.json": {
       "bytes": 2346,
@@ -190,8 +190,8 @@
       "sha256": "b9cdd1c3743ac552c84cb9c07fad7b8dd3fbf21e3a7bf45330968c93bf0c1838"
     },
     "index.html": {
-      "bytes": 25083,
-      "sha256": "805a8fb820d1f563170bf7b0450636ef1310e45d74ad6df2c59bd0f70e277560"
+      "bytes": 25457,
+      "sha256": "0077f918d77d2a1e22386738eb81025740343c8680788f5dc551134ad8ae3663"
     },
     "presentations/architecture-notes.md": {
       "bytes": 11727,
@@ -218,8 +218,8 @@
       "sha256": "53ffca414c1896cffd491984f45256fa466d4a4b4b1ed55fc93ee19f7950dc2c"
     },
     "presentations/index.html": {
-      "bytes": 25075,
-      "sha256": "0905ff869ff1d09f52ed41f523b36e06f5c6346c9044af3f735884572eb298f0"
+      "bytes": 25461,
+      "sha256": "c06ec54987840d65f7f9a3f4db2ac92d39e543f215270dc14800310266fb8468"
     },
     "presentations/security-notes.md": {
       "bytes": 17968,
@@ -231,7 +231,7 @@
     },
     "qa/checks.json": {
       "bytes": 4645,
-      "sha256": "56d4fdad1bab54c6787ad52c331403c6edfd6ccc1134e3805ec7812b56c4f71f"
+      "sha256": "00494e13af8b95095b568ce4dce8c4faac7d286292850d6a06dbd16541087c10"
     },
     "qa/content-review.json": {
       "bytes": 937,
@@ -239,7 +239,7 @@
     },
     "qa/rebuild.json": {
       "bytes": 209,
-      "sha256": "340c91f41cbd461916e9ea999e9e4ce554a574c8a39c05d06b7098ff485ac2ac"
+      "sha256": "46829c8b508380a5169519dddc637c5ccac5302639eef122eea7ac33290a3e85"
     },
     "qa/relationships.json": {
       "bytes": 1371,
@@ -250,8 +250,8 @@
       "sha256": "7f2582dc7394a020fcdd1959893283cc751574190db0f7ad30a6fd653d702c35"
     },
     "tools/docs/build.py": {
-      "bytes": 29369,
-      "sha256": "489c598e6b46754754ddfe3c5ed5e18adc2f47f4c83ba12d8bc2684961105763"
+      "bytes": 27037,
+      "sha256": "99b2cf8750b5336ab243c8ff9c1e8953b646a590c234b86fb5472fb8e3df3438"
     },
     "tools/docs/catalog.py": {
       "bytes": 21993,
