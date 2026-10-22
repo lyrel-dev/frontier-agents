@@ -1,0 +1,36 @@
+{
+  "classification": "synthetic teaching fixture; not an AWS export or measured service result",
+  "devops": {
+    "prior": {"database_connections": 100, "database_limit": 100, "database_query_p95_ms": 900, "inventory_p95_ms": 40, "checkout_p95_ms": 3200},
+    "current": {"database_connections": 34, "database_limit": 100, "database_query_p95_ms": 18, "inventory_p95_ms": 2900, "checkout_p95_ms": 3100},
+    "expected_interpretation": "Current evidence weakens the old database-saturation explanation and supports investigating the inventory dependency; its internal cause remains unresolved. Memory retrieval itself is not proven by the fixture."
+  },
+  "security": {
+    "original_revision": "demo-r1",
+    "proposed_revision": "demo-r2",
+    "deployed_revision": "demo-r2",
+    "test_identity": "user-A/account-A",
+    "original_cross_account_result": "test invoice for account B returned",
+    "prepared_revalidation_identity": "user-A/account-A",
+    "prepared_revalidation_result": "access denied",
+    "expected_interpretation": "Prepared evidence supports repair of the selected cross-account path for the recorded role and revision; it does not establish whole-application security."
+  },
+  "finops": {
+    "currency": "USD",
+    "period_days": 14,
+    "same_account_service_and_cost_basis": true,
+    "rates_are_not_aws_prices": true,
+    "rows": [
+      {"component": "Storage quantity", "baseline_quantity": "10000", "comparison_quantity": "12000", "unit_rate": "0.10", "baseline_cost": "1000", "comparison_cost": "1200"},
+      {"component": "Request quantity", "baseline_quantity": "2000000", "comparison_quantity": "3000000", "unit_rate": "0.0001", "baseline_cost": "200", "comparison_cost": "300"},
+      {"component": "Transfer quantity", "baseline_quantity": "2000", "comparison_quantity": "4740", "unit_rate": "0.10", "baseline_cost": "200", "comparison_cost": "474"}
+    ],
+    "expected_baseline": "1400",
+    "expected_comparison": "1974",
+    "expected_delta": "574",
+    "expected_percent_change": "41",
+    "prepared_change": "second export destination enabled at 10:02 UTC",
+    "prepared_job_log_additional_transfer_units": "2740",
+    "expected_interpretation": "Transfer contributes 274 of the 574 increase. The prepared export log supports that component only; storage and request causes remain unresolved."
+  }
+}
