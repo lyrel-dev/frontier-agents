@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="585pt" height="604pt" viewBox="0.00 0.00 584.50 604.00" role="img" aria-labelledby="devops-reporting-title devops-reporting-desc" data-diagram="devops-reporting">
+<title id="devops-reporting-title">Configured operational-report workflow</title><desc id="devops-reporting-desc">The team defines the report period and selected evidence. An invocation queries sources, produces a report, and exposes results for review. Schedule timing and the reporting window are separate configuration decisions.</desc><g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(18 586)">
+<title>G</title>
+
+<g id="node1" class="node">
+<title>contract</title>
+<path fill="#edf5f4" stroke="#496b78" d="M291,-568C291,-568 12,-568 12,-568 6,-568 0,-562 0,-556 0,-556 0,-532 0,-532 0,-526 6,-520 12,-520 12,-520 291,-520 291,-520 297,-520 303,-526 303,-532 303,-532 303,-556 303,-556 303,-562 297,-568 291,-568" />
+<text text-anchor="middle" x="151.5" y="-547.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Report specification</text>
+<text text-anchor="middle" x="151.5" y="-532.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Service, window, aggregation, audience</text>
+</g>
+
+<g id="node2" class="node">
+<title>definition</title>
+<path fill="#edf5f4" stroke="#496b78" d="M253.5,-464C253.5,-464 49.5,-464 49.5,-464 43.5,-464 37.5,-458 37.5,-452 37.5,-452 37.5,-428 37.5,-428 37.5,-422 43.5,-416 49.5,-416 49.5,-416 253.5,-416 253.5,-416 259.5,-416 265.5,-422 265.5,-428 265.5,-428 265.5,-452 265.5,-452 265.5,-458 259.5,-464 253.5,-464" />
+<text text-anchor="middle" x="151.5" y="-443.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Custom-agent definition</text>
+<text text-anchor="middle" x="151.5" y="-428.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Prompt, tools, skills, memory</text>
+</g>
+
+<g id="edge1" class="edge">
+<title>contract-&gt;definition</title>
+<path fill="none" stroke="#496b78" d="M151.5,-519.85C151.5,-505.64 151.5,-487.26 151.5,-471.82" />
+<polygon fill="#496b78" stroke="#496b78" points="154.13,-471.55 151.5,-464.05 148.88,-471.55 154.13,-471.55" />
+<text text-anchor="middle" x="196" y="-489.2" font-family="DejaVu Sans" font-size="11.00">defines the task</text>
+</g>
+
+<g id="node4" class="node">
+<title>query</title>
+<path fill="#edf5f4" stroke="#496b78" d="M428.5,-360C428.5,-360 200.5,-360 200.5,-360 194.5,-360 188.5,-354 188.5,-348 188.5,-348 188.5,-324 188.5,-324 188.5,-318 194.5,-312 200.5,-312 200.5,-312 428.5,-312 428.5,-312 434.5,-312 440.5,-318 440.5,-324 440.5,-324 440.5,-348 440.5,-348 440.5,-354 434.5,-360 428.5,-360" />
+<text text-anchor="middle" x="314.5" y="-339.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Invocation</text>
+<text text-anchor="middle" x="314.5" y="-324.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Query selected logs and metrics</text>
+</g>
+
+<g id="edge2" class="edge">
+<title>definition-&gt;query</title>
+<path fill="none" stroke="#496b78" d="M185.07,-415.73C200.57,-405.18 219.31,-392.71 236.5,-382 246.19,-375.97 256.69,-369.71 266.76,-363.86" />
+<polygon fill="#496b78" stroke="#496b78" points="268.13,-366.1 273.31,-360.07 265.5,-361.56 268.13,-366.1" />
+<text text-anchor="middle" x="297" y="-385.2" font-family="DejaVu Sans" font-size="11.00">supplies configuration</text>
+</g>
+
+<g id="node3" class="node">
+<title>trigger</title>
+<path fill="#edf5f4" stroke="#496b78" d="M536.5,-464C536.5,-464 302.5,-464 302.5,-464 296.5,-464 290.5,-458 290.5,-452 290.5,-452 290.5,-428 290.5,-428 290.5,-422 296.5,-416 302.5,-416 302.5,-416 536.5,-416 536.5,-416 542.5,-416 548.5,-422 548.5,-428 548.5,-428 548.5,-452 548.5,-452 548.5,-458 542.5,-464 536.5,-464" />
+<text text-anchor="middle" x="419.5" y="-443.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">On-demand or scheduled start</text>
+<text text-anchor="middle" x="419.5" y="-428.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Flexible schedule window applies</text>
+</g>
+
+<g id="edge3" class="edge">
+<title>trigger-&gt;query</title>
+<path fill="none" stroke="#496b78" d="M395.67,-415.85C380.24,-400.86 360.02,-381.22 343.63,-365.3" />
+<polygon fill="#496b78" stroke="#496b78" points="345.44,-363.4 338.23,-360.05 341.78,-367.16 345.44,-363.4" />
+<text text-anchor="middle" x="401" y="-385.2" font-family="DejaVu Sans" font-size="11.00">starts work</text>
+</g>
+
+<g id="node5" class="node">
+<title>report</title>
+<path fill="#edf5f4" stroke="#496b78" d="M452.5,-256C452.5,-256 176.5,-256 176.5,-256 170.5,-256 164.5,-250 164.5,-244 164.5,-244 164.5,-220 164.5,-220 164.5,-214 170.5,-208 176.5,-208 176.5,-208 452.5,-208 452.5,-208 458.5,-208 464.5,-214 464.5,-220 464.5,-220 464.5,-244 464.5,-244 464.5,-250 458.5,-256 452.5,-256" />
+<text text-anchor="middle" x="314.5" y="-235.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Report</text>
+<text text-anchor="middle" x="314.5" y="-220.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Measured changes and missing signals</text>
+</g>
+
+<g id="edge4" class="edge">
+<title>query-&gt;report</title>
+<path fill="none" stroke="#496b78" d="M314.5,-311.85C314.5,-297.64 314.5,-279.26 314.5,-263.82" />
+<polygon fill="#496b78" stroke="#496b78" points="317.13,-263.55 314.5,-256.05 311.88,-263.55 317.13,-263.55" />
+<text text-anchor="middle" x="374" y="-281.2" font-family="DejaVu Sans" font-size="11.00">synthesizes evidence</text>
+</g>
+
+<g id="node6" class="node">
+<title>review</title>
+<path fill="#edf5f4" stroke="#496b78" d="M433,-152C433,-152 196,-152 196,-152 190,-152 184,-146 184,-140 184,-140 184,-116 184,-116 184,-110 190,-104 196,-104 196,-104 433,-104 433,-104 439,-104 445,-110 445,-116 445,-116 445,-140 445,-140 445,-146 439,-152 433,-152" />
+<text text-anchor="middle" x="314.5" y="-131.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Engineering review</text>
+<text text-anchor="middle" x="314.5" y="-116.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Reproduce a material observation</text>
+</g>
+
+<g id="edge5" class="edge">
+<title>report-&gt;review</title>
+<path fill="none" stroke="#496b78" d="M314.5,-207.85C314.5,-193.64 314.5,-175.26 314.5,-159.82" />
+<polygon fill="#496b78" stroke="#496b78" points="317.13,-159.55 314.5,-152.05 311.88,-159.55 317.13,-159.55" />
+<text text-anchor="middle" x="337.5" y="-177.2" font-family="DejaVu Sans" font-size="11.00">checked</text>
+</g>
+
+<g id="node7" class="node">
+<title>publication</title>
+<path fill="#edf5f4" stroke="#496b78" d="M431,-48C431,-48 198,-48 198,-48 192,-48 186,-42 186,-36 186,-36 186,-12 186,-12 186,-6 192,0 198,0 198,0 431,0 431,0 437,0 443,-6 443,-12 443,-12 443,-36 443,-36 443,-42 437,-48 431,-48" />
+<text text-anchor="middle" x="314.5" y="-27.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Approved destination</text>
+<text text-anchor="middle" x="314.5" y="-12.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Only when separately configured</text>
+</g>
+
+<g id="edge6" class="edge">
+<title>review-&gt;publication</title>
+<path fill="none" stroke="#496b78" stroke-dasharray="5,2" d="M314.5,-103.85C314.5,-89.64 314.5,-71.26 314.5,-55.82" />
+<polygon fill="#496b78" stroke="#496b78" points="317.13,-55.55 314.5,-48.05 311.88,-55.55 317.13,-55.55" />
+<text text-anchor="middle" x="375" y="-73.2" font-family="DejaVu Sans" font-size="11.00">team publication path</text>
+</g>
+</g>
+</svg>
