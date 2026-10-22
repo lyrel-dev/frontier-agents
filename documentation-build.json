@@ -1,6 +1,6 @@
 {
   "revision": "2026-10-22-product-resource-models",
-  "build": 1,
+  "build": 2,
   "scope": ["AWS DevOps Agent", "AWS Security Agent", "AWS FinOps Agent"],
   "shared_architecture": true,
   "canonical_source": "guides/*.md",
