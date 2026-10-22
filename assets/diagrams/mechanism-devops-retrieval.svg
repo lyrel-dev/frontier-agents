@@ -1,82 +1,96 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="524pt" height="500pt" viewBox="0.00 0.00 523.50 500.00" role="img" aria-labelledby="mechanism-devops-retrieval-title mechanism-devops-retrieval-desc" data-diagram="mechanism-devops-retrieval">
+<svg xmlns="http://www.w3.org/2000/svg" width="663pt" height="500pt" viewBox="0.00 0.00 663.00 500.00" role="img" aria-labelledby="mechanism-devops-retrieval-title mechanism-devops-retrieval-desc" data-diagram="mechanism-devops-retrieval">
 <title id="mechanism-devops-retrieval-title">Incident memory: production, availability and retrieval</title><desc id="mechanism-devops-retrieval-desc">Producing context does not prove a later execution selected it. Activation and applicable attachments control availability; current evidence controls interpretation. Green/AWS: documented service concept. Blue/DOC: our verification procedure. Orange/EXT: engineering-owned source. Stages are logical explanations, not API status enum values.</desc><g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(18 482)">
 <title>G</title>
 
 <g id="node1" class="node">
 <title>history</title>
-<path fill="#d9f2e5" stroke="#348761" d="M248.5,-464C248.5,-464 22.5,-464 22.5,-464 16.5,-464 10.5,-458 10.5,-452 10.5,-452 10.5,-428 10.5,-428 10.5,-422 16.5,-416 22.5,-416 22.5,-416 248.5,-416 248.5,-416 254.5,-416 260.5,-422 260.5,-428 260.5,-428 260.5,-452 260.5,-452 260.5,-458 254.5,-464 248.5,-464" />
-<text text-anchor="middle" x="135.5" y="-443.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">AWS · Prior investigation</text>
-<text text-anchor="middle" x="135.5" y="-428.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">Evidence and verified correction</text>
+<path fill="#d9f2e5" stroke="#348761" d="M262,-464C262,-464 12,-464 12,-464 6,-464 0,-458 0,-452 0,-452 0,-428 0,-428 0,-422 6,-416 12,-416 12,-416 262,-416 262,-416 268,-416 274,-422 274,-428 274,-428 274,-452 274,-452 274,-458 268,-464 262,-464" />
+<text text-anchor="middle" x="137" y="-443.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">AWS · Prior investigations</text>
+<text text-anchor="middle" x="137" y="-428.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">Recorded evidence and conclusions</text>
 </g>
 
-<g id="node2" class="node">
+<g id="node3" class="node">
 <title>store</title>
-<path fill="#d9f2e5" stroke="#348761" d="M250,-360C250,-360 21,-360 21,-360 15,-360 9,-354 9,-348 9,-348 9,-324 9,-324 9,-318 15,-312 21,-312 21,-312 250,-312 250,-312 256,-312 262,-318 262,-324 262,-324 262,-348 262,-348 262,-354 256,-360 250,-360" />
-<text text-anchor="middle" x="135.5" y="-339.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">AWS · Retained entry</text>
-<text text-anchor="middle" x="135.5" y="-324.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">Description, content and version</text>
+<path fill="#d9f2e5" stroke="#348761" d="M389.5,-360C389.5,-360 160.5,-360 160.5,-360 154.5,-360 148.5,-354 148.5,-348 148.5,-348 148.5,-324 148.5,-324 148.5,-318 154.5,-312 160.5,-312 160.5,-312 389.5,-312 389.5,-312 395.5,-312 401.5,-318 401.5,-324 401.5,-324 401.5,-348 401.5,-348 401.5,-354 395.5,-360 389.5,-360" />
+<text text-anchor="middle" x="275" y="-339.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">AWS · Retained entry</text>
+<text text-anchor="middle" x="275" y="-324.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">Description, content and version</text>
 </g>
 
 <g id="edge1" class="edge">
 <title>history-&gt;store</title>
-<path fill="none" stroke="#526474" d="M135.5,-415.85C135.5,-401.64 135.5,-383.26 135.5,-367.82" />
-<polygon fill="#526474" stroke="#526474" points="138.13,-367.55 135.5,-360.05 132.88,-367.55 138.13,-367.55" />
-<text text-anchor="middle" x="223" y="-385.2" font-family="DejaVu Sans" font-size="11.00" fill="#344454">managed synthesis / correction</text>
+<path fill="none" stroke="#526474" d="M168.31,-415.85C188.87,-400.66 215.86,-380.71 237.55,-364.68" />
+<polygon fill="#526474" stroke="#526474" points="239.34,-366.62 243.81,-360.05 236.22,-362.4 239.34,-366.62" />
+<text text-anchor="middle" x="265" y="-385.2" font-family="DejaVu Sans" font-size="11.00" fill="#344454">managed synthesis</text>
 </g>
 
-<g id="node3" class="node">
-<title>available</title>
-<path fill="#d9f2e5" stroke="#348761" d="M259,-256C259,-256 12,-256 12,-256 6,-256 0,-250 0,-244 0,-244 0,-220 0,-220 0,-214 6,-208 12,-208 12,-208 259,-208 259,-208 265,-208 271,-214 271,-220 271,-220 271,-244 271,-244 271,-250 265,-256 259,-256" />
-<text text-anchor="middle" x="135.5" y="-235.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">AWS · Available context</text>
-<text text-anchor="middle" x="135.5" y="-220.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">Active state; applicable attachment</text>
+<g id="node2" class="node">
+<title>feedback</title>
+<path fill="#d9f2e5" stroke="#348761" d="M517,-464C517,-464 311,-464 311,-464 305,-464 299,-458 299,-452 299,-452 299,-428 299,-428 299,-422 305,-416 311,-416 311,-416 517,-416 517,-416 523,-416 529,-422 529,-428 529,-428 529,-452 529,-452 529,-458 523,-464 517,-464" />
+<text text-anchor="middle" x="414" y="-443.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">AWS · Investigation feedback</text>
+<text text-anchor="middle" x="414" y="-428.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">Operator-supplied correction</text>
 </g>
 
 <g id="edge2" class="edge">
-<title>store-&gt;available</title>
-<path fill="none" stroke="#526474" d="M135.5,-311.85C135.5,-297.64 135.5,-279.26 135.5,-263.82" />
-<polygon fill="#526474" stroke="#526474" points="138.13,-263.55 135.5,-256.05 132.88,-263.55 138.13,-263.55" />
-<text text-anchor="middle" x="193" y="-281.2" font-family="DejaVu Sans" font-size="11.00" fill="#344454">activation and scope</text>
+<title>feedback-&gt;store</title>
+<path fill="none" stroke="#526474" d="M382.46,-415.85C361.75,-400.66 334.57,-380.71 312.72,-364.68" />
+<polygon fill="#526474" stroke="#526474" points="314.02,-362.37 306.42,-360.05 310.91,-366.61 314.02,-362.37" />
+<text text-anchor="middle" x="399" y="-385.2" font-family="DejaVu Sans" font-size="11.00" fill="#344454">corrective context</text>
 </g>
 
 <g id="node4" class="node">
-<title>select</title>
-<path fill="#d9f2e5" stroke="#348761" d="M238,-152C238,-152 33,-152 33,-152 27,-152 21,-146 21,-140 21,-140 21,-116 21,-116 21,-110 27,-104 33,-104 33,-104 238,-104 238,-104 244,-104 250,-110 250,-116 250,-116 250,-140 250,-140 250,-146 244,-152 238,-152" />
-<text text-anchor="middle" x="135.5" y="-131.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">AWS · Select and read</text>
-<text text-anchor="middle" x="135.5" y="-116.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">Store then entry descriptions</text>
+<title>available</title>
+<path fill="#d9f2e5" stroke="#348761" d="M398.5,-256C398.5,-256 151.5,-256 151.5,-256 145.5,-256 139.5,-250 139.5,-244 139.5,-244 139.5,-220 139.5,-220 139.5,-214 145.5,-208 151.5,-208 151.5,-208 398.5,-208 398.5,-208 404.5,-208 410.5,-214 410.5,-220 410.5,-220 410.5,-244 410.5,-244 410.5,-250 404.5,-256 398.5,-256" />
+<text text-anchor="middle" x="275" y="-235.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">AWS · Available context</text>
+<text text-anchor="middle" x="275" y="-220.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">Active state; applicable attachment</text>
 </g>
 
 <g id="edge3" class="edge">
-<title>available-&gt;select</title>
-<path fill="none" stroke="#526474" d="M135.5,-207.85C135.5,-193.64 135.5,-175.26 135.5,-159.82" />
-<polygon fill="#526474" stroke="#526474" points="138.13,-159.55 135.5,-152.05 132.88,-159.55 138.13,-159.55" />
-<text text-anchor="middle" x="191" y="-177.2" font-family="DejaVu Sans" font-size="11.00" fill="#344454">relevant description</text>
-</g>
-
-<g id="node6" class="node">
-<title>review</title>
-<path fill="#dcebff" stroke="#447ac2" d="M392,-48C392,-48 125,-48 125,-48 119,-48 113,-42 113,-36 113,-36 113,-12 113,-12 113,-6 119,0 125,0 125,0 392,0 392,0 398,0 404,-6 404,-12 404,-12 404,-36 404,-36 404,-42 398,-48 392,-48" />
-<text text-anchor="middle" x="258.5" y="-27.8" font-family="DejaVu Sans" font-size="14.00" fill="#183b69">DOC · Separate checks</text>
-<text text-anchor="middle" x="258.5" y="-12.8" font-family="DejaVu Sans" font-size="14.00" fill="#183b69">Existence, observed read, correctness</text>
-</g>
-
-<g id="edge4" class="edge">
-<title>select-&gt;review</title>
-<path fill="none" stroke="#526474" stroke-dasharray="5,2" d="M163.41,-103.85C181.65,-88.73 205.58,-68.88 224.87,-52.89" />
-<polygon fill="#526474" stroke="#526474" points="226.6,-54.86 230.7,-48.05 223.25,-50.82 226.6,-54.86" />
-<text text-anchor="middle" x="246" y="-73.2" font-family="DejaVu Sans" font-size="11.00" fill="#344454">selected history</text>
+<title>store-&gt;available</title>
+<path fill="none" stroke="#526474" d="M275,-311.85C275,-297.64 275,-279.26 275,-263.82" />
+<polygon fill="#526474" stroke="#526474" points="277.63,-263.55 275,-256.05 272.38,-263.55 277.63,-263.55" />
+<text text-anchor="middle" x="332.5" y="-281.2" font-family="DejaVu Sans" font-size="11.00" fill="#344454">activation and scope</text>
 </g>
 
 <g id="node5" class="node">
-<title>current</title>
-<path fill="#fce8d5" stroke="#c78335" d="M475.5,-152C475.5,-152 287.5,-152 287.5,-152 281.5,-152 275.5,-146 275.5,-140 275.5,-140 275.5,-116 275.5,-116 275.5,-110 281.5,-104 287.5,-104 287.5,-104 475.5,-104 475.5,-104 481.5,-104 487.5,-110 487.5,-116 487.5,-116 487.5,-140 487.5,-140 487.5,-146 481.5,-152 475.5,-152" />
-<text text-anchor="middle" x="381.5" y="-131.8" font-family="DejaVu Sans" font-size="14.00" fill="#6d431a">EXT · Current observations</text>
-<text text-anchor="middle" x="381.5" y="-116.8" font-family="DejaVu Sans" font-size="14.00" fill="#6d431a">New incident time window</text>
+<title>select</title>
+<path fill="#d9f2e5" stroke="#348761" d="M377.5,-152C377.5,-152 172.5,-152 172.5,-152 166.5,-152 160.5,-146 160.5,-140 160.5,-140 160.5,-116 160.5,-116 160.5,-110 166.5,-104 172.5,-104 172.5,-104 377.5,-104 377.5,-104 383.5,-104 389.5,-110 389.5,-116 389.5,-116 389.5,-140 389.5,-140 389.5,-146 383.5,-152 377.5,-152" />
+<text text-anchor="middle" x="275" y="-131.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">AWS · Select and read</text>
+<text text-anchor="middle" x="275" y="-116.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">Store then entry descriptions</text>
+</g>
+
+<g id="edge4" class="edge">
+<title>available-&gt;select</title>
+<path fill="none" stroke="#526474" d="M275,-207.85C275,-193.64 275,-175.26 275,-159.82" />
+<polygon fill="#526474" stroke="#526474" points="277.63,-159.55 275,-152.05 272.38,-159.55 277.63,-159.55" />
+<text text-anchor="middle" x="330.5" y="-177.2" font-family="DejaVu Sans" font-size="11.00" fill="#344454">relevant description</text>
+</g>
+
+<g id="node7" class="node">
+<title>review</title>
+<path fill="#dcebff" stroke="#447ac2" d="M571.5,-48C571.5,-48 224.5,-48 224.5,-48 218.5,-48 212.5,-42 212.5,-36 212.5,-36 212.5,-12 212.5,-12 212.5,-6 218.5,0 224.5,0 224.5,0 571.5,0 571.5,0 577.5,0 583.5,-6 583.5,-12 583.5,-12 583.5,-36 583.5,-36 583.5,-42 577.5,-48 571.5,-48" />
+<text text-anchor="middle" x="398" y="-27.8" font-family="DejaVu Sans" font-size="14.00" fill="#183b69">DOC · Memory verification</text>
+<text text-anchor="middle" x="398" y="-12.8" font-family="DejaVu Sans" font-size="14.00" fill="#183b69">Entry identity, observed access, current evidence</text>
 </g>
 
 <g id="edge5" class="edge">
+<title>select-&gt;review</title>
+<path fill="none" stroke="#526474" stroke-dasharray="5,2" d="M302.91,-103.85C321.15,-88.73 345.08,-68.88 364.37,-52.89" />
+<polygon fill="#526474" stroke="#526474" points="366.1,-54.86 370.2,-48.05 362.75,-50.82 366.1,-54.86" />
+<text text-anchor="middle" x="384.5" y="-73.2" font-family="DejaVu Sans" font-size="11.00" fill="#344454">selected history</text>
+</g>
+
+<g id="node6" class="node">
+<title>current</title>
+<path fill="#fce8d5" stroke="#c78335" d="M615,-152C615,-152 427,-152 427,-152 421,-152 415,-146 415,-140 415,-140 415,-116 415,-116 415,-110 421,-104 427,-104 427,-104 615,-104 615,-104 621,-104 627,-110 627,-116 627,-116 627,-140 627,-140 627,-146 621,-152 615,-152" />
+<text text-anchor="middle" x="521" y="-131.8" font-family="DejaVu Sans" font-size="14.00" fill="#6d431a">EXT · Current observations</text>
+<text text-anchor="middle" x="521" y="-116.8" font-family="DejaVu Sans" font-size="14.00" fill="#6d431a">New incident time window</text>
+</g>
+
+<g id="edge6" class="edge">
 <title>current-&gt;review</title>
-<path fill="none" stroke="#526474" stroke-dasharray="5,2" d="M353.59,-103.85C335.35,-88.73 311.42,-68.88 292.13,-52.89" />
-<polygon fill="#526474" stroke="#526474" points="293.75,-50.82 286.3,-48.05 290.4,-54.86 293.75,-50.82" />
-<text text-anchor="middle" x="388" y="-73.2" font-family="DejaVu Sans" font-size="11.00" fill="#344454">supports or contradicts</text>
+<path fill="none" stroke="#526474" stroke-dasharray="5,2" d="M493.09,-103.85C474.85,-88.73 450.92,-68.88 431.63,-52.89" />
+<polygon fill="#526474" stroke="#526474" points="433.25,-50.82 425.8,-48.05 429.9,-54.86 433.25,-50.82" />
+<text text-anchor="middle" x="527.5" y="-73.2" font-family="DejaVu Sans" font-size="11.00" fill="#344454">supports or contradicts</text>
 </g>
 </g>
 </svg>
