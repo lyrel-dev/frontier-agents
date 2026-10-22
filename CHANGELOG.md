@@ -1,12 +1,8 @@
-# Publication revision — 21 October 2026
+# Change log
 
-Current three-agent revision: Standardized factual capability records and use-case steps in the report and slide views; added proposed review records, named responsible roles, 50 untimed reference slides, and an editorial standard. Speaking and demo allocations unchanged.
+## 22 October 2026 — canonical engineering guides
 
-Added four detailed narrative reports with six-stage use cases, explicit input/output contracts, failure paths and acceptance gates. Retained the in-scope capability evidence. Earlier editions remain in Git history. Added the portfolio index, report Markdown, source-aligned PowerPoint decks, timed transcripts, synthetic demo assets and reproducible build. Presentation budgets remain 35, 30, 27 and 36 minutes, including demonstrations.
+Replaced overlapping scenario, mechanism and platform-reference editions with one canonical guide per platform and a shared comparison. Added resource models, configuration decisions, lifecycle distinctions, diagnostic tables, source-version decisions and evidence-bearing synthetic exercises. Rebuilt presentations as curated teaching sequences referencing canonical sections. Removed obsolete documentation generators and duplicated editions; Git preserves history. The separate readiness-console application and workflow are unchanged.
 
-PowerPoint publication decks contain the 70 timed slides plus 50 untimed capability reference slides from the same source records. Decorative title imagery from the earlier 61-slide edition is not reused; core content is editable and each deck has an additional untimed evidence appendix.
+This edition is not a record of live AWS execution. See VALIDATION.md for observed build/test results and limitations.
 
-
-## Mechanisms and enablement extension
-
-Added 23 mechanism records, three platform setup guides, a comparison guide, four untimed reference decks, six-step optional exercises and a dated source register. Retained all core presentation budgets.
