@@ -2,7 +2,7 @@
 
 
 
-Presentation: 58 minutes, including 8 minutes of prepared-result exercises. Questions and breaks are additional.
+Presentation: 59 minutes, including 8 minutes of prepared-result exercises. Questions and breaks are additional.
 
 
 
@@ -362,57 +362,25 @@ Detailed reference: [Remote access and release-assurance workflows](../guides/de
 Detailed reference: [Execution limits and diagnostic procedures](../guides/devops.html#D-10)
 
 
-## 16. Use case taxonomy and delivery modes
+## 16. Incident response outcomes
 
-37:00–39:00 · Operational use cases
+37:00–40:00 · Operational objectives and implementation
 
-The catalog distinguishes native functions from configured and team-composed workflows.
-
-
-
-Delivery mode | Meaning | Representative use cases | Required configuration
-
-Built-in function | AWS-managed incident, query or prevention behavior | Triage, investigation, on-demand health, pattern analysis | Agent Space, sources and operator access
-
-Configured custom agent | Operator-defined prompt, tools, skills, memory and schedule | Health reports, operational reviews, audits, trend reports | Custom-agent definition and trigger
-
-Configured knowledge | Reusable context or procedure | SOP consolidation, report standards, topology notes | Memory, skill or instructions
-
-Controlled action | Explicitly authorized state change | Approved mitigation | Directed actions, role, classification and approval
-
-Preview function | Feature-specific pre-production path | Release readiness and release testing | Eligibility, Region and test target
-
-
-Detailed reference: [The agent, Agent Space, and investigation](../guides/devops.html#D-01)
+Follow the operational objective through its workflow, configured mechanisms and independent completion evidence. The catalog links each dependency to its detailed guide.
 
 
 
-Detailed reference: [Incident triage, investigation, and prevention](../guides/devops.html#D-06)
+Operational outcome | Completion evidence | Implementation boundary
 
+Triage incident signals | Decision and reason are visible. | Built-in function
 
+Investigate a service incident | Affected service and UTC interval are explicit. | Built-in function
 
-Detailed reference: [Custom-agent configuration and invocation](../guides/devops.html#D-07)
+Prepare a mitigation plan | Target and proposed effect are explicit. | Built-in function
 
+Execute an approved mitigation and verify recovery | Exact operation and target were approved. | Controlled action
 
-## 17. Incident operations use cases
-
-39:00–42:00 · Operational use cases
-
-Triage, diagnosis, recommendation and execution are different stages with different records.
-
-
-
-Use case | Initiation | Primary inputs | Reviewable output
-
-Incident signal triage | Alert, ticket or webhook | Signal identity, correlation and skip criteria | Linked, skipped or proceed decision with reason
-
-Root-cause investigation | Automatic or manual investigation | Metrics, logs, traces, changes and topology | Evidence, hypotheses, root-cause versions
-
-Investigation steering | Operator follow-up in context | Contrary evidence or missing source | Revised analysis and new root-cause version
-
-Mitigation planning | Completed or active investigation | Proposed effect, target, risk and rollback | Reviewable mitigation proposal
-
-Approved mitigation | Explicit operator approval | Exact operation and resource | Attributed action and independently checked state
+Prepare an incident-status bulletin | Incident and measurement window are identified. | Configured custom agent
 
 
 Detailed reference: [Incident triage, investigation, and prevention](../guides/devops.html#D-06)
@@ -422,80 +390,92 @@ Detailed reference: [Incident triage, investigation, and prevention](../guides/d
 Detailed reference: [Directed actions and approval scope](../guides/devops.html#D-M06)
 
 
+## 17. Reporting and reliability outcomes
 
-Detailed reference: [Execution limits and diagnostic procedures](../guides/devops.html#D-10)
+40:00–43:00 · Operational objectives and implementation
 
-
-## 18. Operational reporting and review use cases
-
-42:00–45:00 · Operational use cases
-
-Recurring reports are custom-agent workflows; the report contract and data window must be explicit. Scheduled custom work has a flexible start window of up to 30 minutes; telemetry resolution and report delivery are different.
+Follow the operational objective through its workflow, configured mechanisms and independent completion evidence. The catalog links each dependency to its detailed guide.
 
 
 
-Use case | Cadence | Source scope | Expected output
+Operational outcome | Completion evidence | Implementation boundary
 
-On-demand service health | Ad hoc | Selected service metrics, alarms and deployments | Timestamped health answer with missing signals
+Assess and report service health and trends | Service dimensions and observation periods are explicit. | Native inquiry or configured reporting
 
-Incident status bulletin | On demand; flexible schedule | Current logs, metrics and active investigation | Changed observations, open hypotheses and next check
+Review deployment and change activity | Deployment states and immutable revisions are traceable. | Configured custom agent
 
-Daily or weekly health report | Scheduled | Named services and complete reporting window | Trend summary, incidents, deployments and data gaps
+Identify recurring incident patterns | Supporting investigation identities are retained. | Built-in function
 
-Deployment activity report | Scheduled or ad hoc | CI/CD history and service ownership | Revision list, failed changes and affected services
-
-Operational review pack | Weekly or monthly | Health, incidents, prevention and changes | Review agenda, decisions and owned follow-up
+Prioritize incident-prevention work | Accepted proposals retain source incidents. | Built-in function
 
 
 Detailed reference: [Custom-agent configuration and invocation](../guides/devops.html#D-07)
 
 
 
+Detailed reference: [Incident triage, investigation, and prevention](../guides/devops.html#D-06)
+
+
+## 18. Operational knowledge and release assurance
+
+43:00–46:00 · Operational objectives and implementation
+
+Follow the operational objective through its workflow, configured mechanisms and independent completion evidence. The catalog links each dependency to its detailed guide.
+
+
+
+Operational outcome | Completion evidence | Implementation boundary
+
+Consolidate and maintain operational procedures | Conflicting or stale instructions are resolved. | Composed workflow
+
+Document service topology and dependencies | Observed and inferred relationships are distinguished. | Built-in function with composed documentation
+
+Audit resource configurations against approved standards | Each finding identifies resource, rule and observed value. | Configured custom agent
+
+Assess release readiness | The candidate revision is unambiguous. | Preview function
+
+Test a deployed application release | Target revision, identities and permitted effects are explicit. | Preview function
+
+
+Detailed reference: [Runbook skills and applicability rules](../guides/devops.html#D-M04)
+
+
+
+Detailed reference: [Environment-knowledge consolidation and refresh](../guides/devops.html#D-M08)
+
+
+
+Detailed reference: [Remote access and release-assurance workflows](../guides/devops.html#D-09)
+
+
+## 19. Service-health reporting: workflow dependencies
+
+46:00–49:00 · Operational objectives and implementation
+
+One reporting objective has native and configured implementations. Required evidence, optional context and conditional execution remain explicit.
+
+
+
+Workflow step | Mechanism and configuration | Completion or failure decision
+
+Read current observations | Authorized evidence sources and explicit scope | Missing current data prevents a health conclusion.
+
+Choose the execution profile | Built-in operational query OR configured custom agent | A native inquiry does not require a custom definition.
+
+Use relevant context | Optional available memory or reviewed reporting procedure | Retained history never substitutes for current observations.
+
+Repeat or publish | Conditional schedule and optional destination | Timing and publication controls remain separate from the report objective.
+
+
 Detailed reference: [MCP provider registration and tool selection](../guides/devops.html#D-03)
 
 
 
-Detailed reference: [Resource discovery and topology construction](../guides/devops.html#D-05)
-
-
-## 19. Knowledge and documentation use cases
-
-45:00–48:00 · Operational use cases
-
-Memory, instructions, skills and topology serve different documentation purposes and lifecycles.
-
-
-
-Use case | Primary mechanism | Maintained object | Boundary
-
-Incident pattern identification | Managed learning and prevention evaluation | Monitor memory and recommendation | Historical pattern is not the current cause
-
-SOP consolidation | Skill and supporting resources | Reviewed SKILL.md bundle | Team workflow; procedure does not grant tools
-
-Standing operational policy | Agent instructions | Global or agent-specific AGENTS.md | Prompt context, not IAM enforcement
-
-Topology documentation | Discovery and learned understanding | Topology and environment summary | Graph is not an access-control boundary
-
-Service-specific context | Custom memory store | Descriptions, entries and versions | Attachment and active state control access
-
-
-Detailed reference: [Resource discovery and topology construction](../guides/devops.html#D-05)
+Detailed reference: [Custom-agent configuration and invocation](../guides/devops.html#D-07)
 
 
 
 Detailed reference: [Incident-memory construction and retrieval](../guides/devops.html#D-M01)
-
-
-
-Detailed reference: [Investigation feedback and corrective memory](../guides/devops.html#D-M02)
-
-
-
-Detailed reference: [Global and agent-specific instructions](../guides/devops.html#D-M03)
-
-
-
-Detailed reference: [Runbook skills and applicability rules](../guides/devops.html#D-M04)
 
 
 
@@ -504,7 +484,7 @@ Detailed reference: [Memory-store access, versions, and retention](../guides/dev
 
 ## 20. Worked example: recurring alarm with different current evidence
 
-48:00–56:00 · Worked example
+49:00–57:00 · Worked example
 
 Prepared evidence demonstrates how historical context can be useful without becoming the current diagnosis.
 
@@ -532,7 +512,7 @@ Detailed reference: [Investigation feedback and corrective memory](../guides/dev
 
 ## 21. Troubleshooting matrix and operating limits
 
-56:00–58:00 · Troubleshooting and references
+57:00–59:00 · Troubleshooting and references
 
 Diagnose the failed layer and retest the smallest relevant operation.
 
