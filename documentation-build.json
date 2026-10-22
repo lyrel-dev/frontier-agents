@@ -1,6 +1,6 @@
 {
   "revision": "2026-10-22-mechanism-review",
-  "build": 1,
+  "build": 2,
   "scope": ["AWS DevOps Agent", "AWS Security Agent", "AWS FinOps Agent"],
   "shared_architecture": true,
   "canonical_source": "Authored guides/*.md plus generated mechanism-detail blocks from catalog/mechanisms.json",
@@ -12,7 +12,7 @@
   "resource_model_source": "catalog/resource-models.json",
   "presentation_outline": "tools/docs/presentation.py",
   "diagram_source": "tools/docs/diagrams.py, tools/docs/resource_model.py and tools/docs/mechanism_figures.py",
-  "publication": "Stage 3: documented mechanism narratives, configuration, lifecycle, effects, observable evidence and proposed verification, within existing guides and HTML presentations.",
+  "publication": "Stage 3: mechanism narratives, configuration, lifecycle, effects, observable evidence and proposed verification within existing guides and HTML presentations.",
   "primary_use_cases": 30,
   "approved_catalog_sources": "Preserve use cases, features, profiles, aliases and resource models exactly from 75f7d7c11d29e308e71a1bbe77ad93e9bc9f08a9; preserve the existing 40 mechanism core fields while adding reviewed detail and one conditional support mechanism",
   "presentation_format": "HTML only",
