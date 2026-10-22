@@ -1,0 +1,550 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><title>AWS FinOps Agent — HTML presentation</title><style>:root{--ink:#182b3b;--muted:#526574;--navy:#132c40;--accent:#086e68;--pale:#edf5f4;--line:#d5e0e7;--paper:#fff;--bg:#f5f7f9;--warn:#9b5b13;--shadow:0 12px 28px #172c4310}
+*{box-sizing:border-box}html{scroll-padding-top:100px;scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 system-ui,-apple-system,'Segoe UI',sans-serif}a{color:#075d94;text-underline-offset:3px}button,input,select{font:inherit;color:inherit;background:var(--paper);border:1px solid #9cb0bf;border-radius:5px;padding:9px 12px;min-height:42px}button{cursor:pointer}button:hover{background:var(--pale)}button:disabled{opacity:.4;cursor:default}:focus-visible{outline:3px solid #b87114;outline-offset:3px}[hidden]{display:none!important}.skip{position:absolute;top:-100px;left:20px;z-index:50;background:white;padding:12px}.skip:focus{top:12px}.site-header{background:var(--navy);color:white;padding:16px 28px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}.site-header a{color:#e6f3fd}.brand{font-size:13px;font-weight:750;letter-spacing:.08em;text-transform:uppercase}.site-header nav{display:flex;gap:20px;flex-wrap:wrap;font-size:14px}.eyebrow{color:var(--accent);font-size:12px;text-transform:uppercase;letter-spacing:.12em;font-weight:750}.muted,.small{color:var(--muted)}.small{font-size:13px}.intro{max-width:70ch}h1{font-size:clamp(28px,3.2vw,42px);letter-spacing:-.025em;line-height:1.16;margin:12px 0 22px}h2{font-size:29px;line-height:1.25;margin:0 0 14px}h3{font-size:24px;line-height:1.3;margin:8px 0 20px}h4{font-size:19px;line-height:1.4;margin:26px 0 10px}p{margin:0 0 17px}li{margin:7px 0}code{font-size:.9em;overflow-wrap:anywhere}pre{background:#132b3e;color:#eaf2f8;border-radius:5px;padding:20px;overflow-x:auto;max-width:100%;font-size:13px;line-height:1.7}.table-wrap{max-width:100%;overflow-x:auto;margin:22px 0}table{border-collapse:collapse;width:100%;font-size:14px;line-height:1.5}th,td{border:1px solid var(--line);padding:12px 14px;text-align:left;vertical-align:top;min-width:100px}th{background:#e8eff3}tr:nth-child(even) td{background:#f7fafb}blockquote{margin:20px 0;border-left:4px solid var(--accent);background:var(--pale);padding:14px 20px}.button-link{display:inline-block;border:1px solid var(--accent);border-radius:5px;padding:8px 14px;text-decoration:none;color:var(--accent);font-weight:650}.primary{background:var(--accent);color:white}.actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:20px 0}.report-shell{display:grid;grid-template-columns:290px minmax(0,1fr);gap:36px;max-width:1500px;margin:auto;padding:26px}.toc{position:sticky;top:18px;align-self:start;max-height:94vh;overflow:auto;font-size:13px;padding-right:12px}.toc-label{font-size:12px;font-weight:750;letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px}.toc-actions{display:flex;gap:8px;margin:12px 0}.toc-actions button{font-size:12px;min-height:34px;padding:5px 8px}.toc details{border-bottom:1px solid var(--line);padding:8px 0}.toc summary{cursor:pointer;font-weight:700;line-height:1.4;padding:8px 0}.toc ul{list-style:none;margin:0;padding:0 0 6px 14px}.toc li{margin:3px 0}.toc a{display:block;text-decoration:none;color:var(--muted);line-height:1.4;border-left:2px solid transparent;padding:7px 9px}.toc a.active{border-color:var(--accent);background:var(--pale);color:var(--ink);font-weight:650}.toc a small{display:block;font-size:10px;letter-spacing:.03em;color:#5f788a}.content{min-width:0;max-width:1020px}.hero{background:white;border:1px solid var(--line);border-top:5px solid var(--accent);padding:30px;border-radius:7px}.hero h1{max-width:24ch}.meta-row{display:flex;gap:12px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-top:22px}.meta-row span{border-left:2px solid var(--line);padding-left:12px}.chapter-map{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:25px 0}.map-link{display:block;padding:17px 18px;background:white;border:1px solid var(--line);border-radius:6px;text-decoration:none;color:var(--ink)}.map-link:hover{border-color:var(--accent)}.map-link strong{display:block;font-size:16px;margin:4px 0}.map-link p{font-size:13px;color:var(--muted);margin:0}.ordinal{font-size:12px;font-weight:750;color:var(--accent);letter-spacing:.1em}.filter-bar{display:flex;gap:9px;flex-wrap:wrap;padding:14px 0;background:var(--bg);position:sticky;top:0;z-index:4}.filter-bar input{flex:2;min-width:180px}.filter-bar select{flex:1;min-width:145px}.filter-bar button{font-size:14px}.search-status{font-size:13px;color:var(--muted);min-height:24px}.chapter{padding-top:22px;margin-top:12px}.chapter-heading{border-bottom:2px solid var(--ink);padding:14px 0 18px}.chapter-heading .ordinal{font-size:13px}.chapter-heading h2{margin:7px 0 10px}.chapter-heading p{max-width:70ch;color:var(--muted);margin:0}.report-section{border:1px solid var(--line);border-radius:6px;background:white;padding:28px 30px;margin:18px 0;min-width:0}.section-meta{display:flex;gap:12px;align-items:center;flex-wrap:wrap;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px}.section-meta a{margin-left:auto;text-transform:none;font-size:12px;letter-spacing:0}.report-section h3 a{color:inherit;text-decoration:none}.callout{border-left:3px solid var(--accent);padding-left:16px}.section-nav{display:flex;justify-content:space-between;gap:20px;margin-top:25px;padding-top:18px;border-top:1px solid var(--line);font-size:13px}.section-nav a{max-width:47%;overflow-wrap:anywhere}.empty{padding:25px;border:1px dashed var(--line);background:white}.reading-breadcrumb{color:var(--muted);font-size:12px;margin:0 0 12px}footer{font-size:13px;color:var(--muted);border-top:1px solid var(--line);padding:24px 0;margin-top:28px}.index-main{max-width:1200px;margin:38px auto;padding:0 24px}.index-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}.index-card{border:1px solid var(--line);border-top:4px solid var(--accent);background:white;padding:25px;border-radius:7px}.index-card h2{font-size:25px}.index-card .actions{margin-bottom:0}.programme{padding:20px 24px;background:var(--pale);border-left:4px solid var(--accent);margin:25px 0}.deck-main{max-width:1420px;margin:auto;padding:18px 26px 30px}.deck-toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}.deck-toolbar select{flex:1;min-width:200px}.deck-toolbar button{font-size:14px}.deck-toolbar .timer{font-variant-numeric:tabular-nums;font-size:13px;color:var(--muted)}.chapter-strip{display:flex;gap:5px;margin:14px 0;flex-wrap:wrap}.chapter-strip button{flex:1;min-width:100px;min-height:48px;text-align:left;font-size:11px;padding:7px 10px;border-color:var(--line);line-height:1.35}.chapter-strip button span{display:block;font-size:10px;color:var(--muted);margin-bottom:3px}.chapter-strip button[aria-current=true]{background:var(--navy);border-color:var(--navy);color:white}.chapter-strip button[aria-current=true] span{color:#bbd7df}.slide{background:white;border:1px solid var(--line);border-top:5px solid var(--accent);padding:27px 34px;min-height:600px;display:flex;flex-direction:column;box-shadow:var(--shadow)}.slide-top{display:flex;justify-content:space-between;gap:15px;font-size:12px;color:var(--muted)}.slide h1{font-size:clamp(27px,2.7vw,39px);margin:18px 0 25px;max-width:32ch}.slide-body{flex:1;display:flex;align-items:center;min-height:270px}.slide-body .table-wrap{width:100%;margin:0}.slide table{font-size:clamp(15px,1.45vw,20px)}.slide th,.slide td{padding:13px 16px;line-height:1.4}.flow,.columns{display:flex;gap:18px;width:100%;align-items:stretch}.node,.column{flex:1;min-width:0;background:var(--pale);padding:20px;border-top:3px solid var(--accent);position:relative}.node strong,.column strong{display:block;font-size:clamp(18px,1.6vw,24px);line-height:1.3;margin:0 0 18px}.node p,.column p{font-size:clamp(16px,1.5vw,21px);line-height:1.5;margin:0}.node:not(:last-child)::after{content:'→';position:absolute;right:-18px;top:43%;color:var(--accent);font-size:22px}.takeaway{margin-top:26px;padding:14px 18px;background:var(--navy);color:white;font-size:clamp(16px,1.4vw,20px);line-height:1.4}.slide-foot{display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap;font-size:12px;color:var(--muted);padding-top:16px}.slide-foot a{margin-right:10px}.deck-status{display:flex;justify-content:space-between;gap:18px;align-items:center;font-size:13px;color:var(--muted);margin:12px 0}.deck-status progress{width:180px;max-width:30vw;height:7px;accent-color:var(--accent)}.timer.over{color:var(--warn);font-weight:700}.notes{border:1px solid var(--line);background:white;padding:20px 26px;margin-top:20px}.notes summary{cursor:pointer;font-weight:700}.notes h2{font-size:21px;margin-top:22px}.notes h3{font-size:19px}.notes h4{font-size:17px}.notes .talk-track{padding:18px;background:var(--pale);margin:16px 0}.notes .note-reference{border-top:1px solid var(--line);padding-top:18px;margin-top:20px}.notes section p{font-size:14px}.evidence{margin-top:22px;border:1px solid var(--line);padding:18px 22px;background:white}.evidence summary{font-weight:700;cursor:pointer}.evidence ol{font-size:13px}.evidence a{overflow-wrap:anywhere}dialog{max-width:880px;width:calc(100% - 40px);max-height:88vh;border:1px solid var(--line);border-radius:8px;padding:24px;color:var(--ink);box-shadow:0 20px 80px #0004}dialog::backdrop{background:#122b4077}.dialog-top{display:flex;justify-content:space-between;align-items:center;gap:15px;position:sticky;top:-24px;background:white;padding:12px 0}.agenda-group{margin:18px 0}.agenda-group h3{font-size:18px;margin-bottom:8px}.agenda-group button{display:block;width:100%;text-align:left;margin:5px 0;font-size:14px;line-height:1.45}.agenda-group button small{display:block;color:var(--muted)}:fullscreen{overflow:auto;background:var(--bg)}
+@media(max-width:1050px){.report-shell{grid-template-columns:240px minmax(0,1fr);gap:20px;padding:18px}.report-section,.hero{padding:22px}.slide{padding:23px;min-height:530px}.deck-main{padding:16px}.node,.column{padding:16px}.slide-body{min-height:230px}}
+@media(max-width:760px){.site-header{padding:15px 18px}.site-header nav{gap:14px;font-size:12px}.report-shell{display:block;padding:14px}.toc{position:static;max-height:340px;padding:14px;background:white;border:1px solid var(--line);margin-bottom:20px}.toc>details{padding:3px 0}.chapter-map,.index-grid{grid-template-columns:1fr}.filter-bar{position:static}.filter-bar>*{width:100%;min-width:0!important}.hero,.report-section{padding:20px}.report-section h3{font-size:22px}.chapter-heading h2{font-size:25px}.deck-toolbar>*{flex:1}.deck-toolbar select{min-width:100%;order:1}.chapter-strip button{min-width:130px}.slide{min-height:0;padding:20px}.slide h1{font-size:27px}.slide-body{min-height:0}.flow,.columns{flex-direction:column}.node:not(:last-child)::after{display:none}.node p,.column p{font-size:18px}.slide table{font-size:16px}.slide th,.slide td{padding:12px}.slide-top{font-size:11px}.section-meta a{margin-left:0}.notes{padding:18px}.deck-status{align-items:flex-start}.slide-foot{line-height:1.7}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media print{@page{size:A4 landscape;margin:12mm}body{background:white;color:black;font-size:10pt}.site-header,.toc,.filter-bar,.chapter-map,.actions,.search-status,.reading-breadcrumb,.section-nav,.deck-toolbar,.chapter-strip,.deck-status,.notes,.evidence,footer,.empty,.section-meta a,.skip{display:none!important}.report-shell{display:block;padding:0;max-width:none}.content{max-width:none}.hero{border:0;padding:0}.hero h1{max-width:none}.report-section,.chapter{display:block!important;border:0;padding:0;margin:14px 0}.chapter-heading{break-after:avoid}.report-section h3{break-after:avoid}.report-section[hidden],.chapter[hidden]{display:block!important}.table-wrap{overflow:visible}table{font-size:9pt}pre{white-space:pre-wrap;background:#eee;color:black}.deck-main{padding:0;max-width:none}.presentation-page .slide{display:flex!important;box-shadow:none;border:0;padding:0;min-height:0;break-after:page;height:176mm;overflow:visible}.presentation-page .slide:last-of-type{break-after:auto}.slide h1{font-size:25pt;margin:8mm 0 5mm}.slide-body{min-height:0}.slide table{font-size:12pt}.slide td,.slide th{padding:8px}.flow,.columns{flex-direction:row}.node,.column{padding:14px}.node strong,.column strong{font-size:16pt}.node p,.column p{font-size:13pt}.takeaway{background:#e8eeee;color:black;font-size:13pt}.slide-foot{font-size:9pt}.slide-top{font-size:9pt}.index-main{margin:0}.index-grid{grid-template-columns:1fr 1fr}}
+
+@media print{@page{size:A4 landscape}}</style></head><body class="presentation-page" data-view="presentation" data-key="finops" data-total="1920"><a href="#main" class="skip">Skip to content</a><header class="site-header"><div class="brand">AWS agent engineering guides</div><nav aria-label="Collection navigation"><a href="../index.html">Collection</a><a href="../presentations/index.html">HTML presentations</a><a href="../guides/coverage.md">Coverage</a></nav></header><main id="main" class="deck-main"><div class="deck-toolbar"><a class="button-link" href="../guides/finops.html">Read structured report</a><button id="agenda-open">Agenda</button><button id="previous">Previous</button><select id="slide-select" aria-label="Select slide"><option value="0">01. Instance configuration and task execution are separate</option><option value="1">02. Four permission responsibilities are not one role</option><option value="2">03. Numerical contribution and cause are different conclusions</option><option value="3">04. Files are reviewed reference inputs</option><option value="4">05. Memory and file retrieval need different tests</option><option value="5">06. Compaction summarizes a conversation, not all persistent state</option><option value="6">07. A task runs; an automation creates future tasks</option><option value="7">08. Trace an anomaly through the complete event path</option><option value="8">09. Integration registration precedes destination binding</option><option value="9">10. Approval rules depend on effect and invocation</option><option value="10">11. Stop and delete mean different things for different objects</option><option value="11">12. Exercise: reconcile the 41% increase before explaining it</option><option value="12">13. Validate each layer rather than one fluent answer</option></select><button id="next">Next</button><button id="notes-button">Speaker notes</button><button id="fullscreen">Fullscreen</button><button data-print>Print slides</button></div><nav class="chapter-strip" aria-label="Presentation chapters"><button data-start="0" data-group="0" aria-current="false"><span>01 · 02:00</span>Platform model</button><button data-start="1" data-group="1" aria-current="false"><span>02 · 05:00</span>Access and source data</button><button data-start="3" data-group="2" aria-current="false"><span>03 · 05:00</span>Context mechanisms</button><button data-start="6" data-group="3" aria-current="false"><span>04 · 10:00</span>Tasks, publication and lifecycle</button><button data-start="11" data-group="4" aria-current="false"><span>05 · 08:00</span>Prepared-result exercise</button><button data-start="12" data-group="5" aria-current="false"><span>06 · 02:00</span>Troubleshooting and coverage</button></nav><div class="deck-toolbar"><button id="timer-toggle" aria-pressed="false">Start timer</button><button id="timer-reset">Reset timer</button><span class="timer" id="session-clock">Session <b id="session-time">00:00 / 32:00</b></span><span class="timer" id="slide-clock">Slide <b id="slide-time">00:00</b></span><span class="small">32 min including 8 min prepared-result exercise</span></div><article class="slide" id="slide-01" data-seconds="120" data-kind="flow" data-group="0" data-chapter="Platform model" aria-label="Slide 1"><div class="slide-top"><span>AWS FinOps Agent · 01 / 06 Platform model</span><span>Presentation</span></div><h1>Instance configuration and task execution are separate</h1><div class="slide-body"><div class="flow"><div class="node"><strong>Access</strong><p>Agent data role and operator entry</p></div><div class="node"><strong>Context</strong><p>Uploaded files, memory and conversation</p></div><div class="node"><strong>Work</strong><p>Automation or request creates a queued task</p></div><div class="node"><strong>Output</strong><p>Answer, artifact or configured external action</p></div></div></div><div class="takeaway">Preview service; storage and inference geography must be reviewed separately.</div><div class="slide-foot"><span>01 / 13 · 00:00–02:00 · 02:00 planned</span><span>Guide sections: <a href="../guides/finops.html#F-01">F-01</a></span></div></article><article class="slide" id="slide-02" data-seconds="180" data-kind="table" data-group="1" data-chapter="Access and source data" aria-label="Slide 2" hidden><div class="slide-top"><span>AWS FinOps Agent · 02 / 06 Access and source data</span><span>Presentation</span></div><h1>Four permission responsibilities are not one role</h1><div class="slide-body"><div class="table-wrap" tabindex="0" role="region" aria-label="Slide table"><table><thead><tr><th scope="col">Responsibility</th><th scope="col">Purpose</th></tr></thead><tbody><tr><td>Administrator</td><td>Create/configure service resources and permitted roles</td></tr><tr><td>Agent data role</td><td>Call authorized data services and manage required rules</td></tr><tr><td>Operator role</td><td>Supported web-app operations</td></tr><tr><td>User permission</td><td>Enter the configured agent as the intended person</td></tr></tbody></table></div></div><div class="takeaway">Test data access and team access independently.</div><div class="slide-foot"><span>02 / 13 · 02:00–05:00 · 03:00 planned</span><span>Guide sections: <a href="../guides/finops.html#F-02">F-02</a></span></div></article><article class="slide" id="slide-03" data-seconds="120" data-kind="table" data-group="1" data-chapter="Access and source data" aria-label="Slide 3" hidden><div class="slide-top"><span>AWS FinOps Agent · 02 / 06 Access and source data</span><span>Presentation</span></div><h1>Numerical contribution and cause are different conclusions</h1><div class="slide-body"><div class="table-wrap" tabindex="0" role="region" aria-label="Slide table"><table><thead><tr><th scope="col">Source</th><th scope="col">What it can support</th></tr></thead><tbody><tr><td>Cost query</td><td>Amount for fixed dates, metric and dimensions</td></tr><tr><td>Anomaly record</td><td>Detected deviation under the monitor</td></tr><tr><td>Recommendation</td><td>Upstream candidate and assumptions</td></tr><tr><td>Change event</td><td>Recorded operation at a time</td></tr></tbody></table></div></div><div class="takeaway">A nearby deployment alone does not explain the entire cost delta.</div><div class="slide-foot"><span>03 / 13 · 05:00–07:00 · 02:00 planned</span><span>Guide sections: <a href="../guides/finops.html#F-M01">F-M01</a></span></div></article><article class="slide" id="slide-04" data-seconds="120" data-kind="columns" data-group="2" data-chapter="Context mechanisms" aria-label="Slide 4" hidden><div class="slide-top"><span>AWS FinOps Agent · 03 / 06 Context mechanisms</span><span>Presentation</span></div><h1>Files are reviewed reference inputs</h1><div class="slide-body"><div class="columns"><div class="column"><strong>Preparation</strong><p>Use actual account identifiers, owners and reporting basis. Keep the maintained source in Git.</p></div><div class="column"><strong>Controls</strong><p>Upload/soft-delete/restore in the workspace. The agent reads but does not conversationally rewrite the file.</p></div><div class="column"><strong>Limits</strong><p>Supported formats, 10 MB per file and total context quota matter.</p></div></div></div><div class="takeaway">Everyone with access to the agent can see its context files.</div><div class="slide-foot"><span>04 / 13 · 07:00–09:00 · 02:00 planned</span><span>Guide sections: <a href="../guides/finops.html#F-M02">F-M02</a></span></div></article><article class="slide" id="slide-05" data-seconds="120" data-kind="flow" data-group="2" data-chapter="Context mechanisms" aria-label="Slide 5" hidden><div class="slide-top"><span>AWS FinOps Agent · 03 / 06 Context mechanisms</span><span>Presentation</span></div><h1>Memory and file retrieval need different tests</h1><div class="slide-body"><div class="flow"><div class="node"><strong>Remember</strong><p>State a harmless preference</p></div><div class="node"><strong>New session</strong><p>Observe its application</p></div><div class="node"><strong>Correct / forget</strong><p>Change the retained memory</p></div><div class="node"><strong>Retest</strong><p>Check separately from uploaded source files</p></div></div></div><div class="takeaway">Updating memory does not establish that a reference file changed.</div><div class="slide-foot"><span>05 / 13 · 09:00–11:00 · 02:00 planned</span><span>Guide sections: <a href="../guides/finops.html#F-M03">F-M03</a></span></div></article><article class="slide" id="slide-06" data-seconds="60" data-kind="columns" data-group="2" data-chapter="Context mechanisms" aria-label="Slide 6" hidden><div class="slide-top"><span>AWS FinOps Agent · 03 / 06 Context mechanisms</span><span>Presentation</span></div><h1>Compaction summarizes a conversation, not all persistent state</h1><div class="slide-body"><div class="columns"><div class="column"><strong>What changes</strong><p>Older messages are summarized as the conversation context fills. Recent messages remain in full.</p></div><div class="column"><strong>How to review</strong><p>Restate the current cost contract and unresolved questions before another material calculation.</p></div></div></div><div class="takeaway">Do not infer verbatim retention or a documented hidden precedence algorithm.</div><div class="slide-foot"><span>06 / 13 · 11:00–12:00 · 01:00 planned</span><span>Guide sections: <a href="../guides/finops.html#F-M04">F-M04</a></span></div></article><article class="slide" id="slide-07" data-seconds="120" data-kind="flow" data-group="3" data-chapter="Tasks, publication and lifecycle" aria-label="Slide 7" hidden><div class="slide-top"><span>AWS FinOps Agent · 04 / 06 Tasks, publication and lifecycle</span><span>Presentation</span></div><h1>A task runs; an automation creates future tasks</h1><div class="slide-body"><div class="flow"><div class="node"><strong>Definition</strong><p>Schedule or supported event condition</p></div><div class="node"><strong>Task creation</strong><p>A separate execution record</p></div><div class="node"><strong>Shared queue</strong><p>On-demand and automated work</p></div><div class="node"><strong>Result</strong><p>Status, source evidence and artifacts</p></div></div></div><div class="takeaway">Removing an automation does not delete existing tasks or messages.</div><div class="slide-foot"><span>07 / 13 · 12:00–14:00 · 02:00 planned</span><span>Guide sections: <a href="../guides/finops.html#F-03">F-03</a></span></div></article><article class="slide" id="slide-08" data-seconds="120" data-kind="flow" data-group="3" data-chapter="Tasks, publication and lifecycle" aria-label="Slide 8" hidden><div class="slide-top"><span>AWS FinOps Agent · 04 / 06 Tasks, publication and lifecycle</span><span>Presentation</span></div><h1>Trace an anomaly through the complete event path</h1><div class="slide-body"><div class="flow"><div class="node"><strong>Monitor</strong><p>Cost Anomaly Detection</p></div><div class="node"><strong>Managed rule</strong><p>EventBridge condition and permissions</p></div><div class="node"><strong>Automation</strong><p>COST_ANOMALY trigger creates task</p></div><div class="node"><strong>Execution</strong><p>Inspect result and destination separately</p></div></div></div><div class="takeaway">No task and no delivered message are different failures.</div><div class="slide-foot"><span>08 / 13 · 14:00–16:00 · 02:00 planned</span><span>Guide sections: <a href="../guides/finops.html#F-M05">F-M05</a></span></div></article><article class="slide" id="slide-09" data-seconds="120" data-kind="table" data-group="3" data-chapter="Tasks, publication and lifecycle" aria-label="Slide 9" hidden><div class="slide-top"><span>AWS FinOps Agent · 04 / 06 Tasks, publication and lifecycle</span><span>Presentation</span></div><h1>Integration registration precedes destination binding</h1><div class="slide-body"><div class="table-wrap" tabindex="0" role="region" aria-label="Slide table"><table><thead><tr><th scope="col">Layer</th><th scope="col">Jira</th><th scope="col">Slack</th></tr></thead><tbody><tr><td>Registration</td><td>Supported Cloud authorization</td><td>Workspace authorization</td></tr><tr><td>Agent connection</td><td>Selected project/space</td><td>Channel; app membership required</td></tr><tr><td>Boundary</td><td>No arbitrary workflow editing</td><td>One-way posting, not channel reading</td></tr></tbody></table></div></div><div class="takeaway">Inspect connection state and the actual destination.</div><div class="slide-foot"><span>09 / 13 · 16:00–18:00 · 02:00 planned</span><span>Guide sections: <a href="../guides/finops.html#F-05">F-05</a></span></div></article><article class="slide" id="slide-10" data-seconds="120" data-kind="table" data-group="3" data-chapter="Tasks, publication and lifecycle" aria-label="Slide 10" hidden><div class="slide-top"><span>AWS FinOps Agent · 04 / 06 Tasks, publication and lifecycle</span><span>Presentation</span></div><h1>Approval rules depend on effect and invocation</h1><div class="slide-body"><div class="table-wrap" tabindex="0" role="region" aria-label="Slide table"><table><thead><tr><th scope="col">Effect</th><th scope="col">Interactive / on-demand</th><th scope="col">Automation</th></tr></thead><tbody><tr><td>Jira issue or comment</td><td>Approval prompt</td><td>Pre-authorized during setup</td></tr><tr><td>Slack post</td><td>No approval prompt</td><td>No approval prompt</td></tr></tbody></table></div></div><div class="takeaway">Schedule setup can authorize publication; review content and audience at that point.</div><div class="slide-foot"><span>10 / 13 · 18:00–20:00 · 02:00 planned</span><span>Guide sections: <a href="../guides/finops.html#F-M06">F-M06</a></span></div></article><article class="slide" id="slide-11" data-seconds="120" data-kind="table" data-group="3" data-chapter="Tasks, publication and lifecycle" aria-label="Slide 11" hidden><div class="slide-top"><span>AWS FinOps Agent · 04 / 06 Tasks, publication and lifecycle</span><span>Presentation</span></div><h1>Stop and delete mean different things for different objects</h1><div class="slide-body"><div class="table-wrap" tabindex="0" role="region" aria-label="Slide table"><table><thead><tr><th scope="col">Object</th><th scope="col">Control</th><th scope="col">What may remain</th></tr></thead><tbody><tr><td>Context file</td><td>Soft delete / restore</td><td>Retained file content</td></tr><tr><td>Task</td><td>Cancel execution</td><td>Task record</td></tr><tr><td>Automation</td><td>Disable/delete future starts</td><td>Existing tasks</td></tr><tr><td>Artifact</td><td>Delete artifact</td><td>External published copies</td></tr></tbody></table></div></div><div class="takeaway">Whole-agent deletion is not an ordinary lifecycle demonstration.</div><div class="slide-foot"><span>11 / 13 · 20:00–22:00 · 02:00 planned</span><span>Guide sections: <a href="../guides/finops.html#F-M07">F-M07</a><a href="../guides/finops.html#F-04">F-04</a></span></div></article><article class="slide" id="slide-12" data-seconds="480" data-kind="demo" data-group="4" data-chapter="Prepared-result exercise" aria-label="Slide 12" hidden><div class="slide-top"><span>AWS FinOps Agent · 05 / 06 Prepared-result exercise</span><span>Prepared-result exercise</span></div><h1>Exercise: reconcile the 41% increase before explaining it</h1><div class="slide-body"><div class="table-wrap" tabindex="0" role="region" aria-label="Slide table"><table><thead><tr><th scope="col">Time</th><th scope="col">Action</th><th scope="col">Prepared evidence</th></tr></thead><tbody><tr><td>0–2 min</td><td>Check comparison contract</td><td>Two complete windows, same scope and cost basis</td></tr><tr><td>2–4 min</td><td>Reconcile component totals</td><td>1,400 → 1,974; delta 574</td></tr><tr><td>4–6 min</td><td>Attribute arithmetic</td><td>Storage +200; requests +100; transfer +274</td></tr><tr><td>6–8 min</td><td>Evaluate prepared evidence</td><td>Extra export supports transfer only; other causes unresolved</td></tr></tbody></table></div></div><div class="takeaway">Synthetic quantities and rates—not AWS prices or a measured saving.</div><div class="slide-foot"><span>12 / 13 · 22:00–30:00 · 08:00 planned</span><span>Guide sections: <a href="../guides/finops.html#F-U01">F-U01</a></span></div></article><article class="slide" id="slide-13" data-seconds="120" data-kind="columns" data-group="5" data-chapter="Troubleshooting and coverage" aria-label="Slide 13" hidden><div class="slide-top"><span>AWS FinOps Agent · 06 / 06 Troubleshooting and coverage</span><span>Presentation</span></div><h1>Validate each layer rather than one fluent answer</h1><div class="slide-body"><div class="columns"><div class="column"><strong>Data</strong><p>Reproduce totals with identical metric, dates, filters and units.</p></div><div class="column"><strong>State and execution</strong><p>Test file retrieval, memory, event matching and queue status separately.</p></div><div class="column"><strong>Effects</strong><p>Inspect destination, approval path and retained records after a stop operation.</p></div></div></div><div class="takeaway">Complete current policies and quotas remain the authoritative linked reference.</div><div class="slide-foot"><span>13 / 13 · 30:00–32:00 · 02:00 planned</span><span>Guide sections: <a href="../guides/finops.html#F-06">F-06</a><a href="../guides/finops.html#F-07">F-07</a></span></div></article><div class="deck-status"><span id="slide-position"></span><progress id="slide-progress" max="13" value="1" aria-label="Slide progress"></progress><span>← → navigate · N notes · T timer · F fullscreen</span></div><span id="slide-announcement" aria-live="polite" style="position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden"></span><details id="speaker-notes" class="notes"><summary>Speaker notes and canonical reference</summary><div class="note-block"><h2>1. Instance configuration and task execution are separate</h2><p class="small">Budget 02:00 · cumulative 00:00–02:00.</p><div class="talk-track"><strong>Speaking focus</strong><p>Preview service; storage and inference geography must be reviewed separately.</p><p class="small">Use the visual as the outline. The linked reference below is supporting detail, not a required verbatim script.</p></div><section class="note-reference"><h3><a href="../guides/finops.html#F-01">F-01 — Resource and authority model</a></h3><pre><code class="language-text">AWS account / Region
+  Administrator policy → setup operations
+  Registered Jira / Slack integration → agent connection / destination
+  Agent data role → permitted AWS cost and operational APIs
+  Operator role + user permission → web-app access
+                      ↓
+Agent instance
+  ├─ context files, conversational memory, conversations
+  ├─ automations → scheduled/event tasks ┐
+  ├─ on-demand tasks ───────────────────┴─ shared queue → results
+  └─ report artifacts → local download / configured publication
+</code></pre>
+<p>An integration is registered at account level; a connection binds it to an agent and destination. Each agent instance has its own permissions, retained context, task queue and connections. Instance separation is not a shared organization-wide memory service. <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/creating-an-agent.html">FS02</a> <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/setting-up.html">FS03</a> <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html">FS08</a></p>
+<div aria-label="Scrollable reference table" class="table-wrap" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>Product function</th>
+<th>Supporting platform capabilities</th>
+<th>Detailed treatment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cost inquiry, comparisons, forecasts and coverage</td>
+<td>Authorized source queries; organizational context; conversation</td>
+<td><a href="../guides/finops.html#F-02">F-02</a>, <a href="../guides/finops.html#F-M01">F-M01</a>, <a href="../guides/finops.html#F-M02">F-M02</a></td>
+</tr>
+<tr>
+<td>Anomaly investigation</td>
+<td>Cost Anomaly Detection; operational-change evidence; tasks</td>
+<td><a href="../guides/finops.html#F-M01">F-M01</a>, <a href="../guides/finops.html#F-M05">F-M05</a></td>
+</tr>
+<tr>
+<td>Recommendation triage</td>
+<td>Retrieval of upstream recommendations</td>
+<td><a href="../guides/finops.html#F-M01">F-M01</a></td>
+</tr>
+<tr>
+<td>Recurring reporting</td>
+<td>Context, automation, queue, artifacts, destinations</td>
+<td><a href="../guides/finops.html#F-M02">F-M02</a> through <a href="../guides/finops.html#F-M06">F-M06</a></td>
+</tr>
+<tr>
+<td>Team handoff</td>
+<td>Explicit external-action permissions and destination binding</td>
+<td><a href="../guides/finops.html#F-05">F-05</a>, <a href="../guides/finops.html#F-M06">F-M06</a></td>
+</tr>
+</tbody>
+</table></div>
+<p>The recommendations underlying optimization analysis originate in Cost Optimization Hub and Compute Optimizer. The agent contextualizes those recommendations; its prose is not a new independent optimization calculation. <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/what-is.html">FS01</a> <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html">FS06</a></p>
+</section><h3>Official documentation for this slide</h3><ul><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/what-is.html">FS01 — what-is.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/creating-an-agent.html">FS02 — creating-an-agent.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/setting-up.html">FS03 — setting-up.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html">FS06 — agent-guardrail-control.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html">FS08 — data-protection.html</a></li></ul></div><div class="note-block" hidden><h2>2. Four permission responsibilities are not one role</h2><p class="small">Budget 03:00 · cumulative 02:00–05:00.</p><div class="talk-track"><strong>Speaking focus</strong><p>Test data access and team access independently.</p><p class="small">Use the visual as the outline. The linked reference below is supporting detail, not a required verbatim script.</p></div><section class="note-reference"><h3><a href="../guides/finops.html#F-02">F-02 — Configure four policy responsibilities and two service roles</a></h3><p>AWS distinguishes administrator setup permissions, the agent's data policy, the operator role policy, and the web-app user's own access policy. They are not four names for the same permission set. <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/setting-up.html">FS03</a></p>
+<div aria-label="Scrollable reference table" class="table-wrap" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>Responsibility</th>
+<th>Attached to / used by</th>
+<th>What to verify</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Setup administration</td>
+<td>Setup identity</td>
+<td>May create/configure the service and permitted roles/integrations</td>
+</tr>
+<tr>
+<td>Agent data access</td>
+<td>Role assumed by the service</td>
+<td>Actual source-service actions, account scope and required EventBridge permissions</td>
+</tr>
+<tr>
+<td>Operator session</td>
+<td>Operator role</td>
+<td>Supported conversation, task, document and operator operations</td>
+</tr>
+<tr>
+<td>Web-app entry</td>
+<td>End-user identity</td>
+<td>May access the configured agent through the supported route</td>
+</tr>
+</tbody>
+</table></div>
+<p>The setup path uses roles trusted by <code>finops-agent.amazonaws.com</code>. Automatically created roles include service-specific scoping. For existing roles, use the official trust and permission examples and adapt them to the intended account and instance. A role name cannot establish what actions its policy permits. <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/creating-an-agent.html">FS02</a> <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/setting-up.html">FS03</a></p>
+<p class="callout"><strong>Creation procedure:</strong> complete the wizard's name, agent access, operator access, optional third-party integrations, and review steps. Open the agent from the console, inspect its connections, and test an authorized cost query. Then test the intended non-administrator user. Success for the setup identity does not prove team access. <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/creating-an-agent.html">FS02</a></p>
+<p><strong>Dependency review:</strong> enable the cost/recommendation services required for the selected task and inspect whether the role permits the relevant APIs. For example, missing <code>cloudtrail:LookupEvents</code> removes an operational-change input without necessarily disabling Cost Explorer questions. Removing write access to customer infrastructure does not mean that Jira/Slack publishing is disabled; those effects follow separate integration rules. <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/setting-up.html">FS03</a> <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html">FS06</a></p>
+</section><h3>Official documentation for this slide</h3><ul><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/creating-an-agent.html">FS02 — creating-an-agent.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/setting-up.html">FS03 — setting-up.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html">FS06 — agent-guardrail-control.html</a></li></ul></div><div class="note-block" hidden><h2>3. Numerical contribution and cause are different conclusions</h2><p class="small">Budget 02:00 · cumulative 05:00–07:00.</p><div class="talk-track"><strong>Speaking focus</strong><p>A nearby deployment alone does not explain the entire cost delta.</p><p class="small">Use the visual as the outline. The linked reference below is supporting detail, not a required verbatim script.</p></div><section class="note-reference"><h3><a href="../guides/finops.html#F-M01">F-M01 — Source-backed analysis and recommendation provenance</a></h3><p>The agent translates an inquiry into supported data-source calls, interprets returned evidence using the instance's context, and generates a response or artifact. Cost Explorer totals, anomaly events, recommendation records and CloudTrail change records answer different questions. <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/what-is.html">FS01</a> <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/setting-up.html">FS03</a></p>
+<div aria-label="Scrollable reference table" class="table-wrap" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>Evidence</th>
+<th>Establishes</th>
+<th>Does not establish by itself</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Matching cost query</td>
+<td>Spend for the specified dates, metric, scope and dimensions</td>
+<td>Why a workload consumed that usage</td>
+</tr>
+<tr>
+<td>Anomaly record</td>
+<td>A detected deviation under the monitor's model</td>
+<td>Root cause of the deviation</td>
+</tr>
+<tr>
+<td>Recommendation source</td>
+<td>An upstream optimization candidate and its assumptions</td>
+<td>Realized saving or authorization to apply it</td>
+</tr>
+<tr>
+<td>Operational event</td>
+<td>A recorded change at a time</td>
+<td>That the change caused the entire cost movement</td>
+</tr>
+</tbody>
+</table></div>
+<p>The right procedure is to reproduce the numerical result first, then evaluate the explanation. Fix the time window, cost metric, granularity, filters, currency and relevant allocation assumptions. Require the response to identify unavailable sources instead of filling their absence with a causal story. These comparison rules are engineering guidance, not a new query mode. <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html">FS06</a></p>
+<p><strong>Read-only query example:</strong></p>
+<pre><code class="language-bash">aws ce get-cost-and-usage \
+  --time-period Start=2026-09-01,End=2026-09-15 \
+  --granularity DAILY --metrics UnblendedCost \
+  --group-by Type=DIMENSION,Key=SERVICE
+</code></pre>
+<p>The end date is exclusive. This example deliberately has no account, Region or tag filters; add the same approved filters used in the agent question before comparing results. Cost Explorer availability, permissions and API charges still apply. The command was not executed here and must not be compared to a differently scoped agent total. <a href="https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_GetCostAndUsage.html">FS14</a></p>
+</section><h3>Official documentation for this slide</h3><ul><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/what-is.html">FS01 — what-is.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/setting-up.html">FS03 — setting-up.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html">FS06 — agent-guardrail-control.html</a></li><li><a href="https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_GetCostAndUsage.html">FS14 — API_GetCostAndUsage.html</a></li></ul></div><div class="note-block" hidden><h2>4. Files are reviewed reference inputs</h2><p class="small">Budget 02:00 · cumulative 07:00–09:00.</p><div class="talk-track"><strong>Speaking focus</strong><p>Everyone with access to the agent can see its context files.</p><p class="small">Use the visual as the outline. The linked reference below is supporting detail, not a required verbatim script.</p></div><section class="note-reference"><h3><a href="../guides/finops.html#F-M02">F-M02 — Uploaded reference files are operator-maintained context</a></h3><p>The Context files workspace accepts text, CSV, JSON, Markdown, HTML and YAML. The documented file limit is 10 MB; total context storage is 100 MB per agent by default. The agent can read these files but cannot modify or delete them through conversation. Users who can access the agent can see its context files. <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/context-files-and-memory.html">FS04</a> <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/quotas.html">FS10</a></p>
+<p class="callout"><strong>Procedure:</strong> prepare a minimal, non-sensitive authoritative mapping, upload it through Context files, inspect its active state, and ask a question whose answer depends on one known entry. Delete/restore through the workspace when changing availability. Deletion is reversible soft deletion, not proof of physical erasure. <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/context-files-and-memory.html">FS04</a></p>
+<p class="callout"><strong>Original example:</strong></p>
+<pre><code class="language-yaml">schema: team-routing-v1
+updated: 2026-10-22
+accounts:
+  staging-account-alias:
+    owner: platform-team
+    cost_basis: UnblendedCost
+    publication: internal-test-channel-only
+</code></pre>
+<p>Use the identifiers actually available in your authorized queries; this alias is illustrative. Keep the source file under review in Git and upload a reviewed revision. A stale ownership mapping can produce the wrong destination even when the cost arithmetic is correct. A file statement about publication is prompt context, not a replacement for destination access controls.</p>
+</section><h3>Official documentation for this slide</h3><ul><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/context-files-and-memory.html">FS04 — context-files-and-memory.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/quotas.html">FS10 — quotas.html</a></li></ul></div><div class="note-block" hidden><h2>5. Memory and file retrieval need different tests</h2><p class="small">Budget 02:00 · cumulative 09:00–11:00.</p><div class="talk-track"><strong>Speaking focus</strong><p>Updating memory does not establish that a reference file changed.</p><p class="small">Use the visual as the outline. The linked reference below is supporting detail, not a required verbatim script.</p></div><section class="note-reference"><h3><a href="../guides/finops.html#F-M03">F-M03 — Conversational memory survives sessions; it is not a file update</a></h3><p>Memory retains preferences, organizational context, corrections and prior task outcomes for subsequent work. Use explicit remember, update and forget requests to manage it. These requests do not imply that a matching uploaded file or earlier conversation has also changed. Persistent context is instance-local and loaded into a session-isolated runtime. <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/context-files-and-memory.html">FS04</a> <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html">FS08</a></p>
+<p class="callout"><strong>Proposed verification:</strong> remember a harmless preference such as displaying a cost-comparison table before commentary. Open a new conversation and check its application; correct or forget the preference and repeat. Independently test uploaded-file retrieval with a different fact. Record whether the preference was applied, not an unsupported claim about hidden model state.</p>
+<p>For conflicting context, identify the authoritative source and update the relevant objects deliberately. Do not claim a documented automatic precedence rule between files and memory where the public guide does not specify one.</p>
+</section><h3>Official documentation for this slide</h3><ul><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/context-files-and-memory.html">FS04 — context-files-and-memory.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html">FS08 — data-protection.html</a></li></ul></div><div class="note-block" hidden><h2>6. Compaction summarizes a conversation, not all persistent state</h2><p class="small">Budget 01:00 · cumulative 11:00–12:00.</p><div class="talk-track"><strong>Speaking focus</strong><p>Do not infer verbatim retention or a documented hidden precedence algorithm.</p><p class="small">Use the visual as the outline. The linked reference below is supporting detail, not a required verbatim script.</p></div><section class="note-reference"><h3><a href="../guides/finops.html#F-M04">F-M04 — Conversation compaction manages a bounded context</a></h3><p>As a conversation approaches its context limit, older messages are summarized while recent messages remain in full. This is within-conversation context management, distinct from persistent memory and uploaded files. The documentation does not promise verbatim retention or expose a general customer setting for the summarization algorithm. <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/context-files-and-memory.html">FS04</a></p>
+<p class="callout"><strong>Engineering procedure:</strong> put critical constraints in a concise current task specification and reference the authoritative file or source record. When resuming a long conversation, ask the agent to restate the comparison basis and unresolved questions, then correct any discrepancy before requesting another calculation. This tests retained context; it does not prove that every earlier message remains available.</p>
+</section><h3>Official documentation for this slide</h3><ul><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/context-files-and-memory.html">FS04 — context-files-and-memory.html</a></li></ul></div><div class="note-block" hidden><h2>7. A task runs; an automation creates future tasks</h2><p class="small">Budget 02:00 · cumulative 12:00–14:00.</p><div class="talk-track"><strong>Speaking focus</strong><p>Removing an automation does not delete existing tasks or messages.</p><p class="small">Use the visual as the outline. The linked reference below is supporting detail, not a required verbatim script.</p></div><section class="note-reference"><h3><a href="../guides/finops.html#F-03">F-03 — On-demand tasks, schedules and observation</a></h3><p>A task is an execution record. An automation is a rule for creating future tasks. On-demand, scheduled and event-triggered work shares the queue. Asking a conversational question is not necessarily a request to create a durable task; task creation should be explicit. <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/task-management.html">FS05</a></p>
+<p class="callout"><strong>On-demand procedure:</strong> use the Tasks workspace or explicitly request a task, give its input scope and desired output, and inspect the resulting task. Check pending/running/completed or failure information and resulting artifacts. Do not treat a conversational acknowledgement as evidence that execution has finished. <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/task-management.html">FS05</a></p>
+<p class="callout"><strong>Scheduled procedure:</strong> define the required schedule and reporting window separately. Inspect the saved automation's trigger and next applicable execution information. For a daily report, a schedule time does not define whether the report covers the previous calendar day, rolling 24 hours or incomplete current day; specify the window. Removing the automation prevents future tasks but does not remove previously created tasks or published messages. <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/task-management.html">FS05</a> <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html">FS08</a></p>
+</section><h3>Official documentation for this slide</h3><ul><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/task-management.html">FS05 — task-management.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html">FS08 — data-protection.html</a></li></ul></div><div class="note-block" hidden><h2>8. Trace an anomaly through the complete event path</h2><p class="small">Budget 02:00 · cumulative 14:00–16:00.</p><div class="talk-track"><strong>Speaking focus</strong><p>No task and no delivered message are different failures.</p><p class="small">Use the visual as the outline. The linked reference below is supporting detail, not a required verbatim script.</p></div><section class="note-reference"><h3><a href="../guides/finops.html#F-M05">F-M05 — Anomaly events become queued work through a managed rule</a></h3><p>The documented event path is Cost Anomaly Detection → managed EventBridge rule → matching automation → task queue → analysis/result. During the reviewed preview, the event type is <code>COST_ANOMALY</code>; this does not establish an arbitrary customer-event orchestration platform. <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/task-management.html">FS05</a> <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/automated-anomaly-response.html">FS07</a></p>
+<p class="callout"><strong>Enablement procedure:</strong></p>
+<ol>
+<li>Configure a relevant Cost Anomaly Detection monitor and ensure the agent role can manage the service's EventBridge rules.</li>
+<li>Connect any intended reporting destination using <a href="../guides/finops.html#F-05">F-05</a>. Set the destination before enabling automatic publication.</li>
+<li>Request an automation naming the monitor/conditions and the intended investigation and output. Treat threshold values in example prompts as proposed configuration, not service defaults.</li>
+<li>Open Automations and inspect the stored trigger type, status and last-triggered information. Inspect the created task separately after a matching event.</li>
+<li>For a test, trace event identity, automation, task, result and external message. Then disable or remove the automation and verify that new matching work stops; existing tasks need separate handling.</li>
+</ol>
+<p>AWS's IAM examples constrain rule management using service ownership and account conditions. Do not replace those conditions with broad EventBridge administration merely because task creation failed. <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/setting-up.html">FS03</a> <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/automated-anomaly-response.html">FS07</a></p>
+<p><strong>Failure branch:</strong> a registered automation with no task can mean there was no matching event, the monitor/condition is wrong, or rule permissions failed. A completed task with no message is a different destination/publication problem. Preserve these distinctions during diagnosis.</p>
+</section><h3>Official documentation for this slide</h3><ul><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/setting-up.html">FS03 — setting-up.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/task-management.html">FS05 — task-management.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/automated-anomaly-response.html">FS07 — automated-anomaly-response.html</a></li></ul></div><div class="note-block" hidden><h2>9. Integration registration precedes destination binding</h2><p class="small">Budget 02:00 · cumulative 16:00–18:00.</p><div class="talk-track"><strong>Speaking focus</strong><p>Inspect connection state and the actual destination.</p><p class="small">Use the visual as the outline. The linked reference below is supporting detail, not a required verbatim script.</p></div><section class="note-reference"><h3><a href="../guides/finops.html#F-05">F-05 — Integration registration and destination connections</a></h3><div aria-label="Scrollable reference table" class="table-wrap" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Jira</th>
+<th>Slack</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Account registration</td>
+<td>Supported Jira Cloud authorization flow</td>
+<td>Workspace authorization</td>
+</tr>
+<tr>
+<td>Agent connection</td>
+<td>Selected Jira space/project key</td>
+<td>Channel ID; application already added to that channel</td>
+</tr>
+<tr>
+<td>Supported effects</td>
+<td>Create issues; supported reads/comments</td>
+<td>One-way posting and supported artifact sharing</td>
+</tr>
+<tr>
+<td>Do not assume</td>
+<td>On-premises support or arbitrary issue/workflow editing</td>
+<td>Reading channel conversations, responding to mentions, editing/deleting posts</td>
+</tr>
+</tbody>
+</table></div>
+<p>Register the integration, complete authorization, then add the agent-specific connection and confirm its status. Inspect Pending/Active/Error/Inactive states rather than relying on the connection's name. An invalid Jira destination in unattended execution can fail instead of producing a clarifying conversation. A Slack membership error requires adding the app to the intended channel, not granting unrelated AWS permissions. <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/jira-integration.html">FS12</a> <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/slack-integration.html">FS13</a></p>
+<p class="callout"><strong>Engineering procedure:</strong> use designated test destinations, post a non-sensitive test result and record its actual location. Confirm that only the intended users can see it. API retries described in the integration guide address transient failures; they do not turn a permission or invalid-destination error into a successful publication.</p>
+</section><h3>Official documentation for this slide</h3><ul><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/jira-integration.html">FS12 — jira-integration.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/slack-integration.html">FS13 — slack-integration.html</a></li></ul></div><div class="note-block" hidden><h2>10. Approval rules depend on effect and invocation</h2><p class="small">Budget 02:00 · cumulative 18:00–20:00.</p><div class="talk-track"><strong>Speaking focus</strong><p>Schedule setup can authorize publication; review content and audience at that point.</p><p class="small">Use the visual as the outline. The linked reference below is supporting detail, not a required verbatim script.</p></div><section class="note-reference"><h3><a href="../guides/finops.html#F-M06">F-M06 — Approval depends on the action and invocation path</a></h3><div aria-label="Scrollable reference table" class="table-wrap" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>Effect</th>
+<th>Chat / on-demand task</th>
+<th>Scheduled / event task</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Jira issue or comment</td>
+<td>Approval requested</td>
+<td>Pre-authorized through automation setup</td>
+</tr>
+<tr>
+<td>Slack post</td>
+<td>No approval prompt</td>
+<td>No approval prompt</td>
+</tr>
+</tbody>
+</table></div>
+<p>These are documented differences, not one universal human-approval rule. Automation setup is therefore an authorization decision as well as a scheduling decision. Connected destinations and supplied context must be appropriate for unattended publication. <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html">FS06</a> <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/task-management.html">FS05</a></p>
+<p class="callout"><strong>Proposed verification:</strong> in test destinations, record the requested action, invocation type, observed prompt or lack of prompt, and the resulting artifact. A successful Slack post does not demonstrate Jira approval behavior. Removing a future schedule does not retract a previously published message.</p>
+</section><h3>Official documentation for this slide</h3><ul><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/task-management.html">FS05 — task-management.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html">FS06 — agent-guardrail-control.html</a></li></ul></div><div class="note-block" hidden><h2>11. Stop and delete mean different things for different objects</h2><p class="small">Budget 02:00 · cumulative 20:00–22:00.</p><div class="talk-track"><strong>Speaking focus</strong><p>Whole-agent deletion is not an ordinary lifecycle demonstration.</p><p class="small">Use the visual as the outline. The linked reference below is supporting detail, not a required verbatim script.</p></div><section class="note-reference"><h3><a href="../guides/finops.html#F-M07">F-M07 — Data lifecycle follows the object, not a single delete command</a></h3><p>Persistent agent data and the ephemeral session runtime are separate. The preview uses AWS-managed encrypted storage. Agent instances do not share retained files or memory. <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html">FS08</a></p>
+<div aria-label="Scrollable reference table" class="table-wrap" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>Object</th>
+<th>Supported control and consequence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Context file</td>
+<td>Soft delete; restore later through workspace</td>
+</tr>
+<tr>
+<td>Memory</td>
+<td>Ask to update or forget the specific information</td>
+</tr>
+<tr>
+<td>Conversation</td>
+<td>Individual deletion not supported in reviewed preview; retained until agent deletion</td>
+</tr>
+<tr>
+<td>Task</td>
+<td>Cancel execution where supported; record remains until agent deletion</td>
+</tr>
+<tr>
+<td>Automation</td>
+<td>Disable/delete future task creation; existing tasks remain separate</td>
+</tr>
+<tr>
+<td>Artifact</td>
+<td>Delete through its supported workspace; external copies are separate</td>
+</tr>
+<tr>
+<td>Whole agent</td>
+<td>Delete instance and associated retained service data; disconnect third-party integrations first</td>
+</tr>
+</tbody>
+</table></div>
+<p>Use the operation matching the intended outcome. In particular, cancel, forget, soft delete, disable and delete are not synonyms. Whole-agent deletion is unsuitable as an ordinary demonstration when meaningful data exists. <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html">FS08</a> <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/creating-an-agent.html">FS02</a></p>
+<p>For data-location decisions, document both persistent storage (<code>us-east-1</code> in the reviewed preview) and cross-Region US inference. Do not describe the chosen console Region as the complete processing boundary. <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/cross-region-inference.html">FS09</a></p>
+</section><section class="note-reference"><h3><a href="../guides/finops.html#F-04">F-04 — Report artifacts and revision</a></h3><p>The service supports report artifacts including HTML, PDF and editable PowerPoint. A request can specify the audience, comparison basis, grouping and output format, and subsequent requests can revise the artifact. Source retrieval, calculations and artifact generation are different stages; formatted output is not independent proof that the totals are correct. <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/custom-cost-reporting.html">FS11</a></p>
+<p class="callout"><strong>Procedure:</strong> ask for one defined report, inspect the source breakdown and period, open/download the artifact, and verify at least one material total using the same source query. Request a revision that names the desired change rather than silently changing the comparison basis. When publishing, check that the file corresponds to the reviewed task and audience. <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/custom-cost-reporting.html">FS11</a> <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html">FS06</a></p>
+<p>The artifact store has a separate default quota from context-file storage. Deleting an artifact does not necessarily delete external copies previously posted to a collaboration system. <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/quotas.html">FS10</a> <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html">FS08</a></p>
+</section><h3>Official documentation for this slide</h3><ul><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/creating-an-agent.html">FS02 — creating-an-agent.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html">FS06 — agent-guardrail-control.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html">FS08 — data-protection.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/cross-region-inference.html">FS09 — cross-region-inference.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/quotas.html">FS10 — quotas.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/custom-cost-reporting.html">FS11 — custom-cost-reporting.html</a></li></ul></div><div class="note-block" hidden><h2>12. Exercise: reconcile the 41% increase before explaining it</h2><p class="small">Budget 08:00 · cumulative 22:00–30:00.</p><div class="talk-track"><strong>Speaking focus</strong><p>Synthetic quantities and rates—not AWS prices or a measured saving.</p><p class="small">Use the visual as the outline. The linked reference below is supporting detail, not a required verbatim script.</p></div><section class="note-reference"><h3><a href="../guides/finops.html#F-U01">F-U01 — Worked example: decompose a cost increase</a></h3><p><strong>Synthetic fixture; USD; two complete 14-day windows; identical account, service and cost basis.</strong> Rates and quantities are teaching values, not AWS prices. This fixture now includes quantities and rates, so it can support arithmetic attribution rather than just two totals.</p>
+<div aria-label="Scrollable reference table" class="table-wrap" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>Component</th>
+<th style="text-align:right">Baseline quantity</th>
+<th style="text-align:right">Comparison quantity</th>
+<th style="text-align:right">Unit rate</th>
+<th style="text-align:right">Baseline cost</th>
+<th style="text-align:right">Comparison cost</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Storage quantity</td>
+<td style="text-align:right">10,000</td>
+<td style="text-align:right">12,000</td>
+<td style="text-align:right">0.10</td>
+<td style="text-align:right">1,000</td>
+<td style="text-align:right">1,200</td>
+</tr>
+<tr>
+<td>Request quantity</td>
+<td style="text-align:right">2,000,000</td>
+<td style="text-align:right">3,000,000</td>
+<td style="text-align:right">0.0001</td>
+<td style="text-align:right">200</td>
+<td style="text-align:right">300</td>
+</tr>
+<tr>
+<td>Transfer quantity</td>
+<td style="text-align:right">2,000</td>
+<td style="text-align:right">4,740</td>
+<td style="text-align:right">0.10</td>
+<td style="text-align:right">200</td>
+<td style="text-align:right">474</td>
+</tr>
+<tr>
+<td>Total</td>
+<td style="text-align:right">—</td>
+<td style="text-align:right">—</td>
+<td style="text-align:right">—</td>
+<td style="text-align:right">1,400</td>
+<td style="text-align:right">1,974</td>
+</tr>
+</tbody>
+</table></div>
+<p>The delta is 574, or 41%. Component contributions are 200 storage, 100 requests and 274 transfer. The transfer component explains about 47.7% of the monetary delta, not 47.7% of all spending. Rates are unchanged in this fixture. These calculations can be reproduced without an agent.</p>
+<p><strong>Prepared operational evidence:</strong> a deployment at 10:02 UTC enabled a second export destination; a job log after that deployment records 2,740 additional transfer units. This is invented corroborating evidence. It supports the transfer-volume explanation in this fixture but cannot explain the additional storage and request quantities without more evidence.</p>
+<p><strong>Walkthrough:</strong> fix the query contract, reconcile all line items, compute each delta, inspect the prepared change/job evidence, and report a partial explanation. The expected answer identifies transfer as the largest contributor, marks the export change as supported by the supplied log, and leaves storage/request causes unresolved. Do not add potential recommendation savings to the historical delta.</p>
+<p><strong>Failure branches:</strong> a different cost metric or date window invalidates the comparison; missing job evidence leaves only a temporal association; lack of recommendation-service data prevents evaluating a candidate saving. A proposed lifecycle or capacity change requires a separate engineering decision and measurement plan.</p>
+<p>The repository's deterministic fixture test verifies the arithmetic. It is not a test of the AWS service, recommendation quality or causal inference.</p>
+</section><h3>Official documentation for this slide</h3><ul><li>Synthetic or team-composed example; see the linked guide for its stated boundaries.</li></ul></div><div class="note-block" hidden><h2>13. Validate each layer rather than one fluent answer</h2><p class="small">Budget 02:00 · cumulative 30:00–32:00.</p><div class="talk-track"><strong>Speaking focus</strong><p>Complete current policies and quotas remain the authoritative linked reference.</p><p class="small">Use the visual as the outline. The linked reference below is supporting detail, not a required verbatim script.</p></div><section class="note-reference"><h3><a href="../guides/finops.html#F-06">F-06 — Limits and troubleshooting decisions</a></h3><p>Selected documented defaults are one agent per account/Region, 100 MB artifact storage, 10 MB per context upload and 100 MB total context storage. The per-file limit is fixed; relevant account/storage quotas may be adjustable. The reviewed integration limits include one account-level registration of each supported collaboration type and two connections of each type per agent. Check actual quotas before designing multiple destinations or isolated instances. <a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/quotas.html">FS10</a></p>
+<div aria-label="Scrollable reference table" class="table-wrap" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Inspect</th>
+<th>Result to establish</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>User cannot open agent</td>
+<td>User policy and operator role, not only setup permissions</td>
+<td>Intended user can enter and perform the supported operation</td>
+</tr>
+<tr>
+<td>Total differs from console</td>
+<td>Dates, exclusive end, metric, filters, currency, grouping</td>
+<td>Same query reproduces the amount</td>
+</tr>
+<tr>
+<td>No change evidence</td>
+<td>Agent role and CloudTrail availability</td>
+<td>Determine source absence before proposing a cause</td>
+</tr>
+<tr>
+<td>Uploaded mapping ignored</td>
+<td>File active state, identifiers and task scope</td>
+<td>Known mapping can be retrieved separately from memory</td>
+</tr>
+<tr>
+<td>Task never starts</td>
+<td>Automation match and shared queue</td>
+<td>Distinguish no task creation from queued execution</td>
+</tr>
+<tr>
+<td>Jira action not visible</td>
+<td>Destination binding, approval path and task result</td>
+<td>Correct project and resulting issue/comment</td>
+</tr>
+<tr>
+<td>Slack post denied</td>
+<td>App membership, channel ID and connection state</td>
+<td>App is in the configured channel and connection active</td>
+</tr>
+<tr>
+<td>File cannot upload</td>
+<td>Type, per-file size and total quota</td>
+<td>Input is supported and storage available</td>
+</tr>
+<tr>
+<td>Deleted automation still has records</td>
+<td>Object lifecycle</td>
+<td>No new tasks; old task records expected</td>
+</tr>
+</tbody>
+</table></div>
+<p>The table is engineering troubleshooting guidance based on the cited configuration and integration pages. It is not a claim of a native unified diagnostic workflow.</p>
+</section><section class="note-reference"><h3><a href="../guides/finops.html#F-07">F-07 — Coverage and source-review record</a></h3><div aria-label="Scrollable reference table" class="table-wrap" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>Official topic</th>
+<th>Treatment</th>
+<th>Boundary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Setup, roles, instance creation</td>
+<td>Role/policy map and ordered setup</td>
+<td>Exact account-specific IAM statements remain official examples</td>
+</tr>
+<tr>
+<td>Cost and recommendation sources</td>
+<td>Provenance, read-only query and reconciliation</td>
+<td>No complete enumeration of every supported cost dimension</td>
+</tr>
+<tr>
+<td>Files, memory, compaction</td>
+<td>Separate mechanisms and lifecycle</td>
+<td>No invented internal precedence or summary algorithm</td>
+</tr>
+<tr>
+<td>Tasks and events</td>
+<td>Configuration, rule/queue sequence and failure split</td>
+<td>Preview event types only as documented</td>
+</tr>
+<tr>
+<td>Reporting and integrations</td>
+<td>Artifacts, destination binding and effect-specific approval</td>
+<td>No live external publication performed</td>
+</tr>
+<tr>
+<td>Data protection and quotas</td>
+<td>Object matrix, location distinction, selected constraints</td>
+<td>Complete current quota and policy tables linked</td>
+</tr>
+</tbody>
+</table></div>
+<h4>Official sources and reviewed sections</h4>
+<ul>
+<li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/what-is.html">FS01</a> Product functions and recommendation provenance.</li>
+<li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/creating-an-agent.html">FS02</a> Five creation steps, roles, team access, verification and deletion prerequisites.</li>
+<li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/setting-up.html">FS03</a> Four policy responsibilities, trust, source actions and managed EventBridge permissions.</li>
+<li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/context-files-and-memory.html">FS04</a> File formats/limits, upload/soft deletion, memory and compaction.</li>
+<li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/task-management.html">FS05</a> Task queue, manual/scheduled/event work and execution observation.</li>
+<li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html">FS06</a> Supported effects, approval rules and analytical boundaries.</li>
+<li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/automated-anomaly-response.html">FS07</a> Cost Anomaly Detection, rule/automation setup and destination checks.</li>
+<li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html">FS08</a> Persistent/runtime isolation and object-specific lifecycle.</li>
+<li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/cross-region-inference.html">FS09</a> Preview storage and US cross-Region inference.</li>
+<li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/quotas.html">FS10</a> Default quotas and adjustability.</li>
+<li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/custom-cost-reporting.html">FS11</a> Report formats, artifacts and revision.</li>
+<li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/jira-integration.html">FS12</a> Jira registration/connections, operations, states and failures.</li>
+<li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/slack-integration.html">FS13</a> Slack registration/connections, one-way behavior and membership failures.</li>
+<li><a href="https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_GetCostAndUsage.html">FS14</a> Cost Explorer GetCostAndUsage request semantics; read-only example.</li>
+</ul>
+</section><h3>Official documentation for this slide</h3><ul><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/what-is.html">FS01 — what-is.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/creating-an-agent.html">FS02 — creating-an-agent.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/setting-up.html">FS03 — setting-up.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/context-files-and-memory.html">FS04 — context-files-and-memory.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/task-management.html">FS05 — task-management.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html">FS06 — agent-guardrail-control.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/automated-anomaly-response.html">FS07 — automated-anomaly-response.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html">FS08 — data-protection.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/cross-region-inference.html">FS09 — cross-region-inference.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/quotas.html">FS10 — quotas.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/custom-cost-reporting.html">FS11 — custom-cost-reporting.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/jira-integration.html">FS12 — jira-integration.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/slack-integration.html">FS13 — slack-integration.html</a></li><li><a href="https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_GetCostAndUsage.html">FS14 — API_GetCostAndUsage.html</a></li></ul></div></details><details class="evidence"><summary>Official source register · untimed reference</summary><p class="small">Product statements retain their existing official references. This revision changes organization and HTML delivery; it does not constitute a new product-documentation audit or live AWS test.</p><ol><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/what-is.html">FS01 — what-is.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/creating-an-agent.html">FS02 — creating-an-agent.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/setting-up.html">FS03 — setting-up.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/context-files-and-memory.html">FS04 — context-files-and-memory.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/task-management.html">FS05 — task-management.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html">FS06 — agent-guardrail-control.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/automated-anomaly-response.html">FS07 — automated-anomaly-response.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html">FS08 — data-protection.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/cross-region-inference.html">FS09 — cross-region-inference.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/quotas.html">FS10 — quotas.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/custom-cost-reporting.html">FS11 — custom-cost-reporting.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/jira-integration.html">FS12 — jira-integration.html</a></li><li><a href="https://docs.aws.amazon.com/finops-agent/latest/userguide/slack-integration.html">FS13 — slack-integration.html</a></li><li><a href="https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_GetCostAndUsage.html">FS14 — API_GetCostAndUsage.html</a></li></ol></details><footer>No live service completion or measured outcome is implied by the walkthrough budgets. <a href="finops-notes.md">Presenter reference</a>.</footer></main><dialog id="agenda" aria-labelledby="agenda-title"><div class="dialog-top"><h2 id="agenda-title">AWS FinOps Agent — agenda</h2><button id="agenda-close">Close</button></div><p>32 minutes including 8 minutes of prepared-result exercise. Select a slide or use the chapter buttons.</p><section class="agenda-group"><h3>01. Platform model · 02:00</h3><button data-slide="0">01. Instance configuration and task execution are separate<small>00:00–02:00 · 02:00 planned</small></button></section><section class="agenda-group"><h3>02. Access and source data · 05:00</h3><button data-slide="1">02. Four permission responsibilities are not one role<small>02:00–05:00 · 03:00 planned</small></button><button data-slide="2">03. Numerical contribution and cause are different conclusions<small>05:00–07:00 · 02:00 planned</small></button></section><section class="agenda-group"><h3>03. Context mechanisms · 05:00</h3><button data-slide="3">04. Files are reviewed reference inputs<small>07:00–09:00 · 02:00 planned</small></button><button data-slide="4">05. Memory and file retrieval need different tests<small>09:00–11:00 · 02:00 planned</small></button><button data-slide="5">06. Compaction summarizes a conversation, not all persistent state<small>11:00–12:00 · 01:00 planned</small></button></section><section class="agenda-group"><h3>04. Tasks, publication and lifecycle · 10:00</h3><button data-slide="6">07. A task runs; an automation creates future tasks<small>12:00–14:00 · 02:00 planned</small></button><button data-slide="7">08. Trace an anomaly through the complete event path<small>14:00–16:00 · 02:00 planned</small></button><button data-slide="8">09. Integration registration precedes destination binding<small>16:00–18:00 · 02:00 planned</small></button><button data-slide="9">10. Approval rules depend on effect and invocation<small>18:00–20:00 · 02:00 planned</small></button><button data-slide="10">11. Stop and delete mean different things for different objects<small>20:00–22:00 · 02:00 planned</small></button></section><section class="agenda-group"><h3>05. Prepared-result exercise · 08:00</h3><button data-slide="11">12. Exercise: reconcile the 41% increase before explaining it<small>22:00–30:00 · 08:00 planned</small></button></section><section class="agenda-group"><h3>06. Troubleshooting and coverage · 02:00</h3><button data-slide="12">13. Validate each layer rather than one fluent answer<small>30:00–32:00 · 02:00 planned</small></button></section></dialog><script>'use strict';
+(() => {
+  const $ = s => document.querySelector(s);
+  const $$ = s => [...document.querySelectorAll(s)];
+  const isEditing = () => ['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName);
+  const format = seconds => `${Math.floor(seconds / 60).toString().padStart(2,'0')}:${Math.floor(seconds % 60).toString().padStart(2,'0')}`;
+  $$('[data-print]').forEach(b => b.addEventListener('click', () => window.print()));
+  if (document.body.dataset.view === 'report') {
+    const sections = $$('.report-section'), chapters = $$('.chapter');
+    const search = $('#search'), type = $('#type'), chapter = $('#chapter');
+    function filter() {
+      const query = search.value.toLowerCase().trim();
+      let count = 0;
+      sections.forEach(s => {
+        const visible = (!query || s.textContent.toLowerCase().includes(query)) && (!type.value || s.dataset.kind === type.value) && (!chapter.value || s.dataset.chapter === chapter.value);
+        s.hidden = !visible;
+        if (visible) count++;
+      });
+      chapters.forEach(c => c.hidden = ![...c.querySelectorAll('.report-section')].some(s => !s.hidden));
+      $('#search-status').textContent = `${count} of ${sections.length} sections shown`;
+      $('#empty-results').hidden = count !== 0;
+    }
+    function reset() { search.value = ''; type.value = ''; chapter.value = ''; filter(); }
+    [search,type,chapter].forEach(x => x.addEventListener('input',filter));
+    $('#reset').addEventListener('click',reset);
+    $('#nav-expand').addEventListener('click',() => $$('.toc details').forEach(d => d.open = true));
+    $('#nav-collapse').addEventListener('click',() => $$('.toc details').forEach(d => d.open = false));
+    function reveal() {
+      let id;
+      try { id = decodeURIComponent(location.hash.slice(1)); } catch { return; }
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (el.matches('.report-section,.chapter') || el.closest('.report-section')) {
+        reset();
+        const section = el.closest('.report-section') || el.querySelector('.report-section');
+        if (section) {
+          const link = $$('.toc a[data-section]').find(a => a.dataset.section === section.id);
+          if (link) link.closest('details').open = true;
+        }
+        requestAnimationFrame(() => el.scrollIntoView({block:'start'}));
+      }
+    }
+    window.addEventListener('hashchange',reveal);
+    $$('.toc a,.map-link').forEach(a => a.addEventListener('click',() => { reset(); setTimeout(reveal,0); }));
+    const observer = new IntersectionObserver(entries => {
+      const visible = entries.filter(e => e.isIntersecting && !e.target.hidden).sort((a,b) => a.boundingClientRect.top - b.boundingClientRect.top);
+      if (!visible.length) return;
+      const section = visible[0].target;
+      $$('.toc a[data-section]').forEach(a => {
+        const active = a.dataset.section === section.id;
+        a.classList.toggle('active',active);
+        if (active) a.setAttribute('aria-current','location'); else a.removeAttribute('aria-current');
+      });
+      $('#reading-location').textContent = section.dataset.path;
+    }, {rootMargin:'-80px 0px -60% 0px', threshold:0});
+    sections.forEach(s => observer.observe(s));
+    document.addEventListener('keydown',e => { if (e.key === '/' && !isEditing()) { e.preventDefault(); search.focus(); } });
+    filter(); reveal();
+  }
+  if (document.body.dataset.view === 'presentation') {
+    const slides = $$('.slide'), select = $('#slide-select'), noteBlocks = $$('.note-block');
+    const groups = $$('.chapter-strip button'), totalBudget = Number(document.body.dataset.total);
+    let index = 0, running = false, totalSpent = 0, last = 0;
+    const spent = slides.map(() => 0);
+    function collect() {
+      if (!running) return;
+      const now = performance.now(), delta = Math.max(0,now-last);
+      totalSpent += delta; spent[index] += delta; last = now;
+    }
+    function timers() {
+      collect();
+      $('#session-time').textContent = `${format(totalSpent/1000)} / ${format(totalBudget)}`;
+      $('#slide-time').textContent = `${format(spent[index]/1000)} / ${format(Number(slides[index].dataset.seconds))}`;
+      $('#session-clock').classList.toggle('over',totalSpent/1000 > totalBudget);
+      $('#slide-clock').classList.toggle('over',spent[index]/1000 > Number(slides[index].dataset.seconds));
+    }
+    function show(n, updateHash = true) {
+      collect(); index = Math.max(0,Math.min(slides.length-1,n));
+      slides.forEach((s,i) => s.hidden = i !== index);
+      noteBlocks.forEach((s,i) => s.hidden = i !== index);
+      select.value = String(index);
+      $('#previous').disabled = index === 0; $('#next').disabled = index === slides.length-1;
+      const active = slides[index];
+      groups.forEach(b => b.setAttribute('aria-current',String(b.dataset.group === active.dataset.group)));
+      $('#slide-progress').value = index+1;
+      $('#slide-position').textContent = `Slide ${index+1} of ${slides.length} · ${active.dataset.chapter}`;
+      $('#slide-announcement').textContent = `Slide ${index+1}: ${active.querySelector('h1').textContent}`;
+      if (updateHash) history.replaceState(null,'',`#slide-${String(index+1).padStart(2,'0')}`);
+      timers();
+    }
+    function fromHash() { const m = location.hash.match(/^#slide-(\d+)$/); show(m ? Number(m[1])-1 : 0,false); }
+    $('#previous').onclick = () => show(index-1);
+    $('#next').onclick = () => show(index+1);
+    select.onchange = () => show(Number(select.value));
+    groups.forEach(b => b.onclick = () => show(Number(b.dataset.start)));
+    $('#agenda-open').onclick = () => $('#agenda').showModal();
+    $('#agenda-close').onclick = () => $('#agenda').close();
+    $$('#agenda [data-slide]').forEach(b => b.onclick = () => { show(Number(b.dataset.slide)); $('#agenda').close(); });
+    $('#timer-toggle').onclick = () => {
+      collect(); running = !running; last = performance.now();
+      $('#timer-toggle').textContent = running ? 'Pause timer' : 'Start timer';
+      $('#timer-toggle').setAttribute('aria-pressed',String(running)); timers();
+    };
+    $('#timer-reset').onclick = () => { running=false; totalSpent=0; spent.fill(0); $('#timer-toggle').textContent='Start timer'; $('#timer-toggle').setAttribute('aria-pressed','false'); timers(); };
+    $('#notes-button').onclick = () => { $('#speaker-notes').open = !$('#speaker-notes').open; if ($('#speaker-notes').open) $('#speaker-notes').scrollIntoView({block:'start'}); };
+    $('#fullscreen').onclick = async () => {
+      try { if (document.fullscreenElement) await document.exitFullscreen(); else await document.documentElement.requestFullscreen(); }
+      catch { $('#slide-announcement').textContent='Fullscreen is unavailable; browser presentation controls remain active.'; }
+    };
+    document.addEventListener('keydown',e => {
+      if (isEditing() || $('#agenda').open) return;
+      const actions = {ArrowRight:()=>show(index+1),PageDown:()=>show(index+1),ArrowLeft:()=>show(index-1),PageUp:()=>show(index-1),Home:()=>show(0),End:()=>show(slides.length-1),n:()=>$('#notes-button').click(),t:()=>$('#timer-toggle').click(),f:()=>$('#fullscreen').click()};
+      if (actions[e.key]) { e.preventDefault(); actions[e.key](); }
+    });
+    window.addEventListener('hashchange',fromHash);
+    setInterval(timers,200); fromHash();
+  }
+})();
+</script></body></html>
