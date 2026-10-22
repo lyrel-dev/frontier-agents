@@ -141,8 +141,11 @@ def validate_model(guides,browser=False):
                     assert page.locator('#UC-G01').is_visible()
                     page.locator('[data-uc-reset]').click();page.locator('[data-uc-search]').fill('Investigation steering')
                     assert page.locator('#UC-D02').is_visible()
+                    page.locator('[data-uc-reset]').click();page.locator('[data-uc-search]').fill('Persistent reporting preferences')
+                    assert page.locator('[data-supporting-matches]').is_visible()
+                    assert page.locator('[data-supporting-matches] a[href="../catalog/mechanisms.html#MX-F-MEMORY"]').is_visible()
                     page.locator('[data-uc-reset]').click();page.locator('#UC-D06 summary').click()
-                    assert page.locator('#UC-D06 .workflow-steps > li').count()==4
+                    assert page.locator('#UC-D06 .workflow-steps > li').count()==len(next(c for c in cases if c['id']=='UC-D06')['workflow'])
                     page.locator('#UC-D06 a[href="../catalog/mechanisms.html#MX-D-RECALL"]').click()
                     assert page.locator('#MX-D-RECALL').is_visible()
                     page.locator('#MX-D-RECALL a[href="../catalog/features.html#FT-D-MEMORY"]').click()
