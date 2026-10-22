@@ -1,0 +1,234 @@
+{
+  "reviewed_on": "2026-10-23",
+  "baseline": "13b619a7cddd8249fbaa54931ca2099409eb8890",
+  "scope": "Technical wording, guide narrative, presentation explanations, selected factual corrections and corresponding regression checks.",
+  "protected": "The use-case, feature, profile, alias and resource-model source files are unchanged.",
+  "core_corrections": [
+    {
+      "id": "MX-F-ARTIFACT",
+      "field": "state",
+      "before": "Artifact linked to a task and query basis",
+      "after": "Report artifact, originating conversation or task, and query basis",
+      "reason": "Report generation also returns artifacts in conversation; a task is not a universal parent resource.",
+      "official_sources": [
+        "https://docs.aws.amazon.com/finops-agent/latest/userguide/custom-cost-reporting.html"
+      ]
+    },
+    {
+      "id": "MX-F-MEMORY",
+      "field": "trigger",
+      "before": "Explicit remember, update or forget request",
+      "after": "Conversation preferences, corrections or task outcomes; explicit remember, update or forget requests",
+      "reason": "The memory input model includes retained task outcomes and is not limited to imperative remember requests.",
+      "official_sources": [
+        "https://docs.aws.amazon.com/finops-agent/latest/userguide/context-files-and-memory.html"
+      ]
+    },
+    {
+      "id": "MX-S-GENERATE",
+      "field": "trigger",
+      "before": "Approved policy source is submitted",
+      "after": "Policy documents are submitted for requirement generation",
+      "reason": "Approval of policy source is a team control, not a documented service-side approval gate.",
+      "official_sources": [
+        "https://docs.aws.amazon.com/securityagent/latest/userguide/security-requirements.html"
+      ]
+    },
+    {
+      "id": "MX-D-QUERY",
+      "field": "sections",
+      "before": [
+        "D-01",
+        "D-12"
+      ],
+      "after": [
+        "D-01",
+        "D-12",
+        "D-07"
+      ],
+      "reason": "Place invocation instructions in the operations chapter; retain the high-level overview and integration references.",
+      "official_sources": []
+    }
+  ],
+  "editorial_changes": [
+    {
+      "file": "tools/docs/mechanism_detail.py",
+      "operation": "replace function",
+      "function": "block"
+    },
+    {
+      "file": "tools/docs/mechanism_detail.py",
+      "operation": "replace",
+      "occurrences": 1,
+      "before": "path.write_text(body.rstrip()+'\\n\\n'+definitions+'\\n'+newdefs+'\\n',encoding='utf-8')",
+      "after": "path.write_text(re.sub(r'\\n{3,}', '\\n\\n', body.rstrip()+'\\n\\n'+definitions+'\\n'+newdefs+'\\n'),encoding='utf-8')"
+    },
+    {
+      "file": "tools/docs/mechanism_detail.py",
+      "operation": "replace",
+      "occurrences": 1,
+      "before": "Read the complete mechanism explanation and procedure",
+      "after": "Read the configuration, lifecycle, and verification procedure"
+    },
+    {
+      "file": "tools/docs/mechanism_detail.py",
+      "operation": "replace",
+      "occurrences": 1,
+      "before": "<strong>Evidence boundary.</strong> ",
+      "after": "<strong>Implementation limits.</strong> "
+    },
+    {
+      "file": "tools/docs/mechanism_detail.py",
+      "operation": "replace",
+      "occurrences": 1,
+      "before": "    if changed:errors.append('Existing mechanism identity/dependency summaries changed: '+json.dumps(changed))",
+      "after": "    edit_record=ROOT/'qa/technical-edit-record.json'\n    permitted=json.loads(edit_record.read_text())['core_corrections'] if edit_record.exists() else []\n    for item in changed:\n        old_entry=ne"
+    },
+    {
+      "file": "tools/docs/mechanism_detail.py",
+      "operation": "replace",
+      "occurrences": 1,
+      "before": "'added_mechanism':'MX-S-PERSONALIZE','regression_checks':regression",
+      "after": "'added_mechanism':'MX-S-PERSONALIZE','reviewed_core_corrections':permitted,'regression_checks':regression"
+    },
+    {
+      "file": "guides/devops.md",
+      "operation": "replace introduction; consolidate conventions; normalize paragraph spacing and version qualification"
+    },
+    {
+      "file": "guides/security.md",
+      "operation": "replace introduction; consolidate conventions; normalize paragraph spacing and version qualification"
+    },
+    {
+      "file": "guides/finops.md",
+      "operation": "replace introduction; consolidate conventions; normalize paragraph spacing and version qualification"
+    },
+    {
+      "file": "guides/architecture.md",
+      "operation": "replace introduction; consolidate conventions; normalize paragraph spacing and version qualification"
+    },
+    {
+      "file": "guides/devops.md",
+      "operation": "remove explanation duplicated by the maintained mechanism detail",
+      "text": "A correction becomes useful only when it identifies what the original investigation got wrong and supplies the verified alternative. That is a different input from simply collecting another similar incident. The feedback path records that distinction so later work can treat a prior conclusion as corrected context."
+    },
+    {
+      "file": "guides/devops.md",
+      "operation": "remove explanation duplicated by the maintained mechanism detail",
+      "text": "Some guidance belongs in every new session, such as the format of an incident finding or the conventions used to name services. Standing instructions provide that context at startup. They are appropriate for persistent behavioral guidance rather than a procedure relevant only to one symptom."
+    },
+    {
+      "file": "guides/devops.md",
+      "operation": "remove explanation duplicated by the maintained mechanism detail",
+      "text": "Global and agent-specific `AGENTS.md` text is supplied at startup; it is not selected by relevance. Changes apply to sessions started after saving. A running session retains its startup content. [DS09]"
+    },
+    {
+      "file": "guides/devops.md",
+      "operation": "remove explanation duplicated by the maintained mechanism detail",
+      "text": "**Procedure:** add a skill from **Knowledge → Skills**, write a description naming the relevant symptoms and services, choose agent scope, and supply the procedure. Test a matching request and a nonmatching request. Inspect available run evidence for selection and tool use; document an unavailable signal as unverified rather than asserting selection."
+    },
+    {
+      "file": "guides/finops.md",
+      "operation": "remove explanation duplicated by the maintained mechanism detail",
+      "text": "A cost question becomes a set of data queries with a specific comparison basis. The returned amounts, recommendations, and change records then support different conclusions. Reproducing the amount is the first step; explaining its cause requires additional evidence."
+    },
+    {
+      "file": "guides/finops.md",
+      "operation": "remove explanation duplicated by the maintained mechanism detail",
+      "text": "The agent translates an inquiry into supported data-source calls, interprets returned evidence using the instance's context, and generates a response or artifact. Cost Explorer totals, anomaly events, recommendation records and CloudTrail change records answer different questions. [FS01] [FS03]"
+    },
+    {
+      "file": "tools/docs/build.py",
+      "operation": "replace",
+      "occurrences": 1,
+      "before": "Read the service architecture, supported integrations, knowledge mechanisms, and operating workflows for three AWS services.",
+      "after": "Technical reference for the resource models, integrations, retained context, and execution workflows of three AWS services."
+    },
+    {
+      "file": "tools/docs/build.py",
+      "operation": "replace",
+      "occurrences": 1,
+      "before": "The guides explain the platforms; the use-case catalog applies them to daily engineering work; the HTML presentations provide a timed teaching sequence.",
+      "after": "The guides define product behavior and configuration. The catalog links operational objectives to mechanisms and implementation profiles. HTML presentations use the same sources."
+    },
+    {
+      "file": "tools/docs/build.py",
+      "operation": "replace",
+      "occurrences": 1,
+      "before": "Logical model, not AWS internal deployment. Resource ER diagrams qualify undocumented multiplicity and logical associations in their relationship register.",
+      "after": "Logical model. Entity ownership and relationship qualifications are defined in the resource register."
+    },
+    {
+      "file": "tools/docs/check.py",
+      "operation": "replace",
+      "occurrences": 1,
+      "before": "from resource_model import validate as validate_resources",
+      "after": "from resource_model import validate as validate_resources\nfrom editorial_check import validate as validate_editorial"
+    },
+    {
+      "file": "tools/docs/check.py",
+      "operation": "replace",
+      "occurrences": 1,
+      "before": "    model_result=validate_model(guides, browser=browser)",
+      "after": "    editorial_result=validate_editorial(guides)\n    errors.extend(editorial_result[\"errors\"])\n    model_result=validate_model(guides, browser=browser)"
+    },
+    {
+      "file": "tools/docs/check.py",
+      "operation": "replace",
+      "occurrences": 1,
+      "before": "    results['relationship_model']=model_result",
+      "after": "    results['relationship_model']=model_result\n    results['technical_editorial_review']=editorial_result"
+    }
+  ],
+  "additional_source_checks": [
+    {
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/custom-cost-reporting.html",
+      "section": "Generating cost reports",
+      "finding": "Artifacts can be returned in conversation; scheduled reporting uses tasks.",
+      "action": "Correct artifact provenance and inspection text."
+    },
+    {
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/context-files-and-memory.html",
+      "section": "Agent memory across sessions",
+      "finding": "Retained context includes preferences, corrections and task outcomes.",
+      "action": "Correct the trigger and input summary."
+    },
+    {
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/security-requirements.html",
+      "section": "Generate requirements by uploading documents",
+      "finding": "Generation replaces pack content; source approval is a team control.",
+      "action": "Separate native trigger from team review."
+    },
+    {
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/connect-azure-devops.html",
+      "section": "How Azure DevOps integration works; Register; Grant access",
+      "finding": "Git repositories are supported; TFVC is excluded; registration, organization permission and repository selection are separate.",
+      "action": "Add qualified provider row and procedure summary. Retrieved from the official indexed page; direct retrieval returned no content."
+    },
+    {
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html",
+      "section": "How memories work; Deleting a memory store",
+      "finding": "Direct and indexed page representations differ in coverage.",
+      "action": "Retain documented behavior but remove unsupported relative-age claims."
+    },
+    {
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/review-penetration-findings.html",
+      "section": "Review personalized findings",
+      "finding": "Personalization adjusts finding attributes; it does not repair the application.",
+      "action": "Retain the mechanism and its existing control distinction."
+    },
+    {
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html",
+      "section": "Read-write actions",
+      "finding": "Jira approval is invocation-dependent; Slack posting has no per-message approval.",
+      "action": "Retain separate controls."
+    },
+    {
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html",
+      "section": "Managing your data",
+      "finding": "Context files, memory, tasks and automations have distinct controls.",
+      "action": "Retain object-specific lifecycle guidance."
+    }
+  ],
+  "boundary": "Targeted product-source checks and editorial corrections. Other sources retain their existing review dates. No live AWS workflow, performance test or savings measurement was executed."
+}
