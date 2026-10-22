@@ -1,0 +1,113 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1052pt" height="329pt" viewBox="0.00 0.00 1051.50 328.50" role="img" aria-labelledby="er-finops-scope-title er-finops-scope-desc" data-diagram="er-finops-scope">
+<title id="er-finops-scope-title">FinOps Agent: instance access and integration connections</title><desc id="er-finops-scope-desc">Colors identify concept ownership; labels distinguish resources, configuration members and derived state. An edge shows source-count : target-count; ? means unspecified. Dashed edges are logical or editorial relationships, not asserted service foreign keys. See the relationship register for qualifications.</desc><g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(18 310.5)">
+<title>G</title>
+<g id="clust1" class="cluster">
+<title>cluster_ownership</title>
+<path fill="transparent" stroke="#b5c2cc" d="M646.5,-8C646.5,-8 995.5,-8 995.5,-8 1001.5,-8 1007.5,-14 1007.5,-20 1007.5,-20 1007.5,-272.5 1007.5,-272.5 1007.5,-278.5 1001.5,-284.5 995.5,-284.5 995.5,-284.5 646.5,-284.5 646.5,-284.5 640.5,-284.5 634.5,-278.5 634.5,-272.5 634.5,-272.5 634.5,-20 634.5,-20 634.5,-14 640.5,-8 646.5,-8" />
+<text text-anchor="middle" x="821" y="-267.7" font-family="DejaVu Sans" font-size="16.00">Ownership of the definition (not availability)</text>
+</g>
+
+<g id="node1" class="node">
+<title>F-Agent</title>
+<path fill="#d9f2e5" stroke="#348761" d="M318,-251.5C318,-251.5 157,-251.5 157,-251.5 151,-251.5 145,-245.5 145,-239.5 145,-239.5 145,-225.5 145,-225.5 145,-219.5 151,-213.5 157,-213.5 157,-213.5 318,-213.5 318,-213.5 324,-213.5 330,-219.5 330,-225.5 330,-225.5 330,-239.5 330,-239.5 330,-245.5 324,-251.5 318,-251.5" />
+<text text-anchor="middle" x="237.5" y="-236.3" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[AWS] FinOps agent instance</text>
+<text text-anchor="middle" x="237.5" y="-223.3" font-family="DejaVu Sans" font-size="11.50" fill="#152636">service resource</text>
+</g>
+
+<g id="node2" class="node">
+<title>F-DataRole</title>
+<path fill="#d9f2e5" stroke="#348761" d="M133,-155.5C133,-155.5 12,-155.5 12,-155.5 6,-155.5 0,-149.5 0,-143.5 0,-143.5 0,-129.5 0,-129.5 0,-123.5 6,-117.5 12,-117.5 12,-117.5 133,-117.5 133,-117.5 139,-117.5 145,-123.5 145,-129.5 145,-129.5 145,-143.5 145,-143.5 145,-149.5 139,-155.5 133,-155.5" />
+<text text-anchor="middle" x="72.5" y="-140.3" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[AWS] Agent data role</text>
+<text text-anchor="middle" x="72.5" y="-127.3" font-family="DejaVu Sans" font-size="11.50" fill="#152636">cross-service resource</text>
+</g>
+
+<g id="edge1" class="edge">
+<title>F-Agent-&gt;F-DataRole</title>
+<path fill="none" stroke="#496b78" d="M163.76,-213.43C150.81,-208.65 137.86,-202.74 126.5,-195.5 112.47,-186.56 99.65,-173.12 90.02,-161.44" />
+<polygon fill="#496b78" stroke="#496b78" points="92.02,-159.73 85.29,-155.52 87.92,-163.01 92.02,-159.73" />
+<text text-anchor="middle" x="179.5" y="-187.5" font-family="DejaVu Sans" font-size="10.00">uses data access role</text>
+<text text-anchor="middle" x="179.5" y="-176.5" font-family="DejaVu Sans" font-size="10.00">? : 1</text>
+</g>
+
+<g id="node3" class="node">
+<title>F-OperatorRole</title>
+<path fill="#d9f2e5" stroke="#348761" d="M298,-155.5C298,-155.5 177,-155.5 177,-155.5 171,-155.5 165,-149.5 165,-143.5 165,-143.5 165,-129.5 165,-129.5 165,-123.5 171,-117.5 177,-117.5 177,-117.5 298,-117.5 298,-117.5 304,-117.5 310,-123.5 310,-129.5 310,-129.5 310,-143.5 310,-143.5 310,-149.5 304,-155.5 298,-155.5" />
+<text text-anchor="middle" x="237.5" y="-140.3" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[AWS] Operator role</text>
+<text text-anchor="middle" x="237.5" y="-127.3" font-family="DejaVu Sans" font-size="11.50" fill="#152636">cross-service resource</text>
+</g>
+
+<g id="edge2" class="edge">
+<title>F-Agent-&gt;F-OperatorRole</title>
+<path fill="none" stroke="#496b78" d="M237.5,-213.38C237.5,-199.2 237.5,-179.31 237.5,-163.44" />
+<polygon fill="#496b78" stroke="#496b78" points="240.13,-163.07 237.5,-155.57 234.88,-163.07 240.13,-163.07" />
+<text text-anchor="middle" x="282" y="-187.5" font-family="DejaVu Sans" font-size="10.00">uses operator role</text>
+<text text-anchor="middle" x="282" y="-176.5" font-family="DejaVu Sans" font-size="10.00">? : 1</text>
+</g>
+
+<g id="node5" class="node">
+<title>F-Connection</title>
+<path fill="#d9f2e5" stroke="#348761" d="M527,-155.5C527,-155.5 394,-155.5 394,-155.5 388,-155.5 382,-149.5 382,-143.5 382,-143.5 382,-129.5 382,-129.5 382,-123.5 388,-117.5 394,-117.5 394,-117.5 527,-117.5 527,-117.5 533,-117.5 539,-123.5 539,-129.5 539,-129.5 539,-143.5 539,-143.5 539,-149.5 533,-155.5 527,-155.5" />
+<text text-anchor="middle" x="460.5" y="-140.3" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[AWS] Agent connection</text>
+<text text-anchor="middle" x="460.5" y="-127.3" font-family="DejaVu Sans" font-size="11.50" fill="#152636">service resource</text>
+</g>
+
+<g id="edge3" class="edge">
+<title>F-Agent-&gt;F-Connection</title>
+<path fill="none" stroke="#496b78" d="M294.25,-213.35C305.75,-208.44 317.41,-202.5 327.5,-195.5 338.36,-187.97 336.38,-180.64 347.5,-173.5 356.72,-167.58 366.99,-162.57 377.48,-158.34" />
+<polygon fill="#496b78" stroke="#496b78" points="378.7,-160.68 384.76,-155.53 376.82,-155.78 378.7,-160.68" />
+<text text-anchor="middle" x="416" y="-187.5" font-family="DejaVu Sans" font-size="10.00">has destination connections</text>
+<text text-anchor="middle" x="416" y="-176.5" font-family="DejaVu Sans" font-size="10.00">1 : 0..*</text>
+</g>
+
+<g id="node4" class="node">
+<title>F-Integration</title>
+<path fill="#d9f2e5" stroke="#348761" d="M596.5,-251.5C596.5,-251.5 430.5,-251.5 430.5,-251.5 424.5,-251.5 418.5,-245.5 418.5,-239.5 418.5,-239.5 418.5,-225.5 418.5,-225.5 418.5,-219.5 424.5,-213.5 430.5,-213.5 430.5,-213.5 596.5,-213.5 596.5,-213.5 602.5,-213.5 608.5,-219.5 608.5,-225.5 608.5,-225.5 608.5,-239.5 608.5,-239.5 608.5,-245.5 602.5,-251.5 596.5,-251.5" />
+<text text-anchor="middle" x="513.5" y="-236.3" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[AWS] Integration registration</text>
+<text text-anchor="middle" x="513.5" y="-223.3" font-family="DejaVu Sans" font-size="11.50" fill="#152636">service resource</text>
+</g>
+
+<g id="edge4" class="edge">
+<title>F-Integration-&gt;F-Connection</title>
+<path fill="none" stroke="#496b78" d="M507.51,-213.36C503.27,-201.59 497,-186.15 489.5,-173.5 487.19,-169.61 484.49,-165.68 481.69,-161.93" />
+<polygon fill="#496b78" stroke="#496b78" points="483.6,-160.12 476.92,-155.81 479.46,-163.34 483.6,-160.12" />
+<text text-anchor="middle" x="557" y="-187.5" font-family="DejaVu Sans" font-size="10.00">authorizes connections</text>
+<text text-anchor="middle" x="557" y="-176.5" font-family="DejaVu Sans" font-size="10.00">1 : 0..*</text>
+</g>
+
+<g id="node6" class="node">
+<title>F-Destination</title>
+<path fill="#fce8d5" stroke="#c78335" d="M530,-59.5C530,-59.5 391,-59.5 391,-59.5 385,-59.5 379,-53.5 379,-47.5 379,-47.5 379,-20.5 379,-20.5 379,-14.5 385,-8.5 391,-8.5 391,-8.5 530,-8.5 530,-8.5 536,-8.5 542,-14.5 542,-20.5 542,-20.5 542,-47.5 542,-47.5 542,-53.5 536,-59.5 530,-59.5" />
+<text text-anchor="middle" x="460.5" y="-44.3" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[EXT] Jira project or Slack</text>
+<text text-anchor="middle" x="460.5" y="-31.3" font-family="DejaVu Sans" font-size="11.50" fill="#152636">channel</text>
+<text text-anchor="middle" x="460.5" y="-18.3" font-family="DejaVu Sans" font-size="11.50" fill="#152636">external destination</text>
+</g>
+
+<g id="edge5" class="edge">
+<title>F-Connection-&gt;F-Destination</title>
+<path fill="none" stroke="#496b78" d="M460.5,-117.07C460.5,-103.24 460.5,-83.94 460.5,-67.54" />
+<polygon fill="#496b78" stroke="#496b78" points="463.13,-67.25 460.5,-59.75 457.88,-67.25 463.13,-67.25" />
+<text text-anchor="middle" x="507" y="-91.5" font-family="DejaVu Sans" font-size="10.00">selects destination</text>
+<text text-anchor="middle" x="507" y="-80.5" font-family="DejaVu Sans" font-size="10.00">? : 1</text>
+</g>
+
+<g id="node7" class="node">
+<title>legend_0</title>
+<polygon fill="#dcebff" stroke="#447ac2" points="902.5,-250.5 738.5,-250.5 738.5,-214.5 902.5,-214.5 902.5,-250.5" />
+<text text-anchor="middle" x="820.5" y="-230" font-family="DejaVu Sans" font-size="10.00" fill="#142c3e">DOC · Documentation-defined</text>
+</g>
+
+<g id="node8" class="node">
+<title>legend_1</title>
+<polygon fill="#d9f2e5" stroke="#348761" points="876,-154.5 765,-154.5 765,-118.5 876,-118.5 876,-154.5" />
+<text text-anchor="middle" x="820.5" y="-134" font-family="DejaVu Sans" font-size="10.00" fill="#142c3e">AWS · AWS-defined</text>
+</g>
+
+
+<g id="node9" class="node">
+<title>legend_2</title>
+<polygon fill="#fce8d5" stroke="#c78335" points="915.5,-52 725.5,-52 725.5,-16 915.5,-16 915.5,-52" />
+<text text-anchor="middle" x="820.5" y="-31.5" font-family="DejaVu Sans" font-size="10.00" fill="#142c3e">EXT · External / engineering-owned</text>
+</g>
+
+</g>
+</svg>
