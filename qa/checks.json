@@ -1,11 +1,18 @@
 {
-  "revision": "2026-10-22-linked-catalog",
-  "baseline": "71a14e8ba76561d65345a696e6de3280b7c8dd00",
+  "revision": "2026-10-22-product-resource-models",
+  "baseline": "cd65b98e04e20e7a4bcf59165db7f98315417964",
   "guides": 4,
-  "canonical_sections": 65,
-  "previous_identifiers_retained": 64,
+  "canonical_sections": 73,
+  "previous_identifiers_retained": 65,
   "new_sections": [
-    "A-09"
+    "A-10",
+    "A-11",
+    "D-13",
+    "D-14",
+    "F-09",
+    "F-10",
+    "S-10",
+    "S-11"
   ],
   "authored_use_case_narratives": 30,
   "narrative_paragraphs": 60,
@@ -15,19 +22,19 @@
     "finops": 7,
     "architecture": 1
   },
-  "logical_diagrams": 18,
-  "rendered_diagram_instances": 88,
+  "logical_diagrams": 28,
+  "rendered_diagram_instances": 115,
   "html_presentations": 4,
-  "slides": 73,
-  "programme_minutes": 197,
+  "slides": 81,
+  "programme_minutes": 221,
   "exercise_minutes": 28,
-  "local_links_checked": 2656,
+  "local_links_checked": 3210,
   "browser_checks": [
     {
       "subject": "devops",
       "width": 390,
-      "technical_sections": 21,
-      "slides": 21,
+      "technical_sections": 23,
+      "slides": 23,
       "javascript_errors": [],
       "slides_over_1050px": [],
       "navigation_filters_hash_notes_timer_print": "passed"
@@ -35,8 +42,8 @@
     {
       "subject": "devops",
       "width": 1440,
-      "technical_sections": 21,
-      "slides": 21,
+      "technical_sections": 23,
+      "slides": 23,
       "javascript_errors": [],
       "slides_over_1050px": [],
       "navigation_filters_hash_notes_timer_print": "passed"
@@ -44,8 +51,8 @@
     {
       "subject": "security",
       "width": 390,
-      "technical_sections": 17,
-      "slides": 20,
+      "technical_sections": 19,
+      "slides": 22,
       "javascript_errors": [],
       "slides_over_1050px": [],
       "navigation_filters_hash_notes_timer_print": "passed"
@@ -53,7 +60,16 @@
     {
       "subject": "security",
       "width": 1440,
-      "technical_sections": 17,
+      "technical_sections": 19,
+      "slides": 22,
+      "javascript_errors": [],
+      "slides_over_1050px": [],
+      "navigation_filters_hash_notes_timer_print": "passed"
+    },
+    {
+      "subject": "finops",
+      "width": 390,
+      "technical_sections": 18,
       "slides": 20,
       "javascript_errors": [],
       "slides_over_1050px": [],
@@ -61,18 +77,9 @@
     },
     {
       "subject": "finops",
-      "width": 390,
-      "technical_sections": 16,
-      "slides": 18,
-      "javascript_errors": [],
-      "slides_over_1050px": [],
-      "navigation_filters_hash_notes_timer_print": "passed"
-    },
-    {
-      "subject": "finops",
       "width": 1440,
-      "technical_sections": 16,
-      "slides": 18,
+      "technical_sections": 18,
+      "slides": 20,
       "javascript_errors": [],
       "slides_over_1050px": [],
       "navigation_filters_hash_notes_timer_print": "passed"
@@ -80,8 +87,8 @@
     {
       "subject": "architecture",
       "width": 390,
-      "technical_sections": 11,
-      "slides": 14,
+      "technical_sections": 13,
+      "slides": 16,
       "javascript_errors": [],
       "slides_over_1050px": [],
       "navigation_filters_hash_notes_timer_print": "passed"
@@ -89,8 +96,8 @@
     {
       "subject": "architecture",
       "width": 1440,
-      "technical_sections": 11,
-      "slides": 14,
+      "technical_sections": 13,
+      "slides": 16,
       "javascript_errors": [],
       "slides_over_1050px": [],
       "navigation_filters_hash_notes_timer_print": "passed"
@@ -158,5 +165,57 @@
     ],
     "errors": [],
     "boundary": "Document dependency and navigation checks. Not a live AWS readiness test, exhaustive source audit or evidence of operational improvement."
+  },
+  "product_resource_model": {
+    "reviewed_on": "2026-10-22",
+    "products": 3,
+    "entities": 74,
+    "relationships": 72,
+    "feature_bindings": 37,
+    "official_references": 32,
+    "approved_sources": {
+      "catalog/use-cases.json": {
+        "unchanged": true,
+        "sha256": "e5aae837db20d3dc7383b86cf22f01cb7310c8691e37122b0f11650ecc92900c"
+      },
+      "catalog/mechanisms.json": {
+        "unchanged": true,
+        "sha256": "ac390358c3e241b9e00fe17720ce656c97abc081f6b5fee25df1821c2fbfb0bf"
+      },
+      "catalog/features.json": {
+        "unchanged": true,
+        "sha256": "fefc21015e00bf043a9bbbe9776caa5ca5cb2de0ab3232ca8a6437ad8ed20763"
+      },
+      "catalog/profiles.json": {
+        "unchanged": true,
+        "sha256": "89d23d92c97b95288e68de2a001186ba5846b18b6dec3774ba545143aea33190"
+      },
+      "catalog/aliases.json": {
+        "unchanged": true,
+        "sha256": "5f1efdc4eb665cdd3d7830c148d653cc2f38a7d4c7cf4cf1f68e538d95ced720"
+      }
+    },
+    "semantic_checks": [
+      "Named FinOps AgentSpace alias remains service-specific",
+      "One-off design review is not converted to reusable configuration",
+      "Revalidation result association remains documentation-defined",
+      "Topology is a derived view, not authorization scope",
+      "Retained login procedure is not an asserted CRUD resource",
+      "Unspecified event-rule multiplicity remains unknown"
+    ],
+    "browser": [
+      {
+        "width": 390,
+        "entity_search_ownership_product_hash_print": "passed",
+        "javascript_errors": []
+      },
+      {
+        "width": 1440,
+        "entity_search_ownership_product_hash_print": "passed",
+        "javascript_errors": []
+      }
+    ],
+    "errors": [],
+    "boundary": "Logical documentation model, not an AWS database schema, SDK payload or shared runtime. Green means AWS defines the concept; it does not mean every green item has an independent ARN, CRUD API or equal availability. Relationship multiplicities are qualified individually and are not service quotas."
   }
 }
