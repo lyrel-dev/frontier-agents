@@ -22,13 +22,13 @@
     "finops": 7,
     "architecture": 1
   },
-  "logical_diagrams": 28,
+  "logical_diagrams": 25,
   "rendered_diagram_instances": 115,
   "html_presentations": 4,
   "slides": 81,
   "programme_minutes": 221,
   "exercise_minutes": 28,
-  "local_links_checked": 3210,
+  "local_links_checked": 3337,
   "browser_checks": [
     {
       "subject": "devops",
