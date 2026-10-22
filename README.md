@@ -1,13 +1,19 @@
+<!-- USE-CASE-CATALOG -->
+## Day-to-day use case catalog
+
+[Open the grouped and searchable catalog](catalog/index.html). It contains **54** use cases: 22 for AWS DevOps Agent, 16 for AWS Security Agent, and 16 for AWS FinOps Agent. Each record identifies delivery mode, cadence, availability, inputs, reviewable output, constraints, canonical guide sections and official sources.
+<!-- /USE-CASE-CATALOG -->
+
 # AWS agent engineering guides
 
 Open `index.html` after cloning the repository. Reports and presentations are separate, self-contained HTML pages; GitHub source previews do not execute their controls.
 
 | Subject | Structured report | Presentation | Timing |
 |---|---|---|---|
-| AWS DevOps Agent | [Report](guides/devops.html) / [Markdown](guides/devops.md) | [HTML presentation](presentations/devops.html) / [Notes](presentations/devops-notes.md) | 37 min / 8 min exercise |
-| AWS Security Agent | [Report](guides/security.html) / [Markdown](guides/security.md) | [HTML presentation](presentations/security.html) / [Notes](presentations/security-notes.md) | 35 min / 8 min exercise |
-| AWS FinOps Agent | [Report](guides/finops.html) / [Markdown](guides/finops.md) | [HTML presentation](presentations/finops.html) / [Notes](presentations/finops-notes.md) | 32 min / 8 min exercise |
-| Shared architecture | [Report](guides/architecture.html) / [Markdown](guides/architecture.md) | [HTML presentation](presentations/architecture.html) / [Notes](presentations/architecture-notes.md) | 20 min / 4 min exercise |
+| AWS DevOps Agent | [Report](guides/devops.html) / [Markdown](guides/devops.md) | [HTML presentation](presentations/devops.html) / [Notes](presentations/devops-notes.md) | 44 min / 8 min exercise |
+| AWS Security Agent | [Report](guides/security.html) / [Markdown](guides/security.md) | [HTML presentation](presentations/security.html) / [Notes](presentations/security-notes.md) | 44 min / 8 min exercise |
+| AWS FinOps Agent | [Report](guides/finops.html) / [Markdown](guides/finops.md) | [HTML presentation](presentations/finops.html) / [Notes](presentations/finops-notes.md) | 39 min / 8 min exercise |
+| Shared Architecture | [Report](guides/architecture.html) / [Markdown](guides/architecture.md) | [HTML presentation](presentations/architecture.html) / [Notes](presentations/architecture-notes.md) | 22 min / 4 min exercise |
 
 The programme remains **124 minutes including 28 minutes of prepared-result exercises**. Questions and breaks are additional.
 
