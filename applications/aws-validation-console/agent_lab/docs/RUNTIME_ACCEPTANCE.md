@@ -18,7 +18,7 @@ Official contract: https://docs.aws.amazon.com/fis/latest/APIReference/API_GetSa
 
 `python run.py --with-worker` now acquires the workspace lock synchronously and waits for the worker to start before it serves HTTP. A second combined process using that workspace exits instead of presenting an apparently operational console whose worker failed in a daemon thread.
 
-The combined process watches its worker. An engine or probe-scheduler failure records a failed heartbeat, stops the HTTP server, and produces a nonzero process exit. Normal shutdown stops scheduling and waits for in-flight local probe work before releasing ownership. The process applies a 30-second drain budget; exceeding it exits unsuccessfully and leaves durable operation intents for reconciliation after restart. Shutdown is not automatic cloud rollback.
+The combined process watches its worker. An engine or probe-scheduler failure records a failed heartbeat, stops the HTTP server, and produces a nonzero process exit. Normal shutdown stops scheduling and waits for in-flight local probe work before releasing ownership. The process applies a 30-second drain budget; exceeding it terminates the process unsuccessfully even if executor threads remain, and leaves durable operation intents for reconciliation after restart. Shutdown is not automatic cloud rollback.
 
 Separate API/worker deployments remain supported. The API can serve evidence when its separate worker is stopped, but starting a trial still requires the worker heartbeat. The combined-process supervisor does not manage an external worker process.
 

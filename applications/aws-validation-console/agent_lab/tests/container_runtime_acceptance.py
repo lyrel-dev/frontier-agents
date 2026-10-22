@@ -143,9 +143,21 @@ def main():
                workspace['worker']['state'] == 'running' and workspace['entities'] == [])
         docker('stop', '-t', '40', second, timeout=50)
         passed('SIGTERM drains the combined process and exits successfully', inspect(second)['State']['ExitCode'] == 0)
-        read_only = ("import json,sqlite3; c=sqlite3.connect('file:/data/experiments.sqlite3?mode=ro',uri=True); "
-                     "print(c.execute(\"SELECT data FROM metadata WHERE key='worker'\").fetchone()[0])")
+        # WAL readers may need a shared-memory sidecar even with mode=ro.
+        # The application has stopped. Copy its DB and WAL to disposable writable
+        # storage, leaving the mounted workspace read-only; never ignore the WAL.
+        read_only = """import json,shutil,sqlite3,tempfile
+from pathlib import Path
+with tempfile.TemporaryDirectory() as directory:
+    for name in ('experiments.sqlite3','experiments.sqlite3-wal'):
+        source=Path('/data')/name
+        if source.exists(): shutil.copyfile(source,Path(directory)/name)
+    with sqlite3.connect(str(Path(directory)/'experiments.sqlite3')) as db:
+        assert db.execute('PRAGMA integrity_check').fetchone()[0]=='ok'
+        print(db.execute("SELECT data FROM metadata WHERE key='worker'").fetchone()[0])
+"""
         last = json.loads(docker('run', '--rm', '--network', 'none', '--read-only',
+                                 '--tmpfs', '/tmp:rw,noexec,nosuid,size=32m',
                                  '-v', volume + ':/data:ro', '--entrypoint', 'python', image, '-c', read_only).stdout)
         passed('graceful shutdown persists a stopped worker heartbeat', last['state'] == 'stopped')
         report = {'schema': 'agent-lab.container-runtime/v1', 'passed': len(checks), 'checks': checks,

@@ -61,7 +61,9 @@ def main():
                 if worker_thread.is_alive():
                     # In-flight intents remain durable and require reconciliation.
                     print('Worker shutdown deadline exceeded; inspect operation intents before restarting.',flush=True)
-                    raise SystemExit(1)
+                    # Executor threads can prevent SystemExit from terminating.
+                    # Intents are already durable; do not release the lock early.
+                    os._exit(1)
                 if worker.failure:
                     print('Experiment worker failed: '+worker.failure,flush=True)
                     raise SystemExit(1)

@@ -46,3 +46,32 @@ def test_foreground_signal_drains_worker_before_exit(tmp_path, signal_name):
     finally:
         if process.poll() is None:
             process.kill(); process.communicate(timeout=5)
+
+
+def test_shutdown_deadline_terminates_even_with_an_undrained_executor(monkeypatch, tmp_path):
+    from threading import Event
+    from test_runtime_guards import prepare_main
+    run = prepare_main(monkeypatch, tmp_path)
+    joins = []
+    exits = []
+    class PendingThread:
+        def is_alive(self): return True
+        def join(self, timeout=None): joins.append(timeout)
+    class PendingWorker:
+        def __init__(self, *args):
+            self.finished = Event()
+            self.failure = None
+        def start_background(self): return PendingThread()
+        def stop(self): pass
+    class Server:
+        def __init__(self, *args, **kwargs): self.should_exit = False
+        def run(self): pass
+    def terminate(status):
+        exits.append(status)
+        raise SystemExit(status)
+    monkeypatch.setattr(run, 'Worker', PendingWorker)
+    monkeypatch.setattr(run.uvicorn, 'Server', Server)
+    monkeypatch.setattr(run.os, '_exit', terminate)
+    with pytest.raises(SystemExit) as exc:
+        run.main()
+    assert exc.value.code == 1 and exits == [1] and joins == [30]
