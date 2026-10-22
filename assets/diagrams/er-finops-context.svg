@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="949pt" height="322pt" viewBox="0.00 0.00 949.00 322.00" role="img" aria-labelledby="er-finops-context-title er-finops-context-desc" data-diagram="er-finops-context">
+<title id="er-finops-context-title">FinOps Agent: retained inputs and session context</title><desc id="er-finops-context-desc">Colors identify concept ownership; labels distinguish resources, configuration members and derived state. An edge shows source-count : target-count; ? means unspecified. Dashed edges are logical or editorial relationships, not asserted service foreign keys. See the relationship register for qualifications.</desc><g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(18 304)">
+<title>G</title>
+<g id="clust1" class="cluster">
+<title>cluster_ownership</title>
+<path fill="transparent" stroke="#b5c2cc" d="M544,-8C544,-8 893,-8 893,-8 899,-8 905,-14 905,-20 905,-20 905,-266 905,-266 905,-272 899,-278 893,-278 893,-278 544,-278 544,-278 538,-278 532,-272 532,-266 532,-266 532,-20 532,-20 532,-14 538,-8 544,-8" />
+<text text-anchor="middle" x="718.5" y="-261.2" font-family="DejaVu Sans" font-size="16.00">Ownership of the definition (not availability)</text>
+</g>
+
+<g id="node1" class="node">
+<title>F-Agent</title>
+<path fill="#d9f2e5" stroke="#348761" d="M307.5,-245C307.5,-245 146.5,-245 146.5,-245 140.5,-245 134.5,-239 134.5,-233 134.5,-233 134.5,-219 134.5,-219 134.5,-213 140.5,-207 146.5,-207 146.5,-207 307.5,-207 307.5,-207 313.5,-207 319.5,-213 319.5,-219 319.5,-219 319.5,-233 319.5,-233 319.5,-239 313.5,-245 307.5,-245" />
+<text text-anchor="middle" x="227" y="-229.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[AWS] FinOps agent instance</text>
+<text text-anchor="middle" x="227" y="-216.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">service resource</text>
+</g>
+
+<g id="node2" class="node">
+<title>F-File</title>
+<path fill="#d9f2e5" stroke="#348761" d="M112,-149C112,-149 12,-149 12,-149 6,-149 0,-143 0,-137 0,-137 0,-123 0,-123 0,-117 6,-111 12,-111 12,-111 112,-111 112,-111 118,-111 124,-117 124,-123 124,-123 124,-137 124,-137 124,-143 118,-149 112,-149" />
+<text text-anchor="middle" x="62" y="-133.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[AWS] Context file</text>
+<text text-anchor="middle" x="62" y="-120.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">retained input</text>
+</g>
+
+<g id="edge2" class="edge">
+<title>F-Agent-&gt;F-File</title>
+<path fill="none" stroke="#496b78" d="M140.11,-206.99C127.71,-202.3 115.59,-196.4 105,-189 92.8,-180.48 82.67,-167.39 75.31,-155.8" />
+<polygon fill="#496b78" stroke="#496b78" points="77.44,-154.25 71.31,-149.2 72.95,-156.97 77.44,-154.25" />
+<text text-anchor="middle" x="163.5" y="-181" font-family="DejaVu Sans" font-size="10.00">retains reference inputs</text>
+<text text-anchor="middle" x="163.5" y="-170" font-family="DejaVu Sans" font-size="10.00">1 : 0..*</text>
+</g>
+
+<g id="node3" class="node">
+<title>F-Memory</title>
+<path fill="#d9f2e5" stroke="#348761" d="M297.5,-149C297.5,-149 156.5,-149 156.5,-149 150.5,-149 144.5,-143 144.5,-137 144.5,-137 144.5,-123 144.5,-123 144.5,-117 150.5,-111 156.5,-111 156.5,-111 297.5,-111 297.5,-111 303.5,-111 309.5,-117 309.5,-123 309.5,-123 309.5,-137 309.5,-137 309.5,-143 303.5,-149 297.5,-149" />
+<text text-anchor="middle" x="227" y="-133.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[AWS] Persistent memory</text>
+<text text-anchor="middle" x="227" y="-120.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">managed retained state</text>
+</g>
+
+<g id="edge3" class="edge">
+<title>F-Agent-&gt;F-Memory</title>
+<path fill="none" stroke="#496b78" d="M227,-206.88C227,-192.7 227,-172.81 227,-156.94" />
+<polygon fill="#496b78" stroke="#496b78" points="229.63,-156.57 227,-149.07 224.38,-156.57 229.63,-156.57" />
+<text text-anchor="middle" x="285.5" y="-181" font-family="DejaVu Sans" font-size="10.00">retains contextual state</text>
+<text text-anchor="middle" x="285.5" y="-170" font-family="DejaVu Sans" font-size="10.00">1 : ?</text>
+</g>
+
+<g id="node4" class="node">
+<title>F-Conversation</title>
+<path fill="#d9f2e5" stroke="#348761" d="M450.5,-149C450.5,-149 341.5,-149 341.5,-149 335.5,-149 329.5,-143 329.5,-137 329.5,-137 329.5,-123 329.5,-123 329.5,-117 335.5,-111 341.5,-111 341.5,-111 450.5,-111 450.5,-111 456.5,-111 462.5,-117 462.5,-123 462.5,-123 462.5,-137 462.5,-137 462.5,-143 456.5,-149 450.5,-149" />
+<text text-anchor="middle" x="396" y="-133.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[AWS] Conversation</text>
+<text text-anchor="middle" x="396" y="-120.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">interaction record</text>
+</g>
+
+<g id="edge1" class="edge">
+<title>F-Agent-&gt;F-Conversation</title>
+<path fill="none" stroke="#496b78" d="M312.65,-206.94C325.42,-202.24 337.98,-196.35 349,-189 361.92,-180.38 373.04,-167.13 381.22,-155.46" />
+<polygon fill="#496b78" stroke="#496b78" points="383.43,-156.87 385.45,-149.18 379.08,-153.94 383.43,-156.87" />
+<text text-anchor="middle" x="389" y="-181" font-family="DejaVu Sans" font-size="10.00">retains</text>
+<text text-anchor="middle" x="389" y="-170" font-family="DejaVu Sans" font-size="10.00">1 : 0..*</text>
+</g>
+
+<g id="node6" class="node">
+<title>F-Runtime</title>
+<path fill="#d9f2e5" stroke="#348761" d="M218.5,-53C218.5,-53 35.5,-53 35.5,-53 29.5,-53 23.5,-47 23.5,-41 23.5,-41 23.5,-27 23.5,-27 23.5,-21 29.5,-15 35.5,-15 35.5,-15 218.5,-15 218.5,-15 224.5,-15 230.5,-21 230.5,-27 230.5,-27 230.5,-41 230.5,-41 230.5,-47 224.5,-53 218.5,-53" />
+<text text-anchor="middle" x="127" y="-37.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[AWS] Session runtime</text>
+<text text-anchor="middle" x="127" y="-24.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">ephemeral execution component</text>
+</g>
+
+<g id="edge4" class="edge">
+<title>F-File-&gt;F-Runtime</title>
+<path fill="none" stroke="#496b78" d="M63.46,-110.94C65.17,-98.78 68.9,-82.85 77,-71 80.31,-66.16 84.5,-61.74 89.04,-57.78" />
+<polygon fill="#496b78" stroke="#496b78" points="90.74,-59.78 94.93,-53.02 87.44,-55.69 90.74,-59.78" />
+<text text-anchor="middle" x="132" y="-85" font-family="DejaVu Sans" font-size="10.00">is loaded for a session</text>
+<text text-anchor="middle" x="132" y="-74" font-family="DejaVu Sans" font-size="10.00">? : ?</text>
+</g>
+
+<g id="edge5" class="edge">
+<title>F-Memory-&gt;F-Runtime</title>
+<path fill="none" stroke="#496b78" d="M217.7,-110.98C210.72,-98.68 200.27,-82.57 188,-71 182.63,-65.94 176.43,-61.27 170.08,-57.09" />
+<polygon fill="#496b78" stroke="#496b78" points="171.45,-54.85 163.7,-53.08 168.65,-59.3 171.45,-54.85" />
+<text text-anchor="middle" x="262" y="-85" font-family="DejaVu Sans" font-size="10.00">is loaded for a session</text>
+<text text-anchor="middle" x="262" y="-74" font-family="DejaVu Sans" font-size="10.00">? : ?</text>
+</g>
+
+<g id="node5" class="node">
+<title>F-Summary</title>
+<path fill="#d9f2e5" stroke="#348761" d="M479,-53C479,-53 313,-53 313,-53 307,-53 301,-47 301,-41 301,-41 301,-27 301,-27 301,-21 307,-15 313,-15 313,-15 479,-15 479,-15 485,-15 491,-21 491,-27 491,-27 491,-41 491,-41 491,-47 485,-53 479,-53" />
+<text text-anchor="middle" x="396" y="-37.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[AWS] Conversation summary</text>
+<text text-anchor="middle" x="396" y="-24.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">derived context</text>
+</g>
+
+<g id="edge6" class="edge">
+<title>F-Conversation-&gt;F-Summary</title>
+<path fill="none" stroke="#496b78" d="M396,-110.88C396,-96.7 396,-76.81 396,-60.94" />
+<polygon fill="#496b78" stroke="#496b78" points="398.63,-60.57 396,-53.07 393.38,-60.57 398.63,-60.57" />
+<text text-anchor="middle" x="460" y="-85" font-family="DejaVu Sans" font-size="10.00">compacts older messages</text>
+<text text-anchor="middle" x="460" y="-74" font-family="DejaVu Sans" font-size="10.00">1 : ?</text>
+</g>
+
+<g id="node7" class="node">
+<title>legend_0</title>
+<polygon fill="#dcebff" stroke="#447ac2" points="800,-244 636,-244 636,-208 800,-208 800,-244" />
+<text text-anchor="middle" x="718" y="-223.5" font-family="DejaVu Sans" font-size="10.00" fill="#142c3e">DOC · Documentation-defined</text>
+</g>
+
+<g id="node8" class="node">
+<title>legend_1</title>
+<polygon fill="#d9f2e5" stroke="#348761" points="773.5,-148 662.5,-148 662.5,-112 773.5,-112 773.5,-148" />
+<text text-anchor="middle" x="718" y="-127.5" font-family="DejaVu Sans" font-size="10.00" fill="#142c3e">AWS · AWS-defined</text>
+</g>
+
+
+<g id="node9" class="node">
+<title>legend_2</title>
+<polygon fill="#fce8d5" stroke="#c78335" points="813,-52 623,-52 623,-16 813,-16 813,-52" />
+<text text-anchor="middle" x="718" y="-31.5" font-family="DejaVu Sans" font-size="10.00" fill="#142c3e">EXT · External / engineering-owned</text>
+</g>
+
+</g>
+</svg>
