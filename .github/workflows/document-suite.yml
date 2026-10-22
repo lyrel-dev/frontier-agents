@@ -27,7 +27,10 @@ jobs:
           sudo apt-get install -y graphviz
           python -m pip install -r tools/docs/requirements.txt
           python -m playwright install --with-deps chromium
-      - name: Build guides, figures, catalog, and HTML presentations
+      - name: Apply reviewed outcome consolidation once
+        run: |
+          if [ -f tools/docs/consolidate_once.py ]; then python tools/docs/consolidate_once.py; fi
+      - name: Build guides, linked catalog, figures and HTML presentations
         run: |
           python -m compileall -q tools/docs
           python tools/docs/build.py
@@ -45,14 +48,10 @@ jobs:
           subprocess.run([sys.executable,'tools/docs/build.py'],check=True)
           after=hashes()
           assert before==after, 'Repeated generation changed document or figure bytes'
-          Path('qa/rebuild.json').write_text(json.dumps({
-              'revision':'2026-10-22-narrative-guides',
-              'files_compared':len(before),
-              'identical_repeated_build':True,
-              'boundary':'Same committed inputs and same runner environment; not a claim of reproducibility across different dependency versions.'
-          },indent=2)+'\n')
+          revision=json.loads(Path('documentation-build.json').read_text())['revision']
+          Path('qa/rebuild.json').write_text(json.dumps({'revision':revision,'files_compared':len(before),'identical_repeated_build':True,'boundary':'Same committed inputs and same runner environment; not cross-version reproducibility.'},indent=2)+'\n')
           PY
-      - name: Validate source relationships and rendered behavior
+      - name: Validate relationships, examples and rendered behavior
         run: python tools/docs/check.py --browser
       - name: Commit each documentation change separately
         env:
