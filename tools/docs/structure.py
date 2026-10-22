@@ -1,6 +1,6 @@
 """Maintained chapter membership and presentation grouping."""
-REVISION='2026-10-22-product-resource-models'
-BASELINE='cd65b98e04e20e7a4bcf59165db7f98315417964'
+REVISION='2026-10-22-mechanism-review'
+BASELINE='75f7d7c11d29e308e71a1bbe77ad93e9bc9f08a9'
 CHAPTERS={'devops': [{'slug': 'model',
              'title': 'Resource model and scope',
              'purpose': 'Begin with the product-specific entities, their scope and their relationships. '
