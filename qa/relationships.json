@@ -1,0 +1,45 @@
+{
+  "schema_version": 2,
+  "primary_cases": 30,
+  "primary_distribution": {
+    "devops": 14,
+    "security": 8,
+    "finops": 7,
+    "architecture": 1
+  },
+  "mechanisms": 40,
+  "features": 37,
+  "implementation_profiles": 15,
+  "former_identifiers_mapped": 54,
+  "workflow_steps": 94,
+  "mechanism_bindings": 73,
+  "supporting_records_reclassified": 13,
+  "regression_checks": [
+    "Unknown mechanism rejected",
+    "Ambiguous split cannot silently resolve to one outcome",
+    "Missing failure handling rejected",
+    "Cross-product configuration assumption rejected"
+  ],
+  "browser": [
+    {
+      "width": 390,
+      "reference_filters": "passed",
+      "outcome_mechanism_feature_reverse_navigation": "passed",
+      "former_case_and_support_aliases": "passed",
+      "forecast_coverage_choice": "passed",
+      "shared_profile_filters": "passed",
+      "javascript_errors": []
+    },
+    {
+      "width": 1440,
+      "reference_filters": "passed",
+      "outcome_mechanism_feature_reverse_navigation": "passed",
+      "former_case_and_support_aliases": "passed",
+      "forecast_coverage_choice": "passed",
+      "shared_profile_filters": "passed",
+      "javascript_errors": []
+    }
+  ],
+  "errors": [],
+  "boundary": "Document dependency and navigation checks. Not a live AWS readiness test, exhaustive source audit or evidence of operational improvement."
+}
