@@ -37,6 +37,7 @@ def rendered_text(path: Path) -> str:
 def validate(guides: dict) -> dict:
     errors: list[str] = []
     from presentation import DECKS
+    from mechanism_figures import DIAGRAMS as MECHANISM_FIGURES
     from mechanism_detail import load
     registry = load()
     entries = {e['id']: e for e in registry['entries']}
@@ -69,6 +70,10 @@ def validate(guides: dict) -> dict:
         if hits:
             errors.append(relative+': promotional phrasing '+', '.join(sorted(set(hits))))
         inspected.append(relative)
+    publication=MECHANISM_FIGURES['mechanism-finops-publication'][3]
+    if 'chat -> jira' not in publication or 'chat -> slack' not in publication:errors.append('Diagram omits direct conversation publication')
+    if 'Verify the actual role reached' in MECHANISM_FIGURES['mechanism-security-learning'][3]:errors.append('Team verification remains inside an AWS-owned state label')
+    if any(s['title']=='Documentation and presentation acceptance criteria' for d in DECKS.values() for s in d['slides']):errors.append('Document-quality meta-slide remains in the technical programme')
     protected = {}
     for name in ('use-cases','features','profiles','aliases','resource-models'):
         relative = f'catalog/{name}.json'
