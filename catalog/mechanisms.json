@@ -383,9 +383,9 @@
         ],
         "controls": "An instruction cannot grant a tool, change a trust policy or substitute for action approval.",
         "observable_output": "Saved instruction content and observable behavior in a newly started session.",
-        "undocumented": "Conflict precedence for contradictory global, agent-specific and task instructions is not fully specified; do not invent it.",
+        "undocumented": "Conflict precedence for contradictory global, agent-specific and task instructions is not fully specified; do not assume a precedence order.",
         "test": [
-          "Add a harmless required heading to a scoped test instruction.",
+          "Add a test-only required heading to a scoped test instruction.",
           "Compare a new session with one started before the change.",
           "A denied tool must remain denied even when the instruction asks to use it."
         ],
@@ -458,7 +458,7 @@
         ],
         "controls": "Skill text is guidance, not authorization; executable-code support is feature-specific.",
         "observable_output": "Saved skill configuration and exposed execution evidence of procedure/tool use.",
-        "undocumented": "Exact relevance thresholds and a universal selection trace are not guaranteed; unavailable observability remains unverified.",
+        "undocumented": "The cited guide does not specify relevance thresholds or guarantee a skill-selection event in every execution trace.",
         "test": [
           "Provide one request that matches the described symptom and another that does not.",
           "Inspect exposed skill/tool-use evidence and the resulting procedure.",
@@ -1854,7 +1854,7 @@
       "sections": [
         "S-M04"
       ],
-      "trigger": "Approved policy source is submitted",
+      "trigger": "Policy documents are submitted for requirement generation",
       "state": "Existing custom pack and generated replacement",
       "process": "Replace pack contents from the selected policy documents for subsequent review.",
       "effect": "Configuration replacement",
@@ -1863,7 +1863,7 @@
       "review": {
         "primary_section": "S-M04",
         "kind": "Requirement-replacement mechanism",
-        "inputs": "Approved policy documents, chosen custom pack and existing requirements including manually authored entries.",
+        "inputs": "Documents submitted for a custom requirement pack. The team reviews the policy source and replacement before enabling the pack.",
         "narrative": [
           "Generation reads policy documents and constructs structured requirements. Running it again for an existing pack replaces the requirements; it is not an append operation. A successful generation therefore establishes a proposed replacement, not approval of every generated rule.",
           "Reconcile overlapping policies before submission. Review applicability and technical criteria afterward, and explicitly compare the replacement with any manual entries that existed before the upload."
@@ -2379,9 +2379,9 @@
         ],
         "controls": "The service summarizes recommendations from optimization services; it does not independently calculate its own underlying optimization analysis.",
         "observable_output": "Returned figures, query basis and source/tool evidence.",
-        "undocumented": "Complete inference logic, causal accuracy and guaranteed agreement with differently scoped console queries are not established.",
+        "undocumented": "The source guides do not specify the query-planning algorithm. Queries with different dates, metrics or filters are not directly comparable.",
         "test": [
-          "Use the supplied synthetic cost fixture or a harmless read-only account query.",
+          "Use the supplied synthetic cost fixture or a read-only query in an authorized account.",
           "Reconcile components to the total under identical periods and metric.",
           "Change metric or period deliberately; identify why the totals are not comparable."
         ],
@@ -2490,7 +2490,7 @@
       "sections": [
         "F-M03"
       ],
-      "trigger": "Explicit remember, update or forget request",
+      "trigger": "Conversation preferences, corrections or task outcomes; explicit remember, update or forget requests",
       "state": "Instance-local retained preference",
       "process": "Apply retained preferences to subsequent sessions.",
       "effect": "Retained context update and read",
@@ -2499,7 +2499,7 @@
       "review": {
         "primary_section": "F-M03",
         "kind": "Cross-session retained-context mechanism",
-        "inputs": "Preference or correction supplied through conversation; instance-local persistent memory.",
+        "inputs": "Conversation preferences, corrections, task outcomes, and explicit requests to remember, update or forget information within the instance.",
         "narrative": [
           "Conversational memory retains preferences and corrections for later work in the same instance. It is not the current conversation transcript and is not an uploaded file. An explicit remember, update or forget instruction targets this retained representation.",
           "Test it across sessions rather than immediately repeating the fact in the same conversation. Also inspect whether an active reference file supplies the same information; otherwise successful file use can be mistaken for memory recall."
@@ -2692,7 +2692,7 @@
         "observable_output": "Task identity, execution status, source calls, outputs and separate delivery outcome.",
         "undocumented": "Queue order, fairness, exactly-once processing and guaranteed cancellation of every in-flight action are not specified.",
         "test": [
-          "Create a harmless report task with an explicit date range.",
+          "Create a report task using non-sensitive inputs with an explicit date range.",
           "Trace its identity from request to resulting output.",
           "Cancel controlled work and distinguish preserved history from a deleted task."
         ],
@@ -2884,7 +2884,7 @@
         "F-04"
       ],
       "trigger": "Analysis requires a report artifact",
-      "state": "Artifact linked to a task and query basis",
+      "state": "Report artifact, originating conversation or task, and query basis",
       "process": "Format supported output and revise it without silently changing analytical scope.",
       "effect": "Report artifact",
       "verification": "Compare displayed figures and period with the reviewed source analysis.",
@@ -2892,7 +2892,7 @@
       "review": {
         "primary_section": "F-04",
         "kind": "Analysis-to-artifact mechanism",
-        "inputs": "Reviewed cost query/results, report instructions, output format and optional sample template.",
+        "inputs": "Cost-report request, authorized source access, query parameters, output format and optional report template.",
         "narrative": [
           "Report generation retrieves source data, builds the requested presentation and returns an artifact. A visual quality pass concerns presentation defects; it is not an independent reconciliation of the underlying financial interpretation.",
           "A follow-up can revise the artifact. Keep the analytical basis explicit when revising it: changing a title or chart layout should not silently change period, cost metric or grouping."
@@ -2932,7 +2932,7 @@
           ]
         ],
         "controls": "Formatting and completion status do not establish numerical accuracy; distribution is a separate effect.",
-        "observable_output": "Reportable artifact tied by the team to task/query identity and reviewed scope.",
+        "observable_output": "Report artifact and its source conversation or task. Record the query parameters and output identity used for reconciliation.",
         "undocumented": "An immutable artifact-version API and universal external-copy deletion are not established by the report guide.",
         "test": [
           "Generate a report from the small supplied synthetic cost fixture.",
@@ -3125,7 +3125,8 @@
       ],
       "sections": [
         "D-01",
-        "D-12"
+        "D-12",
+        "D-07"
       ],
       "trigger": "A scoped conversational question",
       "state": "Request context and connected source evidence",
@@ -3134,11 +3135,11 @@
       "verification": "Inspect scope and reproduce a material observation from the same source query.",
       "on_failure": "Name the missing source and qualify or withhold the answer; creating a custom agent does not by itself repair source access.",
       "review": {
-        "primary_section": "D-01",
+        "primary_section": "D-07",
         "kind": "Built-in inquiry workflow",
         "inputs": "Explicit question, service/account scope, observation interval and connected evidence.",
         "narrative": [
-          "The built-in inquiry path answers an operational question without requiring a separately created custom agent. It still depends on the Agent Space sources and permissions. A custom definition is useful for a recurring or specialized procedure, not a repair for missing read access.",
+          "The built-in inquiry path answers an operational question without requiring a separately created custom agent. It still depends on the Agent Space sources and permissions. Use a custom definition for a recurring or specialized procedure; configure source access independently.",
           "The response is scoped to evidence actually available to that request. Record the queried period and reproduce a material observation before treating a health summary as an operational fact."
         ],
         "configuration": [
@@ -3167,7 +3168,7 @@
         ],
         "controls": "A conversational request is not permission for a state-changing operation.",
         "observable_output": "Scoped answer and available supporting tool observations.",
-        "undocumented": "No universal source-completeness or exact query-planning guarantee is provided.",
+        "undocumented": "The cited guide does not specify the query-selection algorithm. Inspect the sources and query parameters used by the execution.",
         "test": [
           "Ask for one known staging service measurement in a complete interval.",
           "Compare it with the monitoring source.",
