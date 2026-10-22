@@ -6,21 +6,25 @@ Open [devops.html](devops.html). The timing includes prepared-result exercises, 
 
 
 
-## 1. An Agent Space connects configuration to executions
+## 1. Product Functions and Agent Space Resource Model
 
-**Chapter:** Platform model. **Schedule:** 00:00–02:00. **Slide budget:** 02:00.
+**Chapter:** Part I · Product Model. **Schedule:** 00:00–03:00. **Slide budget:** 03:00.
 
-Configuration, execution and evidence are different objects.
+Configuration objects, executions and effects must be reviewed as separate records.
 
 
 
-Account registrations | Providers and AWS account access
+Layer | Primary objects | Operational purpose | Evidence to inspect
 
-Agent Space | Associations, selected tools and operator access
+Account and Region | Provider registrations; AWS account roles | Make selected sources and tools available | Registered provider, role ARN, Region
 
-Agent definition | Managed behavior or custom prompt and attachments
+Agent Space | Associations; selected tools; operator access | Define the operational boundary | Space ID, integrations, operator role
 
-Execution | Investigation, invocation and observable tool results
+Knowledge and behavior | Topology; memory; instructions; skills | Provide environment context and procedures | Version, active state, attachment
+
+Execution | Investigation; custom-agent invocation; evaluation | Perform a bounded task | Trajectory, tool results, status
+
+Effect | Recommendation; approval; directed action | Separate advice from state change | Approval identity and resulting state
 
 
 
@@ -28,171 +32,203 @@ Execution | Investigation, invocation and observable tool results
 
 
 
-## 2. Two access paths need separate verification
+## 2. Use Case Taxonomy and Delivery Modes
 
-**Chapter:** Access and integrations. **Schedule:** 02:00–04:00. **Slide budget:** 02:00.
+**Chapter:** Part II · Use Case Catalog. **Schedule:** 03:00–05:00. **Slide budget:** 02:00.
 
-A created workspace is not proof that its data sources are readable.
+The catalog distinguishes native functions from configured and team-composed workflows.
 
 
 
-Path | Purpose | Acceptance check
+Delivery mode | Meaning | Representative use cases | Required configuration
 
-Resource role | Read authorized AWS sources | Known resource and identity are correct
+Built-in function | AWS-managed incident, query or prevention behavior | Triage, investigation, on-demand health, pattern analysis | Agent Space, sources and operator access
 
-Operator role | Let people use the space | Intended user—not only administrator—can enter
+Configured custom agent | Operator-defined prompt, tools, skills, memory and schedule | Health reports, operational reviews, audits, trend reports | Custom-agent definition and trigger
 
-Connected provider | Access selected external tools | Arguments and returned source agree
+Configured knowledge | Reusable context or procedure | SOP consolidation, report standards, topology notes | Memory, skill or instructions
 
+Controlled action | Explicitly authorized state change | Approved mitigation | Directed actions, role, classification and approval
 
+Preview function | Feature-specific pre-production path | Release readiness and release testing | Eligibility, Region and test target
 
-**Guide:** [D-02](../guides/devops.html#D-02)
 
 
+**Guide:** [D-01](../guides/devops.html#D-01), [D-06](../guides/devops.html#D-06), [D-07](../guides/devops.html#D-07)
 
-## 3. MCP setup has authentication-specific decisions
 
-**Chapter:** Access and integrations. **Schedule:** 04:00–07:00. **Slide budget:** 03:00.
 
-Role-less SigV4 validation is deferred to association.
+## 3. Incident Operations Use Cases
 
+**Chapter:** Part II · Use Case Catalog. **Schedule:** 05:00–08:00. **Slide budget:** 03:00.
 
+Triage, diagnosis, recommendation and execution are different stages with different records.
 
-Method | Required decisions
 
-OAuth | Token/authorization endpoints, client and scopes
 
-API key / secret headers | Actual header names and supported rotation path
+Use case | Initiation | Primary inputs | Reviewable output
 
-SigV4 | Signing Region, service and role option
+Incident signal triage | Alert, ticket or webhook | Signal identity, correlation and skip criteria | Linked, skipped or proceed decision with reason
 
-Association | Select tools in the Agent Space; verify there
+Root-cause investigation | Automatic or manual investigation | Metrics, logs, traces, changes and topology | Evidence, hypotheses, root-cause versions
 
+Investigation steering | Operator follow-up in context | Contrary evidence or missing source | Revised analysis and new root-cause version
 
+Mitigation planning | Completed or active investigation | Proposed effect, target, risk and rollback | Reviewable mitigation proposal
 
-**Guide:** [D-03](../guides/devops.html#D-03)
+Approved mitigation | Explicit operator approval | Exact operation and resource | Attributed action and independently checked state
 
 
 
-## 4. Private routing and provider identity are separate
+**Guide:** [D-06](../guides/devops.html#D-06), [D-M06](../guides/devops.html#D-M06), [D-10](../guides/devops.html#D-10)
 
-**Chapter:** Access and integrations. **Schedule:** 07:00–09:00. **Slide budget:** 02:00.
 
-Check the gateway path and target port before rotating a valid secret.
 
+## 4. Operational Reporting and Review Use Cases
 
+**Chapter:** Part II · Use Case Catalog. **Schedule:** 08:00–11:00. **Slide budget:** 03:00.
 
-Agent service | Uses configured private connection
+Recurring reports are custom-agent workflows; the report contract and data window must be explicit.
 
-Resource gateway | ENIs in selected VPC subnets
 
-Endpoint route | DNS, host and allowed port ranges
 
-Authenticated tool | Provider authentication and selected operation
+Use case | Cadence | Source scope | Expected output
 
+On-demand service health | Ad hoc | Selected service metrics, alarms and deployments | Timestamped health answer with missing signals
 
+Minute incident status report | On demand or short schedule | Current logs, metrics and active investigation | Changed observations, open hypotheses and next check
 
-**Guide:** [D-04](../guides/devops.html#D-04)
+Daily or weekly health report | Scheduled | Named services and complete reporting window | Trend summary, incidents, deployments and data gaps
 
+Deployment activity report | Scheduled or ad hoc | CI/CD history and service ownership | Revision list, failed changes and affected services
 
+Operational review pack | Weekly or monthly | Health, incidents, prevention and changes | Review agenda, decisions and owned follow-up
 
-## 5. Topology is a representation, not an access boundary
 
-**Chapter:** Context and behavior. **Schedule:** 09:00–11:00. **Slide budget:** 02:00.
 
-A missing graph node does not establish that a direct resource read is denied.
+**Guide:** [D-07](../guides/devops.html#D-07), [D-03](../guides/devops.html#D-03), [D-05](../guides/devops.html#D-05)
 
 
 
-Discovery | CloudFormation resources and enabled Resource Explorer supply inventory.
+## 5. Knowledge and Documentation Use Cases
 
-Relationships | Configuration, tags, pipeline mapping and observability supply evidence.
+**Chapter:** Part II · Use Case Catalog. **Schedule:** 11:00–14:00. **Slide budget:** 03:00.
 
-Verification | Compare one service/repository edge with the deployed configuration.
+Memory, instructions, skills and topology serve different documentation purposes and lifecycles.
 
 
 
-**Guide:** [D-05](../guides/devops.html#D-05)
+Use case | Primary mechanism | Maintained object | Boundary
 
+Incident pattern identification | Managed learning and prevention evaluation | Monitor memory and recommendation | Historical pattern is not the current cause
 
+SOP consolidation | Skill and supporting resources | Reviewed SKILL.md bundle | Team workflow; procedure does not grant tools
 
-## 6. Past incidents become selected contextual evidence
+Standing operational policy | Agent instructions | Global or agent-specific AGENTS.md | Prompt context, not IAM enforcement
 
-**Chapter:** Context and behavior. **Schedule:** 11:00–14:00. **Slide budget:** 03:00.
+Topology documentation | Discovery and learned understanding | Topology and environment summary | Graph is not an access-control boundary
 
-Retention, retrieval and diagnostic correctness require separate observations.
+Service-specific context | Custom memory store | Descriptions, entries and versions | Attachment and active state control access
 
 
 
-Investigations | Earlier outcomes and evidence
+**Guide:** [D-05](../guides/devops.html#D-05), [D-M01](../guides/devops.html#D-M01), [D-M02](../guides/devops.html#D-M02), [D-M03](../guides/devops.html#D-M03), [D-M04](../guides/devops.html#D-M04), [D-M07](../guides/devops.html#D-M07)
 
-Learning process | Synthesizes monitor-specific knowledge
 
-Memory store | Descriptions, entries, versions and active state
 
-New investigation | Selects relevant context and checks current evidence
+## 6. Access Roles, Tool Providers and Private Connectivity
 
+**Chapter:** Part III · Access and Knowledge. **Schedule:** 14:00–17:00. **Slide budget:** 03:00.
 
+Reachability, authentication, tool selection and authorization must each be tested.
 
-**Guide:** [D-M01](../guides/devops.html#D-M01)
 
 
+Configuration area | Decision | Confirmation | Typical failure
 
-## 7. Corrections and access attachments solve different problems
+Resource access | Allowed accounts, actions and resources | Known resource can be read under expected identity | Missing source data
 
-**Chapter:** Context and behavior. **Schedule:** 14:00–16:00. **Slide budget:** 02:00.
+Operator access | Who can enter and operate the space | Intended operator signs in | Administrator-only access works
 
-Feedback changes contextual knowledge; attachment changes which context an agent may use.
+MCP provider | Endpoint, authentication and registration | Provider validates or associates successfully | Wrong token endpoint or SigV4 fields
 
+Tool association | Selected tools for the space or custom agent | Expected tool visible; excluded tool absent | Provider registered but tool unavailable
 
+Private connection | VPC, subnets, security groups and ports | Target host and port reachable | Route or port failure mistaken for credential failure
 
-Correct a diagnosis | Submit verified feedback; inspect the resulting lesson. AWS sharing is a separate choice.
 
-Attach context | New custom agents start without stores. Attach only required stores; managed stores are read-only to them.
 
+**Guide:** [D-02](../guides/devops.html#D-02), [D-03](../guides/devops.html#D-03), [D-04](../guides/devops.html#D-04)
 
 
-**Guide:** [D-M02](../guides/devops.html#D-M02), [D-M07](../guides/devops.html#D-M07)
 
+## 7. Memory, Instructions and Skills
 
+**Chapter:** Part III · Access and Knowledge. **Schedule:** 17:00–20:00. **Slide budget:** 03:00.
 
-## 8. Instructions and skills enter the session differently
+Availability, selection and diagnostic influence are separate questions for retained context.
 
-**Chapter:** Context and behavior. **Schedule:** 16:00–18:00. **Slide budget:** 02:00.
 
-Prompt guidance does not grant or revoke IAM permissions.
 
+Mechanism | When loaded | Typical content | Lifecycle control
 
+Managed memory | Selected by description during relevant work | Recurring causes and environment understanding | Version, active state and managed refresh
 
-Control | Loading behavior | Configuration test
+Custom memory | Selected after store attachment | Team or service context | Create, edit, deactivate, detach or delete
 
-Instructions | Applicable text at session startup | Compare an existing and new session
+Corrective reflection | Future investigation of the alarm | Verified correction to an earlier diagnosis | Latest feedback and visible memory
 
-Skill | Procedure selected by description and scope | Compare a matching and nonmatching request
+Agent instructions | Every new applicable session | Standing policies and output rules | Edit and start a new session
 
-Permissions | Enforced by the connected systems | Test an expected denial separately
+Skill | When description and agent scope match | Specialized procedure and references | Edit description, content and targeting
 
 
 
-**Guide:** [D-M03](../guides/devops.html#D-M03), [D-M04](../guides/devops.html#D-M04)
+**Guide:** [D-M01](../guides/devops.html#D-M01), [D-M02](../guides/devops.html#D-M02), [D-M03](../guides/devops.html#D-M03), [D-M04](../guides/devops.html#D-M04), [D-M07](../guides/devops.html#D-M07)
 
 
 
-## 9. Inspect triage before diagnosing a missing investigation
+## 8. Custom Agents, Schedules and Invocation Records
 
-**Chapter:** Execution and control. **Schedule:** 18:00–20:00. **Slide budget:** 02:00.
+**Chapter:** Part III · Access and Knowledge. **Schedule:** 20:00–23:00. **Slide budget:** 03:00.
 
-Routing correction and root-cause feedback are different operations.
+A schedule creates future work; it does not define the data window or cancel an existing run.
 
 
 
-Decision | Meaning | Operator response
+Object | Configuration | Run-time behavior | Stop or change control
 
-Linked | Signal belongs to existing work | Inspect the primary investigation; unlink if wrong
+Custom agent | System prompt, selected tools, skills and stores | Loads only assigned resources | Edit or disable definition
 
-Skipped | Configured criteria excluded it | Inspect rule/skill; unskip if wrong
+Schedule trigger | Rate or cron expression | Creates future invocations | Pause or delete trigger
 
-Proceed | Independent work is scheduled | Inspect execution and evidence
+Invocation | Run Now, prompt or trigger | Produces status, trajectory and outputs | Cancel current invocation
+
+Artifact or recommendation | Generated by assigned skills/tools | Separate output object | Review and manage independently
+
+Asset API | IDs, metadata, files and versions | Programmatic configuration management | Respect PATCH/replacement semantics
+
+
+
+**Guide:** [D-07](../guides/devops.html#D-07), [D-08](../guides/devops.html#D-08)
+
+
+
+## 9. Incident Triage and Investigation Lifecycle
+
+**Chapter:** Part IV · Incident Operations and Control. **Schedule:** 23:00–26:00. **Slide budget:** 03:00.
+
+Routing correction, diagnosis correction and mitigation approval are distinct operations.
+
+
+
+Incoming signal | Alert, ticket, webhook or manual request with incident context.
+
+Triage decision | Linked, skipped or proceed; inspect the reason before diagnosing absence.
+
+Investigation | Evidence collection, hypotheses, root-cause versions and steering.
+
+Closure and feedback | Mitigation decision, recovery evidence and correction of routing or diagnosis.
 
 
 
@@ -200,39 +236,47 @@ Proceed | Independent work is scheduled | Inspect execution and evidence
 
 
 
-## 10. A trigger creates work; cancellation affects a run
+## 10. Incident Pattern Analysis and Prevention Recommendations
 
-**Chapter:** Execution and control. **Schedule:** 20:00–22:00. **Slide budget:** 02:00.
+**Chapter:** Part IV · Incident Operations and Control. **Schedule:** 26:00–29:00. **Slide budget:** 03:00.
 
-In-flight calls may finish after cancellation; a schedule is not the data window.
-
-
-
-Definition | Prompt, selected tools, skills and stores
-
-Trigger | Manual, rate or cron; inspect next run
-
-Invocation | History shows status and tool trajectory
-
-Stop controls | Pause future starts; cancel existing work separately
+Incident pattern identification produces context and recommendations, not an automatically implemented fix.
 
 
 
-**Guide:** [D-07](../guides/devops.html#D-07)
+Stage | Input | Output | Operator decision
+
+Monitor memory refresh | Recent completed investigations | Monitor-specific recurring-cause context | Inspect version and relevance
+
+Prevention evaluation | Multiple incident investigations | Observability, infrastructure, governance or code recommendations | Run, stop or wait for scheduled evaluation
+
+Recommendation review | Incident evidence and expected impact | Keep, discard or implemented state | Assign owner and acceptance criteria
+
+Corrective feedback | Verified diagnosis correction | Reflection for future investigations | Separate local learning from AWS sharing
 
 
 
-## 11. Sandbox and directed actions have different boundaries
-
-**Chapter:** Execution and control. **Schedule:** 22:00–25:00. **Slide budget:** 03:00.
-
-Application or tool effects must be reviewed; “read-only” is not a universal agent label.
+**Guide:** [D-M01](../guides/devops.html#D-M01), [D-M02](../guides/devops.html#D-M02), [D-06](../guides/devops.html#D-06)
 
 
 
-Sandbox | Fresh investigation-local environment; configured packages and outbound rules. Empty allowlist still permits AWS endpoints.
+## 11. Sandbox and Directed Actions
 
-Directed actions | Space opt-in, eligible access and specific operation/resource approval. Inspect classification and final state.
+**Chapter:** Part IV · Incident Operations and Control. **Schedule:** 29:00–32:00. **Slide budget:** 03:00.
+
+Execution authority depends on the specific effect; there is no universal read-only agent mode.
+
+
+
+Execution surface | Purpose | Primary controls | Evidence
+
+Sandbox | Investigation-local computation and data processing | Packages, network rules and existing AWS permissions | Code, outputs and failed network calls
+
+Directed AWS action | Eligible resource mutation | Space opt-in, elevated role and specific approval | Approval, CloudTrail and resulting resource state
+
+External MCP mutation | Tool-defined effect | Tool classification, selected tool and approval behavior | Tool arguments and external result
+
+Recommendation only | Describe a possible change | No execution authorization | Proposal, risk, rollback and verification plan
 
 
 
@@ -240,43 +284,45 @@ Directed actions | Space opt-in, eligible access and specific operation/resource
 
 
 
-## 12. Update semantics are part of the operational contract
+## 12. Release Readiness Review and Release Testing
 
-**Chapter:** Execution and control. **Schedule:** 25:00–27:00. **Slide budget:** 02:00.
+**Chapter:** Part IV · Incident Operations and Control. **Schedule:** 32:00–34:00. **Slide budget:** 02:00.
 
-Read current configuration first, then verify the saved result.
-
-
-
-Object | Update behavior | Avoid
-
-Asset metadata | PATCH semantics | Assuming names can replace required asset IDs
-
-Space preferences map | Replacement when supplied | Dropping existing values unintentionally
-
-Memory entry | New immutable version | Treating edits as erased history
+Readiness review, managed verification and active application testing are separate preview operations.
 
 
 
-**Guide:** [D-08](../guides/devops.html#D-08), [D-M06](../guides/devops.html#D-M06)
+Preview path | Subject | Primary output | Important boundary
+
+Release readiness review | Code change and dependency context | Risk findings and recommended actions | Feature and repository eligibility are specific
+
+Managed verification | Build or test evidence for the change | Verification task and results | Not equivalent to production recovery evidence
+
+Active release testing | Running web application or API | Observed application behavior | Requests can create, modify or delete application data
+
+Custom-agent release tools | Release Manager tasks and reports | Created or analyzed release task | Use selected tools and inspect task state
 
 
 
-## 13. Exercise: same alarm, different evidence
-
-**Chapter:** Prepared-result exercise. **Schedule:** 27:00–35:00. **Slide budget:** 08:00.
-
-Synthetic prepared-result exercise. Do not claim observed AWS recall or a proven deployment cause.
+**Guide:** [D-09](../guides/devops.html#D-09), [D-10](../guides/devops.html#D-10)
 
 
 
-0–2 min | Inspect historical memory | Earlier database pool saturation
+## 13. Worked Example: Recurring Alarm with Different Current Evidence
 
-2–4 min | Compare new fixture | DB 34/100 connections; query p95 18 ms
+**Chapter:** Part V · Worked Example. **Schedule:** 34:00–42:00. **Slide budget:** 08:00.
 
-4–6 min | Evaluate current lead | Inventory p95 2,900 ms; checkout 3,100 ms
+Prepared evidence demonstrates how historical context can be useful without becoming the current diagnosis.
 
-6–8 min | Record the boundary | Upstream lead supported; internal cause unresolved
+
+
+0–2 min | Inspect prior context | Earlier database pool saturation and its verified evidence
+
+2–4 min | Compare current database signals | 34/100 connections and query p95 of 18 ms
+
+4–6 min | Evaluate current dependency signals | Inventory p95 of 2,900 ms and checkout p95 of 3,100 ms
+
+6–8 min | Record the conclusion | Historical memory is relevant; upstream latency is the current lead; cause remains bounded
 
 
 
@@ -284,19 +330,25 @@ Synthetic prepared-result exercise. Do not claim observed AWS recall or a proven
 
 
 
-## 14. Diagnose the failing layer, then retest
+## 14. Troubleshooting Matrix and Operating Limits
 
-**Chapter:** Troubleshooting and coverage. **Schedule:** 35:00–37:00. **Slide budget:** 02:00.
+**Chapter:** Part VI · Troubleshooting. **Schedule:** 42:00–44:00. **Slide budget:** 02:00.
 
-Full remote-protocol and release-profile procedures remain linked scope, not completed live tests.
+Diagnose the failed layer and retest the smallest relevant operation.
 
 
 
-Access and connectivity | Check operator identity, source role, provider association, route and endpoint port.
+Symptom | First object to inspect | Second check | Do not do first
 
-Context and execution | Check activation, descriptions, attachments, session start and concurrency.
+No investigation | Triage decision and incident link | Concurrency and trigger status | Broaden all permissions
 
-Changes and coverage | Check exact approval and update semantics; consult current quotas and feature eligibility.
+Missing data | Resource role and source connection | Time window and resource identity | Assume the source has no data
+
+Memory not used | Store/entry active state and description | Agent attachment and new session | Claim retrieval from answer wording
+
+Tool unavailable | Provider association and selected tools | Authentication and private route | Rotate a valid secret without network evidence
+
+Mutation denied | Directed-action enablement and classification | Role trust, exact operation and approval | Treat a chat request as authorization
 
 
 
