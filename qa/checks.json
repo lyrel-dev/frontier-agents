@@ -1,16 +1,16 @@
 {
-  "revision": "2026-10-22-structured-html",
-  "baseline": "03ad431ecb7636a2f22688c674e8d05b3dae5d5a",
+  "revision": "2026-10-22-use-case-catalog",
+  "baseline": "7ed9843ed35f6c78214dd2853df497b670a49995",
   "reports": 4,
   "report_chapters": 26,
   "canonical_sections_preserved": 57,
   "canonical_content_and_sources_unchanged": true,
   "html_presentations": 4,
-  "timed_slides": 50,
-  "programme_minutes": 124,
+  "timed_slides": 51,
+  "programme_minutes": 149,
   "exercise_minutes": 28,
-  "html_files_checked": 24,
-  "local_links_checked": 619,
+  "html_files_checked": 25,
+  "local_links_checked": 963,
   "binary_presentations_remaining": 0,
   "browser_checks": [
     {
@@ -33,7 +33,7 @@
       "subject": "security",
       "width": 390,
       "report_chapters": 7,
-      "slide_count": 14,
+      "slide_count": 15,
       "javascript_errors": [],
       "search_chapter_type_deeplinks_notes_timers_print": "passed"
     },
@@ -41,7 +41,7 @@
       "subject": "security",
       "width": 1440,
       "report_chapters": 7,
-      "slide_count": 14,
+      "slide_count": 15,
       "javascript_errors": [],
       "search_chapter_type_deeplinks_notes_timers_print": "passed"
     },
@@ -86,5 +86,61 @@
   "excluded_scope_hits": [],
   "application_changes": [],
   "errors": [],
-  "boundary": "Organization, preserved source content, HTML behavior and timing checks only. No new external product audit or live AWS execution."
+  "boundary": "Organization, preserved source content, HTML behavior and timing checks only. No new external product audit or live AWS execution.",
+  "use_case_catalog": {
+    "revision": "2026-10-22-use-case-catalog",
+    "use_cases": 54,
+    "platform_counts": {
+      "devops": 22,
+      "security": 16,
+      "finops": 16
+    },
+    "group_counts": {
+      "Incident operations": 5,
+      "Health reporting and reviews": 5,
+      "Pattern analysis and improvement": 2,
+      "Knowledge and documentation": 5,
+      "Custom operational work": 3,
+      "Release and change assurance": 2,
+      "Application assessment": 4,
+      "Authentication and access": 1,
+      "Findings and remediation": 4,
+      "Shift-left review": 6,
+      "Program operations": 1,
+      "Cost inquiry and reporting": 6,
+      "Anomaly and optimization": 4,
+      "Context and governance": 2,
+      "Automation and collaboration": 4
+    },
+    "delivery_counts": {
+      "Built-in function": 7,
+      "Controlled action": 1,
+      "Configured custom agent": 7,
+      "Built-in mechanism": 2,
+      "Composed workflow": 4,
+      "Configured knowledge": 1,
+      "Built-in function with composed documentation": 1,
+      "Preview function": 2,
+      "Native assessment": 1,
+      "Configured assessment": 3,
+      "Native mechanism": 1,
+      "Native operation": 2,
+      "Configured integration": 4,
+      "Configured remediation": 1,
+      "Preview assessment": 4,
+      "Configured criteria": 1,
+      "Native function": 4,
+      "Native function with context": 1,
+      "Configured recurring task": 1,
+      "Configured automation": 2,
+      "Native function with team review": 1,
+      "Configured context": 1,
+      "Native memory": 1,
+      "Native output": 1
+    },
+    "local_links_checked": 859,
+    "marketing_title_matches": [],
+    "boundary": "Catalog structure, source mapping, local links, HTML controls and slide information density were checked. No live AWS workflow or use-case outcome was executed.",
+    "browser_checks": 5
+  }
 }
