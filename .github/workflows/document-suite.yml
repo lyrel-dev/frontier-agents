@@ -32,12 +32,6 @@ jobs:
       - name: Install Chromium for browser validation
         timeout-minutes: 3
         run: python -m playwright install chromium
-      - name: Integrate reviewed mechanism sources once
-        run: |
-          python -m compileall -q tools/docs
-          for file in apply_mechanism_review.py apply_mechanism_layout.py apply_mechanism_checks.py; do
-            if [ -f "tools/docs/$file" ]; then python "tools/docs/$file"; fi
-          done
       - name: Build guides, linked catalog, figures and HTML presentations
         run: |
           python -m compileall -q tools/docs
