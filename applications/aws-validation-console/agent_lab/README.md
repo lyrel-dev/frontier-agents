@@ -1,6 +1,10 @@
-# AWS DevOps Agent response and prevention lab
+# AWS FIS account orchestration and agent benchmarks
 
-**0.3.0-rc1 — executable release candidate. Live two-account acceptance is pending.**
+**0.4.0-rc1 — live AWS and agent-performance acceptance pending.**
+
+The default `/` view discovers existing FIS templates across a configured set of AWS accounts and Regions, maps them to approved agent-response measurement contracts, and sequences qualified FIS trials through the durable executor. Frozen benchmarks retain unsuccessful and unstarted attempts and separate incomparable service/template/agent cohorts. The detailed response and prevention workspace remains at `/response`.
+
+Start with [the AWS/FIS operating guide](docs/FIS_FLEET.md). Account discovery needs only read permissions and is independent of execution configuration. No account, incident, experiment or measurement is preloaded.
 
 The local controller tests an existing Agent Space in account A against an authorized non-production service in account B. It drives a measured baseline, an approved finite FIS exposure, native incident correlation, investigation collection, independent workload observation and verified cleanup. Prevention links an actual evaluation and versioned recommendation to an approved implementation and comparable replay.
 

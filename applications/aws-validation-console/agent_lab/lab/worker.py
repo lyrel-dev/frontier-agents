@@ -7,6 +7,7 @@ import os
 import threading
 import time
 from .engine import Engine, PROBING
+from .fis_campaigns import Fleet
 from .models import Configuration
 from .probe import request
 from .util import iso, dt, error_code
@@ -15,6 +16,7 @@ from .util import iso, dt, error_code
 class Worker:
     def __init__(self,config:Configuration,store,*,engine=None):
         self.config=config; self.store=store; self.engine=engine or Engine(config,store)
+        self.fleet=Fleet(config,store)
         self.stop_event=threading.Event(); self.owner=None; self.thread=None
         self.background_thread=None; self.failure=None; self.probe_failure=None
         self.started=threading.Event(); self.finished=threading.Event()
@@ -90,8 +92,9 @@ class Worker:
                     raise RuntimeError('Probe scheduler stopped unexpectedly')
                 self.store.meta('worker',{'pid':os.getpid(),'heartbeat_at':iso(),'state':'running'})
                 self.engine.step()
+                self.fleet.step()
                 self.store.meta('worker',{'pid':os.getpid(),'heartbeat_at':iso(),'state':'running'})
-                self.stop_event.wait(self.config.poll_seconds)
+                self.stop_event.wait(self.fleet.poll_delay())
             if self.probe_failure:
                 raise RuntimeError('Probe scheduler failed')
         except Exception as exc:

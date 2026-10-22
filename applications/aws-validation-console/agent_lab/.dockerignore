@@ -15,3 +15,5 @@ preview.html
 # Private environment definitions and live acceptance evidence.
 *.local.json
 local-acceptance/
+
+aws-preview.html

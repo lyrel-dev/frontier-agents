@@ -21,3 +21,11 @@ local-acceptance/
 
 # Generated hosting test evidence belongs in CI artifacts.
 validation/container-runtime.json
+
+aws-preview.html
+
+# Source-derived assets and run-specific acceptance outputs.
+schemas/*.json
+grafana/agent-validation.json
+validation/fis-*.json
+validation/fis-*.xml

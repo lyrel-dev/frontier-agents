@@ -41,7 +41,7 @@ class Service:
               'binding_record_id':br['id'],'comparison':request.comparison.model_dump(mode='json'),
               'plan_sha256':digest(request.model_dump(mode='json')),'registered_at':iso(self.clock())})
 
-    def trial(self,request:TrialRequest):
+    def trial(self,request:TrialRequest, *, entity_id=None):
         spec=self.experiment(request.experiment_ref); binding=self.binding(spec.binding_id)
         if request.arm=='treatment' and not request.campaign_id: raise Blocked('A treatment run requires a prevention campaign')
         if request.campaign_id:
@@ -49,10 +49,22 @@ class Service:
             if campaign['kind']!='campaign' or campaign['data']['experiment_ref']!=request.experiment_ref: raise Blocked('Campaign/experiment mismatch')
             if request.arm=='treatment' and campaign['state']!='REPLAY_READY': raise Blocked('Deploy and verify the linked recommendation before replay')
             if request.arm=='baseline' and campaign['state']!='BASELINES': raise Blocked('Untreated baselines must precede the prevention implementation')
+        if entity_id is not None:
+            try:
+                old = self.store.entity(entity_id)
+            except KeyError:
+                old = None
+            if old:
+                if (old['kind'] != 'trial' or old['data']['experiment_ref'] != request.experiment_ref
+                        or old['data'].get('campaign_id') != request.campaign_id
+                        or old['data']['arm'] != request.arm
+                        or old['data']['binding_sha256'] != digest(binding.model_dump(mode='json'))):
+                    raise Blocked('Scheduler trial identity conflicts with its pinned request')
+                return old
         br=self.store.put_record('binding','workspace',binding.model_dump(mode='json'),'binding-'+digest(binding.model_dump(mode='json')))
         return self.store.create('trial','DRAFT',{'title':spec.title,'experiment_ref':request.experiment_ref,
               'binding_record_id':br['id'],'binding_sha256':br['sha256'],'campaign_id':request.campaign_id,'arm':request.arm,
-              'registered_at':iso(self.clock()),'configuration_version':'0.3','fault_confirmed':False,'cleanup_verified':False})
+              'registered_at':iso(self.clock()),'configuration_version':'0.3','fault_confirmed':False,'cleanup_verified':False}, entity_id=entity_id)
 
     def qualify(self,trial_id):
         trial=self.store.entity(trial_id)

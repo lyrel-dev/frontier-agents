@@ -1,7 +1,7 @@
 services:
   agent-lab:
     build: .
-    image: local/devops-agent-lab:0.3.0-rc1
+    image: local/devops-agent-lab:0.4.0-rc1
     ports:
       - "127.0.0.1:8787:8787"
     environment:

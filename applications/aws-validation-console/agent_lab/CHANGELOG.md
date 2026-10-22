@@ -1,3 +1,13 @@
+# 0.4.0-rc1 — AWS FIS account catalogue and benchmark campaigns
+
+- Added resumable, account-verified paginated template/history discovery with target-account configuration reads and explicit per-scope gaps.
+- Added an AWS-first default SPA: accounts, FIS library, guarded campaign queues and frozen response benchmarks.
+- Reused the existing FIS executor and per-exposure approval/recovery controls; no blanket execution of discovered templates.
+- Added deterministic child registration, transactional queue ownership/pause enforcement, failure retention and restart-safe progression.
+- Added cohort/agent-separated statistics, actual-exposure comparability, missing/censored counts, interactive graphs and all-attempt exports.
+- Multi-account and selector-based templates are visible but remain execution-blocked until their adapters are qualified.
+- No live AWS or agent outcome is asserted by this increment.
+
 # Runtime safeguards and hosting gate — 22 October 2026
 
 - Require a fresh, verified FIS safety-lever read before first fault dispatch. Block engaged, engaging, unknown and unreadable states. Preserve uncertain-operation reconciliation and owned-experiment stopping.

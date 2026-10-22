@@ -1,3 +1,7 @@
+# AWS-first account and campaign scope
+
+The AWS/FIS catalogue and queue are described in [FIS_FLEET.md](FIS_FLEET.md). Discovery includes all enumerated configured account/Region templates and history, including definitions the executor cannot qualify. Sequential campaigns can span separate workload/agent bindings. One multi-account FIS exposure and dynamic selector execution are not enabled by this change.
+
 # Instrument coverage: supported paths and explicit limits
 
 The nine deployment-model labels describe the monitored service. They are **not** a claim that every FIS action, target resolver or local fault engine is implemented. No deployment model has been accepted against a real AWS workload during this delivery.

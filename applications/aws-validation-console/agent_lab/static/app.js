@@ -1,5 +1,5 @@
 'use strict';
-const state={token:'',workspace:null,config:null,view:'overview',selected:null,detail:null,offline:location.protocol==='file:'};
+const state={token:'',workspace:null,config:null,view:new URLSearchParams(location.search).has('trial')?'trials':'overview',selected:new URLSearchParams(location.search).get('trial'),detail:null,offline:location.protocol==='file:'};
 const $=s=>document.querySelector(s);
 function el(tag,cls,text){const n=document.createElement(tag);if(cls)n.className=cls;if(text!==undefined)n.textContent=text;return n;}
 function button(text,fn,cls='',disabled=false){const b=el('button',cls,text);b.type='button';b.disabled=disabled;b.addEventListener('click',()=>Promise.resolve().then(fn).catch(fail));return b;}

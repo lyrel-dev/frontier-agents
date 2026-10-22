@@ -163,7 +163,13 @@ class Store:
                        if r['state'] in {'APPROVED','RUNNING','UNKNOWN_REMOTE_STATE','ROLLBACK_APPROVED','ROLLING_BACK','RESTORE_REQUIRED'}]
             if active or changes:
                 raise Blocked('Only one active workload experiment or change is permitted')
-            data = json.loads(row['data']); data['approval_id'] = approval['id']; data['started_at'] = started_at or iso()
+            data = json.loads(row['data'])
+            if data.get('fis_campaign_id'):
+                fleet = db.execute('SELECT kind,state,data FROM entities WHERE id=?', (data['fis_campaign_id'],)).fetchone()
+                if (not fleet or fleet['kind'] != 'fis_campaign' or fleet['state'] != 'RUNNING'
+                        or json.loads(fleet['data']).get('active_trial_id') != entity_id):
+                    raise Blocked('The fleet queue is paused, cancelled or no longer owns this trial')
+            data['approval_id'] = approval['id']; data['started_at'] = started_at or iso()
             db.execute('UPDATE entities SET state=?, revision=revision+1,updated_at=?,data=? WHERE id=?',
                        ('BASELINING',iso(),canonical(data),entity_id))
             self._event(db,entity_id,'trial.started',{'approval_id':approval['id'],'started_at':data['started_at']})

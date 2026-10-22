@@ -42,7 +42,7 @@ def main():
     b=pw.chromium.launch(executable_path=os.getenv('CHROMIUM_PATH','/usr/bin/chromium'),headless=True,args=['--no-sandbox'])
     page=b.new_page(viewport={'width':1440,'height':1000});errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
     if a.native:
-     page.goto(base,wait_until='networkidle')
+     page.goto(base+'/response',wait_until='networkidle')
     else:
      def bridge(source,path,options):
       assert path.startswith('/api/') and not path.startswith('//')

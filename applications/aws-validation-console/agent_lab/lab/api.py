@@ -13,6 +13,7 @@ from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from pydantic import BaseModel, ConfigDict, Field
 from . import __version__
 from .evaluation import evaluate_trial, compare_campaign
+from .fis_campaigns import QueueRequest, AttachContract
 from .models import Configuration, Experiment, TrialRequest, CampaignRequest, Approval, Diagnosis, ChangeProposal, Binding
 from .service import Service
 from .store import Store
@@ -76,11 +77,14 @@ def create_app(config:Configuration,store:Store,operator_token:str,approval_toke
     def health(): return {'status':'ok','version':__version__}
 
     @app.get('/',response_class=HTMLResponse)
-    def index(): return (ROOT/'static/index.html').read_text()
+    def index(): return (ROOT/'static/aws.html').read_text()
+
+    @app.get('/response',response_class=HTMLResponse)
+    def response_console(): return (ROOT/'static/index.html').read_text()
 
     @app.get('/static/{name}')
     def static(name:str):
-        allowed={'app.js':'text/javascript','charts.js':'text/javascript','style.css':'text/css'}
+        allowed={'app.js':'text/javascript','charts.js':'text/javascript','style.css':'text/css','aws.js':'text/javascript','aws.css':'text/css'}
         if name not in allowed: raise HTTPException(404)
         return Response((ROOT/'static'/name).read_text(),media_type=allowed[name])
 
@@ -109,7 +113,7 @@ def create_app(config:Configuration,store:Store,operator_token:str,approval_toke
 
     @app.get('/api/schema/{kind}')
     def schema(kind:str):
-        models={'experiment':Experiment,'configuration':Configuration,'diagnosis':Diagnosis,'campaign':CampaignRequest,'change':ChangeProposal}
+        models={'experiment':Experiment,'configuration':Configuration,'diagnosis':Diagnosis,'campaign':CampaignRequest,'change':ChangeProposal,'fis_campaign':QueueRequest,'fis_contract':AttachContract}
         if kind not in models: raise HTTPException(404)
         return models[kind].model_json_schema()
 
@@ -177,4 +181,6 @@ def create_app(config:Configuration,store:Store,operator_token:str,approval_toke
     def grafana():
         from .metrics import dashboard
         return dashboard()
+    from .fis_api import install
+    install(app, config, store, svc)
     return app

@@ -219,9 +219,29 @@ class Binding(Strict):
             raise ValueError('Instrument ARN is outside the workload Region')
 
 
+class FISAccount(Strict):
+    """Administrator-owned SDK profile. Discovery never accepts browser credentials."""
+    id: ID
+    name: str = Field(min_length=1, max_length=150)
+    account_id: str = Field(pattern=r'^\d{12}$')
+    profile: str = Field(min_length=1, max_length=150)
+    regions: list[str] = Field(min_length=1, max_length=30)
+
+    @model_validator(mode='after')
+    def validate_regions(self):
+        import re
+        if len(set(self.regions)) != len(self.regions):
+            raise ValueError('Duplicate discovery Region')
+        if any(not re.fullmatch(r'[a-z]{2}(?:-[a-z]+)+-\d', r) for r in self.regions):
+            raise ValueError('Invalid discovery Region')
+        return self
+
+
 class Configuration(Strict):
     enable_aws_writes: bool = False
-    bindings: list[Binding] = Field(default_factory=list, max_length=10)
+    bindings: list[Binding] = Field(default_factory=list, max_length=100)
+    fis_accounts: list[FISAccount] = Field(default_factory=list, max_length=100)
+    fis_discovery_max_pages: int = Field(default=1000, ge=1, le=10000)
     poll_seconds: int = Field(default=10, ge=2, le=60)
     approval_ttl_seconds: int = Field(default=900, ge=60, le=3600)
     probe_gap_seconds: int = Field(default=15, ge=5, le=60)
@@ -229,6 +249,11 @@ class Configuration(Strict):
     def unique(self):
         if len({b.id for b in self.bindings}) != len(self.bindings):
             raise ValueError('Duplicate binding ID')
+        if len({a.id for a in self.fis_accounts}) != len(self.fis_accounts):
+            raise ValueError('Duplicate discovery account ID')
+        scopes = [(a.account_id, region) for a in self.fis_accounts for region in a.regions]
+        if len(set(scopes)) != len(scopes):
+            raise ValueError('Duplicate account/Region discovery scope')
         return self
 
 
