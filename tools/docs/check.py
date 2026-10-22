@@ -18,6 +18,7 @@ from diagrams import DIAGRAMS
 from structure import BASELINE
 from model_check import validate_model
 from resource_model import validate as validate_resources
+from editorial_check import validate as validate_editorial
 from mechanism_detail import validate as validate_mechanisms
 
 
@@ -121,6 +122,8 @@ def check(browser=False):
     s=evidence['security'];assert s['deployed_revision']==s['proposed_revision'];assert s['test_identity']==s['prepared_revalidation_identity']
     mechanism_result=validate_mechanisms(guides,browser=browser)
     errors.extend(mechanism_result["errors"])
+    editorial_result=validate_editorial(guides)
+    errors.extend(editorial_result["errors"])
     model_result=validate_model(guides, browser=browser)
     errors.extend(model_result["errors"])
     resource_result=validate_resources(guides,browser=browser)
@@ -197,6 +200,7 @@ def check(browser=False):
     results={'revision':REVISION,'baseline':BASELINE,'guides':len(guides),'canonical_sections':len(new_ids),'previous_identifiers_retained':len(set(previous_ids)&set(new_ids)),'new_sections':sorted(set(new_ids)-set(previous_ids)),'authored_use_case_narratives':len(entries),'narrative_paragraphs':len(source_narratives),'platform_use_cases':dict(Counter(e['platform'] for e in entries)),'logical_diagrams':len(DIAGRAMS),'rendered_diagram_instances':figures,'html_presentations':len(DECKS),'slides':sum(len(d['slides']) for d in DECKS.values()),'programme_minutes':sum(totals(d)[0] for d in DECKS.values())//60,'exercise_minutes':sum(totals(d)[1] for d in DECKS.values())//60,'local_links_checked':link_count,'browser_checks':browser_results,'application_changes':app_changes,'excluded_scope_hits':scope_hits,'errors':errors,'boundary':'Source mapping, narrative presence/uniqueness, logical SVG accessibility, examples, and HTML behavior were checked. These checks do not establish factual completeness, live AWS operation, agent accuracy, or measured outcomes.'}
     results['mechanism_review']=mechanism_result
     results['relationship_model']=model_result
+    results['technical_editorial_review']=editorial_result
     results['product_resource_model']=resource_result
     write('qa/checks.json',json.dumps(results,indent=2))
     if errors:raise SystemExit(json.dumps(results,indent=2))
