@@ -12,7 +12,7 @@ concurrency:
 jobs:
   documents:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
         with:
@@ -25,12 +25,18 @@ jobs:
         run: |
           python -m pip install -r tools/docs-requirements.txt
           python -m playwright install --with-deps chromium
-      - name: Compile sources and replace superseded documentation
+      - name: Apply source revision when present
         run: |
-          python -m py_compile tools/docs_build.py tools/docs_check.py tools/lesson_plan.py
+          if [ -f tools/apply_use_case_revision.py ]; then python tools/apply_use_case_revision.py; fi
+      - name: Build structured reports, use-case catalog and HTML presentations
+        run: |
+          python -m py_compile tools/docs_build.py tools/docs_check.py tools/lesson_plan.py tools/use_case_catalog.py
           python tools/docs_build.py
-      - name: Validate canonical content, examples, browser controls and application preservation
-        run: python tools/docs_check.py --browser
+          python tools/use_case_catalog.py
+      - name: Validate content, catalog, presentation flow and browser behavior
+        run: |
+          python tools/docs_check.py --browser
+          python tools/use_case_catalog.py --check --browser --finalize
       - name: Commit each changed document or deletion separately
         run: |
           git config user.name 'github-actions[bot]'
