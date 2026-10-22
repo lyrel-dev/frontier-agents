@@ -50,7 +50,7 @@ jobs:
           python -m pytest -q --junitxml=validation/fis-console-pytest.xml
           python tests/browser_checks.py --native
           python tests/fis_browser_checks.py --native
-          python tests/setup_browser_checks.py --native
+          python tests/native_setup_diagnostics.py
           python tests/worker_http_acceptance.py
           git diff --check
       - name: Verify isolated container hosting
