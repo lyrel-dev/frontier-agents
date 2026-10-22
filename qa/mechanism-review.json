@@ -32,8 +32,55 @@
       "sha256": "4565514f203edd099b20fdc1472a3a1472696e147952f838e2163efe2947aa42"
     }
   },
-  "old_mechanism_core_fields_preserved": true,
+  "old_mechanism_core_fields_preserved": false,
   "added_mechanism": "MX-S-PERSONALIZE",
+  "reviewed_core_corrections": [
+    {
+      "id": "MX-F-ARTIFACT",
+      "field": "state",
+      "before": "Artifact linked to a task and query basis",
+      "after": "Report artifact, originating conversation or task, and query basis",
+      "reason": "Report generation also returns artifacts in conversation; a task is not a universal parent resource.",
+      "official_sources": [
+        "https://docs.aws.amazon.com/finops-agent/latest/userguide/custom-cost-reporting.html"
+      ]
+    },
+    {
+      "id": "MX-F-MEMORY",
+      "field": "trigger",
+      "before": "Explicit remember, update or forget request",
+      "after": "Conversation preferences, corrections or task outcomes; explicit remember, update or forget requests",
+      "reason": "The memory input model includes retained task outcomes and is not limited to imperative remember requests.",
+      "official_sources": [
+        "https://docs.aws.amazon.com/finops-agent/latest/userguide/context-files-and-memory.html"
+      ]
+    },
+    {
+      "id": "MX-S-GENERATE",
+      "field": "trigger",
+      "before": "Approved policy source is submitted",
+      "after": "Policy documents are submitted for requirement generation",
+      "reason": "Approval of policy source is a team control, not a documented service-side approval gate.",
+      "official_sources": [
+        "https://docs.aws.amazon.com/securityagent/latest/userguide/security-requirements.html"
+      ]
+    },
+    {
+      "id": "MX-D-QUERY",
+      "field": "sections",
+      "before": [
+        "D-01",
+        "D-12"
+      ],
+      "after": [
+        "D-01",
+        "D-12",
+        "D-07"
+      ],
+      "reason": "Place invocation instructions in the operations chapter; retain the high-level overview and integration references.",
+      "official_sources": []
+    }
+  ],
   "regression_checks": [
     "Missing lifecycle rejected",
     "Unresolved claim evidence rejected",
