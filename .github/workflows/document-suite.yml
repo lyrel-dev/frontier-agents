@@ -32,9 +32,6 @@ jobs:
       - name: Install Chromium for browser validation
         timeout-minutes: 3
         run: python -m playwright install chromium
-      - name: Finalize maintained publication metadata once
-        run: |
-          if [ -f tools/docs/finish_publication.py ]; then python tools/docs/finish_publication.py; fi
       - name: Build guides, linked catalog, figures and HTML presentations
         run: |
           python -m compileall -q tools/docs
