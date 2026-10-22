@@ -35,7 +35,7 @@ Only one worker can own the workspace. Closing the browser does not stop a trial
 
 ## Connect the actual environment
 
-Complete `config/binding.template.json` locally. It describes one finite, explicit-target EC2 stop example, not a universal fault recipe. Supply the real account IDs, regions, profiles, Agent Space/association, exact native incident-reference contract, approved targets, pinned instruments, verifiers, business-path probe and service-owned limits. Keep observation, fault execution, change execution and optional task creation identities separate from the agent's own cross-account role.
+For discovery, populate `config/fis-accounts.template.json` locally with the approved account set and Regions. For execution, also complete `config/binding.template.json` for each workload/Agent Space pair. It describes one finite, explicit-target EC2 stop example, not a universal fault recipe. Supply the real account IDs, regions, profiles, Agent Space/association, exact native incident-reference contract, approved targets, pinned instruments, verifiers, business-path probe and service-owned limits. Keep observation, fault execution, change execution and optional task creation identities separate from the agent's own cross-account role.
 
 ```sh
 python configure.py --check config.local.json
@@ -74,7 +74,10 @@ python -m pip install -r requirements-dev.txt
 python build_assets.py
 python -m pytest -q
 python tests/browser_checks.py --native
+python tests/fis_browser_checks.py --native
 python tests/worker_http_acceptance.py
+# Requires Docker; no AWS account configuration or credentials:
+python tests/container_runtime_acceptance.py
 ```
 
 Set `CHROMIUM_PATH` as needed. `--native` requires real browser HTTP navigation and does not fall back to a bridge. `--bridge` is an explicitly limited authoring-sandbox harness. Browser tests delay the workspace HTTP response to cover unlock/load ordering. Unit and worker tests use test-only AWS/agent providers; loopback probes make real local requests. Neither validates an AWS account.
@@ -83,4 +86,4 @@ Set `CHROMIUM_PATH` as needed. `--native` requires real browser HTTP navigation 
 
 [Operations](docs/OPERATIONS.md) · [Safety](docs/SAFETY.md) · [Coverage](docs/COVERAGE.md) · [Deployment](docs/DEPLOYMENT.md) · [API](docs/API.md) · [Live acceptance](docs/LIVE_ACCEPTANCE.md) · [Acceptance commands](docs/ACCEPTANCE_GATE.md)
 
-Source is committed on `feat/devops-agent-response-lab` in `lyrel-dev/frontier-agents`, under `applications/aws-validation-console/agent_lab/`. This branch is not merged by the acceptance-tool work. Generated preview, schemas and dashboard are rebuilt with `build_assets.py`; local configuration, credentials and acceptance exports must not be committed.
+Source is on `feat/aws-fis-agent-benchmark` in `lyrel-dev/frontier-agents`, under `applications/aws-validation-console/agent_lab/`, based on the reviewed response-lab branch. This work does not modify `main` or merge either branch. Generated `aws-preview.html`, `preview.html`, schemas and dashboard are rebuilt with `build_assets.py`; local configuration, credentials and acceptance exports must not be committed.

@@ -1,5 +1,9 @@
 # Local API
 
+## AWS-first workspace
+
+`GET /` and `GET /aws` serve the FIS account catalogue, campaign queue and agent benchmarks. `GET /response` retains detailed response/prevention controls. The authenticated `/api/fis/*` routes and schemas are documented in [FIS_FLEET.md](FIS_FLEET.md). Catalogue reads do not authorize execution; campaign starts still require exact per-trial approval.
+
 All `/api/*` requests require `Authorization: Bearer <local token>`. Approval routes require the **separate approval token**; it is not an AWS key. The operator token cannot approve execution. The UI keeps tokens in memory, not persistent browser storage. API writes reject other origins. Bind to loopback or use authenticated port forwarding; this is not a multi-user internet service.
 
 | Method and route | Operation |

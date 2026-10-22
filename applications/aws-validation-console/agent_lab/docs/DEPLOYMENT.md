@@ -22,7 +22,7 @@ The API is published only on `127.0.0.1:8787`. The image runs as UID/GID 10001, 
 
 After administrator review, mount `config.local.json` read-only at `/app/config.json` and make **only required** AWS profile/config/cache files available to UID 10001. Configure any role/SSO cache write requirements explicitly rather than assuming a read-only credential mount supports refresh. Do not mount the entire home directory or Docker/Podman socket. Populate the approved probe header variables through a protected environment mechanism. These mounts are deliberately not present in the distributed Compose file.
 
-The image uses a pinned application dependency list but an upstream `python:3.13-slim` tag and transitive dependencies are not digest-locked. Image build/run and supply-chain acceptance were not performed here because no local Docker engine was available. Build and scan the image, pin a reviewed digest, validate volume ownership and credential refresh before executing an AWS trial.
+The image uses a pinned application dependency list but an upstream `python:3.13-slim` tag and transitive dependencies are not digest-locked. The credential-free Docker hosting harness builds and exercises the image in GitHub CI; consult the exact source revision’s artifact for its result. This is not a supply-chain audit or live AWS acceptance. Scan the image, pin a reviewed digest, and validate volume ownership and credential refresh before executing an AWS trial.
 
 ## Kubernetes
 
@@ -44,4 +44,4 @@ Before restoring: stop API and worker; preserve the existing data directory; ver
 
 ## Runtime safeguard follow-up
 
-The branch now includes a Docker hosting acceptance harness and combined-process worker supervision. See [Runtime safeguards and hosting acceptance](RUNTIME_ACCEPTANCE.md) for the commands, evidence artifact, new mandatory FIS safety-lever read, and remaining live-environment limits. Earlier authoring-environment statements above are historical; use the exact commit's CI artifact to determine whether its image was built and exercised. This does not qualify Podman or Kubernetes automatically.
+The branch now includes a Docker hosting acceptance harness and combined-process worker supervision. See [Runtime safeguards and hosting acceptance](RUNTIME_ACCEPTANCE.md) for the commands, evidence artifact, new mandatory FIS safety-lever read, and remaining live-environment limits. Use the exact commit's CI artifact to determine whether its image was built and exercised. This does not qualify Podman or Kubernetes automatically.

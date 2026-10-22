@@ -49,6 +49,7 @@ jobs:
           python build_assets.py
           python -m pytest -q --junitxml=validation/fis-console-pytest.xml
           python tests/browser_checks.py --native
+          python tests/fis_browser_checks.py --native
           python tests/worker_http_acceptance.py
           git diff --check
       - name: Verify isolated container hosting
@@ -63,6 +64,7 @@ jobs:
           path: |
             applications/aws-validation-console/agent_lab/validation/
             applications/aws-validation-console/agent_lab/preview.html
+            applications/aws-validation-console/agent_lab/aws-preview.html
             applications/aws-validation-console/agent_lab/grafana/
             applications/aws-validation-console/agent_lab/schemas/
           retention-days: 14
