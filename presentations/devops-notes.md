@@ -21,28 +21,28 @@ Read the entity kind and ownership label before following the relationship. A qu
 Detailed reference: [Agent Space, configuration and execution](../guides/devops.html#D-01)
 
 
-## 02. Product functions and agent space resource model
+## 02. Resource identities and lifecycle boundaries
 
 02:00–05:00 · Product-specific resource model
 
-Configuration objects, executions and effects must be reviewed as separate records.
+Identify the actual product object before configuring, invoking, correcting or removing it. The resource kind determines which operation is meaningful.
 
 
 
-Layer | Primary objects | Operational purpose | Evidence to inspect
+Object | Identity or membership | Relationship to inspect
 
-Account and Region | Provider registrations; AWS account roles | Make selected sources and tools available | Registered provider, role ARN, Region
+Agent Space | agentSpaceId and service scope | Account roles and selected associations
 
-Agent Space | Associations; selected tools; operator access | Define the operational boundary | Space ID, integrations, operator role
+Service association | associationId and serviceId | Registered provider plus space-specific configuration
 
-Knowledge and behavior | Topology; memory; instructions; skills | Provide environment context and procedures | Version, active state, attachment
+Custom definition | custom_agent assetId | Existing skill and memory-store asset IDs
 
-Execution | Investigation; custom-agent invocation; evaluation | Perform a bounded task | Trajectory, tool results, status
+Memory | Parent store and content version | Activation, attachment and observed retrieval
 
-Effect | Recommendation; approval; directed action | Separate advice from state change | Approval identity and resulting state
+Invocation or investigation | Execution record and actual interval | Tool evidence, conclusion and any separate approval
 
 
-Detailed reference: [Agent Space, configuration and execution](../guides/devops.html#D-01)
+Detailed reference: [Configuration identities and knowledge relationships](../guides/devops.html#D-13)
 
 
 ## 03. Memory stores, entries and definition references
