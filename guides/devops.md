@@ -1,20 +1,16 @@
 # AWS DevOps Agent
 
-Architecture, integrations, knowledge, and operational workflows
+Resource model, integrations, retained context, and operational execution
 
-An incident rarely arrives with all of its evidence in one place. The alarm identifies a symptom; logs describe individual failures; a deployment system records changes; and a runbook explains the service’s expected behavior. AWS DevOps Agent works across the sources made available to an Agent Space to investigate that operational question. The service also supports operational inquiries, prevention analysis, and custom-agent work. Release-assurance features have separate availability and effects. [DS18] [DS08]
+AWS DevOps Agent performs incident investigation, operational queries, prevention analysis, and user-defined operational tasks. An Agent Space associates account access, provider connections, and execution context. Investigations and custom-agent invocations are separate execution records. Release-readiness review and active release testing have their own scope and availability. [DS18] [DS08]
 
-This guide begins with the objects an operator configures, then follows the evidence into an execution and into retained knowledge. After the integration and knowledge chapters, it explains incident handling, custom reports, and controlled actions. The worked example shows why an earlier root cause is useful context but cannot replace present measurements. The grouped use-case catalog applies these mechanisms to daily work; it is not a second list of platform capabilities.
+The guide first defines the resources and their relationships. It then covers source access, knowledge production and retrieval, execution controls, and the existing operational use cases. The incident example uses synthetic telemetry to distinguish a previous cause from the current failure.
 
-Product behavior is linked to official AWS documentation. Diagrams are logical explanations of documented resources and flows, not disclosures of AWS’s internal implementation. Procedures marked as engineering guidance and synthetic examples describe proposed team practice. No live AWS execution is claimed.
-
-
+**Reading conventions.** Product statements link to official AWS documentation. Configuration recommendations and verification procedures are team guidance; the proposed tests and synthetic examples have not been executed against AWS. Lifecycle tables describe service behavior and operator actions, not an API status enumeration unless explicitly cited. DOC (blue), AWS (green), and EXT (orange) identify concept ownership. Source-review dates and qualifications are recorded in the source registers.
 
 ## 01. Resource model and scope
 
 Begin with the product-specific entities, their scope and their relationships. Configuration, executions, knowledge and external evidence are distinct objects with different lifecycles.
-
-
 
 ### D-01 — Agent Space, configuration and execution
 
@@ -31,57 +27,6 @@ Managed and custom agents have different administrative models. Managed roles be
 These distinctions connect the service to the approved outcomes. Incident triage and investigation use the built-in operational path. A native health inquiry can use Chat. A repeatable report with a prescribed structure may use a custom definition and optional trigger. A mitigation proposal is an output; carrying out a directed action introduces additional authorization. Release-readiness review and deployed-application testing are separate preview paths with different subjects and effects. [DS56] [DS57] [DS60] [DS61]
 
 The following section explains identities and relationships. Subsequent chapters follow the same model through integration setup, knowledge production, execution and the approved use cases. The [resource index](../catalog/resource-models.html#model-devops) provides the entity dictionary and individually qualified relationship multiplicities; it is not an inventory of resources in your account.
-
-<!-- mechanism-review:start D-01 -->
-
-#### MX-D-QUERY — Built-in operational inquiry
-
-**Classification:** Built-in inquiry workflow. **Inputs:** Explicit question, service/account scope, observation interval and connected evidence.
-
-The built-in inquiry path answers an operational question without requiring a separately created custom agent. It still depends on the Agent Space sources and permissions. A custom definition is useful for a recurring or specialized procedure, not a repair for missing read access. [DS407] [DS401]
-
-The response is scoped to evidence actually available to that request. Record the queried period and reproduce a material observation before treating a health summary as an operational fact. [DS407] [DS401]
-
-**Configuration and enablement**
-
-1. **Scope.** Open Chat in the intended Agent Space and state service identifiers and UTC interval. Applies to: Current request.
-2. **Evidence.** Check relevant source associations and permission scope. Applies to: Underlying read access.
-
-[DS407] [DS401]
-
-**Lifecycle and state changes**
-
-The rows describe documented consequences and logical stages; they are not an invented SDK status enumeration.
-
-| Starting condition | Operation or event | Consequence |
-|---|---|---|
-| Question submitted | Read available evidence | Response or source gap is produced. |
-| Question needs recurring execution | Define a custom task separately | A new configuration path, not automatic conversion. |
-
-[DS407] [DS401]
-
-**Controls.** A conversational request is not permission for a state-changing operation.
-
-**Observable output.** Scoped answer and available supporting tool observations.
-
-**Not established by the reviewed sources.** No universal source-completeness or exact query-planning guarantee is provided.
-
-**Proposed verification — not executed**
-
-1. Ask for one known staging service measurement in a complete interval.
-2. Compare it with the monitoring source.
-3. An unavailable metric must be listed as missing rather than inferred as healthy.
-
-The verification procedure is authored engineering guidance. A failed or unobservable check must remain unresolved; no live AWS outcome is represented here.
-
-**Official evidence for the product assertions**
-
-| Reference | Reviewed section | Supported assertion |
-|---|---|---|
-| [DS407] | Custom agents compared to built-in capabilities | On-demand queries are a built-in path; custom agents are separately configured. |
-| [DS401] | Configuring MCP tools in an Agent Space | Connected evidence remains subject to selected source tools. |
-
-<!-- mechanism-review:end D-01 -->
 
 ### D-13 — Configuration identities and knowledge relationships
 
@@ -108,13 +53,9 @@ The table summarizes different lifecycles; it is not an instruction to apply the
 
 In the diagrams, `0..*` means an optional repeated logical association, not an unlimited service quota. `?` means that the reviewed documentation does not establish exact multiplicity. Dashed edges mark logical or editorial associations rather than asserted service foreign keys. Each qualification and its supporting source is retained in the [relationship register](../catalog/resource-models.html#model-devops).
 
-
-
 ## 02. Data sources and integration configuration
 
 An investigation can use only the evidence exposed through its configured access paths. Start with the supported connection families, then distinguish operator roles, provider authorization, selected tools, and private routing.
-
-
 
 ### D-12 — Supported integrations and connection directions
 
@@ -145,8 +86,6 @@ Azure adds another scope decision. Azure Resources and Azure DevOps are independ
 
 For a first operational deployment, choose the smallest useful evidence chain: the affected AWS service, one telemetry source, and the repository or pipeline that deploys it. Add incident coordination after confirming a read with known service and revision identifiers. This staged verification is an engineering recommendation, not an additional service requirement.
 
-
-
 ### D-02 — Resource roles and operator roles
 
 Resource access lets an execution inspect infrastructure; operator access lets a person use the space. These paths are configured together during setup but fail independently. Establishing the distinction first makes a missing data result easier to diagnose than treating every failure as an agent problem.
@@ -161,8 +100,6 @@ Resource access lets an execution inspect infrastructure; operator access lets a
 | Failure interpretation | Missing data can be an API or role problem | An unavailable app can be an identity/access problem |
 
 **Engineering procedure:** record the space ID, Region, role ARNs and one tested resource. Keep policy source in Git. Do not publish account secrets or copy broad policy examples without adapting their resource scope. For secondary-account trust and exact IAM statements, use the linked current AWS procedure; this guide does not invent a universal trust policy. [DS19]
-
-
 
 ### D-03 — MCP provider registration and tool selection
 
@@ -188,49 +125,43 @@ In the role-less SigV4 option, validation is deferred until association and uses
 
 #### MX-D-READ — Evidence retrieval through selected tools
 
-**Classification:** Tool-access mechanism. **Inputs:** Registered provider endpoint and authentication; space association; selected operation; resource identifiers and observation interval.
-
 A successful provider registration establishes a connection, not the result of a particular query. The Agent Space association selects the available tool surface. A custom definition can further restrict that surface. At execution time the source still evaluates the actual credentials and request arguments. This is why a missing metric can be a selection, identity, scope or time-window problem rather than an analytical failure. [DS401] [DS407]
 
 The mechanism ends with a tool response or an explicit error. Interpreting the response is subsequent work. Keep the source identity and observation interval with the response so that a later summary can be checked against the same measurement. [DS401] [DS407]
 
-**Configuration and enablement**
+**Inputs.** Registered provider endpoint and authentication; space association; selected operation; resource identifiers and observation interval.
 
-1. **Registration.** Capability Providers → MCP Server → Register; provide HTTPS endpoint and supported authentication. Applies to: Account-level registration.
-2. **Association.** Agent Space → Capabilities → MCP Servers → Add; select the registered provider and required tools. Applies to: Space-level tool selection.
-3. **Custom execution.** Assign the actual tools to the custom definition. Applies to: Additional definition-level selection.
+**Configuration**
+
+1. **Registration — Account-level registration.** Capability Providers → MCP Server → Register; provide HTTPS endpoint and supported authentication.
+2. **Association — Space-level tool selection.** Agent Space → Capabilities → MCP Servers → Add; select the registered provider and required tools.
+3. **Custom execution — Additional definition-level selection.** Assign the actual tools to the custom definition.
 
 [DS401] [DS407]
 
-**Lifecycle and state changes**
+**Lifecycle and operator actions**
 
-The rows describe documented consequences and logical stages; they are not an invented SDK status enumeration.
-
-| Starting condition | Operation or event | Consequence |
+| Initial condition | Operation or event | Result |
 |---|---|---|
 | Registered | Associate selected tools | Tools become available to the space, not necessarily every custom definition. |
 | Associated | Remove connection | Future access through that association is removed. |
 | Registered credential changes | Follow provider re-registration procedure | Review dependent associations before replacing the registration. |
 
-[DS401] [DS407]
+**Constraints.** Network reachability, authentication, resource permissions and tool selection are separate gates. Use read credentials for this evidence path; mutating tools belong to the directed-action explanation.
 
-**Controls.** Network reachability, authentication, resource permissions and tool selection are separate gates. Use read credentials for this evidence path; mutating tools belong to the directed-action explanation.
+**Inspection points.** Provider/association configuration and an actual tool result or error; a connection-valid status alone does not prove the intended source query works.
 
-**Observable output.** Provider/association configuration and an actual tool result or error; a connection-valid status alone does not prove the intended source query works.
+**Implementation limits.** The platform does not document a universal query planner, response-completeness guarantee or retry/deduplication contract for every connected tool.
 
-**Not established by the reviewed sources.** The platform does not document a universal query planner, response-completeness guarantee or retry/deduplication contract for every connected tool.
-
-**Proposed verification — not executed**
+**Verification procedure (proposed)**
 
 1. Use a permitted staging read with a known resource and time interval.
 2. Reproduce one returned measurement with the same source query.
 3. Select an unavailable operation or out-of-scope fixture; require an explicit gap, not a healthy result.
 
-The verification procedure is authored engineering guidance. A failed or unobservable check must remain unresolved; no live AWS outcome is represented here.
+**Source mapping**
 
-**Official evidence for the product assertions**
-
-| Reference | Reviewed section | Supported assertion |
+| Reference | Documentation section | Supported behavior |
 |---|---|---|
 | [DS401] | Registering an MCP server; Configuring MCP tools; Managing connections | Registration, association and tool selection are separate; removal and credential replacement have dependent-connection consequences. |
 | [DS407] | How custom agents work | A custom agent accesses only its assigned tools. |
@@ -247,13 +178,9 @@ AWS uses VPC Lattice and a service-managed resource gateway whose ENIs are place
 
 **Illustrative configuration review:** an endpoint `https://metrics.example.internal:8443/mcp` needs a route and port range covering 8443. A successful HTTPS check on port 443 is not evidence that this endpoint works. A firewall rule should identify the selected gateway network path. It should not be copied from an unrelated public-service allowlist. This example is a review checklist, not a deployable AWS resource definition.
 
-
-
 ## 03. Knowledge and execution context
 
 Current observations and retained information play different roles in a diagnosis. Discovery builds an environment model; learning produces memories; instructions and skills supply guidance. The following sections explain their producers and retrieval paths.
-
-
 
 ### D-05 — Resource discovery and topology construction
 
@@ -264,8 +191,6 @@ Discovery collects CloudFormation resources and, for tagged resources outside Cl
 The managed Learning agent maintains environment knowledge. Its page provides knowledge, run history and scheduled-trigger inspection. Its schedules belong to the platform, unlike custom-agent triggers. Newer documentation moves learned topology, dependency, pipeline and tool-use knowledge into memory; older pages still call these learned skills. [DS06] [DS19]
 
 **Engineering verification:** choose one service, identify its actual deployed resources and repository revision, and compare them with the graph. Record missing or incorrectly inferred edges separately. Inspect a learning run and the output's version after refresh; clicking a refresh control is not the completion evidence. Do not enable additional account writes to repair a read/discovery gap.
-
-
 
 ### D-M08 — Environment-knowledge consolidation and refresh
 
@@ -294,49 +219,43 @@ A custom store serves a different authoring need. It can hold reviewed facts, se
 
 #### MX-D-TOPOLOGY — Environment-knowledge construction and refresh
 
-**Classification:** Knowledge-production mechanism. **Inputs:** Discovered resources, configuration and observability relationships, connected repository/pipeline context and completed operational work.
-
 Environment learning turns source evidence into a retained representation. Discovery identifies resources; relationship analysis connects them; learned context describes services and request paths for later work. These products are derived information. They neither replace the deployed configuration nor widen the permission boundary. [DS403] [DS402]
 
 Environment understanding, tool-use guidance and monitor history have different refresh conditions. The current memory guide is authoritative for those conditions; the older topology page still uses learned-skill terminology. Requesting regeneration is therefore followed by inspecting the learning result and its version, not by assuming that every dependent view has already changed. [DS403] [DS402]
 
-**Configuration and enablement**
+**Inputs.** Discovered resources, configuration and observability relationships, connected repository/pipeline context and completed operational work.
 
-1. **Discovery.** Connect the relevant accounts and sources; enable Resource Explorer for its documented discovery path. Applies to: Resource and relationship inputs.
-2. **Refresh.** Use Topology → Regenerate or request the supported update through Chat. Applies to: Managed learning request.
-3. **Inspection.** Inspect the resulting environment memory and summary/topology representation. Applies to: Version and changed relationships.
+**Configuration**
+
+1. **Discovery — Resource and relationship inputs.** Connect the relevant accounts and sources; enable Resource Explorer for its documented discovery path.
+2. **Refresh — Managed learning request.** Use Topology → Regenerate or request the supported update through Chat.
+3. **Inspection — Version and changed relationships.** Inspect the resulting environment memory and summary/topology representation.
 
 [DS403] [DS402]
 
-**Lifecycle and state changes**
+**Lifecycle and operator actions**
 
-The rows describe documented consequences and logical stages; they are not an invented SDK status enumeration.
-
-| Starting condition | Operation or event | Consequence |
+| Initial condition | Operation or event | Result |
 |---|---|---|
 | Source changed | Run applicable managed refresh | New derived understanding may be written. |
 | Refresh requested | Observe completion and inspect a known changed relationship | Request acceptance is not completion. |
 | Derived view stale | Correct source/discovery configuration and refresh | The graph is not repaired by granting unrelated write access. |
 
-[DS403] [DS402]
+**Constraints.** Authorization belongs to account roles and tool access. A graph omission does not prove a resource is unreadable, and a graph edge does not prove source completeness.
 
-**Controls.** Authorization belongs to account roles and tool access. A graph omission does not prove a resource is unreadable, and a graph edge does not prove source completeness.
+**Inspection points.** Updated context version and a reviewed topology/summary with known changed relationships.
 
-**Observable output.** Updated context version and a reviewed topology/summary with known changed relationships.
+**Implementation limits.** No universal freshness SLA, complete relationship-detection algorithm or consistency guarantee across all derived views is documented.
 
-**Not established by the reviewed sources.** No universal freshness SLA, complete relationship-detection algorithm or consistency guarantee across all derived views is documented.
-
-**Proposed verification — not executed**
+**Verification procedure (proposed)**
 
 1. Identify a harmless staging dependency change with authoritative before/after evidence.
 2. Find that change in the refreshed representation and record the version.
 3. Leave an input unavailable; require the resulting missing or inferred relationship to remain qualified.
 
-The verification procedure is authored engineering guidance. A failed or unobservable check must remain unresolved; no live AWS outcome is represented here.
+**Source mapping**
 
-**Official evidence for the product assertions**
-
-| Reference | Reviewed section | Supported assertion |
+| Reference | Documentation section | Supported behavior |
 |---|---|---|
 | [DS403] | How topology graphs are created; Resource discovery; Investigation scope beyond topology | Discovery and relationship inference produce a representation that does not bound investigation permissions. |
 | [DS402] | How memory is built and refreshed | Managed stores have distinct refresh conditions and can be inspected after regeneration. |
@@ -361,51 +280,45 @@ There are also two meanings of recovery. Retrieving knowledge means making a rel
 
 #### MX-D-RECALL — Selective incident-context retrieval
 
-**Classification:** Knowledge-retrieval mechanism. **Inputs:** Current task; available store and entry descriptions; active memory content; applicable custom-agent store attachment.
-
 Retrieval is a selection process, not automatic loading of all history. The agent first sees available store descriptions, then inspects a relevant store and selects entries before reading their content. A useful description exposes the subject and conditions under which an entry matters. A relevant fact hidden behind an unrelated description may never be read. [DS402]
 
 Operationally, distinguish content production, availability to this execution, selection and diagnostic influence. A previous cause is contextual evidence for a new incident. Current measurements can contradict it. Viewing an old version is also different from restoring a deleted store; the current guide does not establish a general backup or undelete service. [DS402]
 
+**Inputs.** Current task; available store and entry descriptions; active memory content; applicable custom-agent store attachment.
+
 ![Selective incident-context retrieval: state and control paths](../assets/diagrams/mechanism-devops-retrieval.svg)
 
-**Configuration and enablement**
+**Configuration**
 
-1. **Content.** Knowledge → Memories → select store → View entry; inspect description and version. Applies to: Stored informational context.
-2. **Availability.** Inspect store and entry activation; inspect custom-agent attachments where applicable. Applies to: Access to retained material.
-3. **Description maintenance.** Refine the store/entry description and retest a relevant request. Applies to: Retrieval metadata, not permissions.
+1. **Content — Stored informational context.** Knowledge → Memories → select store → View entry; inspect description and version.
+2. **Availability — Access to retained material.** Inspect store and entry activation; inspect custom-agent attachments where applicable.
+3. **Description maintenance — Retrieval metadata, not permissions.** Refine the store/entry description and retest a relevant request.
 
 [DS402]
 
-**Lifecycle and state changes**
+**Lifecycle and operator actions**
 
-The rows describe documented consequences and logical stages; they are not an invented SDK status enumeration.
-
-| Starting condition | Operation or event | Consequence |
+| Initial condition | Operation or event | Result |
 |---|---|---|
 | Entry retained | Deactivate entry or store | Content remains but active retrieval is suppressed. |
 | Entry edited | Save updated content | A new immutable version is created. |
 | Custom store deleted in console | Confirm deletion | Store contents are removed; the documented deletion is not reversible. |
 
-[DS402]
+**Constraints.** Keep raw incident evidence in its source system. Store access, relevance and answer correctness are separate; memory is not a same-investigation raw-tool cache.
 
-**Controls.** Keep raw incident evidence in its source system. Store access, relevance and answer correctness are separate; memory is not a same-investigation raw-tool cache.
+**Inspection points.** Entry content/version and, where exposed, a memory read in execution evidence. Output similarity alone does not establish retrieval.
 
-**Observable output.** Entry content/version and, where exposed, a memory read in execution evidence. Output similarity alone does not establish retrieval.
+**Implementation limits.** Embedding model, ranking thresholds, hidden selection policy and model-weight training are not documented by this mechanism.
 
-**Not established by the reviewed sources.** Embedding model, ranking thresholds, hidden selection policy and model-weight training are not documented by this mechanism.
-
-**Proposed verification — not executed**
+**Verification procedure (proposed)**
 
 1. Prepare a harmless known fact and a current observation that contradicts a historical cause.
 2. Record existence, observable retrieval and supported conclusion separately.
 3. Deactivate the entry or remove the applicable attachment and verify that unsupported historical claims are not asserted.
 
-The verification procedure is authored engineering guidance. A failed or unobservable check must remain unresolved; no live AWS outcome is represented here.
+**Source mapping**
 
-**Official evidence for the product assertions**
-
-| Reference | Reviewed section | Supported assertion |
+| Reference | Documentation section | Supported behavior |
 |---|---|---|
 | [DS402] | How memories work; Activating and deactivating; Deleting a memory store | Description-led retrieval, immutable versions and activation differ from irreversible custom-store deletion. |
 
@@ -413,57 +326,49 @@ The verification procedure is authored engineering guidance. A failed or unobser
 
 ### D-M02 — Investigation feedback and corrective memory
 
-A correction becomes useful only when it identifies what the original investigation got wrong and supplies the verified alternative. That is a different input from simply collecting another similar incident. The feedback path records that distinction so later work can treat a prior conclusion as corrected context.
-
 Corrective feedback is not the same producer as monitor-history synthesis. In a completed investigation, **Add feedback** records the verdict and, when wrong, the actual cause; Chat is another entry point. The most recent feedback submission replaces earlier feedback for that investigation. Sharing it with AWS requires separate confirmation. The dated change log describes a `reflections` store for lessons from corrections. [DS08] [DS19]
 
 <!-- mechanism-review:start D-M02 -->
 
 #### MX-D-FEEDBACK — Corrective investigation feedback
 
-**Classification:** Corrective-context mechanism. **Inputs:** Completed investigation identifier, operator verdict and verified actual cause.
-
 Feedback supplies a verified correction to a particular investigation. It is not the same input as another occurrence of the alarm and is not the same operation as steering an active investigation. The correction can produce reflection context explaining the discrepancy between the earlier diagnosis and the established cause. [DS404] [DS402]
 
 The operator should preserve the evidence for the actual cause independently. Submitting feedback confirms an input was recorded; it does not prove that a later task selected the resulting context. Sharing the feedback with AWS is a separate confirmation decision. [DS404] [DS402]
 
-**Configuration and enablement**
+**Inputs.** Completed investigation identifier, operator verdict and verified actual cause.
 
-1. **Feedback.** Completed investigation → Add feedback; supply verdict and actual cause when incorrect, or use the documented Chat path. Applies to: Investigation-specific correction.
-2. **Inspection.** Inspect saved feedback and any exposed reflection in Knowledge → Memories. Applies to: Correction versus derived context.
-3. **External sharing.** Review the separate AWS-sharing confirmation. Applies to: Separate disclosure decision.
+**Configuration**
+
+1. **Feedback — Investigation-specific correction.** Completed investigation → Add feedback; supply verdict and actual cause when incorrect, or use the documented Chat path.
+2. **Inspection — Correction versus derived context.** Inspect saved feedback and any exposed reflection in Knowledge → Memories.
+3. **External sharing — Separate disclosure decision.** Review the separate AWS-sharing confirmation.
 
 [DS404] [DS402]
 
-**Lifecycle and state changes**
+**Lifecycle and operator actions**
 
-The rows describe documented consequences and logical stages; they are not an invented SDK status enumeration.
-
-| Starting condition | Operation or event | Consequence |
+| Initial condition | Operation or event | Result |
 |---|---|---|
 | Completed diagnosis | Submit correction | Feedback describes the verified alternative. |
 | Feedback already present | Submit replacement | Inspect the saved latest feedback rather than assuming additive history. |
 | Reflection available | Later relevant investigation reads it | Later use must be evaluated independently. |
 
-[DS404] [DS402]
+**Constraints.** Do not infer production-change authority from a corrective message. Operator evidence, retained correction and optional external sharing are different records.
 
-**Controls.** Do not infer production-change authority from a corrective message. Operator evidence, retained correction and optional external sharing are different records.
+**Inspection points.** Saved feedback and any visible corrective memory; later retrieval is an additional observation.
 
-**Observable output.** Saved feedback and any visible corrective memory; later retrieval is an additional observation.
+**Implementation limits.** The exact latency from submission to reflection availability and a guaranteed recall rate are not established.
 
-**Not established by the reviewed sources.** The exact latency from submission to reflection availability and a guaranteed recall rate are not established.
-
-**Proposed verification — not executed**
+**Verification procedure (proposed)**
 
 1. Use a completed non-production example with a known corrected cause.
 2. Confirm saved correction, then inspect later use only if the execution exposes it.
 3. Supply a different current cause on recurrence; repeating the previous answer is not success.
 
-The verification procedure is authored engineering guidance. A failed or unobservable check must remain unresolved; no live AWS outcome is represented here.
+**Source mapping**
 
-**Official evidence for the product assertions**
-
-| Reference | Reviewed section | Supported assertion |
+| Reference | Documentation section | Supported behavior |
 |---|---|---|
 | [DS404] | Provide feedback on investigations | Feedback records the actual cause; latest feedback and separate sharing confirmation have distinct effects. |
 | [DS402] | reflections | Corrective lessons are retained for future relevant investigations. |
@@ -485,17 +390,11 @@ A new custom agent has no store attachments. Its definition selects accessible s
 | Delete a custom store in console | Deletes its contents; not reversible | Review the selected store before confirmation |
 | Delete a managed store | Not supported | Use supported activation/content controls instead |
 
-The last two deletion behaviors and the description-selection model are documented in the newer indexed memory guidance. See the evidence notes for the older/newer-page discrepancy. [DS07]
-
-
+The last two deletion behaviors and the description-selection model are documented in the indexed memory guidance retrieved for the source review. See the evidence notes for the retrieved-page discrepancy. [DS07]
 
 ### D-M03 — Global and agent-specific instructions
 
-Some guidance belongs in every new session, such as the format of an incident finding or the conventions used to name services. Standing instructions provide that context at startup. They are appropriate for persistent behavioral guidance rather than a procedure relevant only to one symptom.
-
-Global and agent-specific `AGENTS.md` text is supplied at startup; it is not selected by relevance. Changes apply to sessions started after saving. A running session retains its startup content. [DS09]
-
-**Procedure:** open **Agents → Managed agents**, select the relevant agent, and edit the global or agent-specific instructions on **Agent definition**. Confirm the global change when prompted. Start a new session for verification. Older cached instructions pages show **Knowledge → Instructions**; the newer indexed guide and managed-agent page agree on the Agents route. [DS09] [DS06]
+**Procedure:** open **Agents → Managed agents**, select the relevant agent, and edit the global or agent-specific instructions on **Agent definition**. Confirm the global change when prompted. Start a new session for verification. Older cached instructions pages show **Knowledge → Instructions**; the indexed guide and managed-agent page agree on the Agents route. [DS09] [DS06]
 
 **Original example, not an AWS default:**
 
@@ -513,49 +412,43 @@ Save this only where applicable. Check an old and a new session to test propagat
 
 #### MX-D-INSTRUCTIONS — Standing instruction loading
 
-**Classification:** Session-initialization mechanism. **Inputs:** Saved global and applicable agent-specific AGENTS.md text and a newly starting session.
-
 Standing instructions are loaded at session initialization. The service includes applicable global and agent-specific content without relying on task-relevance selection. Saving a change affects newly started sessions, not the content already loaded by an existing session. [DS405]
 
 This makes instructions suitable for persistent reporting conventions. It does not make their content an IAM policy. Use an ordinary output convention as a propagation test and verify actual permissions separately. [DS405]
 
-**Configuration and enablement**
+**Inputs.** Saved global and applicable agent-specific AGENTS.md text and a newly starting session.
 
-1. **Scope.** Edit global or relevant managed-agent instructions using the instruction editor exposed by the operator app. Applies to: Applicable AGENTS.md content.
-2. **Propagation.** Save, then start a new session. Applies to: Startup-loaded content.
-3. **UI version.** Retrieved guidance shows both Knowledge → Instructions and Agents → Managed agents → Agent definition. Use the editor present in the deployed interface. Applies to: Navigation qualification.
+**Configuration**
+
+1. **Scope — Applicable AGENTS.md content.** Edit global or relevant managed-agent instructions using the instruction editor exposed by the operator app.
+2. **Propagation — Startup-loaded content.** Save, then start a new session.
+3. **UI version — Navigation qualification.** Retrieved guidance shows both Knowledge → Instructions and Agents → Managed agents → Agent definition. Use the editor present in the deployed interface.
 
 [DS405]
 
-**Lifecycle and state changes**
+**Lifecycle and operator actions**
 
-The rows describe documented consequences and logical stages; they are not an invented SDK status enumeration.
-
-| Starting condition | Operation or event | Consequence |
+| Initial condition | Operation or event | Result |
 |---|---|---|
 | Saved guidance | Start session | Applicable content is loaded. |
 | Session active | Edit saved guidance | Active session retains its startup content. |
 | Updated guidance | Start another session | New content becomes applicable. |
 
-[DS405]
+**Constraints.** An instruction cannot grant a tool, change a trust policy or substitute for action approval.
 
-**Controls.** An instruction cannot grant a tool, change a trust policy or substitute for action approval.
+**Inspection points.** Saved instruction content and observable behavior in a newly started session.
 
-**Observable output.** Saved instruction content and observable behavior in a newly started session.
+**Implementation limits.** Conflict precedence for contradictory global, agent-specific and task instructions is not fully specified; do not assume a precedence order.
 
-**Not established by the reviewed sources.** Conflict precedence for contradictory global, agent-specific and task instructions is not fully specified; do not invent it.
+**Verification procedure (proposed)**
 
-**Proposed verification — not executed**
-
-1. Add a harmless required heading to a scoped test instruction.
+1. Add a test-only required heading to a scoped test instruction.
 2. Compare a new session with one started before the change.
 3. A denied tool must remain denied even when the instruction asks to use it.
 
-The verification procedure is authored engineering guidance. A failed or unobservable check must remain unresolved; no live AWS outcome is represented here.
+**Source mapping**
 
-**Official evidence for the product assertions**
-
-| Reference | Reviewed section | Supported assertion |
+| Reference | Documentation section | Supported behavior |
 |---|---|---|
 | [DS405] | How agent instructions work; Agent type scoping | Instructions are loaded at session start; existing sessions retain the original content. |
 
@@ -566,8 +459,6 @@ The verification procedure is authored engineering guidance. A failed or unobser
 A runbook describes a procedure for a recognizable situation. A skill packages that procedure with an applicability description so an agent can select it when the task matches. Consolidating SOPs therefore starts with resolving contradictory or stale procedures, not merely concatenating documents into a larger prompt.
 
 A skill requires `SKILL.md`; its name, description and agent-type targeting determine applicability. Additional references or data can accompany it. Without Sandbox, the supported material is non-executable; Sandbox adds a code-execution surface for applicable investigations. [DS11]
-
-**Procedure:** add a skill from **Knowledge → Skills**, write a description naming the relevant symptoms and services, choose agent scope, and supply the procedure. Test a matching request and a nonmatching request. Inspect available run evidence for selection and tool use; document an unavailable signal as unverified rather than asserting selection.
 
 **Original example:**
 
@@ -584,49 +475,43 @@ Add a procedure that compares upstream response time, connection errors and depl
 
 #### MX-D-SKILL — Runbook applicability and procedural loading
 
-**Classification:** Procedural-context mechanism. **Inputs:** SKILL.md, applicability description, agent-type targeting and any supporting files; actual tools required by the procedure.
-
 A skill packages procedural guidance. Its description tells the built-in agent when to select it; targeting limits which agent types can use it. Assigned skills in a custom definition are loaded through that definition, so built-in relevance selection and explicit custom assignment should not be described as identical entry paths. [DS406] [DS407]
 
 The procedure still depends on tools that exist and are authorized. Document-only skills do not create a shell. Executable content requires the separately configured Sandbox surface where supported. [DS406] [DS407]
 
-**Configuration and enablement**
+**Inputs.** SKILL.md, applicability description, agent-type targeting and any supporting files; actual tools required by the procedure.
 
-1. **Package.** Knowledge → Skills → add a skill with SKILL.md and a concrete applicability description. Applies to: Reusable procedure.
-2. **Target.** Select relevant agent types or assign the skill to the custom definition. Applies to: Consumer scope.
-3. **Tool dependencies.** Name real selected operations and expected observations. Applies to: External prerequisites.
+**Configuration**
+
+1. **Package — Reusable procedure.** Knowledge → Skills → add a skill with SKILL.md and a concrete applicability description.
+2. **Target — Consumer scope.** Select relevant agent types or assign the skill to the custom definition.
+3. **Tool dependencies — External prerequisites.** Name real selected operations and expected observations.
 
 [DS406] [DS407]
 
-**Lifecycle and state changes**
+**Lifecycle and operator actions**
 
-The rows describe documented consequences and logical stages; they are not an invented SDK status enumeration.
-
-| Starting condition | Operation or event | Consequence |
+| Initial condition | Operation or event | Result |
 |---|---|---|
 | Skill available | Matching task or assigned custom invocation | Procedure becomes context. |
 | Procedure updated | Run a new applicable test | Check the saved content and actual selection. |
 | Skill disabled or unassigned | Start subsequent work | Do not assume the procedure remains available. |
 
-[DS406] [DS407]
+**Constraints.** Skill text is guidance, not authorization; executable-code support is feature-specific.
 
-**Controls.** Skill text is guidance, not authorization; executable-code support is feature-specific.
+**Inspection points.** Saved skill configuration and exposed execution evidence of procedure/tool use.
 
-**Observable output.** Saved skill configuration and exposed execution evidence of procedure/tool use.
+**Implementation limits.** The cited guide does not specify relevance thresholds or guarantee a skill-selection event in every execution trace.
 
-**Not established by the reviewed sources.** Exact relevance thresholds and a universal selection trace are not guaranteed; unavailable observability remains unverified.
-
-**Proposed verification — not executed**
+**Verification procedure (proposed)**
 
 1. Provide one request that matches the described symptom and another that does not.
 2. Inspect exposed skill/tool-use evidence and the resulting procedure.
 3. Remove a necessary tool; the task must report the blocked step rather than invent its observation.
 
-The verification procedure is authored engineering guidance. A failed or unobservable check must remain unresolved; no live AWS outcome is represented here.
+**Source mapping**
 
-**Official evidence for the product assertions**
-
-| Reference | Reviewed section | Supported assertion |
+| Reference | Documentation section | Supported behavior |
 |---|---|---|
 | [DS406] | Frontmatter; Creating Skills; Managing Skills | Description, target scope and supported content determine applicability. |
 | [DS407] | How custom agents work | Custom definitions load assigned skill documents. |
@@ -636,8 +521,6 @@ The verification procedure is authored engineering guidance. A failed or unobser
 ## 04. Incident response and operational work
 
 With access and context configured, a signal can be routed into an investigation or a defined operational task. This chapter follows execution, observation, and the additional controls required for computation or state-changing actions.
-
-
 
 ### D-06 — Incident triage, investigation, and prevention
 
@@ -657,149 +540,129 @@ Prevention evaluations analyze multiple investigations into recommendations. The
 
 #### MX-D-TRIAGE — Incident routing
 
-**Classification:** Incident-routing mechanism. **Inputs:** Incoming external signal, active investigations and configured correlation/skip guidance.
-
 Triage changes the relationship between a signal and investigation work. Linked signals contribute context to an existing investigation; skipped signals match exclusion criteria; proceed decisions schedule independent work. Routing is therefore not the root-cause result. [DS404]
 
 Correct a bad relationship at the routing layer. Unlinking or unskipping reschedules independent investigation; changing a hypothesis inside the primary investigation does not repair the original routing decision. [DS404]
 
-**Configuration and enablement**
+**Inputs.** Incoming external signal, active investigations and configured correlation/skip guidance.
 
-1. **Signal path.** Connect a supported incident source or webhook and inspect the received event. Applies to: Incident initiation.
-2. **Routing criteria.** Review the relevant correlation or skip skill. Applies to: Routing guidance.
-3. **Correction.** Inspect the triage record and use supported unlink/unskip controls. Applies to: Signal relationship.
+**Configuration**
+
+1. **Signal path — Incident initiation.** Connect a supported incident source or webhook and inspect the received event.
+2. **Routing criteria — Routing guidance.** Review the relevant correlation or skip skill.
+3. **Correction — Signal relationship.** Inspect the triage record and use supported unlink/unskip controls.
 
 [DS404]
 
-**Lifecycle and state changes**
+**Lifecycle and operator actions**
 
-The rows describe documented consequences and logical stages; they are not an invented SDK status enumeration.
-
-| Starting condition | Operation or event | Consequence |
+| Initial condition | Operation or event | Result |
 |---|---|---|
 | Received signal | Linked | Existing investigation receives signal context. |
 | Received signal | Skipped | Reason is retained without a new investigation. |
 | Received signal | Proceed | Independent investigation is scheduled. |
 | Linked or skipped | Unlink or unskip | Independent work is rescheduled. |
 
-[DS404]
+**Constraints.** Do not interpret a linked signal as missing work or a skipped signal as proof that the service is healthy.
 
-**Controls.** Do not interpret a linked signal as missing work or a skipped signal as proof that the service is healthy.
+**Inspection points.** Triage outcome, reason and investigation linkage.
 
-**Observable output.** Triage outcome, reason and investigation linkage.
+**Implementation limits.** The exact correlation model and an absolute timing guarantee are not specified; a typical lookback is not a universal contract.
 
-**Not established by the reviewed sources.** The exact correlation model and an absolute timing guarantee are not specified; a typical lookback is not a universal contract.
-
-**Proposed verification — not executed**
+**Verification procedure (proposed)**
 
 1. Submit related and unrelated authorized test events.
 2. Check linkage and reason against known service/time identity.
 3. Deliberately review an incorrect skip criterion and verify the correction changes routing, not resource state.
 
-The verification procedure is authored engineering guidance. A failed or unobservable check must remain unresolved; no live AWS outcome is represented here.
+**Source mapping**
 
-**Official evidence for the product assertions**
-
-| Reference | Reviewed section | Supported assertion |
+| Reference | Documentation section | Supported behavior |
 |---|---|---|
 | [DS404] | Incident triage | Linked, Skipped and Proceed are routing outcomes; supported corrections reschedule independent work. |
 
-
 #### MX-D-INVESTIGATE — Investigation and operator steering
-
-**Classification:** Documented service workflow. **Inputs:** Incident description, start evidence, actual incident time, service scope and connected source access.
 
 An investigation has its own scope and evidence record. The service gathers observations and develops an explanation; operator steering can add missing or contrary evidence within that record. This describes the observable workflow, not an undisclosed hypothesis-ranking algorithm. [DS404] [DS407]
 
 Use the incident timestamp rather than the time the operator happened to open the form. Preserve observations that weaken the leading explanation. A revised analysis is useful only when the supporting evidence also changes. [DS404] [DS407]
 
-**Configuration and enablement**
+**Inputs.** Incident description, start evidence, actual incident time, service scope and connected source access.
 
-1. **Start.** Incident Response → start a manual investigation; review details, starting point, UTC incident time, name and priority. Applies to: Investigation identity.
-2. **Steer.** Supply contrary observations within the active investigation. Applies to: Current execution context.
-3. **Conclude.** Review findings and cause; request a mitigation proposal separately. Applies to: Analysis before effects.
+**Configuration**
+
+1. **Start — Investigation identity.** Incident Response → start a manual investigation; review details, starting point, UTC incident time, name and priority.
+2. **Steer — Current execution context.** Supply contrary observations within the active investigation.
+3. **Conclude — Analysis before effects.** Review findings and cause; request a mitigation proposal separately.
 
 [DS404] [DS407]
 
-**Lifecycle and state changes**
+**Lifecycle and operator actions**
 
-The rows describe documented consequences and logical stages; they are not an invented SDK status enumeration.
-
-| Starting condition | Operation or event | Consequence |
+| Initial condition | Operation or event | Result |
 |---|---|---|
 | Investigation started | Read connected evidence | Observations and gaps accumulate. |
 | Hypothesis present | Operator supplies contrary evidence | Analysis can be reconsidered in context. |
 | Investigation completed | Review or submit feedback | Later correction is separate from active steering. |
 
-[DS404] [DS407]
+**Constraints.** Steering is not approval for a resource mutation. Missing evidence constrains the conclusion.
 
-**Controls.** Steering is not approval for a resource mutation. Missing evidence constrains the conclusion.
+**Inspection points.** Investigation findings, source observations and any revised conclusion available in the service record.
 
-**Observable output.** Investigation findings, source observations and any revised conclusion available in the service record.
+**Implementation limits.** No deterministic root-cause accuracy guarantee or complete inference algorithm is published.
 
-**Not established by the reviewed sources.** No deterministic root-cause accuracy guarantee or complete inference algorithm is published.
-
-**Proposed verification — not executed**
+**Verification procedure (proposed)**
 
 1. Use the repository recurring-alarm fixture as a tabletop, not as service telemetry.
 2. Require the explanation to follow the current dependency measurements.
 3. Remove the decisive observation; an inconclusive result is preferable to a fabricated cause.
 
-The verification procedure is authored engineering guidance. A failed or unobservable check must remain unresolved; no live AWS outcome is represented here.
+**Source mapping**
 
-**Official evidence for the product assertions**
-
-| Reference | Reviewed section | Supported assertion |
+| Reference | Documentation section | Supported behavior |
 |---|---|---|
 | [DS404] | Starting Investigations; Incident triage | Manual scope and operator context drive a separate investigation record. |
 | [DS407] | Custom agents compared to built-in capabilities | Incident response is a built-in path, not a mandatory custom-agent task. |
 
-
 #### MX-D-PREVENT — Cross-investigation prevention evaluation
-
-**Classification:** Cross-investigation analysis workflow. **Inputs:** Recent investigation evidence, existing recommendation backlog and operator disposition feedback.
 
 Prevention compares incidents to propose changes rather than diagnosing one current alarm. An evaluation produces or updates recommendations; backlog controls describe what the team intends to do with those recommendations. The action that implements a recommendation remains a separate change. [DS410]
 
 A kept recommendation is not a deployed fix. A recommendation marked implemented is a tracking state, not independent proof of reduced incidents. Retain the implementation and post-change evidence in the normal change process. [DS410]
 
-**Configuration and enablement**
+**Inputs.** Recent investigation evidence, existing recommendation backlog and operator disposition feedback.
 
-1. **Evaluate.** Improvements → Run Now; inspect linked investigations and proposed effect. Applies to: Evaluation and recommendations.
-2. **Control evaluation.** Pause recurring evaluation or Stop Evaluation for current work as appropriate. Applies to: Different scheduling/execution controls.
-3. **Disposition.** Use Keep, Discard or Implemented and supply relevant explanation. Applies to: Backlog state.
+**Configuration**
+
+1. **Evaluate — Evaluation and recommendations.** Improvements → Run Now; inspect linked investigations and proposed effect.
+2. **Control evaluation — Different scheduling/execution controls.** Pause recurring evaluation or Stop Evaluation for current work as appropriate.
+3. **Disposition — Backlog state.** Use Keep, Discard or Implemented and supply relevant explanation.
 
 [DS410]
 
-**Lifecycle and state changes**
+**Lifecycle and operator actions**
 
-The rows describe documented consequences and logical stages; they are not an invented SDK status enumeration.
-
-| Starting condition | Operation or event | Consequence |
+| Initial condition | Operation or event | Result |
 |---|---|---|
 | Proposal | Keep | Retained backlog candidate. |
 | Proposal | Discard with rationale | Removed from backlog; feedback informs later recommendations. |
 | Accepted proposal | Mark Implemented | Tracking status changes; actual implementation must be verified. |
 
-[DS410]
+**Constraints.** Priority and estimated effect do not authorize execution or measure realized improvement.
 
-**Controls.** Priority and estimated effect do not authorize execution or measure realized improvement.
+**Inspection points.** Recommendation, supporting investigation references, disposition and observed changes.
 
-**Observable output.** Recommendation, supporting investigation references, disposition and observed changes.
+**Implementation limits.** Full ranking weights, exact feedback influence and causal benefit attribution are not specified.
 
-**Not established by the reviewed sources.** Full ranking weights, exact feedback influence and causal benefit attribution are not specified.
-
-**Proposed verification — not executed**
+**Verification procedure (proposed)**
 
 1. Review a candidate tied to several known investigations.
 2. Trace the common weakness to its supporting evidence.
 3. A change not deployed must not be reported as completed merely because the recommendation was kept.
 
-The verification procedure is authored engineering guidance. A failed or unobservable check must remain unresolved; no live AWS outcome is represented here.
+**Source mapping**
 
-**Official evidence for the product assertions**
-
-| Reference | Reviewed section | Supported assertion |
+| Reference | Documentation section | Supported behavior |
 |---|---|---|
 | [DS410] | Controlling evaluations; Managing recommendations | Evaluation control and recommendation disposition are separate; unretained recommendations may age out. |
 
@@ -823,106 +686,134 @@ The CronSchedule API reference specifies a flexible scheduling window of up to 3
 
 #### MX-D-CUSTOM — Configured custom-agent invocation
 
-**Classification:** Definition-to-execution mechanism. **Inputs:** Custom definition with system prompt, selected tools, assigned skills and applicable memory access; optional per-run prompt.
-
 A custom definition persists across executions. Run Now creates a new invocation; an additional prompt supplies context for that run without replacing the system prompt. The execution loads its configured resources, calls available tools and records results in a trajectory. [DS407] [DS408] [DS414]
 
 A definition is not a running job. Likewise, an output artifact is not the invocation itself. Diagnose these objects separately when a report is missing: was an invocation created, did its tools complete, and was the requested output produced? [DS407] [DS408] [DS414]
 
+**Inputs.** Custom definition with system prompt, selected tools, assigned skills and applicable memory access; optional per-run prompt.
+
 ![Configured custom-agent invocation: state and control paths](../assets/diagrams/mechanism-devops-cancellation.svg)
 
-**Configuration and enablement**
+**Configuration**
 
-1. **Define.** Agents → Custom Agents → Create agent; provide goal, approach, constraints and output. Applies to: Reusable definition.
-2. **Select.** Assign actual tools through the supported configuration path and applicable skills/stores. Applies to: Scoped execution resources.
-3. **Run.** Run Now or Run with prompt; open the invocation in History. Applies to: Independent execution.
+1. **Define — Reusable definition.** Agents → Custom Agents → Create agent; provide goal, approach, constraints and output.
+2. **Select — Scoped execution resources.** Assign actual tools through the supported configuration path and applicable skills/stores.
+3. **Run — Independent execution.** Run Now or Run with prompt; open the invocation in History.
 
 [DS407] [DS408] [DS414]
 
-**Lifecycle and state changes**
+**Lifecycle and operator actions**
 
-The rows describe documented consequences and logical stages; they are not an invented SDK status enumeration.
-
-| Starting condition | Operation or event | Consequence |
+| Initial condition | Operation or event | Result |
 |---|---|---|
 | Definition saved | Run Now | An invocation starts or is pending. |
 | Invocation active | Cancel in trajectory or Chat | Completed evidence is retained; in-flight calls may still finish. |
 | No invocation active | Invoke again | A new record is created; do not assume prior transient context is inherited. |
 
-[DS407] [DS408] [DS414]
+**Constraints.** Only assigned tools are available. The documented execution page permits one invocation at a time per custom agent.
 
-**Controls.** Only assigned tools are available. The documented execution page permits one invocation at a time per custom agent.
+**Inspection points.** Invocation identity, status, tool arguments/results/errors and requested output.
 
-**Observable output.** Invocation identity, status, tool arguments/results/errors and requested output.
+**Implementation limits.** Exactly-once effects and universal rollback after cancellation are not documented.
 
-**Not established by the reviewed sources.** Exactly-once effects and universal rollback after cancellation are not documented.
-
-**Proposed verification — not executed**
+**Verification procedure (proposed)**
 
 1. Create a harmless read-only report over a known staging signal.
 2. Inspect the actual arguments and reconcile a figure in the output.
 3. Cancel a controlled long read; distinguish cancellation from completion of an already-started external call.
 
-The verification procedure is authored engineering guidance. A failed or unobservable check must remain unresolved; no live AWS outcome is represented here.
+**Source mapping**
 
-**Official evidence for the product assertions**
-
-| Reference | Reviewed section | Supported assertion |
+| Reference | Documentation section | Supported behavior |
 |---|---|---|
 | [DS407] | How custom agents work | Prompt, selected tools and assigned skills are loaded per invocation. |
 | [DS408] | Running; Canceling an invocation; Tool call results | Runs have history; cancellation preserves completed evidence and may not interrupt in-flight calls. |
 | [DS414] | Creating a custom agent using the form | Creation and tool assignment are separate setup concerns. |
 
-
 #### MX-D-SCHEDULE — Schedule-to-invocation creation
-
-**Classification:** Trigger-to-execution mechanism. **Inputs:** Saved custom agent and valid rate/cron trigger; explicit reporting-window rules in task instructions.
 
 A trigger schedules future invocation opportunities. It does not specify the observation interval used by a report. The API reference further qualifies the timing: custom-agent schedules use a flexible start window of up to 30 minutes. An expression therefore cannot be presented as an exact delivery deadline. [DS408] [DS409]
 
 Pausing the trigger prevents subsequent starts but does not cancel a running invocation. These are two independent control operations and should be inspected separately when retiring recurring work. [DS408] [DS409]
 
-**Configuration and enablement**
+**Inputs.** Saved custom agent and valid rate/cron trigger; explicit reporting-window rules in task instructions.
 
-1. **Create.** Agents → selected custom agent → Triggers → create; enter a valid rate or cron expression. Applies to: Recurring trigger.
-2. **Inspect.** Confirm saved expression, next run and actual start. Applies to: Timing evidence.
-3. **Stop.** Pause/delete trigger and, if needed, cancel the current invocation separately. Applies to: Future versus current work.
+**Configuration**
+
+1. **Create — Recurring trigger.** Agents → selected custom agent → Triggers → create; enter a valid rate or cron expression.
+2. **Inspect — Timing evidence.** Confirm saved expression, next run and actual start.
+3. **Stop — Future versus current work.** Pause/delete trigger and, if needed, cancel the current invocation separately.
 
 [DS408] [DS409]
 
-**Lifecycle and state changes**
+**Lifecycle and operator actions**
 
-The rows describe documented consequences and logical stages; they are not an invented SDK status enumeration.
-
-| Starting condition | Operation or event | Consequence |
+| Initial condition | Operation or event | Result |
 |---|---|---|
 | Trigger active | Schedule due | Eligible future invocation under timing/concurrency constraints. |
 | Trigger active | Pause | Future starts disabled until resumed. |
 | Trigger paused | Resume | Future schedule becomes active. |
 | Trigger exists | Delete | Trigger is removed; existing execution evidence is separate. |
 
-[DS408] [DS409]
+**Constraints.** Schedule variability, one-at-a-time custom execution and external-call completion are independent constraints.
 
-**Controls.** Schedule variability, one-at-a-time custom execution and external-call completion are independent constraints.
+**Inspection points.** Trigger configuration plus actual invocation timing and observation interval.
 
-**Observable output.** Trigger configuration plus actual invocation timing and observation interval.
+**Implementation limits.** Missed-occurrence, overlap queueing and exactly-once delivery behavior are not established by the cited schedule pages.
 
-**Not established by the reviewed sources.** Missed-occurrence, overlap queueing and exactly-once delivery behavior are not established by the cited schedule pages.
-
-**Proposed verification — not executed**
+**Verification procedure (proposed)**
 
 1. Choose a non-time-critical test report and explicit UTC reporting period.
 2. Compare due time, actual start and the period queried.
 3. Run longer than the interval in an approved test and record actual behavior rather than assuming queued catch-up.
 
-The verification procedure is authored engineering guidance. A failed or unobservable check must remain unresolved; no live AWS outcome is represented here.
+**Source mapping**
 
-**Official evidence for the product assertions**
-
-| Reference | Reviewed section | Supported assertion |
+| Reference | Documentation section | Supported behavior |
 |---|---|---|
 | [DS408] | Scheduling custom agents; Managing triggers | Rate/cron triggers can be paused or deleted separately from invocations. |
 | [DS409] | CronSchedule | The schedule anchors a flexible window of up to 30 minutes. |
+
+#### MX-D-QUERY — Built-in operational inquiry
+
+The built-in inquiry path answers an operational question without requiring a separately created custom agent. It still depends on the Agent Space sources and permissions. Use a custom definition for a recurring or specialized procedure; configure source access independently. [DS407] [DS401]
+
+The response is scoped to evidence actually available to that request. Record the queried period and reproduce a material observation before treating a health summary as an operational fact. [DS407] [DS401]
+
+**Inputs.** Explicit question, service/account scope, observation interval and connected evidence.
+
+**Configuration**
+
+1. **Scope — Current request.** Open Chat in the intended Agent Space and state service identifiers and UTC interval.
+2. **Evidence — Underlying read access.** Check relevant source associations and permission scope.
+
+[DS407] [DS401]
+
+**Lifecycle and operator actions**
+
+| Initial condition | Operation or event | Result |
+|---|---|---|
+| Question submitted | Read available evidence | Response or source gap is produced. |
+| Question needs recurring execution | Define a custom task separately | A new configuration path, not automatic conversion. |
+
+**Constraints.** A conversational request is not permission for a state-changing operation.
+
+**Inspection points.** Scoped answer and available supporting tool observations.
+
+**Implementation limits.** The cited guide does not specify the query-selection algorithm. Inspect the sources and query parameters used by the execution.
+
+**Verification procedure (proposed)**
+
+1. Ask for one known staging service measurement in a complete interval.
+2. Compare it with the monitoring source.
+3. An unavailable metric must be listed as missing rather than inferred as healthy.
+
+**Source mapping**
+
+| Reference | Documentation section | Supported behavior |
+|---|---|---|
+| [DS407] | Custom agents compared to built-in capabilities | On-demand queries are a built-in path; custom agents are separately configured. |
+| [DS401] | Configuring MCP tools in an Agent Space | Connected evidence remains subject to selected source tools. |
 
 <!-- mechanism-review:end D-07 -->
 
@@ -935,8 +826,6 @@ Sandbox provisions a fresh Linux environment per investigation. It can execute c
 **Procedure:** in the console, select the space, open **Capabilities → Sandbox → Configure**, select packages and add required host/method/path rules, then save. An empty allowlist is not total network isolation. Remove the Sandbox configuration to stop future use; do not assume that changing configuration rewinds already executed code. [DS14]
 
 **Proposed check:** process a harmless supplied dataset, inspect code and numerical results, and test that an unlisted non-AWS endpoint is unavailable. Do not use production mutation as a connectivity test. Network filtering, AWS permissions and directed-action approvals are distinct controls.
-
-
 
 ### D-M06 — Directed actions and approval scope
 
@@ -952,50 +841,44 @@ When using `UpdateAgentSpace`, supplying `preferences` replaces that complete ma
 
 #### MX-D-ACTION — Operation-specific directed authorization
 
-**Classification:** Effect-specific authorization mechanism. **Inputs:** Eligible exact operation and resource; Agent Space opt-in; target-account elevated role or selected classified tool; operator approval.
-
 The requested effect passes several gates. Enabling directed actions opens the capability; the target role supplies a permission ceiling; the approval constrains the specific operation and resource. For AWS calls, the service uses scoped credentials and records attribution. None of these steps is replaced by a mitigation recommendation. [DS411]
 
 External-tool classification is part of the control boundary. A tool marked read-only but implemented as mutating can defeat the intended approval path. Review classification against its real effects and permissions rather than its display name. [DS411]
 
-**Configuration and enablement**
+**Inputs.** Eligible exact operation and resource; Agent Space opt-in; target-account elevated role or selected classified tool; operator approval.
 
-1. **Enable.** Agent Space settings: enable directed actions; preserve the full preferences map when updating through the API. Applies to: Primary opt-in.
-2. **Authorize account.** Register the elevated role with documented trust including source-identity/session tagging support. Applies to: Permission ceiling.
-3. **Review exact action.** Inspect target and parameters in Chat approval; reject or narrow as needed. Applies to: Specific execution grant.
+**Configuration**
+
+1. **Enable — Primary opt-in.** Agent Space settings: enable directed actions; preserve the full preferences map when updating through the API.
+2. **Authorize account — Permission ceiling.** Register the elevated role with documented trust including source-identity/session tagging support.
+3. **Review exact action — Specific execution grant.** Inspect target and parameters in Chat approval; reject or narrow as needed.
 
 [DS411]
 
-**Lifecycle and state changes**
+**Lifecycle and operator actions**
 
-The rows describe documented consequences and logical stages; they are not an invented SDK status enumeration.
-
-| Starting condition | Operation or event | Consequence |
+| Initial condition | Operation or event | Result |
 |---|---|---|
 | Disabled | Enable and configure eligible access | Requests can reach the approval path. |
 | Proposal awaiting decision | Approve exact operation | Scoped execution is permitted. |
 | Approval granted | Different target or operation requested | Previous approval is not reusable. |
 | Action executed | Inspect resource and service signals | Action success and recovery are separate observations. |
 
-[DS411]
+**Constraints.** API preference replacement can reset omitted settings. IAM and service guardrails still apply after approval; tool effects require correct classification.
 
-**Controls.** API preference replacement can reset omitted settings. IAM and service guardrails still apply after approval; tool effects require correct classification.
+**Inspection points.** Approval details, execution attribution and independently inspected resulting state.
 
-**Observable output.** Approval details, execution attribution and independently inspected resulting state.
+**Implementation limits.** No universal transactional rollback is documented; approved calls can have effects that outlive the conversation.
 
-**Not established by the reviewed sources.** No universal transactional rollback is documented; approved calls can have effects that outlive the conversation.
-
-**Proposed verification — not executed**
+**Verification procedure (proposed)**
 
 1. Use an eligible reversible staging operation under narrow permissions.
 2. Match approval, attribution and target state.
 3. Request a different target or denied operation; it must not inherit the earlier approval.
 
-The verification procedure is authored engineering guidance. A failed or unobservable check must remain unresolved; no live AWS outcome is represented here.
+**Source mapping**
 
-**Official evidence for the product assertions**
-
-| Reference | Reviewed section | Supported assertion |
+| Reference | Documentation section | Supported behavior |
 |---|---|---|
 | [DS411] | Enabling; Registering elevated role; Categorizing tools; Approving directed actions | Independent opt-ins, operation-specific approval, preference replacement and classification govern mutation. |
 
@@ -1016,8 +899,6 @@ aws devops-agent list-assets --agent-space-id "$AGENT_SPACE_ID" --region "$AWS_R
 
 Set both variables to your approved environment; these commands were not executed here. Inspect returned metadata before changing it. Asset PATCH behavior must not be generalized to the replacement behavior of the directed-action preference map. For content upload/file operations and deployment templates, follow the type-specific official examples rather than constructing an undocumented payload. [DS17]
 
-
-
 ### D-09 — Remote access and release-assurance workflows
 
 There are several directions of access around the service. An external client can call the agent, the agent can call an external tool, and an incident system can deliver a webhook. Release assurance adds another distinction between reviewing a proposed change and actively exercising a deployed application.
@@ -1037,99 +918,86 @@ Release testing interacts with a deployed application and can create, modify or 
 
 #### MX-D-READINESS — Candidate release analysis
 
-**Classification:** Preview analysis and verification workflow. **Inputs:** Candidate branch/commit and connected repository context; optional managed verification environment.
-
 Readiness analysis examines a proposed code change. Optional verification builds and exercises the code in a managed environment; it is not a test of whichever production revision happens to be running. A report must therefore identify the candidate and whether verification actually ran. [DS412] [DS415]
 
 Insufficient data or permissions are unresolved outcomes, not favorable release decisions. Automated triggers and verification are independently configured, so the presence of a review does not prove that a build/test environment was used. [DS412] [DS415]
 
-**Configuration and enablement**
+**Inputs.** Candidate branch/commit and connected repository context; optional managed verification environment.
 
-1. **Eligibility.** Check current release-management Region and repository support. Applies to: Feature-specific preview boundary.
-2. **Repository settings.** Configure change-review triggering and automatic verification independently. Applies to: Two separate options.
-3. **Private verification.** Select a verification environment with the required private route and runtime role when needed. Applies to: Build dependencies, not unrestricted network access.
+**Configuration**
+
+1. **Eligibility — Feature-specific preview boundary.** Check current release-management Region and repository support.
+2. **Repository settings — Two separate options.** Configure change-review triggering and automatic verification independently.
+3. **Private verification — Build dependencies, not unrestricted network access.** Select a verification environment with the required private route and runtime role when needed.
 
 [DS412] [DS415]
 
-**Lifecycle and state changes**
+**Lifecycle and operator actions**
 
-The rows describe documented consequences and logical stages; they are not an invented SDK status enumeration.
-
-| Starting condition | Operation or event | Consequence |
+| Initial condition | Operation or event | Result |
 |---|---|---|
 | Candidate selected | Start review | Analysis record is associated with the candidate. |
 | Verification enabled | Build and execute tests | Test evidence is added when execution succeeds. |
 | Access or context missing | Review reports gaps | Resolve the prerequisite and rerun; do not interpret as clean review. |
 
-[DS412] [DS415]
+**Constraints.** Code verification and active deployed-application testing have different subjects and effects.
 
-**Controls.** Code verification and active deployed-application testing have different subjects and effects.
+**Inspection points.** Readiness report, candidate identity, findings and any Tests-tab results.
 
-**Observable output.** Readiness report, candidate identity, findings and any Tests-tab results.
+**Implementation limits.** Exact risk-scoring thresholds and guaranteed test coverage are not published; feature availability must be checked.
 
-**Not established by the reviewed sources.** Exact risk-scoring thresholds and guaranteed test coverage are not published; feature availability must be checked.
-
-**Proposed verification — not executed**
+**Verification procedure (proposed)**
 
 1. Use a non-production candidate with one known behavior change.
 2. Compare findings and executed tests with that revision.
 3. Omit a required build dependency and require an incomplete or failed verification, not a pass.
 
-The verification procedure is authored engineering guidance. A failed or unobservable check must remain unresolved; no live AWS outcome is represented here.
+**Source mapping**
 
-**Official evidence for the product assertions**
-
-| Reference | Reviewed section | Supported assertion |
+| Reference | Documentation section | Supported behavior |
 |---|---|---|
 | [DS412] | Getting started; Performing a code review; Automatic verification testing | Review and verification settings are independent; candidate and verification results are inspectable. |
 | [DS415] | Feature availability by Region | Release-management eligibility differs from production operations. |
 
-
 #### MX-D-TEST — Active deployed-application testing
-
-**Classification:** Preview active-test workflow. **Inputs:** Test profile, deployed URL, UI/API type, test intent and authorized disposable application data.
 
 Release testing generates a plan from change context or a stated intent and exercises a running application. Its requests can modify data. The relevant identity is therefore the deployed target and its test account, not just the repository branch. [DS413] [DS415]
 
 Inspect the actual interactions and results. A generated plan is not executed coverage. This guide uses the documented profile and web-app path rather than copying inconsistent action names from different parts of the retrieved pipeline example. [DS413] [DS415]
 
-**Configuration and enablement**
+**Inputs.** Test profile, deployed URL, UI/API type, test intent and authorized disposable application data.
 
-1. **Profile.** Release Manager → Test profiles → Add test profile: name, target URL and UI/API type. Applies to: Saved target definition.
-2. **Execution.** Start testing and provide a bounded test intent. Applies to: Active run.
-3. **Environment.** Use disposable staging data and suppress unintended downstream effects. Applies to: Team safety prerequisite.
+**Configuration**
+
+1. **Profile — Saved target definition.** Release Manager → Test profiles → Add test profile: name, target URL and UI/API type.
+2. **Execution — Active run.** Start testing and provide a bounded test intent.
+3. **Environment — Team safety prerequisite.** Use disposable staging data and suppress unintended downstream effects.
 
 [DS413] [DS415]
 
-**Lifecycle and state changes**
+**Lifecycle and operator actions**
 
-The rows describe documented consequences and logical stages; they are not an invented SDK status enumeration.
-
-| Starting condition | Operation or event | Consequence |
+| Initial condition | Operation or event | Result |
 |---|---|---|
 | Profile saved | Start testing | Plan generation and active requests begin. |
 | Requests executed | Review results | Failures, reproductions and observed behavior become available. |
 | Unexpected effect observed | Stop further authorized test activity and inspect target | No automatic undo of prior requests is asserted. |
 
-[DS413] [DS415]
+**Constraints.** Infrastructure read permissions do not make application POST/PUT/DELETE requests harmless.
 
-**Controls.** Infrastructure read permissions do not make application POST/PUT/DELETE requests harmless.
+**Inspection points.** Test run, actual target, observed interactions and reproduction details.
 
-**Observable output.** Test run, actual target, observed interactions and reproduction details.
+**Implementation limits.** The documentation does not promise exhaustive coverage or transactional rollback of application writes.
 
-**Not established by the reviewed sources.** The documentation does not promise exhaustive coverage or transactional rollback of application writes.
-
-**Proposed verification — not executed**
+**Verification procedure (proposed)**
 
 1. Prepare a sandboxed checkout endpoint with synthetic records and disabled notifications.
 2. Inspect expected request effects and one known validation error.
 3. An unexpected payment/notification path ends the exercise; do not treat later cancellation as rollback.
 
-The verification procedure is authored engineering guidance. A failed or unobservable check must remain unresolved; no live AWS outcome is represented here.
+**Source mapping**
 
-**Official evidence for the product assertions**
-
-| Reference | Reviewed section | Supported assertion |
+| Reference | Documentation section | Supported behavior |
 |---|---|---|
 | [DS413] | How release testing works; Defining test profiles; Reviewing results | Testing sends real requests including writes and reports observed results. |
 | [DS415] | Feature availability by Region | Release testing is a feature-specific preview path. |
@@ -1139,8 +1007,6 @@ The verification procedure is authored engineering guidance. A failed or unobser
 ## 05. Applying the model to operational outcomes
 
 Trace the approved use cases through their concrete configuration and execution objects, then examine the prepared evidence. The examples remain synthetic, not live AWS results.
-
-
 
 ### D-14 — Incident and reporting use cases in the resource model
 
@@ -1164,8 +1030,6 @@ The table is a map of the existing cases, not additional native functionality. I
 
 To troubleshoot a case, locate the first missing relationship. A registered provider with no usable association is different from an invocation that queried the wrong interval. A stored memory with no attachment is different from a retrieved entry that conflicts with current data. The detailed case dependencies identify whether to stop, continue with a qualification or transfer work to an engineer. Those failure decisions are authored operating guidance; they are not an additional AWS workflow engine.
 
-
-
 ### D-U01 — Recurring-alarm investigation: worked example
 
 **Synthetic exercise, not an AWS execution.** The same checkout latency alarm fired in two incidents. In the first, connection exhaustion was verified. The new fixture contains the evidence below; values are invented and are not performance claims.
@@ -1184,13 +1048,9 @@ To troubleshoot a case, locate the first missing relationship. A registered prov
 
 **Failure branch:** when no retrieval evidence is exposed, record memory use as unverified. When current telemetry is inaccessible, report insufficient evidence; do not substitute the old memory for current measurements. This exercise tests the distinction between retention, retrieval and diagnosis, not whether a memorized sentence appears.
 
-
-
 ## 06. Troubleshooting and operating limits
 
 Failures can occur before analysis begins: identity, routing, tool selection, and quotas all matter. Diagnose the first failed prerequisite before changing the investigation hypothesis.
-
-
 
 ### D-10 — Execution limits and diagnostic procedures
 
@@ -1209,13 +1069,9 @@ Selected defaults in the reviewed quota guide: three concurrent investigations p
 
 This diagnostic ordering is an engineering synthesis of D-02 through D-M06, not an additional AWS troubleshooting API.
 
-
-
 ## 07. Documentation coverage
 
 The references identify the documented behaviors used in this guide and the procedures that remain linked rather than reproduced.
-
-
 
 ### D-11 — Documentation coverage and references
 
