@@ -1,6 +1,6 @@
 {
   "revision": "2026-10-22-use-case-catalog",
-  "build": 5,
+  "build": 6,
   "scope": ["AWS DevOps Agent", "AWS Security Agent", "AWS FinOps Agent"],
   "shared_architecture": true,
   "canonical_source": "guides/*.md",
