@@ -11,6 +11,10 @@ Open `index.html` from a repository checkout. The guides, catalog, and presentat
 
 The programme is **221 minutes including 28 minutes of prepared-result exercises**. Questions and breaks are additional.
 
+## Mechanism configuration and lifecycle
+
+The [mechanism index](catalog/mechanisms.html) links to reviewed procedures in each guide: triggers, inputs, state changes, configuration, controls, observable results and explicitly unexecuted verification plans. See the [Stage 3 review](qa/mechanism-review.json) and [claim-level source record](qa/mechanism-source-review.json). The 30 approved outcomes are unchanged.
+
 ## Product resource models
 
 [Read the ownership-coded resource models](catalog/resource-models.html). The guides introduce the model in their overview, explain identities and lifecycles, and trace the approved use cases through concrete resource bindings. [Model source](catalog/resource-models.json) and [review evidence](qa/product-source-review.json) are maintained with the build.
