@@ -1,0 +1,52 @@
+{
+  "reviewed_on": "2026-10-22",
+  "products": 3,
+  "entities": 74,
+  "relationships": 72,
+  "feature_bindings": 37,
+  "official_references": 32,
+  "approved_sources": {
+    "catalog/use-cases.json": {
+      "unchanged": true,
+      "sha256": "e5aae837db20d3dc7383b86cf22f01cb7310c8691e37122b0f11650ecc92900c"
+    },
+    "catalog/mechanisms.json": {
+      "unchanged": true,
+      "sha256": "ac390358c3e241b9e00fe17720ce656c97abc081f6b5fee25df1821c2fbfb0bf"
+    },
+    "catalog/features.json": {
+      "unchanged": true,
+      "sha256": "fefc21015e00bf043a9bbbe9776caa5ca5cb2de0ab3232ca8a6437ad8ed20763"
+    },
+    "catalog/profiles.json": {
+      "unchanged": true,
+      "sha256": "89d23d92c97b95288e68de2a001186ba5846b18b6dec3774ba545143aea33190"
+    },
+    "catalog/aliases.json": {
+      "unchanged": true,
+      "sha256": "5f1efdc4eb665cdd3d7830c148d653cc2f38a7d4c7cf4cf1f68e538d95ced720"
+    }
+  },
+  "semantic_checks": [
+    "Named FinOps AgentSpace alias remains service-specific",
+    "One-off design review is not converted to reusable configuration",
+    "Revalidation result association remains documentation-defined",
+    "Topology is a derived view, not authorization scope",
+    "Retained login procedure is not an asserted CRUD resource",
+    "Unspecified event-rule multiplicity remains unknown"
+  ],
+  "browser": [
+    {
+      "width": 390,
+      "entity_search_ownership_product_hash_print": "passed",
+      "javascript_errors": []
+    },
+    {
+      "width": 1440,
+      "entity_search_ownership_product_hash_print": "passed",
+      "javascript_errors": []
+    }
+  ],
+  "errors": [],
+  "boundary": "Logical documentation model, not an AWS database schema, SDK payload or shared runtime. Green means AWS defines the concept; it does not mean every green item has an independent ARN, CRUD API or equal availability. Relationship multiplicities are qualified individually and are not service quotas."
+}
