@@ -13,7 +13,7 @@ def patch(path,old,new,count=1):
     if text.count(old)!=count:raise ValueError(f'{path}: expected {count} anchors, found {text.count(old)} for {old[:80]!r}')
     p.write_text(text.replace(old,new))
 
-retired={'devops-memory','security-auth','security-revalidation','finops-context','finops-automation'}
+retired={'devops-memory','security-authentication','security-revalidation','finops-context','finops-automation'}
 p=HERE/'diagrams.py';text=p.read_text();tree=ast.parse(text)
 node=next(n for n in tree.body if isinstance(n,ast.Assign) and any(isinstance(t,ast.Name) and t.id=='DIAGRAMS' for t in n.targets))
 old=ast.literal_eval(node.value)
@@ -43,11 +43,10 @@ patch('tools/docs/interactions.js',"      if(target.matches('.report-section,.ch
 patch('tools/docs/catalog.py','import re\n','import re\nfrom mechanism_detail import index_summary\n')
 patch('tools/docs/catalog.py',"                rows=related(ident)","                parts.append(index_summary(item))\n                rows=related(ident)")
 
-# Replace teaching units rather than extending the programme.
 import presentation
 replacements={
  'devops-memory':('mechanism-devops-retrieval',['D-M01','D-M02','D-M07'],'Memory production, availability and selective retrieval','Separate retained content, access to the entry, observable retrieval and the correctness of the new conclusion.'),
- 'security-auth':('mechanism-security-learning',['S-M01','S-M02','S-05'],'Authentication reuse and finding personalization','Login Optimization reuses navigation. Findings Personalization reuses eligible edits. Neither establishes that the application was repaired.'),
+ 'security-authentication':('mechanism-security-learning',['S-M01','S-M02','S-05'],'Authentication reuse and finding personalization','Login Optimization reuses navigation. Findings Personalization reuses eligible edits. Neither establishes that the application was repaired.'),
  'security-revalidation':('mechanism-security-replay',['S-M05','S-05'],'Finding replay and verification boundaries','Revalidation creates a linked job. Interpret non-reproduction only after checking the actual target, identity and reached path.'),
  'finops-context':('mechanism-finops-context',['F-M02','F-M03','F-M04'],'Files, memory and conversation-context lifecycles','Soft deletion and restoration apply to files. Forgetting updates memory. Compaction changes working context; these operations are not interchangeable.'),
  'finops-automation':('mechanism-finops-publication',['F-03','F-M05','F-M06'],'Task execution and destination-specific approval','A matching event or schedule creates work. Analysis and publication are separate; Jira approval depends on invocation mode and Slack has no per-message prompt.')}
