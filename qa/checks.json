@@ -1,0 +1,106 @@
+{
+  "revision": "2026-10-22-canonical-guides",
+  "canonical_guides": 4,
+  "canonical_sections": 57,
+  "unique_official_urls": 53,
+  "local_links_checked": 272,
+  "timed_slides": 50,
+  "pptx_slides_including_appendices": 54,
+  "programme_minutes": 124,
+  "exercise_minutes": 28,
+  "synthetic_fixture_checks": [
+    {
+      "fixture": "finops",
+      "checked": "quantities \u00d7 rates, component totals, 574 delta, 41% change, transfer-only corroboration and guide-table consistency"
+    },
+    {
+      "fixture": "devops",
+      "checked": "contrary current database evidence and elevated upstream latency; no recall or diagnosis execution asserted"
+    },
+    {
+      "fixture": "security",
+      "checked": "prepared revision and identity consistency; no live revalidation asserted"
+    }
+  ],
+  "browser": [
+    {
+      "page": "devops",
+      "width": 390,
+      "javascript_errors": [],
+      "horizontal_overflow": false,
+      "interaction_checks": true
+    },
+    {
+      "page": "devops",
+      "width": 1440,
+      "javascript_errors": [],
+      "horizontal_overflow": false,
+      "interaction_checks": true
+    },
+    {
+      "page": "security",
+      "width": 390,
+      "javascript_errors": [],
+      "horizontal_overflow": false,
+      "interaction_checks": true
+    },
+    {
+      "page": "security",
+      "width": 1440,
+      "javascript_errors": [],
+      "horizontal_overflow": false,
+      "interaction_checks": true
+    },
+    {
+      "page": "finops",
+      "width": 390,
+      "javascript_errors": [],
+      "horizontal_overflow": false,
+      "interaction_checks": true
+    },
+    {
+      "page": "finops",
+      "width": 1440,
+      "javascript_errors": [],
+      "horizontal_overflow": false,
+      "interaction_checks": true
+    },
+    {
+      "page": "architecture",
+      "width": 390,
+      "javascript_errors": [],
+      "horizontal_overflow": false,
+      "interaction_checks": true
+    },
+    {
+      "page": "architecture",
+      "width": 1440,
+      "javascript_errors": [],
+      "horizontal_overflow": false,
+      "interaction_checks": true
+    },
+    {
+      "page": "index",
+      "width": 390,
+      "javascript_errors": [],
+      "horizontal_overflow": false,
+      "interaction_checks": false
+    },
+    {
+      "page": "index",
+      "width": 1440,
+      "javascript_errors": [],
+      "horizontal_overflow": false,
+      "interaction_checks": false
+    }
+  ],
+  "preservation": {
+    "checked_against_checkout": "10605419db55af496b3a1c15eeb6678d957f6b01",
+    "application_tree": "faa8429773ba8bcc907f9172bcae48a10aa21ddf",
+    "console_workflow_blob": "53f9c59ff62abaf3f15b240b7ac21f886690a1e0",
+    "uncommitted_changes": []
+  },
+  "excluded_scope_hits": [],
+  "errors": [],
+  "boundary": "Checks cover document structure, local links, source identifiers, synthetic arithmetic/record consistency, browser behavior, slide bounds and notes. They are not external source-content verification, successful AWS configuration, causal inference testing or measured operational outcomes."
+}
