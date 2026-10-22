@@ -668,7 +668,9 @@ A kept recommendation is not a deployed fix. A recommendation marked implemented
 
 <!-- mechanism-review:end D-06 -->
 
-### D-07 — Custom-agent configuration and invocation
+### D-07 — Operational queries and custom-agent invocations
+
+Use the built-in Chat path for an operational question. Use a custom-agent definition when the task requires a prescribed prompt, selected tools, and reusable procedures. Both execution paths depend on configured source access. [DS407]
 
 ![Workflow: Custom-agent configuration and invocation](../assets/diagrams/devops-reporting.svg)
 
@@ -683,6 +685,47 @@ Define a name, system prompt, selected skills and memory stores. Use Chat for to
 The CronSchedule API reference specifies a flexible scheduling window of up to 30 minutes for trigger-created custom-agent schedules. A cron expression anchors that window; it is not a guarantee of exact-minute start or completion. Keep telemetry resolution, report lookback window, trigger window, and execution duration separate. For a time-critical incident bulletin, use an explicit on-demand request or a separately engineered trigger path whose latency you test. [DS33]
 
 <!-- mechanism-review:start D-07 -->
+
+#### MX-D-QUERY — Built-in operational inquiry
+
+The built-in inquiry path answers an operational question without requiring a separately created custom agent. It still depends on the Agent Space sources and permissions. Use a custom definition for a recurring or specialized procedure; configure source access independently. [DS407] [DS401]
+
+The response is scoped to evidence actually available to that request. Record the queried period and reproduce a material observation before treating a health summary as an operational fact. [DS407] [DS401]
+
+**Inputs.** Explicit question, service/account scope, observation interval and connected evidence.
+
+**Configuration**
+
+1. **Scope — Current request.** Open Chat in the intended Agent Space and state service identifiers and UTC interval.
+2. **Evidence — Underlying read access.** Check relevant source associations and permission scope.
+
+[DS407] [DS401]
+
+**Lifecycle and operator actions**
+
+| Initial condition | Operation or event | Result |
+|---|---|---|
+| Question submitted | Read available evidence | Response or source gap is produced. |
+| Question needs recurring execution | Define a custom task separately | A new configuration path, not automatic conversion. |
+
+**Constraints.** A conversational request is not permission for a state-changing operation.
+
+**Inspection points.** Scoped answer and available supporting tool observations.
+
+**Implementation limits.** The cited guide does not specify the query-selection algorithm. Inspect the sources and query parameters used by the execution.
+
+**Verification procedure (proposed)**
+
+1. Ask for one known staging service measurement in a complete interval.
+2. Compare it with the monitoring source.
+3. An unavailable metric must be listed as missing rather than inferred as healthy.
+
+**Source mapping**
+
+| Reference | Documentation section | Supported behavior |
+|---|---|---|
+| [DS407] | Custom agents compared to built-in capabilities | On-demand queries are a built-in path; custom agents are separately configured. |
+| [DS401] | Configuring MCP tools in an Agent Space | Connected evidence remains subject to selected source tools. |
 
 #### MX-D-CUSTOM — Configured custom-agent invocation
 
@@ -773,47 +816,6 @@ Pausing the trigger prevents subsequent starts but does not cancel a running inv
 |---|---|---|
 | [DS408] | Scheduling custom agents; Managing triggers | Rate/cron triggers can be paused or deleted separately from invocations. |
 | [DS409] | CronSchedule | The schedule anchors a flexible window of up to 30 minutes. |
-
-#### MX-D-QUERY — Built-in operational inquiry
-
-The built-in inquiry path answers an operational question without requiring a separately created custom agent. It still depends on the Agent Space sources and permissions. Use a custom definition for a recurring or specialized procedure; configure source access independently. [DS407] [DS401]
-
-The response is scoped to evidence actually available to that request. Record the queried period and reproduce a material observation before treating a health summary as an operational fact. [DS407] [DS401]
-
-**Inputs.** Explicit question, service/account scope, observation interval and connected evidence.
-
-**Configuration**
-
-1. **Scope — Current request.** Open Chat in the intended Agent Space and state service identifiers and UTC interval.
-2. **Evidence — Underlying read access.** Check relevant source associations and permission scope.
-
-[DS407] [DS401]
-
-**Lifecycle and operator actions**
-
-| Initial condition | Operation or event | Result |
-|---|---|---|
-| Question submitted | Read available evidence | Response or source gap is produced. |
-| Question needs recurring execution | Define a custom task separately | A new configuration path, not automatic conversion. |
-
-**Constraints.** A conversational request is not permission for a state-changing operation.
-
-**Inspection points.** Scoped answer and available supporting tool observations.
-
-**Implementation limits.** The cited guide does not specify the query-selection algorithm. Inspect the sources and query parameters used by the execution.
-
-**Verification procedure (proposed)**
-
-1. Ask for one known staging service measurement in a complete interval.
-2. Compare it with the monitoring source.
-3. An unavailable metric must be listed as missing rather than inferred as healthy.
-
-**Source mapping**
-
-| Reference | Documentation section | Supported behavior |
-|---|---|---|
-| [DS407] | Custom agents compared to built-in capabilities | On-demand queries are a built-in path; custom agents are separately configured. |
-| [DS401] | Configuring MCP tools in an Agent Space | Connected evidence remains subject to selected source tools. |
 
 <!-- mechanism-review:end D-07 -->
 
