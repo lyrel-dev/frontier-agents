@@ -1,0 +1,22 @@
+{
+  "id": "reviewed-change",
+  "title": "REPLACE: exact reviewed implementation",
+  "document_arn": "${AUTOMATION_DOCUMENT_ARN}",
+  "document_version": "${AUTOMATION_DOCUMENT_VERSION}",
+  "content_sha256": "${AUTOMATION_DOCUMENT_SHA256}",
+  "parameters": {
+    "AutomationAssumeRole": [
+      "${AUTOMATION_EXECUTION_ROLE_ARN}"
+    ]
+  },
+  "timeout_seconds": 300,
+  "before_checks": [
+    "REPLACE-precondition-check-id"
+  ],
+  "after_checks": [
+    "REPLACE-deployed-state-check-id"
+  ],
+  "rollback_runbook_id": "REPLACE-reviewed-rollback-id",
+  "implementation_artifact": "${IMPLEMENTATION_ARTIFACT}",
+  "implementation_diff_sha256": "${IMPLEMENTATION_DIFF_SHA256}"
+}

@@ -1,0 +1,16 @@
+.venv/
+__pycache__/
+.pytest_cache/
+*.pyc
+.env
+config.local.json
+*-config.local.json
+data/
+*.sqlite*
+*.db*
+worker.lock
+preview.html
+validation/*.png
+validation/*-run.txt
+validation/*.log
+validation/*.pid

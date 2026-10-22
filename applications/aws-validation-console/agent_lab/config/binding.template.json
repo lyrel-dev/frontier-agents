@@ -1,0 +1,119 @@
+{
+  "enable_aws_writes": false,
+  "poll_seconds": 10,
+  "approval_ttl_seconds": 900,
+  "probe_gap_seconds": 15,
+  "bindings": [
+    {
+      "id": "service-test",
+      "name": "Authorized non-production service",
+      "environment": "nonproduction",
+      "deployment_model": "ec2",
+      "service_id": "monitored-service",
+      "agent": {
+        "account_id": "${AGENT_ACCOUNT_ID}",
+        "region": "${AGENT_REGION}",
+        "profile": "agent-observer"
+      },
+      "workload": {
+        "account_id": "${WORKLOAD_ACCOUNT_ID}",
+        "region": "${WORKLOAD_REGION}",
+        "profile": "workload-observer"
+      },
+      "agent_space_id": "${AGENT_SPACE_ID}",
+      "association_id": "${SECONDARY_ASSOCIATION_ID}",
+      "fault_profile": "workload-fault-executor",
+      "change_profile": "workload-change-executor",
+      "requester_profile": "agent-task-creator",
+      "route": {
+        "alarm_name": "${INCIDENT_ALARM_NAME}",
+        "reference_system": "${EXISTING_REFERENCE_SYSTEM}",
+        "reference_id_format": "{alarm_arn}",
+        "receipt_log_group": "${DELIVERY_LOG_GROUP}",
+        "receipt_account": "agent",
+        "lifecycle_log_group": "${AGENT_EVENT_LOG_GROUP}",
+        "route_contract": "REPLACE: document the existing integration exact task.reference join and receipt writer. Do not change the Agent Space incident route to make this test pass."
+      },
+      "probes": [
+        {
+          "id": "business-probe",
+          "title": "Approved business-path GET probe",
+          "url": "${BUSINESS_PROBE_URL}",
+          "allowed_networks": [
+            "${PROBE_ALLOWED_CIDR}"
+          ],
+          "requests_per_second": 1,
+          "timeout_seconds": 3,
+          "expected_status": [
+            200
+          ],
+          "allow_loopback_http": false,
+          "header_environment": {},
+          "json_expression": null,
+          "expected_json_value": null
+        }
+      ],
+      "checks": [
+        {
+          "id": "instance-running",
+          "service": "ec2",
+          "operation": "describe_instances",
+          "parameters": {
+            "InstanceIds": [
+              "${TARGET_INSTANCE_ID}"
+            ]
+          },
+          "expression": "Reservations[0].Instances[0].State.Name",
+          "operator": "eq",
+          "expected": "running",
+          "purpose": "Read the selected serving instance state before exposure and after restoration."
+        },
+        {
+          "id": "instance-stopped",
+          "service": "ec2",
+          "operation": "describe_instances",
+          "parameters": {
+            "InstanceIds": [
+              "${TARGET_INSTANCE_ID}"
+            ]
+          },
+          "expression": "Reservations[0].Instances[0].State.Name",
+          "operator": "eq",
+          "expected": "stopped",
+          "purpose": "Independently verify the approved target actually stopped during the fault interval."
+        }
+      ],
+      "faults": [
+        {
+          "id": "bounded-instance-stop",
+          "title": "Reviewed existing FIS template",
+          "template_id": "${FIS_TEMPLATE_ID}",
+          "template_sha256": "${FIS_TEMPLATE_SHA256}",
+          "target_arns": [
+            "${TARGET_INSTANCE_ARN}"
+          ],
+          "allowed_action_ids": [
+            "aws:ec2:stop-instances"
+          ],
+          "max_fault_seconds": 120,
+          "baseline_checks": [
+            "instance-running"
+          ],
+          "fault_checks": [
+            "instance-stopped"
+          ],
+          "cleanup_checks": [
+            "instance-running"
+          ],
+          "safety_alarm_arns": [
+            "${SAFETY_ALARM_ARN}"
+          ],
+          "cleanup_runbook_id": null,
+          "safety_review": "REPLACE: approved finite startInstancesAfterDuration; confirm ASG behavior, independent emergency recovery and business/data restoration checks. Instance running alone is not a complete restoration contract."
+        }
+      ],
+      "runbooks": [],
+      "metrics": []
+    }
+  ]
+}

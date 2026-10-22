@@ -1,0 +1,1 @@
+{"enable_aws_writes":false,"bindings":[],"poll_seconds":10,"approval_ttl_seconds":900,"probe_gap_seconds":15}

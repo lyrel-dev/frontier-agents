@@ -1,0 +1,141 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: agent-validation
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: agent-lab-config
+  namespace: agent-validation
+data:
+  config.json: |
+    {"enable_aws_writes":false,"bindings":[],"poll_seconds":10,"approval_ttl_seconds":900,"probe_gap_seconds":15}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: agent-lab-data
+  namespace: agent-validation
+spec:
+  accessModes: [ReadWriteOnce]
+  # Select and verify a LOCAL/block provisioner before accepting this deployment.
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agent-lab
+  namespace: agent-validation
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: agent-lab
+  template:
+    metadata:
+      labels:
+        app: agent-lab
+    spec:
+      automountServiceAccountToken: false
+      terminationGracePeriodSeconds: 30
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: api
+          image: local/devops-agent-lab:0.3.0-rc1
+          imagePullPolicy: IfNotPresent
+          command: [python, run.py, --config, /config/config.json, --data, /data/workspace]
+          ports:
+            - containerPort: 8787
+          env:
+            - name: LAB_BIND
+              value: 0.0.0.0
+            - name: LAB_OPERATOR_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: agent-lab-auth
+                  key: operator-token
+            - name: LAB_APPROVAL_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: agent-lab-auth
+                  key: approval-token
+          securityContext:
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: [ALL]
+          volumeMounts:
+            - name: data
+              mountPath: /data
+            - name: config
+              mountPath: /config
+              readOnly: true
+            - name: api-tmp
+              mountPath: /tmp
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8787
+              httpHeaders:
+                - name: Host
+                  value: localhost
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resources:
+            requests: {cpu: 100m, memory: 128Mi}
+            limits: {cpu: "1", memory: 512Mi}
+        - name: worker
+          image: local/devops-agent-lab:0.3.0-rc1
+          imagePullPolicy: IfNotPresent
+          command: [python, worker.py, --config, /config/config.json, --data, /data/workspace]
+          securityContext:
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: [ALL]
+          volumeMounts:
+            - name: data
+              mountPath: /data
+            - name: config
+              mountPath: /config
+              readOnly: true
+            - name: worker-tmp
+              mountPath: /tmp
+          resources:
+            requests: {cpu: 100m, memory: 128Mi}
+            limits: {cpu: "1", memory: 512Mi}
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: agent-lab-data
+        - name: config
+          configMap:
+            name: agent-lab-config
+        - name: api-tmp
+          emptyDir: {medium: Memory, sizeLimit: 32Mi}
+        - name: worker-tmp
+          emptyDir: {medium: Memory, sizeLimit: 32Mi}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: agent-lab
+  namespace: agent-validation
+spec:
+  type: ClusterIP
+  selector:
+    app: agent-lab
+  ports:
+    - port: 8787
+      targetPort: 8787

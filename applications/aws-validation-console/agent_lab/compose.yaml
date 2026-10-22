@@ -1,0 +1,22 @@
+services:
+  agent-lab:
+    build: .
+    image: local/devops-agent-lab:0.3.0-rc1
+    ports:
+      - "127.0.0.1:8787:8787"
+    environment:
+      LAB_OPERATOR_TOKEN: ${LAB_OPERATOR_TOKEN:?Set a private operator token}
+      LAB_APPROVAL_TOKEN: ${LAB_APPROVAL_TOKEN:?Set a different private approval token}
+      LAB_DATA: /data
+      LAB_BIND: 0.0.0.0
+    volumes:
+      - workspace:/data
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=32m
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    restart: unless-stopped
+    stop_grace_period: 30s
+volumes:
+  workspace:

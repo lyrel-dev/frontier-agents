@@ -1,0 +1,46 @@
+{
+  "version": "0.3.0-rc1",
+  "date": "2026-10-22",
+  "status": "executable_release_candidate_live_acceptance_pending",
+  "record_type": "Historical delivery validation; subsequent branch CI is separate",
+  "original_patch_baseline": "83f65fc50d2f2a39c705356f71715ef1e33ef774",
+  "repository_import_base": "7ed9843ed35f6c78214dd2853df497b670a49995",
+  "results": {
+    "python_tests": {"passed": 77, "command": "python -m pytest -q", "rerun_during_repository_preparation": true},
+    "browser": {"passed": 30, "native_navigation": false, "browser_bridge": true, "provider_access": "none"},
+    "durable_worker_real_http": {"passed": 9, "workload": "Actual loopback HTTP requests", "provider": "Test-only in-memory AWS/agent double", "live_aws_tested": false},
+    "structural_checks": {"passed": 9, "boundary": "Source, schema, document links and additive patch; not live deployment acceptance"}
+  },
+  "aws_tests": "botocore Stubber checks installed SDK contracts. Workflow fixtures never call live AWS.",
+  "live_aws_mutations_performed": false,
+  "native_browser": {"attempted": true, "result": "environment_blocked", "error": "net::ERR_BLOCKED_BY_ADMINISTRATOR", "native_navigation_verified": false},
+  "reviewed_source_sha256": {
+    "integration/delivery_receipt.py": "4cebacffba1c63c5e974627407ee8ae7bb5a4d9bb00be51feada7d1ab607b407",
+    "lab/__init__.py": "da8024cbeacd4feb668a7b2e3606b41cd60e7b7c7715aa163b2c0e8ec9d05c46",
+    "lab/api.py": "0809900f0cf200a035692f364936cf51786c8831149e5b441a53bc32300968ec",
+    "lab/aws.py": "4c74e9695e99e1d611bf2edf052a3c796606eb7ae700d3831a28221b58cf6003",
+    "lab/broker.py": "b978b81e4dd0db0f1515f6e86eef41bd5f236cd276a28f00549c0d4826012c63",
+    "lab/engine.py": "4ef742a21cd96e7d489af60b6983490d6a07d55fe5602ad53242a82193d397c5",
+    "lab/evaluation.py": "156a54ffafd0f5a5c06f41a793d7b50b89ce0c294a287e63892d66fc7db51ca6",
+    "lab/metrics.py": "17790763c8b356e674ea376395e5a36cda6058a7f29b5cdc62a09765020e9ce4",
+    "lab/models.py": "34f7f52e49867185ceea0c88d7a4fa511a4b7c37335df19bad07f43598d6512d",
+    "lab/probe.py": "ef7e59513710960ceadbabbed37b1f546740fb655ec1fac43353815a897da147",
+    "lab/report.py": "238ae5ce1a9bd86daae39e5af83201824b258ce88237fad985b50008eb257c4a",
+    "lab/service.py": "5b66f050499b3070c8b68208532ee55499eabe06541a40a813cb1c73699a5307",
+    "lab/store.py": "b1384542357c1736377b7f17c1844c2de115317d74af675756d58c33ff77444c",
+    "lab/util.py": "f63fc21023d9680b50872af8bf33d604b8d3f7ffaf6c40624e69b977f513b1bd",
+    "lab/worker.py": "e1452d439b098e18012cc1257b9ff7351aee9cb2fc65e7903ed8ab8a3ed95eba",
+    "static/app.js": "cc90e3deadb1ce1cb0cb51caa27d9de49ef7ac7566b1c5829ab45e77c2f015ff",
+    "static/charts.js": "d52b8d59d05ec0478b585faace378067de5d7cb157942b71cdffb00ced99fd25",
+    "static/index.html": "b6a10dc08f5d55037a1a09fb510903f8354472bdae1c391f1367c37ea2be81d9",
+    "static/style.css": "805ba6862d73f6c4d274baa6a72799003abd8564c82657c15ca7e17b8ba19853"
+  },
+  "known_scope_limits": [
+    "No live Account A/Account B acceptance, real incident delivery or agent efficacy test",
+    "No container/runtime hosting or Grafana server acceptance in this delivery",
+    "Explicit-ARN finite FIS actions only; no Kubernetes-selector or local engine fault executor",
+    "Bounded GET probes, not general business transaction or data-loss reconciliation",
+    "Attributed human diagnosis extraction and sequential replay, not autonomous correctness or randomized causal proof",
+    "Single local worker/filesystem; no distributed failover or independent security audit"
+  ]
+}

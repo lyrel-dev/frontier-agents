@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DevOps Agent · Experiment Console</title>
+<link rel="stylesheet" href="/static/style.css">
+<script defer src="/static/charts.js"></script><script defer src="/static/app.js"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to workspace</a>
+<aside class="sidebar">
+  <div class="brand"><span class="brand-mark">A∴</span><div>AGENT VALIDATION<small>Response & prevention lab</small></div></div>
+  <div class="nav-label">WORKSPACE</div>
+  <nav aria-label="Workspace"><button data-view="overview" class="active">Overview <span>01</span></button><button data-view="trials">Response trials <span>02</span></button><button data-view="prevention">Prevention campaigns <span>03</span></button><button data-view="evidence">Evidence & reports <span>04</span></button><button data-view="connections">Instruments & access <span>05</span></button></nav>
+  <div class="sidebar-foot"><span class="status-dot"></span> LOCAL EVIDENCE STORAGE<p>No preloaded incidents.<br>No generated measurement data.</p><small>0.3.0-rc1 · Non-production execution</small></div>
+</aside>
+<div class="workspace">
+  <header class="topbar"><div><span class="eyebrow">AWS DEVOPS AGENT</span><span class="divider">/</span><span id="breadcrumb">Experiment console</span></div><div class="top-actions"><span id="write-state" class="pill neutral">Execution locked</span><button id="unlock-button" class="primary">Unlock workspace</button><button id="refresh-button" class="icon-button" title="Refresh collected workspace">↻</button></div></header>
+  <main id="main" tabindex="-1"><div id="view"></div></main>
+  <footer><span>Account A: Agent Space · Account B: monitored service</span><span id="worker-status">Worker not connected</span></footer>
+</div>
+<dialog id="modal"><div class="modal-head"><h2 id="modal-title"></h2><button id="modal-close" aria-label="Close dialog">×</button></div><div id="modal-body"></div></dialog>
+<div id="toast" role="status" aria-live="polite"></div>
+</body></html>

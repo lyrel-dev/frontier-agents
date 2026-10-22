@@ -1,0 +1,56 @@
+name: Validate DevOps Agent response lab
+on:
+  push:
+    branches: [feat/devops-agent-response-lab]
+    paths:
+      - applications/aws-validation-console/agent_lab/**
+      - .github/workflows/devops-agent-response-lab.yml
+  pull_request:
+    paths:
+      - applications/aws-validation-console/agent_lab/**
+      - .github/workflows/devops-agent-response-lab.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: agent-response-lab-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: applications/aws-validation-console/agent_lab
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install test tools
+        run: |
+          python -m pip install -r requirements-dev.txt
+          python -m playwright install --with-deps chromium
+          python -c 'from playwright.sync_api import sync_playwright; p=sync_playwright().start(); print("CHROMIUM_PATH="+p.chromium.executable_path); p.stop()' >> "$GITHUB_ENV"
+      - name: Build source-derived assets and test
+        env:
+          AWS_EC2_METADATA_DISABLED: 'true'
+        run: |
+          python build_assets.py
+          python -m pytest -q --junitxml=validation/repository-pytest.xml
+          python tests/browser_checks.py --native
+          python tests/worker_http_acceptance.py
+          git diff --check
+      - name: Retain test evidence and build outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: agent-response-lab-validation
+          path: |
+            applications/aws-validation-console/agent_lab/validation/
+            applications/aws-validation-console/agent_lab/preview.html
+            applications/aws-validation-console/agent_lab/grafana/
+            applications/aws-validation-console/agent_lab/schemas/
+          retention-days: 14
