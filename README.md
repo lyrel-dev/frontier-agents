@@ -4,22 +4,22 @@ Open `index.html` from a repository checkout. The guides, catalog, and presentat
 
 | Subject | Guide | HTML presentation | Duration |
 |---|---|---|---|
-| AWS DevOps Agent | [HTML](guides/devops.html) / [Markdown](guides/devops.md) | [Slides](presentations/devops.html) / [Notes](presentations/devops-notes.md) | 58 min including 8 min exercise |
-| AWS Security Agent | [HTML](guides/security.html) / [Markdown](guides/security.md) | [Slides](presentations/security.html) / [Notes](presentations/security-notes.md) | 56 min including 8 min exercise |
-| AWS FinOps Agent | [HTML](guides/finops.html) / [Markdown](guides/finops.md) | [Slides](presentations/finops.html) / [Notes](presentations/finops-notes.md) | 49 min including 8 min exercise |
-| Shared Architecture | [HTML](guides/architecture.html) / [Markdown](guides/architecture.md) | [Slides](presentations/architecture.html) / [Notes](presentations/architecture-notes.md) | 26 min including 4 min exercise |
+| AWS DevOps Agent | [HTML](guides/devops.html) / [Markdown](guides/devops.md) | [Slides](presentations/devops.html) / [Notes](presentations/devops-notes.md) | 59 min including 8 min exercise |
+| AWS Security Agent | [HTML](guides/security.html) / [Markdown](guides/security.md) | [Slides](presentations/security.html) / [Notes](presentations/security-notes.md) | 54 min including 8 min exercise |
+| AWS FinOps Agent | [HTML](guides/finops.html) / [Markdown](guides/finops.md) | [Slides](presentations/finops.html) / [Notes](presentations/finops-notes.md) | 50 min including 8 min exercise |
+| Shared Architecture | [HTML](guides/architecture.html) / [Markdown](guides/architecture.md) | [Slides](presentations/architecture.html) / [Notes](presentations/architecture-notes.md) | 34 min including 4 min exercise |
 
-The programme is **189 minutes including 28 minutes of prepared-result exercises**. Questions and breaks are additional.
+The programme is **197 minutes including 28 minutes of prepared-result exercises**. Questions and breaks are additional.
 
 ## Operational use cases
 
-[Read and search the catalog](catalog/index.html). All 54 workflows are narrated in prose and grouped by operational purpose. The catalog is an application layer, not a competing definition of platform capabilities.
+[Read and search the catalog](catalog/index.html). All 30 workflows are narrated in prose and grouped by operational purpose. Workflow steps link to shared mechanisms, concrete feature configuration and implementation profiles. Browse the [mechanism index](catalog/mechanisms.html), [feature impact index](catalog/features.html), [profiles](catalog/profiles.html) and [consolidation map](catalog/migration.md).
 
 ## Repository layout
 
 ```text
 guides/          Maintained Markdown guides and generated HTML
-catalog/         Maintained narrative JSON; generated HTML and Markdown
+catalog/         Canonical cases, mechanisms, features, profiles and alias data; generated reading indexes
 presentations/   Generated HTML decks and presenter notes
 assets/diagrams/ Generated, accessible SVG figures
 examples/        Synthetic evidence used in worked examples
