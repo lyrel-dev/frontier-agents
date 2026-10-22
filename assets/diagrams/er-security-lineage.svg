@@ -1,0 +1,151 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1033pt" height="416pt" viewBox="0.00 0.00 1032.50 416.00" role="img" aria-labelledby="er-security-lineage-title er-security-lineage-desc" data-diagram="er-security-lineage">
+<title id="er-security-lineage-title">Security Agent: finding, repair and revalidation lineage</title><desc id="er-security-lineage-desc">Colors identify concept ownership; labels distinguish resources, configuration members and derived state. An edge shows source-count : target-count; ? means unspecified. Dashed edges are logical or editorial relationships, not asserted service foreign keys. See the relationship register for qualifications.</desc><g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(18 398)">
+<title>G</title>
+<g id="clust1" class="cluster">
+<title>cluster_ownership</title>
+<path fill="transparent" stroke="#b5c2cc" d="M627.5,-95.5C627.5,-95.5 976.5,-95.5 976.5,-95.5 982.5,-95.5 988.5,-101.5 988.5,-107.5 988.5,-107.5 988.5,-360 988.5,-360 988.5,-366 982.5,-372 976.5,-372 976.5,-372 627.5,-372 627.5,-372 621.5,-372 615.5,-366 615.5,-360 615.5,-360 615.5,-107.5 615.5,-107.5 615.5,-101.5 621.5,-95.5 627.5,-95.5" />
+<text text-anchor="middle" x="802" y="-355.2" font-family="DejaVu Sans" font-size="16.00">Ownership of the definition (not availability)</text>
+</g>
+
+<g id="node1" class="node">
+<title>S-Run</title>
+<path fill="#d9f2e5" stroke="#348761" d="M238.5,-339C238.5,-339 90.5,-339 90.5,-339 84.5,-339 78.5,-333 78.5,-327 78.5,-327 78.5,-313 78.5,-313 78.5,-307 84.5,-301 90.5,-301 90.5,-301 238.5,-301 238.5,-301 244.5,-301 250.5,-307 250.5,-313 250.5,-313 250.5,-327 250.5,-327 250.5,-333 244.5,-339 238.5,-339" />
+<text text-anchor="middle" x="164.5" y="-323.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[AWS] Penetration-test run</text>
+<text text-anchor="middle" x="164.5" y="-310.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">execution record</text>
+</g>
+
+<g id="node2" class="node">
+<title>S-Finding</title>
+<path fill="#d9f2e5" stroke="#348761" d="M181,-243C181,-243 12,-243 12,-243 6,-243 0,-237 0,-231 0,-231 0,-217 0,-217 0,-211 6,-205 12,-205 12,-205 181,-205 181,-205 187,-205 193,-211 193,-217 193,-217 193,-231 193,-231 193,-237 187,-243 181,-243" />
+<text text-anchor="middle" x="96.5" y="-227.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[AWS] Penetration-test finding</text>
+<text text-anchor="middle" x="96.5" y="-214.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">result record</text>
+</g>
+
+<g id="edge1" class="edge">
+<title>S-Run-&gt;S-Finding</title>
+<path fill="none" stroke="#496b78" d="M103.18,-300.77C95.79,-296.12 89.21,-290.29 84.5,-283 78.24,-273.32 79.77,-260.99 83.46,-250.19" />
+<polygon fill="#496b78" stroke="#496b78" points="85.98,-250.95 86.29,-243.01 81.1,-249.03 85.98,-250.95" />
+<text text-anchor="middle" x="130.5" y="-275" font-family="DejaVu Sans" font-size="10.00">produces evidence</text>
+<text text-anchor="middle" x="130.5" y="-264" font-family="DejaVu Sans" font-size="10.00">1 : 0..*</text>
+</g>
+
+<g id="node7" class="node">
+<title>S-Target</title>
+<path fill="#fce8d5" stroke="#c78335" d="M401,-243C401,-243 226,-243 226,-243 220,-243 214,-237 214,-231 214,-231 214,-217 214,-217 214,-211 220,-205 226,-205 226,-205 401,-205 401,-205 407,-205 413,-211 413,-217 413,-217 413,-231 413,-231 413,-237 407,-243 401,-243" />
+<text text-anchor="middle" x="313.5" y="-227.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[EXT] Deployed test application</text>
+<text text-anchor="middle" x="313.5" y="-214.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">customer workload</text>
+</g>
+
+<g id="edge6" class="edge">
+<title>S-Run-&gt;S-Target</title>
+<path fill="none" stroke="#496b78" d="M173.61,-300.96C180.91,-288.16 192.28,-271.46 206.5,-261 214.43,-255.17 223.36,-250.24 232.6,-246.08" />
+<polygon fill="#496b78" stroke="#496b78" points="233.84,-248.41 239.71,-243.06 231.78,-243.58 233.84,-248.41" />
+<text text-anchor="middle" x="268.5" y="-275" font-family="DejaVu Sans" font-size="10.00">assesses running system</text>
+<text text-anchor="middle" x="268.5" y="-264" font-family="DejaVu Sans" font-size="10.00">0..* : ?</text>
+</g>
+
+<g id="node4" class="node">
+<title>S-SelectedResult</title>
+<path fill="#dcebff" stroke="#447ac2" d="M555,-147C555,-147 392,-147 392,-147 386,-147 380,-141 380,-135 380,-135 380,-108 380,-108 380,-102 386,-96 392,-96 392,-96 555,-96 555,-96 561,-96 567,-102 567,-108 567,-108 567,-135 567,-135 567,-141 561,-147 555,-147" />
+<text text-anchor="middle" x="473.5" y="-131.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[DOC] Finding-to-revalidation</text>
+<text text-anchor="middle" x="473.5" y="-118.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">result</text>
+<text text-anchor="middle" x="473.5" y="-105.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">normalized association</text>
+</g>
+
+<g id="edge2" class="edge">
+<title>S-Finding-&gt;S-SelectedResult</title>
+<path fill="none" stroke="#496b78" stroke-dasharray="5,2" d="M193.03,-206.73C196.56,-206.15 200.06,-205.57 203.5,-205 252.81,-196.85 266.37,-200.48 314.5,-187 348.49,-177.48 385.08,-162.95 414.58,-150.09" />
+<polygon fill="#496b78" stroke="#496b78" points="415.73,-152.46 421.54,-147.04 413.62,-147.65 415.73,-152.46" />
+<text text-anchor="middle" x="414" y="-179" font-family="DejaVu Sans" font-size="10.00">is evaluated in</text>
+<text text-anchor="middle" x="414" y="-168" font-family="DejaVu Sans" font-size="10.00">1 : 0..*</text>
+</g>
+
+<g id="node5" class="node">
+<title>S-Remediation</title>
+<path fill="#d9f2e5" stroke="#348761" d="M172.5,-140.5C172.5,-140.5 18.5,-140.5 18.5,-140.5 12.5,-140.5 6.5,-134.5 6.5,-128.5 6.5,-128.5 6.5,-114.5 6.5,-114.5 6.5,-108.5 12.5,-102.5 18.5,-102.5 18.5,-102.5 172.5,-102.5 172.5,-102.5 178.5,-102.5 184.5,-108.5 184.5,-114.5 184.5,-114.5 184.5,-128.5 184.5,-128.5 184.5,-134.5 178.5,-140.5 172.5,-140.5" />
+<text text-anchor="middle" x="95.5" y="-125.3" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[AWS] Remediation attempt</text>
+<text text-anchor="middle" x="95.5" y="-112.3" font-family="DejaVu Sans" font-size="11.50" fill="#152636">operation record</text>
+</g>
+
+<g id="edge4" class="edge">
+<title>S-Finding-&gt;S-Remediation</title>
+<path fill="none" stroke="#496b78" d="M96.32,-204.57C96.16,-188.84 95.93,-166.05 95.76,-148.48" />
+<polygon fill="#496b78" stroke="#496b78" points="98.38,-148.29 95.68,-140.82 93.13,-148.34 98.38,-148.29" />
+<text text-anchor="middle" x="152.5" y="-179" font-family="DejaVu Sans" font-size="10.00">initiates proposal work</text>
+<text text-anchor="middle" x="152.5" y="-168" font-family="DejaVu Sans" font-size="10.00">? : ?</text>
+</g>
+
+<g id="node8" class="node">
+<title>S-Issue</title>
+<path fill="#fce8d5" stroke="#c78335" d="M328.5,-140.5C328.5,-140.5 216.5,-140.5 216.5,-140.5 210.5,-140.5 204.5,-134.5 204.5,-128.5 204.5,-128.5 204.5,-114.5 204.5,-114.5 204.5,-108.5 210.5,-102.5 216.5,-102.5 216.5,-102.5 328.5,-102.5 328.5,-102.5 334.5,-102.5 340.5,-108.5 340.5,-114.5 340.5,-114.5 340.5,-128.5 340.5,-128.5 340.5,-134.5 334.5,-140.5 328.5,-140.5" />
+<text text-anchor="middle" x="272.5" y="-125.3" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[EXT] Jira issue</text>
+<text text-anchor="middle" x="272.5" y="-112.3" font-family="DejaVu Sans" font-size="11.50" fill="#152636">external work record</text>
+</g>
+
+<g id="edge8" class="edge">
+<title>S-Finding-&gt;S-Issue</title>
+<path fill="none" stroke="#496b78" d="M175.82,-204.9C188.95,-200.16 202.01,-194.27 213.5,-187 230.07,-176.51 244.94,-160.18 255.61,-146.58" />
+<polygon fill="#496b78" stroke="#496b78" points="257.75,-148.1 260.21,-140.55 253.57,-144.92 257.75,-148.1" />
+<text text-anchor="middle" x="274.5" y="-179" font-family="DejaVu Sans" font-size="10.00">may be linked</text>
+<text text-anchor="middle" x="274.5" y="-168" font-family="DejaVu Sans" font-size="10.00">? : ?</text>
+</g>
+
+<g id="node3" class="node">
+<title>S-Revalidation</title>
+<path fill="#d9f2e5" stroke="#348761" d="M449.5,-339C449.5,-339 325.5,-339 325.5,-339 319.5,-339 313.5,-333 313.5,-327 313.5,-327 313.5,-313 313.5,-313 313.5,-307 319.5,-301 325.5,-301 325.5,-301 449.5,-301 449.5,-301 455.5,-301 461.5,-307 461.5,-313 461.5,-313 461.5,-327 461.5,-327 461.5,-333 455.5,-339 449.5,-339" />
+<text text-anchor="middle" x="387.5" y="-323.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[AWS] Revalidation job</text>
+<text text-anchor="middle" x="387.5" y="-310.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">execution record</text>
+</g>
+
+<g id="edge3" class="edge">
+<title>S-Revalidation-&gt;S-SelectedResult</title>
+<path fill="none" stroke="#496b78" stroke-dasharray="5,2" d="M458.09,-300.92C465.71,-296.26 472.5,-290.39 477.5,-283 503.21,-245.02 494.22,-189.55 484.51,-154.77" />
+<polygon fill="#496b78" stroke="#496b78" points="486.94,-153.71 482.31,-147.25 481.9,-155.18 486.94,-153.71" />
+<text text-anchor="middle" x="552" y="-227" font-family="DejaVu Sans" font-size="10.00">reports selected results</text>
+<text text-anchor="middle" x="552" y="-216" font-family="DejaVu Sans" font-size="10.00">1 : 1..*</text>
+</g>
+
+<g id="edge7" class="edge">
+<title>S-Revalidation-&gt;S-Target</title>
+<path fill="none" stroke="#496b78" d="M367.05,-300.74C361.41,-295.28 355.48,-289.12 350.5,-283 342.15,-272.74 334.1,-260.51 327.65,-249.92" />
+<polygon fill="#496b78" stroke="#496b78" points="329.76,-248.34 323.66,-243.24 325.25,-251.03 329.76,-248.34" />
+<text text-anchor="middle" x="413.5" y="-275" font-family="DejaVu Sans" font-size="10.00">retests selected evidence</text>
+<text text-anchor="middle" x="413.5" y="-264" font-family="DejaVu Sans" font-size="10.00">0..* : ?</text>
+</g>
+
+<g id="node6" class="node">
+<title>S-Patch</title>
+<path fill="#fce8d5" stroke="#c78335" d="M169.5,-38C169.5,-38 21.5,-38 21.5,-38 15.5,-38 9.5,-32 9.5,-26 9.5,-26 9.5,-12 9.5,-12 9.5,-6 15.5,0 21.5,0 21.5,0 169.5,0 169.5,0 175.5,0 181.5,-6 181.5,-12 181.5,-12 181.5,-26 181.5,-26 181.5,-32 175.5,-38 169.5,-38" />
+<text text-anchor="middle" x="95.5" y="-22.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">[EXT] Patch or pull request</text>
+<text text-anchor="middle" x="95.5" y="-9.8" font-family="DejaVu Sans" font-size="11.50" fill="#152636">change artifact</text>
+</g>
+
+<g id="edge5" class="edge">
+<title>S-Remediation-&gt;S-Patch</title>
+<path fill="none" stroke="#496b78" d="M95.5,-102.07C95.5,-86.34 95.5,-63.55 95.5,-45.98" />
+<polygon fill="#496b78" stroke="#496b78" points="98.13,-45.82 95.5,-38.32 92.88,-45.82 98.13,-45.82" />
+<text text-anchor="middle" x="161" y="-70" font-family="DejaVu Sans" font-size="10.00">produces proposed change</text>
+<text text-anchor="middle" x="161" y="-59" font-family="DejaVu Sans" font-size="10.00">? : ?</text>
+</g>
+
+<g id="node9" class="node">
+<title>legend_0</title>
+<polygon fill="#dcebff" stroke="#447ac2" points="883.5,-338 719.5,-338 719.5,-302 883.5,-302 883.5,-338" />
+<text text-anchor="middle" x="801.5" y="-317.5" font-family="DejaVu Sans" font-size="10.00" fill="#142c3e">DOC · Documentation-defined</text>
+</g>
+
+<g id="node10" class="node">
+<title>legend_1</title>
+<polygon fill="#d9f2e5" stroke="#348761" points="857,-242 746,-242 746,-206 857,-206 857,-242" />
+<text text-anchor="middle" x="801.5" y="-221.5" font-family="DejaVu Sans" font-size="10.00" fill="#142c3e">AWS · AWS-defined</text>
+</g>
+
+
+<g id="node11" class="node">
+<title>legend_2</title>
+<polygon fill="#fce8d5" stroke="#c78335" points="896.5,-139.5 706.5,-139.5 706.5,-103.5 896.5,-103.5 896.5,-139.5" />
+<text text-anchor="middle" x="801.5" y="-119" font-family="DejaVu Sans" font-size="10.00" fill="#142c3e">EXT · External / engineering-owned</text>
+</g>
+
+</g>
+</svg>
