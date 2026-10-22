@@ -63,6 +63,27 @@ def block(entry):
     return '\n'.join(lines)
 
 
+def section_boundaries(body):
+    """Locate canonical sections without treating headings inside examples as structure."""
+    marks=[];offset=0;fence=None
+    for line in body.splitlines(keepends=True):
+        marker=re.match(r'^\s*(`{3,}|~{3,})',line)
+        if marker:
+            token=marker[1]
+            if fence is None:fence=(token[0],len(token))
+            elif token[0]==fence[0] and len(token)>=fence[1]:fence=None
+            offset+=len(line);continue
+        if fence is None:
+            section=re.match(r'^###\s+([DSFA]-(?:M|U)?\d+)\s+[—-]\s+',line)
+            if section:marks.append((offset,section[1]))
+            elif re.match(r'^##\s+\d{2}\.\s+',line):marks.append((offset,None))
+        offset+=len(line)
+    result={}
+    for i,(start,sid) in enumerate(marks):
+        if sid:result[sid]=(start,marks[i+1][0] if i+1<len(marks) else len(body))
+    return result
+
+
 def sync_guides():
     data=load();groups=defaultdict(lambda:defaultdict(list))
     for e in data['entries']:groups[e['platform']][e['review']['primary_section']].append(e)
@@ -75,13 +96,10 @@ def sync_guides():
         definition_start=re.search(r'^\[[DSFA]S\d+\]:',text,re.M)
         if not definition_start:raise ValueError(product+': missing reference definitions')
         body=text[:definition_start.start()].rstrip();definitions=text[definition_start.start():].strip()
-        heading=re.compile(r'^###\s+([DSFA]-(?:M|U)?\d+)\s+[—-]\s+.+$',re.M)
-        matches=list(heading.finditer(body));inserts=[]
+        boundaries=section_boundaries(body);inserts=[]
         for sid,items in sections.items():
-            match=next((m for m in matches if m[1]==sid),None)
-            if match is None:raise ValueError('Unknown mechanism section '+sid)
-            next_boundary=re.search(r'^#{2,3}\s+',body[match.end():],re.M)
-            end=match.end()+next_boundary.start() if next_boundary else len(body)
+            if sid not in boundaries:raise ValueError('Unknown mechanism section '+sid)
+            end=boundaries[sid][1]
             content=f'\n\n<!-- mechanism-review:start {sid} -->\n\n'+ '\n\n'.join(block(e) for e in items)+f'\n<!-- mechanism-review:end {sid} -->\n\n'
             inserts.append((end,content))
         for position,content in sorted(inserts,reverse=True):body=body[:position].rstrip()+content+body[position:]
