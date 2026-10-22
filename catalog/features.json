@@ -2,41 +2,587 @@
   "schema_version": 2,
   "boundary": "Configuration index; the linked guide sections remain the maintained technical explanations. No new AWS resource types or cross-product runtime are implied.",
   "entries": [
-    {"id":"FT-D-SOURCES","platform":"devops","title":"Provider registration and selected tools","group":"Evidence access","objects":["Provider","Agent Space association","Tool selection"],"configuration":"Configure endpoint, authentication, selected resources and private routing when needed. Test the actual read identity.","sections":["D-02","D-03","D-04","D-12"]},
-    {"id":"FT-D-TOPOLOGY","platform":"devops","title":"Resource discovery and topology","group":"Environment context","objects":["Discovered resource","Relationship","Environment understanding"],"configuration":"Connect relevant accounts, repositories and telemetry; compare inferred relationships with the deployed system.","sections":["D-05","D-M08"]},
-    {"id":"FT-D-MEMORY","platform":"devops","title":"Memory stores and entries","group":"Retained context","objects":["Store","Entry","Version","Attachment"],"configuration":"Inspect descriptions, active state and applicable custom-agent attachments. Keep original incident evidence in its source system.","sections":["D-M01","D-M02","D-M07","D-M08"]},
-    {"id":"FT-D-INSTRUCTIONS","platform":"devops","title":"Global and agent-specific instructions","group":"Behavior","objects":["AGENTS.md","Agent definition"],"configuration":"Save standing guidance at the intended scope and test a new applicable session. Existing sessions retain startup content.","sections":["D-M03"]},
-    {"id":"FT-D-SKILLS","platform":"devops","title":"Skills and supporting references","group":"Behavior","objects":["SKILL.md","Applicability description","Agent scope"],"configuration":"Package a reviewed procedure, identify its matching conditions and actual tools, and test applicability. Skills do not grant access.","sections":["D-M04"]},
-    {"id":"FT-D-CUSTOM","platform":"devops","title":"Custom-agent definitions","group":"Execution","objects":["System prompt","Selected tools","Skills","Memory attachments"],"configuration":"Define objective, source scope, output and failed-read behavior. Select real tools instead of assuming all provider tools are available.","sections":["D-07","D-M07"]},
-    {"id":"FT-D-SCHEDULE","platform":"devops","title":"Custom-agent schedule triggers","group":"Execution","objects":["Trigger","Rate or cron expression"],"configuration":"Separate schedule timing from observation window. Inspect actual starts and accepted timing constraints; do not promise real-time delivery.","sections":["D-07"]},
-    {"id":"FT-D-HISTORY","platform":"devops","title":"Invocation history and trajectories","group":"Execution evidence","objects":["Invocation","Status","Tool result"],"configuration":"Inspect tool arguments, results and failures. Pausing future triggers and cancelling current work are separate controls.","sections":["D-07"]},
-    {"id":"FT-D-INCIDENT","platform":"devops","title":"Incident triage and investigations","group":"Incident operations","objects":["Signal","Triage decision","Investigation","Feedback"],"configuration":"Supply service identity, incident time and evidence. Distinguish routing correction, investigation steering and completed-investigation feedback.","sections":["D-06","D-M02"]},
-    {"id":"FT-D-PREVENTION","platform":"devops","title":"Incident-prevention evaluations","group":"Reliability improvement","objects":["Evaluation","Recommendation"],"configuration":"Review source investigations and recommendation state; assign implementation ownership separately from proposal generation.","sections":["D-06"]},
-    {"id":"FT-D-ACTIONS","platform":"devops","title":"Directed actions","group":"Controlled effects","objects":["Space preference","Elevated role","Tool category","Approval"],"configuration":"Verify opt-in, eligible target access, classification and approval for the exact operation. A recommendation is not authorization.","sections":["D-M06"]},
-    {"id":"FT-D-READINESS","platform":"devops","title":"Release-readiness review","group":"Release assurance","objects":["Candidate revision","Review task"],"configuration":"Check preview, repository and Region eligibility and retain the exact candidate revision.","sections":["D-09"]},
-    {"id":"FT-D-TEST","platform":"devops","title":"Release testing","group":"Release assurance","objects":["Test profile","Deployed target","Test execution"],"configuration":"Use an authorized disposable application and test identities. Requests can change application data.","sections":["D-09"]},
-    {"id":"FT-S-SOURCES","platform":"security","title":"Application sources and integrations","group":"Application context","objects":["Agent Space","Repository","Document source"],"configuration":"Select the supported sources and revisions. Source reads, repair proposals and external publication are distinct operations.","sections":["S-01","S-02","S-09","S-M07"]},
-    {"id":"FT-S-TARGET","platform":"security","title":"Target and network configuration","group":"Assessment access","objects":["Verified domain","Target rule","Support path","Exclusion","Private route"],"configuration":"Define permitted targets and supporting access under owner authorization. Network reachability does not widen assessment scope.","sections":["S-03"]},
-    {"id":"FT-S-AUTH","platform":"security","title":"Test credentials and preflight","group":"Assessment access","objects":["Credential definition","Login instructions","Preflight result"],"configuration":"Configure the selected credential strategy and actual application role. Retrieval success is not authentication success.","sections":["S-M01"]},
-    {"id":"FT-S-LOGIN","platform":"security","title":"Login Optimization","group":"Procedure reuse","objects":["Learned login procedure","Reuse setting"],"configuration":"Inspect reuse after successful authentication. Disabling reuse is not the same as deleting learned information.","sections":["S-M02"]},
-    {"id":"FT-S-RUNS","platform":"security","title":"Penetration-test configurations and runs","group":"Assessment execution","objects":["Saved configuration","Run","Execution limit"],"configuration":"Record target revision, identities, exclusions and work limits for each independent execution.","sections":["S-04"]},
-    {"id":"FT-S-FINDINGS","platform":"security","title":"Finding evidence and disposition","group":"Assessment evidence","objects":["Finding","Source location","Reproduction evidence"],"configuration":"Retain finding identity through review, repair and verification. Record incomplete assessment coverage.","sections":["S-05"]},
-    {"id":"FT-S-FIX","platform":"security","title":"Code-remediation proposals","group":"Remediation","objects":["Patch","Pull request","Repository setting"],"configuration":"Check provider-specific support. Review and test the proposal; deployment and revalidation remain separate.","sections":["S-05","S-09"]},
-    {"id":"FT-S-REVALIDATION","platform":"security","title":"Finding revalidation jobs","group":"Verification","objects":["Selected finding","Revalidation job","Finding lineage"],"configuration":"Deploy the repair to the intended authorized target and verify current authentication before interpreting non-reproduction.","sections":["S-M05"]},
-    {"id":"FT-S-REQUIREMENTS","platform":"security","title":"Security requirement packs","group":"Assessment criteria","objects":["Pack","Applicability","Compliance criterion"],"configuration":"Review and enable criteria. Regeneration replaces existing pack contents, including manual entries; it is not evaluation.","sections":["S-M03","S-M04"]},
-    {"id":"FT-S-CODE","platform":"security","title":"Source-code reviews","group":"Assessment execution","objects":["Review configuration","Full scan","Change review"],"configuration":"Select revision, vulnerability and requirement modes independently. Provider and preview eligibility apply.","sections":["S-06"]},
-    {"id":"FT-S-DESIGN","platform":"security","title":"Design reviews","group":"Assessment execution","objects":["Design document","One-off review"],"configuration":"Identify the design revision and applicable requirements; use the supported new-review path for changed material.","sections":["S-06"]},
-    {"id":"FT-S-THREAT","platform":"security","title":"Threat-model configurations","group":"Assessment execution","objects":["Scope document","Source context","Model run"],"configuration":"Review inferred system boundaries and flows before accepting individual threats.","sections":["S-06"]},
-    {"id":"FT-S-PIPELINE","platform":"security","title":"Pipeline assessment integration","group":"Invocation","objects":["Pipeline identity","Saved assessment","Server-side job"],"configuration":"Bind the supported invocation to an authorized assessment. Define a team decision for errors and incomplete results.","sections":["S-06","S-09"]},
-    {"id":"FT-S-JIRA","platform":"security","title":"Jira finding publication","group":"Publication","objects":["Connection","Project","Issue or comment"],"configuration":"Review destination audience, supported operations and finding linkage. Removing a connection does not delete published records.","sections":["S-09","S-M07"]},
-    {"id":"FT-F-SOURCES","platform":"finops","title":"Cost and operational source access","group":"Evidence access","objects":["Agent role","Cost query","Forecast","Coverage","Anomaly","Recommendation","Change event"],"configuration":"Activate required upstream services and scope access. Keep historical amounts, forecasts, coverage and recommendation estimates distinct.","sections":["F-02","F-M01","F-08"]},
-    {"id":"FT-F-FILES","platform":"finops","title":"Context files","group":"Retained context","objects":["Uploaded file","Active state"],"configuration":"Maintain reviewed mappings and report conventions. Files are visible to agent users and are not conversationally rewritten.","sections":["F-M02"]},
-    {"id":"FT-F-MEMORY","platform":"finops","title":"Conversational memory","group":"Retained context","objects":["Preference","Correction","Retained outcome"],"configuration":"Request remember, update or forget and test a later session separately from file retrieval.","sections":["F-M03"]},
-    {"id":"FT-F-CONTEXT","platform":"finops","title":"Conversation context management","group":"Session state","objects":["Conversation","Summary","Recent messages"],"configuration":"Restate material query constraints during long conversations. Compaction is not verbatim retention of all prior messages.","sections":["F-M04"]},
-    {"id":"FT-F-TASKS","platform":"finops","title":"Task queue and history","group":"Execution","objects":["Task","Status","Tool result"],"configuration":"Create explicit tasks and inspect actual execution and outputs rather than only the creation acknowledgement.","sections":["F-03"]},
-    {"id":"FT-F-AUTOMATIONS","platform":"finops","title":"Scheduled and event automations","group":"Invocation","objects":["Automation","Schedule","Managed event rule"],"configuration":"Configure schedule or supported anomaly event. Future task creation and already-created task lifecycle remain separate.","sections":["F-03","F-M05"]},
-    {"id":"FT-F-JIRA","platform":"finops","title":"Jira issue and comment actions","group":"Publication","objects":["Registration","Agent connection","Project","Issue"],"configuration":"Interactive and on-demand operations request approval; scheduled or event-driven operations use setup-time authorization.","sections":["F-05","F-M06"]},
-    {"id":"FT-F-SLACK","platform":"finops","title":"Slack message publication","group":"Publication","objects":["Workspace","Agent connection","Channel"],"configuration":"Review audience and membership before invocation. Posting has no per-message approval prompt, including interactive invocation.","sections":["F-05","F-M06"]},
-    {"id":"FT-F-ARTIFACTS","platform":"finops","title":"Report artifacts","group":"Outputs","objects":["Artifact","Revision","Download"],"configuration":"Retain task identity and query basis; verify numerical content before distribution. External copies have their own lifecycle.","sections":["F-04","F-M07"]}
+    {
+      "id": "FT-D-SOURCES",
+      "platform": "devops",
+      "title": "Provider registration and selected tools",
+      "group": "Evidence access",
+      "objects": [
+        "Provider",
+        "Agent Space association",
+        "Tool selection"
+      ],
+      "configuration": "Configure endpoint, authentication, selected resources and private routing when needed. Test the actual read identity.",
+      "sections": [
+        "D-02",
+        "D-03",
+        "D-04",
+        "D-12"
+      ]
+    },
+    {
+      "id": "FT-D-TOPOLOGY",
+      "platform": "devops",
+      "title": "Resource discovery and topology",
+      "group": "Environment context",
+      "objects": [
+        "Discovered resource",
+        "Relationship",
+        "Environment understanding"
+      ],
+      "configuration": "Connect relevant accounts, repositories and telemetry; compare inferred relationships with the deployed system.",
+      "sections": [
+        "D-05",
+        "D-M08"
+      ]
+    },
+    {
+      "id": "FT-D-MEMORY",
+      "platform": "devops",
+      "title": "Memory stores and entries",
+      "group": "Retained context",
+      "objects": [
+        "Store",
+        "Entry",
+        "Version",
+        "Attachment"
+      ],
+      "configuration": "Inspect descriptions, active state and applicable custom-agent attachments. Keep original incident evidence in its source system.",
+      "sections": [
+        "D-M01",
+        "D-M02",
+        "D-M07",
+        "D-M08"
+      ]
+    },
+    {
+      "id": "FT-D-INSTRUCTIONS",
+      "platform": "devops",
+      "title": "Global and agent-specific instructions",
+      "group": "Behavior",
+      "objects": [
+        "AGENTS.md",
+        "Agent definition"
+      ],
+      "configuration": "Save standing guidance at the intended scope and test a new applicable session. Existing sessions retain startup content.",
+      "sections": [
+        "D-M03"
+      ]
+    },
+    {
+      "id": "FT-D-SKILLS",
+      "platform": "devops",
+      "title": "Skills and supporting references",
+      "group": "Behavior",
+      "objects": [
+        "SKILL.md",
+        "Applicability description",
+        "Agent scope"
+      ],
+      "configuration": "Package a reviewed procedure, identify its matching conditions and actual tools, and test applicability. Skills do not grant access.",
+      "sections": [
+        "D-M04"
+      ]
+    },
+    {
+      "id": "FT-D-CUSTOM",
+      "platform": "devops",
+      "title": "Custom-agent definitions",
+      "group": "Execution",
+      "objects": [
+        "System prompt",
+        "Selected tools",
+        "Skills",
+        "Memory attachments"
+      ],
+      "configuration": "Define objective, source scope, output and failed-read behavior. Select real tools instead of assuming all provider tools are available.",
+      "sections": [
+        "D-07",
+        "D-M07"
+      ]
+    },
+    {
+      "id": "FT-D-SCHEDULE",
+      "platform": "devops",
+      "title": "Custom-agent schedule triggers",
+      "group": "Execution",
+      "objects": [
+        "Trigger",
+        "Rate or cron expression"
+      ],
+      "configuration": "Separate schedule timing from observation window. Inspect actual starts and accepted timing constraints; do not promise real-time delivery.",
+      "sections": [
+        "D-07"
+      ]
+    },
+    {
+      "id": "FT-D-HISTORY",
+      "platform": "devops",
+      "title": "Invocation history and trajectories",
+      "group": "Execution evidence",
+      "objects": [
+        "Invocation",
+        "Status",
+        "Tool result"
+      ],
+      "configuration": "Inspect tool arguments, results and failures. Pausing future triggers and cancelling current work are separate controls.",
+      "sections": [
+        "D-07"
+      ]
+    },
+    {
+      "id": "FT-D-INCIDENT",
+      "platform": "devops",
+      "title": "Incident triage and investigations",
+      "group": "Incident operations",
+      "objects": [
+        "Signal",
+        "Triage decision",
+        "Investigation",
+        "Feedback"
+      ],
+      "configuration": "Supply service identity, incident time and evidence. Distinguish routing correction, investigation steering and completed-investigation feedback.",
+      "sections": [
+        "D-06",
+        "D-M02"
+      ]
+    },
+    {
+      "id": "FT-D-PREVENTION",
+      "platform": "devops",
+      "title": "Incident-prevention evaluations",
+      "group": "Reliability improvement",
+      "objects": [
+        "Evaluation",
+        "Recommendation"
+      ],
+      "configuration": "Review source investigations and recommendation state; assign implementation ownership separately from proposal generation.",
+      "sections": [
+        "D-06"
+      ]
+    },
+    {
+      "id": "FT-D-ACTIONS",
+      "platform": "devops",
+      "title": "Directed actions",
+      "group": "Controlled effects",
+      "objects": [
+        "Space preference",
+        "Elevated role",
+        "Tool category",
+        "Approval"
+      ],
+      "configuration": "Verify opt-in, eligible target access, classification and approval for the exact operation. A recommendation is not authorization.",
+      "sections": [
+        "D-M06"
+      ]
+    },
+    {
+      "id": "FT-D-READINESS",
+      "platform": "devops",
+      "title": "Release-readiness review",
+      "group": "Release assurance",
+      "objects": [
+        "Candidate revision",
+        "Review task"
+      ],
+      "configuration": "Check preview, repository and Region eligibility and retain the exact candidate revision.",
+      "sections": [
+        "D-09"
+      ]
+    },
+    {
+      "id": "FT-D-TEST",
+      "platform": "devops",
+      "title": "Release testing",
+      "group": "Release assurance",
+      "objects": [
+        "Test profile",
+        "Deployed target",
+        "Test execution"
+      ],
+      "configuration": "Use an authorized disposable application and test identities. Requests can change application data.",
+      "sections": [
+        "D-09"
+      ]
+    },
+    {
+      "id": "FT-S-SOURCES",
+      "platform": "security",
+      "title": "Application sources and integrations",
+      "group": "Application context",
+      "objects": [
+        "Agent Space",
+        "Repository",
+        "Document source"
+      ],
+      "configuration": "Select the supported sources and revisions. Source reads, repair proposals and external publication are distinct operations.",
+      "sections": [
+        "S-01",
+        "S-02",
+        "S-09",
+        "S-M07"
+      ]
+    },
+    {
+      "id": "FT-S-TARGET",
+      "platform": "security",
+      "title": "Target and network configuration",
+      "group": "Assessment access",
+      "objects": [
+        "Verified domain",
+        "Target rule",
+        "Support path",
+        "Exclusion",
+        "Private route"
+      ],
+      "configuration": "Define permitted targets and supporting access under owner authorization. Network reachability does not widen assessment scope.",
+      "sections": [
+        "S-03"
+      ]
+    },
+    {
+      "id": "FT-S-AUTH",
+      "platform": "security",
+      "title": "Test credentials and preflight",
+      "group": "Assessment access",
+      "objects": [
+        "Credential definition",
+        "Login instructions",
+        "Preflight result"
+      ],
+      "configuration": "Configure the selected credential strategy and actual application role. Retrieval success is not authentication success.",
+      "sections": [
+        "S-M01"
+      ]
+    },
+    {
+      "id": "FT-S-LOGIN",
+      "platform": "security",
+      "title": "Login Optimization",
+      "group": "Procedure reuse",
+      "objects": [
+        "Learned login procedure",
+        "Reuse setting"
+      ],
+      "configuration": "Inspect reuse after successful authentication. Disabling reuse is not the same as deleting learned information.",
+      "sections": [
+        "S-M02"
+      ]
+    },
+    {
+      "id": "FT-S-RUNS",
+      "platform": "security",
+      "title": "Penetration-test configurations and runs",
+      "group": "Assessment execution",
+      "objects": [
+        "Saved configuration",
+        "Run",
+        "Execution limit"
+      ],
+      "configuration": "Record target revision, identities, exclusions and work limits for each independent execution.",
+      "sections": [
+        "S-04"
+      ]
+    },
+    {
+      "id": "FT-S-FINDINGS",
+      "platform": "security",
+      "title": "Finding evidence and disposition",
+      "group": "Assessment evidence",
+      "objects": [
+        "Finding",
+        "Source location",
+        "Reproduction evidence"
+      ],
+      "configuration": "Retain finding identity through review, repair and verification. Record incomplete assessment coverage.",
+      "sections": [
+        "S-05"
+      ]
+    },
+    {
+      "id": "FT-S-FIX",
+      "platform": "security",
+      "title": "Code-remediation proposals",
+      "group": "Remediation",
+      "objects": [
+        "Patch",
+        "Pull request",
+        "Repository setting"
+      ],
+      "configuration": "Check provider-specific support. Review and test the proposal; deployment and revalidation remain separate.",
+      "sections": [
+        "S-05",
+        "S-09"
+      ]
+    },
+    {
+      "id": "FT-S-REVALIDATION",
+      "platform": "security",
+      "title": "Finding revalidation jobs",
+      "group": "Verification",
+      "objects": [
+        "Selected finding",
+        "Revalidation job",
+        "Finding lineage"
+      ],
+      "configuration": "Deploy the repair to the intended authorized target and verify current authentication before interpreting non-reproduction.",
+      "sections": [
+        "S-M05"
+      ]
+    },
+    {
+      "id": "FT-S-REQUIREMENTS",
+      "platform": "security",
+      "title": "Security requirement packs",
+      "group": "Assessment criteria",
+      "objects": [
+        "Pack",
+        "Applicability",
+        "Compliance criterion"
+      ],
+      "configuration": "Review and enable criteria. Regeneration replaces existing pack contents, including manual entries; it is not evaluation.",
+      "sections": [
+        "S-M03",
+        "S-M04"
+      ]
+    },
+    {
+      "id": "FT-S-CODE",
+      "platform": "security",
+      "title": "Source-code reviews",
+      "group": "Assessment execution",
+      "objects": [
+        "Review configuration",
+        "Full scan",
+        "Change review"
+      ],
+      "configuration": "Select revision, vulnerability and requirement modes independently. Provider and preview eligibility apply.",
+      "sections": [
+        "S-06"
+      ]
+    },
+    {
+      "id": "FT-S-DESIGN",
+      "platform": "security",
+      "title": "Design reviews",
+      "group": "Assessment execution",
+      "objects": [
+        "Design document",
+        "One-off review"
+      ],
+      "configuration": "Identify the design revision and applicable requirements; use the supported new-review path for changed material.",
+      "sections": [
+        "S-06"
+      ]
+    },
+    {
+      "id": "FT-S-THREAT",
+      "platform": "security",
+      "title": "Threat-model configurations",
+      "group": "Assessment execution",
+      "objects": [
+        "Scope document",
+        "Source context",
+        "Model run"
+      ],
+      "configuration": "Review inferred system boundaries and flows before accepting individual threats.",
+      "sections": [
+        "S-06"
+      ]
+    },
+    {
+      "id": "FT-S-PIPELINE",
+      "platform": "security",
+      "title": "Pipeline assessment integration",
+      "group": "Invocation",
+      "objects": [
+        "Pipeline identity",
+        "Saved assessment",
+        "Server-side job"
+      ],
+      "configuration": "Bind the supported invocation to an authorized assessment. Define a team decision for errors and incomplete results.",
+      "sections": [
+        "S-06",
+        "S-09"
+      ]
+    },
+    {
+      "id": "FT-S-JIRA",
+      "platform": "security",
+      "title": "Jira finding publication",
+      "group": "Publication",
+      "objects": [
+        "Connection",
+        "Project",
+        "Issue or comment"
+      ],
+      "configuration": "Review destination audience, supported operations and finding linkage. Removing a connection does not delete published records.",
+      "sections": [
+        "S-09",
+        "S-M07"
+      ]
+    },
+    {
+      "id": "FT-F-SOURCES",
+      "platform": "finops",
+      "title": "Cost and operational source access",
+      "group": "Evidence access",
+      "objects": [
+        "Agent role",
+        "Cost query",
+        "Forecast",
+        "Coverage",
+        "Anomaly",
+        "Recommendation",
+        "Change event"
+      ],
+      "configuration": "Activate required upstream services and scope access. Keep historical amounts, forecasts, coverage and recommendation estimates distinct.",
+      "sections": [
+        "F-02",
+        "F-M01",
+        "F-08"
+      ]
+    },
+    {
+      "id": "FT-F-FILES",
+      "platform": "finops",
+      "title": "Context files",
+      "group": "Retained context",
+      "objects": [
+        "Uploaded file",
+        "Active state"
+      ],
+      "configuration": "Maintain reviewed mappings and report conventions. Files are visible to agent users and are not conversationally rewritten.",
+      "sections": [
+        "F-M02"
+      ]
+    },
+    {
+      "id": "FT-F-MEMORY",
+      "platform": "finops",
+      "title": "Conversational memory",
+      "group": "Retained context",
+      "objects": [
+        "Preference",
+        "Correction",
+        "Retained outcome"
+      ],
+      "configuration": "Request remember, update or forget and test a later session separately from file retrieval.",
+      "sections": [
+        "F-M03"
+      ]
+    },
+    {
+      "id": "FT-F-CONTEXT",
+      "platform": "finops",
+      "title": "Conversation context management",
+      "group": "Session state",
+      "objects": [
+        "Conversation",
+        "Summary",
+        "Recent messages"
+      ],
+      "configuration": "Restate material query constraints during long conversations. Compaction is not verbatim retention of all prior messages.",
+      "sections": [
+        "F-M04"
+      ]
+    },
+    {
+      "id": "FT-F-TASKS",
+      "platform": "finops",
+      "title": "Task queue and history",
+      "group": "Execution",
+      "objects": [
+        "Task",
+        "Status",
+        "Tool result"
+      ],
+      "configuration": "Create explicit tasks and inspect actual execution and outputs rather than only the creation acknowledgement.",
+      "sections": [
+        "F-03"
+      ]
+    },
+    {
+      "id": "FT-F-AUTOMATIONS",
+      "platform": "finops",
+      "title": "Scheduled and event automations",
+      "group": "Invocation",
+      "objects": [
+        "Automation",
+        "Schedule",
+        "Managed event rule"
+      ],
+      "configuration": "Configure schedule or supported anomaly event. Future task creation and already-created task lifecycle remain separate.",
+      "sections": [
+        "F-03",
+        "F-M05"
+      ]
+    },
+    {
+      "id": "FT-F-JIRA",
+      "platform": "finops",
+      "title": "Jira issue and comment actions",
+      "group": "Publication",
+      "objects": [
+        "Registration",
+        "Agent connection",
+        "Project",
+        "Issue"
+      ],
+      "configuration": "Interactive and on-demand operations request approval; scheduled or event-driven operations use setup-time authorization.",
+      "sections": [
+        "F-05",
+        "F-M06"
+      ]
+    },
+    {
+      "id": "FT-F-SLACK",
+      "platform": "finops",
+      "title": "Slack message publication",
+      "group": "Publication",
+      "objects": [
+        "Workspace",
+        "Agent connection",
+        "Channel"
+      ],
+      "configuration": "Review audience and membership before invocation. Posting has no per-message approval prompt, including interactive invocation.",
+      "sections": [
+        "F-05",
+        "F-M06"
+      ]
+    },
+    {
+      "id": "FT-F-ARTIFACTS",
+      "platform": "finops",
+      "title": "Report artifacts",
+      "group": "Outputs",
+      "objects": [
+        "Artifact",
+        "Revision",
+        "Download"
+      ],
+      "configuration": "Retain task identity and query basis; verify numerical content before distribution. External copies have their own lifecycle.",
+      "sections": [
+        "F-04",
+        "F-M07"
+      ]
+    },
+    {
+      "id": "FT-D-QUERY",
+      "platform": "devops",
+      "title": "On-demand operational queries",
+      "group": "Operational inquiry",
+      "objects": [
+        "Agent Space",
+        "Chat request",
+        "Connected evidence"
+      ],
+      "configuration": "Use the built-in conversational query path with an explicit service and observation interval. A custom-agent definition is not required for a native inquiry. Source access and the requested scope still apply.",
+      "sections": [
+        "D-01",
+        "D-12"
+      ]
+    }
   ]
 }
