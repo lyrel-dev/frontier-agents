@@ -1,14 +1,32 @@
-# Shared architecture — three distinct control systems
+# Architecture of AWS operational agents
 
-Engineering comparison • documentation reviewed 22 October 2026
+Execution, integration, knowledge, and evidence across three services
 
-This document compares AWS DevOps Agent, AWS Security Agent and AWS FinOps Agent. It is not an AWS reference architecture or a claim that the services share a runtime, memory implementation, authorization model or orchestrator. Product statements are sourced; proposed team-level interfaces are labeled as engineering design.
+The term agent describes a way of carrying out work, not one universal AWS resource type. AWS DevOps Agent, AWS Security Agent, and AWS FinOps Agent expose different configuration objects, execution records, and retained context. This guide introduces the common concepts and then compares their concrete product implementations. The comparison is intended to help teams configure each service without importing assumptions from another. [AS30] [AS31] [AS32]
 
-## 01. Resource and Context Models
+Begin with the distinction between an agent definition and an execution. From there, follow the connections to external systems, the construction and retrieval of knowledge, and the controls on effects. The final chapters describe a team-managed handoff between services. They do not posit a shared memory store, common permission model, or built-in cross-product orchestrator.
 
-Compare the documented objects and retained information without assuming a common runtime.
+## 01. Agents and resource models
 
-### A-01 — Compare resources before comparing workflows
+An agent is an execution model, while an Agent Space or instance is a product-specific configuration resource. The comparison starts with these distinctions and then examines retained context.
+
+### A-00 — Agents, tools, context, and executions
+
+In these guides, an agent is a software system that carries out a bounded task by using a model to interpret the request and by invoking the tools or assessment functions the service makes available. The useful unit of observation is the execution: the particular investigation, assessment run, conversation, or task that receives inputs and produces results. The configured agent or application space is longer-lived and can supply permissions, instructions, sources, and retained information to many executions. The three AWS services implement that distinction with different named resources. [AS30] [AS31] [AS32]
+
+A tool is an interface to another system, such as an authorized telemetry query or an issue-creation operation. Tool output supplies observations. Instructions express how the agent should perform its work. Memory or reference material supplies context. These are different responsibilities: a statement in a document cannot make an unauthorized API call succeed, and a granted API permission does not guarantee that a run will choose the correct query.
+
+![Logical agent execution cycle](../assets/diagrams/agent-execution.svg)
+
+The diagram is a reading model, not a shared AWS implementation. A request or event establishes the task; applicable configuration and context shape the execution; tools or assessment components produce observations; the service uses those observations to continue the work or produce an output. Where an effect requires approval, the approval boundary belongs to that operation. A retained lesson may influence a later run without altering the underlying model’s weights.
+
+This kind of agent is also different from a telemetry collection agent installed on a machine. The latter collects or forwards measurements. An operational reasoning service consumes evidence exposed through its configured access paths. Calling both an agent does not mean that DevOps Agent installs a universal host collector or that Security Agent continuously observes every request to an application.
+
+The rest of the comparison keeps four questions separate: what reusable capability exists; which operation configures or invokes it; what documented mechanism carries it out; and which engineering use case combines those pieces. The product guides provide the procedures. The catalog provides concrete applications and their prerequisites.
+
+### A-01 — Workspace, configuration, and execution models
+
+A comparison begins with the objects each product actually exposes. The three services all separate configuration from execution, but their scopes and resource relationships are not interchangeable. The table below compares those documented objects without proposing a new universal agent schema.
 
 | Layer | DevOps Agent | Security Agent | FinOps Agent |
 |---|---|---|---|
@@ -21,7 +39,9 @@ The terms differ because the objects differ. A common UI label does not make all
 
 **Engineering design:** record the platform, account/Region, configuration ID and execution ID separately. Do not put one ambiguous `agent_id` in every downstream ticket and expect it to identify all four concepts.
 
-### A-02 — Separate knowledge producers from consumers
+### A-02 — Knowledge construction and retrieval models
+
+Knowledge has a producer, an owner, and a retrieval path. A DevOps monitor entry is synthesized from investigations; a Security login skill comes from successful navigation; a FinOps reference file is uploaded by an operator. Comparing these paths is more informative than asking whether all three products have memory.
 
 | Retained material | Producer | Consumer and lifecycle | Do not infer |
 |---|---|---|---|
@@ -35,11 +55,30 @@ These mechanisms are documented separately in the canonical guides: D-M01, D-M02
 
 **Engineering verification:** separate five questions: was relevant input available, was retained content produced, was it accessible to this execution, was its use observable, and was the resulting conclusion correct? The final answer alone cannot resolve all five.
 
-## 02. Connectivity, Identity and Effect Boundaries
+## 02. Integration and authorization boundaries
 
-Separate reachability, authenticated identity and authority to perform an operation.
+An integration connects a source, trigger, target, or destination. The permitted direction and effect determine the relevant network and authorization controls.
 
-### A-03 — Connectivity, authentication and authorization are different layers
+### A-08 — Integration direction and evidence ownership
+
+Start an integration design by drawing the direction of every exchange. An event producer can initiate work, a data source can answer a query, an execution target can receive active requests, and a publication destination can receive findings. One system may occupy several roles, but those roles still require distinct permissions and failure handling. [AS30] [AS31] [AS32]
+
+| Integration role | DevOps Agent | Security Agent | FinOps Agent |
+|---|---|---|---|
+| Evidence source | AWS resources, observability, code and delivery systems, selected MCP tools | Selected repositories, S3 resources, design and Confluence documents | Authorized cost, anomaly, optimization, and change data |
+| Work initiation | Operator request, supported incident integration/webhook, custom schedule | Operator assessment, supported repository or pipeline path, configured schedule | Conversation/task request, schedule, supported anomaly event |
+| Active target | Approved resource/tool action; release-test application | Explicitly authorized application and authentication scope | Supported service queries; separately authorized collaboration actions |
+| Result destination | Investigation record and configured communication path | Finding, remediation proposal, revalidation history, connected Jira project | Response, artifact, connected Jira project or Slack channel |
+
+![Evidence handoff between independently configured services](../assets/diagrams/shared-handoff.svg)
+
+The handoff in the diagram is team-composed. For example, an operational investigation can produce a service identifier and a deployment revision. An application owner can use those identifiers to scope a security assessment, while a cost engineer can use the service and time window to define a cost inquiry. The receiving service uses its own configuration and permissions. The handoff should carry references and decisions, not borrowed credentials or an assertion that an earlier approval applies everywhere.
+
+Ownership remains with the original systems. A source repository owns the reviewed revision, an assessment owns its finding, and a destination owns the published ticket or message. Removing a connection can stop future access or publication without deleting those external records. This is why a cross-platform workflow needs an explicit record of source identity, execution identity, and publication destination rather than one ambiguous status called complete.
+
+### A-03 — Network, identity, and tool-access boundaries
+
+Reachability, identity, and authorization are different boundaries. A route makes an endpoint reachable, credentials identify a caller, and permissions constrain the operation. The execution must satisfy each applicable boundary; a successful check at one layer does not establish the others.
 
 A private connection supplies a route. Authentication establishes an identity. Authorization determines allowed operations. Prompt instructions describe desired behavior. A successful connection test demonstrates only the layers it actually exercised.
 
@@ -57,7 +96,9 @@ For DevOps MCP, provider registration and Agent Space tool selection are distinc
 
 Use a non-production target and non-sensitive fixture. These are proposed tests, not recorded service outcomes.
 
-### A-04 — Authorization must follow the effect
+### A-04 — Authorization of state-changing operations
+
+The effect of an operation determines which controls matter. Reading a metric, posting an issue, changing a resource, and sending an active application test request have different consequences. The comparison should follow those effects rather than assign a single read-only or autonomous label to an entire service.
 
 | Effect | Product control to inspect | Important exception |
 |---|---|---|
@@ -71,11 +112,13 @@ The common rule is to examine the actual effect, not to label every agent “rea
 
 **Engineering design:** carry a requested effect and intended target in a work item, but never carry credentials or substitute a ticket approval for the receiving service's native authorization.
 
-## 03. Execution Lifecycles and Handoff Records
+## 03. Execution lifecycles and evidence handoffs
 
-Compare configuration, execution, artifacts and team-composed handoffs.
+A definition, execution, retained artifact, and external record have separate lifecycles. Team handoffs preserve their identities rather than collapsing them into one status.
 
-### A-05 — Configuration, execution and derived artifacts need separate lifecycles
+### A-05 — Configuration, execution, and artifact lifecycles
+
+The lifecycle of a saved definition differs from the lifecycle of the executions it creates. Disabling a schedule affects future work, while cancellation concerns an existing execution. Artifacts and external messages may remain after either operation. This distinction is central to a maintainable operating procedure.
 
 Pause an automation to stop future starts; cancel a current run using its supported operation; remove or deactivate context using its own controls; delete an artifact only when the artifact itself is the intended target. These are different transitions. In-flight calls or retained execution history may remain after a stop action. [AS13] [AS07]
 
@@ -83,7 +126,13 @@ Security revalidation deliberately creates a new job linked to the original find
 
 **Engineering design:** retain version identifiers and source revisions in accepted work records. Keep maintained configuration source in Git. Do not create dated snapshot directories or compressed manual distributions as a substitute for version control. The product's own runtime retention is independent of this repository's history policy.
 
-### A-06 — A handoff is an artifact, not transferred execution authority
+### A-06 — Cross-team evidence handoffs
+
+The documented services retain different execution objects: a custom-agent invocation, an assessment run and finding, or a task and artifact. A receiving specialist therefore needs the original identifiers and source scope to interpret the handoff correctly. The resource and lifecycle guidance supports that distinction. [AS30] [AS31] [AS32]
+
+The handoff format below is a proposed team record, not an AWS API or a built-in cross-product orchestration protocol. Its fields preserve evidence identity, ownership, and unresolved questions; they do not transfer credentials, retained memory, or approval authority.
+
+A team handoff transfers evidence and a decision to another owner. It does not need to transfer an agent’s credentials, memory, or approval authority. A useful handoff therefore identifies the source objects and unresolved questions so the next specialist can reconstruct the relevant context.
 
 The following is an original team interface, not an AWS schema:
 
@@ -115,11 +164,11 @@ The receiving engineer resolves the internal evidence link, validates the resour
 
 **Failure branch:** a task naming “the latest deployment” without an immutable revision cannot establish which change was assessed. Return the work item for clarification rather than letting each product silently choose a different latest revision.
 
-## 04. Worked Cross-Platform Comparison
+## 04. Cross-platform worked example
 
-Assign different evidence obligations to the three services for one operational symptom.
+The worked example assigns different questions to the three services while retaining the source identity and verification responsibility for each.
 
-### A-U01 — Worked comparison: one symptom, three different jobs
+### A-U01 — Cross-platform operational review: worked example
 
 **Synthetic tabletop.** A staging release produces elevated request retries, an authorization finding and increased transfer volume. Those observations are distinct; one is not proof of the others.
 
@@ -131,11 +180,11 @@ Assign different evidence obligations to the three services for one operational 
 
 **Four-minute exercise:** spend one minute identifying each product's required input, two minutes checking revision/window/identity consistency across the prepared records, and one minute assigning unresolved questions to owners. A purported single root cause is rejected unless evidence actually connects the observations. No live agents or shared runtime are assumed.
 
-## 05. Documentation Acceptance and Evidence Boundaries
+## 05. Documentation coverage
 
-Identify what is documented, recommended, tested and undisclosed.
+These diagrams and comparisons are logical explanations of documented behavior, not assertions about undisclosed runtime architecture.
 
-### A-07 — Coverage, evidence and unresolved implementation details
+### A-07 — Architecture assumptions and references
 
 This comparison covers resource scoping, retained context, access layers, effects, lifecycle and handoffs. It does not propose a universal agent framework or reproduce complete IAM policies. The three platform guides carry the detailed procedures and explicit per-product coverage tables.
 
@@ -172,3 +221,6 @@ The public sources do not justify specifying a shared vector database, embedding
 [AS12]: https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html
 [AS13]: https://docs.aws.amazon.com/devopsagent/latest/userguide/custom-agents-executing-custom-agents.html
 [AS14]: https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html
+[AS30]: https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html
+[AS31]: https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html
+[AS32]: https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html
