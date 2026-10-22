@@ -7,9 +7,9 @@ Open `index.html` from a repository checkout. The guides, catalog, and presentat
 | AWS DevOps Agent | [HTML](guides/devops.html) / [Markdown](guides/devops.md) | [Slides](presentations/devops.html) / [Notes](presentations/devops-notes.md) | 65 min including 8 min exercise |
 | AWS Security Agent | [HTML](guides/security.html) / [Markdown](guides/security.md) | [Slides](presentations/security.html) / [Notes](presentations/security-notes.md) | 60 min including 8 min exercise |
 | AWS FinOps Agent | [HTML](guides/finops.html) / [Markdown](guides/finops.md) | [Slides](presentations/finops.html) / [Notes](presentations/finops-notes.md) | 56 min including 8 min exercise |
-| Shared Architecture | [HTML](guides/architecture.html) / [Markdown](guides/architecture.md) | [Slides](presentations/architecture.html) / [Notes](presentations/architecture-notes.md) | 40 min including 4 min exercise |
+| Cross-service architecture | [HTML](guides/architecture.html) / [Markdown](guides/architecture.md) | [Slides](presentations/architecture.html) / [Notes](presentations/architecture-notes.md) | 38 min including 4 min exercise |
 
-The programme is **221 minutes including 28 minutes of prepared-result exercises**. Questions and breaks are additional.
+The programme is **219 minutes including 28 minutes of prepared-result exercises**. Questions and breaks are additional.
 
 ## Mechanism configuration and lifecycle
 
