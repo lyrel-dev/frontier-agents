@@ -32,6 +32,9 @@ jobs:
       - name: Install Chromium for browser validation
         timeout-minutes: 3
         run: python -m playwright install chromium
+      - name: Apply the reviewed source revision once
+        run: |
+          if [ -f tools/docs/apply_resource_revision.py ]; then python tools/docs/apply_resource_revision.py; fi
       - name: Build guides, linked catalog, figures and HTML presentations
         run: |
           python -m compileall -q tools/docs
