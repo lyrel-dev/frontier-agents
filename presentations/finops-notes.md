@@ -10,7 +10,7 @@ Presentation: 56 minutes, including 8 minutes of prepared-result exercises. Ques
 
 00:00–02:00 · Product-specific resource model
 
-Read the entity kind and ownership label before following the relationship. A question mark leaves exact multiplicity unspecified; the detailed register explains each logical association.
+The instance uses separate data-access and operator roles. Account-level Jira or Slack registration is followed by an instance-specific project or channel connection.
 
 
 
@@ -21,7 +21,7 @@ Read the entity kind and ownership label before following the relationship. A qu
 Detailed reference: [Agent instance, access roles and retained state](../guides/finops.html#F-01)
 
 
-## 02. Resource identities and lifecycle boundaries
+## 02. Instance, conversation, task, and artifact identities
 
 02:00–05:00 · Product-specific resource model
 
@@ -49,7 +49,7 @@ Detailed reference: [Conversations, automations, tasks and artifacts](../guides/
 
 05:00–08:00 · Product-specific resource model
 
-Read the entity kind and ownership label before following the relationship. A question mark leaves exact multiplicity unspecified; the detailed register explains each logical association.
+A conversation may answer directly. An explicit task has a separate queue and execution record. An automation creates future tasks. Report artifacts can originate from a conversation or task.
 
 
 
@@ -435,7 +435,7 @@ Detailed reference: [Publication permissions and approvals](../guides/finops.htm
 
 43:00–46:00 · Operational objectives and implementation
 
-Read the entity kind and ownership label before following the relationship. A question mark leaves exact multiplicity unspecified; the detailed register explains each logical association.
+Files, retained preferences, and conversation summaries supply different context. File restoration, memory correction, and conversation compaction operate on different state.
 
 
 
