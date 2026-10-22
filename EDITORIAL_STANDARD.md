@@ -35,3 +35,7 @@ Maintain HTML decks with visible chapter membership, substantive diagrams or com
 ## Verification
 
 Check source mapping and content consistency separately from HTML behavior. Check actual rendering, navigation, filters, figure accessibility, slide timing, and print restoration. Report what was tested and what was not. No live-service result may be inferred from a document build.
+
+## Product resource model
+
+Use ownership labels and colors consistently: DOC blue for this collection, AWS green for documented product concepts, EXT orange for external systems and engineering artifacts. Always state entity kind: resource, configuration member, execution record, retained state or derived view. A green label does not imply independent CRUD operations. Qualify relationship multiplicity; unknown remains unknown. Product namespace is part of identity. Keep configuration, execution, original evidence and acceptance distinct. The resource register binds features to objects without replacing or rewriting approved use cases.
