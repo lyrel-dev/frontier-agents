@@ -1,0 +1,90 @@
+{
+  "date": "2026-10-22",
+  "new_references": [
+    {
+      "id": "DS30",
+      "guide": "devops",
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge.html",
+      "reviewed_on": "2026-10-22",
+      "scope": "New integration, execution-model, or schedule explanation; not a whole-service audit."
+    },
+    {
+      "id": "DS31",
+      "guide": "devops",
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-connecting-telemetry-sources-index.html",
+      "reviewed_on": "2026-10-22",
+      "scope": "New integration, execution-model, or schedule explanation; not a whole-service audit."
+    },
+    {
+      "id": "DS32",
+      "guide": "devops",
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-connecting-azure-index.html",
+      "reviewed_on": "2026-10-22",
+      "scope": "New integration, execution-model, or schedule explanation; not a whole-service audit."
+    },
+    {
+      "id": "DS33",
+      "guide": "devops",
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/APIReference/API_CronSchedule.html",
+      "reviewed_on": "2026-10-22",
+      "scope": "New integration, execution-model, or schedule explanation; not a whole-service audit."
+    },
+    {
+      "id": "SS30",
+      "guide": "security",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/about-integrations.html",
+      "reviewed_on": "2026-10-22",
+      "scope": "New integration, execution-model, or schedule explanation; not a whole-service audit."
+    },
+    {
+      "id": "SS31",
+      "guide": "security",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/enable-s3-bucket.html",
+      "reviewed_on": "2026-10-22",
+      "scope": "New integration, execution-model, or schedule explanation; not a whole-service audit."
+    },
+    {
+      "id": "SS32",
+      "guide": "security",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/connect-jira.html",
+      "reviewed_on": "2026-10-22",
+      "scope": "New integration, execution-model, or schedule explanation; not a whole-service audit."
+    },
+    {
+      "id": "SS33",
+      "guide": "security",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/connect-confluence.html",
+      "reviewed_on": "2026-10-22",
+      "scope": "New integration, execution-model, or schedule explanation; not a whole-service audit."
+    },
+    {
+      "id": "SS34",
+      "guide": "security",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/how-it-works.html",
+      "reviewed_on": "2026-10-22",
+      "scope": "New integration, execution-model, or schedule explanation; not a whole-service audit."
+    },
+    {
+      "id": "AS30",
+      "guide": "architecture",
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html",
+      "reviewed_on": "2026-10-22",
+      "scope": "New integration, execution-model, or schedule explanation; not a whole-service audit."
+    },
+    {
+      "id": "AS31",
+      "guide": "architecture",
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html",
+      "reviewed_on": "2026-10-22",
+      "scope": "New integration, execution-model, or schedule explanation; not a whole-service audit."
+    },
+    {
+      "id": "AS32",
+      "guide": "architecture",
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html",
+      "reviewed_on": "2026-10-22",
+      "scope": "New integration, execution-model, or schedule explanation; not a whole-service audit."
+    }
+  ],
+  "retained_reference_status": "Earlier source register retained; key memory, context, and authentication pages selectively rechecked. No live service test."
+}
