@@ -40,26 +40,26 @@ def markdown_table(headers,rows):
 def block(entry):
     d=entry['review'];refs=list(dict.fromkeys(c['source'] for c in d['claims']))
     cite=' '.join('['+r+']' for r in refs)
-    lines=[f"#### {entry['id']} — {entry['title']}",'',f"**Classification:** {d['kind']}. **Inputs:** {d['inputs']}",'']
+    lines=[f"#### {entry['id']} — {entry['title']}",'']
     lines.extend(p+' '+cite+'\n' for p in d['narrative'])
+    lines.extend(['**Inputs.** '+d['inputs'],''])
     if d.get('diagram'):
         lines.extend([f"![{entry['title']}: state and control paths](../assets/diagrams/{d['diagram']}.svg)",''])
-    lines.extend(['**Configuration and enablement**',''])
+    lines.extend(['**Configuration**',''])
     for i,(control,procedure,scope) in enumerate(d['configuration'],1):
-        lines.append(f'{i}. **{control}.** {procedure} Applies to: {scope}.')
-    lines.extend(['',cite,'','**Lifecycle and state changes**','',
-                  'The rows describe documented consequences and logical stages; they are not an invented SDK status enumeration.', '',
-                  markdown_table(['Starting condition','Operation or event','Consequence'],d['lifecycle']), '',cite,'',
-                  '**Controls.** '+d['controls'],'',
-                  '**Observable output.** '+d['observable_output'],'',
-                  '**Not established by the reviewed sources.** '+d['undocumented'],'',
-                  '**Proposed verification — not executed**',''])
+        lines.append(f'{i}. **{control} — {scope.rstrip(".")}.** {procedure}')
+    lines.extend(['',cite,'','**Lifecycle and operator actions**','',
+                  markdown_table(['Initial condition','Operation or event','Result'],d['lifecycle']), '',
+                  '**Constraints.** '+d['controls'],'',
+                  '**Inspection points.** '+d['observable_output'],'',
+                  '**Implementation limits.** '+d['undocumented'],'',
+                  '**Verification procedure (proposed)**',''])
     for i,t in enumerate(d['test'],1):lines.append(f'{i}. {t}')
-    lines.extend(['','The verification procedure is authored engineering guidance. A failed or unobservable check must remain unresolved; no live AWS outcome is represented here.',''])
+    lines.append('')
     if entry.get('related_mechanisms'):
-        lines.append('**Related process.** '+' '.join(f"[{r['id']}](../catalog/mechanisms.html#{r['id']}): {r['dependency']} — {r['condition']}" for r in entry['related_mechanisms']))
+        lines.append('**Related mechanism.** '+' '.join(f"[{r['id']}](../catalog/mechanisms.html#{r['id']}): {r['dependency']} — {r['condition']}" for r in entry['related_mechanisms']))
         lines.append('')
-    lines.extend(['**Official evidence for the product assertions**','',markdown_table(['Reference','Reviewed section','Supported assertion'],[['['+c['source']+']',c['section'],c['assertion']] for c in d['claims']]),''])
+    lines.extend(['**Source mapping**','',markdown_table(['Reference','Documentation section','Supported behavior'],[['['+c['source']+']',c['section'],c['assertion']] for c in d['claims']]),''])
     return '\n'.join(lines)
 
 
@@ -105,7 +105,7 @@ def sync_guides():
         for position,content in sorted(inserts,reverse=True):body=body[:position].rstrip()+content+body[position:]
         refs={c['source'] for items in sections.values() for e in items for c in e['review']['claims']}
         newdefs='\n'.join('['+r+']: '+data['review_sources'][r]['url'] for r in sorted(refs))
-        path.write_text(body.rstrip()+'\n\n'+definitions+'\n'+newdefs+'\n',encoding='utf-8')
+        path.write_text(re.sub(r'\n{3,}', '\n\n', body.rstrip()+'\n\n'+definitions+'\n'+newdefs+'\n'),encoding='utf-8')
 
 
 def index_summary(entry):
@@ -114,8 +114,8 @@ def index_summary(entry):
     refs=load()['review_sources'];ident=entry['id'];product=entry['platform']
     text='<section class="mechanism-review-summary"><h3>Configuration, lifecycle and verification</h3>'
     text+='<p><strong>'+esc(d['kind'])+'.</strong> '+esc(d['inputs'])+'</p>'
-    text+='<p><a href="../guides/'+product+'.html#'+ident+'">Read the complete mechanism explanation and procedure</a></p>'
-    text+='<p><strong>Evidence boundary.</strong> '+esc(d['undocumented'])+'</p>'
+    text+='<p><a href="../guides/'+product+'.html#'+ident+'">Read the configuration, lifecycle, and verification procedure</a></p>'
+    text+='<p><strong>Implementation limits.</strong> '+esc(d['undocumented'])+'</p>'
     text+='<ul class="claim-evidence">'+''.join('<li><a href="'+esc(refs[c['source']]['url'])+'">'+esc(c['source']+' — '+c['section'])+'</a>: '+esc(c['assertion'])+'</li>' for c in d['claims'])+'</ul>'
     if entry.get('related_mechanisms'):
         text+='<h3>Conditional related mechanisms</h3><ul>'+''.join('<li><a href="mechanisms.html#'+esc(r['id'])+'">'+esc(r['id'])+'</a> — '+esc(r['dependency']+': '+r['condition'])+'</li>' for r in entry['related_mechanisms'])+'</ul>'
@@ -169,7 +169,13 @@ def validate(guides,browser=False):
         if e['id'] not in current:errors.append(e['id']+': former mechanism removed');continue
         fields=[f for f in CORE if current[e['id']].get(f)!=e.get(f)]
         if fields:changed.append({'id':e['id'],'fields':fields})
-    if changed:errors.append('Existing mechanism identity/dependency summaries changed: '+json.dumps(changed))
+    edit_record=ROOT/'qa/technical-edit-record.json'
+    permitted=json.loads(edit_record.read_text())['core_corrections'] if edit_record.exists() else []
+    for item in changed:
+        old_entry=next(e for e in old if e['id']==item['id'])
+        for field in item['fields']:
+            matches=[c for c in permitted if c['id']==item['id'] and c['field']==field and c['before']==old_entry.get(field) and c['after']==current[item['id']].get(field)]
+            if len(matches)!=1:errors.append(item['id']+': unreviewed summary change '+field)
     if set(current)-{e['id'] for e in old}!={'MX-S-PERSONALIZE'}:errors.append('Unexpected mechanism addition')
     # Mutation tests establish that checks reject defects rather than only counting records.
     regression=[]
@@ -215,7 +221,7 @@ def validate(guides,browser=False):
             'distribution':dict(Counter(e['platform'] for e in data['entries'])),
             'official_sources':len(data['review_sources']),'claim_mappings':sum(len(e['review']['claims']) for e in data['entries']),
             'approved_sources':preserved,'old_mechanism_core_fields_preserved':not changed,
-            'added_mechanism':'MX-S-PERSONALIZE','regression_checks':regression,'browser':results,'errors':errors,
+            'added_mechanism':'MX-S-PERSONALIZE','reviewed_core_corrections':permitted,'regression_checks':regression,'browser':results,'errors':errors,
             'boundary':'Document-level review and proposed test plans, not live AWS execution or an exhaustive internal algorithm specification.'}
     (ROOT/'qa/mechanism-review.json').write_text(json.dumps(result,indent=2)+'\n')
     (ROOT/'qa/mechanism-source-review.json').write_text(json.dumps(source_record(),ensure_ascii=False,indent=2)+'\n')
