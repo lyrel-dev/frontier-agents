@@ -30,6 +30,7 @@ jobs:
       - name: Apply reviewed outcome consolidation once
         run: |
           if [ -f tools/docs/consolidate_once.py ]; then python tools/docs/consolidate_once.py; fi
+          if [ -f tools/docs/refine_once.py ]; then python tools/docs/refine_once.py; fi
       - name: Build guides, linked catalog, figures and HTML presentations
         run: |
           python -m compileall -q tools/docs
