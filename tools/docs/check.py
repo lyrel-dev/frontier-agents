@@ -17,6 +17,7 @@ from build import ROOT,DECKS,CHAPTERS,DECK_CHAPTERS,REVISION,load_guides,load_ca
 from diagrams import DIAGRAMS
 from structure import BASELINE
 from model_check import validate_model
+from resource_model import validate as validate_resources
 
 
 def git(*args):return subprocess.check_output(['git','-C',str(ROOT),*args],text=True).strip()
@@ -29,7 +30,7 @@ def file_manifest():
 
 def check(browser=False):
     errors=[];guides=load_guides();catalog=load_catalog();entries=catalog['entries'];browser_results=[]
-    html_paths=[ROOT/'catalog/mechanisms.html',ROOT/'catalog/features.html',ROOT/'catalog/profiles.html',ROOT/'index.html',ROOT/'catalog/index.html',ROOT/'presentations/index.html',*(ROOT/f'guides/{k}.html' for k in guides),*(ROOT/f'presentations/{k}.html' for k in guides)]
+    html_paths=[ROOT/'catalog/resource-models.html',ROOT/'catalog/mechanisms.html',ROOT/'catalog/features.html',ROOT/'catalog/profiles.html',ROOT/'index.html',ROOT/'catalog/index.html',ROOT/'presentations/index.html',*(ROOT/f'guides/{k}.html' for k in guides),*(ROOT/f'presentations/{k}.html' for k in guides)]
     parsed={p.resolve():BeautifulSoup(p.read_text(),'html.parser') for p in html_paths}
     previous_ids=[];new_ids=[];link_count=0;figures=0
     for key,g in guides.items():
@@ -119,6 +120,8 @@ def check(browser=False):
     s=evidence['security'];assert s['deployed_revision']==s['proposed_revision'];assert s['test_identity']==s['prepared_revalidation_identity']
     model_result=validate_model(guides, browser=browser)
     errors.extend(model_result["errors"])
+    resource_result=validate_resources(guides,browser=browser)
+    errors.extend(resource_result["errors"])
     if browser and not errors:
         from playwright.sync_api import sync_playwright
         with sync_playwright() as pw:
@@ -190,9 +193,10 @@ def check(browser=False):
             br.close()
     results={'revision':REVISION,'baseline':BASELINE,'guides':len(guides),'canonical_sections':len(new_ids),'previous_identifiers_retained':len(set(previous_ids)&set(new_ids)),'new_sections':sorted(set(new_ids)-set(previous_ids)),'authored_use_case_narratives':len(entries),'narrative_paragraphs':len(source_narratives),'platform_use_cases':dict(Counter(e['platform'] for e in entries)),'logical_diagrams':len(DIAGRAMS),'rendered_diagram_instances':figures,'html_presentations':len(DECKS),'slides':sum(len(d['slides']) for d in DECKS.values()),'programme_minutes':sum(totals(d)[0] for d in DECKS.values())//60,'exercise_minutes':sum(totals(d)[1] for d in DECKS.values())//60,'local_links_checked':link_count,'browser_checks':browser_results,'application_changes':app_changes,'excluded_scope_hits':scope_hits,'errors':errors,'boundary':'Source mapping, narrative presence/uniqueness, logical SVG accessibility, examples, and HTML behavior were checked. These checks do not establish factual completeness, live AWS operation, agent accuracy, or measured outcomes.'}
     results['relationship_model']=model_result
+    results['product_resource_model']=resource_result
     write('qa/checks.json',json.dumps(results,indent=2))
     if errors:raise SystemExit(json.dumps(results,indent=2))
-    write('VALIDATION.md','# Documentation validation\n\nThe current [machine-readable results](qa/checks.json) distinguish source structure, rendered behavior, and synthetic examples. The [content revision record](qa/content-review.json) identifies cleanup and editorial changes; the [source review record](qa/source-review.json) identifies new and selectively rechecked official material.\n\nThe [relationship checks](qa/relationships.json) additionally validate all 54 former-record mappings, 30 outcome definitions, workflow dependency types, feature configuration references, implementation profiles, reverse impact links and semantic regression cases. These are modeled dependencies, not live availability tests.\n\nChecks cover stable section identifiers, source mapping, use-case narratives, local links, unique SVG identifiers and accessibility descriptions, report and catalog filtering, chapter and slide navigation, notes, timers, hash links, and print-state restoration at desktop and mobile widths. The synthetic cost arithmetic and incident/security evidence relationships are checked separately.\n\nThese are not live AWS tests, an exhaustive upstream-documentation audit, or a claim that passing structural checks alone establishes good technical writing. The diagrams are logical explanatory models. No productivity, accuracy, security coverage, or savings result has been measured.\n\nThe application tree and its workflow are compared with the pinned baseline and must remain unchanged. Superseded document entry points and generators are removed rather than archived.\n')
+    write('VALIDATION.md','# Documentation validation\n\nThe current [machine-readable results](qa/checks.json) distinguish source structure, rendered behavior, and synthetic examples. The [content revision record](qa/content-review.json) identifies cleanup and editorial changes; the [source review record](qa/source-review.json) identifies new and selectively rechecked official material.\n\nThe [product resource checks](qa/resource-models.json) verify entity ownership, qualified relationships, all feature/resource bindings and unchanged approved catalog sources. [Product-source evidence](qa/product-source-review.json) identifies the exact reviewed claims and version qualifications.\n\nThe [relationship checks](qa/relationships.json) additionally validate all 54 former-record mappings, 30 outcome definitions, workflow dependency types, feature configuration references, implementation profiles, reverse impact links and semantic regression cases. These are modeled dependencies, not live availability tests.\n\nChecks cover stable section identifiers, source mapping, use-case narratives, local links, unique SVG identifiers and accessibility descriptions, report and catalog filtering, chapter and slide navigation, notes, timers, hash links, and print-state restoration at desktop and mobile widths. The synthetic cost arithmetic and incident/security evidence relationships are checked separately.\n\nThese are not live AWS tests, an exhaustive upstream-documentation audit, or a claim that passing structural checks alone establishes good technical writing. The diagrams are logical explanatory models. No productivity, accuracy, security coverage, or savings result has been measured.\n\nThe application tree and its workflow are compared with the pinned baseline and must remain unchanged. Superseded document entry points and generators are removed rather than archived.\n')
     write('MANIFEST.json',json.dumps({'revision':REVISION,'files':file_manifest(),'excluded':['MANIFEST.json itself','applications/','.git/','__pycache__/']},indent=2))
     print(json.dumps(results,indent=2))
 
