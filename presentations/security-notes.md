@@ -2,7 +2,7 @@
 
 
 
-Presentation: 56 minutes, including 8 minutes of prepared-result exercises. Questions and breaks are additional.
+Presentation: 54 minutes, including 8 minutes of prepared-result exercises. Questions and breaks are additional.
 
 
 
@@ -349,57 +349,79 @@ Web app / assessment / async identity | Performs different data operations | Doe
 Detailed reference: [Encryption keys, identities, and access](../guides/security.html#S-M06)
 
 
-## 16. Security use case taxonomy and availability
+## 16. Application, source and design assessment objectives
 
-35:00–37:00 · Operational use cases
+35:00–38:00 · Operational objectives and implementation
 
-Availability must be checked for the exact assessment type and integration.
+Follow the operational objective through its workflow, configured mechanisms and independent completion evidence. The catalog links each dependency to its detailed guide.
 
 
 
-Use case family | Representative work | Delivery | Availability boundary
+Operational outcome | Completion evidence | Implementation boundary
 
-Dynamic assessment | On-demand, authenticated and private penetration testing | Native assessment | On-demand penetration testing GA
+Assess a running application for vulnerabilities | Target revision and owner authorization are retained. | Configured application assessment
 
-Finding operations | Review, Jira tracking, remediation and revalidation | Native plus integrations | Feature-specific
+Review source code for security issues | Review mode and exact revision are known. | Preview assessment
 
-Source review | Full, change-focused or differential code review | Configured review | Preview
+Review a proposed application design | Design revision and assumptions are explicit. | Preview assessment
 
-Design analysis | Design review and threat modeling | Configured assessment | Preview
-
-Security criteria | Requirement packs and policy evaluation | Configured reusable criteria | Preview workflows
+Develop and review an application threat model | Boundaries and flows are reviewed before threats. | Preview assessment
 
 
 Detailed reference: [The agent, application space, and assessment](../guides/security.html#S-01)
 
 
 
-Detailed reference: [Assessment configuration and run lifecycle](../guides/security.html#S-04)
-
-
-
 Detailed reference: [Code review, design review, and threat modeling](../guides/security.html#S-06)
 
 
-## 17. Application assessment use cases
+## 17. Finding disposition, repair and verification
 
-37:00–40:00 · Operational use cases
+38:00–41:00 · Operational objectives and implementation
 
-Domain verification, network access, credential retrieval and application login are separate prerequisites.
+Follow the operational objective through its workflow, configured mechanisms and independent completion evidence. The catalog links each dependency to its detailed guide.
 
 
 
-Use case | Required scope | Authentication | Output
+Operational outcome | Completion evidence | Implementation boundary
 
-On-demand penetration test | Verified staging target and written authority | Optional or required by route | Run findings and evidence
+Triage and prioritize security findings | Impact and evidence are reviewed. | Native operation
 
-Authenticated workflow assessment | Representative test roles and protected routes | Direct or AWS-native credential strategy | Coverage by actual identity
+Prepare a code-remediation proposal | The proposal matches the affected revision. | Configured remediation
 
-Private application assessment | VPC route, DNS and security groups | Same application login model | Reachability and findings
+Revalidate a finding after deployment of a repair | The intended repair is deployed to the target. | Native operation
 
-Recurring assessment | Stable configuration and schedule | Current credentials at execution time | Separate scheduled runs
+Consolidate and maintain security requirements | Conflicting policy sources are reconciled. | Composed workflow
 
-Login procedure reuse | Successful first authentication flow | Login Optimization enabled | Saved procedure used by later sessions
+
+Detailed reference: [Finding review and code remediation](../guides/security.html#S-05)
+
+
+
+Detailed reference: [Finding revalidation and evidence lineage](../guides/security.html#S-M05)
+
+
+
+Detailed reference: [Requirement generation and replacement](../guides/security.html#S-M04)
+
+
+## 18. Application assessment: independent configuration choices
+
+41:00–44:00 · Operational objectives and implementation
+
+Follow the operational objective through its workflow, configured mechanisms and independent completion evidence. The catalog links each dependency to its detailed guide.
+
+
+
+Choice | Supporting mechanism | Control preserved
+
+Network path | Target scope and public/private connectivity | Reachability does not enlarge owner authorization.
+
+Application role | Credential resolution, login and optional procedure reuse | Failed login leaves protected paths unassessed.
+
+Invocation | Manual, recurring or supported pipeline path | Every run records current revision and coverage.
+
+Criteria and closure | Findings, source evidence and separate revalidation | Non-reproduction is scoped to the selected issue and valid test conditions.
 
 
 Detailed reference: [Test targets, dependencies, and exclusions](../guides/security.html#S-03)
@@ -417,69 +439,13 @@ Detailed reference: [Login-workflow retention and reuse](../guides/security.html
 Detailed reference: [Assessment configuration and run lifecycle](../guides/security.html#S-04)
 
 
-## 18. Findings, remediation and verification use cases
-
-40:00–43:00 · Operational use cases
-
-A proposed patch, deployed revision and revalidation result are separate records.
-
-
-
-Use case | Input | Output | Closure evidence
-
-Finding review and prioritization | Impact, confidence, reproduction and affected role | Disposition and remediation owner | Recorded decision and scope
-
-Jira remediation tracking | Finding and approved project | Issue linked to finding | Issue state and comments
-
-Proposed code remediation | Accepted finding and repository access | Patch or pull request | Independent review and tests
-
-Finding revalidation | Deployed fix and selected original finding | Separate revalidation job | Linked Active or Resolved result
-
-Broader regression assessment | Material application change | New full penetration test | New run rather than narrow replay
-
-
-Detailed reference: [Finding review and code remediation](../guides/security.html#S-05)
-
-
 
 Detailed reference: [Finding revalidation and evidence lineage](../guides/security.html#S-M05)
 
 
-## 19. Shift-left review use cases
+## 19. Worked example: authorization finding through revalidation
 
-43:00–46:00 · Operational use cases
-
-Code, design, threat-model and requirement workflows have different inputs and lifecycles.
-
-
-
-Use case | Primary input | Evaluation basis | Output
-
-Repository code review | Repository or supported source package | Vulnerability analysis and configured requirements | Code findings and locations
-
-Change-focused review | Pull request, merge request or differential source | Changed code and configured criteria | Revision-specific findings
-
-Security requirement evaluation | Enabled requirement pack | Applicability and compliance criteria | Requirement findings
-
-Design review | Current design material | Security requirements and design evidence | Design findings
-
-Threat model | Architecture and scope sources | Assets, trust boundaries, flows and threats | Reusable model and findings
-
-
-Detailed reference: [Requirement applicability and evaluation](../guides/security.html#S-M03)
-
-
-
-Detailed reference: [Requirement generation and replacement](../guides/security.html#S-M04)
-
-
-
-Detailed reference: [Code review, design review, and threat modeling](../guides/security.html#S-06)
-
-
-## 20. Worked example: authorization finding through revalidation
-
-46:00–54:00 · Worked example
+44:00–52:00 · Worked example
 
 Prepared staging evidence traces the finding, deployed repair and scoped revalidation result.
 
@@ -501,9 +467,9 @@ Detailed reference: [Authorization-finding remediation: worked example](../guide
 Detailed reference: [Finding revalidation and evidence lineage](../guides/security.html#S-M05)
 
 
-## 21. Troubleshooting matrix and assessment limits
+## 20. Troubleshooting matrix and assessment limits
 
-54:00–56:00 · Troubleshooting and references
+52:00–54:00 · Troubleshooting and references
 
 Troubleshooting follows the first failed prerequisite in the assessment chain.
 
