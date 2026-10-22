@@ -43,6 +43,10 @@ jobs:
           python tests/browser_checks.py --native
           python tests/worker_http_acceptance.py
           git diff --check
+      - name: Verify isolated container hosting and worker ownership
+        env:
+          AWS_EC2_METADATA_DISABLED: 'true'
+        run: python tests/container_runtime_acceptance.py
       - name: Retain test evidence and build outputs
         if: always()
         uses: actions/upload-artifact@v4

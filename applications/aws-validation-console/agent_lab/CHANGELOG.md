@@ -1,3 +1,11 @@
+# Runtime safeguards and hosting gate — 22 October 2026
+
+- Require a fresh, verified FIS safety-lever read before first fault dispatch. Block engaged, engaging, unknown and unreadable states. Preserve uncertain-operation reconciliation and owned-experiment stopping.
+- Acquire worker ownership before serving the combined API; fail startup if another worker owns the workspace.
+- Supervise engine and probe-scheduler failures, stop the combined HTTP service on worker failure, and drain probes before releasing the lock.
+- Add 22 runtime regression tests and a credential-free Docker acceptance harness covering isolation, authentication, persistence and shutdown. CI retains measured hosting results rather than treating a test definition as a pass.
+- No live AWS account, fault, agent task or prevention campaign is exercised by this increment. See docs/RUNTIME_ACCEPTANCE.md.
+
 # Acceptance tooling follow-up — 22 October 2026
 
 - Added `acceptance.py preflight`: offline by default; optional read-only AWS qualification and an explicitly requested single business-path GET. It cannot start a fault, agent task or runbook.

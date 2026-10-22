@@ -1,7 +1,8 @@
 """Persist intent, dispatch once, and reconcile uncertain provider operations."""
 from __future__ import annotations
 from botocore.exceptions import ClientError
-from .util import Blocked, UnknownRemoteState, dt
+from .fis_safety import read_safety_lever
+from .util import Blocked, UnknownRemoteState, dt, iso, error_code
 
 DEFINITIVE_REJECTIONS={'AccessDeniedException','AccessDenied','UnauthorizedOperation','ValidationException',
     'ValidationError','InvalidParameterException','ResourceNotFoundException','InvalidDocument','InvalidDocumentVersion'}
@@ -15,12 +16,36 @@ class Broker:
         if not self.enabled: raise Blocked('AWS mutations are disabled in administrator configuration')
         self.aws.identity(side)  # A failed identity read cannot leave an uncertain write intent.
         request={'side':side,'service':service,'operation':operation,'parameters':params}
+        op=self.store.operation(owner,name)
+        if op:
+            # Validate the original request even when returning a previous result.
+            op=self.store.intent(owner,name,request)
+            if op['state']=='CONFIRMED': return op
+            if op['state']=='FAILED': raise Blocked('Previously rejected provider operation: '+name)
+            if op['state'] in ('DISPATCHING','UNKNOWN'):
+                if self.reconcile_automatically(op): return self.store.operation(owner,name)
+                raise UnknownRemoteState(op['id'])
+        if service == 'fis' and operation == 'start_experiment':
+            if side != 'fault':
+                raise Blocked('FIS starts require the configured workload fault identity')
+            # Read at first dispatch, not just in optional onboarding. A previous
+            # read is not authority. Reconciliation and cleanup bypass this gate.
+            try:
+                lever = read_safety_lever(self.aws)
+                allowed = lever.get('status') == 'disengaged'
+                self.store.put_record('execution_guard', owner, {
+                    'guard': 'fis_safety_lever', 'at': iso(), 'allowed': allowed,
+                    'status': lever.get('status'), 'source_record_id': lever.get('source'),
+                    'operation': name, 'provider_start_dispatched': False})
+            except Exception as exc:
+                self.store.put_record('execution_guard', owner, {
+                    'guard': 'fis_safety_lever', 'at': iso(), 'allowed': False,
+                    'error_code': error_code(exc), 'operation': name,
+                    'provider_start_dispatched': False})
+                raise Blocked('FIS safety lever could not be verified; no start dispatched') from None
+            if not allowed:
+                raise Blocked('FIS safety lever is not disengaged; no start dispatched')
         op=self.store.intent(owner,name,request)
-        if op['state']=='CONFIRMED': return op
-        if op['state']=='FAILED': raise Blocked('Previously rejected provider operation: '+name)
-        if op['state'] in ('DISPATCHING','UNKNOWN'):
-            if self.reconcile_automatically(op): return self.store.operation(owner,name)
-            raise UnknownRemoteState(op['id'])
         args=dict(params)
         if operation=='start_experiment':
             args['clientToken']=op['token']

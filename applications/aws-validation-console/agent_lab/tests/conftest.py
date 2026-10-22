@@ -91,6 +91,13 @@ class FakeAWS:
             out.append({'id':identifier,'passed':actual==expected,'actual':actual,'expected':expected,'source_record_id':source['id']})
         self.store.put_record('verification',self.owner,{'checks':out,'all_passed':all(x['passed'] for x in out)})
         return out
+    def client(self,side,service,write=False):
+        assert (side,service,write)==('fault','fis',False)
+        return self
+    def get_safety_lever(self,**params):
+        assert params=={'id':'default'}
+        return {'safetyLever':{'id':'default','state':{'status':getattr(self.world,'safety_status','disengaged')}},
+                'ResponseMetadata':{'RequestId':'test-only-safety-read'}}
     def template(self,fault): return {'contract':{'test_template':fault.template_sha256},'source':'test-contract','duration_upper_bound_seconds':60}
     def qualify(self,spec):
         from lab.util import Blocked

@@ -18,3 +18,6 @@ validation/*.pid
 # Private environment definitions and live acceptance evidence.
 *.local.json
 local-acceptance/
+
+# Generated hosting test evidence belongs in CI artifacts.
+validation/container-runtime.json

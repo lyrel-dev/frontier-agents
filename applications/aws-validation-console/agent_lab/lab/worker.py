@@ -16,6 +16,8 @@ class Worker:
     def __init__(self,config:Configuration,store,*,engine=None):
         self.config=config; self.store=store; self.engine=engine or Engine(config,store)
         self.stop_event=threading.Event(); self.owner=None; self.thread=None
+        self.background_thread=None; self.failure=None; self.probe_failure=None
+        self.started=threading.Event(); self.finished=threading.Event()
 
     def acquire(self):
         self.owner=open(self.store.directory/'worker.lock','a+')
@@ -69,19 +71,77 @@ class Worker:
             for future in pending:
                 tid,result=future.result(); self.store.probe(tid,result)
 
-    def run(self):
-        self.acquire()
-        self.thread=threading.Thread(target=self._probes,daemon=True,name='probe-scheduler'); self.thread.start()
+    def _probe_loop(self):
         try:
+            self._probes()
+        except Exception as exc:
+            self.probe_failure=error_code(exc)
+            self.stop_event.set()
+
+    def _run_owned(self):
+        """Keep the workspace lock until the engine and all probe work drain."""
+        try:
+            self.thread=threading.Thread(target=self._probe_loop,daemon=True,name='probe-scheduler')
+            self.thread.start()
+            self.store.meta('worker',{'pid':os.getpid(),'heartbeat_at':iso(),'state':'running'})
+            self.started.set()
             while not self.stop_event.is_set():
+                if not self.thread.is_alive():
+                    raise RuntimeError('Probe scheduler stopped unexpectedly')
                 self.store.meta('worker',{'pid':os.getpid(),'heartbeat_at':iso(),'state':'running'})
                 self.engine.step()
                 self.store.meta('worker',{'pid':os.getpid(),'heartbeat_at':iso(),'state':'running'})
                 self.stop_event.wait(self.config.poll_seconds)
+            if self.probe_failure:
+                raise RuntimeError('Probe scheduler failed')
+        except Exception as exc:
+            self.failure=error_code(exc)
+            raise
         finally:
-            self.stop_event.set(); self.thread.join(timeout=15)
-            self.store.meta('worker',{'pid':os.getpid(),'heartbeat_at':iso(),'state':'stopped'})
+            self.stop_event.set()
+            # A timeout here would release ownership while requests could still
+            # write evidence. The process supervisor applies the shutdown budget.
+            try:
+                if self.thread and self.thread.ident is not None:
+                    self.thread.join()
+                if self.probe_failure and not self.failure:
+                    self.failure=self.probe_failure
+                self.store.meta('worker',{'pid':os.getpid(),'heartbeat_at':iso(),
+                    'state':'failed' if self.failure else 'stopped',
+                    **({'error_code':self.failure} if self.failure else {})})
+            finally:
+                self.release()
+                self.finished.set()
+
+    def run(self):
+        self.acquire()
+        self._run_owned()
+
+    def start_background(self, timeout=5):
+        """Acquire synchronously: a duplicate owner must fail before HTTP starts."""
+        if self.background_thread is not None or self.owner is not None or self.stop_event.is_set():
+            raise RuntimeError('Worker instance cannot be started twice')
+        self.acquire()
+        def background():
+            try:
+                self._run_owned()
+            except Exception:
+                # Failure is retained in worker metadata and observed by run.py.
+                pass
+        self.background_thread=threading.Thread(target=background,name='experiment-worker',daemon=True)
+        try:
+            self.background_thread.start()
+        except Exception:
             self.release()
+            raise
+        deadline=time.monotonic()+timeout
+        while not self.started.is_set() and not self.finished.is_set() and time.monotonic()<deadline:
+            self.started.wait(.01)
+        if not self.started.is_set() or self.failure or not self.background_thread.is_alive():
+            self.stop()
+            self.background_thread.join(timeout=timeout)
+            raise RuntimeError('Experiment worker did not start successfully')
+        return self.background_thread
 
     def stop(self):
         self.stop_event.set()

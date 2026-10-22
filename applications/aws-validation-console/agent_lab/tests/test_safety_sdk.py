@@ -98,6 +98,7 @@ def test_write_operations_match_sdk_request_contract(config,store):
     a,c=adapter(config,store,['fis','ssm','devops-agent']);a.verified={'fault':{},'change':{},'requester':{}}
     with ExitStack() as stack:
         f=stack.enter_context(Stubber(c['fis']));s=stack.enter_context(Stubber(c['ssm']));d=stack.enter_context(Stubber(c['devops-agent']))
+        f.add_response('get_safety_lever',{'safetyLever':{'id':'default','state':{'status':'disengaged'}}},{'id':'default'})
         f.add_response('start_experiment',{'experiment':{'id':'EXPtest'}},{'experimentTemplateId':'EXTtest','clientToken':ANY,'tags':{'ValidationTrial':'contract-owner','ValidationOperation':ANY}})
         s.add_response('start_automation_execution',{'AutomationExecutionId':'00000000-0000-4000-8000-000000000001'},
             {'DocumentName':DOC,'DocumentVersion':'1','Parameters':{'AutomationAssumeRole':[f'arn:aws:iam::{ACCOUNT_B}:role/AutomationExecution']},'Mode':'Auto','ClientToken':ANY,'Tags':[{'Key':'ValidationTrial','Value':'contract-owner'},{'Key':'ValidationOperation','Value':ANY}]})

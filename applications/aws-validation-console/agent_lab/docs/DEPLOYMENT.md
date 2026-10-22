@@ -41,3 +41,7 @@ Set up account profiles/workload identities and network access as an explicit de
 `GET /api/backup` with the operator token returns a SQLite online backup. Export a dependency-inclusive trial/campaign JSON as review material, not as a database restore.
 
 Before restoring: stop API and worker; preserve the existing data directory; verify the backup file with `PRAGMA integrity_check`; replace only the workspace database using the configured filename, correct UID and mode; and ensure no stale SQLite WAL/SHM sidecars are reused. Restart in observation-only mode first. A restored operation intent may still represent an active AWS operation: reconcile IDs and verify actual resource state before enabling new work. Do not erase uncertain operation history to force a retry.
+
+## Runtime safeguard follow-up
+
+The branch now includes a Docker hosting acceptance harness and combined-process worker supervision. See [Runtime safeguards and hosting acceptance](RUNTIME_ACCEPTANCE.md) for the commands, evidence artifact, new mandatory FIS safety-lever read, and remaining live-environment limits. Earlier authoring-environment statements above are historical; use the exact commit's CI artifact to determine whether its image was built and exercised. This does not qualify Podman or Kubernetes automatically.
