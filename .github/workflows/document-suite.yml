@@ -25,28 +25,48 @@ jobs:
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y graphviz
-          if [ -f tools/docs/requirements.txt ]; then
-            python -m pip install -r tools/docs/requirements.txt
-          else
-            python -m pip install -r tools/docs-requirements.txt
-          fi
+          python -m pip install -r tools/docs/requirements.txt
           python -m playwright install --with-deps chromium
-      - name: Apply the plain-text editorial migration once
+      - name: Finalize reviewed presentation sequence
         run: |
           python - <<'PY'
+          import sys, re
           from pathlib import Path
-          import re
-          for name in ('revise_guide_text.py','revise_catalog_text.py','complete_knowledge_chapter.py','prepare_documentation_layout.py'):
-              path=Path('tools')/name
-              if path.exists():
-                  text=re.sub(r"([A-Za-z]{3,})'(s|t|re|ve|ll|d|m)\b",r'\1’\2',path.read_text())
-                  compile(text,str(path),'exec')
-                  path.write_text(text)
+          from pprint import pformat
+          sys.path.insert(0,'tools/docs')
+          from presentation import DECKS
+          from structure import CHAPTERS, DECK_CHAPTERS, TYPES, LABELS, REVISION, BASELINE
+          plan=[
+            ('Service architecture',['DevOps Agent resource and execution architecture','Product functions and agent space resource model']),
+            ('Integrations and access',['Provider registration and Agent Space association','Telemetry, source control, and incident connections','Access roles, tool providers and private connectivity']),
+            ('Knowledge and behavior',['Environment-knowledge consolidation','Incident knowledge production and selective retrieval','Memory, instructions and skills']),
+            ('Incident response and operational execution',['Incident triage and investigation workflow','Incident triage and investigation lifecycle','Incident pattern analysis and prevention recommendations','Custom agents, schedules and invocation records','Configured operational-report workflow','Sandbox and directed actions','Release readiness review and release testing']),
+            ('Operational use cases',['Use case taxonomy and delivery modes','Incident operations use cases','Operational reporting and review use cases','Knowledge and documentation use cases']),
+            ('Worked example',['Worked example: recurring alarm with different current evidence']),
+            ('Troubleshooting and references',['Troubleshooting matrix and operating limits'])
+          ]
+          lookup={s['title'].casefold():s for s in DECKS['devops']['slides']}
+          wanted=[title.casefold() for _,titles in plan for title in titles]
+          assert len(wanted)==len(set(wanted)) and set(wanted)==set(lookup), (set(wanted)-set(lookup),set(lookup)-set(wanted))
+          slides=[];groups=[]
+          for group,titles in plan:
+              start=len(slides)
+              slides.extend(lookup[t.casefold()] for t in titles)
+              groups.append((group,list(range(start,len(slides)))))
+          DECKS['devops']['slides']=slides
+          DECK_CHAPTERS['devops']=groups
+          for deck in DECKS.values():
+              for slide in deck['slides']:
+                  for row in slide.get('data',[]):
+                      for i,value in enumerate(row):
+                          if isinstance(value,str):
+                              row[i]=value.replace('Minute incident status report','Incident status bulletin').replace('On demand or short schedule','On demand; flexible schedule')
+          Path('tools/docs/presentation.py').write_text('"""Maintained HTML presentation outline and delivery budgets."""\nDECKS = '+pformat(DECKS,width=105,sort_dicts=False)+'\n')
+          header='"""Maintained chapter membership and section types."""\nREVISION='+repr(REVISION)+'\nBASELINE='+repr(BASELINE)+'\n'
+          body='CHAPTERS='+pformat(CHAPTERS,width=105,sort_dicts=False)+'\nDECK_CHAPTERS='+pformat(DECK_CHAPTERS,width=105,sort_dicts=False)+'\nTYPES='+pformat(TYPES,width=105,sort_dicts=False)+'\nLABELS='+pformat(LABELS,width=105,sort_dicts=False)
+          end='\ndef section_type(sid):\n    return "example" if "-U" in sid else "mechanism" if "-M" in sid else TYPES[sid]\n'
+          Path('tools/docs/structure.py').write_text(header+body+end)
           PY
-          if [ -f tools/revise_guide_text.py ]; then python tools/revise_guide_text.py; fi
-          if [ -f tools/revise_catalog_text.py ]; then python tools/revise_catalog_text.py; fi
-          if [ -f tools/complete_knowledge_chapter.py ]; then python tools/complete_knowledge_chapter.py; fi
-          if [ -f tools/prepare_documentation_layout.py ]; then python tools/prepare_documentation_layout.py; fi
       - name: Build guides, figures, catalog, and HTML presentations
         run: |
           python -m compileall -q tools/docs
