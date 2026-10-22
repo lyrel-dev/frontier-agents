@@ -1,0 +1,21 @@
+{
+  "enable_aws_writes": false,
+  "fis_accounts": [
+    {
+      "id": "workload-account",
+      "name": "Approved FIS workload account",
+      "account_id": "${WORKLOAD_ACCOUNT_ID}",
+      "profile": "${FIS_DISCOVERY_PROFILE}",
+      "regions": ["${WORKLOAD_REGION}"]
+    },
+    {
+      "id": "agent-account",
+      "name": "Agent Space account",
+      "account_id": "${AGENT_ACCOUNT_ID}",
+      "profile": "${AGENT_DISCOVERY_PROFILE}",
+      "regions": ["${AGENT_REGION}"]
+    }
+  ],
+  "fis_discovery_max_pages": 1000,
+  "bindings": []
+}

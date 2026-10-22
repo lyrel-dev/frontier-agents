@@ -1,0 +1,22 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ReadIdentity",
+      "Effect": "Allow",
+      "Action": ["sts:GetCallerIdentity"],
+      "Resource": "*"
+    },
+    {
+      "Sid": "DiscoverFISDefinitionsAndExecutionSummaries",
+      "Effect": "Allow",
+      "Action": [
+        "fis:ListExperimentTemplates",
+        "fis:GetExperimentTemplate",
+        "fis:ListTargetAccountConfigurations",
+        "fis:ListExperiments"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
