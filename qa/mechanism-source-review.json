@@ -1,0 +1,652 @@
+{
+  "reviewed_on": "2026-10-22",
+  "stage": 3,
+  "scope": "Mechanism behavior, configuration and lifecycle; not a whole-service audit.",
+  "sources": {
+    "DS401": {
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-connecting-mcp-servers.html",
+      "scope": "MCP registration, authentication, association and removal",
+      "reviewed_on": "2026-10-22"
+    },
+    "DS402": {
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html",
+      "scope": "Memory production, progressive retrieval, versions and lifecycle; newer indexed text reviewed alongside older direct-page text",
+      "reviewed_on": "2026-10-22"
+    },
+    "DS403": {
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-what-is-a-devops-agent-topology.html",
+      "scope": "Discovery and topology representation; legacy learned-skill wording qualified by the current memory guide",
+      "reviewed_on": "2026-10-22"
+    },
+    "DS404": {
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-autonomous-incident-response.html",
+      "scope": "Signal routing, investigation creation, steering and corrective feedback",
+      "reviewed_on": "2026-10-22"
+    },
+    "DS405": {
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-agent-instructions.html",
+      "scope": "Session-start loading and propagation; UI navigation differs between retrieved versions",
+      "reviewed_on": "2026-10-22"
+    },
+    "DS406": {
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-skills.html",
+      "scope": "Skill descriptions, targeting and document/code boundaries",
+      "reviewed_on": "2026-10-22"
+    },
+    "DS407": {
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html",
+      "scope": "Definition loading, selected tools and recorded invocation",
+      "reviewed_on": "2026-10-22"
+    },
+    "DS408": {
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/custom-agents-executing-custom-agents.html",
+      "scope": "Invocation, trigger creation, pause/delete and cancellation",
+      "reviewed_on": "2026-10-22"
+    },
+    "DS409": {
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/APIReference/API_CronSchedule.html",
+      "scope": "Flexible window of up to 30 minutes; indexed API reference retrieved",
+      "reviewed_on": "2026-10-22"
+    },
+    "DS410": {
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-proactive-incident-prevention.html",
+      "scope": "Evaluation, recommendation disposition and recommendation lifecycle",
+      "reviewed_on": "2026-10-22"
+    },
+    "DS411": {
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-working-with-directed-actions.html",
+      "scope": "Independent authorization gates, preference replacement and scoped approval",
+      "reviewed_on": "2026-10-22"
+    },
+    "DS412": {
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/release-management-release-readiness-code-review.html",
+      "scope": "Candidate analysis, independent verification option and result categories",
+      "reviewed_on": "2026-10-22"
+    },
+    "DS413": {
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/release-management-release-testing.html",
+      "scope": "Test profiles, real application requests and results; conflicting action names in the page are not copied",
+      "reviewed_on": "2026-10-22"
+    },
+    "DS414": {
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/custom-agents-creating-a-custom-agent.html",
+      "scope": "Custom definition creation and tool assignment",
+      "reviewed_on": "2026-10-22"
+    },
+    "DS415": {
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-supported-regions.html",
+      "scope": "Feature-specific preview availability",
+      "reviewed_on": "2026-10-22"
+    },
+    "SS401": {
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/about-integrations.html",
+      "scope": "Account registrations, space resource selection and separate write opt-ins",
+      "reviewed_on": "2026-10-22"
+    },
+    "SS402": {
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html",
+      "scope": "Target/access/exclusion distinction, credentials and saved assessment",
+      "reviewed_on": "2026-10-22"
+    },
+    "SS403": {
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html",
+      "scope": "Credential resolution and retained login procedure; navigation/authentication coverage differs across retrieved page versions",
+      "reviewed_on": "2026-10-22"
+    },
+    "SS404": {
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html",
+      "scope": "Configuration/run models and one-off design reviews",
+      "reviewed_on": "2026-10-22"
+    },
+    "SS405": {
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/review-penetration-findings.html",
+      "scope": "Findings, confidence filter, original/latest edits and Findings Personalization; newer indexed official page reviewed",
+      "reviewed_on": "2026-10-22"
+    },
+    "SS406": {
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/remediate-finding.html",
+      "scope": "Private repository proposals and S3 diffs; newer indexed provider wording supersedes older GitHub-only description",
+      "reviewed_on": "2026-10-22"
+    },
+    "SS407": {
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html",
+      "scope": "Selected finding replay, Active/Resolved results and preserved lineage",
+      "reviewed_on": "2026-10-22"
+    },
+    "SS408": {
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/security-requirements.html",
+      "scope": "Pack applicability, evaluation and future-review scope",
+      "reviewed_on": "2026-10-22"
+    },
+    "SS409": {
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/import-security-requirements.html",
+      "scope": "Generation replaces pack contents including manual requirements",
+      "reviewed_on": "2026-10-22"
+    },
+    "SS410": {
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-code-review.html",
+      "scope": "Source selection, scan modes and preflight",
+      "reviewed_on": "2026-10-22"
+    },
+    "SS411": {
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/review-code-findings-github.html",
+      "scope": "Change triggers and repository filtering guidance",
+      "reviewed_on": "2026-10-22"
+    },
+    "SS412": {
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/review-design-findings.html",
+      "scope": "Design statuses including Insufficient data and clone/new review behavior",
+      "reviewed_on": "2026-10-22"
+    },
+    "SS413": {
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-threat-model.html",
+      "scope": "Scope documents, source context, system overview and threat review",
+      "reviewed_on": "2026-10-22"
+    },
+    "SS414": {
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/cicd-pentest.html",
+      "scope": "Saved test prerequisite, CI/CD mode, OIDC, deployed-change scope and server-side execution",
+      "reviewed_on": "2026-10-22"
+    },
+    "SS415": {
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/connect-jira.html",
+      "scope": "Project selection and separate issue/comment permissions",
+      "reviewed_on": "2026-10-22"
+    },
+    "SS416": {
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/export-findings-to-issue-tracker.html",
+      "scope": "One issue per selected finding and Task issue-type prerequisite",
+      "reviewed_on": "2026-10-22"
+    },
+    "SS417": {
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/remove-jira.html",
+      "scope": "Removal blocks future integration actions without deleting existing issues",
+      "reviewed_on": "2026-10-22"
+    },
+    "SS418": {
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart.html",
+      "scope": "Save versus execute, preflight and result inspection",
+      "reviewed_on": "2026-10-22"
+    },
+    "FS401": {
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/what-is.html",
+      "scope": "Source-service responsibilities for observed cost, forecasts, coverage and recommendations",
+      "reviewed_on": "2026-10-22"
+    },
+    "FS402": {
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/context-files-and-memory.html",
+      "scope": "Uploaded files, conversational memory and automatic compaction",
+      "reviewed_on": "2026-10-22"
+    },
+    "FS403": {
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html",
+      "scope": "Session runtime, instance isolation and object-specific removal",
+      "reviewed_on": "2026-10-22"
+    },
+    "FS404": {
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/task-management.html",
+      "scope": "Explicit task requests, shared queue, schedules and event tasks",
+      "reviewed_on": "2026-10-22"
+    },
+    "FS405": {
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/automated-anomaly-response.html",
+      "scope": "Monitor event, managed-rule permissions, automation and destination setup",
+      "reviewed_on": "2026-10-22"
+    },
+    "FS406": {
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/custom-cost-reporting.html",
+      "scope": "Source query to report artifact and follow-up revision",
+      "reviewed_on": "2026-10-22"
+    },
+    "FS407": {
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html",
+      "scope": "Action/invocation-specific approval and analytical boundaries",
+      "reviewed_on": "2026-10-22"
+    },
+    "FS408": {
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/jira-integration.html",
+      "scope": "Account registration, project connections and supported Jira operations",
+      "reviewed_on": "2026-10-22"
+    },
+    "FS409": {
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/slack-integration.html",
+      "scope": "Workspace registration, channel binding, membership and one-way publication",
+      "reviewed_on": "2026-10-22"
+    }
+  },
+  "claims": {
+    "MX-D-READ": [
+      {
+        "source": "DS401",
+        "section": "Registering an MCP server; Configuring MCP tools; Managing connections",
+        "assertion": "Registration, association and tool selection are separate; removal and credential replacement have dependent-connection consequences."
+      },
+      {
+        "source": "DS407",
+        "section": "How custom agents work",
+        "assertion": "A custom agent accesses only its assigned tools."
+      }
+    ],
+    "MX-D-TOPOLOGY": [
+      {
+        "source": "DS403",
+        "section": "How topology graphs are created; Resource discovery; Investigation scope beyond topology",
+        "assertion": "Discovery and relationship inference produce a representation that does not bound investigation permissions."
+      },
+      {
+        "source": "DS402",
+        "section": "How memory is built and refreshed",
+        "assertion": "Managed stores have distinct refresh conditions and can be inspected after regeneration."
+      }
+    ],
+    "MX-D-RECALL": [
+      {
+        "source": "DS402",
+        "section": "How memories work; Activating and deactivating; Deleting a memory store",
+        "assertion": "Description-led retrieval, immutable versions and activation differ from irreversible custom-store deletion."
+      }
+    ],
+    "MX-D-FEEDBACK": [
+      {
+        "source": "DS404",
+        "section": "Provide feedback on investigations",
+        "assertion": "Feedback records the actual cause; latest feedback and separate sharing confirmation have distinct effects."
+      },
+      {
+        "source": "DS402",
+        "section": "reflections",
+        "assertion": "Corrective lessons are retained for future relevant investigations."
+      }
+    ],
+    "MX-D-INSTRUCTIONS": [
+      {
+        "source": "DS405",
+        "section": "How agent instructions work; Agent type scoping",
+        "assertion": "Instructions are loaded at session start; existing sessions retain the original content."
+      }
+    ],
+    "MX-D-SKILL": [
+      {
+        "source": "DS406",
+        "section": "Frontmatter; Creating Skills; Managing Skills",
+        "assertion": "Description, target scope and supported content determine applicability."
+      },
+      {
+        "source": "DS407",
+        "section": "How custom agents work",
+        "assertion": "Custom definitions load assigned skill documents."
+      }
+    ],
+    "MX-D-TRIAGE": [
+      {
+        "source": "DS404",
+        "section": "Incident triage",
+        "assertion": "Linked, Skipped and Proceed are routing outcomes; supported corrections reschedule independent work."
+      }
+    ],
+    "MX-D-INVESTIGATE": [
+      {
+        "source": "DS404",
+        "section": "Starting Investigations; Incident triage",
+        "assertion": "Manual scope and operator context drive a separate investigation record."
+      },
+      {
+        "source": "DS407",
+        "section": "Custom agents compared to built-in capabilities",
+        "assertion": "Incident response is a built-in path, not a mandatory custom-agent task."
+      }
+    ],
+    "MX-D-CUSTOM": [
+      {
+        "source": "DS407",
+        "section": "How custom agents work",
+        "assertion": "Prompt, selected tools and assigned skills are loaded per invocation."
+      },
+      {
+        "source": "DS408",
+        "section": "Running; Canceling an invocation; Tool call results",
+        "assertion": "Runs have history; cancellation preserves completed evidence and may not interrupt in-flight calls."
+      },
+      {
+        "source": "DS414",
+        "section": "Creating a custom agent using the form",
+        "assertion": "Creation and tool assignment are separate setup concerns."
+      }
+    ],
+    "MX-D-SCHEDULE": [
+      {
+        "source": "DS408",
+        "section": "Scheduling custom agents; Managing triggers",
+        "assertion": "Rate/cron triggers can be paused or deleted separately from invocations."
+      },
+      {
+        "source": "DS409",
+        "section": "CronSchedule",
+        "assertion": "The schedule anchors a flexible window of up to 30 minutes."
+      }
+    ],
+    "MX-D-PREVENT": [
+      {
+        "source": "DS410",
+        "section": "Controlling evaluations; Managing recommendations",
+        "assertion": "Evaluation control and recommendation disposition are separate; unretained recommendations may age out."
+      }
+    ],
+    "MX-D-ACTION": [
+      {
+        "source": "DS411",
+        "section": "Enabling; Registering elevated role; Categorizing tools; Approving directed actions",
+        "assertion": "Independent opt-ins, operation-specific approval, preference replacement and classification govern mutation."
+      }
+    ],
+    "MX-D-READINESS": [
+      {
+        "source": "DS412",
+        "section": "Getting started; Performing a code review; Automatic verification testing",
+        "assertion": "Review and verification settings are independent; candidate and verification results are inspectable."
+      },
+      {
+        "source": "DS415",
+        "section": "Feature availability by Region",
+        "assertion": "Release-management eligibility differs from production operations."
+      }
+    ],
+    "MX-D-TEST": [
+      {
+        "source": "DS413",
+        "section": "How release testing works; Defining test profiles; Reviewing results",
+        "assertion": "Testing sends real requests including writes and reports observed results."
+      },
+      {
+        "source": "DS415",
+        "section": "Feature availability by Region",
+        "assertion": "Release testing is a feature-specific preview path."
+      }
+    ],
+    "MX-S-CONTEXT": [
+      {
+        "source": "SS401",
+        "section": "Register once, reuse everywhere; One connection, shared across capabilities",
+        "assertion": "Registration, resource association and write opt-ins are distinct."
+      }
+    ],
+    "MX-S-ACCESS": [
+      {
+        "source": "SS402",
+        "section": "Configure penetration test scope; Configure VPC resources",
+        "assertion": "Targets, supporting accessible URLs and excluded paths have different purposes."
+      },
+      {
+        "source": "SS418",
+        "section": "Review penetration test findings",
+        "assertion": "Failed preflight stops testing and must be inspected separately."
+      }
+    ],
+    "MX-S-AUTH": [
+      {
+        "source": "SS403",
+        "section": "Use advanced setting; Configure multiple credentials",
+        "assertion": "Resource retrieval and application login are separate; strategy-specific permissions and limits apply."
+      }
+    ],
+    "MX-S-LOGIN": [
+      {
+        "source": "SS403",
+        "section": "Login Optimization",
+        "assertion": "Successful navigation produces a skill reused in later sessions/runs; disabling reuse preserves learning."
+      }
+    ],
+    "MX-S-RUN": [
+      {
+        "source": "SS404",
+        "section": "Penetration testing: reusable configurations with independent executions",
+        "assertion": "One configuration supports separate runs and new findings."
+      },
+      {
+        "source": "SS418",
+        "section": "Create and execute; Review findings",
+        "assertion": "Saving, executing and preflight outcomes are different stages."
+      }
+    ],
+    "MX-S-FINDING": [
+      {
+        "source": "SS405",
+        "section": "Default confidence filter; Review finding details; View original agent version",
+        "assertion": "Evidence, display filtering and original/latest attributes are distinct review surfaces."
+      }
+    ],
+    "MX-S-FIX": [
+      {
+        "source": "SS406",
+        "section": "Start and view code remediation",
+        "assertion": "Current guidance distinguishes private-repository proposals and S3 diffs."
+      },
+      {
+        "source": "SS401",
+        "section": "Write actions are opt-in",
+        "assertion": "Repository writes are separately configured and provider-limited."
+      }
+    ],
+    "MX-S-REVALIDATE": [
+      {
+        "source": "SS407",
+        "section": "Select findings; Interpret results; Trace history",
+        "assertion": "Replay has separate job identity, selected scope and preserved original finding."
+      }
+    ],
+    "MX-S-CRITERIA": [
+      {
+        "source": "SS408",
+        "section": "Overview; Enable or disable a pack",
+        "assertion": "Enabled packs govern future eligible reviews and have distinct applicability/compliance fields."
+      },
+      {
+        "source": "SS412",
+        "section": "Understand compliance statuses",
+        "assertion": "Design reviews distinguish Insufficient data and Not applicable from compliance/violation."
+      }
+    ],
+    "MX-S-GENERATE": [
+      {
+        "source": "SS409",
+        "section": "Generate requirements; Replace requirements with a new upload",
+        "assertion": "Generation replaces existing pack contents and requires review before use."
+      }
+    ],
+    "MX-S-CODE": [
+      {
+        "source": "SS410",
+        "section": "Create and run a code review; Review findings",
+        "assertion": "Source preflight precedes analysis and has inspectable failure outcomes."
+      },
+      {
+        "source": "SS411",
+        "section": "How code review works; Filtering findings",
+        "assertion": "Change-trigger and main-branch filtering behavior are distinct configuration paths."
+      }
+    ],
+    "MX-S-DESIGN": [
+      {
+        "source": "SS404",
+        "section": "Key differences between security capabilities",
+        "assertion": "Design reviews have a different one-off lifecycle."
+      },
+      {
+        "source": "SS412",
+        "section": "Understand statuses; Next steps",
+        "assertion": "Missing evidence and non-compliance differ; cloning creates a new review."
+      }
+    ],
+    "MX-S-THREAT": [
+      {
+        "source": "SS413",
+        "section": "Create and run a threat model; Review threats",
+        "assertion": "Scope documents and source context have distinct roles; overview and threats are reviewable."
+      }
+    ],
+    "MX-S-PIPELINE": [
+      {
+        "source": "SS414",
+        "section": "Before you start; Post-deployment gate",
+        "assertion": "The integration invokes an existing configured test, uses OIDC and observes server-side work."
+      }
+    ],
+    "MX-S-JIRA": [
+      {
+        "source": "SS415",
+        "section": "Connecting projects to an Agent Space",
+        "assertion": "Create and comment actions are selected per project."
+      },
+      {
+        "source": "SS416",
+        "section": "Creating issues for findings",
+        "assertion": "The selected project must allow Task and receives one issue per selected finding."
+      },
+      {
+        "source": "SS417",
+        "section": "Prerequisites for removal",
+        "assertion": "Previously created issues are not deleted with the integration."
+      }
+    ],
+    "MX-F-QUERY": [
+      {
+        "source": "FS401",
+        "section": "Related services",
+        "assertion": "Cost Explorer, anomaly detection, optimization services and CloudTrail supply distinct evidence."
+      },
+      {
+        "source": "FS407",
+        "section": "Generative AI accuracy considerations",
+        "assertion": "Recommendations are upstream analysis; anomaly causality remains investigative."
+      }
+    ],
+    "MX-F-FILES": [
+      {
+        "source": "FS402",
+        "section": "Supported file types; Manage context files",
+        "assertion": "Files are agent-read-only, size-limited and support soft deletion/restoration."
+      },
+      {
+        "source": "FS403",
+        "section": "Managing your data",
+        "assertion": "File removal and other object lifecycles differ."
+      }
+    ],
+    "MX-F-MEMORY": [
+      {
+        "source": "FS402",
+        "section": "Agent memory across sessions",
+        "assertion": "Remember, update and forget govern retained preferences/corrections."
+      },
+      {
+        "source": "FS403",
+        "section": "Data isolation; Managing your data",
+        "assertion": "Instance isolation and memory updates differ from conversation retention."
+      }
+    ],
+    "MX-F-COMPACT": [
+      {
+        "source": "FS402",
+        "section": "Long conversation handling",
+        "assertion": "Automatic summarization replaces older context while recent messages remain in full."
+      }
+    ],
+    "MX-F-TASK": [
+      {
+        "source": "FS404",
+        "section": "On-demand tasks",
+        "assertion": "Tasks are explicit and run through a shared queue rather than blocking the conversation."
+      },
+      {
+        "source": "FS403",
+        "section": "Managing your data",
+        "assertion": "Cancellation and record removal are different lifecycle operations."
+      }
+    ],
+    "MX-F-SCHEDULE": [
+      {
+        "source": "FS404",
+        "section": "Scheduled tasks",
+        "assertion": "Schedules create automations and new tasks; disabling/deleting stops recurring work."
+      },
+      {
+        "source": "FS403",
+        "section": "Managing your data",
+        "assertion": "Automations and task records have distinct lifecycles."
+      }
+    ],
+    "MX-F-EVENT": [
+      {
+        "source": "FS405",
+        "section": "Prerequisites; Verify and manage the automation",
+        "assertion": "Monitor, managed-rule permissions and saved condition create a traceable automation/task path."
+      },
+      {
+        "source": "FS404",
+        "section": "Event-based tasks",
+        "assertion": "The supported preview trigger is a cost-anomaly event."
+      }
+    ],
+    "MX-F-ARTIFACT": [
+      {
+        "source": "FS406",
+        "section": "Generating cost reports",
+        "assertion": "Reports are artifacts, default to HTML and can be revised through follow-up."
+      },
+      {
+        "source": "FS403",
+        "section": "Managing your data",
+        "assertion": "Artifacts and other retained objects have distinct controls."
+      }
+    ],
+    "MX-F-JIRA": [
+      {
+        "source": "FS407",
+        "section": "Jira issue creation and comment addition",
+        "assertion": "Approval differs between interactive/on-demand and automated invocation."
+      },
+      {
+        "source": "FS408",
+        "section": "Integration model; Capabilities",
+        "assertion": "Project connections and supported actions limit the effect."
+      }
+    ],
+    "MX-F-SLACK": [
+      {
+        "source": "FS409",
+        "section": "Integration and connection model; Capabilities",
+        "assertion": "Connections are per-instance/channel and one-way; membership is required."
+      },
+      {
+        "source": "FS407",
+        "section": "Slack messages",
+        "assertion": "Posting does not prompt for approval even in interactive invocation."
+      }
+    ],
+    "MX-D-QUERY": [
+      {
+        "source": "DS407",
+        "section": "Custom agents compared to built-in capabilities",
+        "assertion": "On-demand queries are a built-in path; custom agents are separately configured."
+      },
+      {
+        "source": "DS401",
+        "section": "Configuring MCP tools in an Agent Space",
+        "assertion": "Connected evidence remains subject to selected source tools."
+      }
+    ],
+    "MX-S-PERSONALIZE": [
+      {
+        "source": "SS405",
+        "section": "How personalization learns from your edits; Enable or disable Findings Personalization",
+        "assertion": "Learning uses eligible edits from the most recent completed run; false-positive status is special, and disabling preserves preferences."
+      }
+    ]
+  },
+  "qualifications": [
+    "Some official direct-page and indexed-page revisions differ; relevant record notes identify those differences.",
+    "State labels are logical explanations, not invented API enum names.",
+    "Similarity algorithms, ranking, exact retry guarantees and unsupported recovery operations remain undocumented."
+  ],
+  "live_aws_execution": false
+}
