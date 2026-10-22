@@ -33,10 +33,6 @@
       "bytes": 5572,
       "sha256": "06300501ef014e1354ce25421e34412bcd3851643b1c86705d0268adc4c226b3"
     },
-    "assets/diagrams/devops-architecture.svg": {
-      "bytes": 10788,
-      "sha256": "094c4124979be126b76fc805666e05f97489baec8046f7d03d3a97542765c5f4"
-    },
     "assets/diagrams/devops-incident.svg": {
       "bytes": 9930,
       "sha256": "3dbe303dc8be39cb21e5ef304c6e2d15a05094a629b53e7fb5206eb335aa9d5b"
@@ -97,10 +93,6 @@
       "bytes": 11219,
       "sha256": "cb320c679638e74703b8622ebbc215e4ac85fd370f7d301c5f4366847c57b0c1"
     },
-    "assets/diagrams/finops-architecture.svg": {
-      "bytes": 7127,
-      "sha256": "6a10eafd055151befb9a4e255403b0423b487cacc33bfc33db4a1366ee601cf6"
-    },
     "assets/diagrams/finops-automation.svg": {
       "bytes": 8075,
       "sha256": "a588a0892ec56f6c891fff85b4830a117d29ac768b0ce5a3ae994cd769e2b50d"
@@ -112,10 +104,6 @@
     "assets/diagrams/finops-integrations.svg": {
       "bytes": 6401,
       "sha256": "50130cc992d5220e02d5d5b12e0d9ab0b5c500292be92aae4e486c3b0772f22b"
-    },
-    "assets/diagrams/security-architecture.svg": {
-      "bytes": 10254,
-      "sha256": "df63175e5e1a3adc043867d37237f4fee9e0702a81c06b56ee5252eec509a8db"
     },
     "assets/diagrams/security-authentication.svg": {
       "bytes": 6730,
@@ -178,8 +166,8 @@
       "sha256": "89d23d92c97b95288e68de2a001186ba5846b18b6dec3774ba545143aea33190"
     },
     "catalog/resource-models.html": {
-      "bytes": 275701,
-      "sha256": "4643a0eaa00a6bc5c791539fd32483a283ef605a425a418524f5f959e2da04ea"
+      "bytes": 276651,
+      "sha256": "6e6436a947170b027dc645770ba6c6492c911a86fe6ce6a2c7dd92743574cece"
     },
     "catalog/resource-models.json": {
       "bytes": 85746,
@@ -199,43 +187,43 @@
     },
     "documentation-build.json": {
       "bytes": 1160,
-      "sha256": "ef859e8e8346c32085aa055a2ffc8e13024ae4655c90136e86e3995cf6387ced"
+      "sha256": "8162c8fc4742620b3f2e48c6e7293c4db3951a769e60d780b5799a82ff3cf8bd"
     },
     "examples/prepared-evidence.json": {
       "bytes": 2346,
       "sha256": "1ad6d10aa456827131f7087a4e3a58a5283a0cd75a39a9e6c9219f7b71463983"
     },
     "guides/architecture.html": {
-      "bytes": 145269,
-      "sha256": "c7a9108edeac542b3ee2efa0d3ea52a07298a9543a5b4a7f03a7d9ec71604836"
+      "bytes": 146681,
+      "sha256": "f8f92466dbf81a1aa01d5ea9a8c6060cbb6886519ec3cf2570148d81610f0b76"
     },
     "guides/architecture.md": {
-      "bytes": 33958,
-      "sha256": "35eeaeae588d323c68acee4137059aa9ba608bfed8500a59b7929e2351c222fe"
+      "bytes": 34676,
+      "sha256": "4359836dcd9909533c51cbe8f1c0382f3329039348fe037a6928fc0883bd2c50"
     },
     "guides/coverage.md": {
-      "bytes": 38635,
-      "sha256": "6d22ffffd208612ca7e8615c86076a796c3aba70c73b64f2df261fe8c608ea83"
+      "bytes": 38427,
+      "sha256": "c27054a14145d8498c3bb9932e9dced62526fe70d62bc8dbc4728141e8490906"
     },
     "guides/devops.html": {
-      "bytes": 309921,
-      "sha256": "9ab2ea567460d067349cdb07b66b8b35c1696459ee1296addd541dcd997b111f"
+      "bytes": 310757,
+      "sha256": "04a2f54eb9b6fba3582c06543133384caa5650fca0f531963eac2b806352f4f1"
     },
     "guides/devops.md": {
       "bytes": 59122,
       "sha256": "6a9aded982fbf224d9cdaa3d816027a5d28dbdad46c84ed1feb2ee3ff0c043ed"
     },
     "guides/finops.html": {
-      "bytes": 227186,
-      "sha256": "d402bd9da78d7c9a1b592997663185770c32b1490c7329813e3fa7715b38ee13"
+      "bytes": 227810,
+      "sha256": "96ec64d387f8d38180582881b1b91f3572ee2f2dc6724ba6dc2554ede994417a"
     },
     "guides/finops.md": {
       "bytes": 43267,
       "sha256": "d81f38a2b09f540c57dacc9a92536a9a156441fdf026e81cf54a2c93fe8bd605"
     },
     "guides/security.html": {
-      "bytes": 241498,
-      "sha256": "55126e24efbc79d09a06a728619ee46e5a40196813e8361fe378631336566ebf"
+      "bytes": 242254,
+      "sha256": "80070e8ec270d1746972df2bf4f08feb7d0d92796296e9fbe6832ca4833a595e"
     },
     "guides/security.md": {
       "bytes": 49190,
@@ -246,44 +234,44 @@
       "sha256": "a2a57ba37320a37c87f5dbaa89f841f1a1130032b55991aaecac4815abbdec7d"
     },
     "presentations/architecture-notes.md": {
-      "bytes": 13765,
-      "sha256": "c0f05b438b2c6dee3fcc1245c7732b9714aa3b2e3003ffeafb806844033e7698"
+      "bytes": 13756,
+      "sha256": "0447120e0e2f049e56c3b0000edb719b519da59297a4ff4477c8728c64d5eb07"
     },
     "presentations/architecture.html": {
-      "bytes": 213859,
-      "sha256": "ad7906d490a2f22ec1ae50dd32ce90917ed69f70352df7af8eccd37c3417b951"
+      "bytes": 217871,
+      "sha256": "13291c5ce312bd1edaa2a09ab2409147aa7b4c9a7c49a4f5d98e124a391f4113"
     },
     "presentations/devops-notes.md": {
-      "bytes": 21037,
-      "sha256": "3d6f18004037c9444ab468f4a6a62d770c8be3837a430eefdebfc5a663fa5722"
+      "bytes": 20916,
+      "sha256": "16492c346d90f5fc54bdc61ad1847ed6b34ec4bac5352c451593f41a0372451f"
     },
     "presentations/devops.html": {
-      "bytes": 505527,
-      "sha256": "27947ef5acd220697544af02f0198b0a52fdfcad7893fd7f34b8be49631ead48"
+      "bytes": 508112,
+      "sha256": "7c9e13ba5c335d199688c127e91e8f3c554e38b61d106b21b2def0ee4aef41bd"
     },
     "presentations/finops-notes.md": {
-      "bytes": 17535,
-      "sha256": "974887461a7038616c4ee3ccc0c310a450fcedb3e9b275d34586fc6739bac708"
+      "bytes": 17483,
+      "sha256": "355c5d121241eb65613a6d2f3939e446084f0eee5b07a09a9814bb5d414ccac5"
     },
     "presentations/finops.html": {
-      "bytes": 341409,
-      "sha256": "863860f112c0dbbc0e6d997e3231dc369a482814b72c461cca4b9ffd3fa2d408"
+      "bytes": 346492,
+      "sha256": "50dda13db5a73fd6e82963b614e0a9b2e27e21f4a03d3e8a0180d165ff30ee87"
     },
     "presentations/index.html": {
       "bytes": 26929,
       "sha256": "7723fb1a52544c9a1a6e0d28b3c2a63d085f6e252167f7c91a31a13fa1e447c9"
     },
     "presentations/security-notes.md": {
-      "bytes": 18921,
-      "sha256": "492e130497af858fbe4b4d2b8bfd3c96b3189374f1a93ba5a3aca09f8e1feaf4"
+      "bytes": 18811,
+      "sha256": "7190b2ba675c18a8292cdb78db0fe6bc5c752298c3f1dbd3cbd5327baec5a918"
     },
     "presentations/security.html": {
-      "bytes": 382559,
-      "sha256": "6312f2d0ef7c3e27fa66a08f0340d6bcfe28a16080c9ee387b347d44f6e762e7"
+      "bytes": 386438,
+      "sha256": "384b034f90c96d32a5e9e8c552fc05fdc63a9d217f54b6179ff1ae95729194ec"
     },
     "qa/checks.json": {
       "bytes": 6791,
-      "sha256": "8b306feb327a44c7a18a08a8da4ed5136c14042fcae2e844ff79159b0c8a7837"
+      "sha256": "31dc9d0a0455184f7537a0ecb7ed1fe5bf191ff432454117bbac99f198da0d84"
     },
     "qa/content-review.json": {
       "bytes": 937,
@@ -295,7 +283,7 @@
     },
     "qa/rebuild.json": {
       "bytes": 218,
-      "sha256": "8e501c4f44caa597ab45bebc347d60dfe21fedf3d46a61e985d6be2c97a1f350"
+      "sha256": "474b5d4dc134a09086b683e062ac080049c9eaacaaefc241683a081ea1abdd94"
     },
     "qa/relationships.json": {
       "bytes": 1371,
@@ -314,8 +302,8 @@
       "sha256": "c653a8a3f88627697377192c54db4fd145de22114df5bcc48c282851a6438318"
     },
     "tools/docs/build.py": {
-      "bytes": 27712,
-      "sha256": "439e2631a185302bada7ed2976b01545eb664f6d2626f1c58db3a07642ee8652"
+      "bytes": 27866,
+      "sha256": "5b9e76ff48ad1d176822a543718d872aba11823322e4748cfe3d99bbd84a8bd7"
     },
     "tools/docs/catalog.py": {
       "bytes": 21993,
@@ -326,8 +314,8 @@
       "sha256": "aa7cae0f3c51ea128768c108bfd7d1b2560d167d1fa3adb5131e8ac94de87a07"
     },
     "tools/docs/diagrams.py": {
-      "bytes": 21126,
-      "sha256": "b95eeecfd8211444639728227855f82382abebb49b7d1a925e5e01e1deb4d807"
+      "bytes": 23893,
+      "sha256": "7c44086319343a5b5ef1593617307d6574620d7ca4f461185fa7d9c990ba160a"
     },
     "tools/docs/interactions.js": {
       "bytes": 8247,
@@ -338,8 +326,8 @@
       "sha256": "8499886b191d35b6830a890b780afae7840609eadbcd4b7485f498aaa8a18157"
     },
     "tools/docs/presentation.py": {
-      "bytes": 114060,
-      "sha256": "5b2b25aedb5251fc735c21f9996a12fcc1cdc196e104b9c659697217508eb83e"
+      "bytes": 113238,
+      "sha256": "c7d5cc535fd7fb2b9f3ae7c91b069a844123ea5c4934ad1a4b14e2daf7f350c2"
     },
     "tools/docs/requirements.txt": {
       "bytes": 78,
