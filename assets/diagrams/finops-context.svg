@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="914pt" height="385pt" viewBox="0.00 0.00 914.00 385.00" role="img" aria-labelledby="finops-context-title finops-context-desc" data-diagram="finops-context">
+<title id="finops-context-title">Persistent context and session-local working state</title><desc id="finops-context-desc">Uploaded files and conversational memory persist within an instance. They are loaded into an isolated ephemeral session runtime. Older messages may be summarized; that is separate from editing a file or a retained preference.</desc><g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(18 367)">
+<title>G</title>
+
+<g id="node1" class="node">
+<title>files</title>
+<path fill="#edf5f4" stroke="#496b78" d="M228,-245C228,-245 12,-245 12,-245 6,-245 0,-239 0,-233 0,-233 0,-209 0,-209 0,-203 6,-197 12,-197 12,-197 228,-197 228,-197 234,-197 240,-203 240,-209 240,-209 240,-233 240,-233 240,-239 234,-245 228,-245" />
+<text text-anchor="middle" x="120" y="-224.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Uploaded context files</text>
+<text text-anchor="middle" x="120" y="-209.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Operator-maintained reference</text>
+</g>
+
+<g id="node4" class="node">
+<title>runtime</title>
+<path fill="#edf5f4" stroke="#496b78" d="M590,-141C590,-141 320,-141 320,-141 314,-141 308,-135 308,-129 308,-129 308,-105 308,-105 308,-99 314,-93 320,-93 320,-93 590,-93 590,-93 596,-93 602,-99 602,-105 602,-105 602,-129 602,-129 602,-135 596,-141 590,-141" />
+<text text-anchor="middle" x="455" y="-120.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Isolated session runtime</text>
+<text text-anchor="middle" x="455" y="-105.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Working context and tool observations</text>
+</g>
+
+<g id="edge1" class="edge">
+<title>files-&gt;runtime</title>
+<path fill="none" stroke="#496b78" d="M195.6,-196.98C248.14,-180.98 318.16,-159.66 372.21,-143.21" />
+<polygon fill="#496b78" stroke="#496b78" points="372.98,-145.72 379.39,-141.02 371.45,-140.7 372.98,-145.72" />
+<text text-anchor="middle" x="334.5" y="-166.2" font-family="DejaVu Sans" font-size="11.00">loaded / read</text>
+</g>
+
+<g id="node2" class="node">
+<title>memory</title>
+<path fill="#edf5f4" stroke="#496b78" d="M472.5,-245C472.5,-245 277.5,-245 277.5,-245 271.5,-245 265.5,-239 265.5,-233 265.5,-233 265.5,-209 265.5,-209 265.5,-203 271.5,-197 277.5,-197 277.5,-197 472.5,-197 472.5,-197 478.5,-197 484.5,-203 484.5,-209 484.5,-209 484.5,-233 484.5,-233 484.5,-239 478.5,-245 472.5,-245" />
+<text text-anchor="middle" x="375" y="-224.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Persistent memory</text>
+<text text-anchor="middle" x="375" y="-209.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Preferences and corrections</text>
+</g>
+
+<g id="edge2" class="edge">
+<title>memory-&gt;runtime</title>
+<path fill="none" stroke="#496b78" d="M393.15,-196.85C404.71,-182.12 419.78,-162.91 432.15,-147.13" />
+<polygon fill="#496b78" stroke="#496b78" points="434.36,-148.58 436.92,-141.05 430.22,-145.34 434.36,-148.58" />
+<text text-anchor="middle" x="462" y="-166.2" font-family="DejaVu Sans" font-size="11.00">loaded / applied</text>
+</g>
+
+<g id="node3" class="node">
+<title>conversation</title>
+<path fill="#edf5f4" stroke="#496b78" d="M650.5,-349C650.5,-349 461.5,-349 461.5,-349 455.5,-349 449.5,-343 449.5,-337 449.5,-337 449.5,-313 449.5,-313 449.5,-307 455.5,-301 461.5,-301 461.5,-301 650.5,-301 650.5,-301 656.5,-301 662.5,-307 662.5,-313 662.5,-313 662.5,-337 662.5,-337 662.5,-343 656.5,-349 650.5,-349" />
+<text text-anchor="middle" x="556" y="-328.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Conversation history</text>
+<text text-anchor="middle" x="556" y="-313.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Messages and current task</text>
+</g>
+
+<g id="edge3" class="edge">
+<title>conversation-&gt;runtime</title>
+<path fill="none" stroke="#496b78" d="M554.22,-300.8C550.73,-267.73 540.63,-206.25 512,-163 507.93,-156.85 502.74,-151.16 497.16,-146.04" />
+<polygon fill="#496b78" stroke="#496b78" points="498.87,-144.04 491.48,-141.12 495.43,-148.01 498.87,-144.04" />
+<text text-anchor="middle" x="589" y="-218.2" font-family="DejaVu Sans" font-size="11.00">session context</text>
+</g>
+
+<g id="node5" class="node">
+<title>summary</title>
+<path fill="#edf5f4" stroke="#496b78" d="M866,-245C866,-245 660,-245 660,-245 654,-245 648,-239 648,-233 648,-233 648,-209 648,-209 648,-203 654,-197 660,-197 660,-197 866,-197 866,-197 872,-197 878,-203 878,-209 878,-209 878,-233 878,-233 878,-239 872,-245 866,-245" />
+<text text-anchor="middle" x="763" y="-224.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Context compaction</text>
+<text text-anchor="middle" x="763" y="-209.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Older messages summarized</text>
+</g>
+
+<g id="edge4" class="edge">
+<title>conversation-&gt;summary</title>
+<path fill="none" stroke="#496b78" d="M602.71,-300.98C634.33,-285.4 676.18,-264.78 709.2,-248.51" />
+<polygon fill="#496b78" stroke="#496b78" points="710.53,-250.78 716.1,-245.11 708.21,-246.07 710.53,-250.78" />
+<text text-anchor="middle" x="701" y="-270.2" font-family="DejaVu Sans" font-size="11.00">context limit</text>
+</g>
+
+<g id="node6" class="node">
+<title>result</title>
+<path fill="#edf5f4" stroke="#496b78" d="M536,-48C536,-48 374,-48 374,-48 368,-48 362,-42 362,-36 362,-36 362,-12 362,-12 362,-6 368,0 374,0 374,0 536,0 536,0 542,0 548,-6 548,-12 548,-12 548,-36 548,-36 548,-42 542,-48 536,-48" />
+<text text-anchor="middle" x="455" y="-27.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Task result or artifact</text>
+<text text-anchor="middle" x="455" y="-12.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Retained output record</text>
+</g>
+
+<g id="edge6" class="edge">
+<title>runtime-&gt;result</title>
+<path fill="none" stroke="#496b78" d="M455,-92.57C455,-81.33 455,-67.73 455,-55.69" />
+<polygon fill="#496b78" stroke="#496b78" points="457.63,-55.54 455,-48.04 452.38,-55.54 457.63,-55.54" />
+</g>
+
+<g id="edge5" class="edge">
+<title>summary-&gt;runtime</title>
+<path fill="none" stroke="#496b78" d="M693.49,-196.98C645.38,-181.05 581.34,-159.84 531.73,-143.41" />
+<polygon fill="#496b78" stroke="#496b78" points="532.46,-140.89 524.52,-141.02 530.81,-145.87 532.46,-140.89" />
+<text text-anchor="middle" x="670" y="-166.2" font-family="DejaVu Sans" font-size="11.00">condensed history</text>
+</g>
+</g>
+</svg>
