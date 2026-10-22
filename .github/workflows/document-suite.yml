@@ -33,6 +33,16 @@ jobs:
           python -m playwright install --with-deps chromium
       - name: Apply the plain-text editorial migration once
         run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          for name in ('revise_guide_text.py','revise_catalog_text.py','complete_knowledge_chapter.py','prepare_documentation_layout.py'):
+              path=Path('tools')/name
+              if path.exists():
+                  text=re.sub(r"([A-Za-z]{3,})'(s|t|re|ve|ll|d|m)\b",r'\1’\2',path.read_text())
+                  compile(text,str(path),'exec')
+                  path.write_text(text)
+          PY
           if [ -f tools/revise_guide_text.py ]; then python tools/revise_guide_text.py; fi
           if [ -f tools/revise_catalog_text.py ]; then python tools/revise_catalog_text.py; fi
           if [ -f tools/complete_knowledge_chapter.py ]; then python tools/complete_knowledge_chapter.py; fi
