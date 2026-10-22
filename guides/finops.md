@@ -1,48 +1,67 @@
-# AWS FinOps Agent — configuration and operation
+# AWS FinOps Agent
 
-Engineering guide • documentation reviewed 22 October 2026
+Architecture, cost-data sources, organizational context, and task execution
 
-AWS FinOps Agent is documented as preview. It queries permitted cost and operational sources, interprets the returned information, creates report artifacts and performs supported integration actions. It is not an unrestricted infrastructure-change or financial-purchase executor. Data storage and model inference have different location boundaries: the preview stores agent data in `us-east-1`, while inference may use other US Regions. [FS01] [FS08] [FS09]
+AWS FinOps Agent is documented as a preview service for cost inquiry, anomaly investigation, reporting, and the interpretation of upstream optimization recommendations. Its work begins with a defined comparison: the accounts, dates, cost basis, and dimensions under consideration. It combines authorized source results with the organization’s uploaded context and retained preferences, then produces an answer, a task result, or a report. [FS01]
 
-This guide explains platform objects before showing their application. Product behavior has official references. **Engineering procedures** and **synthetic exercises** are original recommendations or examples; none is a live account result or a measured saving.
+This guide follows that sequence. It explains the instance and permissions first, identifies the supported data and collaboration integrations, and then separates reference files, persistent memory, and conversation summarization. The task chapter follows a scheduled or event-driven request into the queue and through publication. The worked example distinguishes a numerical cost contribution from evidence of an operational cause.
 
-## 01. Product Functions and Resource Model
+During the reviewed preview, agent data is stored in us-east-1 and inference can use other US Regions; those are different boundaries. Diagrams are logical service models. Examples and proposed checks are not live account results, purchase authorizations, or measured savings. [FS08] [FS09]
 
-Distinguish the agent instance, access roles, retained context, queued work and outputs.
+## 01. Service architecture
 
-### F-01 — Resource and authority model
+The instance persists configuration and context; conversations and tasks perform individual pieces of work. The resource model explains which state belongs to each.
 
-```text
-AWS account / Region
-  Administrator policy → setup operations
-  Registered Jira / Slack integration → agent connection / destination
-  Agent data role → permitted AWS cost and operational APIs
-  Operator role + user permission → web-app access
-                      ↓
-Agent instance
-  ├─ context files, conversational memory, conversations
-  ├─ automations → scheduled/event tasks ┐
-  ├─ on-demand tasks ───────────────────┴─ shared queue → results
-  └─ report artifacts → local download / configured publication
-```
+### F-01 — The agent instance and its execution environment
 
-An integration is registered at account level; a connection binds it to an agent and destination. Each agent instance has its own permissions, retained context, task queue and connections. Instance separation is not a shared organization-wide memory service. [FS02] [FS03] [FS08]
+AWS FinOps Agent combines authorized AWS data with an instance’s organizational context to perform cost-related work. The instance is the durable configuration: it has an agent data role, operator access, files, memory, connections, and a task queue. A conversation or task is a particular execution within that instance. This distinction explains why a saved automation can create many tasks and why cancelling one task does not remove the automation. [FS02] [FS05] [FS08]
 
-| Product function | Supporting platform capabilities | Detailed treatment |
+![FinOps Agent logical architecture](../assets/diagrams/finops-architecture.svg)
+
+The architecture separates data retrieval from interpretation and publication. Upstream services return cost records, anomalies, recommendations, or change events. Organizational context gives those records a business meaning, such as which team owns an account. The agent can produce an answer or artifact and, through a configured integration, publish supported results. The permissions for retrieving evidence and those for publishing a result are not interchangeable. [FS01] [FS03] [FS12] [FS13]
+
+Each instance has its own retained content and execution records. The data-protection guide describes persistent encrypted storage and an ephemeral runtime isolated per session. Files and memory can be loaded into that runtime for use, while conversation and task records are retained separately. The ephemeral runtime should not be mistaken for the only place the data exists. [FS08]
+
+| Function | Required platform abilities | Detailed explanation |
 |---|---|---|
-| Cost inquiry, comparisons, forecasts and coverage | Authorized source queries; organizational context; conversation | F-02, F-M01, F-M02 |
-| Anomaly investigation | Cost Anomaly Detection; operational-change evidence; tasks | F-M01, F-M05 |
-| Recommendation triage | Retrieval of upstream recommendations | F-M01 |
-| Recurring reporting | Context, automation, queue, artifacts, destinations | F-M02 through F-M06 |
-| Team handoff | Explicit external-action permissions and destination binding | F-05, F-M06 |
+| Cost inquiry | Authorized source queries and a defined comparison basis | F-M01 |
+| Organizational reporting | Context-file retrieval, retained preferences, report generation | F-M02, F-M03, F-04 |
+| Anomaly investigation | Monitor event, automation, queue, source evidence | F-M05 |
+| Recommendation review | Upstream recommendation retrieval and workload context | F-M01, F-08 |
+| Recurring delivery | Scheduled task creation and an appropriate destination | F-03, F-05, F-M06 |
 
-The recommendations underlying optimization analysis originate in Cost Optimization Hub and Compute Optimizer. The agent contextualizes those recommendations; its prose is not a new independent optimization calculation. [FS01] [FS06]
+Optimization recommendations originate from the documented upstream recommendation services. The agent’s explanation can help a team interpret and route them, but it is not an independent measurement of realized savings. The next chapter identifies those sources and the permissions that make each one available. [FS01] [FS06]
 
-## 02. Access Roles, Source Data and Integrations
+## 02. Cost-data sources and collaboration connections
 
-Establish policy responsibilities, data-source dependencies and external destinations.
+A cost conclusion depends on its source data and query basis. Collaboration destinations add a separate publication path with its own authorization and lifecycle.
 
-### F-02 — Configure four policy responsibilities and two service roles
+### F-08 — Supported data sources and publication destinations
+
+The data connections answer different financial and operational questions. Cost Explorer supplies cost and usage results. Anomaly Detection supplies a detected deviation. Optimization services supply candidate changes and savings estimates. CloudTrail supplies recorded API activity that may help explain a change. The agent combines these inputs; a permission to query one does not imply access to the others. [FS01] [FS03]
+
+| System | Role in the workflow | Configuration dependency | Interpretation |
+|---|---|---|---|
+| AWS Cost Explorer | Cost and usage queries, forecasts, coverage and commitment analysis | Available cost data and the required role actions | Preserve the metric, dates, account scope, and grouping |
+| AWS Cost Anomaly Detection | Anomaly monitor and event source | Relevant monitors and configured event automation | A deviation is a reason to investigate, not its explanation |
+| AWS Cost Optimization Hub | Consolidated optimization recommendations | Service setup and authorized recommendation reads | Savings estimates belong to the source recommendation |
+| AWS Compute Optimizer | Resource and rightsizing recommendations | Eligible resources and permitted reads | Review utilization assumptions and workload constraints |
+| AWS CloudTrail | API-activity evidence | Permitted LookupEvents and relevant available records | A nearby change is evidence to evaluate, not proof of causality |
+| Amazon EventBridge | Managed anomaly-to-task routing | Required managed-rule actions in the agent role | Creates work through the supported event path |
+| Jira Cloud | Read connected issues; create issues and add comments | Account registration and agent-level project connection | No general issue-field, transition, deletion, or workflow-management capability |
+| Slack | Post results to connected channels | Workspace registration, channel connection, and app membership | One-way publication in the documented preview |
+
+This is the supported service-and-destination model described in the reviewed guides, not a claim of arbitrary external-tool connectivity. In particular, the existence of MCP integration in DevOps Agent should not be copied into this platform’s architecture. Exact AWS action requirements remain in the IAM setup guide. [FS03] [FS12] [FS13]
+
+![Cost-data retrieval and collaboration connections](../assets/diagrams/finops-integrations.svg)
+
+Jira and Slack each use an account-level registration plus a connection owned by the individual agent. The registration stores provider authorization; the connection selects a project or channel. That distinction makes it possible for two agents to use the same registered provider while having different destinations. It does not give either agent access to the other’s files, memory, or tasks. [FS12] [FS13] [FS08]
+
+Test the paths separately. First reproduce a small cost query with known dates and dimensions. Then inspect a recommendation from its upstream source. Finally publish a non-sensitive test result to the intended destination and inspect where it arrived. A failed Slack post is not repaired by widening cost-data access. A missing CloudTrail event does not invalidate arithmetic that was reproduced independently, but it does limit the causal explanation.
+
+### F-02 — Administrator, service, and operator permissions
+
+FinOps setup separates the person who administers the service, the identity used for data access, and the people who use the web application. A successful setup performed by an administrator does not prove that a regular operator can enter the agent or that the agent can read every required cost source.
 
 AWS distinguishes administrator setup permissions, the agent's data policy, the operator role policy, and the web-app user's own access policy. They are not four names for the same permission set. [FS03]
 
@@ -59,7 +78,9 @@ The setup path uses roles trusted by `finops-agent.amazonaws.com`. Automatically
 
 **Dependency review:** enable the cost/recommendation services required for the selected task and inspect whether the role permits the relevant APIs. For example, missing `cloudtrail:LookupEvents` removes an operational-change input without necessarily disabling Cost Explorer questions. Removing write access to customer infrastructure does not mean that Jira/Slack publishing is disabled; those effects follow separate integration rules. [FS03] [FS06]
 
-### F-M01 — Source-backed analysis and recommendation provenance
+### F-M01 — Cost queries and recommendation provenance
+
+A cost question becomes a set of data queries with a specific comparison basis. The returned amounts, recommendations, and change records then support different conclusions. Reproducing the amount is the first step; explaining its cause requires additional evidence.
 
 The agent translates an inquiry into supported data-source calls, interprets returned evidence using the instance's context, and generates a response or artifact. Cost Explorer totals, anomaly events, recommendation records and CloudTrail change records answer different questions. [FS01] [FS03]
 
@@ -83,7 +104,9 @@ aws ce get-cost-and-usage \
 
 The end date is exclusive. This example deliberately has no account, Region or tag filters; add the same approved filters used in the agent question before comparing results. Cost Explorer availability, permissions and API charges still apply. The command was not executed here and must not be compared to a differently scoped agent total. [FS14]
 
-### F-05 — Integration registration and destination connections
+### F-05 — Jira projects and Slack channel connections
+
+Publication starts with a registered provider and an agent-specific destination. The registration establishes authorization to a Jira site or Slack workspace. The connection selects the project or channel used by one agent, so its state and audience must be checked separately from registration.
 
 | Layer | Jira | Slack |
 |---|---|---|
@@ -96,11 +119,13 @@ Register the integration, complete authorization, then add the agent-specific co
 
 **Engineering procedure:** use designated test destinations, post a non-sensitive test result and record its actual location. Confirm that only the intended users can see it. API retries described in the integration guide address transient failures; they do not turn a permission or invalid-destination error into a successful publication.
 
-## 03. Reference Files, Memory and Conversation Context
+## 03. Organizational knowledge and session context
 
-Separate operator-maintained inputs, cross-session memory and within-session compaction.
+Uploaded mappings, retained preferences, and summarized conversations are different representations of organizational context. The operator must know which representation to correct.
 
-### F-M02 — Uploaded reference files are operator-maintained context
+### F-M02 — Context-file preparation and management
+
+Reference files let the agent interpret account identifiers and costs in the organization’s terms. Their value depends on curation: a small current ownership mapping is more useful than a collection of contradictory copies. The operator maintains these files and decides which versions are active.
 
 The Context files workspace accepts text, CSV, JSON, Markdown, HTML and YAML. The documented file limit is 10 MB; total context storage is 100 MB per agent by default. The agent can read these files but cannot modify or delete them through conversation. Users who can access the agent can see its context files. [FS04] [FS10]
 
@@ -120,25 +145,35 @@ accounts:
 
 Use the identifiers actually available in your authorized queries; this alias is illustrative. Keep the source file under review in Git and upload a reviewed revision. A stale ownership mapping can produce the wrong destination even when the cost arithmetic is correct. A file statement about publication is prompt context, not a replacement for destination access controls.
 
-### F-M03 — Conversational memory survives sessions; it is not a file update
+### F-M03 — Persistent preferences and corrections
 
-Memory retains preferences, organizational context, corrections and prior task outcomes for subsequent work. Use explicit remember, update and forget requests to manage it. These requests do not imply that a matching uploaded file or earlier conversation has also changed. Persistent context is instance-local and loaded into a session-isolated runtime. [FS04] [FS08]
+Persistent memory allows a later session to use preferences and corrections supplied earlier. For example, a team may specify the owner of a set of accounts, a preferred reporting breakdown, or a recommendation category that needs special treatment. The service can retain that context and apply it to later questions or tasks. This is a different path from uploading an account-mapping file, and it is different again from summarizing old messages within one long conversation. [FS04]
 
-**Proposed verification:** remember a harmless preference such as displaying a cost-comparison table before commentary. Open a new conversation and check its application; correct or forget the preference and repeat. Independently test uploaded-file retrieval with a different fact. Record whether the preference was applied, not an unsupported claim about hidden model state.
+![Reference files, memory, and the session runtime](../assets/diagrams/finops-context.svg)
 
-For conflicting context, identify the authoritative source and update the relevant objects deliberately. Do not claim a documented automatic precedence rule between files and memory where the public guide does not specify one.
+The persistence boundary is the agent instance. The data-protection guide describes context and memory files in encrypted AWS-managed storage, loaded at session start into an isolated ephemeral runtime. Conversation and task records are retained alongside their own execution records. The guide does not establish a shared memory across instances or an automatic precedence rule that resolves conflicting statements in a file and a remembered preference. [FS08]
 
-### F-M04 — Conversation compaction manages a bounded context
+Operators manage conversational memory by asking the agent to remember, update, or forget a specific fact. Uploads remain operator-maintained files: a request to forget a preference is not an edit to a CSV containing the same information. When ownership changes, identify which representation is authoritative, update the file where appropriate, and correct the retained preference separately. Earlier reports remain historical artifacts rather than being silently rewritten. [FS04] [FS08]
+
+A useful acceptance exercise uses a harmless preference, such as placing the comparison table before commentary. Set it, start a new conversation, and check whether it is applied. Correct or forget it and repeat. Test file retrieval with a different known fact. These observations distinguish successful application of retained context from an assumption about hidden model state. The procedure is a proposed test, not a result observed in an AWS account.
+
+Recovery is object-specific. A soft-deleted context file can be restored through its workspace; memory can be corrected conversationally; earlier conversations and task records have the documented preview retention restrictions. None of these controls proves a general backup-and-restore capability for an entire instance. F-M07 describes the supported lifecycle actions. [FS08]
+
+### F-M04 — Conversation summarization and context limits
+
+A long conversation has a different lifecycle from persistent memory. As earlier messages are summarized, the session preserves a condensed working context rather than every word of the exchange. Important comparison assumptions should therefore remain explicit in the current task and its authoritative reference material.
 
 As a conversation approaches its context limit, older messages are summarized while recent messages remain in full. This is within-conversation context management, distinct from persistent memory and uploaded files. The documentation does not promise verbatim retention or expose a general customer setting for the summarization algorithm. [FS04]
 
 **Engineering procedure:** put critical constraints in a concise current task specification and reference the authoritative file or source record. When resuming a long conversation, ask the agent to restate the comparison basis and unresolved questions, then correct any discrepancy before requesting another calculation. This tests retained context; it does not prove that every earlier message remains available.
 
-## 04. Tasks, Automations, Publication and Data Lifecycle
+## 04. Tasks, reporting, and data lifecycle
 
-Trace task creation, event matching, report artifacts, approvals and object-specific removal.
+Requests and automations create executions; executions produce results and artifacts. This chapter follows that sequence through publication and the supported retention controls.
 
-### F-03 — On-demand tasks, schedules and observation
+### F-03 — Tasks, schedules, and execution history
+
+Tasks provide execution records for requested work. Automations are definitions that create tasks later, either on a schedule or from a supported event. Their separate lifecycles explain why stopping future task creation does not remove a result that already exists.
 
 A task is an execution record. An automation is a rule for creating future tasks. On-demand, scheduled and event-triggered work shares the queue. Asking a conversational question is not necessarily a request to create a durable task; task creation should be explicit. [FS05]
 
@@ -146,7 +181,11 @@ A task is an execution record. An automation is a rule for creating future tasks
 
 **Scheduled procedure:** define the required schedule and reporting window separately. Inspect the saved automation's trigger and next applicable execution information. For a daily report, a schedule time does not define whether the report covers the previous calendar day, rolling 24 hours or incomplete current day; specify the window. Removing the automation prevents future tasks but does not remove previously created tasks or published messages. [FS05] [FS08]
 
-### F-M05 — Anomaly events become queued work through a managed rule
+### F-M05 — Anomaly events and task creation
+
+![Workflow: Anomaly events and task creation](../assets/diagrams/finops-automation.svg)
+
+An anomaly event is the beginning of an investigation path, not its conclusion. The monitor produces the event, a managed rule and matching automation create work, and the task queue records execution. Publication follows only after a result exists and the destination path succeeds.
 
 The documented event path is Cost Anomaly Detection → managed EventBridge rule → matching automation → task queue → analysis/result. During the reviewed preview, the event type is `COST_ANOMALY`; this does not establish an arbitrary customer-event orchestration platform. [FS05] [FS07]
 
@@ -162,15 +201,19 @@ AWS's IAM examples constrain rule management using service ownership and account
 
 **Failure branch:** a registered automation with no task can mean there was no matching event, the monitor/condition is wrong, or rule permissions failed. A completed task with no message is a different destination/publication problem. Preserve these distinctions during diagnosis.
 
-### F-04 — Report artifacts and revision
+### F-04 — Report generation and artifact management
 
-The service supports report artifacts including HTML, PDF and editable PowerPoint. A request can specify the audience, comparison basis, grouping and output format, and subsequent requests can revise the artifact. Source retrieval, calculations and artifact generation are different stages; formatted output is not independent proof that the totals are correct. [FS11]
+A report is a presentation of an analysis, not another source of cost truth. Its usefulness depends on preserving the comparison basis and making the relevant calculations traceable. The artifact and the task that produced it should therefore remain linked when the report is revised or shared.
+
+The service supports report artifacts including HTML, PDF and presentation formats documented by the service. A request can specify the audience, comparison basis, grouping and output format, and subsequent requests can revise the artifact. Source retrieval, calculations and artifact generation are different stages; formatted output is not independent proof that the totals are correct. [FS11]
 
 **Procedure:** ask for one defined report, inspect the source breakdown and period, open/download the artifact, and verify at least one material total using the same source query. Request a revision that names the desired change rather than silently changing the comparison basis. When publishing, check that the file corresponds to the reviewed task and audience. [FS11] [FS06]
 
 The artifact store has a separate default quota from context-file storage. Deleting an artifact does not necessarily delete external copies previously posted to a collaboration system. [FS10] [FS08]
 
-### F-M06 — Approval depends on the action and invocation path
+### F-M06 — Publication permissions and approvals
+
+Publication authorization depends on both the destination and the way work was initiated. An unattended automation can carry authorization established during setup, while an interactive Jira action requests approval. Slack posting follows a different documented behavior, so a single blanket approval statement would be misleading.
 
 | Effect | Chat / on-demand task | Scheduled / event task |
 |---|---|---|
@@ -181,7 +224,9 @@ These are documented differences, not one universal human-approval rule. Automat
 
 **Proposed verification:** in test destinations, record the requested action, invocation type, observed prompt or lack of prompt, and the resulting artifact. A successful Slack post does not demonstrate Jira approval behavior. Removing a future schedule does not retract a previously published message.
 
-### F-M07 — Data lifecycle follows the object, not a single delete command
+### F-M07 — Retention, cancellation, and deletion
+
+Stopping work, withdrawing active context, and removing retained data are different intentions. The service offers object-specific controls for those intentions. Choosing the correct operation requires knowing whether the object is an execution, a future trigger, a reference file, or a published artifact.
 
 Persistent agent data and the ephemeral session runtime are separate. The preview uses AWS-managed encrypted storage. Agent instances do not share retained files or memory. [FS08]
 
@@ -199,11 +244,11 @@ Use the operation matching the intended outcome. In particular, cancel, forget, 
 
 For data-location decisions, document both persistent storage (`us-east-1` in the reviewed preview) and cross-Region US inference. Do not describe the chosen console Region as the complete processing boundary. [FS09]
 
-## 05. Worked Cost Analysis
+## 05. Cost-variance analysis
 
-Reconcile cost components before assessing limited evidence for a causal explanation.
+The synthetic example reconciles the monetary change before using limited operational evidence to explain only part of it.
 
-### F-U01 — Worked example: decompose a cost increase
+### F-U01 — Cost-variance analysis: worked example
 
 **Synthetic fixture; USD; two complete 14-day windows; identical account, service and cost basis.** Rates and quantities are teaching values, not AWS prices. This fixture now includes quantities and rates, so it can support arithmetic attribution rather than just two totals.
 
@@ -224,11 +269,11 @@ The delta is 574, or 41%. Component contributions are 200 storage, 100 requests 
 
 The repository's deterministic fixture test verifies the arithmetic. It is not a test of the AWS service, recommendation quality or causal inference.
 
-## 06. Troubleshooting, Limits and Failure Modes
+## 06. Troubleshooting and operating limits
 
-Test the query, retained context, execution and publication layers separately.
+A numerical disagreement, a missing task, and a failed publication are different faults. Troubleshooting follows the corresponding data, execution, and destination paths.
 
-### F-06 — Limits and troubleshooting decisions
+### F-06 — Data, task, and integration failures
 
 Selected documented defaults are one agent per account/Region, 100 MB artifact storage, 10 MB per context upload and 100 MB total context storage. The per-file limit is fixed; relevant account/storage quotas may be adjustable. The reviewed integration limits include one account-level registration of each supported collaboration type and two connections of each type per agent. Check actual quotas before designing multiple destinations or isolated instances. [FS10]
 
@@ -246,11 +291,15 @@ Selected documented defaults are one agent per account/Region, 100 MB artifact s
 
 The table is engineering troubleshooting guidance based on the cited configuration and integration pages. It is not a claim of a native unified diagnostic workflow.
 
-## 07. Coverage and Source Notes
+## 07. Documentation coverage
 
-Review scope exclusions, preview boundaries and the source-review record.
+The references document the source, context, task, and publication behaviors discussed here; unexecuted examples remain explicitly labeled.
 
-### F-07 — Coverage and source-review record
+### F-07 — Documentation coverage and references
+
+The guide follows a cost question from source access through context, task execution, and publication. The coverage table separates that explanation from complete IAM policies, service quotas, and provider-specific setup that remain in the official reference. A forecast, recommendation estimate, and observed cost are treated as distinct results throughout.
+
+The reference register identifies the documented behavior behind these distinctions. The integration inventory and selected context and data-lifecycle guidance were rechecked on 22 October 2026. Earlier source qualifications remain applicable, and the worked arithmetic is synthetic. No account query, publication action, or measured savings outcome was executed for this guide.
 
 | Official topic | Treatment | Boundary |
 |---|---|---|
