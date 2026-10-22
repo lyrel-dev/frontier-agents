@@ -4,7 +4,11 @@ Engineering comparison • documentation reviewed 22 October 2026
 
 This document compares AWS DevOps Agent, AWS Security Agent and AWS FinOps Agent. It is not an AWS reference architecture or a claim that the services share a runtime, memory implementation, authorization model or orchestrator. Product statements are sourced; proposed team-level interfaces are labeled as engineering design.
 
-## A-01 — Compare resources before comparing workflows
+## 01. Resource and context models
+
+Compare the documented objects and retained information without assuming a common runtime.
+
+### A-01 — Compare resources before comparing workflows
 
 | Layer | DevOps Agent | Security Agent | FinOps Agent |
 |---|---|---|---|
@@ -17,7 +21,7 @@ The terms differ because the objects differ. A common UI label does not make all
 
 **Engineering design:** record the platform, account/Region, configuration ID and execution ID separately. Do not put one ambiguous `agent_id` in every downstream ticket and expect it to identify all four concepts.
 
-## A-02 — Separate knowledge producers from consumers
+### A-02 — Separate knowledge producers from consumers
 
 | Retained material | Producer | Consumer and lifecycle | Do not infer |
 |---|---|---|---|
@@ -31,7 +35,11 @@ These mechanisms are documented separately in the canonical guides: D-M01, D-M02
 
 **Engineering verification:** separate five questions: was relevant input available, was retained content produced, was it accessible to this execution, was its use observable, and was the resulting conclusion correct? The final answer alone cannot resolve all five.
 
-## A-03 — Connectivity, authentication and authorization are different layers
+## 02. Access and effect boundaries
+
+Separate reachability, identity and the authority to perform an operation.
+
+### A-03 — Connectivity, authentication and authorization are different layers
 
 A private connection supplies a route. Authentication establishes an identity. Authorization determines allowed operations. Prompt instructions describe desired behavior. A successful connection test demonstrates only the layers it actually exercised.
 
@@ -49,7 +57,7 @@ For DevOps MCP, provider registration and Agent Space tool selection are distinc
 
 Use a non-production target and non-sensitive fixture. These are proposed tests, not recorded service outcomes.
 
-## A-04 — Authorization must follow the effect
+### A-04 — Authorization must follow the effect
 
 | Effect | Product control to inspect | Important exception |
 |---|---|---|
@@ -63,7 +71,11 @@ The common rule is to examine the actual effect, not to label every agent “rea
 
 **Engineering design:** carry a requested effect and intended target in a work item, but never carry credentials or substitute a ticket approval for the receiving service's native authorization.
 
-## A-05 — Configuration, execution and derived artifacts need separate lifecycles
+## 03. Lifecycle and handoffs
+
+Compare configuration, execution, artifacts and team-composed handoff records.
+
+### A-05 — Configuration, execution and derived artifacts need separate lifecycles
 
 Pause an automation to stop future starts; cancel a current run using its supported operation; remove or deactivate context using its own controls; delete an artifact only when the artifact itself is the intended target. These are different transitions. In-flight calls or retained execution history may remain after a stop action. [AS13] [AS07]
 
@@ -71,7 +83,7 @@ Security revalidation deliberately creates a new job linked to the original find
 
 **Engineering design:** retain version identifiers and source revisions in accepted work records. Keep maintained configuration source in Git. Do not create dated snapshot directories or compressed manual distributions as a substitute for version control. The product's own runtime retention is independent of this repository's history policy.
 
-## A-06 — A handoff is an artifact, not transferred execution authority
+### A-06 — A handoff is an artifact, not transferred execution authority
 
 The following is an original team interface, not an AWS schema:
 
@@ -103,7 +115,11 @@ The receiving engineer resolves the internal evidence link, validates the resour
 
 **Failure branch:** a task naming “the latest deployment” without an immutable revision cannot establish which change was assessed. Return the work item for clarification rather than letting each product silently choose a different latest revision.
 
-## A-U01 — Worked comparison: one symptom, three different jobs
+## 04. Worked comparison
+
+Identify different jobs for the three services from the same operational symptom.
+
+### A-U01 — Worked comparison: one symptom, three different jobs
 
 **Synthetic tabletop.** A staging release produces elevated request retries, an authorization finding and increased transfer volume. Those observations are distinct; one is not proof of the others.
 
@@ -115,13 +131,17 @@ The receiving engineer resolves the internal evidence link, validates the resour
 
 **Four-minute exercise:** spend one minute identifying each product's required input, two minutes checking revision/window/identity consistency across the prepared records, and one minute assigning unresolved questions to owners. A purported single root cause is rejected unless evidence actually connects the observations. No live agents or shared runtime are assumed.
 
-## A-07 — Coverage, evidence and unresolved implementation details
+## 05. Coverage and official evidence
+
+Identify what is documented, recommended and undisclosed.
+
+### A-07 — Coverage, evidence and unresolved implementation details
 
 This comparison covers resource scoping, retained context, access layers, effects, lifecycle and handoffs. It does not propose a universal agent framework or reproduce complete IAM policies. The three platform guides carry the detailed procedures and explicit per-product coverage tables.
 
 The public sources do not justify specifying a shared vector database, embedding strategy, memory-ranking algorithm, foundation-model training pipeline or cross-product identity fabric. Where an implementation detail is not documented, the guide says so rather than completing an attractive architecture diagram with invented components.
 
-### Official sources and reviewed scope
+#### Official sources and reviewed scope
 
 - [AS01] DevOps topology versus investigation access scope.
 - [AS02] Security account and application resource hierarchy.
