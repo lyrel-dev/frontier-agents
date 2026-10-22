@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="738pt" height="385pt" viewBox="0.00 0.00 737.50 385.00" role="img" aria-labelledby="mechanism-security-replay-title mechanism-security-replay-desc" data-diagram="mechanism-security-replay">
+<title id="mechanism-security-replay-title">Finding revalidation: evidence and result boundaries</title><desc id="mechanism-security-replay-desc">Revalidation creates a separate job for selected existing findings. Non-reproduction must be interpreted under the identity and path actually reached; it is not broad new discovery. Green/AWS: documented service concept. Blue/DOC: our verification procedure. Orange/EXT: engineering-owned source. Stages are logical explanations, not API status enum values.</desc><g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(18 367)">
+<title>G</title>
+
+<g id="node1" class="node">
+<title>finding</title>
+<path fill="#d9f2e5" stroke="#348761" d="M207,-349C207,-349 12,-349 12,-349 6,-349 0,-343 0,-337 0,-337 0,-313 0,-313 0,-307 6,-301 12,-301 12,-301 207,-301 207,-301 213,-301 219,-307 219,-313 219,-313 219,-337 219,-337 219,-343 213,-349 207,-349" />
+<text text-anchor="middle" x="109.5" y="-328.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">AWS · Original finding</text>
+<text text-anchor="middle" x="109.5" y="-313.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">Validation steps and history</text>
+</g>
+
+<g id="node4" class="node">
+<title>job</title>
+<path fill="#d9f2e5" stroke="#348761" d="M457,-245C457,-245 230,-245 230,-245 224,-245 218,-239 218,-233 218,-233 218,-209 218,-209 218,-203 224,-197 230,-197 230,-197 457,-197 457,-197 463,-197 469,-203 469,-209 469,-209 469,-233 469,-233 469,-239 463,-245 457,-245" />
+<text text-anchor="middle" x="343.5" y="-224.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">AWS · Revalidation job</text>
+<text text-anchor="middle" x="343.5" y="-209.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">Repeat selected validation steps</text>
+</g>
+
+<g id="edge1" class="edge">
+<title>finding-&gt;job</title>
+<path fill="none" stroke="#526474" d="M162.31,-300.98C198.2,-285.34 245.76,-264.61 283.15,-248.31" />
+<polygon fill="#526474" stroke="#526474" points="284.66,-250.51 290.48,-245.11 282.56,-245.7 284.66,-250.51" />
+<text text-anchor="middle" x="278.5" y="-270.2" font-family="DejaVu Sans" font-size="11.00" fill="#344454">selected finding</text>
+</g>
+
+<g id="node2" class="node">
+<title>repair</title>
+<path fill="#fce8d5" stroke="#c78335" d="M430.5,-349C430.5,-349 256.5,-349 256.5,-349 250.5,-349 244.5,-343 244.5,-337 244.5,-337 244.5,-313 244.5,-313 244.5,-307 250.5,-301 256.5,-301 256.5,-301 430.5,-301 430.5,-301 436.5,-301 442.5,-307 442.5,-313 442.5,-313 442.5,-337 442.5,-337 442.5,-343 436.5,-349 430.5,-349" />
+<text text-anchor="middle" x="343.5" y="-328.8" font-family="DejaVu Sans" font-size="14.00" fill="#6d431a">EXT · Deployed repair</text>
+<text text-anchor="middle" x="343.5" y="-313.8" font-family="DejaVu Sans" font-size="14.00" fill="#6d431a">Approved target revision</text>
+</g>
+
+<g id="edge2" class="edge">
+<title>repair-&gt;job</title>
+<path fill="none" stroke="#526474" d="M343.5,-300.85C343.5,-286.64 343.5,-268.26 343.5,-252.82" />
+<polygon fill="#526474" stroke="#526474" points="346.13,-252.55 343.5,-245.05 340.88,-252.55 346.13,-252.55" />
+<text text-anchor="middle" x="398" y="-270.2" font-family="DejaVu Sans" font-size="11.00" fill="#344454">current deployment</text>
+</g>
+
+<g id="node3" class="node">
+<title>auth</title>
+<path fill="#d9f2e5" stroke="#348761" d="M689.5,-349C689.5,-349 479.5,-349 479.5,-349 473.5,-349 467.5,-343 467.5,-337 467.5,-337 467.5,-313 467.5,-313 467.5,-307 473.5,-301 479.5,-301 479.5,-301 689.5,-301 689.5,-301 695.5,-301 701.5,-307 701.5,-313 701.5,-313 701.5,-337 701.5,-337 701.5,-343 695.5,-349 689.5,-349" />
+<text text-anchor="middle" x="584.5" y="-328.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">AWS · Current test credentials</text>
+<text text-anchor="middle" x="584.5" y="-313.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">Authenticated role and route</text>
+</g>
+
+<g id="edge3" class="edge">
+<title>auth-&gt;job</title>
+<path fill="none" stroke="#526474" d="M535.09,-300.93C511.95,-290.32 483.94,-277.72 458.5,-267 443.25,-260.57 426.75,-253.93 411.13,-247.79" />
+<polygon fill="#526474" stroke="#526474" points="411.96,-245.3 404.02,-245 410.04,-250.18 411.96,-245.3" />
+<text text-anchor="middle" x="528.5" y="-270.2" font-family="DejaVu Sans" font-size="11.00" fill="#344454">current identity</text>
+</g>
+
+<g id="node5" class="node">
+<title>active</title>
+<path fill="#d9f2e5" stroke="#348761" d="M289,-152C289,-152 166,-152 166,-152 160,-152 154,-146 154,-140 154,-140 154,-116 154,-116 154,-110 160,-104 166,-104 166,-104 289,-104 289,-104 295,-104 301,-110 301,-116 301,-116 301,-140 301,-140 301,-146 295,-152 289,-152" />
+<text text-anchor="middle" x="227.5" y="-131.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">AWS · Active</text>
+<text text-anchor="middle" x="227.5" y="-116.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">Issue reproduced</text>
+</g>
+
+<g id="edge4" class="edge">
+<title>job-&gt;active</title>
+<path fill="none" stroke="#526474" d="M313.93,-196.8C298.52,-184.71 279.56,-169.84 263.32,-157.1" />
+<polygon fill="#526474" stroke="#526474" points="264.54,-154.72 257.02,-152.16 261.3,-158.85 264.54,-154.72" />
+</g>
+
+<g id="node6" class="node">
+<title>resolved</title>
+<path fill="#d9f2e5" stroke="#348761" d="M582.5,-152C582.5,-152 338.5,-152 338.5,-152 332.5,-152 326.5,-146 326.5,-140 326.5,-140 326.5,-116 326.5,-116 326.5,-110 332.5,-104 338.5,-104 338.5,-104 582.5,-104 582.5,-104 588.5,-104 594.5,-110 594.5,-116 594.5,-116 594.5,-140 594.5,-140 594.5,-146 588.5,-152 582.5,-152" />
+<text text-anchor="middle" x="460.5" y="-131.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">AWS · Resolved</text>
+<text text-anchor="middle" x="460.5" y="-116.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">Issue not reproduced in this replay</text>
+</g>
+
+<g id="edge5" class="edge">
+<title>job-&gt;resolved</title>
+<path fill="none" stroke="#526474" d="M373.33,-196.8C389,-184.61 408.33,-169.58 424.8,-156.77" />
+<polygon fill="#526474" stroke="#526474" points="426.42,-158.83 430.73,-152.16 423.2,-154.69 426.42,-158.83" />
+</g>
+
+<g id="node7" class="node">
+<title>accept</title>
+<path fill="#dcebff" stroke="#447ac2" d="M476.5,-48C476.5,-48 210.5,-48 210.5,-48 204.5,-48 198.5,-42 198.5,-36 198.5,-36 198.5,-12 198.5,-12 198.5,-6 204.5,0 210.5,0 210.5,0 476.5,0 476.5,0 482.5,0 488.5,-6 488.5,-12 488.5,-12 488.5,-36 488.5,-36 488.5,-42 482.5,-48 476.5,-48" />
+<text text-anchor="middle" x="343.5" y="-27.8" font-family="DejaVu Sans" font-size="14.00" fill="#183b69">DOC · Acceptance check</text>
+<text text-anchor="middle" x="343.5" y="-12.8" font-family="DejaVu Sans" font-size="14.00" fill="#183b69">Verify target, role and completed path</text>
+</g>
+
+<g id="edge6" class="edge">
+<title>active-&gt;accept</title>
+<path fill="none" stroke="#526474" stroke-dasharray="5,2" d="M253.82,-103.85C270.88,-88.86 293.21,-69.22 311.32,-53.3" />
+<polygon fill="#526474" stroke="#526474" points="313.38,-54.98 317.28,-48.05 309.92,-51.04 313.38,-54.98" />
+</g>
+
+<g id="edge7" class="edge">
+<title>resolved-&gt;accept</title>
+<path fill="none" stroke="#526474" stroke-dasharray="5,2" d="M433.95,-103.85C416.75,-88.86 394.23,-69.22 375.96,-53.3" />
+<polygon fill="#526474" stroke="#526474" points="377.32,-51 369.94,-48.05 373.87,-54.96 377.32,-51" />
+<text text-anchor="middle" x="458.5" y="-73.2" font-family="DejaVu Sans" font-size="11.00" fill="#344454">not sufficient alone</text>
+</g>
+</g>
+</svg>
