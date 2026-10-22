@@ -120,9 +120,28 @@ Detailed reference: [MCP provider registration and tool selection](../guides/dev
 Detailed reference: [Private network connections](../guides/devops.html#D-04)
 
 
-## 06. Incident knowledge production and selective retrieval
+## 06. Environment-knowledge consolidation
 
 12:00–14:00 · Knowledge and behavior
+
+Discovery, connected evidence, and completed investigations feed distinct retained knowledge. A later execution selects the relevant context; it still reads current source evidence.
+
+
+
+![Environment-knowledge consolidation](../assets/diagrams/devops-knowledge.svg)
+
+
+
+Detailed reference: [Environment-knowledge consolidation and refresh](../guides/devops.html#D-M08)
+
+
+
+Detailed reference: [Resource discovery and topology construction](../guides/devops.html#D-05)
+
+
+## 07. Incident knowledge production and selective retrieval
+
+14:00–16:00 · Knowledge and behavior
 
 Prior investigations and corrective feedback are separate producers. Available store descriptions lead to relevant entry selection. Current telemetry is needed to evaluate historical context in the next investigation.
 
@@ -141,25 +160,6 @@ Detailed reference: [Investigation feedback and corrective memory](../guides/dev
 
 
 Detailed reference: [Memory-store access, versions, and retention](../guides/devops.html#D-M07)
-
-
-## 07. Environment-knowledge consolidation
-
-14:00–16:00 · Knowledge and behavior
-
-Discovery, connected evidence, and completed investigations feed distinct retained knowledge. A later execution selects the relevant context; it still reads current source evidence.
-
-
-
-![Environment-knowledge consolidation](../assets/diagrams/devops-knowledge.svg)
-
-
-
-Detailed reference: [Environment-knowledge consolidation and refresh](../guides/devops.html#D-M08)
-
-
-
-Detailed reference: [Resource discovery and topology construction](../guides/devops.html#D-05)
 
 
 ## 08. Memory, instructions and skills
@@ -202,9 +202,44 @@ Detailed reference: [Runbook skills and applicability rules](../guides/devops.ht
 Detailed reference: [Memory-store access, versions, and retention](../guides/devops.html#D-M07)
 
 
-## 09. Incident pattern analysis and prevention recommendations
+## 09. Incident triage and investigation workflow
 
-19:00–22:00 · Knowledge and behavior
+19:00–21:00 · Incident response and operational execution
+
+A signal can be linked, skipped, or investigated independently. Steering affects the current analysis; completed-investigation feedback supplies a separate corrective input.
+
+
+
+![Incident triage and investigation workflow](../assets/diagrams/devops-incident.svg)
+
+
+
+Detailed reference: [Incident triage, investigation, and prevention](../guides/devops.html#D-06)
+
+
+## 10. Incident triage and investigation lifecycle
+
+21:00–24:00 · Incident response and operational execution
+
+Routing correction, diagnosis correction and mitigation approval are distinct operations.
+
+
+
+Incoming signal | Alert, ticket, webhook or manual request with incident context.
+
+Triage decision | Linked, skipped or proceed; inspect the reason before diagnosing absence.
+
+Investigation | Evidence collection, hypotheses, root-cause versions and steering.
+
+Closure and feedback | Mitigation decision, recovery evidence and correction of routing or diagnosis.
+
+
+Detailed reference: [Incident triage, investigation, and prevention](../guides/devops.html#D-06)
+
+
+## 11. Incident pattern analysis and prevention recommendations
+
+24:00–27:00 · Incident response and operational execution
 
 Incident pattern identification produces context and recommendations, not an automatically implemented fix.
 
@@ -232,39 +267,9 @@ Detailed reference: [Investigation feedback and corrective memory](../guides/dev
 Detailed reference: [Incident triage, investigation, and prevention](../guides/devops.html#D-06)
 
 
-## 10. Incident triage and investigation workflow
-
-22:00–24:00 · Execution workflows
-
-A signal can be linked, skipped, or investigated independently. Steering affects the current analysis; completed-investigation feedback supplies a separate corrective input.
-
-
-
-![Incident triage and investigation workflow](../assets/diagrams/devops-incident.svg)
-
-
-
-Detailed reference: [Incident triage, investigation, and prevention](../guides/devops.html#D-06)
-
-
-## 11. Configured operational-report workflow
-
-24:00–26:00 · Execution workflows
-
-The team defines the report period and selected evidence. An invocation queries sources, produces a report, and exposes results for review. Schedule timing and the reporting window are separate configuration decisions.
-
-
-
-![Configured operational-report workflow](../assets/diagrams/devops-reporting.svg)
-
-
-
-Detailed reference: [Custom-agent configuration and invocation](../guides/devops.html#D-07)
-
-
 ## 12. Custom agents, schedules and invocation records
 
-26:00–29:00 · Execution workflows
+27:00–30:00 · Incident response and operational execution
 
 A schedule creates future work; it does not define the data window or cancel an existing run.
 
@@ -290,29 +295,24 @@ Detailed reference: [Custom-agent configuration and invocation](../guides/devops
 Detailed reference: [Configuration APIs and update semantics](../guides/devops.html#D-08)
 
 
-## 13. Incident triage and investigation lifecycle
+## 13. Configured operational-report workflow
 
-29:00–32:00 · Execution workflows
+30:00–32:00 · Incident response and operational execution
 
-Routing correction, diagnosis correction and mitigation approval are distinct operations.
-
-
-
-Incoming signal | Alert, ticket, webhook or manual request with incident context.
-
-Triage decision | Linked, skipped or proceed; inspect the reason before diagnosing absence.
-
-Investigation | Evidence collection, hypotheses, root-cause versions and steering.
-
-Closure and feedback | Mitigation decision, recovery evidence and correction of routing or diagnosis.
+The team defines the report period and selected evidence. An invocation queries sources, produces a report, and exposes results for review. Schedule timing and the reporting window are separate configuration decisions.
 
 
-Detailed reference: [Incident triage, investigation, and prevention](../guides/devops.html#D-06)
+
+![Configured operational-report workflow](../assets/diagrams/devops-reporting.svg)
+
+
+
+Detailed reference: [Custom-agent configuration and invocation](../guides/devops.html#D-07)
 
 
 ## 14. Sandbox and directed actions
 
-32:00–35:00 · Execution workflows
+32:00–35:00 · Incident response and operational execution
 
 Execution authority depends on the specific effect; there is no universal read-only agent mode.
 
@@ -336,9 +336,35 @@ Detailed reference: [Sandbox computation and network policy](../guides/devops.ht
 Detailed reference: [Directed actions and approval scope](../guides/devops.html#D-M06)
 
 
-## 15. Use case taxonomy and delivery modes
+## 15. Release readiness review and release testing
 
-35:00–37:00 · Operational use cases
+35:00–37:00 · Incident response and operational execution
+
+Readiness review, managed verification and active application testing are separate preview operations.
+
+
+
+Preview path | Subject | Primary output | Important boundary
+
+Release readiness review | Code change and dependency context | Risk findings and recommended actions | Feature and repository eligibility are specific
+
+Managed verification | Build or test evidence for the change | Verification task and results | Not equivalent to production recovery evidence
+
+Active release testing | Running web application or API | Observed application behavior | Requests can create, modify or delete application data
+
+Custom-agent release tools | Release Manager tasks and reports | Created or analyzed release task | Use selected tools and inspect task state
+
+
+Detailed reference: [Remote access and release-assurance workflows](../guides/devops.html#D-09)
+
+
+
+Detailed reference: [Execution limits and diagnostic procedures](../guides/devops.html#D-10)
+
+
+## 16. Use case taxonomy and delivery modes
+
+37:00–39:00 · Operational use cases
 
 The catalog distinguishes native functions from configured and team-composed workflows.
 
@@ -368,9 +394,41 @@ Detailed reference: [Incident triage, investigation, and prevention](../guides/d
 Detailed reference: [Custom-agent configuration and invocation](../guides/devops.html#D-07)
 
 
-## 16. Operational reporting and review use cases
+## 17. Incident operations use cases
 
-37:00–40:00 · Operational use cases
+39:00–42:00 · Operational use cases
+
+Triage, diagnosis, recommendation and execution are different stages with different records.
+
+
+
+Use case | Initiation | Primary inputs | Reviewable output
+
+Incident signal triage | Alert, ticket or webhook | Signal identity, correlation and skip criteria | Linked, skipped or proceed decision with reason
+
+Root-cause investigation | Automatic or manual investigation | Metrics, logs, traces, changes and topology | Evidence, hypotheses, root-cause versions
+
+Investigation steering | Operator follow-up in context | Contrary evidence or missing source | Revised analysis and new root-cause version
+
+Mitigation planning | Completed or active investigation | Proposed effect, target, risk and rollback | Reviewable mitigation proposal
+
+Approved mitigation | Explicit operator approval | Exact operation and resource | Attributed action and independently checked state
+
+
+Detailed reference: [Incident triage, investigation, and prevention](../guides/devops.html#D-06)
+
+
+
+Detailed reference: [Directed actions and approval scope](../guides/devops.html#D-M06)
+
+
+
+Detailed reference: [Execution limits and diagnostic procedures](../guides/devops.html#D-10)
+
+
+## 18. Operational reporting and review use cases
+
+42:00–45:00 · Operational use cases
 
 Recurring reports are custom-agent workflows; the report contract and data window must be explicit. Scheduled custom work has a flexible start window of up to 30 minutes; telemetry resolution and report delivery are different.
 
@@ -380,7 +438,7 @@ Use case | Cadence | Source scope | Expected output
 
 On-demand service health | Ad hoc | Selected service metrics, alarms and deployments | Timestamped health answer with missing signals
 
-Minute incident status report | On demand or short schedule | Current logs, metrics and active investigation | Changed observations, open hypotheses and next check
+Incident status bulletin | On demand; flexible schedule | Current logs, metrics and active investigation | Changed observations, open hypotheses and next check
 
 Daily or weekly health report | Scheduled | Named services and complete reporting window | Trend summary, incidents, deployments and data gaps
 
@@ -400,9 +458,9 @@ Detailed reference: [MCP provider registration and tool selection](../guides/dev
 Detailed reference: [Resource discovery and topology construction](../guides/devops.html#D-05)
 
 
-## 17. Knowledge and documentation use cases
+## 19. Knowledge and documentation use cases
 
-40:00–43:00 · Operational use cases
+45:00–48:00 · Operational use cases
 
 Memory, instructions, skills and topology serve different documentation purposes and lifecycles.
 
@@ -444,9 +502,9 @@ Detailed reference: [Runbook skills and applicability rules](../guides/devops.ht
 Detailed reference: [Memory-store access, versions, and retention](../guides/devops.html#D-M07)
 
 
-## 18. Worked example: recurring alarm with different current evidence
+## 20. Worked example: recurring alarm with different current evidence
 
-43:00–51:00 · Worked example
+48:00–56:00 · Worked example
 
 Prepared evidence demonstrates how historical context can be useful without becoming the current diagnosis.
 
@@ -470,64 +528,6 @@ Detailed reference: [Incident-memory construction and retrieval](../guides/devop
 
 
 Detailed reference: [Investigation feedback and corrective memory](../guides/devops.html#D-M02)
-
-
-## 19. Incident operations use cases
-
-51:00–54:00 · Troubleshooting and references
-
-Triage, diagnosis, recommendation and execution are different stages with different records.
-
-
-
-Use case | Initiation | Primary inputs | Reviewable output
-
-Incident signal triage | Alert, ticket or webhook | Signal identity, correlation and skip criteria | Linked, skipped or proceed decision with reason
-
-Root-cause investigation | Automatic or manual investigation | Metrics, logs, traces, changes and topology | Evidence, hypotheses, root-cause versions
-
-Investigation steering | Operator follow-up in context | Contrary evidence or missing source | Revised analysis and new root-cause version
-
-Mitigation planning | Completed or active investigation | Proposed effect, target, risk and rollback | Reviewable mitigation proposal
-
-Approved mitigation | Explicit operator approval | Exact operation and resource | Attributed action and independently checked state
-
-
-Detailed reference: [Incident triage, investigation, and prevention](../guides/devops.html#D-06)
-
-
-
-Detailed reference: [Directed actions and approval scope](../guides/devops.html#D-M06)
-
-
-
-Detailed reference: [Execution limits and diagnostic procedures](../guides/devops.html#D-10)
-
-
-## 20. Release readiness review and release testing
-
-54:00–56:00 · Troubleshooting and references
-
-Readiness review, managed verification and active application testing are separate preview operations.
-
-
-
-Preview path | Subject | Primary output | Important boundary
-
-Release readiness review | Code change and dependency context | Risk findings and recommended actions | Feature and repository eligibility are specific
-
-Managed verification | Build or test evidence for the change | Verification task and results | Not equivalent to production recovery evidence
-
-Active release testing | Running web application or API | Observed application behavior | Requests can create, modify or delete application data
-
-Custom-agent release tools | Release Manager tasks and reports | Created or analyzed release task | Use selected tools and inspect task state
-
-
-Detailed reference: [Remote access and release-assurance workflows](../guides/devops.html#D-09)
-
-
-
-Detailed reference: [Execution limits and diagnostic procedures](../guides/devops.html#D-10)
 
 
 ## 21. Troubleshooting matrix and operating limits
