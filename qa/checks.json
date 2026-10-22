@@ -1,5 +1,5 @@
 {
-  "revision": "2026-10-22-mechanism-review",
+  "revision": "2026-10-23-technical-editorial-review",
   "baseline": "75f7d7c11d29e308e71a1bbe77ad93e9bc9f08a9",
   "guides": 4,
   "canonical_sections": 73,
@@ -19,7 +19,7 @@
   "slides": 81,
   "programme_minutes": 221,
   "exercise_minutes": 28,
-  "local_links_checked": 3441,
+  "local_links_checked": 3442,
   "browser_checks": [
     {
       "subject": "devops",
@@ -146,8 +146,55 @@
         "sha256": "4565514f203edd099b20fdc1472a3a1472696e147952f838e2163efe2947aa42"
       }
     },
-    "old_mechanism_core_fields_preserved": true,
+    "old_mechanism_core_fields_preserved": false,
     "added_mechanism": "MX-S-PERSONALIZE",
+    "reviewed_core_corrections": [
+      {
+        "id": "MX-F-ARTIFACT",
+        "field": "state",
+        "before": "Artifact linked to a task and query basis",
+        "after": "Report artifact, originating conversation or task, and query basis",
+        "reason": "Report generation also returns artifacts in conversation; a task is not a universal parent resource.",
+        "official_sources": [
+          "https://docs.aws.amazon.com/finops-agent/latest/userguide/custom-cost-reporting.html"
+        ]
+      },
+      {
+        "id": "MX-F-MEMORY",
+        "field": "trigger",
+        "before": "Explicit remember, update or forget request",
+        "after": "Conversation preferences, corrections or task outcomes; explicit remember, update or forget requests",
+        "reason": "The memory input model includes retained task outcomes and is not limited to imperative remember requests.",
+        "official_sources": [
+          "https://docs.aws.amazon.com/finops-agent/latest/userguide/context-files-and-memory.html"
+        ]
+      },
+      {
+        "id": "MX-S-GENERATE",
+        "field": "trigger",
+        "before": "Approved policy source is submitted",
+        "after": "Policy documents are submitted for requirement generation",
+        "reason": "Approval of policy source is a team control, not a documented service-side approval gate.",
+        "official_sources": [
+          "https://docs.aws.amazon.com/securityagent/latest/userguide/security-requirements.html"
+        ]
+      },
+      {
+        "id": "MX-D-QUERY",
+        "field": "sections",
+        "before": [
+          "D-01",
+          "D-12"
+        ],
+        "after": [
+          "D-01",
+          "D-12",
+          "D-07"
+        ],
+        "reason": "Place invocation instructions in the operations chapter; retain the high-level overview and integration references.",
+        "official_sources": []
+      }
+    ],
     "regression_checks": [
       "Missing lifecycle rejected",
       "Unresolved claim evidence rejected",
@@ -214,6 +261,877 @@
     ],
     "errors": [],
     "boundary": "Document dependency and navigation checks. Not a live AWS readiness test, exhaustive source audit or evidence of operational improvement."
+  },
+  "technical_editorial_review": {
+    "reviewed_on": "2026-10-23",
+    "baseline": "13b619a7cddd8249fbaa54931ca2099409eb8890",
+    "scope": "Technical wording, selected factual corrections, source/render consistency; not a full service audit.",
+    "rendered_documents_checked": [
+      "guides/devops.html",
+      "presentations/devops.html",
+      "guides/security.html",
+      "presentations/security.html",
+      "guides/finops.html",
+      "presentations/finops.html",
+      "guides/architecture.html",
+      "presentations/architecture.html",
+      "catalog/index.html",
+      "catalog/mechanisms.html",
+      "catalog/features.html",
+      "catalog/profiles.html",
+      "catalog/resource-models.html",
+      "index.html"
+    ],
+    "headings_and_slide_titles": [
+      {
+        "product": "devops",
+        "id": "D-01",
+        "title": "Agent Space, configuration and execution"
+      },
+      {
+        "product": "devops",
+        "id": "D-13",
+        "title": "Configuration identities and knowledge relationships"
+      },
+      {
+        "product": "devops",
+        "id": "D-12",
+        "title": "Supported integrations and connection directions"
+      },
+      {
+        "product": "devops",
+        "id": "D-02",
+        "title": "Resource roles and operator roles"
+      },
+      {
+        "product": "devops",
+        "id": "D-03",
+        "title": "MCP provider registration and tool selection"
+      },
+      {
+        "product": "devops",
+        "id": "D-04",
+        "title": "Private network connections"
+      },
+      {
+        "product": "devops",
+        "id": "D-05",
+        "title": "Resource discovery and topology construction"
+      },
+      {
+        "product": "devops",
+        "id": "D-M08",
+        "title": "Environment-knowledge consolidation and refresh"
+      },
+      {
+        "product": "devops",
+        "id": "D-M01",
+        "title": "Incident-memory construction and retrieval"
+      },
+      {
+        "product": "devops",
+        "id": "D-M02",
+        "title": "Investigation feedback and corrective memory"
+      },
+      {
+        "product": "devops",
+        "id": "D-M07",
+        "title": "Memory-store access, versions, and retention"
+      },
+      {
+        "product": "devops",
+        "id": "D-M03",
+        "title": "Global and agent-specific instructions"
+      },
+      {
+        "product": "devops",
+        "id": "D-M04",
+        "title": "Runbook skills and applicability rules"
+      },
+      {
+        "product": "devops",
+        "id": "D-06",
+        "title": "Incident triage, investigation, and prevention"
+      },
+      {
+        "product": "devops",
+        "id": "D-07",
+        "title": "Custom-agent configuration and invocation"
+      },
+      {
+        "product": "devops",
+        "id": "D-M05",
+        "title": "Sandbox computation and network policy"
+      },
+      {
+        "product": "devops",
+        "id": "D-M06",
+        "title": "Directed actions and approval scope"
+      },
+      {
+        "product": "devops",
+        "id": "D-08",
+        "title": "Configuration APIs and update semantics"
+      },
+      {
+        "product": "devops",
+        "id": "D-09",
+        "title": "Remote access and release-assurance workflows"
+      },
+      {
+        "product": "devops",
+        "id": "D-14",
+        "title": "Incident and reporting use cases in the resource model"
+      },
+      {
+        "product": "devops",
+        "id": "D-U01",
+        "title": "Recurring-alarm investigation: worked example"
+      },
+      {
+        "product": "devops",
+        "id": "D-10",
+        "title": "Execution limits and diagnostic procedures"
+      },
+      {
+        "product": "devops",
+        "id": "D-11",
+        "title": "Documentation coverage and references"
+      },
+      {
+        "product": "devops",
+        "id": "slide",
+        "title": "Agent Space, provider associations and custom invocations"
+      },
+      {
+        "product": "devops",
+        "id": "slide",
+        "title": "Agent Space, asset, and invocation identities"
+      },
+      {
+        "product": "devops",
+        "id": "slide",
+        "title": "Memory stores, entries and definition references"
+      },
+      {
+        "product": "devops",
+        "id": "slide",
+        "title": "Provider registration and Agent Space association"
+      },
+      {
+        "product": "devops",
+        "id": "slide",
+        "title": "Telemetry, source control, and incident connections"
+      },
+      {
+        "product": "devops",
+        "id": "slide",
+        "title": "Access roles, tool providers and private connectivity"
+      },
+      {
+        "product": "devops",
+        "id": "slide",
+        "title": "Environment-knowledge consolidation"
+      },
+      {
+        "product": "devops",
+        "id": "slide",
+        "title": "Memory production, availability and selective retrieval"
+      },
+      {
+        "product": "devops",
+        "id": "slide",
+        "title": "Memory, instructions and skills"
+      },
+      {
+        "product": "devops",
+        "id": "slide",
+        "title": "Incident triage and investigation workflow"
+      },
+      {
+        "product": "devops",
+        "id": "slide",
+        "title": "Incident triage and investigation lifecycle"
+      },
+      {
+        "product": "devops",
+        "id": "slide",
+        "title": "Incident pattern analysis and prevention recommendations"
+      },
+      {
+        "product": "devops",
+        "id": "slide",
+        "title": "Stopping future triggers and current invocations"
+      },
+      {
+        "product": "devops",
+        "id": "slide",
+        "title": "Configured operational-report workflow"
+      },
+      {
+        "product": "devops",
+        "id": "slide",
+        "title": "Sandbox and directed actions"
+      },
+      {
+        "product": "devops",
+        "id": "slide",
+        "title": "Release readiness review and release testing"
+      },
+      {
+        "product": "devops",
+        "id": "slide",
+        "title": "Incident response outcomes"
+      },
+      {
+        "product": "devops",
+        "id": "slide",
+        "title": "Reporting and reliability outcomes"
+      },
+      {
+        "product": "devops",
+        "id": "slide",
+        "title": "Operational knowledge and release assurance"
+      },
+      {
+        "product": "devops",
+        "id": "slide",
+        "title": "Service-health reporting: workflow dependencies"
+      },
+      {
+        "product": "devops",
+        "id": "slide",
+        "title": "Incident records and action-specific authorization"
+      },
+      {
+        "product": "devops",
+        "id": "slide",
+        "title": "Worked example: recurring alarm with different current evidence"
+      },
+      {
+        "product": "devops",
+        "id": "slide",
+        "title": "Troubleshooting matrix and operating limits"
+      },
+      {
+        "product": "security",
+        "id": "S-01",
+        "title": "Shared configuration, Agent Spaces and assessments"
+      },
+      {
+        "product": "security",
+        "id": "S-10",
+        "title": "Assessment configurations, runs and result identities"
+      },
+      {
+        "product": "security",
+        "id": "S-09",
+        "title": "Supported source and collaboration integrations"
+      },
+      {
+        "product": "security",
+        "id": "S-02",
+        "title": "User access and repository connections"
+      },
+      {
+        "product": "security",
+        "id": "S-03",
+        "title": "Test targets, dependencies, and exclusions"
+      },
+      {
+        "product": "security",
+        "id": "S-M07",
+        "title": "Application-context construction and reuse"
+      },
+      {
+        "product": "security",
+        "id": "S-M01",
+        "title": "Credential retrieval and application login"
+      },
+      {
+        "product": "security",
+        "id": "S-M02",
+        "title": "Login-workflow retention and reuse"
+      },
+      {
+        "product": "security",
+        "id": "S-M03",
+        "title": "Requirement applicability and evaluation"
+      },
+      {
+        "product": "security",
+        "id": "S-M04",
+        "title": "Requirement generation and replacement"
+      },
+      {
+        "product": "security",
+        "id": "S-M06",
+        "title": "Encryption keys, identities, and access"
+      },
+      {
+        "product": "security",
+        "id": "S-04",
+        "title": "Assessment configuration and run lifecycle"
+      },
+      {
+        "product": "security",
+        "id": "S-05",
+        "title": "Finding review and code remediation"
+      },
+      {
+        "product": "security",
+        "id": "S-M05",
+        "title": "Finding revalidation and evidence lineage"
+      },
+      {
+        "product": "security",
+        "id": "S-06",
+        "title": "Code review, design review, and threat modeling"
+      },
+      {
+        "product": "security",
+        "id": "S-11",
+        "title": "Finding lineage from assessment to repair verification"
+      },
+      {
+        "product": "security",
+        "id": "S-U01",
+        "title": "Authorization-finding remediation: worked example"
+      },
+      {
+        "product": "security",
+        "id": "S-07",
+        "title": "Assessment failures and operating limits"
+      },
+      {
+        "product": "security",
+        "id": "S-08",
+        "title": "Documentation coverage and references"
+      },
+      {
+        "product": "security",
+        "id": "slide",
+        "title": "Shared configuration and application Agent Spaces"
+      },
+      {
+        "product": "security",
+        "id": "slide",
+        "title": "Assessment configuration, run, and finding identities"
+      },
+      {
+        "product": "security",
+        "id": "slide",
+        "title": "Assessment configurations and distinct execution lifecycles"
+      },
+      {
+        "product": "security",
+        "id": "slide",
+        "title": "Application-source registration and selection"
+      },
+      {
+        "product": "security",
+        "id": "slide",
+        "title": "Repository, documentation, and Jira connections"
+      },
+      {
+        "product": "security",
+        "id": "slide",
+        "title": "Identity, repository and target configuration"
+      },
+      {
+        "product": "security",
+        "id": "slide",
+        "title": "Repository, pipeline and external tracking integrations"
+      },
+      {
+        "product": "security",
+        "id": "slide",
+        "title": "Application context and assessment criteria"
+      },
+      {
+        "product": "security",
+        "id": "slide",
+        "title": "Authentication reuse and finding personalization"
+      },
+      {
+        "product": "security",
+        "id": "slide",
+        "title": "Login Optimization and retained authentication procedures"
+      },
+      {
+        "product": "security",
+        "id": "slide",
+        "title": "Security requirements and requirement packs"
+      },
+      {
+        "product": "security",
+        "id": "slide",
+        "title": "Finding replay and verification boundaries"
+      },
+      {
+        "product": "security",
+        "id": "slide",
+        "title": "Credential resolution and application authentication"
+      },
+      {
+        "product": "security",
+        "id": "slide",
+        "title": "Assessment configuration and run lifecycle"
+      },
+      {
+        "product": "security",
+        "id": "slide",
+        "title": "Finding lineage, remediation and revalidation"
+      },
+      {
+        "product": "security",
+        "id": "slide",
+        "title": "Customer-managed encryption and service identities"
+      },
+      {
+        "product": "security",
+        "id": "slide",
+        "title": "Application, source and design assessment objectives"
+      },
+      {
+        "product": "security",
+        "id": "slide",
+        "title": "Finding disposition, repair and verification"
+      },
+      {
+        "product": "security",
+        "id": "slide",
+        "title": "Application assessment: independent configuration choices"
+      },
+      {
+        "product": "security",
+        "id": "slide",
+        "title": "Original findings and revalidation history"
+      },
+      {
+        "product": "security",
+        "id": "slide",
+        "title": "Worked example: authorization finding through revalidation"
+      },
+      {
+        "product": "security",
+        "id": "slide",
+        "title": "Troubleshooting matrix and assessment limits"
+      },
+      {
+        "product": "finops",
+        "id": "F-01",
+        "title": "Agent instance, access roles and retained state"
+      },
+      {
+        "product": "finops",
+        "id": "F-09",
+        "title": "Conversations, automations, tasks and artifacts"
+      },
+      {
+        "product": "finops",
+        "id": "F-08",
+        "title": "Supported data sources and publication destinations"
+      },
+      {
+        "product": "finops",
+        "id": "F-02",
+        "title": "Administrator, service, and operator permissions"
+      },
+      {
+        "product": "finops",
+        "id": "F-M01",
+        "title": "Cost queries and recommendation provenance"
+      },
+      {
+        "product": "finops",
+        "id": "F-05",
+        "title": "Jira projects and Slack channel connections"
+      },
+      {
+        "product": "finops",
+        "id": "F-M02",
+        "title": "Context-file preparation and management"
+      },
+      {
+        "product": "finops",
+        "id": "F-M03",
+        "title": "Persistent preferences and corrections"
+      },
+      {
+        "product": "finops",
+        "id": "F-M04",
+        "title": "Conversation summarization and context limits"
+      },
+      {
+        "product": "finops",
+        "id": "F-03",
+        "title": "Tasks, schedules, and execution history"
+      },
+      {
+        "product": "finops",
+        "id": "F-M05",
+        "title": "Anomaly events and task creation"
+      },
+      {
+        "product": "finops",
+        "id": "F-04",
+        "title": "Report generation and artifact management"
+      },
+      {
+        "product": "finops",
+        "id": "F-M06",
+        "title": "Publication permissions and approvals"
+      },
+      {
+        "product": "finops",
+        "id": "F-M07",
+        "title": "Retention, cancellation, and deletion"
+      },
+      {
+        "product": "finops",
+        "id": "F-10",
+        "title": "Context and evidence in reporting and anomaly use cases"
+      },
+      {
+        "product": "finops",
+        "id": "F-U01",
+        "title": "Cost-variance analysis: worked example"
+      },
+      {
+        "product": "finops",
+        "id": "F-06",
+        "title": "Data, task, and integration failures"
+      },
+      {
+        "product": "finops",
+        "id": "F-07",
+        "title": "Documentation coverage and references"
+      },
+      {
+        "product": "finops",
+        "id": "slide",
+        "title": "Instance roles and destination connections"
+      },
+      {
+        "product": "finops",
+        "id": "slide",
+        "title": "Instance, conversation, task, and artifact identities"
+      },
+      {
+        "product": "finops",
+        "id": "slide",
+        "title": "Conversations, automations, tasks and artifacts"
+      },
+      {
+        "product": "finops",
+        "id": "slide",
+        "title": "Data-source access and collaboration connections"
+      },
+      {
+        "product": "finops",
+        "id": "slide",
+        "title": "Cost-data and publication connections"
+      },
+      {
+        "product": "finops",
+        "id": "slide",
+        "title": "Jira and Slack publication controls"
+      },
+      {
+        "product": "finops",
+        "id": "slide",
+        "title": "Access roles and source dependencies"
+      },
+      {
+        "product": "finops",
+        "id": "slide",
+        "title": "Files, memory and conversation-context lifecycles"
+      },
+      {
+        "product": "finops",
+        "id": "slide",
+        "title": "Context files, memory and conversation compaction"
+      },
+      {
+        "product": "finops",
+        "id": "slide",
+        "title": "Task execution and destination-specific approval"
+      },
+      {
+        "product": "finops",
+        "id": "slide",
+        "title": "Anomaly investigation and cost driver analysis"
+      },
+      {
+        "product": "finops",
+        "id": "slide",
+        "title": "Optimization recommendation review"
+      },
+      {
+        "product": "finops",
+        "id": "slide",
+        "title": "Tasks, schedules and event automations"
+      },
+      {
+        "product": "finops",
+        "id": "slide",
+        "title": "Report artifacts and data lifecycle"
+      },
+      {
+        "product": "finops",
+        "id": "slide",
+        "title": "Historical cost, forecasting and commitment coverage"
+      },
+      {
+        "product": "finops",
+        "id": "slide",
+        "title": "Reporting, anomaly investigation and optimization"
+      },
+      {
+        "product": "finops",
+        "id": "slide",
+        "title": "Cost-anomaly investigation: trigger and publication controls"
+      },
+      {
+        "product": "finops",
+        "id": "slide",
+        "title": "Retained context and session-local execution"
+      },
+      {
+        "product": "finops",
+        "id": "slide",
+        "title": "Worked example: cost increase decomposition"
+      },
+      {
+        "product": "finops",
+        "id": "slide",
+        "title": "Troubleshooting matrix and preview limits"
+      },
+      {
+        "product": "architecture",
+        "id": "A-00",
+        "title": "Agents, tools, context, and executions"
+      },
+      {
+        "product": "architecture",
+        "id": "A-10",
+        "title": "Concept ownership and the approved entity model"
+      },
+      {
+        "product": "architecture",
+        "id": "A-11",
+        "title": "Product specialization and use-case traceability"
+      },
+      {
+        "product": "architecture",
+        "id": "A-09",
+        "title": "Operational objectives and implementation dependencies"
+      },
+      {
+        "product": "architecture",
+        "id": "A-01",
+        "title": "Resource identity across service boundaries"
+      },
+      {
+        "product": "architecture",
+        "id": "A-02",
+        "title": "Knowledge construction and retrieval models"
+      },
+      {
+        "product": "architecture",
+        "id": "A-08",
+        "title": "Integration direction and evidence ownership"
+      },
+      {
+        "product": "architecture",
+        "id": "A-03",
+        "title": "Network, identity, and tool-access boundaries"
+      },
+      {
+        "product": "architecture",
+        "id": "A-04",
+        "title": "Authorization of state-changing operations"
+      },
+      {
+        "product": "architecture",
+        "id": "A-05",
+        "title": "Configuration, execution, and artifact lifecycles"
+      },
+      {
+        "product": "architecture",
+        "id": "A-06",
+        "title": "Cross-team evidence handoffs"
+      },
+      {
+        "product": "architecture",
+        "id": "A-U01",
+        "title": "Cross-platform operational review: worked example"
+      },
+      {
+        "product": "architecture",
+        "id": "A-07",
+        "title": "Architecture assumptions and references"
+      },
+      {
+        "product": "architecture",
+        "id": "slide",
+        "title": "Concept ownership and resource identity"
+      },
+      {
+        "product": "architecture",
+        "id": "slide",
+        "title": "Product-specific configuration and execution models"
+      },
+      {
+        "product": "architecture",
+        "id": "slide",
+        "title": "Agent execution and evidence cycle"
+      },
+      {
+        "product": "architecture",
+        "id": "slide",
+        "title": "Comparison framework"
+      },
+      {
+        "product": "architecture",
+        "id": "slide",
+        "title": "Resource and context models"
+      },
+      {
+        "product": "architecture",
+        "id": "slide",
+        "title": "Operational objectives, mechanisms and features"
+      },
+      {
+        "product": "architecture",
+        "id": "slide",
+        "title": "Service-health reporting: required and conditional dependencies"
+      },
+      {
+        "product": "architecture",
+        "id": "slide",
+        "title": "Operational-review profiles and evidence handoffs"
+      },
+      {
+        "product": "architecture",
+        "id": "slide",
+        "title": "Team-managed evidence handoff"
+      },
+      {
+        "product": "architecture",
+        "id": "slide",
+        "title": "Connectivity, identity and authorization"
+      },
+      {
+        "product": "architecture",
+        "id": "slide",
+        "title": "Execution and approval boundaries"
+      },
+      {
+        "product": "architecture",
+        "id": "slide",
+        "title": "Configuration, execution and artifact lifecycles"
+      },
+      {
+        "product": "architecture",
+        "id": "slide",
+        "title": "Handoff record between platforms and teams"
+      },
+      {
+        "product": "architecture",
+        "id": "slide",
+        "title": "Tabletop: one operational symptom, three different jobs"
+      },
+      {
+        "product": "architecture",
+        "id": "slide",
+        "title": "Use case families across the three platforms"
+      },
+      {
+        "product": "architecture",
+        "id": "slide",
+        "title": "Documentation and presentation acceptance criteria"
+      }
+    ],
+    "protected_sources": {
+      "catalog/use-cases.json": {
+        "unchanged": true,
+        "sha256": "e5aae837db20d3dc7383b86cf22f01cb7310c8691e37122b0f11650ecc92900c"
+      },
+      "catalog/features.json": {
+        "unchanged": true,
+        "sha256": "fefc21015e00bf043a9bbbe9776caa5ca5cb2de0ab3232ca8a6437ad8ed20763"
+      },
+      "catalog/profiles.json": {
+        "unchanged": true,
+        "sha256": "89d23d92c97b95288e68de2a001186ba5846b18b6dec3774ba545143aea33190"
+      },
+      "catalog/aliases.json": {
+        "unchanged": true,
+        "sha256": "5f1efdc4eb665cdd3d7830c148d653cc2f38a7d4c7cf4cf1f68e538d95ced720"
+      },
+      "catalog/resource-models.json": {
+        "unchanged": true,
+        "sha256": "4565514f203edd099b20fdc1472a3a1472696e147952f838e2163efe2947aa42"
+      }
+    },
+    "core_corrections": [
+      {
+        "id": "MX-F-ARTIFACT",
+        "field": "state",
+        "before": "Artifact linked to a task and query basis",
+        "after": "Report artifact, originating conversation or task, and query basis",
+        "reason": "Report generation also returns artifacts in conversation; a task is not a universal parent resource.",
+        "official_sources": [
+          "https://docs.aws.amazon.com/finops-agent/latest/userguide/custom-cost-reporting.html"
+        ]
+      },
+      {
+        "id": "MX-F-MEMORY",
+        "field": "trigger",
+        "before": "Explicit remember, update or forget request",
+        "after": "Conversation preferences, corrections or task outcomes; explicit remember, update or forget requests",
+        "reason": "The memory input model includes retained task outcomes and is not limited to imperative remember requests.",
+        "official_sources": [
+          "https://docs.aws.amazon.com/finops-agent/latest/userguide/context-files-and-memory.html"
+        ]
+      },
+      {
+        "id": "MX-S-GENERATE",
+        "field": "trigger",
+        "before": "Approved policy source is submitted",
+        "after": "Policy documents are submitted for requirement generation",
+        "reason": "Approval of policy source is a team control, not a documented service-side approval gate.",
+        "official_sources": [
+          "https://docs.aws.amazon.com/securityagent/latest/userguide/security-requirements.html"
+        ]
+      },
+      {
+        "id": "MX-D-QUERY",
+        "field": "sections",
+        "before": [
+          "D-01",
+          "D-12"
+        ],
+        "after": [
+          "D-01",
+          "D-12",
+          "D-07"
+        ],
+        "reason": "Place invocation instructions in the operations chapter; retain the high-level overview and integration references.",
+        "official_sources": []
+      }
+    ],
+    "regressions": [
+      "Promotional phrase rejected",
+      "Technical limitation accepted",
+      "Artifact provenance permits conversation or task",
+      "Memory inputs include task outcomes",
+      "Generation distinguished from team approval"
+    ],
+    "errors": [],
+    "boundary": "Lexical and consistency checks supplement editorial review. They do not measure prose quality, product completeness or live service behavior."
   },
   "product_resource_model": {
     "reviewed_on": "2026-10-22",
