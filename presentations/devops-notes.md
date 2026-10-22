@@ -2,28 +2,28 @@
 
 
 
-Presentation: 59 minutes, including 8 minutes of prepared-result exercises. Questions and breaks are additional.
+Presentation: 65 minutes, including 8 minutes of prepared-result exercises. Questions and breaks are additional.
 
 
 
-## 01. DevOps Agent resource and execution architecture
+## 01. Agent Space, provider associations and custom invocations
 
-00:00–02:00 · Service architecture
+00:00–02:00 · Product-specific resource model
 
-Account-level providers and roles are associated with an Agent Space. An execution uses the selected tools and context; learning creates knowledge for later executions.
-
-
-
-![DevOps Agent resource and execution architecture](../assets/diagrams/devops-architecture.svg)
+Read the entity kind and ownership label before following the relationship. A question mark leaves exact multiplicity unspecified; the detailed register explains each logical association.
 
 
 
-Detailed reference: [The agent, Agent Space, and investigation](../guides/devops.html#D-01)
+![DevOps Agent: scope, providers and execution](../assets/diagrams/er-devops-scope.svg)
+
+
+
+Detailed reference: [Agent Space, configuration and execution](../guides/devops.html#D-01)
 
 
 ## 02. Product functions and agent space resource model
 
-02:00–05:00 · Service architecture
+02:00–05:00 · Product-specific resource model
 
 Configuration objects, executions and effects must be reviewed as separate records.
 
@@ -42,12 +42,27 @@ Execution | Investigation; custom-agent invocation; evaluation | Perform a bound
 Effect | Recommendation; approval; directed action | Separate advice from state change | Approval identity and resulting state
 
 
-Detailed reference: [The agent, Agent Space, and investigation](../guides/devops.html#D-01)
+Detailed reference: [Agent Space, configuration and execution](../guides/devops.html#D-01)
 
 
-## 03. Provider registration and Agent Space association
+## 03. Memory stores, entries and definition references
 
-05:00–07:00 · Integrations and access
+05:00–08:00 · Product-specific resource model
+
+Read the entity kind and ownership label before following the relationship. A question mark leaves exact multiplicity unspecified; the detailed register explains each logical association.
+
+
+
+![DevOps Agent: stored knowledge and configuration references](../assets/diagrams/er-devops-knowledge.svg)
+
+
+
+Detailed reference: [Configuration identities and knowledge relationships](../guides/devops.html#D-13)
+
+
+## 04. Provider registration and Agent Space association
+
+08:00–10:00 · Integrations and access
 
 Provider authentication is registered at account level. Association and tool selection make an explicit subset available to the Agent Space. The invocation still needs a working authenticated route.
 
@@ -64,9 +79,9 @@ Detailed reference: [Supported integrations and connection directions](../guides
 Detailed reference: [MCP provider registration and tool selection](../guides/devops.html#D-03)
 
 
-## 04. Telemetry, source control, and incident connections
+## 05. Telemetry, source control, and incident connections
 
-07:00–09:00 · Integrations and access
+10:00–12:00 · Integrations and access
 
 Choose the evidence source, incident-initiation path, and result destination independently. Registration and Agent Space association are separate setup steps.
 
@@ -88,9 +103,9 @@ Additional interfaces | MCP, webhooks, EventBridge | Selected tools, incoming in
 Detailed reference: [Supported integrations and connection directions](../guides/devops.html#D-12)
 
 
-## 05. Access roles, tool providers and private connectivity
+## 06. Access roles, tool providers and private connectivity
 
-09:00–12:00 · Integrations and access
+12:00–15:00 · Integrations and access
 
 Reachability, authentication, tool selection and authorization must each be tested.
 
@@ -120,9 +135,9 @@ Detailed reference: [MCP provider registration and tool selection](../guides/dev
 Detailed reference: [Private network connections](../guides/devops.html#D-04)
 
 
-## 06. Environment-knowledge consolidation
+## 07. Environment-knowledge consolidation
 
-12:00–14:00 · Knowledge and behavior
+15:00–17:00 · Knowledge and behavior
 
 Discovery, connected evidence, and completed investigations feed distinct retained knowledge. A later execution selects the relevant context; it still reads current source evidence.
 
@@ -139,9 +154,9 @@ Detailed reference: [Environment-knowledge consolidation and refresh](../guides/
 Detailed reference: [Resource discovery and topology construction](../guides/devops.html#D-05)
 
 
-## 07. Incident knowledge production and selective retrieval
+## 08. Incident knowledge production and selective retrieval
 
-14:00–16:00 · Knowledge and behavior
+17:00–19:00 · Knowledge and behavior
 
 Prior investigations and corrective feedback are separate producers. Available store descriptions lead to relevant entry selection. Current telemetry is needed to evaluate historical context in the next investigation.
 
@@ -162,9 +177,9 @@ Detailed reference: [Investigation feedback and corrective memory](../guides/dev
 Detailed reference: [Memory-store access, versions, and retention](../guides/devops.html#D-M07)
 
 
-## 08. Memory, instructions and skills
+## 09. Memory, instructions and skills
 
-16:00–19:00 · Knowledge and behavior
+19:00–22:00 · Knowledge and behavior
 
 Availability, selection and diagnostic influence are separate questions for retained context.
 
@@ -202,9 +217,9 @@ Detailed reference: [Runbook skills and applicability rules](../guides/devops.ht
 Detailed reference: [Memory-store access, versions, and retention](../guides/devops.html#D-M07)
 
 
-## 09. Incident triage and investigation workflow
+## 10. Incident triage and investigation workflow
 
-19:00–21:00 · Incident response and operational execution
+22:00–24:00 · Incident response and operational execution
 
 A signal can be linked, skipped, or investigated independently. Steering affects the current analysis; completed-investigation feedback supplies a separate corrective input.
 
@@ -217,9 +232,9 @@ A signal can be linked, skipped, or investigated independently. Steering affects
 Detailed reference: [Incident triage, investigation, and prevention](../guides/devops.html#D-06)
 
 
-## 10. Incident triage and investigation lifecycle
+## 11. Incident triage and investigation lifecycle
 
-21:00–24:00 · Incident response and operational execution
+24:00–27:00 · Incident response and operational execution
 
 Routing correction, diagnosis correction and mitigation approval are distinct operations.
 
@@ -237,9 +252,9 @@ Closure and feedback | Mitigation decision, recovery evidence and correction of 
 Detailed reference: [Incident triage, investigation, and prevention](../guides/devops.html#D-06)
 
 
-## 11. Incident pattern analysis and prevention recommendations
+## 12. Incident pattern analysis and prevention recommendations
 
-24:00–27:00 · Incident response and operational execution
+27:00–30:00 · Incident response and operational execution
 
 Incident pattern identification produces context and recommendations, not an automatically implemented fix.
 
@@ -267,9 +282,9 @@ Detailed reference: [Investigation feedback and corrective memory](../guides/dev
 Detailed reference: [Incident triage, investigation, and prevention](../guides/devops.html#D-06)
 
 
-## 12. Custom agents, schedules and invocation records
+## 13. Custom agents, schedules and invocation records
 
-27:00–30:00 · Incident response and operational execution
+30:00–33:00 · Incident response and operational execution
 
 A schedule creates future work; it does not define the data window or cancel an existing run.
 
@@ -295,9 +310,9 @@ Detailed reference: [Custom-agent configuration and invocation](../guides/devops
 Detailed reference: [Configuration APIs and update semantics](../guides/devops.html#D-08)
 
 
-## 13. Configured operational-report workflow
+## 14. Configured operational-report workflow
 
-30:00–32:00 · Incident response and operational execution
+33:00–35:00 · Incident response and operational execution
 
 The team defines the report period and selected evidence. An invocation queries sources, produces a report, and exposes results for review. Schedule timing and the reporting window are separate configuration decisions.
 
@@ -310,9 +325,9 @@ The team defines the report period and selected evidence. An invocation queries 
 Detailed reference: [Custom-agent configuration and invocation](../guides/devops.html#D-07)
 
 
-## 14. Sandbox and directed actions
+## 15. Sandbox and directed actions
 
-32:00–35:00 · Incident response and operational execution
+35:00–38:00 · Incident response and operational execution
 
 Execution authority depends on the specific effect; there is no universal read-only agent mode.
 
@@ -336,9 +351,9 @@ Detailed reference: [Sandbox computation and network policy](../guides/devops.ht
 Detailed reference: [Directed actions and approval scope](../guides/devops.html#D-M06)
 
 
-## 15. Release readiness review and release testing
+## 16. Release readiness review and release testing
 
-35:00–37:00 · Incident response and operational execution
+38:00–40:00 · Incident response and operational execution
 
 Readiness review, managed verification and active application testing are separate preview operations.
 
@@ -362,9 +377,9 @@ Detailed reference: [Remote access and release-assurance workflows](../guides/de
 Detailed reference: [Execution limits and diagnostic procedures](../guides/devops.html#D-10)
 
 
-## 16. Incident response outcomes
+## 17. Incident response outcomes
 
-37:00–40:00 · Operational objectives and implementation
+40:00–43:00 · Operational objectives and implementation
 
 Follow the operational objective through its workflow, configured mechanisms and independent completion evidence. The catalog links each dependency to its detailed guide.
 
@@ -390,9 +405,9 @@ Detailed reference: [Incident triage, investigation, and prevention](../guides/d
 Detailed reference: [Directed actions and approval scope](../guides/devops.html#D-M06)
 
 
-## 17. Reporting and reliability outcomes
+## 18. Reporting and reliability outcomes
 
-40:00–43:00 · Operational objectives and implementation
+43:00–46:00 · Operational objectives and implementation
 
 Follow the operational objective through its workflow, configured mechanisms and independent completion evidence. The catalog links each dependency to its detailed guide.
 
@@ -416,9 +431,9 @@ Detailed reference: [Custom-agent configuration and invocation](../guides/devops
 Detailed reference: [Incident triage, investigation, and prevention](../guides/devops.html#D-06)
 
 
-## 18. Operational knowledge and release assurance
+## 19. Operational knowledge and release assurance
 
-43:00–46:00 · Operational objectives and implementation
+46:00–49:00 · Operational objectives and implementation
 
 Follow the operational objective through its workflow, configured mechanisms and independent completion evidence. The catalog links each dependency to its detailed guide.
 
@@ -448,9 +463,9 @@ Detailed reference: [Environment-knowledge consolidation and refresh](../guides/
 Detailed reference: [Remote access and release-assurance workflows](../guides/devops.html#D-09)
 
 
-## 19. Service-health reporting: workflow dependencies
+## 20. Service-health reporting: workflow dependencies
 
-46:00–49:00 · Operational objectives and implementation
+49:00–52:00 · Operational objectives and implementation
 
 One reporting objective has native and configured implementations. Required evidence, optional context and conditional execution remain explicit.
 
@@ -482,9 +497,24 @@ Detailed reference: [Incident-memory construction and retrieval](../guides/devop
 Detailed reference: [Memory-store access, versions, and retention](../guides/devops.html#D-M07)
 
 
-## 20. Worked example: recurring alarm with different current evidence
+## 21. Incident records and action-specific authorization
 
-49:00–57:00 · Worked example
+52:00–55:00 · Operational objectives and implementation
+
+Read the entity kind and ownership label before following the relationship. A question mark leaves exact multiplicity unspecified; the detailed register explains each logical association.
+
+
+
+![DevOps Agent: incident records and directed-action boundary](../assets/diagrams/er-devops-incidents.svg)
+
+
+
+Detailed reference: [Incident and reporting use cases in the resource model](../guides/devops.html#D-14)
+
+
+## 22. Worked example: recurring alarm with different current evidence
+
+55:00–63:00 · Worked example
 
 Prepared evidence demonstrates how historical context can be useful without becoming the current diagnosis.
 
@@ -510,9 +540,9 @@ Detailed reference: [Incident-memory construction and retrieval](../guides/devop
 Detailed reference: [Investigation feedback and corrective memory](../guides/devops.html#D-M02)
 
 
-## 21. Troubleshooting matrix and operating limits
+## 23. Troubleshooting matrix and operating limits
 
-57:00–59:00 · Troubleshooting and references
+63:00–65:00 · Troubleshooting and references
 
 Diagnose the failed layer and retest the smallest relevant operation.
 
