@@ -6,9 +6,13 @@ The term agent describes a way of carrying out work, not one universal AWS resou
 
 Begin with the distinction between an agent definition and an execution. From there, follow the connections to external systems, the construction and retrieval of knowledge, and the controls on effects. The final chapters describe a team-managed handoff between services. They do not posit a shared memory store, common permission model, or built-in cross-product orchestrator.
 
-## 01. Agents and resource models
 
-An agent is an execution model, while an Agent Space or instance is a product-specific configuration resource. The comparison starts with these distinctions and then examines retained context.
+
+## 01. Concept ownership and product resource models
+
+Read the approved conceptual model, its ownership notation and each product specialization before comparing knowledge or execution behavior.
+
+
 
 ### A-00 — Agents, tools, context, and executions
 
@@ -23,6 +27,51 @@ The diagram is a reading model, not a shared AWS implementation. A request or ev
 This kind of agent is also different from a telemetry collection agent installed on a machine. The latter collects or forwards measurements. An operational reasoning service consumes evidence exposed through its configured access paths. Calling both an agent does not mean that DevOps Agent installs a universal host collector or that Security Agent continuously observes every request to an application.
 
 The rest of the comparison keeps four questions separate: what reusable capability exists; which operation configures or invokes it; what documented mechanism carries it out; and which engineering use case combines those pieces. The product guides provide the procedures. The catalog provides concrete applications and their prerequisites.
+
+
+
+### A-10 — Concept ownership and the approved entity model
+
+The approved conceptual model separates an operational objective from the product objects used to implement it. A use case identifies who needs a result and how completion is judged. Its workflow orders the work. A mechanism explanation describes how a documented process operates, and a feature reference leads to the concrete configuration and execution facilities used by that process. An implementation profile supplies a reviewed configuration recipe. These are this collection's concepts, not universal AWS resource types.
+
+![Concept model and product resource bindings](../assets/diagrams/er-concept-model.svg)
+
+Blue identifies concepts defined by this documentation. Green identifies AWS-defined resources or documented concepts. Orange identifies an external system, original source evidence or an engineering-owned artifact or decision. Color concerns the authority that defines the concept, not who wrote its content. A customer-authored DevOps skill is green because AWS defines the skill facility; an owner-reviewed SOP document is orange. Our implementation profile is blue, even when it configures an AWS release test profile that is green. [AS50]
+
+Green does not mean independently creatable. A service resource, an asset subtype, a configuration member, an execution record and a derived view all have different administrative behavior. For that reason every entity in the specialized models has a kind, scope and identity description as well as a name. The model does not create new CRUD operations for retained login navigation, a topology view or a conversation summary. The relevant services document those concepts without establishing one common object interface. [AS51] [AS52]
+
+The product diagrams refine the model rather than flattening the products into it. DevOps associates providers with operational spaces and offers managed and custom execution paths. Security separates shared configuration from application assessments and gives different assessment types different lifecycles. FinOps uses an instance-local context and task model whose IAM vocabulary includes service-specific AgentSpace names. Similar labels do not establish interchangeable resources. [AS50] [AS51] [AS53]
+
+Relationships are qualified in three classes. A solid relationship is explicitly documented. A dashed logical relationship is an explanatory association inferred from the described behavior, such as recording a task's optional automation origin without asserting a particular API field. A dashed editorial relationship is introduced by this collection, such as linking a use-case step to a mechanism. Exact multiplicity remains `?` when the reviewed source does not establish it. `0..*` describes a repeatable logical relationship, not an unlimited service quota.
+
+The [resource-model reference](../catalog/resource-models.html) is the generated dictionary and relationship register. It links back to the maintained guide explanations and forward to feature dependencies. It is not a new parallel use-case catalog or a database migration for any AWS service.
+
+
+
+### A-11 — Product specialization and use-case traceability
+
+Stage 2 specializes the approved model in three directions: configuration scope, execution lifecycle and knowledge ownership. The purpose is not to make the products look the same, but to let the reader locate the corresponding responsibility while preserving its actual implementation. Start with a use case, follow its conditional mechanism dependencies, then inspect the product-specific resource bindings before configuring anything. [AS50] [AS51] [AS52]
+
+| Conceptual responsibility | DevOps specialization | Security specialization | FinOps specialization |
+|---|---|---|---|
+| Scope | Agent Space with source associations and knowledge | Application Agent Space with some shared tenant configuration | Independent instance; service-specific AgentSpace name in IAM |
+| Reusable definition | Custom-agent definition, skill or test profile | Assessment-specific configuration; design review is the exception | Automation and instance configuration |
+| Execution | Investigation, custom invocation or Learning execution | Assessment run, one-off design review or revalidation job | Conversation work or separately recorded task |
+| Retained context | Stores, memory entries and versions; instructions and skills | Application sources, requirements and retained login procedure | Context files, persistent memory and conversation summaries |
+| Evidence result | Investigation output, invocation trajectory or recommendation | Source or application findings and linked revalidation results | Analysis and report artifact; upstream evidence stays distinct |
+| External effect | Eligible approved directed operation or active application test | Application requests, code proposal or finding publication | Supported Jira or Slack publication |
+
+This is a responsibility crosswalk. It does not declare that the objects in a row share an API, permission model or deletion behavior. The exact definitions and exceptions appear in D-13, S-10 and F-09. In particular, the FinOps IAM name is documented as `finops-agent:CreateAgentSpace`; it must not be silently replaced with the DevOps service namespace in scripts or policies. [AS53]
+
+The thirty approved use cases remain the authoritative outcome list. Their source records, identifiers, variants, mechanisms and implementation profiles are preserved in this revision. Each feature reference now has an explicit binding to the product objects it uses. That extra relationship answers a question the earlier catalog could not answer precisely: which actual configuration or execution record must an engineer inspect for this step?
+
+For an incident investigation, follow the signal and investigation, then any selected source and memory. For application repair verification, follow the original finding, reviewed change, deployed target and revalidation job. For cost reporting, follow the query basis, retained mapping, optional automation, task and artifact. A failed relationship changes the interpretation of the outcome: missing current telemetry cannot be repaired by recalling an earlier diagnosis; an unreachable authenticated route cannot establish a repaired vulnerability; a correct total with a stale owner mapping is still an incorrect allocation. These are engineering acceptance rules applied to documented operations, not extra native agent capabilities. [AS50] [AS51] [AS52]
+
+The shared operational-review case, [UC-G01](../catalog/index.html#UC-G01), combines reviewed results rather than native runtime state. The receiving engineer gets source identifiers, observation period, result and unresolved questions. Credentials and approval authority stay with their original product boundary. The same separation applies to knowledge: no relationship in this model asserts a shared cross-product memory service or automatic transfer of learned context.
+
+The reverse index supports configuration review. From a feature, the reader can inspect its resource bindings and the use cases that may depend on it. Conditional profiles remain conditional; the index is not a live impact detector or a proof that every linked case is deployed. The model review checks these relationships and preserves uncertain multiplicities, while live access and execution would require a separate authorized test.
+
+
 
 ### A-09 — Operational objectives and implementation dependencies
 
@@ -44,6 +93,8 @@ The linked catalog supports three reading directions. Start with an outcome to s
 
 The shared operational-review case combines reviewed reliability or cost-management results into decisions, owners and follow-up. Each service uses its own sources and authority. The review carries evidence identity and unresolved questions, not credentials, shared memory or inherited approval. A-06 describes that team handoff.
 
+
+
 ### A-01 — Workspace, configuration, and execution models
 
 A comparison begins with the objects each product actually exposes. The three services all separate configuration from execution, but their scopes and resource relationships are not interchangeable. The table below compares those documented objects without proposing a new universal agent schema.
@@ -58,6 +109,8 @@ A comparison begins with the objects each product actually exposes. The three se
 The terms differ because the objects differ. A common UI label does not make all Agent Spaces identical. In Security Agent, requirements can be shared across applications; in DevOps Agent, a topology graph is not the complete access boundary; in FinOps Agent, an instance's context can be visible to everyone with access to that instance. [AS01] [AS02] [AS03]
 
 **Engineering design:** record the platform, account/Region, configuration ID and execution ID separately. Do not put one ambiguous `agent_id` in every downstream ticket and expect it to identify all four concepts.
+
+
 
 ### A-02 — Knowledge construction and retrieval models
 
@@ -75,9 +128,13 @@ These mechanisms are documented separately in the canonical guides: D-M01, D-M02
 
 **Engineering verification:** separate five questions: was relevant input available, was retained content produced, was it accessible to this execution, was its use observable, and was the resulting conclusion correct? The final answer alone cannot resolve all five.
 
+
+
 ## 02. Integration and authorization boundaries
 
 An integration connects a source, trigger, target, or destination. The permitted direction and effect determine the relevant network and authorization controls.
+
+
 
 ### A-08 — Integration direction and evidence ownership
 
@@ -95,6 +152,8 @@ Start an integration design by drawing the direction of every exchange. An event
 The handoff in the diagram is team-composed. For example, an operational investigation can produce a service identifier and a deployment revision. An application owner can use those identifiers to scope a security assessment, while a cost engineer can use the service and time window to define a cost inquiry. The receiving service uses its own configuration and permissions. The handoff should carry references and decisions, not borrowed credentials or an assertion that an earlier approval applies everywhere.
 
 Ownership remains with the original systems. A source repository owns the reviewed revision, an assessment owns its finding, and a destination owns the published ticket or message. Removing a connection can stop future access or publication without deleting those external records. This is why a cross-platform workflow needs an explicit record of source identity, execution identity, and publication destination rather than one ambiguous status called complete.
+
+
 
 ### A-03 — Network, identity, and tool-access boundaries
 
@@ -116,6 +175,8 @@ For DevOps MCP, provider registration and Agent Space tool selection are distinc
 
 Use a non-production target and non-sensitive fixture. These are proposed tests, not recorded service outcomes.
 
+
+
 ### A-04 — Authorization of state-changing operations
 
 The effect of an operation determines which controls matter. Reading a metric, posting an issue, changing a resource, and sending an active application test request have different consequences. The comparison should follow those effects rather than assign a single read-only or autonomous label to an entire service.
@@ -132,9 +193,13 @@ The common rule is to examine the actual effect, not to label every agent “rea
 
 **Engineering design:** carry a requested effect and intended target in a work item, but never carry credentials or substitute a ticket approval for the receiving service's native authorization.
 
+
+
 ## 03. Execution lifecycles and evidence handoffs
 
 A definition, execution, retained artifact, and external record have separate lifecycles. Team handoffs preserve their identities rather than collapsing them into one status.
+
+
 
 ### A-05 — Configuration, execution, and artifact lifecycles
 
@@ -145,6 +210,8 @@ Pause an automation to stop future starts; cancel a current run using its suppor
 Security revalidation deliberately creates a new job linked to the original finding rather than silently rewriting the original assessment. DevOps memories keep immutable versions. FinOps task records and uploaded files have different retention/deletion semantics. [AS14] [AS04] [AS07]
 
 **Engineering design:** retain version identifiers and source revisions in accepted work records. Keep maintained configuration source in Git. Do not create dated snapshot directories or compressed manual distributions as a substitute for version control. The product's own runtime retention is independent of this repository's history policy.
+
+
 
 ### A-06 — Cross-team evidence handoffs
 
@@ -184,9 +251,13 @@ The receiving engineer resolves the internal evidence link, validates the resour
 
 **Failure branch:** a task naming “the latest deployment” without an immutable revision cannot establish which change was assessed. Return the work item for clarification rather than letting each product silently choose a different latest revision.
 
+
+
 ## 04. Cross-platform worked example
 
 The worked example assigns different questions to the three services while retaining the source identity and verification responsibility for each.
+
+
 
 ### A-U01 — Cross-platform operational review: worked example
 
@@ -200,9 +271,13 @@ The worked example assigns different questions to the three services while retai
 
 **Four-minute exercise:** spend one minute identifying each product's required input, two minutes checking revision/window/identity consistency across the prepared records, and one minute assigning unresolved questions to owners. A purported single root cause is rejected unless evidence actually connects the observations. No live agents or shared runtime are assumed.
 
+
+
 ## 05. Documentation coverage
 
 These diagrams and comparisons are logical explanations of documented behavior, not assertions about undisclosed runtime architecture.
+
+
 
 ### A-07 — Architecture assumptions and references
 
@@ -227,20 +302,46 @@ The public sources do not justify specifying a shared vector database, embedding
 - [AS13] Custom-agent trigger versus invocation cancellation.
 - [AS14] Security revalidation lineage.
 
+
+
 [AS01]: https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-what-is-a-devops-agent-topology.html
+
 [AS02]: https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html
+
 [AS03]: https://docs.aws.amazon.com/finops-agent/latest/userguide/creating-an-agent.html
+
 [AS04]: https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html
+
 [AS05]: https://docs.aws.amazon.com/devopsagent/latest/userguide/whats-new.html
+
 [AS06]: https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html
+
 [AS07]: https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html
+
 [AS08]: https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-connecting-mcp-servers.html
+
 [AS09]: https://docs.aws.amazon.com/finops-agent/latest/userguide/jira-integration.html
+
 [AS10]: https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-working-with-directed-actions.html
+
 [AS11]: https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html
+
 [AS12]: https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html
+
 [AS13]: https://docs.aws.amazon.com/devopsagent/latest/userguide/custom-agents-executing-custom-agents.html
+
 [AS14]: https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html
+
 [AS30]: https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html
+
 [AS31]: https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html
+
 [AS32]: https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html
+
+[AS50]: https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html
+
+[AS51]: https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html
+
+[AS52]: https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html
+
+[AS53]: https://docs.aws.amazon.com/finops-agent/latest/userguide/setting-up.html
