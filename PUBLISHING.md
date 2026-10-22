@@ -1,13 +1,5 @@
-# Publishing and rebuilding
+# Publication
 
-Only current source and generated documents are tracked. Git history is the version record. Do not create snapshot directories, compressed import payloads, or committed distribution ZIP files. Clone the repository and open index.html locally. Repository publication is not a Pages deployment.
+Edit canonical Markdown and the curated lesson plan. Rebuild and validate before changing `documentation-build.json` to request a publication run. The workflow renders the guides and slides, runs the documented checks, and commits each changed document or deletion separately. It does not create ZIP distributions or snapshot directories.
 
-```sh
-python tools/assemble_content.py
-python tools/build_suite.py
-python tools/build_suite.py --check
-python tools/editorial_lint.py
-python tools/validate_scope.py
-```
-
-Update documentation-build.json to request publication. Changed documents and deletions are committed individually. Repository visibility is unchanged.
+The documentation-owned paths are isolated from `applications/` and `.github/workflows/validation-console.yml`. Review the final Git diff and preservation check. No force push or history rewrite is part of publication.
