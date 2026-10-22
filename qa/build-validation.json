@@ -1,7 +1,0 @@
-{
-  "html_files": 12,
-  "local_links_checked": 1454,
-  "errors": [],
-  "timing_checks": "four sessions; three agents and shared architecture",
-  "boundary": "Structural checks only. External links, rendered layout and live AWS behavior require separate checks."
-}
