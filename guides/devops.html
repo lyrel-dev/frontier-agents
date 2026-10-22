@@ -1,0 +1,951 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AWS DevOps Agent</title><style>
+:root{--ink:#172c43;--navy:#142c43;--accent:#096b68;--muted:#526579;--line:#d7e1e8;--pale:#eff4f7}*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:90px}body{margin:0;color:var(--ink);background:#f6f8fa;font:16px/1.65 system-ui,-apple-system,Segoe UI,sans-serif}a{color:#075f98;text-underline-offset:3px}button,input,select{font:inherit;color:inherit;padding:9px 12px;border:1px solid #96a9b8;border-radius:5px;background:white}button{cursor:pointer}button:hover{background:#e9f4f2}:focus-visible{outline:3px solid #b46e08;outline-offset:3px}.topbar{background:var(--navy);color:white;padding:18px 30px;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}.topbar a{color:#dceaff}.brand{font-size:13px;letter-spacing:.09em;text-transform:uppercase;font-weight:700}.topbar nav{display:flex;gap:18px;flex-wrap:wrap}.shell{display:grid;grid-template-columns:265px minmax(0,1fr);gap:32px;max-width:1440px;margin:auto;padding:26px 28px}aside{position:sticky;top:20px;max-height:94vh;overflow:auto;align-self:start;padding:4px 14px 12px 0}aside h2{font-size:13px;text-transform:uppercase;letter-spacing:.1em}aside a{display:block;font-size:13px;line-height:1.4;padding:7px 9px;border-left:2px solid var(--line);text-decoration:none;margin:3px 0}aside a:hover{border-color:var(--accent);background:#e7efef}.content{min-width:0;max-width:1000px}.lead{background:white;padding:30px;border:1px solid var(--line);border-top:5px solid var(--accent);border-radius:8px}h1{font-size:clamp(28px,3.4vw,42px);line-height:1.15;letter-spacing:-.025em;margin:0 0 22px}h2{font-size:26px;line-height:1.25;margin:0 0 20px}h3{font-size:20px;line-height:1.35;margin:26px 0 12px}p{margin:0 0 17px}.report-section{background:white;border:1px solid var(--line);padding:30px;margin:25px 0;border-radius:8px;min-width:0}.section-label{font-size:11px;letter-spacing:.1em;font-weight:700;color:var(--accent);text-transform:uppercase;margin-bottom:9px}.controls{display:flex;gap:10px;flex-wrap:wrap;background:#f6f8fa;padding:15px 0;position:sticky;top:0;z-index:3}.controls input{flex:2;min-width:180px}.controls select{flex:1;min-width:130px}.status{font-size:13px;color:var(--muted);margin:0 0 10px}.table-wrap{overflow-x:auto;margin:20px 0}table{border-collapse:collapse;width:100%;font-size:14px;line-height:1.55}th,td{padding:13px 15px;border:1px solid var(--line);text-align:left;vertical-align:top;min-width:90px}th{background:#e9f0f4;font-weight:700}tr:nth-child(even) td{background:#f8fafb}pre{background:#11283d;color:#eaf2f8;padding:20px;overflow:auto;border-radius:6px;font-size:13px;line-height:1.6}code{font-size:.9em;overflow-wrap:anywhere}blockquote{border-left:4px solid var(--accent);margin:20px 0;padding:5px 20px;background:#eef6f4}li{margin:7px 0}.ref-link{font-size:12px;font-weight:600}footer{font-size:13px;color:var(--muted);padding:22px 0}.toc-toggle{display:none}[hidden]{display:none!important}.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}.card{background:white;border:1px solid var(--line);padding:26px;border-top:4px solid var(--accent);border-radius:8px}.card h2{font-size:24px}.card a{margin-right:12px}.guide-index{max-width:1180px;margin:35px auto;padding:0 24px}.small{font-size:13px;color:var(--muted)}.deck{display:none;max-width:1320px;margin:20px auto;padding:0 24px}.presenting .shell{display:none}.presenting .deck{display:block}.deck-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:15px 0}.deck-controls select{min-width:200px;flex:1}.slide{background:white;border:1px solid var(--line);border-top:6px solid var(--accent);padding:25px 34px;min-height:640px;display:flex;flex-direction:column}.slide .kicker{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}.slide h2{font-size:clamp(26px,3vw,39px);margin:12px 0 28px;max-width:1100px}.slide-body{flex:1;display:flex;align-items:center;min-height:310px}.slide table{font-size:19px}.slide th,.slide td{padding:15px;line-height:1.4}.flow{display:flex;gap:15px;width:100%;align-items:stretch}.node{flex:1;min-width:0;background:var(--pale);border-top:4px solid var(--accent);padding:20px;position:relative}.node:not(:last-child):after{content:'→';position:absolute;right:-15px;top:43%;font-size:23px;color:var(--accent)}.node strong{font-size:21px;display:block;margin-bottom:15px;line-height:1.25}.node p{font-size:19px;line-height:1.5}.columns{display:flex;gap:22px;width:100%}.column{flex:1;border-top:4px solid var(--accent);padding:22px;background:var(--pale);min-width:0}.column strong{font-size:23px;display:block;margin-bottom:18px}.column p{font-size:20px;line-height:1.5}.takeaway{background:var(--navy);color:white;padding:15px 20px;font-size:18px;line-height:1.4;margin:25px 0 10px}.slide-foot{font-size:12px;color:var(--muted);display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap}.notes{background:#f0f4f6;border:1px solid var(--line);padding:24px;margin-top:16px;max-height:500px;overflow:auto}.notes h2{font-size:22px}.notes h3{font-size:17px}.notes table{font-size:13px}.presenting .topbar{position:static}.timer{font-variant-numeric:tabular-nums;font-size:16px;font-weight:700}.source-foot{overflow-wrap:anywhere}
+@media(max-width:900px){.shell{grid-template-columns:1fr;padding:16px;gap:0}aside{position:static;max-height:250px;background:white;border:1px solid var(--line);padding:10px;margin-bottom:16px}.toc-toggle{display:inline-block}.report-section,.lead{padding:22px}.controls{position:static}.cards{grid-template-columns:1fr}.slide{padding:20px;min-height:0}.flow,.columns{flex-direction:column}.node:not(:last-child):after{display:none}.slide table{font-size:16px}.slide-body{min-height:0}.node strong,.column strong{font-size:20px}.node p,.column p{font-size:18px}.deck{padding:0 12px}.slide h2{font-size:27px}.slide .table-wrap{max-width:100%}.topbar{padding:16px}.takeaway{font-size:16px}}
+@media print{body{background:white;font-size:10pt}.topbar,aside,.controls,.deck-controls,.status,.notes,footer{display:none!important}.shell{display:block;padding:0;max-width:none}.content{max-width:none}.lead,.report-section{border:0;padding:0;margin:15px 0;break-inside:auto}.report-section[hidden]{display:block!important}.table-wrap{overflow:visible}pre{white-space:pre-wrap;color:black;background:#eee}table{font-size:9pt}.deck{padding:0;max-width:none}.presenting .slide{display:flex!important;break-after:page;min-height:0;height:95vh;border:0}.presenting .slide[hidden]{display:flex!important}.slide h2{font-size:27pt}.slide table{font-size:16pt}.slide .flow,.slide .columns{flex-direction:row}.slide .node p,.slide .column p{font-size:15pt}.slide .node strong,.slide .column strong{font-size:17pt}.takeaway{color:black;background:#eee}.source-foot{font-size:9pt}}
+</style></head><body><header class="topbar"><span class="brand">Frontier agents · engineering guides</span><nav><a href="../index.html">Collection</a><a href="../EDITORIAL_STANDARD.md">Editorial standard</a><a href="../VALIDATION.md">Validation</a></nav></header><div class="shell"><aside><h2>Contents</h2><a href="#D-01">D-01 · Service functions and resource model</a><a href="#D-02">D-02 · Establish the two access paths</a><a href="#D-03">D-03 · Connect an external MCP tool provider</a><a href="#D-04">D-04 · Private connectivity is a network mechanism</a><a href="#D-05">D-05 · Discovery, topology and learned understanding</a><a href="#D-M01">D-M01 · How previous incidents become reusable context</a><a href="#D-M02">D-M02 · Corrective feedback produces a separate lesson</a><a href="#D-M07">D-M07 · Memory attachment and lifecycle</a><a href="#D-M03">D-M03 · Standing instructions enter each new session</a><a href="#D-M04">D-M04 · Skills are selected procedures, not standing memory</a><a href="#D-06">D-06 · Incident routing and investigation feedback</a><a href="#D-07">D-07 · Custom-agent definitions, schedules and cancellation</a><a href="#D-M05">D-M05 · Investigation-local computation</a><a href="#D-M06">D-M06 · Directed-action authorization</a><a href="#D-08">D-08 · Configuration APIs and update semantics</a><a href="#D-09">D-09 · Access direction and preview release paths</a><a href="#D-10">D-10 · Limits and diagnostic decisions</a><a href="#D-U01">D-U01 · Worked example: recurring alarm, different cause</a><a href="#D-11">D-11 · Coverage and evidence notes</a></aside><main class="content"><div class="lead"><h1>AWS DevOps Agent — configuration and operation</h1>
+<p>Engineering guide • documentation reviewed 22 October 2026</p>
+<p>This guide explains the platform from its resources upward: access and connectivity, context, execution, operating procedures, and failure diagnosis. Product behavior is supported by the numbered AWS references. Sections explicitly labeled <strong>engineering procedure</strong> or <strong>synthetic exercise</strong> are recommendations or teaching examples, not additional AWS features. No account configuration or live agent execution was performed for this publication.</p>
+<p class="small"><a href="devops.md">Markdown source</a> · <a href="../presentations/devops.pptx">Editable PowerPoint</a> · <a href="../presentations/devops-notes.md">Presenter reference</a></p></div><div class="controls"><input id="search" aria-label="Search guide" placeholder="Search the guide · / to focus"><select id="kind" aria-label="Section type"><option value="">All sections</option><option value="model">Model</option><option value="procedure">Procedure</option><option value="mechanism">Mechanism</option><option value="troubleshooting">Troubleshooting</option><option value="example">Example</option><option value="reference">Reference</option></select><button id="reset">Reset</button><button id="present">Presentation</button><button data-print>Print</button></div><p id="status" class="status" aria-live="polite"></p><section class="report-section" id="D-01" data-kind="model"><div class="section-label">model</div><h2>D-01 — Service functions and resource model</h2>
+<p>The built-in functions are incident investigation, on-demand operational questions, and incident-prevention recommendations. Release-readiness review and release testing are separate preview paths. Custom agents execute operator-defined work; a scheduled health report is an application of that facility, not another independent platform primitive. Availability is feature- and Region-specific. Consult the Region table rather than assuming that the Region of a monitored workload determines where the Agent Space must reside. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-supported-regions.html" rel="noopener">DS01</a> <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-proactive-incident-prevention.html" rel="noopener">DS15</a> <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html" rel="noopener">DS18</a></p>
+<p>The configuration has two levels. An account registers providers; an Agent Space associates accounts and providers and selects available tools. Within that space, knowledge resources and agent definitions govern the context available to executions. An investigation or custom-agent invocation is a run, not the configuration that produced it. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/getting-started-with-aws-devops-agent-creating-an-agent-space.html" rel="noopener">DS02</a> <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-connecting-mcp-servers.html" rel="noopener">DS03</a> <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html" rel="noopener">DS10</a></p>
+<pre><code class="language-text">Account / Region
+  Capability provider registration ── association + selected tools ──┐
+  Primary / secondary AWS account roles ────────────────────────────┤
+                                                                  ▼
+Agent Space ── operator access ── people / authorized clients
+  ├─ discovered resources → topology and environment understanding
+  ├─ instructions / skills / memory stores
+  ├─ managed agents → investigations / chat / evaluations
+  └─ custom-agent definition → trigger → invocation → tool results
+</code></pre>
+<p>The graph is an explanatory model of documented resources, not an AWS API schema. Topology helps investigations navigate relationships; it does not constrain all possible reads. IAM permissions and integration authorization determine what resources can actually be accessed. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-what-is-a-devops-agent-topology.html" rel="noopener">DS04</a></p>
+<h3>Reusable capabilities, grouped by responsibility</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Group</th>
+<th>Capability</th>
+<th>Configurable or inspectable objects</th>
+<th>Detailed treatment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Access</td>
+<td>Scope AWS and operator access independently</td>
+<td>Resource role; operator role; account association</td>
+<td><a href="#D-02">D-02</a></td>
+</tr>
+<tr>
+<td>Connectivity</td>
+<td>Make selected external tools reachable and callable</td>
+<td>Provider; authentication; private connection; tool selection</td>
+<td><a href="#D-03">D-03</a>, <a href="#D-04">D-04</a></td>
+</tr>
+<tr>
+<td>Context</td>
+<td>Discover resources and infer relationships</td>
+<td>Discovery results; topology; learned understanding</td>
+<td><a href="#D-05">D-05</a></td>
+</tr>
+<tr>
+<td>Context</td>
+<td>Retain and retrieve environment-specific information</td>
+<td>Store; memory; description; version; active state</td>
+<td><a href="#D-M01">D-M01</a>, <a href="#D-M02">D-M02</a></td>
+</tr>
+<tr>
+<td>Behavior</td>
+<td>Supply standing guidance and specialized procedures</td>
+<td>Agent instructions; skill and its applicability</td>
+<td><a href="#D-M03">D-M03</a>, <a href="#D-M04">D-M04</a></td>
+</tr>
+<tr>
+<td>Execution</td>
+<td>Route incident signals and accept steering</td>
+<td>Triage decision; investigation; feedback</td>
+<td><a href="#D-06">D-06</a></td>
+</tr>
+<tr>
+<td>Execution</td>
+<td>Define and schedule bounded operational work</td>
+<td>Custom agent; assigned tools; trigger; invocation</td>
+<td><a href="#D-07">D-07</a></td>
+</tr>
+<tr>
+<td>Execution</td>
+<td>Run investigation-local computation</td>
+<td>Sandbox packages and network policy</td>
+<td><a href="#D-M05">D-M05</a></td>
+</tr>
+<tr>
+<td>Effects</td>
+<td>Authorize particular mutations</td>
+<td>Elevated role; tool category; approval</td>
+<td><a href="#D-M06">D-M06</a></td>
+</tr>
+<tr>
+<td>Administration</td>
+<td>Manage configuration through APIs</td>
+<td>Asset type, ID, metadata, files, versions</td>
+<td><a href="#D-08">D-08</a></td>
+</tr>
+<tr>
+<td>Observation</td>
+<td>Inspect executions and generated outputs</td>
+<td>Investigation details; invocation trajectory; audit events</td>
+<td><a href="#D-06">D-06</a>, <a href="#D-07">D-07</a>, <a href="#D-M06">D-M06</a></td>
+</tr>
+</tbody>
+</table></div>
+<p>This table is an index, not a second capability database. The referenced sections are the canonical explanations.</p>
+</section><section class="report-section" id="D-02" data-kind="procedure"><div class="section-label">procedure</div><h2>D-02 — Establish the two access paths</h2>
+<p><strong>Administrator procedure.</strong> In the AWS console, create an Agent Space, give it a name, and configure primary-account resource access. Select an automatically created role, an existing role, or the policy-template route for customized permissions. Configure the Web App role separately, then create the space. The expected confirmation is an <strong>Operator access</strong> button that opens an authenticated web application. Creating a space successfully is not confirmation that a particular telemetry API is readable. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/getting-started-with-aws-devops-agent-creating-an-agent-space.html" rel="noopener">DS02</a></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Decision</th>
+<th>Resource-access path</th>
+<th>Operator-access path</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Purpose</td>
+<td>Allow the service to inspect authorized AWS resources</td>
+<td>Allow personnel to interact with the space</td>
+</tr>
+<tr>
+<td>Review</td>
+<td>Target accounts, actions, resource scope and trust</td>
+<td>Which users can enter and what operations they can perform</td>
+</tr>
+<tr>
+<td>Proposed test</td>
+<td>Read one known non-sensitive resource and inspect its identity</td>
+<td>Sign in as the intended operator, not only the setup administrator</td>
+</tr>
+<tr>
+<td>Failure interpretation</td>
+<td>Missing data can be an API or role problem</td>
+<td>An unavailable app can be an identity/access problem</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Engineering procedure:</strong> record the space ID, Region, role ARNs and one tested resource. Keep policy source in Git. Do not publish account secrets or copy broad policy examples without adapting their resource scope. For secondary-account trust and exact IAM statements, use the linked current AWS procedure; this guide does not invent a universal trust policy. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/whats-new.html" rel="noopener">DS19</a></p>
+</section><section class="report-section" id="D-03" data-kind="procedure"><div class="section-label">procedure</div><h2>D-03 — Connect an external MCP tool provider</h2>
+<p><strong>Inbound versus outbound:</strong> this section concerns DevOps Agent calling an external MCP server. A client calling DevOps Agent's own remote endpoint is the opposite integration direction; see <a href="#D-09">D-09</a>.</p>
+<p>In <strong>Capability Providers → MCP Server → Register</strong>, enter a name and HTTPS endpoint, choose authentication, and supply the relevant fields. The documented transport is Streamable HTTP. After registration, associate the provider under the Agent Space's <strong>Capabilities → MCP Servers</strong> and select the required tools. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-connecting-mcp-servers.html" rel="noopener">DS03</a></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Authentication choice</th>
+<th>Configuration to prepare</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OAuth client credentials</td>
+<td>Client ID/secret, token exchange URL, parameters and scopes</td>
+</tr>
+<tr>
+<td>OAuth three-legged flow</td>
+<td>Client details, exchange and authorization URLs, scopes</td>
+</tr>
+<tr>
+<td>API key</td>
+<td>Secret value and the actual HTTP header name</td>
+</tr>
+<tr>
+<td>Multiple secret headers</td>
+<td>Explicit secret/header pairs; registration-only credential updates</td>
+</tr>
+<tr>
+<td>SigV4</td>
+<td>Signing Region, AWS service name, and dedicated role or documented role-less option</td>
+</tr>
+</tbody>
+</table></div>
+<p>In the role-less SigV4 option, validation is deferred until association and uses the primary account role. Registration alone is therefore not a successful connectivity test. Removal of a provider registration requires removing its associations first. Authentication update support differs by method. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-connecting-mcp-servers.html" rel="noopener">DS03</a></p>
+<p><strong>Engineering verification:</strong> register a staging provider exposing only a non-mutating <code>service_status</code> tool. Ask for a known service identifier, inspect the returned tool arguments/result, and compare the result with the source. Then request a deliberately unselected tool; the test is whether it is unavailable, not whether the model verbally promises restraint. Tool-effect classification is a separate decision under <a href="#D-M06">D-M06</a>.</p>
+</section><section class="report-section" id="D-04" data-kind="procedure"><div class="section-label">procedure</div><h2>D-04 — Private connectivity is a network mechanism</h2>
+<p>AWS uses VPC Lattice and a service-managed resource gateway whose ENIs are placed in selected subnets. Traffic reaches the target from those ENIs, not from the public integration IP list. The private connection and the provider's endpoint URL are separate configuration objects. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-connecting-to-privately-hosted-tools.html" rel="noopener">DS05</a></p>
+<p><strong>Configuration procedure:</strong> select a VPC, suitable subnets and security groups; specify a routable host and required port ranges; create the connection; associate it with the provider. For OAuth, account for both the MCP endpoint and token endpoint. On failure, inspect <code>failureMessage</code>, DNS, routing, port ranges and target-side rules before modifying credentials. The newer guidance states that omitted port ranges allow only 443. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-connecting-to-privately-hosted-tools.html" rel="noopener">DS05</a> <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/whats-new.html" rel="noopener">DS19</a></p>
+<p><strong>Illustrative configuration review:</strong> an endpoint <code>https://metrics.example.internal:8443/mcp</code> needs a route and port range covering 8443. A successful HTTPS check on port 443 is not evidence that this endpoint works. A firewall rule should identify the selected gateway network path. It should not be copied from an unrelated public-service allowlist. This example is a review checklist, not a deployable AWS resource definition.</p>
+</section><section class="report-section" id="D-05" data-kind="procedure"><div class="section-label">procedure</div><h2>D-05 — Discovery, topology and learned understanding</h2>
+<p>Discovery collects CloudFormation resources and, for tagged resources outside CloudFormation deployments, uses enabled Resource Explorer. Relationship evidence can include configuration, tags, deployment mapping and observability. Learned topology/pipeline views summarize that evidence; raw-resource views expose different levels of granularity. A missing graph node does not prove the agent cannot investigate the resource. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-what-is-a-devops-agent-topology.html" rel="noopener">DS04</a></p>
+<p>The managed Learning agent maintains environment knowledge. Its page provides knowledge, run history and scheduled-trigger inspection. Its schedules belong to the platform, unlike custom-agent triggers. Newer documentation moves learned topology, dependency, pipeline and tool-use knowledge into memory; older pages still call these learned skills. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-managed-agents.html" rel="noopener">DS06</a> <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/whats-new.html" rel="noopener">DS19</a></p>
+<p><strong>Engineering verification:</strong> choose one service, identify its actual deployed resources and repository revision, and compare them with the graph. Record missing or incorrectly inferred edges separately. Inspect a learning run and the output's version after refresh; clicking a refresh control is not the completion evidence. Do not enable additional account writes to repair a read/discovery gap.</p>
+</section><section class="report-section" id="D-M01" data-kind="mechanism"><div class="section-label">mechanism</div><h2>D-M01 — How previous incidents become reusable context</h2>
+<p><strong>Production and retrieval are distinct.</strong> The managed <code>monitors</code> store associates recurring causes and investigation evidence with an alarm or metric. AWS describes a daily learning pass when the space has investigations in the preceding two weeks; entries without updates for two weeks can be removed and full stores evict the oldest item. This is operational context, not permanent incident retention. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html" rel="noopener">DS07</a></p>
+<p>At session start, an agent sees store descriptions. It opens relevant stores, evaluates entry descriptions, and reads selected content. Updates create immutable versions. A store may exist without being selected. The public documentation does not identify a customer-controlled model-training process or disclose a retrieval-ranking implementation. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html" rel="noopener">DS07</a></p>
+<pre><code class="language-text">Past investigations → learning process → monitor-specific memory
+                                             ↓
+New signal → store relevance → entry relevance → selected context
+                                             ↓
+                              diagnosis using current evidence
+</code></pre>
+<p><strong>Operator procedure:</strong> open <strong>Knowledge → Memories</strong>, inspect the monitor store, open the relevant entry, and inspect version and modification time. Confirm that the store and entry are active. Inactive entries are excluded; the monitor store is documented as enabled by default. Use Chat to request a correction to retained information and inspect the resulting content. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html" rel="noopener">DS07</a> <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/whats-new.html" rel="noopener">DS19</a></p>
+<p><strong>Proposed acceptance test:</strong> retain the old incident's independently established cause, then investigate a new occurrence with deliberately different evidence. Record three separate conclusions: entry exists; retrieval was observable or unverified; current diagnosis matches the new evidence. Do not infer retrieval merely because the answer repeats a familiar phrase.</p>
+</section><section class="report-section" id="D-M02" data-kind="mechanism"><div class="section-label">mechanism</div><h2>D-M02 — Corrective feedback produces a separate lesson</h2>
+<p>Corrective feedback is not the same producer as monitor-history synthesis. In a completed investigation, <strong>Add feedback</strong> records the verdict and, when wrong, the actual cause; Chat is another entry point. The most recent feedback submission replaces earlier feedback for that investigation. Sharing it with AWS requires separate confirmation. The dated change log describes a <code>reflections</code> store for lessons from corrections. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-autonomous-incident-response.html" rel="noopener">DS08</a> <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/whats-new.html" rel="noopener">DS19</a></p>
+</section><section class="report-section" id="D-M07" data-kind="mechanism"><div class="section-label">mechanism</div><h2>D-M07 — Memory attachment and lifecycle</h2>
+<p>A new custom agent has no store attachments. Its definition selects accessible stores; it can write to attached custom stores, while managed stores are read-only to it. This is narrower than the managed Chat agent's documented memory editing behavior. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html" rel="noopener">DS10</a></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Object/action</th>
+<th>Documented consequence</th>
+<th>Practical inspection</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Deactivate a store or entry</td>
+<td>Stop active access without deleting content</td>
+<td>Check the active state and rerun a harmless read test</td>
+</tr>
+<tr>
+<td>Edit memory</td>
+<td>New immutable version</td>
+<td>Compare content and timestamp</td>
+</tr>
+<tr>
+<td>Remove custom-agent attachment</td>
+<td>Remove that agent's access to the store</td>
+<td>Inspect the saved definition</td>
+</tr>
+<tr>
+<td>Delete a custom store through Chat</td>
+<td>Contents must be removed first</td>
+<td>Confirm store and entries separately</td>
+</tr>
+<tr>
+<td>Delete a custom store in console</td>
+<td>Deletes its contents; not reversible</td>
+<td>Review the selected store before confirmation</td>
+</tr>
+<tr>
+<td>Delete a managed store</td>
+<td>Not supported</td>
+<td>Use supported activation/content controls instead</td>
+</tr>
+</tbody>
+</table></div>
+<p>The last two deletion behaviors and the description-selection model are documented in the newer indexed memory guidance. See the evidence notes for the older/newer-page discrepancy. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html" rel="noopener">DS07</a></p>
+</section><section class="report-section" id="D-M03" data-kind="mechanism"><div class="section-label">mechanism</div><h2>D-M03 — Standing instructions enter each new session</h2>
+<p>Global and agent-specific <code>AGENTS.md</code> text is supplied at startup; it is not selected by relevance. Changes apply to sessions started after saving. A running session retains its startup content. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-agent-instructions.html" rel="noopener">DS09</a></p>
+<p><strong>Procedure:</strong> open <strong>Agents → Managed agents</strong>, select the relevant agent, and edit the global or agent-specific instructions on <strong>Agent definition</strong>. Confirm the global change when prompted. Start a new session for verification. Older cached instructions pages show <strong>Knowledge → Instructions</strong>; the newer indexed guide and managed-agent page agree on the Agents route. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-agent-instructions.html" rel="noopener">DS09</a> <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-managed-agents.html" rel="noopener">DS06</a></p>
+<p><strong>Original example, not an AWS default:</strong></p>
+<pre><code class="language-markdown">## Incident output contract
+Identify the resource and UTC time range for every material observation.
+Separate current observations from historical context.
+When required data is unavailable, name the failed read and continue only
+with conclusions supported by the remaining evidence.
+</code></pre>
+<p>Save this only where applicable. Check an old and a new session to test propagation. An instruction changes prompt context; it does not modify IAM authorization. Keep the authoritative text in Git, rather than retaining manual document snapshots.</p>
+</section><section class="report-section" id="D-M04" data-kind="mechanism"><div class="section-label">mechanism</div><h2>D-M04 — Skills are selected procedures, not standing memory</h2>
+<p>A skill requires <code>SKILL.md</code>; its name, description and agent-type targeting determine applicability. Additional references or data can accompany it. Without Sandbox, the supported material is non-executable; Sandbox adds a code-execution surface for applicable investigations. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-skills.html" rel="noopener">DS11</a></p>
+<p><strong>Procedure:</strong> add a skill from <strong>Knowledge → Skills</strong>, write a description naming the relevant symptoms and services, choose agent scope, and supply the procedure. Test a matching request and a nonmatching request. Inspect available run evidence for selection and tool use; document an unavailable signal as unverified rather than asserting selection.</p>
+<p><strong>Original example:</strong></p>
+<pre><code class="language-markdown">---
+name: checkout-upstream-timeout
+description: Investigate checkout timeouts involving the inventory dependency.
+---
+</code></pre>
+<p>Add a procedure that compares upstream response time, connection errors and deployment timestamps using the actually connected tools. Record failed reads and distinguish observations from hypotheses. The example frontmatter illustrates applicability; it is not a complete environment-specific runbook. A procedure cannot confer missing tool permissions.</p>
+</section><section class="report-section" id="D-06" data-kind="procedure"><div class="section-label">procedure</div><h2>D-06 — Incident routing and investigation feedback</h2>
+<p>An external signal is triaged before an independent investigation is necessarily started. <strong>Linked</strong> adds the signal to existing work; <strong>Skipped</strong> applies configured skip criteria; <strong>Proceed</strong> schedules new work. The web app shows the decision and reason. Unlinking or unskipping reschedules independent investigation; correlation or skip skills can be corrected for future events. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-autonomous-incident-response.html" rel="noopener">DS08</a></p>
+<p>For a manual investigation, supply the problem, optional starting evidence, incident time, name and priority. Inspect investigation output and tool evidence, then submit feedback after completion. A route decision, a diagnosis, and a feedback verdict are different records. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-autonomous-incident-response.html" rel="noopener">DS08</a></p>
+<p><strong>Engineering procedure:</strong> for an unexpected absence of investigation, first inspect the triage record. A linked event is not lost; follow its primary investigation. A skipped event calls for reviewing the matching skill. For incorrect diagnosis, add the verified correction rather than changing a routing rule unless routing itself was wrong.</p>
+<p>Prevention evaluations analyze multiple investigations into recommendations. The <strong>Improvements</strong> page exposes the latest evaluation summary, manual evaluation and schedule controls; the documented default is weekly. This differs from daily monitor-memory refresh. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-proactive-incident-prevention.html" rel="noopener">DS15</a></p>
+</section><section class="report-section" id="D-07" data-kind="procedure"><div class="section-label">procedure</div><h2>D-07 — Custom-agent definitions, schedules and cancellation</h2>
+<p>Define a name, system prompt, selected skills and memory stores. Use Chat for tool assignment and inspect the saved definition before executing. The available tool set is the selected subset of the space's integrations. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/custom-agents-creating-a-custom-agent.html" rel="noopener">DS12</a></p>
+<p><strong>Execution procedure:</strong> choose the agent, select <strong>Run Now</strong> or <strong>Run with prompt</strong>, then open the invocation in <strong>History</strong>. Inspect tool arguments and results, not only the final text. To schedule it, open <strong>Triggers</strong>, create a rate or cron expression, and check the displayed next run. <code>cron(0 9 ? * MON-FRI *)</code> is 09:00 UTC on weekdays, not automatically Zurich civil time. Pause the trigger to stop future starts. Cancel an existing run separately; an in-flight tool call may finish after cancellation. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/custom-agents-executing-custom-agents.html" rel="noopener">DS13</a></p>
+<p><strong>Original system-prompt outline:</strong> “Read the selected staging service's alarm and deployment tools for the previous 24 complete hours. Return resource IDs, the UTC window, failed reads and links to material results. Do not publish to external destinations.” This becomes usable only after real tool names and access have been selected. A schedule without those dependencies is not a reporting capability.</p>
+</section><section class="report-section" id="D-M05" data-kind="mechanism"><div class="section-label">mechanism</div><h2>D-M05 — Investigation-local computation</h2>
+<p>Sandbox provisions a fresh Linux environment per investigation. It can execute code, access configured packages and use account profiles within existing permissions. Its default outbound policy permits AWS service endpoints; other destinations require allowlisting. The reviewed preview does not extend this environment to all chat or custom-agent paths. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-sandbox.html" rel="noopener">DS14</a></p>
+<p><strong>Procedure:</strong> in the console, select the space, open <strong>Capabilities → Sandbox → Configure</strong>, select packages and add required host/method/path rules, then save. An empty allowlist is not total network isolation. Remove the Sandbox configuration to stop future use; do not assume that changing configuration rewinds already executed code. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-sandbox.html" rel="noopener">DS14</a></p>
+<p><strong>Proposed check:</strong> process a harmless supplied dataset, inspect code and numerical results, and test that an unlisted non-AWS endpoint is unavailable. Do not use production mutation as a connectivity test. Network filtering, AWS permissions and directed-action approvals are distinct controls.</p>
+</section><section class="report-section" id="D-M06" data-kind="mechanism"><div class="section-label">mechanism</div><h2>D-M06 — Directed-action authorization</h2>
+<p>Directed actions require space opt-in, eligible target-account elevated access or integration configuration, and specific operator approval. The approval binds the operation and resource; AWS calls are attributed through CloudTrail. A saved role is a permission ceiling, not a standing approval. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-working-with-directed-actions.html" rel="noopener">DS16</a></p>
+<p><strong>Procedure:</strong> enable the space setting; register the target account's <code>agentElevatedRoleArn</code>; review tool categories for connected services; ask for the particular change; review or adjust parameters; approve or reject; then compare resulting state with the approved operation. Programmatically registered tools without <code>toolDetails</code> default to read-only. Incorrect classification can bypass the expected approval prompt. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-working-with-directed-actions.html" rel="noopener">DS16</a></p>
+<p>When using <code>UpdateAgentSpace</code>, supplying <code>preferences</code> replaces that complete map; omitted preferences revert to defaults. Read current settings first and verify them afterward. A denied mutation should lead to inspection of enablement, role trust, permission policy, tool category and approval scope—not unconditional elevation. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-working-with-directed-actions.html" rel="noopener">DS16</a></p>
+</section><section class="report-section" id="D-08" data-kind="procedure"><div class="section-label">procedure</div><h2>D-08 — Configuration APIs and update semantics</h2>
+<p>Asset management uses the <code>devops-agent</code> CLI/SDK client but <code>aidevops:</code> IAM actions. <code>ListAssetTypes</code> discovers supported types; other asset operations generally authorize against the Agent Space ARN. Metadata keys use snake_case, while top-level request keys use camelCase. Metadata updates use PATCH semantics; asset type cannot be changed. Custom-agent skill/store references require asset IDs, not names. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-managing-assets.html" rel="noopener">DS17</a></p>
+<p><strong>Read-only inspection pattern:</strong></p>
+<pre><code class="language-bash">aws devops-agent list-asset-types --region "$AWS_REGION"
+aws devops-agent list-assets --agent-space-id "$AGENT_SPACE_ID" --region "$AWS_REGION"
+</code></pre>
+<p>Set both variables to your approved environment; these commands were not executed here. Inspect returned metadata before changing it. Asset PATCH behavior must not be generalized to the replacement behavior of the directed-action preference map. For content upload/file operations and deployment templates, follow the type-specific official examples rather than constructing an undocumented payload. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-managing-assets.html" rel="noopener">DS17</a></p>
+</section><section class="report-section" id="D-09" data-kind="procedure"><div class="section-label">procedure</div><h2>D-09 — Access direction and preview release paths</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Path</th>
+<th>Caller → recipient</th>
+<th>What it connects</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>External-tool MCP</td>
+<td>DevOps Agent → your tool server</td>
+<td>Tool/data access; <a href="#D-03">D-03</a></td>
+</tr>
+<tr>
+<td>Remote service endpoint</td>
+<td>Authorized client → DevOps Agent</td>
+<td>MCP or agent-protocol access to service capabilities</td>
+</tr>
+<tr>
+<td>Webhook</td>
+<td>Incident system → Agent Space</td>
+<td>Incident initiation</td>
+</tr>
+<tr>
+<td>Asset/service APIs</td>
+<td>Administrator or automation → AWS API</td>
+<td>Configuration and supported service operations</td>
+</tr>
+</tbody>
+</table></div>
+<p>Each path has its own authentication and permissions. Connecting a tool server does not grant a client access to the agent. The access guide links the remote endpoint, webhook and API procedures. Their complete protocol setup is linked, not reproduced in this edition. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-accessing-devops-agent-index.html" rel="noopener">DS20</a></p>
+<p>Release testing interacts with a deployed application and can create, modify or delete application data. A test profile supplies reusable context; the execution produces evidence about that run. Treat it separately from code/readiness analysis. Use a disposable target and disabled external side effects before trying the preview. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/release-management-release-testing.html" rel="noopener">DS21</a></p>
+</section><section class="report-section" id="D-10" data-kind="troubleshooting"><div class="section-label">troubleshooting</div><h2>D-10 — Limits and diagnostic decisions</h2>
+<p>Selected defaults in the reviewed quota guide: three concurrent investigations per space; five concurrent custom invocations per space but one per custom agent; one-hour custom invocation timeout; 500 allowlisted MCP tools; 50 memory stores, 200 entries per store and 100 KB per entry. Some concurrency quotas are adjustable; the custom-agent and memory limits shown are not. Confirm the effective quota before rollout. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/quotas.html" rel="noopener">DS22</a></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Inspect first</th>
+<th>Corrective decision / expected evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Web app unavailable</td>
+<td>Operator identity and role</td>
+<td>Repair entry permissions; opening as administrator is not the end-user test</td>
+</tr>
+<tr>
+<td>Missing topology resource</td>
+<td>CloudFormation/Resource Explorer and readable metadata</td>
+<td>Distinguish discovery absence from denied direct access</td>
+</tr>
+<tr>
+<td>Provider registers but no tool works</td>
+<td>Space association, selected tools, auth mode</td>
+<td>For role-less SigV4, verify primary-account validation and invoke permission</td>
+</tr>
+<tr>
+<td>Private endpoint times out</td>
+<td>Connection failureMessage, DNS, port ranges, gateway ENIs</td>
+<td>Correct the network path before rotating a valid secret</td>
+</tr>
+<tr>
+<td>Memory is ignored</td>
+<td>Store/entry activation, descriptions, agent attachments</td>
+<td>Compare availability and observed retrieval separately</td>
+</tr>
+<tr>
+<td>Instruction change has no effect</td>
+<td>Session start time and instruction scope</td>
+<td>Retest in a newly started session</td>
+</tr>
+<tr>
+<td>Custom run cannot start</td>
+<td>Existing invocation and per-agent concurrency</td>
+<td>Cancel or inspect current work; do not duplicate definitions</td>
+</tr>
+<tr>
+<td>Mutation is rejected</td>
+<td>Opt-in, role, category, approval</td>
+<td>Repair the failing layer; preserve the narrow target scope</td>
+</tr>
+</tbody>
+</table></div>
+<p>This diagnostic ordering is an engineering synthesis of <a href="#D-02">D-02</a> through <a href="#D-M06">D-M06</a>, not an additional AWS troubleshooting API.</p>
+</section><section class="report-section" id="D-U01" data-kind="example"><div class="section-label">example</div><h2>D-U01 — Worked example: recurring alarm, different cause</h2>
+<p><strong>Synthetic exercise, not an AWS execution.</strong> The same checkout latency alarm fired in two incidents. In the first, connection exhaustion was verified. The new fixture contains the evidence below; values are invented and are not performance claims.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Observation</th>
+<th style="text-align:right">Earlier incident</th>
+<th style="text-align:right">New incident</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Database connections / configured limit</td>
+<td style="text-align:right">100 / 100</td>
+<td style="text-align:right">34 / 100</td>
+</tr>
+<tr>
+<td>Database query p95</td>
+<td style="text-align:right">900 ms</td>
+<td style="text-align:right">18 ms</td>
+</tr>
+<tr>
+<td>Inventory upstream p95</td>
+<td style="text-align:right">40 ms</td>
+<td style="text-align:right">2,900 ms</td>
+</tr>
+<tr>
+<td>Checkout p95</td>
+<td style="text-align:right">3,200 ms</td>
+<td style="text-align:right">3,100 ms</td>
+</tr>
+<tr>
+<td>Known change</td>
+<td style="text-align:right">Database pool configuration</td>
+<td style="text-align:right">Inventory deployment at 10:02 UTC</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Walkthrough:</strong> inspect the old monitor entry; start a separately identified investigation with the new UTC window and evidence; ask for competing explanations; locate observable memory/tool access; compare the result to the table. The prior database hypothesis is weakened by current connection and query figures. The inventory path is the stronger lead, but a nearby deployment alone does not establish its internal cause.</p>
+<p><strong>Expected output:</strong> a current-evidence explanation identifying upstream latency as the supported direction, the old cause as historical context, and missing upstream logs as an unresolved dependency. No deployment action is justified solely by this fixture. A wrong repeated database diagnosis should receive corrective feedback with the contrary evidence.</p>
+<p><strong>Failure branch:</strong> when no retrieval evidence is exposed, record memory use as unverified. When current telemetry is inaccessible, report insufficient evidence; do not substitute the old memory for current measurements. This exercise tests the distinction between retention, retrieval and diagnosis, not whether a memorized sentence appears.</p>
+</section><section class="report-section" id="D-11" data-kind="reference"><div class="section-label">reference</div><h2>D-11 — Coverage and evidence notes</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>AWS subject</th>
+<th>Treatment here</th>
+<th>Deliberate boundary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Workspace, roles, topology</td>
+<td>Configuration and diagnostic model</td>
+<td>Exact organization IAM policy remains in official reference</td>
+</tr>
+<tr>
+<td>MCP/private connectivity</td>
+<td>Authentication decisions and operational sequence</td>
+<td>No customer network topology assumed</td>
+</tr>
+<tr>
+<td>Knowledge and learning</td>
+<td>Producer, retrieval, feedback, activation, attachment, lifecycle</td>
+<td>No claims about hidden ranking or model training</td>
+</tr>
+<tr>
+<td>Managed/custom execution</td>
+<td>Routing, manual runs, schedules, cancellation, observation</td>
+<td>Not every external incident provider reproduced</td>
+</tr>
+<tr>
+<td>Assets and directed actions</td>
+<td>Distinct update semantics and authorization</td>
+<td>Full SDK schemas and denial lists linked</td>
+</tr>
+<tr>
+<td>Sandbox/release preview</td>
+<td>Configuration and effect boundaries</td>
+<td>Full release-profile authoring is deferred</td>
+</tr>
+<tr>
+<td>Quotas</td>
+<td>Selected day-to-day constraints</td>
+<td>Complete current quota/Region tables remain authoritative</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Source-version decisions:</strong> older cached pages and newer indexed AWS content differed for instruction navigation, custom-store attachment and learned-knowledge storage. This edition uses the newer indexed managed-agent, memory, asset and dated-change guidance for those points. The Region table was not reproduced as a complete regional inventory. A retrieval date is not a claim that AWS published the page on that date.</p>
+<h3>Official sources and reviewed sections</h3>
+<ul>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-supported-regions.html" rel="noopener">DS01</a> Service/feature eligibility; Supported Regions and Feature availability.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/getting-started-with-aws-devops-agent-creating-an-agent-space.html" rel="noopener">DS02</a> Space creation; primary account and Web App roles; verification.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-connecting-mcp-servers.html" rel="noopener">DS03</a> MCP requirements; registration, association, authentication, rotation and role-less validation. Newer indexed content used.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-what-is-a-devops-agent-topology.html" rel="noopener">DS04</a> Topology views, discovery and scope beyond the graph.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-connecting-to-privately-hosted-tools.html" rel="noopener">DS05</a> Private gateway operation, firewall rules and connection verification.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-managed-agents.html" rel="noopener">DS06</a> Managed agents; Learning history and platform-owned triggers. Indexed content used.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html" rel="noopener">DS07</a> Memory production, retrieval, versions, activation, custom-store deletion. Older HTML reconciled with newer indexed content.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-autonomous-incident-response.html" rel="noopener">DS08</a> Investigation initiation, triage decisions/corrections and feedback.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-agent-instructions.html" rel="noopener">DS09</a> Instruction scoping and new-session behavior; newer indexed navigation used.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html" rel="noopener">DS10</a> Custom-agent tool/store scope and invocation model. Newer indexed content used.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-skills.html" rel="noopener">DS11</a> Skill applicability, format and authoring.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/custom-agents-creating-a-custom-agent.html" rel="noopener">DS12</a> Custom-agent creation and store selection. Indexed content used.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/custom-agents-executing-custom-agents.html" rel="noopener">DS13</a> Manual execution, schedules, cancellation and trajectories.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-sandbox.html" rel="noopener">DS14</a> Sandbox execution, network defaults, configuration and preview limits.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-proactive-incident-prevention.html" rel="noopener">DS15</a> Prevention evaluations and controls.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-working-with-directed-actions.html" rel="noopener">DS16</a> Directed-action enablement, preferences replacement, categories, approval and audit.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-managing-assets.html" rel="noopener">DS17</a> Asset operation/permission map, IDs and PATCH metadata. Newer indexed content used.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html" rel="noopener">DS18</a> Built-in versus custom capabilities.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/whats-new.html" rel="noopener">DS19</a> Dated changes: monitor default, memory migration, reflections, private ports.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-accessing-devops-agent-index.html" rel="noopener">DS20</a> Access methods and direction; client-specific setup not reproduced.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/release-management-release-testing.html" rel="noopener">DS21</a> Release testing operation and application-write warning.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/quotas.html" rel="noopener">DS22</a> Selected quota defaults and adjustability; newer indexed table used.</li>
+</ul>
+</section><footer>Documentation review is separate from configuration and runtime testing. No live AWS execution was performed.</footer></main></div><div class="deck"><div class="deck-controls"><button id="read">Read guide</button><button id="prev">Previous</button><select id="slide-select" aria-label="Select slide"><option value="0">1. An Agent Space connects configuration to executions</option><option value="1">2. Two access paths need separate verification</option><option value="2">3. MCP setup has authentication-specific decisions</option><option value="3">4. Private routing and provider identity are separate</option><option value="4">5. Topology is a representation, not an access boundary</option><option value="5">6. Past incidents become selected contextual evidence</option><option value="6">7. Corrections and access attachments solve different problems</option><option value="7">8. Instructions and skills enter the session differently</option><option value="8">9. Inspect triage before diagnosing a missing investigation</option><option value="9">10. A trigger creates work; cancellation affects a run</option><option value="10">11. Sandbox and directed actions have different boundaries</option><option value="11">12. Update semantics are part of the operational contract</option><option value="12">13. Exercise: same alarm, different evidence</option><option value="13">14. Diagnose the failing layer, then retest</option></select><button id="next">Next</button><label><input id="notes-toggle" type="checkbox"> Notes</label><button id="timer-toggle">Start timer</button><button id="timer-reset">Reset timer</button><span id="timer" class="timer">0:00</span><button data-print>Print slides</button></div><p class="small">37 minutes including 8 minutes of prepared-result exercise. Arrow keys navigate; Escape returns to guide.</p><article class="slide" data-seconds="120" data-kind="flow"><div class="kicker">AWS DevOps Agent · flow</div><h2>An Agent Space connects configuration to executions</h2><div class="slide-body"><div class="flow"><div class="node"><strong>Account registrations</strong><p>Providers and AWS account access</p></div><div class="node"><strong>Agent Space</strong><p>Associations, selected tools and operator access</p></div><div class="node"><strong>Agent definition</strong><p>Managed behavior or custom prompt and attachments</p></div><div class="node"><strong>Execution</strong><p>Investigation, invocation and observable tool results</p></div></div></div><div class="takeaway">Configuration, execution and evidence are different objects.</div><div class="slide-foot"><span>1 / 14 · 00:00–02:00 · 2 min</span><span><a href="#D-01">D-01</a></span></div></article><article class="slide" data-seconds="120" data-kind="table" hidden><div class="kicker">AWS DevOps Agent · table</div><h2>Two access paths need separate verification</h2><div class="slide-body"><div class="table-wrap"><table><thead><tr><th>Path</th><th>Purpose</th><th>Acceptance check</th></tr></thead><tbody><tr><td>Resource role</td><td>Read authorized AWS sources</td><td>Known resource and identity are correct</td></tr><tr><td>Operator role</td><td>Let people use the space</td><td>Intended user—not only administrator—can enter</td></tr><tr><td>Connected provider</td><td>Access selected external tools</td><td>Arguments and returned source agree</td></tr></tbody></table></div></div><div class="takeaway">A created workspace is not proof that its data sources are readable.</div><div class="slide-foot"><span>2 / 14 · 02:00–04:00 · 2 min</span><span><a href="#D-02">D-02</a></span></div></article><article class="slide" data-seconds="180" data-kind="table" hidden><div class="kicker">AWS DevOps Agent · table</div><h2>MCP setup has authentication-specific decisions</h2><div class="slide-body"><div class="table-wrap"><table><thead><tr><th>Method</th><th>Required decisions</th></tr></thead><tbody><tr><td>OAuth</td><td>Token/authorization endpoints, client and scopes</td></tr><tr><td>API key / secret headers</td><td>Actual header names and supported rotation path</td></tr><tr><td>SigV4</td><td>Signing Region, service and role option</td></tr><tr><td>Association</td><td>Select tools in the Agent Space; verify there</td></tr></tbody></table></div></div><div class="takeaway">Role-less SigV4 validation is deferred to association.</div><div class="slide-foot"><span>3 / 14 · 04:00–07:00 · 3 min</span><span><a href="#D-03">D-03</a></span></div></article><article class="slide" data-seconds="120" data-kind="flow" hidden><div class="kicker">AWS DevOps Agent · flow</div><h2>Private routing and provider identity are separate</h2><div class="slide-body"><div class="flow"><div class="node"><strong>Agent service</strong><p>Uses configured private connection</p></div><div class="node"><strong>Resource gateway</strong><p>ENIs in selected VPC subnets</p></div><div class="node"><strong>Endpoint route</strong><p>DNS, host and allowed port ranges</p></div><div class="node"><strong>Authenticated tool</strong><p>Provider authentication and selected operation</p></div></div></div><div class="takeaway">Check the gateway path and target port before rotating a valid secret.</div><div class="slide-foot"><span>4 / 14 · 07:00–09:00 · 2 min</span><span><a href="#D-04">D-04</a></span></div></article><article class="slide" data-seconds="120" data-kind="columns" hidden><div class="kicker">AWS DevOps Agent · columns</div><h2>Topology is a representation, not an access boundary</h2><div class="slide-body"><div class="columns"><div class="column"><strong>Discovery</strong><p>CloudFormation resources and enabled Resource Explorer supply inventory.</p></div><div class="column"><strong>Relationships</strong><p>Configuration, tags, pipeline mapping and observability supply evidence.</p></div><div class="column"><strong>Verification</strong><p>Compare one service/repository edge with the deployed configuration.</p></div></div></div><div class="takeaway">A missing graph node does not establish that a direct resource read is denied.</div><div class="slide-foot"><span>5 / 14 · 09:00–11:00 · 2 min</span><span><a href="#D-05">D-05</a></span></div></article><article class="slide" data-seconds="180" data-kind="flow" hidden><div class="kicker">AWS DevOps Agent · flow</div><h2>Past incidents become selected contextual evidence</h2><div class="slide-body"><div class="flow"><div class="node"><strong>Investigations</strong><p>Earlier outcomes and evidence</p></div><div class="node"><strong>Learning process</strong><p>Synthesizes monitor-specific knowledge</p></div><div class="node"><strong>Memory store</strong><p>Descriptions, entries, versions and active state</p></div><div class="node"><strong>New investigation</strong><p>Selects relevant context and checks current evidence</p></div></div></div><div class="takeaway">Retention, retrieval and diagnostic correctness require separate observations.</div><div class="slide-foot"><span>6 / 14 · 11:00–14:00 · 3 min</span><span><a href="#D-M01">D-M01</a></span></div></article><article class="slide" data-seconds="120" data-kind="columns" hidden><div class="kicker">AWS DevOps Agent · columns</div><h2>Corrections and access attachments solve different problems</h2><div class="slide-body"><div class="columns"><div class="column"><strong>Correct a diagnosis</strong><p>Submit verified feedback; inspect the resulting lesson. AWS sharing is a separate choice.</p></div><div class="column"><strong>Attach context</strong><p>New custom agents start without stores. Attach only required stores; managed stores are read-only to them.</p></div></div></div><div class="takeaway">Feedback changes contextual knowledge; attachment changes which context an agent may use.</div><div class="slide-foot"><span>7 / 14 · 14:00–16:00 · 2 min</span><span><a href="#D-M02">D-M02</a> · <a href="#D-M07">D-M07</a></span></div></article><article class="slide" data-seconds="120" data-kind="table" hidden><div class="kicker">AWS DevOps Agent · table</div><h2>Instructions and skills enter the session differently</h2><div class="slide-body"><div class="table-wrap"><table><thead><tr><th>Control</th><th>Loading behavior</th><th>Configuration test</th></tr></thead><tbody><tr><td>Instructions</td><td>Applicable text at session startup</td><td>Compare an existing and new session</td></tr><tr><td>Skill</td><td>Procedure selected by description and scope</td><td>Compare a matching and nonmatching request</td></tr><tr><td>Permissions</td><td>Enforced by the connected systems</td><td>Test an expected denial separately</td></tr></tbody></table></div></div><div class="takeaway">Prompt guidance does not grant or revoke IAM permissions.</div><div class="slide-foot"><span>8 / 14 · 16:00–18:00 · 2 min</span><span><a href="#D-M03">D-M03</a> · <a href="#D-M04">D-M04</a></span></div></article><article class="slide" data-seconds="120" data-kind="table" hidden><div class="kicker">AWS DevOps Agent · table</div><h2>Inspect triage before diagnosing a missing investigation</h2><div class="slide-body"><div class="table-wrap"><table><thead><tr><th>Decision</th><th>Meaning</th><th>Operator response</th></tr></thead><tbody><tr><td>Linked</td><td>Signal belongs to existing work</td><td>Inspect the primary investigation; unlink if wrong</td></tr><tr><td>Skipped</td><td>Configured criteria excluded it</td><td>Inspect rule/skill; unskip if wrong</td></tr><tr><td>Proceed</td><td>Independent work is scheduled</td><td>Inspect execution and evidence</td></tr></tbody></table></div></div><div class="takeaway">Routing correction and root-cause feedback are different operations.</div><div class="slide-foot"><span>9 / 14 · 18:00–20:00 · 2 min</span><span><a href="#D-06">D-06</a></span></div></article><article class="slide" data-seconds="120" data-kind="flow" hidden><div class="kicker">AWS DevOps Agent · flow</div><h2>A trigger creates work; cancellation affects a run</h2><div class="slide-body"><div class="flow"><div class="node"><strong>Definition</strong><p>Prompt, selected tools, skills and stores</p></div><div class="node"><strong>Trigger</strong><p>Manual, rate or cron; inspect next run</p></div><div class="node"><strong>Invocation</strong><p>History shows status and tool trajectory</p></div><div class="node"><strong>Stop controls</strong><p>Pause future starts; cancel existing work separately</p></div></div></div><div class="takeaway">In-flight calls may finish after cancellation; a schedule is not the data window.</div><div class="slide-foot"><span>10 / 14 · 20:00–22:00 · 2 min</span><span><a href="#D-07">D-07</a></span></div></article><article class="slide" data-seconds="180" data-kind="columns" hidden><div class="kicker">AWS DevOps Agent · columns</div><h2>Sandbox and directed actions have different boundaries</h2><div class="slide-body"><div class="columns"><div class="column"><strong>Sandbox</strong><p>Fresh investigation-local environment; configured packages and outbound rules. Empty allowlist still permits AWS endpoints.</p></div><div class="column"><strong>Directed actions</strong><p>Space opt-in, eligible access and specific operation/resource approval. Inspect classification and final state.</p></div></div></div><div class="takeaway">Application or tool effects must be reviewed; “read-only” is not a universal agent label.</div><div class="slide-foot"><span>11 / 14 · 22:00–25:00 · 3 min</span><span><a href="#D-M05">D-M05</a> · <a href="#D-M06">D-M06</a></span></div></article><article class="slide" data-seconds="120" data-kind="table" hidden><div class="kicker">AWS DevOps Agent · table</div><h2>Update semantics are part of the operational contract</h2><div class="slide-body"><div class="table-wrap"><table><thead><tr><th>Object</th><th>Update behavior</th><th>Avoid</th></tr></thead><tbody><tr><td>Asset metadata</td><td>PATCH semantics</td><td>Assuming names can replace required asset IDs</td></tr><tr><td>Space preferences map</td><td>Replacement when supplied</td><td>Dropping existing values unintentionally</td></tr><tr><td>Memory entry</td><td>New immutable version</td><td>Treating edits as erased history</td></tr></tbody></table></div></div><div class="takeaway">Read current configuration first, then verify the saved result.</div><div class="slide-foot"><span>12 / 14 · 25:00–27:00 · 2 min</span><span><a href="#D-08">D-08</a> · <a href="#D-M06">D-M06</a></span></div></article><article class="slide" data-seconds="480" data-kind="demo" hidden><div class="kicker">AWS DevOps Agent · demo</div><h2>Exercise: same alarm, different evidence</h2><div class="slide-body"><div class="table-wrap"><table><thead><tr><th>Time</th><th>Action</th><th>Prepared evidence</th></tr></thead><tbody><tr><td>0–2 min</td><td>Inspect historical memory</td><td>Earlier database pool saturation</td></tr><tr><td>2–4 min</td><td>Compare new fixture</td><td>DB 34/100 connections; query p95 18 ms</td></tr><tr><td>4–6 min</td><td>Evaluate current lead</td><td>Inventory p95 2,900 ms; checkout 3,100 ms</td></tr><tr><td>6–8 min</td><td>Record the boundary</td><td>Upstream lead supported; internal cause unresolved</td></tr></tbody></table></div></div><div class="takeaway">Synthetic prepared-result exercise. Do not claim observed AWS recall or a proven deployment cause.</div><div class="slide-foot"><span>13 / 14 · 27:00–35:00 · 8 min</span><span><a href="#D-U01">D-U01</a> · <a href="#D-M01">D-M01</a> · <a href="#D-M02">D-M02</a></span></div></article><article class="slide" data-seconds="120" data-kind="columns" hidden><div class="kicker">AWS DevOps Agent · columns</div><h2>Diagnose the failing layer, then retest</h2><div class="slide-body"><div class="columns"><div class="column"><strong>Access and connectivity</strong><p>Check operator identity, source role, provider association, route and endpoint port.</p></div><div class="column"><strong>Context and execution</strong><p>Check activation, descriptions, attachments, session start and concurrency.</p></div><div class="column"><strong>Changes and coverage</strong><p>Check exact approval and update semantics; consult current quotas and feature eligibility.</p></div></div></div><div class="takeaway">Full remote-protocol and release-profile procedures remain linked scope, not completed live tests.</div><div class="slide-foot"><span>14 / 14 · 35:00–37:00 · 2 min</span><span><a href="#D-10">D-10</a> · <a href="#D-11">D-11</a></span></div></article><div class="notes" hidden><h2>D-01 — Service functions and resource model</h2>
+<p>The built-in functions are incident investigation, on-demand operational questions, and incident-prevention recommendations. Release-readiness review and release testing are separate preview paths. Custom agents execute operator-defined work; a scheduled health report is an application of that facility, not another independent platform primitive. Availability is feature- and Region-specific. Consult the Region table rather than assuming that the Region of a monitored workload determines where the Agent Space must reside. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-supported-regions.html" rel="noopener">DS01</a> <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-proactive-incident-prevention.html" rel="noopener">DS15</a> <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html" rel="noopener">DS18</a></p>
+<p>The configuration has two levels. An account registers providers; an Agent Space associates accounts and providers and selects available tools. Within that space, knowledge resources and agent definitions govern the context available to executions. An investigation or custom-agent invocation is a run, not the configuration that produced it. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/getting-started-with-aws-devops-agent-creating-an-agent-space.html" rel="noopener">DS02</a> <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-connecting-mcp-servers.html" rel="noopener">DS03</a> <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html" rel="noopener">DS10</a></p>
+<pre><code class="language-text">Account / Region
+  Capability provider registration ── association + selected tools ──┐
+  Primary / secondary AWS account roles ────────────────────────────┤
+                                                                  ▼
+Agent Space ── operator access ── people / authorized clients
+  ├─ discovered resources → topology and environment understanding
+  ├─ instructions / skills / memory stores
+  ├─ managed agents → investigations / chat / evaluations
+  └─ custom-agent definition → trigger → invocation → tool results
+</code></pre>
+<p>The graph is an explanatory model of documented resources, not an AWS API schema. Topology helps investigations navigate relationships; it does not constrain all possible reads. IAM permissions and integration authorization determine what resources can actually be accessed. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-what-is-a-devops-agent-topology.html" rel="noopener">DS04</a></p>
+<h3>Reusable capabilities, grouped by responsibility</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Group</th>
+<th>Capability</th>
+<th>Configurable or inspectable objects</th>
+<th>Detailed treatment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Access</td>
+<td>Scope AWS and operator access independently</td>
+<td>Resource role; operator role; account association</td>
+<td><a href="#D-02">D-02</a></td>
+</tr>
+<tr>
+<td>Connectivity</td>
+<td>Make selected external tools reachable and callable</td>
+<td>Provider; authentication; private connection; tool selection</td>
+<td><a href="#D-03">D-03</a>, <a href="#D-04">D-04</a></td>
+</tr>
+<tr>
+<td>Context</td>
+<td>Discover resources and infer relationships</td>
+<td>Discovery results; topology; learned understanding</td>
+<td><a href="#D-05">D-05</a></td>
+</tr>
+<tr>
+<td>Context</td>
+<td>Retain and retrieve environment-specific information</td>
+<td>Store; memory; description; version; active state</td>
+<td><a href="#D-M01">D-M01</a>, <a href="#D-M02">D-M02</a></td>
+</tr>
+<tr>
+<td>Behavior</td>
+<td>Supply standing guidance and specialized procedures</td>
+<td>Agent instructions; skill and its applicability</td>
+<td><a href="#D-M03">D-M03</a>, <a href="#D-M04">D-M04</a></td>
+</tr>
+<tr>
+<td>Execution</td>
+<td>Route incident signals and accept steering</td>
+<td>Triage decision; investigation; feedback</td>
+<td><a href="#D-06">D-06</a></td>
+</tr>
+<tr>
+<td>Execution</td>
+<td>Define and schedule bounded operational work</td>
+<td>Custom agent; assigned tools; trigger; invocation</td>
+<td><a href="#D-07">D-07</a></td>
+</tr>
+<tr>
+<td>Execution</td>
+<td>Run investigation-local computation</td>
+<td>Sandbox packages and network policy</td>
+<td><a href="#D-M05">D-M05</a></td>
+</tr>
+<tr>
+<td>Effects</td>
+<td>Authorize particular mutations</td>
+<td>Elevated role; tool category; approval</td>
+<td><a href="#D-M06">D-M06</a></td>
+</tr>
+<tr>
+<td>Administration</td>
+<td>Manage configuration through APIs</td>
+<td>Asset type, ID, metadata, files, versions</td>
+<td><a href="#D-08">D-08</a></td>
+</tr>
+<tr>
+<td>Observation</td>
+<td>Inspect executions and generated outputs</td>
+<td>Investigation details; invocation trajectory; audit events</td>
+<td><a href="#D-06">D-06</a>, <a href="#D-07">D-07</a>, <a href="#D-M06">D-M06</a></td>
+</tr>
+</tbody>
+</table></div>
+<p>This table is an index, not a second capability database. The referenced sections are the canonical explanations.</p>
+</div><div class="notes" hidden><h2>D-02 — Establish the two access paths</h2>
+<p><strong>Administrator procedure.</strong> In the AWS console, create an Agent Space, give it a name, and configure primary-account resource access. Select an automatically created role, an existing role, or the policy-template route for customized permissions. Configure the Web App role separately, then create the space. The expected confirmation is an <strong>Operator access</strong> button that opens an authenticated web application. Creating a space successfully is not confirmation that a particular telemetry API is readable. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/getting-started-with-aws-devops-agent-creating-an-agent-space.html" rel="noopener">DS02</a></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Decision</th>
+<th>Resource-access path</th>
+<th>Operator-access path</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Purpose</td>
+<td>Allow the service to inspect authorized AWS resources</td>
+<td>Allow personnel to interact with the space</td>
+</tr>
+<tr>
+<td>Review</td>
+<td>Target accounts, actions, resource scope and trust</td>
+<td>Which users can enter and what operations they can perform</td>
+</tr>
+<tr>
+<td>Proposed test</td>
+<td>Read one known non-sensitive resource and inspect its identity</td>
+<td>Sign in as the intended operator, not only the setup administrator</td>
+</tr>
+<tr>
+<td>Failure interpretation</td>
+<td>Missing data can be an API or role problem</td>
+<td>An unavailable app can be an identity/access problem</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Engineering procedure:</strong> record the space ID, Region, role ARNs and one tested resource. Keep policy source in Git. Do not publish account secrets or copy broad policy examples without adapting their resource scope. For secondary-account trust and exact IAM statements, use the linked current AWS procedure; this guide does not invent a universal trust policy. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/whats-new.html" rel="noopener">DS19</a></p>
+</div><div class="notes" hidden><h2>D-03 — Connect an external MCP tool provider</h2>
+<p><strong>Inbound versus outbound:</strong> this section concerns DevOps Agent calling an external MCP server. A client calling DevOps Agent's own remote endpoint is the opposite integration direction; see <a href="#D-09">D-09</a>.</p>
+<p>In <strong>Capability Providers → MCP Server → Register</strong>, enter a name and HTTPS endpoint, choose authentication, and supply the relevant fields. The documented transport is Streamable HTTP. After registration, associate the provider under the Agent Space's <strong>Capabilities → MCP Servers</strong> and select the required tools. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-connecting-mcp-servers.html" rel="noopener">DS03</a></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Authentication choice</th>
+<th>Configuration to prepare</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OAuth client credentials</td>
+<td>Client ID/secret, token exchange URL, parameters and scopes</td>
+</tr>
+<tr>
+<td>OAuth three-legged flow</td>
+<td>Client details, exchange and authorization URLs, scopes</td>
+</tr>
+<tr>
+<td>API key</td>
+<td>Secret value and the actual HTTP header name</td>
+</tr>
+<tr>
+<td>Multiple secret headers</td>
+<td>Explicit secret/header pairs; registration-only credential updates</td>
+</tr>
+<tr>
+<td>SigV4</td>
+<td>Signing Region, AWS service name, and dedicated role or documented role-less option</td>
+</tr>
+</tbody>
+</table></div>
+<p>In the role-less SigV4 option, validation is deferred until association and uses the primary account role. Registration alone is therefore not a successful connectivity test. Removal of a provider registration requires removing its associations first. Authentication update support differs by method. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-connecting-mcp-servers.html" rel="noopener">DS03</a></p>
+<p><strong>Engineering verification:</strong> register a staging provider exposing only a non-mutating <code>service_status</code> tool. Ask for a known service identifier, inspect the returned tool arguments/result, and compare the result with the source. Then request a deliberately unselected tool; the test is whether it is unavailable, not whether the model verbally promises restraint. Tool-effect classification is a separate decision under <a href="#D-M06">D-M06</a>.</p>
+</div><div class="notes" hidden><h2>D-04 — Private connectivity is a network mechanism</h2>
+<p>AWS uses VPC Lattice and a service-managed resource gateway whose ENIs are placed in selected subnets. Traffic reaches the target from those ENIs, not from the public integration IP list. The private connection and the provider's endpoint URL are separate configuration objects. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-connecting-to-privately-hosted-tools.html" rel="noopener">DS05</a></p>
+<p><strong>Configuration procedure:</strong> select a VPC, suitable subnets and security groups; specify a routable host and required port ranges; create the connection; associate it with the provider. For OAuth, account for both the MCP endpoint and token endpoint. On failure, inspect <code>failureMessage</code>, DNS, routing, port ranges and target-side rules before modifying credentials. The newer guidance states that omitted port ranges allow only 443. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-connecting-to-privately-hosted-tools.html" rel="noopener">DS05</a> <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/whats-new.html" rel="noopener">DS19</a></p>
+<p><strong>Illustrative configuration review:</strong> an endpoint <code>https://metrics.example.internal:8443/mcp</code> needs a route and port range covering 8443. A successful HTTPS check on port 443 is not evidence that this endpoint works. A firewall rule should identify the selected gateway network path. It should not be copied from an unrelated public-service allowlist. This example is a review checklist, not a deployable AWS resource definition.</p>
+</div><div class="notes" hidden><h2>D-05 — Discovery, topology and learned understanding</h2>
+<p>Discovery collects CloudFormation resources and, for tagged resources outside CloudFormation deployments, uses enabled Resource Explorer. Relationship evidence can include configuration, tags, deployment mapping and observability. Learned topology/pipeline views summarize that evidence; raw-resource views expose different levels of granularity. A missing graph node does not prove the agent cannot investigate the resource. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-what-is-a-devops-agent-topology.html" rel="noopener">DS04</a></p>
+<p>The managed Learning agent maintains environment knowledge. Its page provides knowledge, run history and scheduled-trigger inspection. Its schedules belong to the platform, unlike custom-agent triggers. Newer documentation moves learned topology, dependency, pipeline and tool-use knowledge into memory; older pages still call these learned skills. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-managed-agents.html" rel="noopener">DS06</a> <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/whats-new.html" rel="noopener">DS19</a></p>
+<p><strong>Engineering verification:</strong> choose one service, identify its actual deployed resources and repository revision, and compare them with the graph. Record missing or incorrectly inferred edges separately. Inspect a learning run and the output's version after refresh; clicking a refresh control is not the completion evidence. Do not enable additional account writes to repair a read/discovery gap.</p>
+</div><div class="notes" hidden><h2>D-M01 — How previous incidents become reusable context</h2>
+<p><strong>Production and retrieval are distinct.</strong> The managed <code>monitors</code> store associates recurring causes and investigation evidence with an alarm or metric. AWS describes a daily learning pass when the space has investigations in the preceding two weeks; entries without updates for two weeks can be removed and full stores evict the oldest item. This is operational context, not permanent incident retention. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html" rel="noopener">DS07</a></p>
+<p>At session start, an agent sees store descriptions. It opens relevant stores, evaluates entry descriptions, and reads selected content. Updates create immutable versions. A store may exist without being selected. The public documentation does not identify a customer-controlled model-training process or disclose a retrieval-ranking implementation. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html" rel="noopener">DS07</a></p>
+<pre><code class="language-text">Past investigations → learning process → monitor-specific memory
+                                             ↓
+New signal → store relevance → entry relevance → selected context
+                                             ↓
+                              diagnosis using current evidence
+</code></pre>
+<p><strong>Operator procedure:</strong> open <strong>Knowledge → Memories</strong>, inspect the monitor store, open the relevant entry, and inspect version and modification time. Confirm that the store and entry are active. Inactive entries are excluded; the monitor store is documented as enabled by default. Use Chat to request a correction to retained information and inspect the resulting content. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html" rel="noopener">DS07</a> <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/whats-new.html" rel="noopener">DS19</a></p>
+<p><strong>Proposed acceptance test:</strong> retain the old incident's independently established cause, then investigate a new occurrence with deliberately different evidence. Record three separate conclusions: entry exists; retrieval was observable or unverified; current diagnosis matches the new evidence. Do not infer retrieval merely because the answer repeats a familiar phrase.</p>
+</div><div class="notes" hidden><h2>D-M02 — Corrective feedback produces a separate lesson</h2>
+<p>Corrective feedback is not the same producer as monitor-history synthesis. In a completed investigation, <strong>Add feedback</strong> records the verdict and, when wrong, the actual cause; Chat is another entry point. The most recent feedback submission replaces earlier feedback for that investigation. Sharing it with AWS requires separate confirmation. The dated change log describes a <code>reflections</code> store for lessons from corrections. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-autonomous-incident-response.html" rel="noopener">DS08</a> <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/whats-new.html" rel="noopener">DS19</a></p>
+<h2>D-M07 — Memory attachment and lifecycle</h2>
+<p>A new custom agent has no store attachments. Its definition selects accessible stores; it can write to attached custom stores, while managed stores are read-only to it. This is narrower than the managed Chat agent's documented memory editing behavior. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html" rel="noopener">DS10</a></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Object/action</th>
+<th>Documented consequence</th>
+<th>Practical inspection</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Deactivate a store or entry</td>
+<td>Stop active access without deleting content</td>
+<td>Check the active state and rerun a harmless read test</td>
+</tr>
+<tr>
+<td>Edit memory</td>
+<td>New immutable version</td>
+<td>Compare content and timestamp</td>
+</tr>
+<tr>
+<td>Remove custom-agent attachment</td>
+<td>Remove that agent's access to the store</td>
+<td>Inspect the saved definition</td>
+</tr>
+<tr>
+<td>Delete a custom store through Chat</td>
+<td>Contents must be removed first</td>
+<td>Confirm store and entries separately</td>
+</tr>
+<tr>
+<td>Delete a custom store in console</td>
+<td>Deletes its contents; not reversible</td>
+<td>Review the selected store before confirmation</td>
+</tr>
+<tr>
+<td>Delete a managed store</td>
+<td>Not supported</td>
+<td>Use supported activation/content controls instead</td>
+</tr>
+</tbody>
+</table></div>
+<p>The last two deletion behaviors and the description-selection model are documented in the newer indexed memory guidance. See the evidence notes for the older/newer-page discrepancy. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html" rel="noopener">DS07</a></p>
+</div><div class="notes" hidden><h2>D-M03 — Standing instructions enter each new session</h2>
+<p>Global and agent-specific <code>AGENTS.md</code> text is supplied at startup; it is not selected by relevance. Changes apply to sessions started after saving. A running session retains its startup content. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-agent-instructions.html" rel="noopener">DS09</a></p>
+<p><strong>Procedure:</strong> open <strong>Agents → Managed agents</strong>, select the relevant agent, and edit the global or agent-specific instructions on <strong>Agent definition</strong>. Confirm the global change when prompted. Start a new session for verification. Older cached instructions pages show <strong>Knowledge → Instructions</strong>; the newer indexed guide and managed-agent page agree on the Agents route. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-agent-instructions.html" rel="noopener">DS09</a> <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-managed-agents.html" rel="noopener">DS06</a></p>
+<p><strong>Original example, not an AWS default:</strong></p>
+<pre><code class="language-markdown">## Incident output contract
+Identify the resource and UTC time range for every material observation.
+Separate current observations from historical context.
+When required data is unavailable, name the failed read and continue only
+with conclusions supported by the remaining evidence.
+</code></pre>
+<p>Save this only where applicable. Check an old and a new session to test propagation. An instruction changes prompt context; it does not modify IAM authorization. Keep the authoritative text in Git, rather than retaining manual document snapshots.</p>
+<h2>D-M04 — Skills are selected procedures, not standing memory</h2>
+<p>A skill requires <code>SKILL.md</code>; its name, description and agent-type targeting determine applicability. Additional references or data can accompany it. Without Sandbox, the supported material is non-executable; Sandbox adds a code-execution surface for applicable investigations. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-skills.html" rel="noopener">DS11</a></p>
+<p><strong>Procedure:</strong> add a skill from <strong>Knowledge → Skills</strong>, write a description naming the relevant symptoms and services, choose agent scope, and supply the procedure. Test a matching request and a nonmatching request. Inspect available run evidence for selection and tool use; document an unavailable signal as unverified rather than asserting selection.</p>
+<p><strong>Original example:</strong></p>
+<pre><code class="language-markdown">---
+name: checkout-upstream-timeout
+description: Investigate checkout timeouts involving the inventory dependency.
+---
+</code></pre>
+<p>Add a procedure that compares upstream response time, connection errors and deployment timestamps using the actually connected tools. Record failed reads and distinguish observations from hypotheses. The example frontmatter illustrates applicability; it is not a complete environment-specific runbook. A procedure cannot confer missing tool permissions.</p>
+</div><div class="notes" hidden><h2>D-06 — Incident routing and investigation feedback</h2>
+<p>An external signal is triaged before an independent investigation is necessarily started. <strong>Linked</strong> adds the signal to existing work; <strong>Skipped</strong> applies configured skip criteria; <strong>Proceed</strong> schedules new work. The web app shows the decision and reason. Unlinking or unskipping reschedules independent investigation; correlation or skip skills can be corrected for future events. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-autonomous-incident-response.html" rel="noopener">DS08</a></p>
+<p>For a manual investigation, supply the problem, optional starting evidence, incident time, name and priority. Inspect investigation output and tool evidence, then submit feedback after completion. A route decision, a diagnosis, and a feedback verdict are different records. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-autonomous-incident-response.html" rel="noopener">DS08</a></p>
+<p><strong>Engineering procedure:</strong> for an unexpected absence of investigation, first inspect the triage record. A linked event is not lost; follow its primary investigation. A skipped event calls for reviewing the matching skill. For incorrect diagnosis, add the verified correction rather than changing a routing rule unless routing itself was wrong.</p>
+<p>Prevention evaluations analyze multiple investigations into recommendations. The <strong>Improvements</strong> page exposes the latest evaluation summary, manual evaluation and schedule controls; the documented default is weekly. This differs from daily monitor-memory refresh. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-proactive-incident-prevention.html" rel="noopener">DS15</a></p>
+</div><div class="notes" hidden><h2>D-07 — Custom-agent definitions, schedules and cancellation</h2>
+<p>Define a name, system prompt, selected skills and memory stores. Use Chat for tool assignment and inspect the saved definition before executing. The available tool set is the selected subset of the space's integrations. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/custom-agents-creating-a-custom-agent.html" rel="noopener">DS12</a></p>
+<p><strong>Execution procedure:</strong> choose the agent, select <strong>Run Now</strong> or <strong>Run with prompt</strong>, then open the invocation in <strong>History</strong>. Inspect tool arguments and results, not only the final text. To schedule it, open <strong>Triggers</strong>, create a rate or cron expression, and check the displayed next run. <code>cron(0 9 ? * MON-FRI *)</code> is 09:00 UTC on weekdays, not automatically Zurich civil time. Pause the trigger to stop future starts. Cancel an existing run separately; an in-flight tool call may finish after cancellation. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/custom-agents-executing-custom-agents.html" rel="noopener">DS13</a></p>
+<p><strong>Original system-prompt outline:</strong> “Read the selected staging service's alarm and deployment tools for the previous 24 complete hours. Return resource IDs, the UTC window, failed reads and links to material results. Do not publish to external destinations.” This becomes usable only after real tool names and access have been selected. A schedule without those dependencies is not a reporting capability.</p>
+</div><div class="notes" hidden><h2>D-M05 — Investigation-local computation</h2>
+<p>Sandbox provisions a fresh Linux environment per investigation. It can execute code, access configured packages and use account profiles within existing permissions. Its default outbound policy permits AWS service endpoints; other destinations require allowlisting. The reviewed preview does not extend this environment to all chat or custom-agent paths. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-sandbox.html" rel="noopener">DS14</a></p>
+<p><strong>Procedure:</strong> in the console, select the space, open <strong>Capabilities → Sandbox → Configure</strong>, select packages and add required host/method/path rules, then save. An empty allowlist is not total network isolation. Remove the Sandbox configuration to stop future use; do not assume that changing configuration rewinds already executed code. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-sandbox.html" rel="noopener">DS14</a></p>
+<p><strong>Proposed check:</strong> process a harmless supplied dataset, inspect code and numerical results, and test that an unlisted non-AWS endpoint is unavailable. Do not use production mutation as a connectivity test. Network filtering, AWS permissions and directed-action approvals are distinct controls.</p>
+<h2>D-M06 — Directed-action authorization</h2>
+<p>Directed actions require space opt-in, eligible target-account elevated access or integration configuration, and specific operator approval. The approval binds the operation and resource; AWS calls are attributed through CloudTrail. A saved role is a permission ceiling, not a standing approval. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-working-with-directed-actions.html" rel="noopener">DS16</a></p>
+<p><strong>Procedure:</strong> enable the space setting; register the target account's <code>agentElevatedRoleArn</code>; review tool categories for connected services; ask for the particular change; review or adjust parameters; approve or reject; then compare resulting state with the approved operation. Programmatically registered tools without <code>toolDetails</code> default to read-only. Incorrect classification can bypass the expected approval prompt. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-working-with-directed-actions.html" rel="noopener">DS16</a></p>
+<p>When using <code>UpdateAgentSpace</code>, supplying <code>preferences</code> replaces that complete map; omitted preferences revert to defaults. Read current settings first and verify them afterward. A denied mutation should lead to inspection of enablement, role trust, permission policy, tool category and approval scope—not unconditional elevation. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-working-with-directed-actions.html" rel="noopener">DS16</a></p>
+</div><div class="notes" hidden><h2>D-08 — Configuration APIs and update semantics</h2>
+<p>Asset management uses the <code>devops-agent</code> CLI/SDK client but <code>aidevops:</code> IAM actions. <code>ListAssetTypes</code> discovers supported types; other asset operations generally authorize against the Agent Space ARN. Metadata keys use snake_case, while top-level request keys use camelCase. Metadata updates use PATCH semantics; asset type cannot be changed. Custom-agent skill/store references require asset IDs, not names. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-managing-assets.html" rel="noopener">DS17</a></p>
+<p><strong>Read-only inspection pattern:</strong></p>
+<pre><code class="language-bash">aws devops-agent list-asset-types --region "$AWS_REGION"
+aws devops-agent list-assets --agent-space-id "$AGENT_SPACE_ID" --region "$AWS_REGION"
+</code></pre>
+<p>Set both variables to your approved environment; these commands were not executed here. Inspect returned metadata before changing it. Asset PATCH behavior must not be generalized to the replacement behavior of the directed-action preference map. For content upload/file operations and deployment templates, follow the type-specific official examples rather than constructing an undocumented payload. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-managing-assets.html" rel="noopener">DS17</a></p>
+<h2>D-M06 — Directed-action authorization</h2>
+<p>Directed actions require space opt-in, eligible target-account elevated access or integration configuration, and specific operator approval. The approval binds the operation and resource; AWS calls are attributed through CloudTrail. A saved role is a permission ceiling, not a standing approval. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-working-with-directed-actions.html" rel="noopener">DS16</a></p>
+<p><strong>Procedure:</strong> enable the space setting; register the target account's <code>agentElevatedRoleArn</code>; review tool categories for connected services; ask for the particular change; review or adjust parameters; approve or reject; then compare resulting state with the approved operation. Programmatically registered tools without <code>toolDetails</code> default to read-only. Incorrect classification can bypass the expected approval prompt. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-working-with-directed-actions.html" rel="noopener">DS16</a></p>
+<p>When using <code>UpdateAgentSpace</code>, supplying <code>preferences</code> replaces that complete map; omitted preferences revert to defaults. Read current settings first and verify them afterward. A denied mutation should lead to inspection of enablement, role trust, permission policy, tool category and approval scope—not unconditional elevation. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-working-with-directed-actions.html" rel="noopener">DS16</a></p>
+</div><div class="notes" hidden><h2>D-U01 — Worked example: recurring alarm, different cause</h2>
+<p><strong>Synthetic exercise, not an AWS execution.</strong> The same checkout latency alarm fired in two incidents. In the first, connection exhaustion was verified. The new fixture contains the evidence below; values are invented and are not performance claims.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Observation</th>
+<th style="text-align:right">Earlier incident</th>
+<th style="text-align:right">New incident</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Database connections / configured limit</td>
+<td style="text-align:right">100 / 100</td>
+<td style="text-align:right">34 / 100</td>
+</tr>
+<tr>
+<td>Database query p95</td>
+<td style="text-align:right">900 ms</td>
+<td style="text-align:right">18 ms</td>
+</tr>
+<tr>
+<td>Inventory upstream p95</td>
+<td style="text-align:right">40 ms</td>
+<td style="text-align:right">2,900 ms</td>
+</tr>
+<tr>
+<td>Checkout p95</td>
+<td style="text-align:right">3,200 ms</td>
+<td style="text-align:right">3,100 ms</td>
+</tr>
+<tr>
+<td>Known change</td>
+<td style="text-align:right">Database pool configuration</td>
+<td style="text-align:right">Inventory deployment at 10:02 UTC</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Walkthrough:</strong> inspect the old monitor entry; start a separately identified investigation with the new UTC window and evidence; ask for competing explanations; locate observable memory/tool access; compare the result to the table. The prior database hypothesis is weakened by current connection and query figures. The inventory path is the stronger lead, but a nearby deployment alone does not establish its internal cause.</p>
+<p><strong>Expected output:</strong> a current-evidence explanation identifying upstream latency as the supported direction, the old cause as historical context, and missing upstream logs as an unresolved dependency. No deployment action is justified solely by this fixture. A wrong repeated database diagnosis should receive corrective feedback with the contrary evidence.</p>
+<p><strong>Failure branch:</strong> when no retrieval evidence is exposed, record memory use as unverified. When current telemetry is inaccessible, report insufficient evidence; do not substitute the old memory for current measurements. This exercise tests the distinction between retention, retrieval and diagnosis, not whether a memorized sentence appears.</p>
+<h2>D-M01 — How previous incidents become reusable context</h2>
+<p><strong>Production and retrieval are distinct.</strong> The managed <code>monitors</code> store associates recurring causes and investigation evidence with an alarm or metric. AWS describes a daily learning pass when the space has investigations in the preceding two weeks; entries without updates for two weeks can be removed and full stores evict the oldest item. This is operational context, not permanent incident retention. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html" rel="noopener">DS07</a></p>
+<p>At session start, an agent sees store descriptions. It opens relevant stores, evaluates entry descriptions, and reads selected content. Updates create immutable versions. A store may exist without being selected. The public documentation does not identify a customer-controlled model-training process or disclose a retrieval-ranking implementation. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html" rel="noopener">DS07</a></p>
+<pre><code class="language-text">Past investigations → learning process → monitor-specific memory
+                                             ↓
+New signal → store relevance → entry relevance → selected context
+                                             ↓
+                              diagnosis using current evidence
+</code></pre>
+<p><strong>Operator procedure:</strong> open <strong>Knowledge → Memories</strong>, inspect the monitor store, open the relevant entry, and inspect version and modification time. Confirm that the store and entry are active. Inactive entries are excluded; the monitor store is documented as enabled by default. Use Chat to request a correction to retained information and inspect the resulting content. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html" rel="noopener">DS07</a> <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/whats-new.html" rel="noopener">DS19</a></p>
+<p><strong>Proposed acceptance test:</strong> retain the old incident's independently established cause, then investigate a new occurrence with deliberately different evidence. Record three separate conclusions: entry exists; retrieval was observable or unverified; current diagnosis matches the new evidence. Do not infer retrieval merely because the answer repeats a familiar phrase.</p>
+<h2>D-M02 — Corrective feedback produces a separate lesson</h2>
+<p>Corrective feedback is not the same producer as monitor-history synthesis. In a completed investigation, <strong>Add feedback</strong> records the verdict and, when wrong, the actual cause; Chat is another entry point. The most recent feedback submission replaces earlier feedback for that investigation. Sharing it with AWS requires separate confirmation. The dated change log describes a <code>reflections</code> store for lessons from corrections. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-autonomous-incident-response.html" rel="noopener">DS08</a> <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/whats-new.html" rel="noopener">DS19</a></p>
+</div><div class="notes" hidden><h2>D-10 — Limits and diagnostic decisions</h2>
+<p>Selected defaults in the reviewed quota guide: three concurrent investigations per space; five concurrent custom invocations per space but one per custom agent; one-hour custom invocation timeout; 500 allowlisted MCP tools; 50 memory stores, 200 entries per store and 100 KB per entry. Some concurrency quotas are adjustable; the custom-agent and memory limits shown are not. Confirm the effective quota before rollout. <a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/quotas.html" rel="noopener">DS22</a></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Inspect first</th>
+<th>Corrective decision / expected evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Web app unavailable</td>
+<td>Operator identity and role</td>
+<td>Repair entry permissions; opening as administrator is not the end-user test</td>
+</tr>
+<tr>
+<td>Missing topology resource</td>
+<td>CloudFormation/Resource Explorer and readable metadata</td>
+<td>Distinguish discovery absence from denied direct access</td>
+</tr>
+<tr>
+<td>Provider registers but no tool works</td>
+<td>Space association, selected tools, auth mode</td>
+<td>For role-less SigV4, verify primary-account validation and invoke permission</td>
+</tr>
+<tr>
+<td>Private endpoint times out</td>
+<td>Connection failureMessage, DNS, port ranges, gateway ENIs</td>
+<td>Correct the network path before rotating a valid secret</td>
+</tr>
+<tr>
+<td>Memory is ignored</td>
+<td>Store/entry activation, descriptions, agent attachments</td>
+<td>Compare availability and observed retrieval separately</td>
+</tr>
+<tr>
+<td>Instruction change has no effect</td>
+<td>Session start time and instruction scope</td>
+<td>Retest in a newly started session</td>
+</tr>
+<tr>
+<td>Custom run cannot start</td>
+<td>Existing invocation and per-agent concurrency</td>
+<td>Cancel or inspect current work; do not duplicate definitions</td>
+</tr>
+<tr>
+<td>Mutation is rejected</td>
+<td>Opt-in, role, category, approval</td>
+<td>Repair the failing layer; preserve the narrow target scope</td>
+</tr>
+</tbody>
+</table></div>
+<p>This diagnostic ordering is an engineering synthesis of <a href="#D-02">D-02</a> through <a href="#D-M06">D-M06</a>, not an additional AWS troubleshooting API.</p>
+<h2>D-11 — Coverage and evidence notes</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>AWS subject</th>
+<th>Treatment here</th>
+<th>Deliberate boundary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Workspace, roles, topology</td>
+<td>Configuration and diagnostic model</td>
+<td>Exact organization IAM policy remains in official reference</td>
+</tr>
+<tr>
+<td>MCP/private connectivity</td>
+<td>Authentication decisions and operational sequence</td>
+<td>No customer network topology assumed</td>
+</tr>
+<tr>
+<td>Knowledge and learning</td>
+<td>Producer, retrieval, feedback, activation, attachment, lifecycle</td>
+<td>No claims about hidden ranking or model training</td>
+</tr>
+<tr>
+<td>Managed/custom execution</td>
+<td>Routing, manual runs, schedules, cancellation, observation</td>
+<td>Not every external incident provider reproduced</td>
+</tr>
+<tr>
+<td>Assets and directed actions</td>
+<td>Distinct update semantics and authorization</td>
+<td>Full SDK schemas and denial lists linked</td>
+</tr>
+<tr>
+<td>Sandbox/release preview</td>
+<td>Configuration and effect boundaries</td>
+<td>Full release-profile authoring is deferred</td>
+</tr>
+<tr>
+<td>Quotas</td>
+<td>Selected day-to-day constraints</td>
+<td>Complete current quota/Region tables remain authoritative</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Source-version decisions:</strong> older cached pages and newer indexed AWS content differed for instruction navigation, custom-store attachment and learned-knowledge storage. This edition uses the newer indexed managed-agent, memory, asset and dated-change guidance for those points. The Region table was not reproduced as a complete regional inventory. A retrieval date is not a claim that AWS published the page on that date.</p>
+<h3>Official sources and reviewed sections</h3>
+<ul>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-supported-regions.html" rel="noopener">DS01</a> Service/feature eligibility; Supported Regions and Feature availability.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/getting-started-with-aws-devops-agent-creating-an-agent-space.html" rel="noopener">DS02</a> Space creation; primary account and Web App roles; verification.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-connecting-mcp-servers.html" rel="noopener">DS03</a> MCP requirements; registration, association, authentication, rotation and role-less validation. Newer indexed content used.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-what-is-a-devops-agent-topology.html" rel="noopener">DS04</a> Topology views, discovery and scope beyond the graph.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-connecting-to-privately-hosted-tools.html" rel="noopener">DS05</a> Private gateway operation, firewall rules and connection verification.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-managed-agents.html" rel="noopener">DS06</a> Managed agents; Learning history and platform-owned triggers. Indexed content used.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html" rel="noopener">DS07</a> Memory production, retrieval, versions, activation, custom-store deletion. Older HTML reconciled with newer indexed content.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-autonomous-incident-response.html" rel="noopener">DS08</a> Investigation initiation, triage decisions/corrections and feedback.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-agent-instructions.html" rel="noopener">DS09</a> Instruction scoping and new-session behavior; newer indexed navigation used.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html" rel="noopener">DS10</a> Custom-agent tool/store scope and invocation model. Newer indexed content used.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-skills.html" rel="noopener">DS11</a> Skill applicability, format and authoring.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/custom-agents-creating-a-custom-agent.html" rel="noopener">DS12</a> Custom-agent creation and store selection. Indexed content used.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/custom-agents-executing-custom-agents.html" rel="noopener">DS13</a> Manual execution, schedules, cancellation and trajectories.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-sandbox.html" rel="noopener">DS14</a> Sandbox execution, network defaults, configuration and preview limits.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-proactive-incident-prevention.html" rel="noopener">DS15</a> Prevention evaluations and controls.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-working-with-directed-actions.html" rel="noopener">DS16</a> Directed-action enablement, preferences replacement, categories, approval and audit.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-managing-assets.html" rel="noopener">DS17</a> Asset operation/permission map, IDs and PATCH metadata. Newer indexed content used.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html" rel="noopener">DS18</a> Built-in versus custom capabilities.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/whats-new.html" rel="noopener">DS19</a> Dated changes: monitor default, memory migration, reflections, private ports.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-accessing-devops-agent-index.html" rel="noopener">DS20</a> Access methods and direction; client-specific setup not reproduced.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/release-management-release-testing.html" rel="noopener">DS21</a> Release testing operation and application-write warning.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/devopsagent/latest/userguide/quotas.html" rel="noopener">DS22</a> Selected quota defaults and adjustability; newer indexed table used.</li>
+</ul>
+</div></div><script>(()=>{const sections=[...document.querySelectorAll('.report-section')],q=document.querySelector('#search'),kind=document.querySelector('#kind'),status=document.querySelector('#status');
+function filter(){let n=0;sections.forEach(s=>{let ok=(!q.value||s.textContent.toLowerCase().includes(q.value.toLowerCase()))&&(!kind.value||kind.value===s.dataset.kind);s.hidden=!ok;n+=ok;});status.textContent=n+' of '+sections.length+' sections shown';}
+if(q){q.addEventListener('input',filter);kind.addEventListener('change',filter);document.querySelector('#reset').onclick=()=>{q.value='';kind.value='';filter();};filter();}
+function reveal(){const s=document.getElementById(decodeURIComponent(location.hash.slice(1)));if(s&&s.classList.contains('report-section')){if(q){q.value='';kind.value='';filter();}document.body.classList.remove('presenting');s.scrollIntoView();}}
+window.addEventListener('hashchange',reveal);reveal();
+const slides=[...document.querySelectorAll('.slide')],select=document.querySelector('#slide-select');let current=0,start=0,elapsed=0,running=false;
+function clock(v){return Math.floor(v/60)+':'+String(v%60).padStart(2,'0');}
+function show(i){if(!slides.length)return;current=Math.max(0,Math.min(slides.length-1,i));slides.forEach((s,j)=>s.hidden=j!==current);select.value=current;document.querySelectorAll('.notes').forEach((n,j)=>n.hidden=j!==current||!document.querySelector('#notes-toggle').checked);}
+if(slides.length){document.querySelector('#present').onclick=()=>{document.body.classList.add('presenting');show(current);window.scrollTo(0,0);};document.querySelector('#read').onclick=()=>document.body.classList.remove('presenting');document.querySelector('#prev').onclick=()=>show(current-1);document.querySelector('#next').onclick=()=>show(current+1);select.onchange=()=>show(Number(select.value));document.querySelector('#notes-toggle').onchange=()=>show(current);document.querySelector('#timer-toggle').onclick=()=>{if(running){elapsed+=Math.floor((Date.now()-start)/1000);running=false;}else{start=Date.now();running=true;}document.querySelector('#timer-toggle').textContent=running?'Pause timer':'Start timer';};document.querySelector('#timer-reset').onclick=()=>{elapsed=0;start=Date.now();};setInterval(()=>{document.querySelector('#timer').textContent=clock(elapsed+(running?Math.floor((Date.now()-start)/1000):0));},250);show(0);}
+document.querySelectorAll('[data-print]').forEach(b=>b.onclick=()=>window.print());document.addEventListener('keydown',e=>{if(['INPUT','SELECT','TEXTAREA'].includes(document.activeElement.tagName))return;if(e.key==='/'&&q){e.preventDefault();q.focus();}if(document.body.classList.contains('presenting')){if(e.key==='ArrowRight'){e.preventDefault();show(current+1);}if(e.key==='ArrowLeft'){e.preventDefault();show(current-1);}if(e.key==='Home'){e.preventDefault();show(0);}if(e.key==='End'){e.preventDefault();show(slides.length-1);}if(e.key==='Escape')document.body.classList.remove('presenting');}});
+})();</script></body></html>
