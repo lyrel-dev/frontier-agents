@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="609pt" height="500pt" viewBox="0.00 0.00 609.00 500.00" role="img" aria-labelledby="shared-handoff-title shared-handoff-desc" data-diagram="shared-handoff">
+<title id="shared-handoff-title">Team-managed evidence handoff</title><desc id="shared-handoff-desc">An operational finding can become input to separate security and cost work. Each receiving service uses its own configuration and authorization; only identifiers, evidence references, and decisions are handed over.</desc><g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(18 482)">
+<title>G</title>
+
+<g id="node1" class="node">
+<title>incident</title>
+<path fill="#edf5f4" stroke="#496b78" d="M400.5,-464C400.5,-464 187.5,-464 187.5,-464 181.5,-464 175.5,-458 175.5,-452 175.5,-452 175.5,-428 175.5,-428 175.5,-422 181.5,-416 187.5,-416 187.5,-416 400.5,-416 400.5,-416 406.5,-416 412.5,-422 412.5,-428 412.5,-428 412.5,-452 412.5,-452 412.5,-458 406.5,-464 400.5,-464" />
+<text text-anchor="middle" x="294" y="-443.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Operational investigation</text>
+<text text-anchor="middle" x="294" y="-428.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Service, time window, revision</text>
+</g>
+
+<g id="node2" class="node">
+<title>handoff</title>
+<path fill="#edf5f4" stroke="#496b78" d="M436.5,-360C436.5,-360 151.5,-360 151.5,-360 145.5,-360 139.5,-354 139.5,-348 139.5,-348 139.5,-324 139.5,-324 139.5,-318 145.5,-312 151.5,-312 151.5,-312 436.5,-312 436.5,-312 442.5,-312 448.5,-318 448.5,-324 448.5,-324 448.5,-348 448.5,-348 448.5,-354 442.5,-360 436.5,-360" />
+<text text-anchor="middle" x="294" y="-339.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Reviewed handoff</text>
+<text text-anchor="middle" x="294" y="-324.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Evidence references and open questions</text>
+</g>
+
+<g id="edge1" class="edge">
+<title>incident-&gt;handoff</title>
+<path fill="none" stroke="#496b78" d="M294,-415.85C294,-401.64 294,-383.26 294,-367.82" />
+<polygon fill="#496b78" stroke="#496b78" points="296.63,-367.55 294,-360.05 291.38,-367.55 296.63,-367.55" />
+<text text-anchor="middle" x="329" y="-385.2" font-family="DejaVu Sans" font-size="11.00">team review</text>
+</g>
+
+<g id="node3" class="node">
+<title>security</title>
+<path fill="#edf5f4" stroke="#496b78" d="M278,-256C278,-256 12,-256 12,-256 6,-256 0,-250 0,-244 0,-244 0,-220 0,-220 0,-214 6,-208 12,-208 12,-208 278,-208 278,-208 284,-208 290,-214 290,-220 290,-220 290,-244 290,-244 290,-250 284,-256 278,-256" />
+<text text-anchor="middle" x="145" y="-235.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Security assessment</text>
+<text text-anchor="middle" x="145" y="-220.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Its own application scope and identity</text>
+</g>
+
+<g id="edge2" class="edge">
+<title>handoff-&gt;security</title>
+<path fill="none" stroke="#496b78" stroke-dasharray="5,2" d="M260.19,-311.85C237.9,-296.6 208.6,-276.54 185.13,-260.47" />
+<polygon fill="#496b78" stroke="#496b78" points="186.35,-258.12 178.68,-256.05 183.38,-262.46 186.35,-258.12" />
+<text text-anchor="middle" x="281" y="-281.2" font-family="DejaVu Sans" font-size="11.00">application evidence</text>
+</g>
+
+<g id="node4" class="node">
+<title>finops</title>
+<path fill="#edf5f4" stroke="#496b78" d="M561,-256C561,-256 327,-256 327,-256 321,-256 315,-250 315,-244 315,-244 315,-220 315,-220 315,-214 321,-208 327,-208 327,-208 561,-208 561,-208 567,-208 573,-214 573,-220 573,-220 573,-244 573,-244 573,-250 567,-256 561,-256" />
+<text text-anchor="middle" x="444" y="-235.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Cost investigation</text>
+<text text-anchor="middle" x="444" y="-220.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Its own query basis and data role</text>
+</g>
+
+<g id="edge3" class="edge">
+<title>handoff-&gt;finops</title>
+<path fill="none" stroke="#496b78" stroke-dasharray="5,2" d="M328.04,-311.85C350.48,-296.6 379.97,-276.54 403.6,-260.47" />
+<polygon fill="#496b78" stroke="#496b78" points="405.37,-262.44 410.1,-256.05 402.42,-258.1 405.37,-262.44" />
+<text text-anchor="middle" x="424.5" y="-281.2" font-family="DejaVu Sans" font-size="11.00">service and period</text>
+</g>
+
+<g id="node5" class="node">
+<title>owner</title>
+<path fill="#edf5f4" stroke="#496b78" d="M427,-152C427,-152 161,-152 161,-152 155,-152 149,-146 149,-140 149,-140 149,-116 149,-116 149,-110 155,-104 161,-104 161,-104 427,-104 427,-104 433,-104 439,-110 439,-116 439,-116 439,-140 439,-140 439,-146 433,-152 427,-152" />
+<text text-anchor="middle" x="294" y="-131.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Engineering owners</text>
+<text text-anchor="middle" x="294" y="-116.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Review results and authorize changes</text>
+</g>
+
+<g id="edge4" class="edge">
+<title>security-&gt;owner</title>
+<path fill="none" stroke="#496b78" d="M178.81,-207.85C201.1,-192.6 230.4,-172.54 253.87,-156.47" />
+<polygon fill="#496b78" stroke="#496b78" points="255.62,-158.46 260.32,-152.05 252.65,-154.12 255.62,-158.46" />
+<text text-anchor="middle" x="269.5" y="-177.2" font-family="DejaVu Sans" font-size="11.00">finding evidence</text>
+</g>
+
+<g id="edge5" class="edge">
+<title>finops-&gt;owner</title>
+<path fill="none" stroke="#496b78" d="M409.96,-207.85C387.52,-192.6 358.03,-172.54 334.4,-156.47" />
+<polygon fill="#496b78" stroke="#496b78" points="335.58,-154.1 327.9,-152.05 332.63,-158.44 335.58,-154.1" />
+<text text-anchor="middle" x="411.5" y="-177.2" font-family="DejaVu Sans" font-size="11.00">cost evidence</text>
+</g>
+
+<g id="node6" class="node">
+<title>verification</title>
+<path fill="#edf5f4" stroke="#496b78" d="M434.5,-48C434.5,-48 153.5,-48 153.5,-48 147.5,-48 141.5,-42 141.5,-36 141.5,-36 141.5,-12 141.5,-12 141.5,-6 147.5,0 153.5,0 153.5,0 434.5,0 434.5,0 440.5,0 446.5,-6 446.5,-12 446.5,-12 446.5,-36 446.5,-36 446.5,-42 440.5,-48 434.5,-48" />
+<text text-anchor="middle" x="294" y="-27.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Independent verification</text>
+<text text-anchor="middle" x="294" y="-12.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Source measurements and scoped tests</text>
+</g>
+
+<g id="edge6" class="edge">
+<title>owner-&gt;verification</title>
+<path fill="none" stroke="#496b78" d="M294,-103.85C294,-89.64 294,-71.26 294,-55.82" />
+<polygon fill="#496b78" stroke="#496b78" points="296.63,-55.55 294,-48.05 291.38,-55.55 296.63,-55.55" />
+<text text-anchor="middle" x="348.5" y="-73.2" font-family="DejaVu Sans" font-size="11.00">controlled follow-up</text>
+</g>
+</g>
+</svg>
