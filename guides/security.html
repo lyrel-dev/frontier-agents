@@ -1,0 +1,858 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AWS Security Agent</title><style>
+:root{--ink:#172c43;--navy:#142c43;--accent:#096b68;--muted:#526579;--line:#d7e1e8;--pale:#eff4f7}*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:90px}body{margin:0;color:var(--ink);background:#f6f8fa;font:16px/1.65 system-ui,-apple-system,Segoe UI,sans-serif}a{color:#075f98;text-underline-offset:3px}button,input,select{font:inherit;color:inherit;padding:9px 12px;border:1px solid #96a9b8;border-radius:5px;background:white}button{cursor:pointer}button:hover{background:#e9f4f2}:focus-visible{outline:3px solid #b46e08;outline-offset:3px}.topbar{background:var(--navy);color:white;padding:18px 30px;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}.topbar a{color:#dceaff}.brand{font-size:13px;letter-spacing:.09em;text-transform:uppercase;font-weight:700}.topbar nav{display:flex;gap:18px;flex-wrap:wrap}.shell{display:grid;grid-template-columns:265px minmax(0,1fr);gap:32px;max-width:1440px;margin:auto;padding:26px 28px}aside{position:sticky;top:20px;max-height:94vh;overflow:auto;align-self:start;padding:4px 14px 12px 0}aside h2{font-size:13px;text-transform:uppercase;letter-spacing:.1em}aside a{display:block;font-size:13px;line-height:1.4;padding:7px 9px;border-left:2px solid var(--line);text-decoration:none;margin:3px 0}aside a:hover{border-color:var(--accent);background:#e7efef}.content{min-width:0;max-width:1000px}.lead{background:white;padding:30px;border:1px solid var(--line);border-top:5px solid var(--accent);border-radius:8px}h1{font-size:clamp(28px,3.4vw,42px);line-height:1.15;letter-spacing:-.025em;margin:0 0 22px}h2{font-size:26px;line-height:1.25;margin:0 0 20px}h3{font-size:20px;line-height:1.35;margin:26px 0 12px}p{margin:0 0 17px}.report-section{background:white;border:1px solid var(--line);padding:30px;margin:25px 0;border-radius:8px;min-width:0}.section-label{font-size:11px;letter-spacing:.1em;font-weight:700;color:var(--accent);text-transform:uppercase;margin-bottom:9px}.controls{display:flex;gap:10px;flex-wrap:wrap;background:#f6f8fa;padding:15px 0;position:sticky;top:0;z-index:3}.controls input{flex:2;min-width:180px}.controls select{flex:1;min-width:130px}.status{font-size:13px;color:var(--muted);margin:0 0 10px}.table-wrap{overflow-x:auto;margin:20px 0}table{border-collapse:collapse;width:100%;font-size:14px;line-height:1.55}th,td{padding:13px 15px;border:1px solid var(--line);text-align:left;vertical-align:top;min-width:90px}th{background:#e9f0f4;font-weight:700}tr:nth-child(even) td{background:#f8fafb}pre{background:#11283d;color:#eaf2f8;padding:20px;overflow:auto;border-radius:6px;font-size:13px;line-height:1.6}code{font-size:.9em;overflow-wrap:anywhere}blockquote{border-left:4px solid var(--accent);margin:20px 0;padding:5px 20px;background:#eef6f4}li{margin:7px 0}.ref-link{font-size:12px;font-weight:600}footer{font-size:13px;color:var(--muted);padding:22px 0}.toc-toggle{display:none}[hidden]{display:none!important}.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}.card{background:white;border:1px solid var(--line);padding:26px;border-top:4px solid var(--accent);border-radius:8px}.card h2{font-size:24px}.card a{margin-right:12px}.guide-index{max-width:1180px;margin:35px auto;padding:0 24px}.small{font-size:13px;color:var(--muted)}.deck{display:none;max-width:1320px;margin:20px auto;padding:0 24px}.presenting .shell{display:none}.presenting .deck{display:block}.deck-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:15px 0}.deck-controls select{min-width:200px;flex:1}.slide{background:white;border:1px solid var(--line);border-top:6px solid var(--accent);padding:25px 34px;min-height:640px;display:flex;flex-direction:column}.slide .kicker{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}.slide h2{font-size:clamp(26px,3vw,39px);margin:12px 0 28px;max-width:1100px}.slide-body{flex:1;display:flex;align-items:center;min-height:310px}.slide table{font-size:19px}.slide th,.slide td{padding:15px;line-height:1.4}.flow{display:flex;gap:15px;width:100%;align-items:stretch}.node{flex:1;min-width:0;background:var(--pale);border-top:4px solid var(--accent);padding:20px;position:relative}.node:not(:last-child):after{content:'→';position:absolute;right:-15px;top:43%;font-size:23px;color:var(--accent)}.node strong{font-size:21px;display:block;margin-bottom:15px;line-height:1.25}.node p{font-size:19px;line-height:1.5}.columns{display:flex;gap:22px;width:100%}.column{flex:1;border-top:4px solid var(--accent);padding:22px;background:var(--pale);min-width:0}.column strong{font-size:23px;display:block;margin-bottom:18px}.column p{font-size:20px;line-height:1.5}.takeaway{background:var(--navy);color:white;padding:15px 20px;font-size:18px;line-height:1.4;margin:25px 0 10px}.slide-foot{font-size:12px;color:var(--muted);display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap}.notes{background:#f0f4f6;border:1px solid var(--line);padding:24px;margin-top:16px;max-height:500px;overflow:auto}.notes h2{font-size:22px}.notes h3{font-size:17px}.notes table{font-size:13px}.presenting .topbar{position:static}.timer{font-variant-numeric:tabular-nums;font-size:16px;font-weight:700}.source-foot{overflow-wrap:anywhere}
+@media(max-width:900px){.shell{grid-template-columns:1fr;padding:16px;gap:0}aside{position:static;max-height:250px;background:white;border:1px solid var(--line);padding:10px;margin-bottom:16px}.toc-toggle{display:inline-block}.report-section,.lead{padding:22px}.controls{position:static}.cards{grid-template-columns:1fr}.slide{padding:20px;min-height:0}.flow,.columns{flex-direction:column}.node:not(:last-child):after{display:none}.slide table{font-size:16px}.slide-body{min-height:0}.node strong,.column strong{font-size:20px}.node p,.column p{font-size:18px}.deck{padding:0 12px}.slide h2{font-size:27px}.slide .table-wrap{max-width:100%}.topbar{padding:16px}.takeaway{font-size:16px}}
+@media print{body{background:white;font-size:10pt}.topbar,aside,.controls,.deck-controls,.status,.notes,footer{display:none!important}.shell{display:block;padding:0;max-width:none}.content{max-width:none}.lead,.report-section{border:0;padding:0;margin:15px 0;break-inside:auto}.report-section[hidden]{display:block!important}.table-wrap{overflow:visible}pre{white-space:pre-wrap;color:black;background:#eee}table{font-size:9pt}.deck{padding:0;max-width:none}.presenting .slide{display:flex!important;break-after:page;min-height:0;height:95vh;border:0}.presenting .slide[hidden]{display:flex!important}.slide h2{font-size:27pt}.slide table{font-size:16pt}.slide .flow,.slide .columns{flex-direction:row}.slide .node p,.slide .column p{font-size:15pt}.slide .node strong,.slide .column strong{font-size:17pt}.takeaway{color:black;background:#eee}.source-foot{font-size:9pt}}
+</style></head><body><header class="topbar"><span class="brand">Frontier agents · engineering guides</span><nav><a href="../index.html">Collection</a><a href="../EDITORIAL_STANDARD.md">Editorial standard</a><a href="../VALIDATION.md">Validation</a></nav></header><div class="shell"><aside><h2>Contents</h2><a href="#S-01">S-01 · Resources, scopes and functions</a><a href="#S-02">S-02 · Set up identity and source access</a><a href="#S-03">S-03 · Define the reachable surface before execution</a><a href="#S-M01">S-M01 · Credential resolution precedes application authentication</a><a href="#S-M02">S-M02 · Login Optimization retains a successful procedure</a><a href="#S-04">S-04 · Configuration, preflight and run lifecycle</a><a href="#S-05">S-05 · Findings, remediation and deployment are different objects</a><a href="#S-M05">S-M05 · Revalidation replays selected finding evidence</a><a href="#S-M03">S-M03 · Requirement evaluation applies reviewed criteria</a><a href="#S-M04">S-M04 · Regeneration replaces a pack&#x27;s contents</a><a href="#S-06">S-06 · Code, design and threat-model workflows</a><a href="#S-M06">S-M06 · Customer-managed encryption uses several identities</a><a href="#S-07">S-07 · Operational limits and failure diagnosis</a><a href="#S-U01">S-U01 · Worked example: a repaired authorization check</a><a href="#S-08">S-08 · Coverage and evidence decisions</a></aside><main class="content"><div class="lead"><h1>AWS Security Agent — configuration and operation</h1>
+<p>Engineering guide • documentation reviewed 22 October 2026</p>
+<p>This guide describes application assessment configuration, authentication, execution, findings and evidence. The current guide identifies AWS Security Agent as part of AWS Continuum. On-demand penetration testing and the design, code, threat-model and pipeline paths have different availability. Confirm the selected feature and Region before adoption; a generally available penetration test does not make every assessment path generally available. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/what-is.html" rel="noopener">SS01</a> <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/doc-history.html" rel="noopener">SS02</a></p>
+<p>Official product behavior is cited. <strong>Engineering procedures</strong> and <strong>synthetic exercises</strong> below are authored recommendations, not additional service functions or records of a live test.</p>
+<p class="small"><a href="security.md">Markdown source</a> · <a href="../presentations/security.pptx">Editable PowerPoint</a> · <a href="../presentations/security-notes.md">Presenter reference</a></p></div><div class="controls"><input id="search" aria-label="Search guide" placeholder="Search the guide · / to focus"><select id="kind" aria-label="Section type"><option value="">All sections</option><option value="model">Model</option><option value="procedure">Procedure</option><option value="mechanism">Mechanism</option><option value="troubleshooting">Troubleshooting</option><option value="example">Example</option><option value="reference">Reference</option></select><button id="reset">Reset</button><button id="present">Presentation</button><button data-print>Print</button></div><p id="status" class="status" aria-live="polite"></p><section class="report-section" id="S-01" data-kind="procedure"><div class="section-label">procedure</div><h2>S-01 — Resources, scopes and functions</h2>
+<p>The product functions are application penetration testing, source-code analysis, design review, and threat modeling. Supporting platform capabilities include source connection, reusable configuration, authenticated/private access, requirement management, run observation, remediation and finding revalidation. Do not equate an entire assessment with a single hidden learning mechanism. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/what-is.html" rel="noopener">SS01</a> <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html" rel="noopener">SS03</a></p>
+<pre><code class="language-text">Account / organization resources
+  ├─ registered source integrations
+  ├─ security requirement packs
+  └─ identity configuration
+              ↓ connect / assign / enable
+Application Agent Space
+  ├─ repositories, documents, user access, service settings
+  ├─ penetration-test configuration → runs → findings → revalidation jobs
+  ├─ code-review configuration → full scans / change-triggered reviews
+  ├─ threat-model configuration → runs and model results
+  └─ one-off design reviews → clone when a new assessment is needed
+</code></pre>
+<p>Registration makes an integration available; connecting a repository selects it for a space; enabling the assessment configures its use. These are separate actions. Requirements are shared resources, so the application boundary is not an isolation claim for every object. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html" rel="noopener">SS03</a></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Capability group</th>
+<th>Resources and operators</th>
+<th>Canonical sections</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Identity and sources</td>
+<td>Administrator, operator, Agent Space, integration, connected repository</td>
+<td><a href="#S-02">S-02</a></td>
+</tr>
+<tr>
+<td>Target access</td>
+<td>Verified domains, VPC route, target rules, credential definitions</td>
+<td><a href="#S-03">S-03</a>, <a href="#S-M01">S-M01</a></td>
+</tr>
+<tr>
+<td>Procedure reuse</td>
+<td>Login Optimization and its learned skill</td>
+<td><a href="#S-M02">S-M02</a></td>
+</tr>
+<tr>
+<td>Assessment criteria</td>
+<td>Managed/custom requirement packs and applicability</td>
+<td><a href="#S-M03">S-M03</a>, <a href="#S-M04">S-M04</a></td>
+</tr>
+<tr>
+<td>Execution</td>
+<td>Configuration, preflight, run, task-hour limit, logs</td>
+<td><a href="#S-04">S-04</a></td>
+</tr>
+<tr>
+<td>Findings and repair</td>
+<td>Finding evidence, proposed patch, deployed revision</td>
+<td><a href="#S-05">S-05</a></td>
+</tr>
+<tr>
+<td>Targeted verification</td>
+<td>Revalidation job and finding lineage</td>
+<td><a href="#S-M05">S-M05</a></td>
+</tr>
+<tr>
+<td>Data protection</td>
+<td>Customer-managed key, branch key, encryption context, calling identity</td>
+<td><a href="#S-M06">S-M06</a></td>
+</tr>
+<tr>
+<td>Earlier feedback</td>
+<td>Full/change-based code review, design review, threat model</td>
+<td><a href="#S-06">S-06</a></td>
+</tr>
+</tbody>
+</table></div>
+</section><section class="report-section" id="S-02" data-kind="procedure"><div class="section-label">procedure</div><h2>S-02 — Set up identity and source access</h2>
+<p>The console is the administrative surface. The web app is the assessment workspace. IAM-based operators can enter through the console route; IAM Identity Center supports assigned users without requiring ordinary console access. Configure the intended operator identity, not just the administrator who creates the Agent Space. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/how-it-works.html" rel="noopener">SS04</a> <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-code-review.html" rel="noopener">SS05</a></p>
+<p><strong>Configuration procedure:</strong> create or select an Agent Space, establish the supported identity mode, register the source integration, connect the application's repositories, and enable the relevant feature. For a GitHub integration, verify whether the installation belongs to a personal account or organization and whether organization approval is required. A successful account registration does not mean a repository was connected. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html" rel="noopener">SS03</a> <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-code-review.html" rel="noopener">SS05</a> <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/troubleshooting.html" rel="noopener">SS06</a></p>
+<p>For code review, independently review the settings for vulnerability analysis, requirement evaluation, comments, and automatic remediation. Enabling one does not establish that all others are active. S3 can be a code source through its own supported configuration path; provider-specific integration instructions remain authoritative. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-code-review.html" rel="noopener">SS05</a></p>
+<p><strong>Engineering verification:</strong> open the web app as the intended user, inspect the connected source and selected branch, and compare the source revision with the deployed test application. Record a known read and an expected denial. Do not place credentials in a repository or presentation to simplify the example.</p>
+</section><section class="report-section" id="S-03" data-kind="procedure"><div class="section-label">procedure</div><h2>S-03 — Define the reachable surface before execution</h2>
+<p>Domain verification demonstrates control through a supported verification method, including DNS, HTTP or a private-VPC route. It is a technical prerequisite, not authorization for every downstream system the application can contact. Private testing additionally needs a supported VPC configuration, subnets, routing and security groups. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/enable-penetration-test.html" rel="noopener">SS07</a></p>
+<p>The current penetration-test wizard separates three network rule classes. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html" rel="noopener">SS08</a></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Class</th>
+<th>Intended behavior</th>
+<th>Example in an authorized staging environment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Target</td>
+<td>May be accessed and tested</td>
+<td><code>https://staging.example.test:8443</code></td>
+</tr>
+<tr>
+<td>Accessible</td>
+<td>May be accessed to support the assessment, not attacked as a target</td>
+<td>Approved login-provider or static-content endpoint</td>
+</tr>
+<tr>
+<td>Out of scope</td>
+<td>Must not be accessed; exclusions take precedence</td>
+<td>A payment or production callback path</td>
+</tr>
+</tbody>
+</table></div>
+<p>These example names are illustrative, not running targets. Specify the complete scheme and nonstandard port when applicable. The current wizard supports explicit nonstandard ports; an older troubleshooting page states only 80/443. This guide follows the newer task-specific wizard and records the conflict rather than repeating the older restriction. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html" rel="noopener">SS08</a> <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/troubleshooting.html" rel="noopener">SS06</a></p>
+<p><strong>Configuration procedure:</strong> prepare the verified target and explicit exclusions; choose public or private connectivity; add representative test credentials; complete the network rules after authentication discovery; inspect suggested extra domains before accepting them. Keep essential login dependencies reachable without turning them into attack targets. Only execute against systems and effects that their owners have authorized. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/enable-penetration-test.html" rel="noopener">SS07</a> <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html" rel="noopener">SS08</a></p>
+<p><strong>Expected confirmation:</strong> the saved configuration identifies the target, network path, credential roles and exclusions. Draft configuration and successful authentication preflight are different states. Neither proves that a complete assessment has run.</p>
+</section><section class="report-section" id="S-M01" data-kind="mechanism"><div class="section-label">mechanism</div><h2>S-M01 — Credential resolution precedes application authentication</h2>
+<p>The service first obtains a credential and then follows login instructions to apply it to the application. A successful secret retrieval is not a successful application login. Current configuration requires a credential name, access URL, method and login prompt; <strong>Save &amp; Test</strong> or <strong>Test All</strong> exercises authentication and exposes success/failure information. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html" rel="noopener">SS09</a> <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html" rel="noopener">SS08</a></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Strategy</th>
+<th>Required dependency</th>
+<th>Typical failure to distinguish</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Direct test credential</td>
+<td>Correct application identity and instructions</td>
+<td>Wrong login URL, role or form flow</td>
+</tr>
+<tr>
+<td>Secrets Manager</td>
+<td>Same-account secret; service role with <code>secretsmanager:GetSecretValue</code> and <code>secretsmanager:DescribeSecret</code></td>
+<td>Access denied versus unusable secret format</td>
+</tr>
+<tr>
+<td>IAM role</td>
+<td>Registered role with correct service trust and limited permissions</td>
+<td>Role assumption versus how the temporary credential is used by the target</td>
+</tr>
+<tr>
+<td>Lambda</td>
+<td>Same-account function, invoke permission, synchronous completion within 30 seconds</td>
+<td>Invocation/timeout versus invalid returned credential</td>
+</tr>
+</tbody>
+</table></div>
+<p>The Lambda input includes <code>pentest_arn</code> and <code>actor_identifier</code>. Login instructions explain the returned credential's application use. The following original function illustrates the response boundary only; it is not a deployable credential provider and deliberately contains no real secret. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html" rel="noopener">SS09</a></p>
+<pre><code class="language-python">def handler(event, context):
+    required = ("pentest_arn", "actor_identifier")
+    if not all(event.get(k) for k in required):
+        raise ValueError("Missing assessment identity")
+    # Retrieve or mint a scoped TEST credential using your approved backend.
+    # Return its actual fields in the format explained by the login prompt.
+    raise NotImplementedError("Connect an authorized test-credential backend")
+</code></pre>
+<p>Use the official trust/policy examples for the selected strategy, restricted to the actual account, space and resource. This snippet is a contract example, not proof that a particular output schema is universal. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html" rel="noopener">SS09</a></p>
+<p>The newer authentication guide includes TOTP and email MFA. Email MFA uses a generated forwarding address associated with the test credential; it is not general permission to forward a real user's inbox. SMS, push and hardware-key flows are not supported in the reviewed guidance. Older cached text says email MFA is unsupported; the newer indexed page is used here. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html" rel="noopener">SS09</a></p>
+<p><strong>Proposed verification:</strong> inspect both credential-test status and the authenticated application's identity/role. Test an intended protected route and an excluded route using approved test data. When access fails, capture which stage failed: source access, credential generation, login navigation, MFA, or authorization inside the application.</p>
+</section><section class="report-section" id="S-M02" data-kind="mechanism"><div class="section-label">mechanism</div><h2>S-M02 — Login Optimization retains a successful procedure</h2>
+<p>The first successful authentication navigation can produce a skill describing the login workflow. Later sessions within the run and subsequent runs reuse it. This is learned procedural navigation, not a general incident-memory store or customer-controlled model retraining. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html" rel="noopener">SS09</a></p>
+<p><strong>Enablement:</strong> add at least one credential, open <strong>Additional configuration → Login optimization</strong>, and inspect the default-enabled toggle. Disabling reuse preserves the skill; re-enabling permits reuse again. The documentation describes adaptation to changed login flows, but does not disclose a general selection algorithm or promise a particular speed improvement. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html" rel="noopener">SS09</a></p>
+<p><strong>Proposed test:</strong> use a staging login flow that the team controls. Retain first-login and later-login evidence, then make an authorized change to the test flow. Verify the actual authenticated role on every run. Without observable reuse evidence, distinguish a successful login from a proven reuse of the learned procedure.</p>
+</section><section class="report-section" id="S-04" data-kind="procedure"><div class="section-label">procedure</div><h2>S-04 — Configuration, preflight and run lifecycle</h2>
+<p>A penetration-test configuration can be saved as a draft and completed through wizard steps for details, VPC, credentials, network and additional settings. It is reusable. A run is a separate execution against the then-current configuration and target. <strong>Create</strong> and <strong>Create and execute</strong> are not equivalent actions. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html" rel="noopener">SS08</a></p>
+<p>Select sources and branch context deliberately: a latest repository branch is not necessarily the deployed revision. For private testing, configure approved network access and optional CloudWatch logging. For repeated tests, inspect the supported scheduling setup and associated Scheduler role rather than assuming that an external cron trigger is the only path. Complete schedule administration is linked to AWS rather than reproduced here. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/enable-penetration-test.html" rel="noopener">SS07</a> <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html" rel="noopener">SS08</a></p>
+<p>Task-hours aggregate work across concurrent tasks; they are not wall-clock duration. The run's configured spending/work limit, account quota and any schedule are different controls. A run reaching its task-hour limit can complete without establishing exhaustive application coverage. Consult pricing before execution; cancelling does not erase work already performed. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html" rel="noopener">SS08</a> <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/quotas.html" rel="noopener">SS10</a> <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/pricing.html" rel="noopener">SS11</a></p>
+<p><strong>Engineering run record:</strong> capture the configuration ID, target revision, authenticated roles, exclusions, run ID, configured limit, start/end times and incomplete areas. Inspect findings and execution/log evidence while the run operates. Stop on unexpected effects; preserve an incomplete outcome rather than relabeling it a pass. These recordkeeping recommendations do not add product-level guarantees.</p>
+</section><section class="report-section" id="S-05" data-kind="procedure"><div class="section-label">procedure</div><h2>S-05 — Findings, remediation and deployment are different objects</h2>
+<p>A finding identifies the issue and its supporting evidence in a particular assessment context. The review surface can expose description, code locations, evidence and a suggested fix. Configured remediation can produce a patch or pull request, with provider-specific behavior. For example, the reviewed GitHub path distinguishes private-repository pull requests from a downloadable diff for public repositories. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-code-review.html" rel="noopener">SS05</a> <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/remediate-finding.html" rel="noopener">SS12</a></p>
+<p><strong>Procedure:</strong> select a material finding, verify the affected source and target revision, inspect reproduction or code evidence, request remediation only when the repository path is configured, then review and test the proposed change through the normal engineering process. A generated patch is neither deployment nor revalidation. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/remediate-finding.html" rel="noopener">SS12</a></p>
+<p><strong>Engineering verification:</strong> before closure, identify the exact deployed revision and re-run relevant regression tests. Retain rejected changes and failed builds as unfinished work. Use the finding ID as the link between assessment, change, deployment and revalidation—not similarity of issue titles.</p>
+</section><section class="report-section" id="S-M05" data-kind="mechanism"><div class="section-label">mechanism</div><h2>S-M05 — Revalidation replays selected finding evidence</h2>
+<p>After a repair reaches the original test environment, open the completed penetration-test run, choose <strong>Multiselect findings for revalidation</strong>, select findings, and choose <strong>Revalidate findings</strong>. The service starts a separate job using current authentication/configuration and repeats the selected validation steps. It does not conduct broad new discovery. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html" rel="noopener">SS13</a></p>
+<pre><code class="language-text">Original finding + deployed repair
+                  ↓ selected validation steps
+          Separate revalidation job
+                  ↓
+      Active: reproduced / Resolved: not reproduced
+                  ↓
+          linked finding and job history
+</code></pre>
+<p>The original finding is preserved and linked to the new job. A non-reproduction result is scoped to that finding and execution conditions. An authentication or environment failure can undermine its interpretation; inspect reachability before treating a result as evidence of repair. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html" rel="noopener">SS13</a></p>
+</section><section class="report-section" id="S-M03" data-kind="mechanism"><div class="section-label">mechanism</div><h2>S-M03 — Requirement evaluation applies reviewed criteria</h2>
+<p>A requirement contains a name/description, applicability, compliance criteria and optional remediation guidance. Applicability can distinguish a violation from a case to which the requirement does not apply. Packs group requirements; managed and custom packs differ in editability. Enabled packs inform subsequent eligible reviews, not retroactive rewrites of completed results. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/security-requirements.html" rel="noopener">SS14</a></p>
+<p><strong>Procedure:</strong> open <strong>Security requirements</strong>, select or create the pack, review applicability and criteria, enable it, and configure the design/code review to evaluate requirements. A vulnerability-only review is not the same evaluation mode. Inspect findings against the selected requirement, not merely the total count. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/security-requirements.html" rel="noopener">SS14</a> <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-code-review.html" rel="noopener">SS05</a></p>
+<p><strong>Original example:</strong> require an authorization check before returning an account-owned invoice. Applicability: handlers returning account-owned invoices. Compliance: the authenticated principal must be authorized for the invoice's owning account. A public static-document handler is inapplicable, not automatically compliant with an invoice rule. Test all three cases: compliant, violating and inapplicable.</p>
+</section><section class="report-section" id="S-M04" data-kind="mechanism"><div class="section-label">mechanism</div><h2>S-M04 — Regeneration replaces a pack's contents</h2>
+<p>Generating requirements from uploaded documents is a separate administrative mechanism. Supported input includes DOC, DOCX, Markdown, PDF and text. Select a custom pack, upload policy material, generate, inspect and edit the result, then enable it. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/import-security-requirements.html" rel="noopener">SS15</a></p>
+<p>Uploading new documents regenerates the pack and replaces existing requirements, including manually added ones. It is not an append operation. Do not start a competing upload while generation is running. Keep the governing policy and reviewed requirement source in Git; inspect the replacement before enabling it. A framework pack is not a compliance certificate. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/import-security-requirements.html" rel="noopener">SS15</a> <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/security-requirements.html" rel="noopener">SS14</a></p>
+</section><section class="report-section" id="S-06" data-kind="model"><div class="section-label">model</div><h2>S-06 — Code, design and threat-model workflows</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Assessment</th>
+<th>Configuration and execution</th>
+<th>Reviewable result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Code review</td>
+<td>Connect sources, select vulnerability/requirement modes, start full review or configure supported repository events</td>
+<td>Locations, evidence, suggested fixes; preflight failures remain separate</td>
+</tr>
+<tr>
+<td>Design review</td>
+<td>Submit a design for a one-off assessment; clone to create a new review</td>
+<td>Design findings against relevant requirements</td>
+</tr>
+<tr>
+<td>Threat model</td>
+<td>Create a reusable definition with scope documents and source context, then start a run</td>
+<td>System overview, boundaries, data flows and threats</td>
+</tr>
+</tbody>
+</table></div>
+<p>Code review preflight checks source and execution prerequisites before analysis. Ready-for-review repository events differ from draft changes; inspect the actual provider and configured trigger. Threat-model scope documents define what to analyze, while source documents/code provide system context. Do not treat them as interchangeable fields. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html" rel="noopener">SS03</a> <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-code-review.html" rel="noopener">SS05</a> <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-threat-model.html" rel="noopener">SS16</a> <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/review-code-findings-github.html" rel="noopener">SS17</a></p>
+<p><strong>Threat-model procedure:</strong> in the web app, create the model, provide title, scope documents, sources and service role, optionally configure logs, save, then start a run. Review the inferred system model before relying on individual threats. Inspect severity, evidence and dispositions. A model generated from the wrong system boundary is not repaired merely by dismissing inconvenient threats. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-threat-model.html" rel="noopener">SS16</a></p>
+<p>The full pipeline integration, complete design-review walkthrough and provider-specific remediation matrix are linked coverage, not reproduced procedures in this edition. This is an explicit limit of the guide, not a claim that those functions are absent.</p>
+</section><section class="report-section" id="S-M06" data-kind="mechanism"><div class="section-label">mechanism</div><h2>S-M06 — Customer-managed encryption uses several identities</h2>
+<p>The documented hierarchy uses a customer KMS key to protect a resource-specific branch key held in a service-managed DynamoDB store. The keyring derives wrapping keys used to protect data-encryption keys. Branch-key rotation and rotation of the KMS key are separate processes; old key versions remain necessary to decrypt older data. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/customer-managed-keys.html" rel="noopener">SS18</a></p>
+<p>Resource-specific encryption context and identity determine authorization. The relevant actors are not interchangeable:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Actor/path</th>
+<th>Permission responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Administrator using console</td>
+<td>Caller permissions for configuration and forwarded operations</td>
+</tr>
+<tr>
+<td>Web-app access role</td>
+<td>Supported web-app data access</td>
+</tr>
+<tr>
+<td>Assessment service role</td>
+<td>Customer resources such as S3, secrets and logs</td>
+</tr>
+<tr>
+<td>Service principal / asynchronous workflow</td>
+<td>Service-managed background access as documented</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Configuration procedure:</strong> select a supported enabled symmetric key, apply the current role/service-principal policy statements with the documented resource and encryption-context conditions, and choose the key when creating the supported resource. An application default can be overridden by an explicit resource key; changing the default does not re-encrypt existing resources. Review the current example policies rather than granting all KMS actions to all four identities. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/customer-managed-keys.html" rel="noopener">SS18</a></p>
+<p><strong>Failure diagnosis:</strong> identify the calling identity and denied KMS action from authorized audit evidence; inspect the matching key policy, grants/role policy and encryption context. Re-enabling a deliberately disabled test key can restore access; deletion can make retained data permanently unavailable. Do not disable a production key merely to demonstrate this mechanism. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/customer-managed-keys.html" rel="noopener">SS18</a></p>
+</section><section class="report-section" id="S-07" data-kind="troubleshooting"><div class="section-label">troubleshooting</div><h2>S-07 — Operational limits and failure diagnosis</h2>
+<p>The reviewed quota page distinguishes assessment capacity from spending controls. Examples include five concurrent penetration tests and five concurrent code-review runs as adjustable quotas, plus 20 requirement packs, 30 requirements per pack and 150 enabled requirements per account/Region as fixed limits. Confirm actual quotas and pricing before large-scale execution; a concurrency limit is not a financial budget. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/quotas.html" rel="noopener">SS10</a> <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/pricing.html" rel="noopener">SS11</a></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Likely boundary</th>
+<th>Next inspection</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Repository missing</td>
+<td>Registration or connection</td>
+<td>Account type, installation approval, connected repo and feature setting</td>
+</tr>
+<tr>
+<td>Credential source denied</td>
+<td>Service-role resource access</td>
+<td>Correct ARN/account, required read/invoke actions and trust</td>
+</tr>
+<tr>
+<td>Secret resolves; login fails</td>
+<td>Application flow</td>
+<td>Access URL, instructions, MFA, identity and credential-test result</td>
+</tr>
+<tr>
+<td>Private endpoint unreachable</td>
+<td>Network</td>
+<td>DNS, route/NAT requirements, egress, target rules and VPC configuration</td>
+</tr>
+<tr>
+<td>Additional domain blocked</td>
+<td>Target/access/exclusion rules</td>
+<td>Login-derived domains; approve only necessary accessible endpoints</td>
+</tr>
+<tr>
+<td>No requirement findings</td>
+<td>Configuration/applicability</td>
+<td>Enabled pack, selected evaluation mode, inapplicable versus compliant</td>
+</tr>
+<tr>
+<td>New document removed a manual rule</td>
+<td>Pack regeneration</td>
+<td>Compare generated replacement with the governing Git source</td>
+</tr>
+<tr>
+<td>Finding not reproduced</td>
+<td>Target and authentication</td>
+<td>Deployed revision, role reached and revalidation job evidence</td>
+</tr>
+<tr>
+<td>Encrypted object inaccessible</td>
+<td>KMS identity/context</td>
+<td>Relevant role/principal, key state, action and context conditions</td>
+</tr>
+</tbody>
+</table></div>
+<p>This ordering is engineering guidance derived from the cited procedures. It does not claim that every error message has one unique cause. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/troubleshooting.html" rel="noopener">SS06</a> <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html" rel="noopener">SS09</a> <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/customer-managed-keys.html" rel="noopener">SS18</a></p>
+</section><section class="report-section" id="S-U01" data-kind="example"><div class="section-label">example</div><h2>S-U01 — Worked example: a repaired authorization check</h2>
+<p><strong>Synthetic, authorized-staging exercise.</strong> Two test users belong to different customer accounts. The illustrative finding is that user A can receive a test invoice owned by account B. No live endpoint, credential or exploit execution is supplied.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Evidence record</th>
+<th>Before repair</th>
+<th>Candidate repair</th>
+<th>After deployment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Application revision</td>
+<td><code>demo-r1</code></td>
+<td><code>demo-r2</code> under review</td>
+<td><code>demo-r2</code> deployed</td>
+</tr>
+<tr>
+<td>Same-account test</td>
+<td>Expected invoice returned</td>
+<td>Regression test passes</td>
+<td>Expected invoice returned</td>
+</tr>
+<tr>
+<td>Cross-account test</td>
+<td>Test invoice returned unexpectedly</td>
+<td>Ownership check added; unit test passes</td>
+<td>Access denied in prepared result</td>
+</tr>
+<tr>
+<td>Identity evidence</td>
+<td>User A / account A</td>
+<td>Test principal controlled</td>
+<td>User A / account A confirmed</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Walkthrough:</strong> inspect the original finding and target revision; review the proposed ownership check; verify that the prepared deployment record names <code>demo-r2</code>; select the finding for revalidation; inspect the new job and its linkage. The observation that a patch exists is not used as evidence of deployment. The prepared post-deployment denial supports only this tested path and identity.</p>
+<p><strong>Failure branch:</strong> if revalidation instead logs in as a privileged administrator, its result is not the intended test of user A. Correct the credential role and rerun the authorized verification. If no application path was reached, do not interpret the absence of reproduction as proof of repair.</p>
+<p><strong>Expected deliverable:</strong> a finding disposition linking original evidence, reviewed change, deployed revision, actual authenticated identity and targeted result, with untested routes stated explicitly. The fixture teaches evidence lineage; it is not an assessment result or a security guarantee.</p>
+</section><section class="report-section" id="S-08" data-kind="reference"><div class="section-label">reference</div><h2>S-08 — Coverage and evidence decisions</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Official subject</th>
+<th>Treatment</th>
+<th>Remaining boundary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Resource lifecycle and identities</td>
+<td>Model plus setup sequence</td>
+<td>Complete SSO and organization-policy deployment linked</td>
+</tr>
+<tr>
+<td>Penetration testing</td>
+<td>Configuration, target classes, credentials, run interpretation</td>
+<td>Full GenAI risk-exception authoring not reproduced</td>
+</tr>
+<tr>
+<td>Authentication</td>
+<td>Strategy matrix, preflight, learned login reuse</td>
+<td>No actual secrets or running credential backend</td>
+</tr>
+<tr>
+<td>Requirements</td>
+<td>Evaluation separated from destructive regeneration</td>
+<td>Full managed-pack inventory linked</td>
+</tr>
+<tr>
+<td>Code and threat models</td>
+<td>Usable configuration sequence and result model</td>
+<td>Complete CI/CD and provider compatibility matrix deferred</td>
+</tr>
+<tr>
+<td>Findings and KMS</td>
+<td>Lineage, remediation boundaries, key hierarchy and actors</td>
+<td>Full policy documents remain official reference</td>
+</tr>
+<tr>
+<td>Limits/troubleshooting</td>
+<td>Selected operational constraints and diagnostic paths</td>
+<td>Not an exhaustive error catalog</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Version conflicts:</strong> current indexed authentication/wizard pages include email MFA and nonstandard ports. Older cached authentication/troubleshooting pages contradict those points. The newer task-specific pages are used; the older troubleshooting source supports only the remaining diagnostics. Review date means retrieval, not a page publication date.</p>
+<h3>Official sources and reviewed sections</h3>
+<ul>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/what-is.html" rel="noopener">SS01</a> Service scope and feature distinctions.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/doc-history.html" rel="noopener">SS02</a> Documentation history; feature announcements and availability.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html" rel="noopener">SS03</a> Account versus space resources; configuration/run lifecycle by assessment type.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/how-it-works.html" rel="noopener">SS04</a> Administrative and assessment surfaces, application context.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-code-review.html" rel="noopener">SS05</a> Code-review setup, modes, preflight, full scans and findings.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/troubleshooting.html" rel="noopener">SS06</a> Source registration and network troubleshooting; stale port restriction excluded.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/enable-penetration-test.html" rel="noopener">SS07</a> Target verification, VPC/role/logging setup and optional scheduling; newer indexed content.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html" rel="noopener">SS08</a> Current penetration-test wizard, network classes, credentials and task-hours; newer indexed content.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html" rel="noopener">SS09</a> Credential methods, preflight, login reuse and MFA; newer indexed content resolves older cached text.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/quotas.html" rel="noopener">SS10</a> Quotas and adjustability; current indexed table.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/pricing.html" rel="noopener">SS11</a> Pricing versus capacity and cancellation implications.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/remediate-finding.html" rel="noopener">SS12</a> Remediation provider behavior and proposed patches.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html" rel="noopener">SS13</a> Revalidation initiation, results and lineage.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/security-requirements.html" rel="noopener">SS14</a> Requirement fields, applicability, activation and review behavior.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/import-security-requirements.html" rel="noopener">SS15</a> Requirement generation and replacement consequences.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-threat-model.html" rel="noopener">SS16</a> Threat-model scope/source distinction, setup, preflight and result review.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/review-code-findings-github.html" rel="noopener">SS17</a> Repository-triggered review and comments.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/customer-managed-keys.html" rel="noopener">SS18</a> Hierarchical keyring, identities, encryption context and key lifecycle.</li>
+</ul>
+</section><footer>Documentation review is separate from configuration and runtime testing. No live AWS execution was performed.</footer></main></div><div class="deck"><div class="deck-controls"><button id="read">Read guide</button><button id="prev">Previous</button><select id="slide-select" aria-label="Select slide"><option value="0">1. Application resources sit beneath shared account configuration</option><option value="1">2. Registration is not repository connection</option><option value="2">3. Network rules separate targets, dependencies and exclusions</option><option value="3">4. Obtaining a credential is not logging into the application</option><option value="4">5. Learned login navigation is a specific reuse mechanism</option><option value="5">6. A reusable configuration produces distinct executions</option><option value="6">7. Requirement evaluation starts with applicability</option><option value="7">8. Regeneration replaces requirements; it does not append</option><option value="8">9. A proposed repair is not a deployed repair</option><option value="9">10. Revalidation preserves the original finding</option><option value="10">11. Earlier assessments use different resource lifecycles</option><option value="11">12. Encryption requires the correct identity and context</option><option value="12">13. Exercise: verify the repaired account boundary</option><option value="13">14. Troubleshooting follows the failed prerequisite</option></select><button id="next">Next</button><label><input id="notes-toggle" type="checkbox"> Notes</label><button id="timer-toggle">Start timer</button><button id="timer-reset">Reset timer</button><span id="timer" class="timer">0:00</span><button data-print>Print slides</button></div><p class="small">35 minutes including 8 minutes of prepared-result exercise. Arrow keys navigate; Escape returns to guide.</p><article class="slide" data-seconds="120" data-kind="flow"><div class="kicker">AWS Security Agent · flow</div><h2>Application resources sit beneath shared account configuration</h2><div class="slide-body"><div class="flow"><div class="node"><strong>Account resources</strong><p>Integrations, identity and requirement packs</p></div><div class="node"><strong>Agent Space</strong><p>Application sources, users and settings</p></div><div class="node"><strong>Configuration</strong><p>Target, authentication, criteria and limits</p></div><div class="node"><strong>Run and evidence</strong><p>Assessment results and linked verification</p></div></div></div><div class="takeaway">Requirements and integrations can have broader scope than a single application.</div><div class="slide-foot"><span>1 / 14 · 00:00–02:00 · 2 min</span><span><a href="#S-01">S-01</a></span></div></article><article class="slide" data-seconds="120" data-kind="table" hidden><div class="kicker">AWS Security Agent · table</div><h2>Registration is not repository connection</h2><div class="slide-body"><div class="table-wrap"><table><thead><tr><th>Action</th><th>Establishes</th><th>Inspect</th></tr></thead><tbody><tr><td>Register integration</td><td>Available source provider</td><td>Account type and authorization</td></tr><tr><td>Connect repository</td><td>Application source selection</td><td>Repository and branch identity</td></tr><tr><td>Enable feature</td><td>Selected assessment behavior</td><td>Modes, comments and remediation settings</td></tr><tr><td>Open as operator</td><td>Usable assessment access</td><td>Intended user rather than setup administrator</td></tr></tbody></table></div></div><div class="takeaway">Verify the deployed revision separately from the latest source branch.</div><div class="slide-foot"><span>2 / 14 · 02:00–04:00 · 2 min</span><span><a href="#S-02">S-02</a></span></div></article><article class="slide" data-seconds="120" data-kind="table" hidden><div class="kicker">AWS Security Agent · table</div><h2>Network rules separate targets, dependencies and exclusions</h2><div class="slide-body"><div class="table-wrap"><table><thead><tr><th>Rule</th><th>Permitted purpose</th><th>Example</th></tr></thead><tbody><tr><td>Target</td><td>Access and testing</td><td>Authorized staging application</td></tr><tr><td>Accessible</td><td>Supporting access; not attack target</td><td>Approved login dependency</td></tr><tr><td>Out of scope</td><td>No access; exclusion precedence</td><td>Production callback or payment path</td></tr></tbody></table></div></div><div class="takeaway">A verified domain is not authorization for every downstream effect.</div><div class="slide-foot"><span>3 / 14 · 04:00–06:00 · 2 min</span><span><a href="#S-03">S-03</a></span></div></article><article class="slide" data-seconds="180" data-kind="flow" hidden><div class="kicker">AWS Security Agent · flow</div><h2>Obtaining a credential is not logging into the application</h2><div class="slide-body"><div class="flow"><div class="node"><strong>Credential source</strong><p>Direct input, secret, role or Lambda</p></div><div class="node"><strong>Service access</strong><p>Required trust and read/invoke permissions</p></div><div class="node"><strong>Login instructions</strong><p>How credentials and MFA apply</p></div><div class="node"><strong>Authenticated role</strong><p>Observed identity and protected routes</p></div></div></div><div class="takeaway">Save &amp; Test verifies the configured flow; inspect where authentication fails.</div><div class="slide-foot"><span>4 / 14 · 06:00–09:00 · 3 min</span><span><a href="#S-M01">S-M01</a></span></div></article><article class="slide" data-seconds="120" data-kind="flow" hidden><div class="kicker">AWS Security Agent · flow</div><h2>Learned login navigation is a specific reuse mechanism</h2><div class="slide-body"><div class="flow"><div class="node"><strong>First successful login</strong><p>Navigation is discovered</p></div><div class="node"><strong>Saved skill</strong><p>Successful procedure is retained</p></div><div class="node"><strong>Later session</strong><p>Procedure can be reused</p></div><div class="node"><strong>Setting / flow change</strong><p>Toggle reuse; verify actual identity again</p></div></div></div><div class="takeaway">Login Optimization is not a universal vulnerability-memory service.</div><div class="slide-foot"><span>5 / 14 · 09:00–11:00 · 2 min</span><span><a href="#S-M02">S-M02</a></span></div></article><article class="slide" data-seconds="120" data-kind="table" hidden><div class="kicker">AWS Security Agent · table</div><h2>A reusable configuration produces distinct executions</h2><div class="slide-body"><div class="table-wrap"><table><thead><tr><th>Object</th><th>Meaning</th></tr></thead><tbody><tr><td>Draft</td><td>Incomplete configuration, not a completed test</td></tr><tr><td>Saved configuration</td><td>Reusable target, credentials and execution choices</td></tr><tr><td>Run</td><td>Assessment against then-current target/configuration</td></tr><tr><td>Task-hour limit</td><td>Cumulative task work, not elapsed wall time</td></tr></tbody></table></div></div><div class="takeaway">A completed status does not establish exhaustive coverage.</div><div class="slide-foot"><span>6 / 14 · 11:00–13:00 · 2 min</span><span><a href="#S-04">S-04</a></span></div></article><article class="slide" data-seconds="120" data-kind="columns" hidden><div class="kicker">AWS Security Agent · columns</div><h2>Requirement evaluation starts with applicability</h2><div class="slide-body"><div class="columns"><div class="column"><strong>Applicable and compliant</strong><p>The required ownership check exists and supporting evidence is present.</p></div><div class="column"><strong>Applicable and violating</strong><p>A handler returns account-owned data without the required authorization.</p></div><div class="column"><strong>Inapplicable</strong><p>The requirement does not govern the evaluated component.</p></div></div></div><div class="takeaway">Configure requirement evaluation explicitly; vulnerability analysis alone is different.</div><div class="slide-foot"><span>7 / 14 · 13:00–15:00 · 2 min</span><span><a href="#S-M03">S-M03</a></span></div></article><article class="slide" data-seconds="120" data-kind="flow" hidden><div class="kicker">AWS Security Agent · flow</div><h2>Regeneration replaces requirements; it does not append</h2><div class="slide-body"><div class="flow"><div class="node"><strong>Source policy</strong><p>Reviewed governing documents</p></div><div class="node"><strong>Generate</strong><p>Replace the pack contents</p></div><div class="node"><strong>Review</strong><p>Inspect generated and formerly manual rules</p></div><div class="node"><strong>Enable</strong><p>Use the reviewed replacement in later assessments</p></div></div></div><div class="takeaway">Keep authoritative requirement source in Git and review replacement before enabling.</div><div class="slide-foot"><span>8 / 14 · 15:00–17:00 · 2 min</span><span><a href="#S-M04">S-M04</a></span></div></article><article class="slide" data-seconds="120" data-kind="flow" hidden><div class="kicker">AWS Security Agent · flow</div><h2>A proposed repair is not a deployed repair</h2><div class="slide-body"><div class="flow"><div class="node"><strong>Finding</strong><p>Evidence and affected revision</p></div><div class="node"><strong>Proposed change</strong><p>Provider-specific patch or pull request</p></div><div class="node"><strong>Engineering review</strong><p>Tests and approval</p></div><div class="node"><strong>Deployment</strong><p>Known revision on the authorized target</p></div></div></div><div class="takeaway">Use the finding ID to connect the records, not similarity of titles.</div><div class="slide-foot"><span>9 / 14 · 17:00–19:00 · 2 min</span><span><a href="#S-05">S-05</a></span></div></article><article class="slide" data-seconds="120" data-kind="flow" hidden><div class="kicker">AWS Security Agent · flow</div><h2>Revalidation preserves the original finding</h2><div class="slide-body"><div class="flow"><div class="node"><strong>Selected finding</strong><p>Original completed assessment</p></div><div class="node"><strong>New job</strong><p>Current credentials; repeat selected steps</p></div><div class="node"><strong>Result</strong><p>Reproduced or not reproduced</p></div><div class="node"><strong>History</strong><p>Original finding linked to new evidence</p></div></div></div><div class="takeaway">A non-reproduction result is scoped; failed authentication can invalidate its interpretation.</div><div class="slide-foot"><span>10 / 14 · 19:00–21:00 · 2 min</span><span><a href="#S-M05">S-M05</a></span></div></article><article class="slide" data-seconds="120" data-kind="table" hidden><div class="kicker">AWS Security Agent · table</div><h2>Earlier assessments use different resource lifecycles</h2><div class="slide-body"><div class="table-wrap"><table><thead><tr><th>Assessment</th><th>Configuration model</th><th>Result focus</th></tr></thead><tbody><tr><td>Code</td><td>Full scan or supported change trigger</td><td>Locations, evidence and suggested fixes</td></tr><tr><td>Design</td><td>One-off review; clone for new work</td><td>Design findings against requirements</td></tr><tr><td>Threat model</td><td>Reusable configuration and runs</td><td>System boundary, flows and threats</td></tr></tbody></table></div></div><div class="takeaway">Review inferred system context before relying on individual findings.</div><div class="slide-foot"><span>11 / 14 · 21:00–23:00 · 2 min</span><span><a href="#S-06">S-06</a></span></div></article><article class="slide" data-seconds="120" data-kind="flow" hidden><div class="kicker">AWS Security Agent · flow</div><h2>Encryption requires the correct identity and context</h2><div class="slide-body"><div class="flow"><div class="node"><strong>Customer KMS key</strong><p>Protects resource branch keys</p></div><div class="node"><strong>Branch key</strong><p>Service-managed stored key material</p></div><div class="node"><strong>Derived wrapping key</strong><p>Protects data-encryption keys</p></div><div class="node"><strong>Authorized request</strong><p>Caller, action and encryption context must match</p></div></div></div><div class="takeaway">Administrator, web-app role, assessment role and asynchronous service access are distinct.</div><div class="slide-foot"><span>12 / 14 · 23:00–25:00 · 2 min</span><span><a href="#S-M06">S-M06</a></span></div></article><article class="slide" data-seconds="480" data-kind="demo" hidden><div class="kicker">AWS Security Agent · demo</div><h2>Exercise: verify the repaired account boundary</h2><div class="slide-body"><div class="table-wrap"><table><thead><tr><th>Time</th><th>Action</th><th>Prepared evidence</th></tr></thead><tbody><tr><td>0–2 min</td><td>Inspect the finding</td><td>User A received account B’s test invoice in demo-r1</td></tr><tr><td>2–4 min</td><td>Inspect the change</td><td>Ownership check reviewed; demo-r2 deployed</td></tr><tr><td>4–6 min</td><td>Inspect revalidation</td><td>Actual user A role and selected path reached</td></tr><tr><td>6–8 min</td><td>State the result scope</td><td>Prepared denial supports that path, not whole-app security</td></tr></tbody></table></div></div><div class="takeaway">Synthetic staging evidence only. No live penetration test or exploit execution.</div><div class="slide-foot"><span>13 / 14 · 25:00–33:00 · 8 min</span><span><a href="#S-U01">S-U01</a> · <a href="#S-M05">S-M05</a></span></div></article><article class="slide" data-seconds="120" data-kind="columns" hidden><div class="kicker">AWS Security Agent · columns</div><h2>Troubleshooting follows the failed prerequisite</h2><div class="slide-body"><div class="columns"><div class="column"><strong>Access</strong><p>Separate repository connection, secret retrieval, application login and private routing.</p></div><div class="column"><strong>Criteria</strong><p>Check pack activation, applicability, regeneration and evaluation mode.</p></div><div class="column"><strong>Evidence</strong><p>Check deployment, actual identity, reachable path and linked job before closing a finding.</p></div></div></div><div class="takeaway">Full provider/pipeline and GenAI exception setup remains explicitly linked coverage.</div><div class="slide-foot"><span>14 / 14 · 33:00–35:00 · 2 min</span><span><a href="#S-07">S-07</a> · <a href="#S-08">S-08</a></span></div></article><div class="notes" hidden><h2>S-01 — Resources, scopes and functions</h2>
+<p>The product functions are application penetration testing, source-code analysis, design review, and threat modeling. Supporting platform capabilities include source connection, reusable configuration, authenticated/private access, requirement management, run observation, remediation and finding revalidation. Do not equate an entire assessment with a single hidden learning mechanism. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/what-is.html" rel="noopener">SS01</a> <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html" rel="noopener">SS03</a></p>
+<pre><code class="language-text">Account / organization resources
+  ├─ registered source integrations
+  ├─ security requirement packs
+  └─ identity configuration
+              ↓ connect / assign / enable
+Application Agent Space
+  ├─ repositories, documents, user access, service settings
+  ├─ penetration-test configuration → runs → findings → revalidation jobs
+  ├─ code-review configuration → full scans / change-triggered reviews
+  ├─ threat-model configuration → runs and model results
+  └─ one-off design reviews → clone when a new assessment is needed
+</code></pre>
+<p>Registration makes an integration available; connecting a repository selects it for a space; enabling the assessment configures its use. These are separate actions. Requirements are shared resources, so the application boundary is not an isolation claim for every object. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html" rel="noopener">SS03</a></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Capability group</th>
+<th>Resources and operators</th>
+<th>Canonical sections</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Identity and sources</td>
+<td>Administrator, operator, Agent Space, integration, connected repository</td>
+<td><a href="#S-02">S-02</a></td>
+</tr>
+<tr>
+<td>Target access</td>
+<td>Verified domains, VPC route, target rules, credential definitions</td>
+<td><a href="#S-03">S-03</a>, <a href="#S-M01">S-M01</a></td>
+</tr>
+<tr>
+<td>Procedure reuse</td>
+<td>Login Optimization and its learned skill</td>
+<td><a href="#S-M02">S-M02</a></td>
+</tr>
+<tr>
+<td>Assessment criteria</td>
+<td>Managed/custom requirement packs and applicability</td>
+<td><a href="#S-M03">S-M03</a>, <a href="#S-M04">S-M04</a></td>
+</tr>
+<tr>
+<td>Execution</td>
+<td>Configuration, preflight, run, task-hour limit, logs</td>
+<td><a href="#S-04">S-04</a></td>
+</tr>
+<tr>
+<td>Findings and repair</td>
+<td>Finding evidence, proposed patch, deployed revision</td>
+<td><a href="#S-05">S-05</a></td>
+</tr>
+<tr>
+<td>Targeted verification</td>
+<td>Revalidation job and finding lineage</td>
+<td><a href="#S-M05">S-M05</a></td>
+</tr>
+<tr>
+<td>Data protection</td>
+<td>Customer-managed key, branch key, encryption context, calling identity</td>
+<td><a href="#S-M06">S-M06</a></td>
+</tr>
+<tr>
+<td>Earlier feedback</td>
+<td>Full/change-based code review, design review, threat model</td>
+<td><a href="#S-06">S-06</a></td>
+</tr>
+</tbody>
+</table></div>
+</div><div class="notes" hidden><h2>S-02 — Set up identity and source access</h2>
+<p>The console is the administrative surface. The web app is the assessment workspace. IAM-based operators can enter through the console route; IAM Identity Center supports assigned users without requiring ordinary console access. Configure the intended operator identity, not just the administrator who creates the Agent Space. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/how-it-works.html" rel="noopener">SS04</a> <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-code-review.html" rel="noopener">SS05</a></p>
+<p><strong>Configuration procedure:</strong> create or select an Agent Space, establish the supported identity mode, register the source integration, connect the application's repositories, and enable the relevant feature. For a GitHub integration, verify whether the installation belongs to a personal account or organization and whether organization approval is required. A successful account registration does not mean a repository was connected. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html" rel="noopener">SS03</a> <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-code-review.html" rel="noopener">SS05</a> <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/troubleshooting.html" rel="noopener">SS06</a></p>
+<p>For code review, independently review the settings for vulnerability analysis, requirement evaluation, comments, and automatic remediation. Enabling one does not establish that all others are active. S3 can be a code source through its own supported configuration path; provider-specific integration instructions remain authoritative. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-code-review.html" rel="noopener">SS05</a></p>
+<p><strong>Engineering verification:</strong> open the web app as the intended user, inspect the connected source and selected branch, and compare the source revision with the deployed test application. Record a known read and an expected denial. Do not place credentials in a repository or presentation to simplify the example.</p>
+</div><div class="notes" hidden><h2>S-03 — Define the reachable surface before execution</h2>
+<p>Domain verification demonstrates control through a supported verification method, including DNS, HTTP or a private-VPC route. It is a technical prerequisite, not authorization for every downstream system the application can contact. Private testing additionally needs a supported VPC configuration, subnets, routing and security groups. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/enable-penetration-test.html" rel="noopener">SS07</a></p>
+<p>The current penetration-test wizard separates three network rule classes. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html" rel="noopener">SS08</a></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Class</th>
+<th>Intended behavior</th>
+<th>Example in an authorized staging environment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Target</td>
+<td>May be accessed and tested</td>
+<td><code>https://staging.example.test:8443</code></td>
+</tr>
+<tr>
+<td>Accessible</td>
+<td>May be accessed to support the assessment, not attacked as a target</td>
+<td>Approved login-provider or static-content endpoint</td>
+</tr>
+<tr>
+<td>Out of scope</td>
+<td>Must not be accessed; exclusions take precedence</td>
+<td>A payment or production callback path</td>
+</tr>
+</tbody>
+</table></div>
+<p>These example names are illustrative, not running targets. Specify the complete scheme and nonstandard port when applicable. The current wizard supports explicit nonstandard ports; an older troubleshooting page states only 80/443. This guide follows the newer task-specific wizard and records the conflict rather than repeating the older restriction. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html" rel="noopener">SS08</a> <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/troubleshooting.html" rel="noopener">SS06</a></p>
+<p><strong>Configuration procedure:</strong> prepare the verified target and explicit exclusions; choose public or private connectivity; add representative test credentials; complete the network rules after authentication discovery; inspect suggested extra domains before accepting them. Keep essential login dependencies reachable without turning them into attack targets. Only execute against systems and effects that their owners have authorized. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/enable-penetration-test.html" rel="noopener">SS07</a> <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html" rel="noopener">SS08</a></p>
+<p><strong>Expected confirmation:</strong> the saved configuration identifies the target, network path, credential roles and exclusions. Draft configuration and successful authentication preflight are different states. Neither proves that a complete assessment has run.</p>
+</div><div class="notes" hidden><h2>S-M01 — Credential resolution precedes application authentication</h2>
+<p>The service first obtains a credential and then follows login instructions to apply it to the application. A successful secret retrieval is not a successful application login. Current configuration requires a credential name, access URL, method and login prompt; <strong>Save &amp; Test</strong> or <strong>Test All</strong> exercises authentication and exposes success/failure information. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html" rel="noopener">SS09</a> <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html" rel="noopener">SS08</a></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Strategy</th>
+<th>Required dependency</th>
+<th>Typical failure to distinguish</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Direct test credential</td>
+<td>Correct application identity and instructions</td>
+<td>Wrong login URL, role or form flow</td>
+</tr>
+<tr>
+<td>Secrets Manager</td>
+<td>Same-account secret; service role with <code>secretsmanager:GetSecretValue</code> and <code>secretsmanager:DescribeSecret</code></td>
+<td>Access denied versus unusable secret format</td>
+</tr>
+<tr>
+<td>IAM role</td>
+<td>Registered role with correct service trust and limited permissions</td>
+<td>Role assumption versus how the temporary credential is used by the target</td>
+</tr>
+<tr>
+<td>Lambda</td>
+<td>Same-account function, invoke permission, synchronous completion within 30 seconds</td>
+<td>Invocation/timeout versus invalid returned credential</td>
+</tr>
+</tbody>
+</table></div>
+<p>The Lambda input includes <code>pentest_arn</code> and <code>actor_identifier</code>. Login instructions explain the returned credential's application use. The following original function illustrates the response boundary only; it is not a deployable credential provider and deliberately contains no real secret. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html" rel="noopener">SS09</a></p>
+<pre><code class="language-python">def handler(event, context):
+    required = ("pentest_arn", "actor_identifier")
+    if not all(event.get(k) for k in required):
+        raise ValueError("Missing assessment identity")
+    # Retrieve or mint a scoped TEST credential using your approved backend.
+    # Return its actual fields in the format explained by the login prompt.
+    raise NotImplementedError("Connect an authorized test-credential backend")
+</code></pre>
+<p>Use the official trust/policy examples for the selected strategy, restricted to the actual account, space and resource. This snippet is a contract example, not proof that a particular output schema is universal. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html" rel="noopener">SS09</a></p>
+<p>The newer authentication guide includes TOTP and email MFA. Email MFA uses a generated forwarding address associated with the test credential; it is not general permission to forward a real user's inbox. SMS, push and hardware-key flows are not supported in the reviewed guidance. Older cached text says email MFA is unsupported; the newer indexed page is used here. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html" rel="noopener">SS09</a></p>
+<p><strong>Proposed verification:</strong> inspect both credential-test status and the authenticated application's identity/role. Test an intended protected route and an excluded route using approved test data. When access fails, capture which stage failed: source access, credential generation, login navigation, MFA, or authorization inside the application.</p>
+</div><div class="notes" hidden><h2>S-M02 — Login Optimization retains a successful procedure</h2>
+<p>The first successful authentication navigation can produce a skill describing the login workflow. Later sessions within the run and subsequent runs reuse it. This is learned procedural navigation, not a general incident-memory store or customer-controlled model retraining. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html" rel="noopener">SS09</a></p>
+<p><strong>Enablement:</strong> add at least one credential, open <strong>Additional configuration → Login optimization</strong>, and inspect the default-enabled toggle. Disabling reuse preserves the skill; re-enabling permits reuse again. The documentation describes adaptation to changed login flows, but does not disclose a general selection algorithm or promise a particular speed improvement. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html" rel="noopener">SS09</a></p>
+<p><strong>Proposed test:</strong> use a staging login flow that the team controls. Retain first-login and later-login evidence, then make an authorized change to the test flow. Verify the actual authenticated role on every run. Without observable reuse evidence, distinguish a successful login from a proven reuse of the learned procedure.</p>
+</div><div class="notes" hidden><h2>S-04 — Configuration, preflight and run lifecycle</h2>
+<p>A penetration-test configuration can be saved as a draft and completed through wizard steps for details, VPC, credentials, network and additional settings. It is reusable. A run is a separate execution against the then-current configuration and target. <strong>Create</strong> and <strong>Create and execute</strong> are not equivalent actions. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html" rel="noopener">SS08</a></p>
+<p>Select sources and branch context deliberately: a latest repository branch is not necessarily the deployed revision. For private testing, configure approved network access and optional CloudWatch logging. For repeated tests, inspect the supported scheduling setup and associated Scheduler role rather than assuming that an external cron trigger is the only path. Complete schedule administration is linked to AWS rather than reproduced here. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/enable-penetration-test.html" rel="noopener">SS07</a> <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html" rel="noopener">SS08</a></p>
+<p>Task-hours aggregate work across concurrent tasks; they are not wall-clock duration. The run's configured spending/work limit, account quota and any schedule are different controls. A run reaching its task-hour limit can complete without establishing exhaustive application coverage. Consult pricing before execution; cancelling does not erase work already performed. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html" rel="noopener">SS08</a> <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/quotas.html" rel="noopener">SS10</a> <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/pricing.html" rel="noopener">SS11</a></p>
+<p><strong>Engineering run record:</strong> capture the configuration ID, target revision, authenticated roles, exclusions, run ID, configured limit, start/end times and incomplete areas. Inspect findings and execution/log evidence while the run operates. Stop on unexpected effects; preserve an incomplete outcome rather than relabeling it a pass. These recordkeeping recommendations do not add product-level guarantees.</p>
+</div><div class="notes" hidden><h2>S-M03 — Requirement evaluation applies reviewed criteria</h2>
+<p>A requirement contains a name/description, applicability, compliance criteria and optional remediation guidance. Applicability can distinguish a violation from a case to which the requirement does not apply. Packs group requirements; managed and custom packs differ in editability. Enabled packs inform subsequent eligible reviews, not retroactive rewrites of completed results. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/security-requirements.html" rel="noopener">SS14</a></p>
+<p><strong>Procedure:</strong> open <strong>Security requirements</strong>, select or create the pack, review applicability and criteria, enable it, and configure the design/code review to evaluate requirements. A vulnerability-only review is not the same evaluation mode. Inspect findings against the selected requirement, not merely the total count. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/security-requirements.html" rel="noopener">SS14</a> <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-code-review.html" rel="noopener">SS05</a></p>
+<p><strong>Original example:</strong> require an authorization check before returning an account-owned invoice. Applicability: handlers returning account-owned invoices. Compliance: the authenticated principal must be authorized for the invoice's owning account. A public static-document handler is inapplicable, not automatically compliant with an invoice rule. Test all three cases: compliant, violating and inapplicable.</p>
+</div><div class="notes" hidden><h2>S-M04 — Regeneration replaces a pack's contents</h2>
+<p>Generating requirements from uploaded documents is a separate administrative mechanism. Supported input includes DOC, DOCX, Markdown, PDF and text. Select a custom pack, upload policy material, generate, inspect and edit the result, then enable it. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/import-security-requirements.html" rel="noopener">SS15</a></p>
+<p>Uploading new documents regenerates the pack and replaces existing requirements, including manually added ones. It is not an append operation. Do not start a competing upload while generation is running. Keep the governing policy and reviewed requirement source in Git; inspect the replacement before enabling it. A framework pack is not a compliance certificate. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/import-security-requirements.html" rel="noopener">SS15</a> <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/security-requirements.html" rel="noopener">SS14</a></p>
+</div><div class="notes" hidden><h2>S-05 — Findings, remediation and deployment are different objects</h2>
+<p>A finding identifies the issue and its supporting evidence in a particular assessment context. The review surface can expose description, code locations, evidence and a suggested fix. Configured remediation can produce a patch or pull request, with provider-specific behavior. For example, the reviewed GitHub path distinguishes private-repository pull requests from a downloadable diff for public repositories. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-code-review.html" rel="noopener">SS05</a> <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/remediate-finding.html" rel="noopener">SS12</a></p>
+<p><strong>Procedure:</strong> select a material finding, verify the affected source and target revision, inspect reproduction or code evidence, request remediation only when the repository path is configured, then review and test the proposed change through the normal engineering process. A generated patch is neither deployment nor revalidation. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/remediate-finding.html" rel="noopener">SS12</a></p>
+<p><strong>Engineering verification:</strong> before closure, identify the exact deployed revision and re-run relevant regression tests. Retain rejected changes and failed builds as unfinished work. Use the finding ID as the link between assessment, change, deployment and revalidation—not similarity of issue titles.</p>
+</div><div class="notes" hidden><h2>S-M05 — Revalidation replays selected finding evidence</h2>
+<p>After a repair reaches the original test environment, open the completed penetration-test run, choose <strong>Multiselect findings for revalidation</strong>, select findings, and choose <strong>Revalidate findings</strong>. The service starts a separate job using current authentication/configuration and repeats the selected validation steps. It does not conduct broad new discovery. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html" rel="noopener">SS13</a></p>
+<pre><code class="language-text">Original finding + deployed repair
+                  ↓ selected validation steps
+          Separate revalidation job
+                  ↓
+      Active: reproduced / Resolved: not reproduced
+                  ↓
+          linked finding and job history
+</code></pre>
+<p>The original finding is preserved and linked to the new job. A non-reproduction result is scoped to that finding and execution conditions. An authentication or environment failure can undermine its interpretation; inspect reachability before treating a result as evidence of repair. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html" rel="noopener">SS13</a></p>
+</div><div class="notes" hidden><h2>S-06 — Code, design and threat-model workflows</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Assessment</th>
+<th>Configuration and execution</th>
+<th>Reviewable result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Code review</td>
+<td>Connect sources, select vulnerability/requirement modes, start full review or configure supported repository events</td>
+<td>Locations, evidence, suggested fixes; preflight failures remain separate</td>
+</tr>
+<tr>
+<td>Design review</td>
+<td>Submit a design for a one-off assessment; clone to create a new review</td>
+<td>Design findings against relevant requirements</td>
+</tr>
+<tr>
+<td>Threat model</td>
+<td>Create a reusable definition with scope documents and source context, then start a run</td>
+<td>System overview, boundaries, data flows and threats</td>
+</tr>
+</tbody>
+</table></div>
+<p>Code review preflight checks source and execution prerequisites before analysis. Ready-for-review repository events differ from draft changes; inspect the actual provider and configured trigger. Threat-model scope documents define what to analyze, while source documents/code provide system context. Do not treat them as interchangeable fields. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html" rel="noopener">SS03</a> <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-code-review.html" rel="noopener">SS05</a> <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-threat-model.html" rel="noopener">SS16</a> <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/review-code-findings-github.html" rel="noopener">SS17</a></p>
+<p><strong>Threat-model procedure:</strong> in the web app, create the model, provide title, scope documents, sources and service role, optionally configure logs, save, then start a run. Review the inferred system model before relying on individual threats. Inspect severity, evidence and dispositions. A model generated from the wrong system boundary is not repaired merely by dismissing inconvenient threats. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-threat-model.html" rel="noopener">SS16</a></p>
+<p>The full pipeline integration, complete design-review walkthrough and provider-specific remediation matrix are linked coverage, not reproduced procedures in this edition. This is an explicit limit of the guide, not a claim that those functions are absent.</p>
+</div><div class="notes" hidden><h2>S-M06 — Customer-managed encryption uses several identities</h2>
+<p>The documented hierarchy uses a customer KMS key to protect a resource-specific branch key held in a service-managed DynamoDB store. The keyring derives wrapping keys used to protect data-encryption keys. Branch-key rotation and rotation of the KMS key are separate processes; old key versions remain necessary to decrypt older data. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/customer-managed-keys.html" rel="noopener">SS18</a></p>
+<p>Resource-specific encryption context and identity determine authorization. The relevant actors are not interchangeable:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Actor/path</th>
+<th>Permission responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Administrator using console</td>
+<td>Caller permissions for configuration and forwarded operations</td>
+</tr>
+<tr>
+<td>Web-app access role</td>
+<td>Supported web-app data access</td>
+</tr>
+<tr>
+<td>Assessment service role</td>
+<td>Customer resources such as S3, secrets and logs</td>
+</tr>
+<tr>
+<td>Service principal / asynchronous workflow</td>
+<td>Service-managed background access as documented</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Configuration procedure:</strong> select a supported enabled symmetric key, apply the current role/service-principal policy statements with the documented resource and encryption-context conditions, and choose the key when creating the supported resource. An application default can be overridden by an explicit resource key; changing the default does not re-encrypt existing resources. Review the current example policies rather than granting all KMS actions to all four identities. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/customer-managed-keys.html" rel="noopener">SS18</a></p>
+<p><strong>Failure diagnosis:</strong> identify the calling identity and denied KMS action from authorized audit evidence; inspect the matching key policy, grants/role policy and encryption context. Re-enabling a deliberately disabled test key can restore access; deletion can make retained data permanently unavailable. Do not disable a production key merely to demonstrate this mechanism. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/customer-managed-keys.html" rel="noopener">SS18</a></p>
+</div><div class="notes" hidden><h2>S-U01 — Worked example: a repaired authorization check</h2>
+<p><strong>Synthetic, authorized-staging exercise.</strong> Two test users belong to different customer accounts. The illustrative finding is that user A can receive a test invoice owned by account B. No live endpoint, credential or exploit execution is supplied.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Evidence record</th>
+<th>Before repair</th>
+<th>Candidate repair</th>
+<th>After deployment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Application revision</td>
+<td><code>demo-r1</code></td>
+<td><code>demo-r2</code> under review</td>
+<td><code>demo-r2</code> deployed</td>
+</tr>
+<tr>
+<td>Same-account test</td>
+<td>Expected invoice returned</td>
+<td>Regression test passes</td>
+<td>Expected invoice returned</td>
+</tr>
+<tr>
+<td>Cross-account test</td>
+<td>Test invoice returned unexpectedly</td>
+<td>Ownership check added; unit test passes</td>
+<td>Access denied in prepared result</td>
+</tr>
+<tr>
+<td>Identity evidence</td>
+<td>User A / account A</td>
+<td>Test principal controlled</td>
+<td>User A / account A confirmed</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Walkthrough:</strong> inspect the original finding and target revision; review the proposed ownership check; verify that the prepared deployment record names <code>demo-r2</code>; select the finding for revalidation; inspect the new job and its linkage. The observation that a patch exists is not used as evidence of deployment. The prepared post-deployment denial supports only this tested path and identity.</p>
+<p><strong>Failure branch:</strong> if revalidation instead logs in as a privileged administrator, its result is not the intended test of user A. Correct the credential role and rerun the authorized verification. If no application path was reached, do not interpret the absence of reproduction as proof of repair.</p>
+<p><strong>Expected deliverable:</strong> a finding disposition linking original evidence, reviewed change, deployed revision, actual authenticated identity and targeted result, with untested routes stated explicitly. The fixture teaches evidence lineage; it is not an assessment result or a security guarantee.</p>
+<h2>S-M05 — Revalidation replays selected finding evidence</h2>
+<p>After a repair reaches the original test environment, open the completed penetration-test run, choose <strong>Multiselect findings for revalidation</strong>, select findings, and choose <strong>Revalidate findings</strong>. The service starts a separate job using current authentication/configuration and repeats the selected validation steps. It does not conduct broad new discovery. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html" rel="noopener">SS13</a></p>
+<pre><code class="language-text">Original finding + deployed repair
+                  ↓ selected validation steps
+          Separate revalidation job
+                  ↓
+      Active: reproduced / Resolved: not reproduced
+                  ↓
+          linked finding and job history
+</code></pre>
+<p>The original finding is preserved and linked to the new job. A non-reproduction result is scoped to that finding and execution conditions. An authentication or environment failure can undermine its interpretation; inspect reachability before treating a result as evidence of repair. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html" rel="noopener">SS13</a></p>
+</div><div class="notes" hidden><h2>S-07 — Operational limits and failure diagnosis</h2>
+<p>The reviewed quota page distinguishes assessment capacity from spending controls. Examples include five concurrent penetration tests and five concurrent code-review runs as adjustable quotas, plus 20 requirement packs, 30 requirements per pack and 150 enabled requirements per account/Region as fixed limits. Confirm actual quotas and pricing before large-scale execution; a concurrency limit is not a financial budget. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/quotas.html" rel="noopener">SS10</a> <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/pricing.html" rel="noopener">SS11</a></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Likely boundary</th>
+<th>Next inspection</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Repository missing</td>
+<td>Registration or connection</td>
+<td>Account type, installation approval, connected repo and feature setting</td>
+</tr>
+<tr>
+<td>Credential source denied</td>
+<td>Service-role resource access</td>
+<td>Correct ARN/account, required read/invoke actions and trust</td>
+</tr>
+<tr>
+<td>Secret resolves; login fails</td>
+<td>Application flow</td>
+<td>Access URL, instructions, MFA, identity and credential-test result</td>
+</tr>
+<tr>
+<td>Private endpoint unreachable</td>
+<td>Network</td>
+<td>DNS, route/NAT requirements, egress, target rules and VPC configuration</td>
+</tr>
+<tr>
+<td>Additional domain blocked</td>
+<td>Target/access/exclusion rules</td>
+<td>Login-derived domains; approve only necessary accessible endpoints</td>
+</tr>
+<tr>
+<td>No requirement findings</td>
+<td>Configuration/applicability</td>
+<td>Enabled pack, selected evaluation mode, inapplicable versus compliant</td>
+</tr>
+<tr>
+<td>New document removed a manual rule</td>
+<td>Pack regeneration</td>
+<td>Compare generated replacement with the governing Git source</td>
+</tr>
+<tr>
+<td>Finding not reproduced</td>
+<td>Target and authentication</td>
+<td>Deployed revision, role reached and revalidation job evidence</td>
+</tr>
+<tr>
+<td>Encrypted object inaccessible</td>
+<td>KMS identity/context</td>
+<td>Relevant role/principal, key state, action and context conditions</td>
+</tr>
+</tbody>
+</table></div>
+<p>This ordering is engineering guidance derived from the cited procedures. It does not claim that every error message has one unique cause. <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/troubleshooting.html" rel="noopener">SS06</a> <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html" rel="noopener">SS09</a> <a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/customer-managed-keys.html" rel="noopener">SS18</a></p>
+<h2>S-08 — Coverage and evidence decisions</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Official subject</th>
+<th>Treatment</th>
+<th>Remaining boundary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Resource lifecycle and identities</td>
+<td>Model plus setup sequence</td>
+<td>Complete SSO and organization-policy deployment linked</td>
+</tr>
+<tr>
+<td>Penetration testing</td>
+<td>Configuration, target classes, credentials, run interpretation</td>
+<td>Full GenAI risk-exception authoring not reproduced</td>
+</tr>
+<tr>
+<td>Authentication</td>
+<td>Strategy matrix, preflight, learned login reuse</td>
+<td>No actual secrets or running credential backend</td>
+</tr>
+<tr>
+<td>Requirements</td>
+<td>Evaluation separated from destructive regeneration</td>
+<td>Full managed-pack inventory linked</td>
+</tr>
+<tr>
+<td>Code and threat models</td>
+<td>Usable configuration sequence and result model</td>
+<td>Complete CI/CD and provider compatibility matrix deferred</td>
+</tr>
+<tr>
+<td>Findings and KMS</td>
+<td>Lineage, remediation boundaries, key hierarchy and actors</td>
+<td>Full policy documents remain official reference</td>
+</tr>
+<tr>
+<td>Limits/troubleshooting</td>
+<td>Selected operational constraints and diagnostic paths</td>
+<td>Not an exhaustive error catalog</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Version conflicts:</strong> current indexed authentication/wizard pages include email MFA and nonstandard ports. Older cached authentication/troubleshooting pages contradict those points. The newer task-specific pages are used; the older troubleshooting source supports only the remaining diagnostics. Review date means retrieval, not a page publication date.</p>
+<h3>Official sources and reviewed sections</h3>
+<ul>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/what-is.html" rel="noopener">SS01</a> Service scope and feature distinctions.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/doc-history.html" rel="noopener">SS02</a> Documentation history; feature announcements and availability.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html" rel="noopener">SS03</a> Account versus space resources; configuration/run lifecycle by assessment type.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/how-it-works.html" rel="noopener">SS04</a> Administrative and assessment surfaces, application context.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-code-review.html" rel="noopener">SS05</a> Code-review setup, modes, preflight, full scans and findings.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/troubleshooting.html" rel="noopener">SS06</a> Source registration and network troubleshooting; stale port restriction excluded.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/enable-penetration-test.html" rel="noopener">SS07</a> Target verification, VPC/role/logging setup and optional scheduling; newer indexed content.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html" rel="noopener">SS08</a> Current penetration-test wizard, network classes, credentials and task-hours; newer indexed content.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html" rel="noopener">SS09</a> Credential methods, preflight, login reuse and MFA; newer indexed content resolves older cached text.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/quotas.html" rel="noopener">SS10</a> Quotas and adjustability; current indexed table.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/pricing.html" rel="noopener">SS11</a> Pricing versus capacity and cancellation implications.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/remediate-finding.html" rel="noopener">SS12</a> Remediation provider behavior and proposed patches.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html" rel="noopener">SS13</a> Revalidation initiation, results and lineage.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/security-requirements.html" rel="noopener">SS14</a> Requirement fields, applicability, activation and review behavior.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/import-security-requirements.html" rel="noopener">SS15</a> Requirement generation and replacement consequences.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-threat-model.html" rel="noopener">SS16</a> Threat-model scope/source distinction, setup, preflight and result review.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/review-code-findings-github.html" rel="noopener">SS17</a> Repository-triggered review and comments.</li>
+<li><a class="ref-link" href="https://docs.aws.amazon.com/securityagent/latest/userguide/customer-managed-keys.html" rel="noopener">SS18</a> Hierarchical keyring, identities, encryption context and key lifecycle.</li>
+</ul>
+</div></div><script>(()=>{const sections=[...document.querySelectorAll('.report-section')],q=document.querySelector('#search'),kind=document.querySelector('#kind'),status=document.querySelector('#status');
+function filter(){let n=0;sections.forEach(s=>{let ok=(!q.value||s.textContent.toLowerCase().includes(q.value.toLowerCase()))&&(!kind.value||kind.value===s.dataset.kind);s.hidden=!ok;n+=ok;});status.textContent=n+' of '+sections.length+' sections shown';}
+if(q){q.addEventListener('input',filter);kind.addEventListener('change',filter);document.querySelector('#reset').onclick=()=>{q.value='';kind.value='';filter();};filter();}
+function reveal(){const s=document.getElementById(decodeURIComponent(location.hash.slice(1)));if(s&&s.classList.contains('report-section')){if(q){q.value='';kind.value='';filter();}document.body.classList.remove('presenting');s.scrollIntoView();}}
+window.addEventListener('hashchange',reveal);reveal();
+const slides=[...document.querySelectorAll('.slide')],select=document.querySelector('#slide-select');let current=0,start=0,elapsed=0,running=false;
+function clock(v){return Math.floor(v/60)+':'+String(v%60).padStart(2,'0');}
+function show(i){if(!slides.length)return;current=Math.max(0,Math.min(slides.length-1,i));slides.forEach((s,j)=>s.hidden=j!==current);select.value=current;document.querySelectorAll('.notes').forEach((n,j)=>n.hidden=j!==current||!document.querySelector('#notes-toggle').checked);}
+if(slides.length){document.querySelector('#present').onclick=()=>{document.body.classList.add('presenting');show(current);window.scrollTo(0,0);};document.querySelector('#read').onclick=()=>document.body.classList.remove('presenting');document.querySelector('#prev').onclick=()=>show(current-1);document.querySelector('#next').onclick=()=>show(current+1);select.onchange=()=>show(Number(select.value));document.querySelector('#notes-toggle').onchange=()=>show(current);document.querySelector('#timer-toggle').onclick=()=>{if(running){elapsed+=Math.floor((Date.now()-start)/1000);running=false;}else{start=Date.now();running=true;}document.querySelector('#timer-toggle').textContent=running?'Pause timer':'Start timer';};document.querySelector('#timer-reset').onclick=()=>{elapsed=0;start=Date.now();};setInterval(()=>{document.querySelector('#timer').textContent=clock(elapsed+(running?Math.floor((Date.now()-start)/1000):0));},250);show(0);}
+document.querySelectorAll('[data-print]').forEach(b=>b.onclick=()=>window.print());document.addEventListener('keydown',e=>{if(['INPUT','SELECT','TEXTAREA'].includes(document.activeElement.tagName))return;if(e.key==='/'&&q){e.preventDefault();q.focus();}if(document.body.classList.contains('presenting')){if(e.key==='ArrowRight'){e.preventDefault();show(current+1);}if(e.key==='ArrowLeft'){e.preventDefault();show(current-1);}if(e.key==='Home'){e.preventDefault();show(0);}if(e.key==='End'){e.preventDefault();show(slides.length-1);}if(e.key==='Escape')document.body.classList.remove('presenting');}});
+})();</script></body></html>
