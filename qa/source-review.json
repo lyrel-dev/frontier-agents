@@ -4,99 +4,293 @@
   "boundary": "This record identifies claims actually checked in official documentation. It is not an exhaustive audit of every retained statement or a live service test. Diagrams are authored logical explanations, and use-case narratives are proposed engineering workflows.",
   "reviewed_claim_groups": [
     {
-      "reference_ids": ["DS30", "DS31"],
-      "sections": ["D-12", "D-01"],
-      "sources": ["https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge.html", "https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-connecting-telemetry-sources-index.html"],
-      "claims_checked": ["Named built-in observability, source-control, and incident-coordination providers", "Two-way telemetry, one-way reads, and bring-your-own integration paths are distinct", "Webhook initiation does not itself provide telemetry-read authorization"],
+      "reference_ids": [
+        "DS30",
+        "DS31"
+      ],
+      "sections": [
+        "D-12",
+        "D-01"
+      ],
+      "sources": [
+        "https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge.html",
+        "https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-connecting-telemetry-sources-index.html"
+      ],
+      "claims_checked": [
+        "Named built-in observability, source-control, and incident-coordination providers",
+        "Two-way telemetry, one-way reads, and bring-your-own integration paths are distinct",
+        "Webhook initiation does not itself provide telemetry-read authorization"
+      ],
       "editorial_result": "The inventory separates evidence sources, incident initiation, tool invocation, and lifecycle delivery instead of assigning identical behavior to every connector."
     },
     {
-      "reference_ids": ["DS32"],
-      "sections": ["D-12"],
-      "sources": ["https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-connecting-azure-index.html"],
-      "claims_checked": ["Azure Resources and Azure DevOps registrations have separate purposes", "Subscription and project association differ", "Externally hosted repository contents are not automatically supplied by pipeline access"],
+      "reference_ids": [
+        "DS32"
+      ],
+      "sections": [
+        "D-12"
+      ],
+      "sources": [
+        "https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-connecting-azure-index.html"
+      ],
+      "claims_checked": [
+        "Azure Resources and Azure DevOps registrations have separate purposes",
+        "Subscription and project association differ",
+        "Externally hosted repository contents are not automatically supplied by pipeline access"
+      ],
       "editorial_result": "Azure infrastructure and delivery context are separate rows and configuration explanations."
     },
     {
-      "reference_ids": ["DS33"],
-      "sections": ["D-07"],
-      "catalog_entries": ["D-UC07"],
-      "sources": ["https://docs.aws.amazon.com/devopsagent/latest/APIReference/API_CronSchedule.html"],
-      "claims_checked": ["Trigger-created custom-agent schedules use a flexible window of up to 30 minutes"],
+      "reference_ids": [
+        "DS33"
+      ],
+      "sections": [
+        "D-07"
+      ],
+      "catalog_entries": [
+        "D-UC07"
+      ],
+      "sources": [
+        "https://docs.aws.amazon.com/devopsagent/latest/APIReference/API_CronSchedule.html"
+      ],
+      "claims_checked": [
+        "Trigger-created custom-agent schedules use a flexible window of up to 30 minutes"
+      ],
       "editorial_result": "Renamed the minute-by-minute report to Incident status bulletin. The guide distinguishes telemetry resolution, lookback window, scheduled start, and execution duration. No exact-minute delivery guarantee is made."
     },
     {
-      "reference_ids": ["DS07", "DS19"],
-      "sections": ["D-M01", "D-M02", "D-M07", "D-M08"],
-      "sources": ["https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html", "https://docs.aws.amazon.com/devopsagent/latest/userguide/whats-new.html"],
-      "claims_checked": ["Store descriptions and entry descriptions precede selected full-content reads", "Memory is versioned informational context, distinct from skill procedures and standing instructions", "Monitor history and corrective reflections have separate production paths", "Environment understanding, dependency, pipeline, and tool-use knowledge are represented as managed memory", "Different managed stores have different refresh triggers and retention behavior", "A store is not a same-investigation cache for raw tool output"],
+      "reference_ids": [
+        "DS07",
+        "DS19"
+      ],
+      "sections": [
+        "D-M01",
+        "D-M02",
+        "D-M07",
+        "D-M08"
+      ],
+      "sources": [
+        "https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html",
+        "https://docs.aws.amazon.com/devopsagent/latest/userguide/whats-new.html"
+      ],
+      "claims_checked": [
+        "Store descriptions and entry descriptions precede selected full-content reads",
+        "Memory is versioned informational context, distinct from skill procedures and standing instructions",
+        "Monitor history and corrective reflections have separate production paths",
+        "Environment understanding, dependency, pipeline, and tool-use knowledge are represented as managed memory",
+        "Different managed stores have different refresh triggers and retention behavior",
+        "A store is not a same-investigation cache for raw tool output"
+      ],
       "editorial_result": "Explained production, retention, retrieval, correction, and access separately. Refresh thresholds vary across retrieved documentation versions; the environment-refresh section describes the conditions and links the current official thresholds rather than freezing a conflicting interval. No undocumented backup, universal vector index, or model-weight training mechanism is asserted."
     },
     {
-      "reference_ids": ["DS10", "AS30"],
-      "sections": ["D-M07", "D-M08", "A-00", "A-06"],
-      "sources": ["https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html"],
-      "claims_checked": ["A new custom agent requires explicit memory-store attachments", "Managed and custom store write behavior differs", "Agent definition and individual invocation are separate objects"],
+      "reference_ids": [
+        "DS10",
+        "AS30"
+      ],
+      "sections": [
+        "D-M07",
+        "D-M08",
+        "A-00",
+        "A-06"
+      ],
+      "sources": [
+        "https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html"
+      ],
+      "claims_checked": [
+        "A new custom agent requires explicit memory-store attachments",
+        "Managed and custom store write behavior differs",
+        "Agent definition and individual invocation are separate objects"
+      ],
       "editorial_result": "The explanations distinguish contextual availability from retrieval and execution. Shared handoffs preserve product-specific identifiers rather than claim a common runtime."
     },
     {
-      "reference_ids": ["SS30"],
-      "sections": ["S-09", "S-01"],
-      "sources": ["https://docs.aws.amazon.com/securityagent/latest/userguide/about-integrations.html"],
-      "claims_checked": ["Account-level integration registration precedes Agent Space resource selection", "Supported GitHub, GitLab, Bitbucket Cloud, and Confluence Cloud variants", "Read context and optional repository write features have separate settings", "The documented repository write actions exclude public repositories"],
+      "reference_ids": [
+        "SS30"
+      ],
+      "sections": [
+        "S-09",
+        "S-01"
+      ],
+      "sources": [
+        "https://docs.aws.amazon.com/securityagent/latest/userguide/about-integrations.html"
+      ],
+      "claims_checked": [
+        "Account-level integration registration precedes Agent Space resource selection",
+        "Supported GitHub, GitLab, Bitbucket Cloud, and Confluence Cloud variants",
+        "Read context and optional repository write features have separate settings",
+        "The documented repository write actions exclude public repositories"
+      ],
       "editorial_result": "Provider editions, selected resources, and permitted effects are shown explicitly. No unsupported self-hosted Bitbucket claim was added."
     },
     {
-      "reference_ids": ["SS31", "SS33"],
-      "sections": ["S-09", "S-M07"],
-      "sources": ["https://docs.aws.amazon.com/securityagent/latest/userguide/enable-s3-bucket.html", "https://docs.aws.amazon.com/securityagent/latest/userguide/connect-confluence.html"],
-      "claims_checked": ["Same-account S3 sources and assessment-specific source-format requirements", "Selected Confluence pages provide documentation context", "Source registration, resource selection, and assessment configuration are distinct steps"],
+      "reference_ids": [
+        "SS31",
+        "SS33"
+      ],
+      "sections": [
+        "S-09",
+        "S-M07"
+      ],
+      "sources": [
+        "https://docs.aws.amazon.com/securityagent/latest/userguide/enable-s3-bucket.html",
+        "https://docs.aws.amazon.com/securityagent/latest/userguide/connect-confluence.html"
+      ],
+      "claims_checked": [
+        "Same-account S3 sources and assessment-specific source-format requirements",
+        "Selected Confluence pages provide documentation context",
+        "Source registration, resource selection, and assessment configuration are distinct steps"
+      ],
       "editorial_result": "Documentation context is not described as a source-code repository or a universal persistent incident-memory system."
     },
     {
-      "reference_ids": ["SS32"],
-      "sections": ["S-09"],
-      "catalog_entries": ["S-UC07"],
-      "sources": ["https://docs.aws.amazon.com/securityagent/latest/userguide/connect-jira.html"],
-      "claims_checked": ["Jira Cloud application authorization and site registration", "Project-specific issue-creation and comment permissions", "Disconnecting does not delete existing external issues"],
+      "reference_ids": [
+        "SS32"
+      ],
+      "sections": [
+        "S-09"
+      ],
+      "catalog_entries": [
+        "S-UC07"
+      ],
+      "sources": [
+        "https://docs.aws.amazon.com/securityagent/latest/userguide/connect-jira.html"
+      ],
+      "claims_checked": [
+        "Jira Cloud application authorization and site registration",
+        "Project-specific issue-creation and comment permissions",
+        "Disconnecting does not delete existing external issues"
+      ],
       "editorial_result": "The publication path and its retained external records are explained separately from assessment execution."
     },
     {
-      "reference_ids": ["SS34", "AS31"],
-      "sections": ["S-M07", "S-01", "A-00", "A-06"],
-      "sources": ["https://docs.aws.amazon.com/securityagent/latest/userguide/how-it-works.html", "https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html"],
-      "claims_checked": ["Application sources, scope, and assessment criteria serve different roles", "Assessment configurations and runs have feature-specific lifecycles", "Findings are execution evidence rather than a documented universal vulnerability-memory store"],
+      "reference_ids": [
+        "SS34",
+        "AS31"
+      ],
+      "sections": [
+        "S-M07",
+        "S-01",
+        "A-00",
+        "A-06"
+      ],
+      "sources": [
+        "https://docs.aws.amazon.com/securityagent/latest/userguide/how-it-works.html",
+        "https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html"
+      ],
+      "claims_checked": [
+        "Application sources, scope, and assessment criteria serve different roles",
+        "Assessment configurations and runs have feature-specific lifecycles",
+        "Findings are execution evidence rather than a documented universal vulnerability-memory store"
+      ],
       "editorial_result": "Added an application-context chapter and logical data-flow diagram. The cross-product handoff schema remains explicitly team-authored, not an AWS API."
     },
     {
-      "reference_ids": ["SS09"],
-      "sections": ["S-M01", "S-M02"],
-      "sources": ["https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html"],
-      "claims_checked": ["Credential retrieval and application authentication are different stages", "Login Optimization retains and reuses a successful login procedure", "Disabling reuse does not establish deletion of the learned procedure"],
+      "reference_ids": [
+        "SS09"
+      ],
+      "sections": [
+        "S-M01",
+        "S-M02"
+      ],
+      "sources": [
+        "https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html"
+      ],
+      "claims_checked": [
+        "Credential retrieval and application authentication are different stages",
+        "Login Optimization retains and reuses a successful login procedure",
+        "Disabling reuse does not establish deletion of the learned procedure"
+      ],
       "editorial_result": "The authentication workflow distinguishes source access, login navigation, actual role, and protected-route coverage."
     },
     {
-      "reference_ids": ["FS01", "FS03"],
-      "sections": ["F-01", "F-08", "F-M01"],
-      "sources": ["https://docs.aws.amazon.com/finops-agent/latest/userguide/what-is.html", "https://docs.aws.amazon.com/finops-agent/latest/userguide/setting-up.html"],
-      "claims_checked": ["Cost, anomaly, recommendation, and operational-change services supply different evidence", "Recommendation provenance belongs to the documented upstream services", "Agent data permissions and operator access have separate roles"],
+      "reference_ids": [
+        "FS01",
+        "FS03"
+      ],
+      "sections": [
+        "F-01",
+        "F-08",
+        "F-M01"
+      ],
+      "sources": [
+        "https://docs.aws.amazon.com/finops-agent/latest/userguide/what-is.html",
+        "https://docs.aws.amazon.com/finops-agent/latest/userguide/setting-up.html"
+      ],
+      "claims_checked": [
+        "Cost, anomaly, recommendation, and operational-change services supply different evidence",
+        "Recommendation provenance belongs to the documented upstream services",
+        "Agent data permissions and operator access have separate roles"
+      ],
       "editorial_result": "The data-source inventory does not import DevOps Agent MCP support or imply independent computation of optimization recommendations."
     },
     {
-      "reference_ids": ["FS04", "FS08", "AS32"],
-      "sections": ["F-M02", "F-M03", "F-M04", "F-M07", "A-00", "A-06"],
-      "sources": ["https://docs.aws.amazon.com/finops-agent/latest/userguide/context-files-and-memory.html", "https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html"],
-      "claims_checked": ["Uploaded files are operator-maintained and read-only to the agent", "Preferences and corrections can persist across sessions", "Older conversation content is summarized separately from persistent memory", "Persistent instance-local context and isolated ephemeral runtime have different lifecycles", "Soft deletion, memory correction, task cancellation, and whole-agent deletion are object-specific controls"],
+      "reference_ids": [
+        "FS04",
+        "FS08",
+        "AS32"
+      ],
+      "sections": [
+        "F-M02",
+        "F-M03",
+        "F-M04",
+        "F-M07",
+        "A-00",
+        "A-06"
+      ],
+      "sources": [
+        "https://docs.aws.amazon.com/finops-agent/latest/userguide/context-files-and-memory.html",
+        "https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html"
+      ],
+      "claims_checked": [
+        "Uploaded files are operator-maintained and read-only to the agent",
+        "Preferences and corrections can persist across sessions",
+        "Older conversation content is summarized separately from persistent memory",
+        "Persistent instance-local context and isolated ephemeral runtime have different lifecycles",
+        "Soft deletion, memory correction, task cancellation, and whole-agent deletion are object-specific controls"
+      ],
       "editorial_result": "The guide distinguishes retrieval from restoration, file updates from memory changes, and persistent state from the runtime. No universal backup or cross-instance shared-memory mechanism is asserted."
     },
     {
-      "reference_ids": ["FS12", "FS13"],
-      "sections": ["F-05", "F-08", "F-M06"],
-      "sources": ["https://docs.aws.amazon.com/finops-agent/latest/userguide/jira-integration.html", "https://docs.aws.amazon.com/finops-agent/latest/userguide/slack-integration.html", "https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html"],
-      "claims_checked": ["Provider registration and agent-specific destination binding differ", "Jira supports the documented read, issue, and comment operations rather than arbitrary workflow management", "Slack is a one-way publication path in the reviewed preview", "Jira approval differs by invocation path, and Slack posting has no per-action prompt"],
+      "reference_ids": [
+        "FS12",
+        "FS13"
+      ],
+      "sections": [
+        "F-05",
+        "F-08",
+        "F-M06"
+      ],
+      "sources": [
+        "https://docs.aws.amazon.com/finops-agent/latest/userguide/jira-integration.html",
+        "https://docs.aws.amazon.com/finops-agent/latest/userguide/slack-integration.html",
+        "https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html"
+      ],
+      "claims_checked": [
+        "Provider registration and agent-specific destination binding differ",
+        "Jira supports the documented read, issue, and comment operations rather than arbitrary workflow management",
+        "Slack is a one-way publication path in the reviewed preview",
+        "Jira approval differs by invocation path, and Slack posting has no per-action prompt"
+      ],
       "editorial_result": "The catalog narratives and integration diagrams preserve destination-specific effect boundaries."
     }
   ],
   "retained_material": "Other detailed procedures retain the previous edition's official references and source-version qualifications. They were not all re-executed or exhaustively re-audited in this revision.",
-  "live_aws_execution": false
+  "live_aws_execution": false,
+  "catalog_consolidation": {
+    "date": "2026-10-22",
+    "scope": "Classification, relationships and implementation recipes. No exhaustive re-audit of retained guide prose.",
+    "rechecked_urls": [
+      "https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html",
+      "https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html",
+      "https://docs.aws.amazon.com/devopsagent/latest/userguide/custom-agents-creating-a-custom-agent.html",
+      "https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html",
+      "https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html",
+      "https://docs.aws.amazon.com/finops-agent/latest/userguide/context-files-and-memory.html",
+      "https://docs.aws.amazon.com/finops-agent/latest/userguide/task-management.html"
+    ],
+    "qualification": "Retrieved DevOps overview/creation versions do not enumerate every attachment detail retained in the existing guide. No absence was interpreted as removal. CronSchedule and Security revalidation could not be newly fetched; their existing references remain qualified rather than marked freshly verified.",
+    "live_execution": false,
+    "additional_check": "Built-in on-demand queries versus user-defined custom reporting were reconfirmed from the Custom Agents overview. FinOps invocation-dependent publication and the Security configuration/run lifecycle were also rechecked. Source absence was not interpreted as feature removal."
+  }
 }
