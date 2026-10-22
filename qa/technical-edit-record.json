@@ -230,5 +230,23 @@
       "action": "Retain object-specific lifecycle guidance."
     }
   ],
-  "boundary": "Targeted product-source checks and editorial corrections. Other sources retain their existing review dates. No live AWS workflow, performance test or savings measurement was executed."
+  "boundary": "Targeted product-source checks and editorial corrections. Other sources retain their existing review dates. No live AWS workflow, performance test or savings measurement was executed.",
+  "diagram_review": {
+    "basis": "Visual inspection of the supplied Stage 3 images and review of the maintained DOT source.",
+    "corrections": [
+      "Separate prior investigations and operator feedback as memory inputs.",
+      "Move the verification instruction out of the AWS-owned authenticated-session node.",
+      "Replace generic interpretation labels with named checks.",
+      "Show direct conversation publication separately from queued tasks."
+    ],
+    "ownership_palette": "Unchanged DOC/AWS/EXT colors and labels.",
+    "current_render_validation": "Performed by the subsequent build and browser checks; prior screenshots are not claimed as screenshots of the amended output."
+  },
+  "presentation_review": {
+    "removed_duplicate": "Architecture comparison table duplicated the product-configuration and execution comparison.",
+    "replaced_meta_slide": "Document-quality criteria replaced with operational prerequisites and verification records.",
+    "speaker_notes": "Repeated generic outcome-to-mechanism statements replaced with case-specific explanations.",
+    "memory_producer": "Conversation preferences, corrections and task outcomes propagated to both comparison tables.",
+    "timing": "Removed duplicate had a two-minute allocation; all other allocations retained."
+  }
 }
