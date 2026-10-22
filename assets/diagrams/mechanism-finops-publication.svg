@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="590pt" height="481pt" viewBox="0.00 0.00 590.00 481.00" role="img" aria-labelledby="mechanism-finops-publication-title mechanism-finops-publication-desc" data-diagram="mechanism-finops-publication">
+<title id="mechanism-finops-publication-title">FinOps tasks and destination-specific authorization</title><desc id="mechanism-finops-publication-desc">Task creation, analysis and delivery have independent outcomes. Jira confirmation depends on invocation mode; Slack does not present a per-message confirmation prompt. Green/AWS: documented service concept. Blue/DOC: our verification procedure. Orange/EXT: engineering-owned source. Stages are logical explanations, not API status enum values.</desc><g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(18 463)">
+<title>G</title>
+
+<g id="node1" class="node">
+<title>manual</title>
+<path fill="#d9f2e5" stroke="#348761" d="M226,-445C226,-445 19,-445 19,-445 13,-445 7,-439 7,-433 7,-433 7,-421 7,-421 7,-415 13,-409 19,-409 19,-409 226,-409 226,-409 232,-409 238,-415 238,-421 238,-421 238,-433 238,-433 238,-439 232,-445 226,-445" />
+<text text-anchor="middle" x="122.5" y="-423.3" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">AWS · Chat / on-demand task</text>
+</g>
+
+<g id="node3" class="node">
+<title>task</title>
+<path fill="#d9f2e5" stroke="#348761" d="M379.5,-353C379.5,-353 151.5,-353 151.5,-353 145.5,-353 139.5,-347 139.5,-341 139.5,-341 139.5,-317 139.5,-317 139.5,-311 145.5,-305 151.5,-305 151.5,-305 379.5,-305 379.5,-305 385.5,-305 391.5,-311 391.5,-317 391.5,-317 391.5,-341 391.5,-341 391.5,-347 385.5,-353 379.5,-353" />
+<text text-anchor="middle" x="265.5" y="-332.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">AWS · Queued task and analysis</text>
+<text text-anchor="middle" x="265.5" y="-317.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">Source reads and result</text>
+</g>
+
+<g id="edge1" class="edge">
+<title>manual-&gt;task</title>
+<path fill="none" stroke="#526474" d="M148.07,-408.84C169.3,-394.58 199.92,-374.03 224.57,-357.48" />
+<polygon fill="#526474" stroke="#526474" points="226.26,-359.51 231.02,-353.15 223.33,-355.15 226.26,-359.51" />
+<text text-anchor="middle" x="255" y="-378.2" font-family="DejaVu Sans" font-size="11.00" fill="#344454">explicit task request</text>
+</g>
+
+<g id="node2" class="node">
+<title>auto</title>
+<path fill="#d9f2e5" stroke="#348761" d="M542,-445C542,-445 275,-445 275,-445 269,-445 263,-439 263,-433 263,-433 263,-421 263,-421 263,-415 269,-409 275,-409 275,-409 542,-409 542,-409 548,-409 554,-415 554,-421 554,-421 554,-433 554,-433 554,-439 548,-445 542,-445" />
+<text text-anchor="middle" x="408.5" y="-423.3" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">AWS · Schedule / anomaly automation</text>
+</g>
+
+<g id="edge2" class="edge">
+<title>auto-&gt;task</title>
+<path fill="none" stroke="#526474" d="M382.93,-408.84C361.7,-394.58 331.08,-374.03 306.43,-357.48" />
+<polygon fill="#526474" stroke="#526474" points="307.67,-355.15 299.98,-353.15 304.74,-359.51 307.67,-355.15" />
+<text text-anchor="middle" x="401.5" y="-378.2" font-family="DejaVu Sans" font-size="11.00" fill="#344454">eligible occurrence</text>
+</g>
+
+<g id="node4" class="node">
+<title>jira</title>
+<path fill="#d9f2e5" stroke="#348761" d="M239,-249C239,-249 12,-249 12,-249 6,-249 0,-243 0,-237 0,-237 0,-198 0,-198 0,-192 6,-186 12,-186 12,-186 239,-186 239,-186 245,-186 251,-192 251,-198 251,-198 251,-237 251,-237 251,-243 245,-249 239,-249" />
+<text text-anchor="middle" x="125.5" y="-228.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">AWS · Jira action</text>
+<text text-anchor="middle" x="125.5" y="-213.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">Interactive: confirm</text>
+<text text-anchor="middle" x="125.5" y="-198.8" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">Automation: setup authorization</text>
+</g>
+
+<g id="edge3" class="edge">
+<title>task-&gt;jira</title>
+<path fill="none" stroke="#526474" d="M235.81,-304.78C216.88,-289.97 191.99,-270.5 170.64,-253.8" />
+<polygon fill="#526474" stroke="#526474" points="172.24,-251.73 164.72,-249.17 169.01,-255.86 172.24,-251.73" />
+<text text-anchor="middle" x="252.5" y="-274.2" font-family="DejaVu Sans" font-size="11.00" fill="#344454">configured action</text>
+</g>
+
+<g id="node5" class="node">
+<title>slack</title>
+<path fill="#d9f2e5" stroke="#348761" d="M522.5,-241.5C522.5,-241.5 288.5,-241.5 288.5,-241.5 282.5,-241.5 276.5,-235.5 276.5,-229.5 276.5,-229.5 276.5,-205.5 276.5,-205.5 276.5,-199.5 282.5,-193.5 288.5,-193.5 288.5,-193.5 522.5,-193.5 522.5,-193.5 528.5,-193.5 534.5,-199.5 534.5,-205.5 534.5,-205.5 534.5,-229.5 534.5,-229.5 534.5,-235.5 528.5,-241.5 522.5,-241.5" />
+<text text-anchor="middle" x="405.5" y="-221.3" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">AWS · Slack action</text>
+<text text-anchor="middle" x="405.5" y="-206.3" font-family="DejaVu Sans" font-size="14.00" fill="#164d35">No per-message approval prompt</text>
+</g>
+
+<g id="edge4" class="edge">
+<title>task-&gt;slack</title>
+<path fill="none" stroke="#526474" d="M295.19,-304.78C317,-287.72 346.73,-264.47 369.83,-246.4" />
+<polygon fill="#526474" stroke="#526474" points="371.56,-248.38 375.85,-241.69 368.33,-244.24 371.56,-248.38" />
+<text text-anchor="middle" x="383.5" y="-274.2" font-family="DejaVu Sans" font-size="11.00" fill="#344454">configured action</text>
+</g>
+
+<g id="node6" class="node">
+<title>external</title>
+<path fill="#fce8d5" stroke="#c78335" d="M377,-141C377,-141 152,-141 152,-141 146,-141 140,-135 140,-129 140,-129 140,-105 140,-105 140,-99 146,-93 152,-93 152,-93 377,-93 377,-93 383,-93 389,-99 389,-105 389,-105 389,-129 389,-129 389,-135 383,-141 377,-141" />
+<text text-anchor="middle" x="264.5" y="-120.8" font-family="DejaVu Sans" font-size="14.00" fill="#6d431a">EXT · Project / channel record</text>
+<text text-anchor="middle" x="264.5" y="-105.8" font-family="DejaVu Sans" font-size="14.00" fill="#6d431a">External audience and retention</text>
+</g>
+
+<g id="edge5" class="edge">
+<title>jira-&gt;external</title>
+<path fill="none" stroke="#526474" d="M168.72,-185.87C186.89,-173 207.87,-158.13 225.56,-145.6" />
+<polygon fill="#526474" stroke="#526474" points="227.31,-147.57 231.91,-141.09 224.27,-143.29 227.31,-147.57" />
+</g>
+
+<g id="edge6" class="edge">
+<title>slack-&gt;external</title>
+<path fill="none" stroke="#526474" d="M372.44,-193.41C351.99,-179.12 325.63,-160.7 304.07,-145.64" />
+<polygon fill="#526474" stroke="#526474" points="305.49,-143.43 297.84,-141.29 302.48,-147.74 305.49,-143.43" />
+</g>
+
+<g id="node7" class="node">
+<title>check</title>
+<path fill="#dcebff" stroke="#447ac2" d="M398.5,-48C398.5,-48 130.5,-48 130.5,-48 124.5,-48 118.5,-42 118.5,-36 118.5,-36 118.5,-12 118.5,-12 118.5,-6 124.5,0 130.5,0 130.5,0 398.5,0 398.5,0 404.5,0 410.5,-6 410.5,-12 410.5,-12 410.5,-36 410.5,-36 410.5,-42 404.5,-48 398.5,-48" />
+<text text-anchor="middle" x="264.5" y="-27.8" font-family="DejaVu Sans" font-size="14.00" fill="#183b69">DOC · Delivery verification</text>
+<text text-anchor="middle" x="264.5" y="-12.8" font-family="DejaVu Sans" font-size="14.00" fill="#183b69">Inspect actual destination before retry</text>
+</g>
+
+<g id="edge7" class="edge">
+<title>external-&gt;check</title>
+<path fill="none" stroke="#526474" stroke-dasharray="5,2" d="M264.5,-92.57C264.5,-81.33 264.5,-67.73 264.5,-55.69" />
+<polygon fill="#526474" stroke="#526474" points="267.13,-55.54 264.5,-48.04 261.88,-55.54 267.13,-55.54" />
+</g>
+</g>
+</svg>
