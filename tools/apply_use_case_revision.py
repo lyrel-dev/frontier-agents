@@ -37,6 +37,13 @@ with zipfile.ZipFile(io.BytesIO(base64.b64decode(payload, validate=True))) as ar
         target = ROOT / name
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_bytes(archive.read(name))
+check_path = ROOT / "tools/docs_check.py"
+check_text = check_path.read_text(encoding="utf-8")
+old = "assert page.locator('.index-card').count()==4"
+new = "assert page.locator('.index-card').count()==5;assert page.locator('#use-case-catalog-card').count()==1"
+if old not in check_text:
+    raise RuntimeError("Expected collection-card assertion was not found")
+check_path.write_text(check_text.replace(old, new), encoding="utf-8")
 for path in (ROOT / "tools").glob(".usecase-payload-*"):
     path.unlink()
 Path(__file__).unlink()
