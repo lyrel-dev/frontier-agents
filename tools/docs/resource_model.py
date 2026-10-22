@@ -239,7 +239,8 @@ def validate(guides, browser=False):
     for sid,s in model['sources'].items():
         if urlsplit(s['url']).hostname!='docs.aws.amazon.com':errors.append(sid+': non-official evidence')
     preserved={}
-    for name in ('use-cases','mechanisms','features','profiles','aliases'):
+    # Mechanism review has its own core-field preservation check in Stage 3.
+    for name in ('use-cases','features','profiles','aliases'):
         path=f'catalog/{name}.json'
         previous=subprocess.check_output(['git','show',model['baseline']+':'+path],cwd=ROOT)
         current=(ROOT/path).read_bytes();same=previous==current
