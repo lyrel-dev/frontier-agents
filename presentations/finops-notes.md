@@ -2,7 +2,7 @@
 
 
 
-Presentation: 49 minutes, including 8 minutes of prepared-result exercises. Questions and breaks are additional.
+Presentation: 50 minutes, including 8 minutes of prepared-result exercises. Questions and breaks are additional.
 
 
 
@@ -332,89 +332,47 @@ Detailed reference: [Report generation and artifact management](../guides/finops
 Detailed reference: [Retention, cancellation, and deletion](../guides/finops.html#F-M07)
 
 
-## 14. FinOps use case taxonomy and delivery modes
+## 14. Historical cost, forecasting and commitment coverage
 
-31:00–33:00 · Operational use cases
+31:00–34:00 · Operational objectives and implementation
 
-The catalog separates analytical functions from scheduled execution and external publication.
-
-
-
-Use case family | Representative work | Delivery | Primary control
-
-Cost inquiry | Breakdowns, comparisons, trends and forecasts | Conversational native function | Query contract and source permissions
-
-Anomaly and optimization | Root-cause analysis and recommendation triage | Native function using upstream services | Source provenance and operational review
-
-Recurring reporting | Daily, weekly, monthly and operational review packs | Scheduled task and report artifact | Schedule, audience and report basis
-
-Event automation | Investigate matching anomaly and publish result | Cost Anomaly Detection plus managed rule | Automation condition and destination
-
-Collaboration | Jira follow-up and Slack publication | Configured integration | Action- and invocation-specific approval
-
-
-Detailed reference: [The agent instance and its execution environment](../guides/finops.html#F-01)
+Follow the operational objective through its workflow, configured mechanisms and independent completion evidence. The catalog links each dependency to its detailed guide.
 
 
 
-Detailed reference: [Tasks, schedules, and execution history](../guides/finops.html#F-03)
+Operational outcome | Completion evidence | Implementation boundary
 
+Analyze historical cost and usage | Dates, metric, currency and filters are explicit. | Native function
 
+Review a cost forecast | Forecast horizon and source are identified. | Native function
 
-Detailed reference: [Report generation and artifact management](../guides/finops.html#F-04)
-
-
-
-Detailed reference: [Jira projects and Slack channel connections](../guides/finops.html#F-05)
-
-
-## 15. Cost inquiry and reporting use cases
-
-33:00–36:00 · Operational use cases
-
-A usable report begins with a reproducible cost-query definition.
-
-
-
-Use case | Required query contract | Output | Independent check
-
-Cost breakdown | Dates, metric, currency, accounts and dimension | Service/account/Region/tag totals | Reproduce a material total
-
-Period comparison | Complete comparable windows and same cost basis | Delta and ranked contributors | Check arithmetic and filters
-
-Forecast review | Forecast horizon and source assumptions | Forecast and uncertainty | Separate forecast from observed spend
-
-Commitment coverage review | Relevant commitment and utilization scope | Coverage and candidate gaps | Inspect source recommendation
-
-Custom report | Audience, sections, figures and source basis | HTML, PDF or editable presentation artifact | Reconcile displayed values
+Review commitment coverage | Commitment type, period and eligible scope are explicit. | Native function
 
 
 Detailed reference: [Cost queries and recommendation provenance](../guides/finops.html#F-M01)
 
 
 
-Detailed reference: [Report generation and artifact management](../guides/finops.html#F-04)
+Detailed reference: [Supported data sources and publication destinations](../guides/finops.html#F-08)
 
 
-## 16. Recurring reports and operational reviews
+## 15. Reporting, anomaly investigation and optimization
 
-36:00–39:00 · Operational use cases
+34:00–37:00 · Operational objectives and implementation
 
-Report cadence, source window, audience and ownership should be configured explicitly.
+Follow the operational objective through its workflow, configured mechanisms and independent completion evidence. The catalog links each dependency to its detailed guide.
 
 
 
-Use case | Cadence | Core content | Audience
+Operational outcome | Completion evidence | Implementation boundary
 
-Daily cost pulse | Daily | Material movement, anomaly status and unresolved gaps | FinOps operations
+Prepare a periodic cost report | Period and cost basis remain consistent. | Configured recurring task
 
-Weekly service report | Weekly | Cost by service, owner, driver and recommendation status | Engineering and FinOps owners
+Investigate a cost anomaly | Affected dimensions and monetary contributions reconcile. | Native analysis with optional automation
 
-Monthly management report | Monthly | Trend, forecast, commitment and actions | Leadership and finance
+Prioritize optimization recommendations | Original source assumptions are retained. | Native function with team review
 
-FinOps operational review | Weekly or monthly | Decisions, owners, rejected items and measured outcomes | Cross-functional review
-
-Optimization backlog report | Scheduled | Candidate, source, estimated benefit, constraint and status | Platform and workload owners
+Measure the outcome of an implemented optimization | Before and after periods are comparable. | Composed workflow
 
 
 Detailed reference: [Tasks, schedules, and execution history](../guides/finops.html#F-03)
@@ -424,9 +382,43 @@ Detailed reference: [Tasks, schedules, and execution history](../guides/finops.h
 Detailed reference: [Report generation and artifact management](../guides/finops.html#F-04)
 
 
+
+Detailed reference: [Cost queries and recommendation provenance](../guides/finops.html#F-M01)
+
+
+## 16. Cost-anomaly investigation: trigger and publication controls
+
+37:00–40:00 · Operational objectives and implementation
+
+Follow the operational objective through its workflow, configured mechanisms and independent completion evidence. The catalog links each dependency to its detailed guide.
+
+
+
+Step | Feature configuration | Acceptance boundary
+
+Create work | Explicit task or supported anomaly automation | Event matching and queued execution are separate.
+
+Investigate | Authorized cost, anomaly and optional change evidence | Reconcile amounts; correlation is not proven cause.
+
+Publish to Jira | Configured project and invocation type | Interactive approval differs from setup-authorized automation.
+
+Publish to Slack | Configured channel and audience | No per-message approval prompt; review scope before invocation.
+
+
+Detailed reference: [Anomaly events and task creation](../guides/finops.html#F-M05)
+
+
+
+Detailed reference: [Cost queries and recommendation provenance](../guides/finops.html#F-M01)
+
+
+
+Detailed reference: [Publication permissions and approvals](../guides/finops.html#F-M06)
+
+
 ## 17. Worked example: cost increase decomposition
 
-39:00–47:00 · Worked example
+40:00–48:00 · Worked example
 
 Prepared quantities and rates demonstrate reconciliation, not AWS pricing or realized savings.
 
@@ -446,7 +438,7 @@ Detailed reference: [Cost-variance analysis: worked example](../guides/finops.ht
 
 ## 18. Troubleshooting matrix and preview limits
 
-47:00–49:00 · Troubleshooting and references
+48:00–50:00 · Troubleshooting and references
 
 Validate data, retained context, execution and external effects as separate layers.
 
