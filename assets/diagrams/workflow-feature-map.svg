@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="899pt" height="396pt" viewBox="0.00 0.00 898.50 396.00" role="img" aria-labelledby="workflow-feature-map-title workflow-feature-map-desc" data-diagram="workflow-feature-map">
+<title id="workflow-feature-map-title">Outcome, workflow, mechanism, and feature relationships</title><desc id="workflow-feature-map-desc">An authored documentation model: each workflow step declares a dependency on a documented mechanism and concrete feature configuration. Reverse links support impact review. This is not an AWS runtime design.</desc><g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(18 378)">
+<title>G</title>
+
+<g id="node1" class="node">
+<title>outcome</title>
+<path fill="#edf5f4" stroke="#496b78" d="M216,-360C216,-360 12,-360 12,-360 6,-360 0,-354 0,-348 0,-348 0,-324 0,-324 0,-318 6,-312 12,-312 12,-312 216,-312 216,-312 222,-312 228,-318 228,-324 228,-324 228,-348 228,-348 228,-354 222,-360 216,-360" />
+<text text-anchor="middle" x="114" y="-339.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Operational objective</text>
+<text text-anchor="middle" x="114" y="-324.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Actor and completion criteria</text>
+</g>
+
+<g id="node3" class="node">
+<title>step</title>
+<path fill="#edf5f4" stroke="#496b78" d="M482.5,-256C482.5,-256 269.5,-256 269.5,-256 263.5,-256 257.5,-250 257.5,-244 257.5,-244 257.5,-220 257.5,-220 257.5,-214 263.5,-208 269.5,-208 269.5,-208 482.5,-208 482.5,-208 488.5,-208 494.5,-214 494.5,-220 494.5,-220 494.5,-244 494.5,-244 494.5,-250 488.5,-256 482.5,-256" />
+<text text-anchor="middle" x="376" y="-235.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Workflow step</text>
+<text text-anchor="middle" x="376" y="-220.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Purpose and responsible actor</text>
+</g>
+
+<g id="edge1" class="edge">
+<title>outcome-&gt;step</title>
+<path fill="none" stroke="#496b78" d="M167.02,-312C192.06,-301.34 222.43,-288.69 250,-278 266.77,-271.5 284.92,-264.81 302.09,-258.65" />
+<polygon fill="#496b78" stroke="#496b78" points="303.2,-261.04 309.38,-256.04 301.43,-256.09 303.2,-261.04" />
+<text text-anchor="middle" x="310" y="-281.2" font-family="DejaVu Sans" font-size="11.00">is carried out through</text>
+</g>
+
+<g id="node2" class="node">
+<title>variant</title>
+<path fill="#edf5f4" stroke="#496b78" d="M486.5,-360C486.5,-360 265.5,-360 265.5,-360 259.5,-360 253.5,-354 253.5,-348 253.5,-348 253.5,-324 253.5,-324 253.5,-318 259.5,-312 265.5,-312 265.5,-312 486.5,-312 486.5,-312 492.5,-312 498.5,-318 498.5,-324 498.5,-324 498.5,-348 498.5,-348 498.5,-354 492.5,-360 486.5,-360" />
+<text text-anchor="middle" x="376" y="-339.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Variant</text>
+<text text-anchor="middle" x="376" y="-324.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Scope, trigger, network, format</text>
+</g>
+
+<g id="edge2" class="edge">
+<title>variant-&gt;step</title>
+<path fill="none" stroke="#496b78" d="M376,-311.85C376,-297.64 376,-279.26 376,-263.82" />
+<polygon fill="#496b78" stroke="#496b78" points="378.63,-263.55 376,-256.05 373.38,-263.55 378.63,-263.55" />
+<text text-anchor="middle" x="445" y="-281.2" font-family="DejaVu Sans" font-size="11.00">conditions a dependency</text>
+</g>
+
+<g id="node4" class="node">
+<title>mechanism</title>
+<path fill="#edf5f4" stroke="#496b78" d="M642.5,-152C642.5,-152 437.5,-152 437.5,-152 431.5,-152 425.5,-146 425.5,-140 425.5,-140 425.5,-116 425.5,-116 425.5,-110 431.5,-104 437.5,-104 437.5,-104 642.5,-104 642.5,-104 648.5,-104 654.5,-110 654.5,-116 654.5,-116 654.5,-140 654.5,-140 654.5,-146 648.5,-152 642.5,-152" />
+<text text-anchor="middle" x="540" y="-131.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Documented mechanism</text>
+<text text-anchor="middle" x="540" y="-116.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Trigger, state, process, effect</text>
+</g>
+
+<g id="edge3" class="edge">
+<title>step-&gt;mechanism</title>
+<path fill="none" stroke="#496b78" d="M413.21,-207.85C437.96,-192.47 470.55,-172.2 496.49,-156.06" />
+<polygon fill="#496b78" stroke="#496b78" points="497.95,-158.24 502.93,-152.05 495.18,-153.79 497.95,-158.24" />
+<text text-anchor="middle" x="532" y="-177.2" font-family="DejaVu Sans" font-size="11.00">requires / optionally uses</text>
+</g>
+
+<g id="node7" class="node">
+<title>evidence</title>
+<path fill="#edf5f4" stroke="#496b78" d="M388.5,-152C388.5,-152 155.5,-152 155.5,-152 149.5,-152 143.5,-146 143.5,-140 143.5,-140 143.5,-116 143.5,-116 143.5,-110 149.5,-104 155.5,-104 155.5,-104 388.5,-104 388.5,-104 394.5,-104 400.5,-110 400.5,-116 400.5,-116 400.5,-140 400.5,-140 400.5,-146 394.5,-152 388.5,-152" />
+<text text-anchor="middle" x="272" y="-131.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Verification evidence</text>
+<text text-anchor="middle" x="272" y="-116.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Observable result and limitations</text>
+</g>
+
+<g id="edge7" class="edge">
+<title>step-&gt;evidence</title>
+<path fill="none" stroke="#496b78" d="M352.4,-207.85C337.24,-192.99 317.44,-173.56 301.28,-157.72" />
+<polygon fill="#496b78" stroke="#496b78" points="302.7,-155.43 295.51,-152.05 299.02,-159.18 302.7,-155.43" />
+<text text-anchor="middle" x="369" y="-177.2" font-family="DejaVu Sans" font-size="11.00">accepted using</text>
+</g>
+
+<g id="node5" class="node">
+<title>feature</title>
+<path fill="#edf5f4" stroke="#496b78" d="M746,-48C746,-48 488,-48 488,-48 482,-48 476,-42 476,-36 476,-36 476,-12 476,-12 476,-6 482,0 488,0 488,0 746,0 746,0 752,0 758,-6 758,-12 758,-12 758,-36 758,-36 758,-42 752,-48 746,-48" />
+<text text-anchor="middle" x="617" y="-27.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Platform feature</text>
+<text text-anchor="middle" x="617" y="-12.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Resources and supported operations</text>
+</g>
+
+<g id="edge4" class="edge">
+<title>mechanism-&gt;feature</title>
+<path fill="none" stroke="#496b78" d="M552.28,-103.77C558.3,-93.12 565.98,-80.55 574,-70 578.13,-64.57 582.84,-59.08 587.59,-53.89" />
+<polygon fill="#496b78" stroke="#496b78" points="589.53,-55.66 592.74,-48.39 585.7,-52.07 589.53,-55.66" />
+<text text-anchor="middle" x="624" y="-73.2" font-family="DejaVu Sans" font-size="11.00">implemented with</text>
+</g>
+
+<g id="node6" class="node">
+<title>recipe</title>
+<path fill="#edf5f4" stroke="#496b78" d="M850.5,-360C850.5,-360 535.5,-360 535.5,-360 529.5,-360 523.5,-354 523.5,-348 523.5,-348 523.5,-324 523.5,-324 523.5,-318 529.5,-312 535.5,-312 535.5,-312 850.5,-312 850.5,-312 856.5,-312 862.5,-318 862.5,-324 862.5,-324 862.5,-348 862.5,-348 862.5,-354 856.5,-360 850.5,-360" />
+<text text-anchor="middle" x="693" y="-339.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Implementation profile</text>
+<text text-anchor="middle" x="693" y="-324.8" font-family="DejaVu Sans" font-size="14.00" fill="#142c3e">Values, permissions, checks, failure handling</text>
+</g>
+
+<g id="edge6" class="edge">
+<title>recipe-&gt;step</title>
+<path fill="none" stroke="#496b78" d="M622.58,-311.94C601.19,-304.91 577.63,-297.16 556,-290 539.99,-284.7 536.05,-283.18 520,-278 500.02,-271.55 478.44,-264.73 458.21,-258.4" />
+<polygon fill="#496b78" stroke="#496b78" points="458.77,-255.82 450.82,-256.09 457.2,-260.83 458.77,-255.82" />
+<text text-anchor="middle" x="615" y="-281.2" font-family="DejaVu Sans" font-size="11.00">binds to environment</text>
+</g>
+
+<g id="edge5" class="edge">
+<title>recipe-&gt;feature</title>
+<path fill="none" stroke="#496b78" d="M697.6,-311.65C705.89,-263.25 718.76,-149.86 676,-70 672.7,-63.83 668.13,-58.25 663,-53.29" />
+<polygon fill="#496b78" stroke="#496b78" points="664.58,-51.18 657.24,-48.15 661.09,-55.1 664.58,-51.18" />
+<text text-anchor="middle" x="734" y="-177.2" font-family="DejaVu Sans" font-size="11.00">configures</text>
+</g>
+</g>
+</svg>
