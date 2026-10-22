@@ -36,6 +36,15 @@ class Session:
 class TestSetup(Setup):
     def __init__(self,c,s):super().__init__(c,s,session_factory=lambda profile=None:Session(profile))
 
+def wait_state(page, expression, *, arg=None, timeout=10):
+ """Poll through the browser protocol; do not require unsafe-eval under CSP."""
+ deadline=time.monotonic()+timeout
+ while time.monotonic()<deadline:
+  if page.evaluate(expression, arg):return
+  page.wait_for_timeout(50)
+ raise AssertionError('Timed out waiting for browser state: '+expression)
+
+
 def main():
     p=argparse.ArgumentParser();p.add_argument('--native',action='store_true');p.add_argument('--bridge',action='store_true');a=p.parse_args()
     if a.native==a.bridge:p.error('Choose exactly one browser mode')
@@ -76,7 +85,7 @@ def main():
                 check('empty mobile layout has no overflow',page.evaluate('document.documentElement.scrollWidth<=innerWidth+1'))
                 page.set_viewport_size({'width':1440,'height':1000})
                 page.get_by_role('button',name='Unlock',exact=True).click();page.get_by_label('Local operator token',exact=True).fill(OP);page.locator('#setup-modal').get_by_role('button',name='Unlock',exact=True).click()
-                page.wait_for_function('GuidedSetup.state().current!==null')
+                wait_state(page, 'GuidedSetup.state().current!==null')
                 page.screenshot(path=str(out/'setup-accounts-empty-desktop.png'),full_page=True)
                 check('SDK names are selected without credential fields',page.get_by_label('Observer profile',exact=True).count()==1 and page.get_by_label('AWS access key',exact=True).count()==0)
                 def approve_dialog():
@@ -86,7 +95,7 @@ def main():
                     page.get_by_label('Exact confirmation',exact=True).fill(subject['confirmation'])
                     page.get_by_label('Separate local approval token',exact=True).fill(AP)
                     page.get_by_role('button',name='Approve exact operation',exact=True).click()
-                    page.wait_for_function('!document.querySelector("#setup-modal").open')
+                    wait_state(page, '!document.querySelector("#setup-modal").open')
                 for cid,account,profile in [('work',ACCOUNT_B,'test-workload'),('agent',ACCOUNT_A,'test-agent')]:
                     page.locator('[data-stage=accounts]').click();page.get_by_label('Connection ID',exact=True).fill(cid)
                     page.get_by_label('Connection label',exact=True).fill('Test-only '+cid)
@@ -152,7 +161,7 @@ def main():
                 check('native prepared contract appears in AWS library',len(Fleet(cfg,store).library()['templates'][0]['contracts'])==1)
                 page.set_viewport_size({'width':390,'height':844})
                 for stage in ('accounts','agents','targets','plan','review'):
-                    page.locator('[data-stage='+stage+']').click();page.wait_for_function('(s)=>GuidedSetup.state().stage===s',arg=stage)
+                    page.locator('[data-stage='+stage+']').click();wait_state(page, '(s)=>GuidedSetup.state().stage===s', arg=stage)
                     check('mobile '+stage+' does not overflow',page.evaluate('document.documentElement.scrollWidth<=innerWidth+1'))
                 check('no token persisted in browser storage',page.evaluate('(()=>{try{return localStorage.length===0&&sessionStorage.length===0}catch{return true}})()'))
                 page.locator('#setup-auth').click();check('locking clears configuration and draft',page.evaluate("GuidedSetup.state().current===null && GuidedSetup.state().draft===null && GuidedSetup.state().token===''") )

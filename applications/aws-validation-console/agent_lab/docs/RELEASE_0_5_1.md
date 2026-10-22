@@ -8,6 +8,8 @@ This revision includes the previously local-only 0.5.0 account onboarding, guide
 * Target-account evidence comes from the experiment's account configurations, not from a later mutable template read.
 * A complete, proven no-response failure remains auditable without demanding nonexistent task/journal records or inventing a correct diagnosis. Missing delivery, ambiguous correlation and unavailable evidence still block that interpretation.
 
+The first native repository run exposed a setup-test wait helper that requested JavaScript string evaluation under CSP. The helper now polls through the browser protocol, as the existing response test does. The application Content Security Policy is unchanged; native acceptance still fails rather than falling back to DOM injection.
+
 ## Reproducible acceptance
 
 Run the existing Python, native-browser, worker HTTP and Docker checks. The additional `tests/observability_acceptance.py` starts the actual empty application, Prometheus 3.15.1 and Grafana 13.2.4 in a disposable, isolated Docker network namespace. It checks authenticated scraping, executes all baseline panel queries in Prometheus and through Grafana, imports/reads back the generated dashboard, and verifies that no incident measurements were created. It is not a test of real AWS metric content.

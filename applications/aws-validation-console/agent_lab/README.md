@@ -1,6 +1,6 @@
 # AWS FIS · Agent response and prevention console
 
-**0.5.1-dev — implementation delivery; live acceptance and remote publication are not complete.**
+**0.5.1-dev — published development implementation; authorized live AWS acceptance remains open.**
 
 A local console for an authorized non-production AWS account set. It discovers existing FIS templates, prepares measured trials through forms, delegates target resolution and fault execution to FIS, observes AWS DevOps Agent, and produces source-pinned response and prevention assessments. AWS templates are not rewritten into local fault recipes.
 
@@ -67,13 +67,14 @@ python tests/setup_browser_checks.py --native
 python tests/worker_http_acceptance.py
 # Requires Docker; no AWS credentials or connected configuration:
 python tests/container_runtime_acceptance.py
+python tests/observability_acceptance.py
 ```
 
 `--native` fails when actual browser navigation is unavailable. The explicitly limited `--bridge` alternative uses DOM injection and a real local HTTP backend; it does not establish native navigation or CSP/fetch acceptance. SDK Stubber tests validate request/response shapes; provider doubles in workflow tests do not establish AWS behavior.
 
 The live Definition of Done remains open until an authorized deployment passes the native account/incident/agent/intervention/prevention acceptance in [DELIVERY_ACCEPTANCE.md](docs/DELIVERY_ACCEPTANCE.md). This is not an independent security audit or production-readiness certificate. Current run-specific results accompany the delivery package; previous revision evidence remains in Git history and must not be used as results for this source.
 
-The source is based on remote revision `b9dc53939611cc32904b49e2447dbb7fd5e2ab35`. The delivery includes a local commit and apply-ready patch; it does not claim a remote branch update.
+The source is published on `feat/aws-fis-console-delivery` in `lyrel-dev/frontier-agents`, based on `b9dc53939611cc32904b49e2447dbb7fd5e2ab35`. The default branch and earlier benchmark branch are unchanged. Verify the selected revision and its CI result before deployment; publication does not close live acceptance.
 
 ## Integration review
 
