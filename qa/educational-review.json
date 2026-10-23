@@ -53,8 +53,14 @@
       "Terminate paths at current box boundaries.",
       "Add named responsibilities and concise action descriptions.",
       "Use product-specific external destination with a qualified publication path.",
-      "Use larger diagram labels and numbered reading steps; retain frozen ownership colors."
+      "Use larger diagram labels and numbered reading steps; retain frozen ownership colors.",
+      "Namespace CSS marker URLs and scope SVG styles per inline diagram; test computed marker references in the HTML presentation."
     ],
     "validation": "The amended views are subsequently checked in the browser for text bounds and layout; the inspected prior image is not claimed as an amended-output screenshot."
+  },
+  "last_source_retrieval": {
+    "custom_agents": "Direct official page confirms prompt, selected tools, assigned skills and invocation; its representation omits some retained-context material present in the supplied source and earlier indexed review.",
+    "agent_spaces": "Direct official page confirms account, integration, user and history isolation.",
+    "managed_agents": "Final direct re-fetch returned a cache miss; retain the supplied source and earlier reviewed evidence rather than claim every source was freshly retrieved."
   }
 }
