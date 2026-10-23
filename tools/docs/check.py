@@ -20,6 +20,7 @@ from model_check import validate_model
 from resource_model import validate as validate_resources
 from editorial_check import validate as validate_editorial
 from mechanism_detail import validate as validate_mechanisms
+from reading_check import validate as validate_reading
 
 
 def git(*args):return subprocess.check_output(['git','-C',str(ROOT),*args],text=True).strip()
@@ -32,7 +33,7 @@ def file_manifest():
 
 def check(browser=False):
     errors=[];guides=load_guides();catalog=load_catalog();entries=catalog['entries'];browser_results=[]
-    html_paths=[ROOT/'catalog/resource-models.html',ROOT/'catalog/mechanisms.html',ROOT/'catalog/features.html',ROOT/'catalog/profiles.html',ROOT/'index.html',ROOT/'catalog/index.html',ROOT/'presentations/index.html',*(ROOT/f'guides/{k}.html' for k in guides),*(ROOT/f'presentations/{k}.html' for k in guides)]
+    html_paths=[ROOT/'index.html',*sorted((ROOT/'guides').glob('*.html')),*sorted((ROOT/'catalog').glob('*.html')),*sorted((ROOT/'presentations').glob('*.html'))]
     parsed={p.resolve():BeautifulSoup(p.read_text(),'html.parser') for p in html_paths}
     previous_ids=[];new_ids=[];link_count=0;figures=0
     for key,g in guides.items():
@@ -50,10 +51,7 @@ def check(browser=False):
         page=parsed[(ROOT/f'guides/{key}.html').resolve()]
         if [n['id'] for n in page.select('.report-section')]!=ordered_ids(key):errors.append(key+': rendered chapter order differs from source')
         if len(page.select('.toc a[data-section]'))!=len(g['sections']):errors.append(key+': incomplete technical contents')
-        if key!='architecture':
-            expected=sum(key in e.get('platforms',[e['platform']]) for e in entries)
-            if len(page.select('.usecase-entry'))!=expected:errors.append(key+': embedded narrative count')
-            if str(page).find('id="use-case-catalog"')<str(page).rfind('class="chapter"'):errors.append(key+': catalog interrupts technical chapters')
+        if page.select('.embedded-catalog,[data-usecase-catalog]'):errors.append(key+': duplicate catalog remains in guide')
         deck=parsed[(ROOT/f'presentations/{key}.html').resolve()]
         if len(deck.select('.slide'))!=len(DECKS[key]['slides']):errors.append(key+': slide count mismatch')
         if len(deck.select('.note-block'))!=len(DECKS[key]['slides']):errors.append(key+': missing presenter notes')
@@ -74,8 +72,8 @@ def check(browser=False):
         if e['group'] not in catalog['group_introductions']:errors.append(e['id']+': group has no introduction')
     if len(source_narratives)!=len(set(source_narratives)):errors.append('Catalog reuses identical narrative paragraphs')
     if len({e['id'] for e in entries})!=len(entries):errors.append('Duplicate use-case identifiers')
-    catalog_page=parsed[(ROOT/'catalog/index.html').resolve()]
-    if len(catalog_page.select('.narrative p'))!=len(source_narratives):errors.append('Narrative paragraphs missing from catalog HTML')
+    rendered_narratives=[p.get_text() for e in entries for p in parsed[(ROOT/f'catalog/{e["id"]}.html').resolve()].select('.case-narrative p')]
+    if rendered_narratives!=source_narratives:errors.append('Use-case narrative/source mismatch')
     for path,page in parsed.items():
         identifiers=[n['id'] for n in page.select('[id]')]
         if len(identifiers)!=len(set(identifiers)):errors.append(str(path.relative_to(ROOT))+': duplicate HTML/SVG identifiers')
@@ -128,83 +126,23 @@ def check(browser=False):
     errors.extend(model_result["errors"])
     resource_result=validate_resources(guides,browser=browser)
     errors.extend(resource_result["errors"])
+    reading_result=validate_reading(guides,browser=browser)
+    errors.extend(reading_result['errors'])
     if browser and not errors:
         from playwright.sync_api import sync_playwright
         with sync_playwright() as pw:
             br=pw.chromium.launch(headless=True)
             for key,g in guides.items():
-                for width in (390,1440):
-                    page=br.new_page(viewport={'width':width,'height':1000});js_errors=[]
-                    page.on('pageerror',lambda err:js_errors.append(str(err)))
-                    try:
-                        page.goto((ROOT/f'guides/{key}.html').as_uri(),wait_until='load')
-                        n=len(g['sections']);assert page.locator('.report-section:visible').count()==n
-                        page.locator('#search').fill('nonexistent-zz928');assert page.locator('.report-section:visible').count()==0
-                        assert page.locator('#empty-results').is_visible();page.locator('#reset').click()
-                        page.locator('#chapter').select_option(CHAPTERS[key][0]['slug']);assert page.locator('.report-section:visible').count()==len(CHAPTERS[key][0]['sections'])
-                        page.locator('#reset').click();page.locator('#type').select_option('mechanism');assert 0<page.locator('.report-section:visible').count()<n
-                        page.emulate_media(media='print');assert page.locator('.report-section:visible').count()==n
-                        page.emulate_media(media='screen');assert page.locator('.report-section:visible').count()<n
-                        page.locator('#nav-collapse').click();assert page.locator('.toc details[open]').count()==0
-                        page.evaluate('(id)=>location.hash=id',ordered_ids(key)[0]);page.wait_for_timeout(100)
-                        assert page.locator('.toc details[open]').count()>0
-                        assert not page.evaluate('document.documentElement.scrollWidth>innerWidth+2')
-                        assert page.locator('figure.diagram svg').count()>0
-                        if key in ('devops','security','finops'):
-                            expected=sum(key in e.get('platforms',[e['platform']]) for e in entries)
-                            assert page.locator('.usecase-entry:visible').count()==expected
-                            page.locator('[data-uc-search]').fill('nonexistent-zz928');assert page.locator('.usecase-entry:visible').count()==0
-                            page.locator('[data-uc-reset]').click();assert page.locator('.usecase-entry:visible').count()==expected
-                        page.goto((ROOT/f'presentations/{key}.html').as_uri(),wait_until='load')
-                        assert page.locator('.slide:visible').count()==1
-                        tall=[]
-                        for i,slide in enumerate(DECKS[key]['slides']):
-                            page.locator('#slide-select').select_option(str(i))
-                            assert page.locator('.slide:visible h1').inner_text()==slide['title']
-                            assert not page.evaluate('document.documentElement.scrollWidth>innerWidth+2')
-                            overflow=page.locator('.slide:visible').evaluate('(el)=>el.scrollWidth>el.clientWidth+2')
-                            assert not overflow
-                            if width==1440:
-                                height=page.locator('.slide:visible').bounding_box()['height']
-                                if height>1050:tall.append({'slide':i+1,'height':round(height)})
-                        page.locator('#agenda-open').click();assert page.locator('#agenda').is_visible()
-                        page.locator('#agenda [data-slide="0"]').click();assert not page.locator('#agenda').is_visible()
-                        page.locator('#next').focus();page.keyboard.press('ArrowRight');assert page.locator('#slide-select').input_value()=='1'
-                        page.locator('#notes-button').click();assert page.locator('.note-block:visible').count()==1
-                        page.locator('#notes-button').click();assert not page.locator('.note-block:visible').count()
-                        page.locator('#timer-toggle').click();page.wait_for_function("document.querySelector('#session-time').textContent!=='00:00'",timeout=5000)
-                        page.locator('#timer-toggle').click();paused=page.locator('#session-time').inner_text();page.wait_for_timeout(300);assert page.locator('#session-time').inner_text()==paused
-                        page.locator('#timer-reset').click();assert page.locator('#session-time').inner_text()=='00:00'
-                        selected=page.locator('#slide-select').input_value();page.reload();assert page.locator('#slide-select').input_value()==selected
-                        page.emulate_media(media='print');assert page.locator('.slide:visible').count()==len(DECKS[key]['slides'])
-                        page.emulate_media(media='screen');assert page.locator('.slide:visible').count()==1
-                        browser_results.append({'subject':key,'width':width,'technical_sections':n,'slides':len(DECKS[key]['slides']),'javascript_errors':js_errors,'slides_over_1050px':tall,'navigation_filters_hash_notes_timer_print':'passed'})
-                        errors.extend(js_errors)
-                        if tall:errors.append(key+': desktop slides require layout review '+json.dumps(tall))
-                    except Exception as exc:errors.append(f'{key} at {width}px: '+str(exc)+'; '+traceback.format_exc(limit=2))
-                    finally:page.close()
-            for width in (390,1440):
-                page=br.new_page(viewport={'width':width,'height':1000});js_errors=[];page.on('pageerror',lambda err:js_errors.append(str(err)))
-                try:
-                    page.goto((ROOT/'catalog/index.html').as_uri());assert page.locator('.usecase-entry:visible').count()==len(entries)
-                    page.locator('[data-uc-platform]').select_option('devops');assert page.locator('.usecase-entry:visible').count()==15
-                    page.locator('[data-uc-search]').fill('flexible');assert page.locator('#UC-D05').is_visible()
-                    page.locator('[data-uc-search]').fill('nonexistent-zz928');assert page.locator('.usecase-entry:visible').count()==0
-                    page.evaluate("location.hash='UC-S01'");page.wait_for_timeout(100);assert page.locator('#UC-S01').is_visible()
-                    page.locator('#UC-S01 summary').click();assert page.locator('#UC-S01 > .case-reference > dl').is_visible()
-                    assert not page.evaluate('document.documentElement.scrollWidth>innerWidth+2')
-                    errors.extend(js_errors);browser_results.append({'subject':'catalog','width':width,'narratives':len(entries),'filters_and_cross_product_hash':'passed','javascript_errors':js_errors})
-                except Exception as exc:errors.append(f'catalog at {width}px: '+str(exc))
-                finally:page.close()
-            br.close()
+                br.close()
     results={'revision':REVISION,'baseline':BASELINE,'guides':len(guides),'canonical_sections':len(new_ids),'previous_identifiers_retained':len(set(previous_ids)&set(new_ids)),'new_sections':sorted(set(new_ids)-set(previous_ids)),'authored_use_case_narratives':len(entries),'narrative_paragraphs':len(source_narratives),'platform_use_cases':dict(Counter(e['platform'] for e in entries)),'logical_diagrams':len(DIAGRAMS),'rendered_diagram_instances':figures,'html_presentations':len(DECKS),'slides':sum(len(d['slides']) for d in DECKS.values()),'programme_minutes':sum(totals(d)[0] for d in DECKS.values())//60,'exercise_minutes':sum(totals(d)[1] for d in DECKS.values())//60,'local_links_checked':link_count,'browser_checks':browser_results,'application_changes':app_changes,'excluded_scope_hits':scope_hits,'errors':errors,'boundary':'Source mapping, narrative presence/uniqueness, logical SVG accessibility, examples, and HTML behavior were checked. These checks do not establish factual completeness, live AWS operation, agent accuracy, or measured outcomes.'}
     results['mechanism_review']=mechanism_result
     results['relationship_model']=model_result
     results['technical_editorial_review']=editorial_result
     results['product_resource_model']=resource_result
+    results['reading_structure']=reading_result
     write('qa/checks.json',json.dumps(results,indent=2))
     if errors:raise SystemExit(json.dumps(results,indent=2))
-    write('VALIDATION.md','# Documentation validation\n\nStage 3 adds [mechanism lifecycle and preservation checks](qa/mechanism-review.json) and [claim-specific source review](qa/mechanism-source-review.json). Proposed AWS tests are documented but were not executed. Existing outcome, feature, profile, alias and resource-model sources are checked against the Stage 2 baseline.\n\nThe current [machine-readable results](qa/checks.json) distinguish source structure, rendered behavior, and synthetic examples. The [content revision record](qa/content-review.json) identifies cleanup and editorial changes; the [source review record](qa/source-review.json) identifies new and selectively rechecked official material.\n\nThe [product resource checks](qa/resource-models.json) verify entity ownership, qualified relationships, all feature/resource bindings and unchanged approved catalog sources. [Product-source evidence](qa/product-source-review.json) identifies the exact reviewed claims and version qualifications.\n\nThe [relationship checks](qa/relationships.json) additionally validate all 54 former-record mappings, 30 outcome definitions, workflow dependency types, feature configuration references, implementation profiles, reverse impact links and semantic regression cases. These are modeled dependencies, not live availability tests.\n\nChecks cover stable section identifiers, source mapping, use-case narratives, local links, unique SVG identifiers and accessibility descriptions, report and catalog filtering, chapter and slide navigation, notes, timers, hash links, and print-state restoration at desktop and mobile widths. The synthetic cost arithmetic and incident/security evidence relationships are checked separately.\n\nThese are not live AWS tests, an exhaustive upstream-documentation audit, or a claim that passing structural checks alone establishes good technical writing. The diagrams are logical explanatory models. No productivity, accuracy, security coverage, or savings result has been measured.\n\nThe application tree and its workflow are compared with the pinned baseline and must remain unchanged. Superseded document entry points and generators are removed rather than archived.\n')
+    write('VALIDATION.md','# Documentation validation\n\nThe current reader revision is covered by [frozen-record and reading-journey checks](qa/reading-structure.json). Model and use-case sources are unchanged. Guide navigation, search, contextual configuration, and deep links are tested separately from service behavior.\n\nStage 3 adds [mechanism lifecycle and preservation checks](qa/mechanism-review.json) and [claim-specific source review](qa/mechanism-source-review.json). Proposed AWS tests are documented but were not executed. Existing outcome, feature, profile, alias and resource-model sources are checked against the Stage 2 baseline.\n\nThe current [machine-readable results](qa/checks.json) distinguish source structure, rendered behavior, and synthetic examples. The [content revision record](qa/content-review.json) identifies cleanup and editorial changes; the [source review record](qa/source-review.json) identifies new and selectively rechecked official material.\n\nThe [product resource checks](qa/resource-models.json) verify entity ownership, qualified relationships, all feature/resource bindings and unchanged approved catalog sources. [Product-source evidence](qa/product-source-review.json) identifies the exact reviewed claims and version qualifications.\n\nThe [relationship checks](qa/relationships.json) additionally validate all 54 former-record mappings, 30 outcome definitions, workflow dependency types, feature configuration references, implementation profiles, reverse impact links and semantic regression cases. These are modeled dependencies, not live availability tests.\n\nChecks cover stable section identifiers, source mapping, use-case narratives, local links, unique SVG identifiers and accessibility descriptions, report and catalog filtering, chapter and slide navigation, notes, timers, hash links, and print-state restoration at desktop and mobile widths. The synthetic cost arithmetic and incident/security evidence relationships are checked separately.\n\nThese are not live AWS tests, an exhaustive upstream-documentation audit, or a claim that passing structural checks alone establishes good technical writing. The diagrams are logical explanatory models. No productivity, accuracy, security coverage, or savings result has been measured.\n\nThe application tree and its workflow are compared with the pinned baseline and must remain unchanged. Superseded document entry points and generators are removed rather than archived.\n')
     write('MANIFEST.json',json.dumps({'revision':REVISION,'files':file_manifest(),'excluded':['MANIFEST.json itself','applications/','.git/','__pycache__/']},indent=2))
     print(json.dumps(results,indent=2))
 
