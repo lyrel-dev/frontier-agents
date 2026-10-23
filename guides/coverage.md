@@ -1,5 +1,5 @@
 # Guide and source coverage
-The source map below identifies the references attached to each maintained section. It is not a claim that every upstream page was freshly audited. Product-specific resource identities and relationships were reviewed on 22 October 2026; retained sections keep their earlier references. See [the product-model source record](../qa/product-source-review.json) and [the earlier source-review record](../qa/source-review.json).
+The source map below identifies the references attached to each maintained section. It is not a claim that every upstream page was freshly audited. Product-specific resource identities and relationships retain the 22 October review. The capability exposition and targeted October 23 source checks are recorded in [exposition review](../qa/exposition-review.json); other retained sections keep their earlier references. See [the product-model source record](../qa/product-source-review.json) and [the earlier source-review record](../qa/source-review.json).
 ## AWS DevOps Agent
 | Section | Subject | Official references |
 |---|---|---|
