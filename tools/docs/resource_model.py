@@ -180,29 +180,6 @@ def resource_index(guides, frame, write, figure):
     write('qa/product-source-review.json',json.dumps(review,indent=2,ensure_ascii=False))
 
 
-def integrate_pages(write):
-    """Add resource links to generated views, not to approved source records."""
-    model=load()
-    pages=[ROOT/'index.html',ROOT/'presentations/index.html',ROOT/'catalog/index.html',ROOT/'catalog/mechanisms.html',ROOT/'catalog/features.html',ROOT/'catalog/profiles.html']
-    pages += [ROOT/f'guides/{k}.html' for k in (*PRODUCTS,'architecture')]
-    pages += [ROOT/f'presentations/{k}.html' for k in (*PRODUCTS,'architecture')]
-    for path in pages:
-        soup=BeautifulSoup(path.read_text(),'html.parser')
-        prefix='' if path.parent==ROOT else '../'
-        nav=soup.select_one('.site-header nav')
-        if nav and not nav.find('a',href=prefix+'catalog/resource-models.html'):
-            a=soup.new_tag('a',href=prefix+'catalog/resource-models.html');a.string='Resource models';nav.append(a)
-        if path.name=='features.html':
-            for key,p in model['products'].items():
-                lookup={e['id']:e for e in p['entities']}
-                for fid,ids in p['feature_bindings'].items():
-                    target=soup.find(id=fid)
-                    if target:
-                        block=BeautifulSoup('<p class="resource-binding"><strong>Product resource bindings:</strong> '+', '.join(f'<a href="resource-models.html#{i}">{esc(lookup[i]["name"])}</a>' for i in ids)+'</p>','html.parser').p
-                        target.append(block)
-        style=soup.find('style')
-        if style:style.append('\n'+CSS)
-        write(path.relative_to(ROOT),str(soup))
 
 
 def validate(guides, browser=False):
