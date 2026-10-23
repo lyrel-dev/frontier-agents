@@ -25,7 +25,7 @@ def browser_checks(root: Path):
                 page.on('pageerror', lambda e: errors.append(str(e)))
                 page.on('request', lambda r: external.append(r.url) if not r.url.startswith(base) else None)
                 page.goto(base+'/guides/devops.html')
-                page.wait_for_function('window.FrontierReview?.interaction === "contextual-v2"')
+                page.wait_for_function('window.FrontierReview?.interaction === "contextual-v3"')
                 assert page.locator('#review-toggle,#review-toolbar').count() == 0
                 expect(page.locator('#review-block-controls')).to_be_hidden()
                 para = page.locator('.report-section:visible p[data-review-block]').first
@@ -45,7 +45,7 @@ def browser_checks(root: Path):
                 page.locator('#review-drawer .review-panel-heading button').click()
                 badge = page.locator(f'.review-comment-marker[data-block-id="{bid}"]:visible').first
                 expect(badge).to_be_visible(); badge.click()
-                expect(page.locator('#review-note-filter')).to_have_value('anchor')
+                assert page.locator('#review-drawer select,#review-drawer .review-io,#review-drawer code,#review-context-quote').count()==0
                 assert page.locator('.review-thread').count() == 1
                 page.get_by_role('button', name='Reply', exact=True).click()
                 page.locator('#review-text').fill('Retain the AWS/source ownership distinction.')
@@ -99,7 +99,7 @@ def browser_checks(root: Path):
                 assert candidates.evaluate_all('(els)=>els.map(el=>el.dataset.reviewBlock)') == ids
                 page.locator('#review-clear-selection').click()
 
-                page.locator('#review-document-note').click();page.locator('#review-text').fill('Document-level observation.');page.locator('#review-save').click()
+                page.locator('#review-notes-open').click();page.locator('#review-document-note').click();page.locator('#review-text').fill('Document-level observation.');page.locator('#review-save').click()
                 assert page.evaluate('FrontierReview.exportPacket().comments').pop()['scope'] == 'document'
                 page.locator('#review-drawer .review-panel-heading button').click()
                 page.locator('#review-search-open').click();page.locator('#review-global-search').fill('memory')
@@ -131,7 +131,7 @@ def browser_checks(root: Path):
                 speaker.focus();page.keyboard.press('Control+Alt+m');page.locator('#review-text').fill('Presenter note comment.');page.locator('#review-save').click()
                 assert '/presentations/devops/' in page.evaluate('FrontierReview.exportPacket().comments').pop()['targets'][0]['path']
                 page.locator('#review-drawer .review-panel-heading button').click()
-                page.locator('#review-notes-open').click();page.locator('.review-io summary').click()
+                page.locator('#review-notes-open').click()
                 incoming=page.evaluate('FrontierReview.exportPacket()');item=deepcopy(incoming['comments'][-1])
                 item['id']='import-test';item['body']='<img src=x onerror=alert(1)>';item['targets'][0]['file_sha256']='0'*64;incoming['comments']=[item]
                 page.locator('#review-import').set_input_files({'name':'review.json','mimeType':'application/json','buffer':json.dumps(incoming).encode()})
@@ -140,7 +140,7 @@ def browser_checks(root: Path):
                 with page.expect_download() as dl:page.locator('#review-export').click()
                 downloaded=json.loads(Path(dl.value.path()).read_text())
                 assert downloaded['schema']=='frontier-review/v1' and downloaded['review_id']==packet['review_id']
-                page.emulate_media(media='print');expect(page.locator('#review-drawer')).to_be_hidden();page.emulate_media(media='screen')
+                page.emulate_media(media='print');expect(page.locator('#review-drawer')).to_be_hidden();expect(page.locator('#review-global-menu')).to_be_hidden();page.emulate_media(media='screen')
                 page.goto(base+'/catalog/UC-D02.html');page.wait_for_function('!!window.FrontierReview')
                 assert page.locator('.case-narrative [data-review-block]').count()>0
                 assert not external,external
