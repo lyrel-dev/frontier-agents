@@ -1,6 +1,6 @@
 {
   "schema": "frontier-markdown-build/v1",
-  "iteration": 10,
-  "scope": "Markdown release check: source fidelity, reviewer navigation, exports, guarded edits",
+  "iteration": 11,
+  "scope": "Contextual annotations without Review mode: hover, range, quote, touch, keyboard, thread markers, source-map and patch preservation",
   "frozen_model_and_use_cases": true
 }
