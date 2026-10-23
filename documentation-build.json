@@ -1,6 +1,6 @@
 {
   "revision": "2026-10-23-educational-sequence",
-  "build": 3,
+  "build": 4,
   "scope": ["AWS DevOps Agent", "AWS Security Agent", "AWS FinOps Agent"],
   "shared_architecture": true,
   "canonical_source": "Authored guides/*.md; frozen catalog records retain approved semantics",
