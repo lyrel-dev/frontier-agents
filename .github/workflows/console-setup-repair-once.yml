@@ -1,0 +1,129 @@
+name: Verify and apply setup navigation repair once
+on:
+  push:
+    branches: [feat/aws-fis-console-delivery]
+    paths: [.github/workflows/console-setup-repair-once.yml]
+permissions:
+  contents: write
+concurrency:
+  group: console-setup-repair-once
+  cancel-in-progress: false
+jobs:
+  repair:
+    if: github.ref == 'refs/heads/feat/aws-fis-console-delivery'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Apply exactly the locally reviewed source changes
+        working-directory: applications/aws-validation-console/agent_lab
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib
+          def edit(name, before, after, transform):
+              p=Path(name); raw=p.read_bytes()
+              assert hashlib.sha256(raw).hexdigest()==before, name+' baseline differs'
+              changed=transform(raw.decode())
+              assert hashlib.sha256(changed.encode()).hexdigest()==after, name+' result differs'
+              p.write_text(changed)
+          def ui(s):
+              s=s.replace("draft:null,plan:null,offline:","draft:null,plan:null,navigation:0,loading:false,offline:")
+              s=s.replace("async function show(stage){setupState.stage=stage;if(setupState.token)await load();render();}","""async function show(stage){
+            const navigation=++setupState.navigation,token=setupState.token;
+            setupState.stage=stage;setupState.loading=true;
+            const host=sq('#setup-content');
+            // Remove obsolete controls before starting asynchronous reads. Retaining the
+            // previous form lets input disappear when the requested stage finishes loading.
+            host.setAttribute('aria-busy','true');
+            host.replaceChildren(se('p','Loading the selected setup stage…','setup-muted'));
+            document.querySelectorAll('[data-stage]').forEach(b=>b.classList.toggle('active',b.dataset.stage===stage));
+            try{
+              if(token)await load();
+              if(navigation!==setupState.navigation||token!==setupState.token)return;
+              render();
+            }finally{
+              if(navigation===setupState.navigation){setupState.loading=false;host.setAttribute('aria-busy','false');}
+            }
+          }""")
+              s=s.replace("clear(){setupState.token='';", "clear(){setupState.navigation++;setupState.loading=false;setupState.token='';")
+              return s.replace("if(setupState.token){setupState.token='';", "if(setupState.token){setupState.navigation++;setupState.loading=false;setupState.token='';")
+          def browser(s):
+              s=s.replace("'accountType':'SECONDARY'", "'accountType':'source'")
+              insert='''                # Delay only response timing; native mode still uses real HTTP and CSP.
+                          page.evaluate("""()=>{const original=window.fetch;let release;
+                            const pending=new Promise(resolve=>{release=resolve});
+                            window.__releaseSetupRead=()=>{release();window.fetch=original};
+                            window.fetch=async(path,options)=>{if(path==='/api/setup')await pending;return original(path,options)};
+                          }""")
+                          page.locator('[data-stage=accounts]').click()
+                          check('navigation removes stale editable controls while account reads are pending',
+                                page.get_by_label('Connection ID',exact=True).count()==0 and
+                                page.locator('#setup-content').get_attribute('aria-busy')=='true')
+                          page.evaluate('window.__releaseSetupRead()')
+                          page.get_by_label('Connection ID',exact=True).wait_for()
+                          wait_state(page, '!GuidedSetup.state().loading')
+                          check('account form becomes available only after its requested reads complete',
+                                page.locator('#setup-content').get_attribute('aria-busy')=='false')
+                          page.evaluate("""()=>{const original=window.fetch;const releases=[];
+                            window.__setupReadReleases=releases;
+                            window.__restoreSetupFetch=()=>{window.fetch=original};
+                            window.fetch=async(path,options)=>{if(path==='/api/setup')await new Promise(resolve=>releases.push(resolve));return original(path,options)};
+                          }""")
+                          page.locator('[data-stage=agents]').click()
+                          page.locator('[data-stage=accounts]').click()
+                          wait_state(page, 'window.__setupReadReleases.length===2')
+                          page.evaluate('window.__setupReadReleases[1]()')
+                          page.get_by_label('Connection ID',exact=True).fill('retained-input')
+                          page.evaluate('window.__setupReadReleases[0]();window.__restoreSetupFetch()')
+                          page.wait_for_timeout(200)
+                          check('late response from an older stage does not erase input in the selected stage',
+                                page.get_by_label('Connection ID',exact=True).input_value()=='retained-input' and
+                                page.get_by_label('Agent connection',exact=True).count()==0)
+          '''
+              # YAML indentation is stripped uniformly. Restore the intended Python test indentation.
+              lines=insert.splitlines(True)
+              insert=lines[0]+''.join(line[10:] if line.startswith(' '*10) else line for line in lines[1:])
+              s=s.replace('                def approve_dialog():',insert+'                def approve_dialog():')
+              return s.replace("wait_state(page, '(s)=>GuidedSetup.state().stage===s', arg=stage)","wait_state(page, '(s)=>GuidedSetup.state().stage===s&&!GuidedSetup.state().loading', arg=stage)")
+          def diagnostics(s):
+              s=s.replace('original_page = Browser.new_page','original_page = Browser.new_page\noriginal_wait = Locator.wait_for')
+              s=s.replace("details = {'page_errors': errors[-8:]}","details = {'page_errors': errors[-8:]}\n        try:\n            details['status'] = self.page.locator('#setup-status').inner_text(timeout=1000)[:1500]\n            details['invalid_fields'] = self.page.locator('input:invalid,select:invalid,textarea:invalid').evaluate_all(\n                '(nodes)=>nodes.map(n=>({label:n.getAttribute(\\\"aria-label\\\"),type:n.type,missing:n.validity.valueMissing,pattern:n.validity.patternMismatch}))')\n        except Exception:\n            pass")
+              s=s.replace('def inspected_select(self, *args, **kwargs):','def inspected_call(original, self, *args, **kwargs):').replace('return original_select(self, *args, **kwargs)','return original(self, *args, **kwargs)')
+              return s.replace('Locator.select_option = inspected_select','Locator.select_option = lambda self,*a,**k: inspected_call(original_select,self,*a,**k)\n    Locator.wait_for = lambda self,*a,**k: inspected_call(original_wait,self,*a,**k)')
+          edit('static/setup.js','013e323f4c68096f8a79dbdc2d954ddcdabbabd66185accf856b1546b44a92e5','c67453f5180528e83bcb252e724c5f2139091c48de6cba12b5ef9bf85dba72af',ui)
+          edit('tests/setup_browser_checks.py','31deeabe8b6160d1d30dca81e75e5ad90d01860cdacce96713c309a71294a5ca','4430cd52939353faba4a981c394fdce229ec8386da86837c5590b7165cac2ff9',browser)
+          edit('tests/native_setup_diagnostics.py','329417d7e686b364a413c8bfc9cd379b5c9055d81aa1a3765172e4fd06d77d49','3eff9df00d419db38d7951e76df34e7e12481d4a5647c97ce642b4b0452a21b5',diagnostics)
+          PY
+      - name: Verify Python and actual native setup navigation
+        working-directory: applications/aws-validation-console/agent_lab
+        env:
+          AWS_EC2_METADATA_DISABLED: 'true'
+        run: |
+          python -m pip install -r requirements-dev.txt
+          python -m playwright install --with-deps chromium
+          export CHROMIUM_PATH=$(python -c 'from playwright.sync_api import sync_playwright; p=sync_playwright().start(); print(p.chromium.executable_path); p.stop()')
+          python build_assets.py
+          python -m pytest -q
+          python tests/native_setup_diagnostics.py
+          git diff --check
+      - name: Preserve acceptance evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: setup-navigation-repair
+          path: applications/aws-validation-console/agent_lab/validation/
+          retention-days: 7
+      - name: Publish only verified application sources
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add applications/aws-validation-console/agent_lab/static/setup.js applications/aws-validation-console/agent_lab/tests/setup_browser_checks.py applications/aws-validation-console/agent_lab/tests/native_setup_diagnostics.py
+          git diff --cached --check
+          git commit -m 'fix(console): preserve guided setup input across asynchronous navigation'
+          git push origin HEAD:feat/aws-fis-console-delivery
