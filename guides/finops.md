@@ -1,16 +1,16 @@
 # AWS FinOps Agent
 
-Cost-data access, retained context, tasks, and report artifacts
+Instance configuration, cost analysis, context, and automation
 
-AWS FinOps Agent is documented as a preview service for cost queries, anomaly investigation, reporting, and interpretation of recommendations from AWS optimization services. Analysis depends on the accounts, dates, cost metric, filters, and grouping supplied to authorized source services. The instance retains context, conversations, tasks, and report artifacts. [FS01]
+AWS FinOps Agent is documented as a preview service for cost inquiry, reporting, anomaly investigation, and interpretation of upstream recommendations. Its instance retains organizational context and contains task automations and destination connections. A conversation, a queued task, and an automation are different objects. [FS501] [FS502] [FS503]
 
-The guide separates source permissions from operator access and publication connections. It then explains uploaded files, persistent memory, conversation summarization, task execution, and data lifecycle. The cost example reconciles the numerical change before assessing operational evidence. The reviewed preview stores agent data in us-east-1; inference can use other US Regions. [FS08] [FS09]
+This guide separates those configuration facilities from their mechanisms: contextual reuse, conversation compaction, scheduled task creation, anomaly-event matching, and publication authorization. It then describes the managed analytical functions and their outputs. The use-case catalog supplies the approved operational objectives rather than another list of platform features.
 
-**Reading conventions.** Product statements link to official AWS documentation. Configuration recommendations and verification procedures are team guidance; the proposed tests and synthetic examples have not been executed against AWS. Lifecycle tables describe service behavior and operator actions, not an API status enumeration unless explicitly cited. DOC (blue), AWS (green), and EXT (orange) identify concept ownership. Source-review dates and qualifications are recorded in the source registers.
+**Reading conventions.** The dimensions below organize documented FinOps facilities; they do not imply a DevOps-style custom-agent API, arbitrary MCP tool registry, or shared cross-service memory. Official sources support product behavior. DOC/AWS/EXT colors identify ownership. Financial examples use synthetic values; verification procedures are proposed, not live account results.
 
-## 01. Resource model and scope
+## 01. Workspace and resource organization
 
-Begin with the product-specific entities, their scope and their relationships. Configuration, executions, knowledge and external evidence are distinct objects with different lifecycles.
+The agent instance, connections, conversations, automations, tasks, and artifacts have different identities.
 
 ### F-01 — Agent instance, access roles and retained state
 
@@ -53,9 +53,106 @@ Publication also depends on invocation mode. Jira actions requested interactivel
 
 The model establishes relationships the reader can reason about; it does not provision them. The [feature/resource crosswalk](../catalog/resource-models.html#model-finops) links each approved feature reference to the actual instance, connection, task or context object and its supporting documentation.
 
-## 02. Cost-data sources and collaboration connections
+## 02. Instance configuration and task definition
 
-A cost conclusion depends on its source data and query basis. Collaboration destinations add a separate publication path with its own authorization and lifecycle.
+Instance settings control access and context; requests and automations define the work.
+
+### F-11 — Instance configuration and task instructions
+
+The instance is configured with data access, operator access, retained context, and supported integration connections. These settings determine which sources can be read and where results can be published. Instructions supplied for a task or automation specify the work; they are not a documented custom-agent system-prompt asset with a customer-selected MCP tool list. [FS502] [FS509]
+
+| Customer control | Configuration surface | Applies to |
+|---|---|---|
+| Data role | Instance setup and IAM policy | Authorized AWS source calls |
+| Operator access | Operator role and user permissions | Use of the instance's web application |
+| Uploaded instructions or mappings | Context files workspace | Reusable organizational context |
+| Request or task instructions | Conversation or task creation | The selected analysis or report |
+| Recurring/event instructions | Automation configuration | Work created by future matching occurrences |
+| Publication destination | Agent connection | Selected Jira project or Slack channel |
+
+Create the instance through the wizard, configure the two role paths, and test entry as the intended operator. Then exercise a small source query under the actual data role. The context and task chapters describe the remaining controls. This configuration model should be read on its own terms rather than populated with facilities available in another AWS service. [FS502] [FS509]
+
+## 03. Organizational knowledge and conversation context
+
+Uploaded files, retained preferences, and compaction are three different context mechanisms.
+
+### F-M02 — Context-file preparation and management
+
+Reference files let the agent interpret account identifiers and costs in the organization’s terms. Their value depends on curation: a small current ownership mapping is more useful than a collection of contradictory copies. The operator maintains these files and decides which versions are active.
+
+The Context files workspace accepts text, CSV, JSON, Markdown, HTML and YAML. The documented file limit is 10 MB; total context storage is 100 MB per agent by default. The agent can read these files but cannot modify or delete them through conversation. Users who can access the agent can see its context files. [FS04] [FS10]
+
+**Procedure:** prepare a minimal, non-sensitive authoritative mapping, upload it through Context files, inspect its active state, and ask a question whose answer depends on one known entry. Delete/restore through the workspace when changing availability. Deletion is reversible soft deletion, not proof of physical erasure. [FS04]
+
+**Original example:**
+
+```yaml
+schema: team-routing-v1
+updated: 2026-10-22
+accounts:
+  staging-account-alias:
+    owner: platform-team
+    cost_basis: UnblendedCost
+    publication: internal-test-channel-only
+```
+
+Use the identifiers actually available in your authorized queries; this alias is illustrative. Keep the source file under review in Git and upload a reviewed revision. A stale ownership mapping can produce the wrong destination even when the cost arithmetic is correct. A file statement about publication is prompt context, not a replacement for destination access controls.
+
+### F-M03 — Persistent preferences and corrections
+
+Persistent memory allows a later session to use preferences and corrections supplied earlier. For example, a team may specify the owner of a set of accounts, a preferred reporting breakdown, or a recommendation category that needs special treatment. The service can retain that context and apply it to later questions or tasks. This is a different path from uploading an account-mapping file, and it is different again from summarizing old messages within one long conversation. [FS04]
+
+The persistence boundary is the agent instance. The data-protection guide describes context and memory files in encrypted AWS-managed storage, loaded at session start into an isolated ephemeral runtime. Conversation and task records are retained alongside their own execution records. The guide does not establish a shared memory across instances or an automatic precedence rule that resolves conflicting statements in a file and a remembered preference. [FS08]
+
+Operators manage conversational memory by asking the agent to remember, update, or forget a specific fact. Uploads remain operator-maintained files: a request to forget a preference is not an edit to a CSV containing the same information. When ownership changes, identify which representation is authoritative, update the file where appropriate, and correct the retained preference separately. Earlier reports remain historical artifacts rather than being silently rewritten. [FS04] [FS08]
+
+A useful acceptance exercise uses a harmless preference, such as placing the comparison table before commentary. Set it, start a new conversation, and check whether it is applied. Correct or forget it and repeat. Test file retrieval with a different known fact. These observations distinguish successful application of retained context from an assumption about hidden model state. The procedure is a proposed test, not a result observed in an AWS account.
+
+Recovery is object-specific. A soft-deleted context file can be restored through its workspace; memory can be corrected conversationally; earlier conversations and task records have the documented preview retention restrictions. None of these controls proves a general backup-and-restore capability for an entire instance. F-M07 describes the supported lifecycle actions. [FS08]
+
+### F-M04 — Conversation summarization and context limits
+
+A long conversation has a different lifecycle from persistent memory. As earlier messages are summarized, the session preserves a condensed working context rather than every word of the exchange. Important comparison assumptions should therefore remain explicit in the current task and its authoritative reference material.
+
+As a conversation approaches its context limit, older messages are summarized while recent messages remain in full. This is within-conversation context management, distinct from persistent memory and uploaded files. The documentation does not promise verbatim retention or expose a general customer setting for the summarization algorithm. [FS04]
+
+**Engineering procedure:** put critical constraints in a concise current task specification and reference the authoritative file or source record. When resuming a long conversation, ask the agent to restate the comparison basis and unresolved questions, then correct any discrepancy before requesting another calculation. This tests retained context; it does not prove that every earlier message remains available.
+
+## 04. Task invocation and automation
+
+Explicit requests, schedules, and supported anomaly events create work through different start conditions.
+
+### F-03 — Tasks, schedules, and execution history
+
+Tasks provide execution records for requested work. Automations are definitions that create tasks later, either on a schedule or from a supported event. Their separate lifecycles explain why stopping future task creation does not remove a result that already exists.
+
+A task is an execution record. An automation is a rule for creating future tasks. On-demand, scheduled and event-triggered work shares the queue. Asking a conversational question is not necessarily a request to create a durable task; task creation should be explicit. [FS05]
+
+**On-demand procedure:** use the Tasks workspace or explicitly request a task, give its input scope and desired output, and inspect the resulting task. Check pending/running/completed or failure information and resulting artifacts. Do not treat a conversational acknowledgement as evidence that execution has finished. [FS05]
+
+**Scheduled procedure:** define the required schedule and reporting window separately. Inspect the saved automation's trigger and next applicable execution information. For a daily report, a schedule time does not define whether the report covers the previous calendar day, rolling 24 hours or incomplete current day; specify the window. Removing the automation prevents future tasks but does not remove previously created tasks or published messages. [FS05] [FS08]
+
+### F-M05 — Anomaly events and task creation
+
+An anomaly event is the beginning of an investigation path, not its conclusion. The monitor produces the event, a managed rule and matching automation create work, and the task queue records execution. Publication follows only after a result exists and the destination path succeeds.
+
+The documented event path is Cost Anomaly Detection → managed EventBridge rule → matching automation → task queue → analysis/result. During the reviewed preview, the event type is `COST_ANOMALY`; this does not establish an arbitrary customer-event orchestration platform. [FS05] [FS07]
+
+**Enablement procedure:**
+
+1. Configure a relevant Cost Anomaly Detection monitor and ensure the agent role can manage the service's EventBridge rules.
+2. Connect any intended reporting destination using F-05. Set the destination before enabling automatic publication.
+3. Request an automation naming the monitor/conditions and the intended investigation and output. Treat threshold values in example prompts as proposed configuration, not service defaults.
+4. Open Automations and inspect the stored trigger type, status and last-triggered information. Inspect the created task separately after a matching event.
+5. For a test, trace event identity, automation, task, result and external message. Then disable or remove the automation and verify that new matching work stops; existing tasks need separate handling.
+
+AWS's IAM examples constrain rule management using service ownership and account conditions. Do not replace those conditions with broad EventBridge administration merely because task creation failed. [FS03] [FS07]
+
+**Failure branch:** a registered automation with no task can mean there was no matching event, the monitor/condition is wrong, or rule permissions failed. A completed task with no message is a different destination/publication problem. Preserve these distinctions during diagnosis.
+
+## 05. Data-source and collaboration integrations
+
+AWS evidence sources and Jira/Slack destinations are configured for different operations.
 
 ### F-08 — Supported data sources and publication destinations
 
@@ -80,24 +177,79 @@ Jira and Slack each use an account-level registration plus a connection owned by
 
 Test the paths separately. First reproduce a small cost query with known dates and dimensions. Then inspect a recommendation from its upstream source. Finally publish a non-sensitive test result to the intended destination and inspect where it arrived. A failed Slack post is not repaired by widening cost-data access. A missing CloudTrail event does not invalidate arithmetic that was reproduced independently, but it does limit the causal explanation.
 
-### F-02 — Administrator, service, and operator permissions
+### F-05 — Jira projects and Slack channel connections
 
-FinOps setup separates the person who administers the service, the identity used for data access, and the people who use the web application. A successful setup performed by an administrator does not prove that a regular operator can enter the agent or that the agent can read every required cost source.
+Publication starts with a registered provider and an agent-specific destination. The registration establishes authorization to a Jira site or Slack workspace. The connection selects the project or channel used by one agent, so its state and audience must be checked separately from registration.
 
-AWS distinguishes administrator setup permissions, the agent's data policy, the operator role policy, and the web-app user's own access policy. They are not four names for the same permission set. [FS03]
-
-| Responsibility | Attached to / used by | What to verify |
+| Layer | Jira | Slack |
 |---|---|---|
-| Setup administration | Setup identity | May create/configure the service and permitted roles/integrations |
-| Agent data access | Role assumed by the service | Actual source-service actions, account scope and required EventBridge permissions |
-| Operator session | Operator role | Supported conversation, task, document and operator operations |
-| Web-app entry | End-user identity | May access the configured agent through the supported route |
+| Account registration | Supported Jira Cloud authorization flow | Workspace authorization |
+| Agent connection | Selected Jira space/project key | Channel ID; application already added to that channel |
+| Supported effects | Create issues; supported reads/comments | One-way posting and supported artifact sharing |
+| Do not assume | On-premises support or arbitrary issue/workflow editing | Reading channel conversations, responding to mentions, editing/deleting posts |
 
-The setup path uses roles trusted by `finops-agent.amazonaws.com`. Automatically created roles include service-specific scoping. For existing roles, use the official trust and permission examples and adapt them to the intended account and instance. A role name cannot establish what actions its policy permits. [FS02] [FS03]
+Register the integration, complete authorization, then add the agent-specific connection and confirm its status. Inspect Pending/Active/Error/Inactive states rather than relying on the connection's name. An invalid Jira destination in unattended execution can fail instead of producing a clarifying conversation. A Slack membership error requires adding the app to the intended channel, not granting unrelated AWS permissions. [FS12] [FS13]
 
-**Creation procedure:** complete the wizard's name, agent access, operator access, optional third-party integrations, and review steps. Open the agent from the console, inspect its connections, and test an authorized cost query. Then test the intended non-administrator user. Success for the setup identity does not prove team access. [FS02]
+**Engineering procedure:** use designated test destinations, post a non-sensitive test result and record its actual location. Confirm that only the intended users can see it. API retries described in the integration guide address transient failures; they do not turn a permission or invalid-destination error into a successful publication.
 
-**Dependency review:** enable the cost/recommendation services required for the selected task and inspect whether the role permits the relevant APIs. For example, missing `cloudtrail:LookupEvents` removes an operational-change input without necessarily disabling Cost Explorer questions. Removing write access to customer infrastructure does not mean that Jira/Slack publishing is disabled; those effects follow separate integration rules. [FS03] [FS06]
+## 06. Service access and data location
+
+Service interfaces, persistent storage location, and inference geography are distinct properties.
+
+### F-12 — Service access, storage location, and inference
+
+FinOps Agent accesses the AWS sources and supported collaboration services described in F-08. The source-service permissions and destination connection establish the available interfaces. The reviewed guide does not expose the DevOps private-tool resource-gateway configuration, so this chapter does not invent a VPC connection object for FinOps Agent. [FS501] [FS509]
+
+During the documented preview, persistent agent data is stored in `us-east-1`. Bedrock inference can take place in other US Regions. Storage location and inference location are separate properties and must both be considered when evaluating organizational data-location requirements. [FS505] [FS508]
+
+Review the permitted input content before uploading it. Anyone with access to the agent can see its context files. An account-to-owner mapping is reference data, not an integration credential; credential values belong in the provider's supported authorization configuration. [FS504]
+
+## 07. Execution runtime and publication control
+
+Task queueing and session execution precede destination-specific publication controls.
+
+### F-13 — Queued execution and session runtime
+
+A direct question can be answered in the conversation. An explicit task request creates separately recorded work in the shared queue. Scheduled and event automations also create tasks. Queueing is the execution mechanism; the saved automation defines when and with which instructions that work is created. [FS503]
+
+Persistent files and memory are separate from the ephemeral session runtime into which context is loaded. Instances do not share files, memory, or task queues. Session termination is therefore not the deletion operation for the persistent context. F-M07 describes object-specific removal and retention. [FS505]
+
+Inspect task history for the requested source calls, results, and supported publication actions. Distinguish work that was not created, work waiting in the queue, analysis failure, and publication failure. These are diagnostic observations rather than an invented API status enumeration. [FS503]
+
+Cancel current work through the supported control, and disable or remove the automation separately to prevent future work. Cancellation does not withdraw an external message that has already been published. [FS503] [FS505]
+
+### F-M06 — Publication permissions and approvals
+
+Publication authorization depends on both the destination and the way work was initiated. An unattended automation can carry authorization established during setup, while an interactive Jira action requests approval. Slack posting follows a different documented behavior, so a single blanket approval statement would be misleading.
+
+| Effect | Chat / on-demand task | Scheduled / event task |
+|---|---|---|
+| Jira issue or comment | Approval requested | Pre-authorized through automation setup |
+| Slack post | No approval prompt | No approval prompt |
+
+These are documented differences, not one universal human-approval rule. Automation setup is therefore an authorization decision as well as a scheduling decision. Connected destinations and supplied context must be appropriate for unattended publication. [FS06] [FS05]
+
+**Proposed verification:** in test destinations, record the requested action, invocation type, observed prompt or lack of prompt, and the resulting artifact. A successful Slack post does not demonstrate Jira approval behavior. Removing a future schedule does not retract a previously published message.
+
+## 08. Managed analytical functions
+
+Historical analysis, forecasting, coverage, anomaly inquiry, and recommendation analysis use different source results.
+
+### F-14 — Cost inquiry, anomaly investigation, and recommendation analysis
+
+The managed analytical functions consume different source-service results. Cost Explorer answers historical cost/usage, forecast, and commitment-coverage questions. Cost Anomaly Detection identifies a deviation for investigation. Cost Optimization Hub and Compute Optimizer supply optimization recommendations. CloudTrail records API activity that can help evaluate a possible explanation. [FS501]
+
+| Analytical function | Result to interpret |
+|---|---|
+| Historical cost and usage | Amounts under specified dates, metric, filters, and dimensions |
+| Forecast review | A source forecast with a stated horizon and assumptions |
+| Commitment coverage | Coverage under the selected commitment type and eligible usage scope |
+| Anomaly investigation | Reconciled cost drivers and evidence for candidate causes |
+| Recommendation analysis | Upstream candidates and savings estimates interpreted against workload context |
+
+These are supported analytical functions. A weekly cost report or a team optimization review is a use case that combines them with retained context, automation, or publication. Retrieving a savings estimate is not applying a resource change or measuring realized savings. [FS501] [FS06]
+
+The causal inquiry starts after reconciling the numerical comparison. A matching CloudTrail event can support a hypothesis, but the query basis and workload evidence must establish how much of the movement it explains. F-M01 gives the source-query procedure, and F-U01 supplies the synthetic decomposition example.
 
 ### F-M01 — Cost queries and recommendation provenance
 
@@ -123,425 +275,17 @@ aws ce get-cost-and-usage \
 
 The end date is exclusive. This example deliberately has no account, Region or tag filters; add the same approved filters used in the agent question before comparing results. Cost Explorer availability, permissions and API charges still apply. The command was not executed here and must not be compared to a differently scoped agent total. [FS14]
 
-<!-- mechanism-review:start F-M01 -->
+## 09. Interaction surfaces and report artifacts
 
-#### MX-F-QUERY — Source-backed cost analysis
+Conversations, task history, report generation, and external publication expose different outputs.
 
-The agent queries the service that owns the requested evidence. Historical cost, forecasts, commitment coverage, anomaly records, optimization recommendations and change events are different inputs. Combining them in one conversation does not turn projected savings into observed spend. [FS401] [FS407]
+### F-15 — Conversation, task history, and artifact interfaces
 
-The analytical result must preserve the query basis. First reconcile amounts, then examine operational evidence for an explanation. A nearby change event is a lead; numerical contribution and causal attribution remain different claims. [FS401] [FS407]
+The web application exposes conversation, Tasks, Automations, Context files, and Artifacts as different working areas. A conversation supports immediate questions. Tasks expose separately executed work. Automations define future starts. Artifacts retain generated reports. The administrative console configures the instance and access. [FS502] [FS503] [FS504] [FS507]
 
-**Inputs.** Question, dates, cost metric, scope, dimensions, currency and permissions to the relevant source service.
+Report artifacts can originate in a conversation or a task. A follow-up request can revise a report; preserve the period, metric, and source scope when the requested revision concerns only format. F-04 describes report generation and supported output forms. [FS507]
 
-**Configuration**
-
-1. **Source — Permitted source evidence.** Enable required upstream services and inspect the agent data role.
-2. **Query — Explicit analytical basis.** State complete periods, metric, filters and grouping.
-3. **Interpretation — Provenance of the returned value.** Identify which source supplied a forecast, anomaly or recommendation.
-
-[FS401] [FS407]
-
-**Lifecycle and operator actions**
-
-| Initial condition | Operation or event | Result |
-|---|---|---|
-| Question submitted | Query upstream service | Source result or access failure returned. |
-| Scope changed | Run a new query | New result is not comparable unless the basis is reconciled. |
-| Recommendation retrieved | Contextualize for owner review | No infrastructure change is authorized by retrieval. |
-
-**Constraints.** The service summarizes recommendations from optimization services; it does not independently calculate its own underlying optimization analysis.
-
-**Inspection points.** Returned figures, query basis and source/tool evidence.
-
-**Implementation limits.** The source guides do not specify the query-planning algorithm. Queries with different dates, metrics or filters are not directly comparable.
-
-**Verification procedure (proposed)**
-
-1. Use the supplied synthetic cost fixture or a read-only query in an authorized account.
-2. Reconcile components to the total under identical periods and metric.
-3. Change metric or period deliberately; identify why the totals are not comparable.
-
-**Source mapping**
-
-| Reference | Documentation section | Supported behavior |
-|---|---|---|
-| [FS401] | Related services | Cost Explorer, anomaly detection, optimization services and CloudTrail supply distinct evidence. |
-| [FS407] | Generative AI accuracy considerations | Recommendations are upstream analysis; anomaly causality remains investigative. |
-
-<!-- mechanism-review:end F-M01 -->
-
-### F-05 — Jira projects and Slack channel connections
-
-Publication starts with a registered provider and an agent-specific destination. The registration establishes authorization to a Jira site or Slack workspace. The connection selects the project or channel used by one agent, so its state and audience must be checked separately from registration.
-
-| Layer | Jira | Slack |
-|---|---|---|
-| Account registration | Supported Jira Cloud authorization flow | Workspace authorization |
-| Agent connection | Selected Jira space/project key | Channel ID; application already added to that channel |
-| Supported effects | Create issues; supported reads/comments | One-way posting and supported artifact sharing |
-| Do not assume | On-premises support or arbitrary issue/workflow editing | Reading channel conversations, responding to mentions, editing/deleting posts |
-
-Register the integration, complete authorization, then add the agent-specific connection and confirm its status. Inspect Pending/Active/Error/Inactive states rather than relying on the connection's name. An invalid Jira destination in unattended execution can fail instead of producing a clarifying conversation. A Slack membership error requires adding the app to the intended channel, not granting unrelated AWS permissions. [FS12] [FS13]
-
-**Engineering procedure:** use designated test destinations, post a non-sensitive test result and record its actual location. Confirm that only the intended users can see it. API retries described in the integration guide address transient failures; they do not turn a permission or invalid-destination error into a successful publication.
-
-## 03. Organizational knowledge and session context
-
-Uploaded mappings, retained preferences, and summarized conversations are different representations of organizational context. The operator must know which representation to correct.
-
-### F-M02 — Context-file preparation and management
-
-Reference files let the agent interpret account identifiers and costs in the organization’s terms. Their value depends on curation: a small current ownership mapping is more useful than a collection of contradictory copies. The operator maintains these files and decides which versions are active.
-
-The Context files workspace accepts text, CSV, JSON, Markdown, HTML and YAML. The documented file limit is 10 MB; total context storage is 100 MB per agent by default. The agent can read these files but cannot modify or delete them through conversation. Users who can access the agent can see its context files. [FS04] [FS10]
-
-**Procedure:** prepare a minimal, non-sensitive authoritative mapping, upload it through Context files, inspect its active state, and ask a question whose answer depends on one known entry. Delete/restore through the workspace when changing availability. Deletion is reversible soft deletion, not proof of physical erasure. [FS04]
-
-**Original example:**
-
-```yaml
-schema: team-routing-v1
-updated: 2026-10-22
-accounts:
-  staging-account-alias:
-    owner: platform-team
-    cost_basis: UnblendedCost
-    publication: internal-test-channel-only
-```
-
-Use the identifiers actually available in your authorized queries; this alias is illustrative. Keep the source file under review in Git and upload a reviewed revision. A stale ownership mapping can produce the wrong destination even when the cost arithmetic is correct. A file statement about publication is prompt context, not a replacement for destination access controls.
-
-<!-- mechanism-review:start F-M02 -->
-
-#### MX-F-FILES — Uploaded reference-file use
-
-Uploaded context is maintained outside the conversation. The agent can read the file but cannot rewrite or delete it by conversational instruction. A request to forget a preference therefore does not modify a conflicting account-owner mapping in an uploaded file. [FS402] [FS403]
-
-Soft deletion removes a file from active context and Restore makes it active again. This is a documented reversible lifecycle for files, not a claim that every other retained object supports restoration. [FS402] [FS403]
-
-**Inputs.** Approved non-sensitive organization mapping or report convention in a supported active file.
-
-![Uploaded reference-file use: state and control paths](../assets/diagrams/mechanism-finops-context.svg)
-
-**Configuration**
-
-1. **Upload — Instance-visible reference.** Context files workspace: upload TXT, CSV, JSON, Markdown, HTML or YAML within documented size limits.
-2. **Maintain — Team-managed content.** Update the governed source and intentionally replace the active uploaded representation.
-3. **Deactivate/restore — File availability.** Delete soft-deletes; Restore reactivates.
-
-[FS402] [FS403]
-
-**Lifecycle and operator actions**
-
-| Initial condition | Operation or event | Result |
-|---|---|---|
-| Active file | Delete | Soft-deleted; removed from active context. |
-| Soft-deleted file | Restore | Available again. |
-| Similar fact retained in memory | Edit file | Memory is a separate representation and may need separate correction. |
-
-**Constraints.** Files are visible to users with access to the agent. Do not upload credentials or sensitive personal information.
-
-**Inspection points.** File state and correct application of a known identifier mapping.
-
-**Implementation limits.** File-versus-memory precedence and exact internal retrieval ranking are not specified.
-
-**Verification procedure (proposed)**
-
-1. Upload a harmless mapping for a fictitious account label.
-2. Ask a question requiring that mapping and inspect attribution.
-3. Soft-delete it and test again; restoring the file is distinct from remembering a new preference.
-
-**Source mapping**
-
-| Reference | Documentation section | Supported behavior |
-|---|---|---|
-| [FS402] | Supported file types; Manage context files | Files are agent-read-only, size-limited and support soft deletion/restoration. |
-| [FS403] | Managing your data | File removal and other object lifecycles differ. |
-
-<!-- mechanism-review:end F-M02 -->
-
-### F-M03 — Persistent preferences and corrections
-
-Persistent memory allows a later session to use preferences and corrections supplied earlier. For example, a team may specify the owner of a set of accounts, a preferred reporting breakdown, or a recommendation category that needs special treatment. The service can retain that context and apply it to later questions or tasks. This is a different path from uploading an account-mapping file, and it is different again from summarizing old messages within one long conversation. [FS04]
-
-The persistence boundary is the agent instance. The data-protection guide describes context and memory files in encrypted AWS-managed storage, loaded at session start into an isolated ephemeral runtime. Conversation and task records are retained alongside their own execution records. The guide does not establish a shared memory across instances or an automatic precedence rule that resolves conflicting statements in a file and a remembered preference. [FS08]
-
-Operators manage conversational memory by asking the agent to remember, update, or forget a specific fact. Uploads remain operator-maintained files: a request to forget a preference is not an edit to a CSV containing the same information. When ownership changes, identify which representation is authoritative, update the file where appropriate, and correct the retained preference separately. Earlier reports remain historical artifacts rather than being silently rewritten. [FS04] [FS08]
-
-A useful acceptance exercise uses a harmless preference, such as placing the comparison table before commentary. Set it, start a new conversation, and check whether it is applied. Correct or forget it and repeat. Test file retrieval with a different known fact. These observations distinguish successful application of retained context from an assumption about hidden model state. The procedure is a proposed test, not a result observed in an AWS account.
-
-Recovery is object-specific. A soft-deleted context file can be restored through its workspace; memory can be corrected conversationally; earlier conversations and task records have the documented preview retention restrictions. None of these controls proves a general backup-and-restore capability for an entire instance. F-M07 describes the supported lifecycle actions. [FS08]
-
-<!-- mechanism-review:start F-M03 -->
-
-#### MX-F-MEMORY — Cross-session preference retention
-
-Conversational memory retains preferences and corrections for later work in the same instance. It is not the current conversation transcript and is not an uploaded file. An explicit remember, update or forget instruction targets this retained representation. [FS402] [FS403]
-
-Test it across sessions rather than immediately repeating the fact in the same conversation. Also inspect whether an active reference file supplies the same information; otherwise successful file use can be mistaken for memory recall. [FS402] [FS403]
-
-**Inputs.** Conversation preferences, corrections, task outcomes, and explicit requests to remember, update or forget information within the instance.
-
-**Configuration**
-
-1. **Write/update — Persistent conversational context.** Ask the agent to remember or update one non-sensitive preference.
-2. **Remove — Memory update, not history deletion.** Ask it to forget the specific retained fact.
-3. **Verify — Cross-session behavior.** Use a later session without restating the test fact.
-
-[FS402] [FS403]
-
-**Lifecycle and operator actions**
-
-| Initial condition | Operation or event | Result |
-|---|---|---|
-| Preference supplied | Remember/update | Retained context can influence later work. |
-| Preference retained | Forget | Memory is updated in place. |
-| Session ends | Start later session | Persistent instance data is separate from ephemeral runtime. |
-
-**Constraints.** Each instance isolates its retained content; no shared organization-wide memory is inferred.
-
-**Inspection points.** Observed later use of a controlled fact, qualified when no direct memory-inspection evidence is exposed.
-
-**Implementation limits.** Internal schema, selection precedence and complete deletion of historical conversation occurrences are not established by a forget request.
-
-**Verification procedure (proposed)**
-
-1. Use a fictitious reporting preference absent from uploaded files.
-2. Test a later session, then change the preference and test again.
-3. Forget it; do not claim that earlier reports or conversation history were erased.
-
-**Source mapping**
-
-| Reference | Documentation section | Supported behavior |
-|---|---|---|
-| [FS402] | Agent memory across sessions | Remember, update and forget govern retained preferences/corrections. |
-| [FS403] | Data isolation; Managing your data | Instance isolation and memory updates differ from conversation retention. |
-
-<!-- mechanism-review:end F-M03 -->
-
-### F-M04 — Conversation summarization and context limits
-
-A long conversation has a different lifecycle from persistent memory. As earlier messages are summarized, the session preserves a condensed working context rather than every word of the exchange. Important comparison assumptions should therefore remain explicit in the current task and its authoritative reference material.
-
-As a conversation approaches its context limit, older messages are summarized while recent messages remain in full. This is within-conversation context management, distinct from persistent memory and uploaded files. The documentation does not promise verbatim retention or expose a general customer setting for the summarization algorithm. [FS04]
-
-**Engineering procedure:** put critical constraints in a concise current task specification and reference the authoritative file or source record. When resuming a long conversation, ask the agent to restate the comparison basis and unresolved questions, then correct any discrepancy before requesting another calculation. This tests retained context; it does not prove that every earlier message remains available.
-
-<!-- mechanism-review:start F-M04 -->
-
-#### MX-F-COMPACT — Conversation compaction
-
-Compaction changes the context supplied to continued conversation. Older material is summarized while recent messages remain in full. It preserves a working representation of key decisions, not a verbatim copy of every earlier turn. [FS402]
-
-Keep a material cost question explicit after a long exchange: period, metric, filters and unresolved assumptions. Restating those choices is an engineering safeguard, not a control that changes the undocumented compaction algorithm. [FS402]
-
-**Inputs.** Growing conversation approaching the model context window.
-
-**Configuration**
-
-1. **Enablement — Service-managed context handling.** Automatic; no administrator threshold or manual compaction switch is established by the cited guide.
-2. **Operational practice — Team verification procedure.** Restate critical query constraints and reference authoritative outputs.
-
-[FS402]
-
-**Lifecycle and operator actions**
-
-| Initial condition | Operation or event | Result |
-|---|---|---|
-| Context grows | Approaches context limit | Older portions summarized. |
-| Compacted context | Conversation continues | Recent messages and summary guide subsequent work. |
-| Detail missing | Reconstruct from authoritative record | Do not infer verbatim recall from a fluent answer. |
-
-**Constraints.** Compaction is not durable preference management or deletion of stored conversation history.
-
-**Inspection points.** Continued conversation and the constraints it actually applies; a direct compaction event may not be exposed.
-
-**Implementation limits.** Thresholds, summary-selection rules and lossless retention are not documented.
-
-**Verification procedure (proposed)**
-
-1. Use a non-sensitive long conversation with a recorded query contract.
-2. Check whether later analysis retains the period and metric.
-3. Where detail is missing, restore it explicitly and label compaction itself unobserved if no service signal exists.
-
-**Source mapping**
-
-| Reference | Documentation section | Supported behavior |
-|---|---|---|
-| [FS402] | Long conversation handling | Automatic summarization replaces older context while recent messages remain in full. |
-
-<!-- mechanism-review:end F-M04 -->
-
-## 04. Tasks, reporting, and data lifecycle
-
-Requests and automations create executions; executions produce results and artifacts. This chapter follows that sequence through publication and the supported retention controls.
-
-### F-03 — Tasks, schedules, and execution history
-
-Tasks provide execution records for requested work. Automations are definitions that create tasks later, either on a schedule or from a supported event. Their separate lifecycles explain why stopping future task creation does not remove a result that already exists.
-
-A task is an execution record. An automation is a rule for creating future tasks. On-demand, scheduled and event-triggered work shares the queue. Asking a conversational question is not necessarily a request to create a durable task; task creation should be explicit. [FS05]
-
-**On-demand procedure:** use the Tasks workspace or explicitly request a task, give its input scope and desired output, and inspect the resulting task. Check pending/running/completed or failure information and resulting artifacts. Do not treat a conversational acknowledgement as evidence that execution has finished. [FS05]
-
-**Scheduled procedure:** define the required schedule and reporting window separately. Inspect the saved automation's trigger and next applicable execution information. For a daily report, a schedule time does not define whether the report covers the previous calendar day, rolling 24 hours or incomplete current day; specify the window. Removing the automation prevents future tasks but does not remove previously created tasks or published messages. [FS05] [FS08]
-
-<!-- mechanism-review:start F-03 -->
-
-#### MX-F-TASK — Queued task execution and observation
-
-An ordinary question can be answered in the conversation. A task is created when explicitly requested or through an automation. The task has its own queue position, execution and output, so a chat acknowledgement is not completion evidence. [FS404] [FS403]
-
-All documented task types share a queue. Inspect whether work was never created, remains queued, failed during analysis or completed but failed to publish. Those failures require different actions. [FS404] [FS403]
-
-**Inputs.** Explicit task request or automation invocation, prompt and permitted data/context.
-
-**Configuration**
-
-1. **Create — Separate execution record.** Ask explicitly to create a task, or Tasks → Create tasks.
-2. **Observe — Work status and evidence.** Inspect Tasks/history and actual tool results.
-3. **Stop — Execution versus definition.** Use supported cancellation for current work; control recurring automation separately.
-
-[FS404] [FS403]
-
-**Lifecycle and operator actions**
-
-| Initial condition | Operation or event | Result |
-|---|---|---|
-| Task requested | Create record | Work enters the shared queue. |
-| Queued work | Execute | Tool results and output accumulate. |
-| Task cancelled | Inspect retained record | Cancellation does not delete task history. |
-
-**Constraints.** Cancelling work is not rollback of prior external publication.
-
-**Inspection points.** Task identity, execution status, source calls, outputs and separate delivery outcome.
-
-**Implementation limits.** Queue order, fairness, exactly-once processing and guaranteed cancellation of every in-flight action are not specified.
-
-**Verification procedure (proposed)**
-
-1. Create a report task using non-sensitive inputs with an explicit date range.
-2. Trace its identity from request to resulting output.
-3. Cancel controlled work and distinguish preserved history from a deleted task.
-
-**Source mapping**
-
-| Reference | Documentation section | Supported behavior |
-|---|---|---|
-| [FS404] | On-demand tasks | Tasks are explicit and run through a shared queue rather than blocking the conversation. |
-| [FS403] | Managing your data | Cancellation and record removal are different lifecycle operations. |
-
-#### MX-F-SCHEDULE — Scheduled task creation
-
-A recurring request creates an automation. Each eligible occurrence creates separate work; the automation is not the historical report. Keep the schedule and reporting basis distinct so a delayed task still queries the intended complete period. [FS404] [FS403]
-
-Disabling an automation controls future starts. Existing tasks and distributed artifacts retain their own lifecycle. When replacing recurring work, inspect old automations to avoid running both definitions unintentionally. [FS404] [FS403]
-
-**Inputs.** Recurring prompt, explicit schedule and timezone, observation-window rule and optional destination.
-
-**Configuration**
-
-1. **Create — Saved automation.** Describe the recurring work and schedule in conversation.
-2. **Inspect — Configuration confirmation.** Open Automations and confirm the actual saved schedule and prompt.
-3. **Disable/delete — Not cancellation/deletion of prior tasks.** Stop future occurrences through the automation control.
-
-[FS404] [FS403]
-
-**Lifecycle and operator actions**
-
-| Initial condition | Operation or event | Result |
-|---|---|---|
-| Automation active | Scheduled occurrence | A new task is created. |
-| Automation active | Disable | Future starts stop. |
-| Automation deleted | Inspect existing tasks/artifacts | Historical work remains independently retained. |
-
-**Constraints.** Unattended publication has destination-specific authorization; recurrence is not a universal approval bypass for unrelated actions.
-
-**Inspection points.** Automation configuration and individual task histories with their queried periods.
-
-**Implementation limits.** Exact missed-run and timezone-resolution behavior must be inspected; the guide does not establish a universal timing SLA.
-
-**Verification procedure (proposed)**
-
-1. Create a non-sensitive recurring report only after an on-demand trial.
-2. Inspect saved timing and the first task observation window.
-3. Disable the automation and confirm future creation stops without assuming prior artifacts disappear.
-
-**Source mapping**
-
-| Reference | Documentation section | Supported behavior |
-|---|---|---|
-| [FS404] | Scheduled tasks | Schedules create automations and new tasks; disabling/deleting stops recurring work. |
-| [FS403] | Managing your data | Automations and task records have distinct lifecycles. |
-
-<!-- mechanism-review:end F-03 -->
-
-### F-M05 — Anomaly events and task creation
-
-An anomaly event is the beginning of an investigation path, not its conclusion. The monitor produces the event, a managed rule and matching automation create work, and the task queue records execution. Publication follows only after a result exists and the destination path succeeds.
-
-The documented event path is Cost Anomaly Detection → managed EventBridge rule → matching automation → task queue → analysis/result. During the reviewed preview, the event type is `COST_ANOMALY`; this does not establish an arbitrary customer-event orchestration platform. [FS05] [FS07]
-
-**Enablement procedure:**
-
-1. Configure a relevant Cost Anomaly Detection monitor and ensure the agent role can manage the service's EventBridge rules.
-2. Connect any intended reporting destination using F-05. Set the destination before enabling automatic publication.
-3. Request an automation naming the monitor/conditions and the intended investigation and output. Treat threshold values in example prompts as proposed configuration, not service defaults.
-4. Open Automations and inspect the stored trigger type, status and last-triggered information. Inspect the created task separately after a matching event.
-5. For a test, trace event identity, automation, task, result and external message. Then disable or remove the automation and verify that new matching work stops; existing tasks need separate handling.
-
-AWS's IAM examples constrain rule management using service ownership and account conditions. Do not replace those conditions with broad EventBridge administration merely because task creation failed. [FS03] [FS07]
-
-**Failure branch:** a registered automation with no task can mean there was no matching event, the monitor/condition is wrong, or rule permissions failed. A completed task with no message is a different destination/publication problem. Preserve these distinctions during diagnosis.
-
-<!-- mechanism-review:start F-M05 -->
-
-#### MX-F-EVENT — Anomaly-event matching and task creation
-
-The event path begins in Cost Anomaly Detection. The service creates a managed rule, matches the configured condition and creates a task using the saved prompt. Analysis and delivery occur after task creation; they are not evidence that matching itself was correct. [FS405] [FS404]
-
-Trace the chain one object at a time. A monitor event with no task points toward rule or condition configuration. A completed analysis with no message points toward destination publication. Changing the analytical prompt does not repair an absent event subscription. [FS405] [FS404]
-
-**Inputs.** Cost Anomaly Detection monitor, required managed EventBridge permissions, condition, response prompt and optional destination.
-
-![Anomaly-event matching and task creation: state and control paths](../assets/diagrams/mechanism-finops-publication.svg)
-
-**Configuration**
-
-1. **Prerequisites — Event source and managed-rule authority.** Configure a monitor and the agent-role EventBridge permissions.
-2. **Automation — COST_ANOMALY trigger and prompt.** Describe monitor/scope, threshold and desired response in Chat.
-3. **Verification — End-to-end observation.** Inspect automation status, last-triggered information, created task and destination result.
-
-[FS405] [FS404]
-
-**Lifecycle and operator actions**
-
-| Initial condition | Operation or event | Result |
-|---|---|---|
-| Matching event arrives | Automation matches | Task created in the queue. |
-| Task completes | Optional publication | Delivery has its own outcome. |
-| Automation disabled/deleted | Future event arrives | No future task from that automation; old records remain. |
-
-**Constraints.** The documented preview event source is Cost Anomaly Detection, not arbitrary events. External publication requires its configured destination.
-
-**Inspection points.** Monitor/event identity, automation, task, source analysis and any actual message.
-
-**Implementation limits.** Event deduplication keys, ordering and universal delivery/retry guarantees are not established.
-
-**Verification procedure (proposed)**
-
-1. Use a controlled event fixture for tabletop tracing; do not manufacture production spend.
-2. Verify all chain identities against available service records during an authorized test.
-3. A missing message must be localized to absent task, failed analysis or failed delivery rather than reported as one undifferentiated error.
-
-**Source mapping**
-
-| Reference | Documentation section | Supported behavior |
-|---|---|---|
-| [FS405] | Prerequisites; Verify and manage the automation | Monitor, managed-rule permissions and saved condition create a traceable automation/task path. |
-| [FS404] | Event-based tasks | The supported preview trigger is a cost-anomaly event. |
-
-<!-- mechanism-review:end F-M05 -->
+Jira and Slack are external publication surfaces, not a shared conversation store. Their permitted operations and approval rules differ. A completed source analysis and successful external publication should be inspected separately through the available task record and the destination. [FS506]
 
 ### F-04 — Report generation and artifact management
 
@@ -553,155 +297,28 @@ The service supports report artifacts including HTML, PDF and presentation forma
 
 The artifact store has a separate default quota from context-file storage. Deleting an artifact does not necessarily delete external copies previously posted to a collaboration system. [FS10] [FS08]
 
-<!-- mechanism-review:start F-04 -->
+## 10. Administration, retention, and limits
 
-#### MX-F-ARTIFACT — Report generation and revision
+Role permissions, retained-data operations, and failure diagnosis must be applied to the correct object.
 
-Report generation retrieves source data, builds the requested presentation and returns an artifact. A visual quality pass concerns presentation defects; it is not an independent reconciliation of the underlying financial interpretation. [FS406] [FS403]
+### F-02 — Administrator, service, and operator permissions
 
-A follow-up can revise the artifact. Keep the analytical basis explicit when revising it: changing a title or chart layout should not silently change period, cost metric or grouping. [FS406] [FS403]
+FinOps setup separates the person who administers the service, the identity used for data access, and the people who use the web application. A successful setup performed by an administrator does not prove that a regular operator can enter the agent or that the agent can read every required cost source.
 
-**Inputs.** Cost-report request, authorized source access, query parameters, output format and optional report template.
+AWS distinguishes administrator setup permissions, the agent's data policy, the operator role policy, and the web-app user's own access policy. They are not four names for the same permission set. [FS03]
 
-**Configuration**
-
-1. **Request — Artifact instruction.** Specify report audience, source period, metric, required sections and supported format; default is HTML.
-2. **Inspect — Output review.** Open/download from Artifacts and compare figures to source results.
-3. **Revise — Revision intent.** Reference the existing report in a follow-up and state whether the query basis may change.
-
-[FS406] [FS403]
-
-**Lifecycle and operator actions**
-
-| Initial condition | Operation or event | Result |
+| Responsibility | Attached to / used by | What to verify |
 |---|---|---|
-| Analysis available | Generate report | Artifact delivered. |
-| Artifact exists | Request revision | Updated presentation can be produced. |
-| Service artifact removed | External copies remain | Downloaded or published copies require separate handling. |
+| Setup administration | Setup identity | May create/configure the service and permitted roles/integrations |
+| Agent data access | Role assumed by the service | Actual source-service actions, account scope and required EventBridge permissions |
+| Operator session | Operator role | Supported conversation, task, document and operator operations |
+| Web-app entry | End-user identity | May access the configured agent through the supported route |
 
-**Constraints.** Formatting and completion status do not establish numerical accuracy; distribution is a separate effect.
+The setup path uses roles trusted by `finops-agent.amazonaws.com`. Automatically created roles include service-specific scoping. For existing roles, use the official trust and permission examples and adapt them to the intended account and instance. A role name cannot establish what actions its policy permits. [FS02] [FS03]
 
-**Inspection points.** Report artifact and its source conversation or task. Record the query parameters and output identity used for reconciliation.
+**Creation procedure:** complete the wizard's name, agent access, operator access, optional third-party integrations, and review steps. Open the agent from the console, inspect its connections, and test an authorized cost query. Then test the intended non-administrator user. Success for the setup identity does not prove team access. [FS02]
 
-**Implementation limits.** An immutable artifact-version API and universal external-copy deletion are not established by the report guide.
-
-**Verification procedure (proposed)**
-
-1. Generate a report from the small supplied synthetic cost fixture.
-2. Reconcile displayed components and totals to the fixture.
-3. Revise layout only and verify that period, metric and numbers did not change.
-
-**Source mapping**
-
-| Reference | Documentation section | Supported behavior |
-|---|---|---|
-| [FS406] | Generating cost reports | Reports are artifacts, default to HTML and can be revised through follow-up. |
-| [FS403] | Managing your data | Artifacts and other retained objects have distinct controls. |
-
-<!-- mechanism-review:end F-04 -->
-
-### F-M06 — Publication permissions and approvals
-
-Publication authorization depends on both the destination and the way work was initiated. An unattended automation can carry authorization established during setup, while an interactive Jira action requests approval. Slack posting follows a different documented behavior, so a single blanket approval statement would be misleading.
-
-| Effect | Chat / on-demand task | Scheduled / event task |
-|---|---|---|
-| Jira issue or comment | Approval requested | Pre-authorized through automation setup |
-| Slack post | No approval prompt | No approval prompt |
-
-These are documented differences, not one universal human-approval rule. Automation setup is therefore an authorization decision as well as a scheduling decision. Connected destinations and supplied context must be appropriate for unattended publication. [FS06] [FS05]
-
-**Proposed verification:** in test destinations, record the requested action, invocation type, observed prompt or lack of prompt, and the resulting artifact. A successful Slack post does not demonstrate Jira approval behavior. Removing a future schedule does not retract a previously published message.
-
-<!-- mechanism-review:start F-M06 -->
-
-#### MX-F-JIRA — Invocation-dependent Jira approval
-
-Jira approval depends on how the action starts. Chat and on-demand tasks present issue/comment details for confirmation; a scheduled or event automation uses authorization established during setup. The same destination does not imply the same per-run approval behavior. [FS407] [FS408]
-
-After approval or preauthorization, inspect the actual external record. A successful analysis is not a successful issue creation, and a retry after an uncertain response can create duplicates unless the operator checks the existing project records. [FS407] [FS408]
-
-**Inputs.** Account Jira registration, per-instance project connection, supported action, payload and invocation mode.
-
-**Configuration**
-
-1. **Connect — Project scope.** Authorize the Jira Cloud integration, then bind the approved project to this instance.
-2. **Interactive action — Per-action decision.** Review project, issue/comment body and target shown for approval.
-3. **Automation action — Setup-time authorization.** Review action and audience before enabling recurrence/event handling.
-
-[FS407] [FS408]
-
-**Lifecycle and operator actions**
-
-| Initial condition | Operation or event | Result |
-|---|---|---|
-| Interactive request | Confirm/revise action | Supported publication can execute. |
-| Automation configured | Matching invocation | Publication executes without a per-run approval prompt. |
-| Publication uncertain | Inspect destination before retry | Avoid assuming an unobserved response means no issue exists. |
-
-**Constraints.** Supported actions do not include arbitrary issue-field changes, deletion or Jira workflow management.
-
-**Inspection points.** Actual issue/comment, intended project and task action history.
-
-**Implementation limits.** Exactly-once external publication and automatic duplicate suppression are not documented.
-
-**Verification procedure (proposed)**
-
-1. Use a restricted Jira Cloud test project and non-sensitive payload.
-2. Compare interactive approval with a separately reviewed automation test.
-3. Deny project access and verify a publication failure does not erase or falsely complete the analysis record.
-
-**Source mapping**
-
-| Reference | Documentation section | Supported behavior |
-|---|---|---|
-| [FS407] | Jira issue creation and comment addition | Approval differs between interactive/on-demand and automated invocation. |
-| [FS408] | Integration model; Capabilities | Project connections and supported actions limit the effect. |
-
-#### MX-F-SLACK — Direct Slack publication
-
-Slack publication is one-way in the documented preview. Registration authorizes the workspace; the instance connection selects a channel; channel membership permits delivery. Posting does not establish channel reading, command handling or thread interaction. [FS409] [FS407]
-
-There is no per-message approval prompt, including interactive requests. Review the intended channel and content before invocation, then inspect actual delivery. Disconnecting the channel is not a mechanism for deleting previously posted messages. [FS409] [FS407]
-
-**Inputs.** Account workspace registration, instance channel connection, app membership and reviewed message/artifact.
-
-**Configuration**
-
-1. **Register — Account-level registration.** Authorize the workspace integration.
-2. **Connect — Instance-specific destination.** Add the app to the channel; instance → Add connection → Slack; select integration and channel ID.
-3. **Publish — External effect.** Use the reviewed destination and verify the resulting post.
-
-[FS409] [FS407]
-
-**Lifecycle and operator actions**
-
-| Initial condition | Operation or event | Result |
-|---|---|---|
-| Connection active | Post requested | Message may be sent without an approval prompt. |
-| App absent from channel | Post attempted | Delivery fails despite registration. |
-| Connection removed | Future request | Future access changes; existing posts remain externally managed. |
-
-**Constraints.** Review audience before sending. The integration does not provide general edit/delete, channel administration or conversation reading.
-
-**Inspection points.** Actual channel post and recorded action/delivery result.
-
-**Implementation limits.** Deduplicated retries, universal rollback and guaranteed post deletion are not provided by the documented interface.
-
-**Verification procedure (proposed)**
-
-1. Use a restricted test channel containing the installed app.
-2. Verify destination and content without expecting a confirmation prompt.
-3. Remove app membership for an authorized negative test and distinguish delivery failure from task failure.
-
-**Source mapping**
-
-| Reference | Documentation section | Supported behavior |
-|---|---|---|
-| [FS409] | Integration and connection model; Capabilities | Connections are per-instance/channel and one-way; membership is required. |
-| [FS407] | Slack messages | Posting does not prompt for approval even in interactive invocation. |
-
-<!-- mechanism-review:end F-M06 -->
+**Dependency review:** enable the cost/recommendation services required for the selected task and inspect whether the role permits the relevant APIs. For example, missing `cloudtrail:LookupEvents` removes an operational-change input without necessarily disabling Cost Explorer questions. Removing write access to customer infrastructure does not mean that Jira/Slack publishing is disabled; those effects follow separate integration rules. [FS03] [FS06]
 
 ### F-M07 — Retention, cancellation, and deletion
 
@@ -723,9 +340,27 @@ Use the operation matching the intended outcome. In particular, cancel, forget, 
 
 For data-location decisions, document both persistent storage (`us-east-1` in the reviewed preview) and cross-Region US inference. Do not describe the chosen console Region as the complete processing boundary. [FS09]
 
-## 05. Applying the model to operational outcomes
+### F-06 — Data, task, and integration failures
 
-Trace the approved use cases through their concrete configuration and execution objects, then examine the prepared evidence. The examples remain synthetic, not live AWS results.
+Selected documented defaults are one agent per account/Region, 100 MB artifact storage, 10 MB per context upload and 100 MB total context storage. The per-file limit is fixed; relevant account/storage quotas may be adjustable. The reviewed integration limits include one account-level registration of each supported collaboration type and two connections of each type per agent. Check actual quotas before designing multiple destinations or isolated instances. [FS10]
+
+| Symptom | Inspect | Result to establish |
+|---|---|---|
+| User cannot open agent | User policy and operator role, not only setup permissions | Intended user can enter and perform the supported operation |
+| Total differs from console | Dates, exclusive end, metric, filters, currency, grouping | Same query reproduces the amount |
+| No change evidence | Agent role and CloudTrail availability | Determine source absence before proposing a cause |
+| Uploaded mapping ignored | File active state, identifiers and task scope | Known mapping can be retrieved separately from memory |
+| Task never starts | Automation match and shared queue | Distinguish no task creation from queued execution |
+| Jira action not visible | Destination binding, approval path and task result | Correct project and resulting issue/comment |
+| Slack post denied | App membership, channel ID and connection state | App is in the configured channel and connection active |
+| File cannot upload | Type, per-file size and total quota | Input is supported and storage available |
+| Deleted automation still has records | Object lifecycle | No new tasks; old task records expected |
+
+The table is engineering troubleshooting guidance based on the cited configuration and integration pages. It is not a claim of a native unified diagnostic workflow.
+
+## 11. Worked example and reference material
+
+The approved reporting and investigation cases are illustrated with a synthetic, reconcilable cost comparison.
 
 ### F-10 — Context and evidence in reporting and anomaly use cases
 
@@ -772,32 +407,6 @@ The delta is 574, or 41%. Component contributions are 200 storage, 100 requests 
 
 The repository's deterministic fixture test verifies the arithmetic. It is not a test of the AWS service, recommendation quality or causal inference.
 
-## 06. Troubleshooting and operating limits
-
-A numerical disagreement, a missing task, and a failed publication are different faults. Troubleshooting follows the corresponding data, execution, and destination paths.
-
-### F-06 — Data, task, and integration failures
-
-Selected documented defaults are one agent per account/Region, 100 MB artifact storage, 10 MB per context upload and 100 MB total context storage. The per-file limit is fixed; relevant account/storage quotas may be adjustable. The reviewed integration limits include one account-level registration of each supported collaboration type and two connections of each type per agent. Check actual quotas before designing multiple destinations or isolated instances. [FS10]
-
-| Symptom | Inspect | Result to establish |
-|---|---|---|
-| User cannot open agent | User policy and operator role, not only setup permissions | Intended user can enter and perform the supported operation |
-| Total differs from console | Dates, exclusive end, metric, filters, currency, grouping | Same query reproduces the amount |
-| No change evidence | Agent role and CloudTrail availability | Determine source absence before proposing a cause |
-| Uploaded mapping ignored | File active state, identifiers and task scope | Known mapping can be retrieved separately from memory |
-| Task never starts | Automation match and shared queue | Distinguish no task creation from queued execution |
-| Jira action not visible | Destination binding, approval path and task result | Correct project and resulting issue/comment |
-| Slack post denied | App membership, channel ID and connection state | App is in the configured channel and connection active |
-| File cannot upload | Type, per-file size and total quota | Input is supported and storage available |
-| Deleted automation still has records | Object lifecycle | No new tasks; old task records expected |
-
-The table is engineering troubleshooting guidance based on the cited configuration and integration pages. It is not a claim of a native unified diagnostic workflow.
-
-## 07. Documentation coverage
-
-The references document the source, context, task, and publication behaviors discussed here; unexecuted examples remain explicitly labeled.
-
 ### F-07 — Documentation coverage and references
 
 The guide follows a cost question from source access through context, task execution, and publication. The coverage table separates that explanation from complete IAM policies, service quotas, and provider-specific setup that remain in the official reference. A forecast, recommendation estimate, and observed cost are treated as distinct results throughout.
@@ -831,50 +440,19 @@ The reference register identifies the documented behavior behind these distincti
 - [FS14] Cost Explorer GetCostAndUsage request semantics; read-only example.
 
 [FS01]: https://docs.aws.amazon.com/finops-agent/latest/userguide/what-is.html
-
 [FS02]: https://docs.aws.amazon.com/finops-agent/latest/userguide/creating-an-agent.html
-
 [FS03]: https://docs.aws.amazon.com/finops-agent/latest/userguide/setting-up.html
-
 [FS04]: https://docs.aws.amazon.com/finops-agent/latest/userguide/context-files-and-memory.html
-
 [FS05]: https://docs.aws.amazon.com/finops-agent/latest/userguide/task-management.html
-
 [FS06]: https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html
-
 [FS07]: https://docs.aws.amazon.com/finops-agent/latest/userguide/automated-anomaly-response.html
-
 [FS08]: https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html
-
 [FS09]: https://docs.aws.amazon.com/finops-agent/latest/userguide/cross-region-inference.html
-
 [FS10]: https://docs.aws.amazon.com/finops-agent/latest/userguide/quotas.html
-
 [FS11]: https://docs.aws.amazon.com/finops-agent/latest/userguide/custom-cost-reporting.html
-
 [FS12]: https://docs.aws.amazon.com/finops-agent/latest/userguide/jira-integration.html
-
 [FS13]: https://docs.aws.amazon.com/finops-agent/latest/userguide/slack-integration.html
-
 [FS14]: https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_GetCostAndUsage.html
-
-[FS50]: https://docs.aws.amazon.com/finops-agent/latest/userguide/creating-an-agent.html
-
-[FS51]: https://docs.aws.amazon.com/finops-agent/latest/userguide/setting-up.html
-
-[FS52]: https://docs.aws.amazon.com/finops-agent/latest/userguide/task-management.html
-
-[FS53]: https://docs.aws.amazon.com/finops-agent/latest/userguide/context-files-and-memory.html
-
-[FS54]: https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html
-
-[FS55]: https://docs.aws.amazon.com/finops-agent/latest/userguide/jira-integration.html
-
-[FS56]: https://docs.aws.amazon.com/finops-agent/latest/userguide/slack-integration.html
-
-[FS57]: https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html
-
-[FS58]: https://docs.aws.amazon.com/finops-agent/latest/userguide/custom-cost-reporting.html
 [FS401]: https://docs.aws.amazon.com/finops-agent/latest/userguide/what-is.html
 [FS402]: https://docs.aws.amazon.com/finops-agent/latest/userguide/context-files-and-memory.html
 [FS403]: https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html
@@ -884,3 +462,22 @@ The reference register identifies the documented behavior behind these distincti
 [FS407]: https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html
 [FS408]: https://docs.aws.amazon.com/finops-agent/latest/userguide/jira-integration.html
 [FS409]: https://docs.aws.amazon.com/finops-agent/latest/userguide/slack-integration.html
+[FS50]: https://docs.aws.amazon.com/finops-agent/latest/userguide/creating-an-agent.html
+[FS501]: https://docs.aws.amazon.com/finops-agent/latest/userguide/what-is.html
+[FS502]: https://docs.aws.amazon.com/finops-agent/latest/userguide/creating-an-agent.html
+[FS503]: https://docs.aws.amazon.com/finops-agent/latest/userguide/task-management.html
+[FS504]: https://docs.aws.amazon.com/finops-agent/latest/userguide/context-files-and-memory.html
+[FS505]: https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html
+[FS506]: https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html
+[FS507]: https://docs.aws.amazon.com/finops-agent/latest/userguide/custom-cost-reporting.html
+[FS508]: https://docs.aws.amazon.com/finops-agent/latest/userguide/cross-region-inference.html
+[FS509]: https://docs.aws.amazon.com/finops-agent/latest/userguide/setting-up.html
+[FS51]: https://docs.aws.amazon.com/finops-agent/latest/userguide/setting-up.html
+[FS510]: https://docs.aws.amazon.com/finops-agent/latest/userguide/automated-anomaly-response.html
+[FS52]: https://docs.aws.amazon.com/finops-agent/latest/userguide/task-management.html
+[FS53]: https://docs.aws.amazon.com/finops-agent/latest/userguide/context-files-and-memory.html
+[FS54]: https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html
+[FS55]: https://docs.aws.amazon.com/finops-agent/latest/userguide/jira-integration.html
+[FS56]: https://docs.aws.amazon.com/finops-agent/latest/userguide/slack-integration.html
+[FS57]: https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html
+[FS58]: https://docs.aws.amazon.com/finops-agent/latest/userguide/custom-cost-reporting.html
