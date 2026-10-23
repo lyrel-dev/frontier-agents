@@ -34,8 +34,16 @@ jobs:
         run: python -m playwright install chromium
       - name: Apply reviewed capability exposition once
         run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('tools/docs/apply_capability_exposition.py')
+          if p.exists():
+              text=p.read_text().replace("'The service's interfaces,", "'Service interfaces,")
+              compile(text,str(p),'exec')
+              p.write_text(text)
+          PY
           python -m compileall -q tools/docs
-          for file in apply_capability_exposition.py finish_capability_exposition.py; do
+          for file in apply_capability_exposition.py finish_capability_exposition.py refine_capability_exposition.py; do
             if [ -f "tools/docs/$file" ]; then python "tools/docs/$file"; fi
           done
       - name: Build guides, linked catalog, figures and HTML presentations
