@@ -23,7 +23,7 @@ def validate(root: Path):
                 page=context.new_page();errors=[]
                 page.on('pageerror',lambda error:errors.append(str(error)))
                 def ready(path='guides/devops.html'):
-                    page.goto(base+'/'+path);page.wait_for_function('window.FrontierReview?.interaction === "contextual-v3"')
+                    page.goto(base+'/'+path);page.wait_for_function('window.FrontierReview?.interaction === "contextual-v4"')
                     page.locator('.report-section:visible p[data-review-block]').first.scroll_into_view_if_needed()
                 def popup():
                     target=page.locator('.report-section:visible p[data-review-block]').first
