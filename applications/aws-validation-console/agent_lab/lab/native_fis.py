@@ -193,38 +193,47 @@ class Previews:
                 else:
                     state='STOPPING' if provider_id and not latest['data'].get('remote_terminal') else 'BLOCKED'
                 self.store.update(job['id'],state=state,changes={'reason':str(exc) if isinstance(exc,Blocked) else error_code(exc),
-                                  **({'provider_id':provider_id} if provider_id else {})})
+                                  **({'provider_id':provider_id,
+                                      'started_at':latest['data'].get('started_at') or (intent or {}).get('created_at'),
+                                      'started_at_basis':latest['data'].get('started_at_basis','operation intent when attachment is missing')} if provider_id else {})})
             return
     def advance(self,job):
+        job=self.store.entity(job['id'])
+        if job['state'] in {'COMPLETE','BLOCKED'}:return
         d=job['data'];sub=d['subject'];row=self.store.record(sub['template_record_id'])['data']
         account=next(a for a in self.config.fis_accounts if a.account_id==sub['account_id'] and sub['region'] in a.regions)
         if digest(account.model_dump(mode='json'))!=sub['account_configuration_sha256']:raise Blocked('Account profile changed since preview approval')
         aws=self.factory(account,sub['region'],self.store,job['id']);aws.identity('fault')
-        broker=Broker(self.store,aws,self.config.enable_aws_writes)
         op=self.store.operation(job['id'],'target-preview')
+        recovering=bool(op and op['state'] in {'CONFIRMED','DISPATCHING','UNKNOWN'})
+        broker=Broker(self.store,aws,self.config.enable_aws_writes or recovering)
         if d.get('abort_requested') and (not op or op['state']=='PENDING'):
             if op:self.store.operation_state(op,'FAILED',response={'code':'CancelledBeforeDispatch'})
             self.store.update(job['id'],state='BLOCKED',changes={'reason':'Cancelled before preview dispatch'})
             return
         if not op or op['state']=='PENDING':
-            if dt(d['expires_at'])<self.clock():raise Blocked('Preview approval expired')
+            if dt(d['expires_at'])<=self.clock():raise Blocked('Preview approval expired')
             current,_=aws.call('fault','fis','get_experiment_template',id=row['template_id'])
             if digest(template_contract(current['experimentTemplate']))!=sub['template_sha256']:raise Blocked('Template changed before preview')
+        from .preview_control import reserve_dispatch
         op=broker.execute(job['id'],'target-preview','fault','fis','start_experiment',{
-            'experimentTemplateId':row['template_id'],'experimentOptions':{'actionsMode':'skip-all'}})
+            'experimentTemplateId':row['template_id'],'experimentOptions':{'actionsMode':'skip-all'}},
+            reserve_dispatch=lambda intent:reserve_dispatch(self.store,intent,self.clock))
         if not d.get('provider_id'):
-            self.store.update(job['id'],state='RUNNING',changes={'provider_id':op['provider_id'],'started_at':iso(self.clock())})
+            self.store.update(job['id'],state='RUNNING',changes={'provider_id':op['provider_id'],'started_at':iso(self.clock()),'started_at_basis':'provider identity attached locally'})
             d=self.store.entity(job['id'])['data']
         result=aws.experiment(op['provider_id']);value=result['experiment'];status=value.get('state',{}).get('status')
-        if value.get('experimentOptions',{}).get('actionsMode')!='skip-all':raise Blocked('AWS preview actions mode mismatch')
-        timeout=(self.clock()-dt(d['started_at'])).total_seconds()>180
+        unexpected_mode=value.get('experimentOptions',{}).get('actionsMode')!='skip-all'
+        timeout=(self.clock()-dt(d.get('started_at') or op['created_at'])).total_seconds()>180
         if status not in FIS_TERMINAL:
-            if timeout or job['state']=='STOPPING' or d.get('abort_requested'):
+            if timeout or job['state']=='STOPPING' or d.get('abort_requested') or unexpected_mode:
                 Broker(self.store,aws,True).execute(job['id'],'stop-preview','fault','fis','stop_experiment',{'id':op['provider_id']})
                 self.store.update(job['id'],state='STOPPING')
+            if unexpected_mode:raise Blocked('AWS preview actions mode mismatch; owned stop requested')
             return
         self.store.update(job['id'],changes={'remote_terminal':True,'remote_state':status})
-        if status!='completed' or d.get('abort_requested'):
+        if unexpected_mode:raise Blocked('AWS preview actions mode mismatch')
+        if status!='completed' or d.get('abort_requested') or job['state']=='STOPPING':
             self.store.update(job['id'],state='BLOCKED',changes={'reason':'Preview did not complete successfully','remote_state':status});return
         if any(a.get('state',{}).get('status')!='skipped' for a in value.get('actions',{}).values()):
             raise Blocked('Completed preview contains a non-skipped action')
@@ -235,8 +244,8 @@ class Previews:
         if actual!=sub['target_accounts_sha256']:raise Blocked('Target account configuration changed during preview')
         targets=sorted([target_key(r) for r in result['resolved_targets']],key=digest)
         if not targets:raise Blocked('Preview resolved no targets; no exposure can be approved')
-        rec=self.store.put_record('fis_preview_result',job['id'],{**sub,'template_id':row['template_id'],
+        from .preview_control import complete
+        complete(self.store,job['id'],{**sub,'template_id':row['template_id'],
             'provider_id':op['provider_id'],'captured_at':iso(self.clock()),'targets':targets,
             'target_accounts':account_contract(configs),'input_hashes':{r['id']:r['sha256'] for r in self.store.records(job['id'])},
-            'limits':['Approximate target selection only; no fault was injected and no action permission was verified.']})
-        self.store.update(job['id'],state='COMPLETE',changes={'result_id':rec['id'],'finished_at':iso(self.clock())})
+            'limits':['Approximate target selection only; no fault was injected and no action permission was verified.']},self.clock)

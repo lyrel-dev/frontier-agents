@@ -12,7 +12,7 @@ class Broker:
     def __init__(self,store,aws,enabled):
         self.store=store; self.aws=aws; self.enabled=enabled
 
-    def execute(self, owner, name, side, service, operation, params):
+    def execute(self, owner, name, side, service, operation, params, *, reserve_dispatch=None):
         if not self.enabled: raise Blocked('AWS mutations are disabled in administrator configuration')
         self.aws.identity(side)  # A failed identity read cannot leave an uncertain write intent.
         request={'side':side,'service':service,'operation':operation,'parameters':params}
@@ -55,7 +55,10 @@ class Broker:
             args['Tags']=[{'Key':'ValidationTrial','Value':owner},{'Key':'ValidationOperation','Value':op['id']}]
         elif operation=='create_backlog_task':
             args['clientToken']=op['token']
-        self.store.operation_state(op,'DISPATCHING')
+        if reserve_dispatch is not None:
+            reserve_dispatch(op)
+        else:
+            self.store.operation_state(op,'DISPATCHING')
         try:
             response=self.aws.write(side,service,operation,args)
         except Exception as exc:

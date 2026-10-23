@@ -1,3 +1,10 @@
+# 0.5.2-dev — preview lifecycle follow-up
+
+- Serialize first preview dispatch with cancellation and approval expiry checks.
+- Recover known provider operations after interrupted local attachment, including timeout provenance.
+- Preserve stop/reconciliation when new writes are disabled; never promote STOPPING to an accepted preview.
+- Commit preview result publication atomically with cancellation; add 19 credential-free lifecycle regressions. Native UI, container and monitoring acceptance must run on the exact published revision. Live AWS acceptance remains open.
+
 # 0.5.1-dev — publication and integration review
 
 - Preserve setup input across asynchronous navigation and configuration approval. Reject late API responses after session lock. Add delayed/out-of-order native-browser regressions.

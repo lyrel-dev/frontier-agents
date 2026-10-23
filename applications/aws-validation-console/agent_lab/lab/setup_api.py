@@ -59,11 +59,8 @@ def install(app,config,store,service):
         return {'jobs':store.entities('fis_preview'),'results':store.records(kind='fis_preview_result')}
     @app.post('/api/setup/previews/{identifier}/cancel')
     def cancel(identifier:str):
-        e=store.entity(identifier)
-        if e['kind']!='fis_preview':raise Blocked('Not a preview job')
-        if e['state'] in {'COMPLETE','BLOCKED'}:return e
-        if not store.operation(identifier,'target-preview'):return store.update(identifier,state='BLOCKED',changes={'reason':'Cancelled before dispatch'})
-        return store.update(identifier,changes={'abort_requested':True})
+        from .preview_control import cancel as cancel_preview
+        return cancel_preview(store,identifier)
     @app.get('/api/setup/read-operations')
     def reads():return {k:sorted(v) for k,v in READS.items()}
     @app.get('/api/setup/read-shape/{svc}/{op}')

@@ -1,6 +1,6 @@
 # AWS FIS · Agent response and prevention console
 
-**0.5.1-dev — published development implementation; authorized live AWS acceptance remains open.**
+**0.5.2-dev — published development implementation; authorized live AWS acceptance remains open.**
 
 A local console for an authorized non-production AWS account set. It discovers existing FIS templates, prepares measured trials through forms, delegates target resolution and fault execution to FIS, observes AWS DevOps Agent, and produces source-pinned response and prevention assessments. AWS templates are not rewritten into local fault recipes.
 
@@ -79,3 +79,7 @@ The source is published on `feat/aws-fis-console-delivery` in `lyrel-dev/frontie
 ## Integration review
 
 See [RELEASE_0_5_1.md](docs/RELEASE_0_5_1.md) for the publication corrections and current-source acceptance procedure. Native browser, container and monitoring-server checks are required in repository CI; they do not establish live AWS or Agent Space efficacy.
+
+## Preview lifecycle follow-up
+
+See [RELEASE_0_5_2.md](docs/RELEASE_0_5_2.md) for atomic cancellation/dispatch reservation, approval expiry and interrupted-preview recovery. These changes do not close live AWS acceptance.
