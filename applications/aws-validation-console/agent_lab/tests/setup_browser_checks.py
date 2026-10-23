@@ -30,7 +30,7 @@ class Session:
         a=ACCOUNT_A if self.profile=='test-agent' else ACCOUNT_B
         return {'Account':a,'Arn':f'arn:aws:iam::{a}:role/test-observer','ResponseMetadata':{'RequestId':'fixture-only'}}
     def list_agent_spaces(self,**kwargs):return {'agentSpaces':[{'agentSpaceId':'space-fixture','name':'Test-only Agent Space'}]}
-    def list_associations(self,**kwargs):return {'associations':[{'associationId':'assoc-fixture','status':'valid','configuration':{'sourceAws':{'accountId':ACCOUNT_B,'accountType':'SECONDARY'}}}]}
+    def list_associations(self,**kwargs):return {'associations':[{'associationId':'assoc-fixture','status':'valid','configuration':{'sourceAws':{'accountId':ACCOUNT_B,'accountType':'source'}}}]}
     def list_experiment_templates(self,**kwargs):return {'experimentTemplates':[]}
     def describe_instances(self,**kwargs):return {'Reservations':[{'Instances':[{'InstanceId':'i-123','State':{'Name':'running'}}]}]}
 class TestSetup(Setup):
@@ -88,6 +88,36 @@ def main():
                 wait_state(page, 'GuidedSetup.state().current!==null')
                 page.screenshot(path=str(out/'setup-accounts-empty-desktop.png'),full_page=True)
                 check('SDK names are selected without credential fields',page.get_by_label('Observer profile',exact=True).count()==1 and page.get_by_label('AWS access key',exact=True).count()==0)
+                # Delay only response timing; native mode still uses real HTTP and CSP.
+                page.evaluate("""()=>{const original=window.fetch;let release;
+                  const pending=new Promise(resolve=>{release=resolve});
+                  window.__releaseSetupRead=()=>{release();window.fetch=original};
+                  window.fetch=async(path,options)=>{if(path==='/api/setup')await pending;return original(path,options)};
+                }""")
+                page.locator('[data-stage=accounts]').click()
+                check('navigation removes stale editable controls while account reads are pending',
+                      page.get_by_label('Connection ID',exact=True).count()==0 and
+                      page.locator('#setup-content').get_attribute('aria-busy')=='true')
+                page.evaluate('window.__releaseSetupRead()')
+                page.get_by_label('Connection ID',exact=True).wait_for()
+                wait_state(page, '!GuidedSetup.state().loading')
+                check('account form becomes available only after its requested reads complete',
+                      page.locator('#setup-content').get_attribute('aria-busy')=='false')
+                page.evaluate("""()=>{const original=window.fetch;const releases=[];
+                  window.__setupReadReleases=releases;
+                  window.__restoreSetupFetch=()=>{window.fetch=original};
+                  window.fetch=async(path,options)=>{if(path==='/api/setup')await new Promise(resolve=>releases.push(resolve));return original(path,options)};
+                }""")
+                page.locator('[data-stage=agents]').click()
+                page.locator('[data-stage=accounts]').click()
+                wait_state(page, 'window.__setupReadReleases.length===2')
+                page.evaluate('window.__setupReadReleases[1]()')
+                page.get_by_label('Connection ID',exact=True).fill('retained-input')
+                page.evaluate('window.__setupReadReleases[0]();window.__restoreSetupFetch()')
+                page.wait_for_timeout(200)
+                check('late response from an older stage does not erase input in the selected stage',
+                      page.get_by_label('Connection ID',exact=True).input_value()=='retained-input' and
+                      page.get_by_label('Agent connection',exact=True).count()==0)
                 def approve_dialog():
                     text=page.locator('#setup-body pre').inner_text();subject=json.loads(text)
                     page.get_by_label('Approver name',exact=True).fill('Fixture reviewer')
@@ -161,7 +191,7 @@ def main():
                 check('native prepared contract appears in AWS library',len(Fleet(cfg,store).library()['templates'][0]['contracts'])==1)
                 page.set_viewport_size({'width':390,'height':844})
                 for stage in ('accounts','agents','targets','plan','review'):
-                    page.locator('[data-stage='+stage+']').click();wait_state(page, '(s)=>GuidedSetup.state().stage===s', arg=stage)
+                    page.locator('[data-stage='+stage+']').click();wait_state(page, '(s)=>GuidedSetup.state().stage===s&&!GuidedSetup.state().loading', arg=stage)
                     check('mobile '+stage+' does not overflow',page.evaluate('document.documentElement.scrollWidth<=innerWidth+1'))
                 check('no token persisted in browser storage',page.evaluate('(()=>{try{return localStorage.length===0&&sessionStorage.length===0}catch{return true}})()'))
                 page.locator('#setup-auth').click();check('locking clears configuration and draft',page.evaluate("GuidedSetup.state().current===null && GuidedSetup.state().draft===null && GuidedSetup.state().token===''") )

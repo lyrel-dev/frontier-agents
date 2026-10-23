@@ -1,6 +1,6 @@
 (()=>{
 'use strict';
-const setupState={token:'',stage:'accounts',current:null,catalog:null,previews:null,draft:null,plan:null,offline:location.protocol==='file:'};
+const setupState={token:'',stage:'accounts',current:null,catalog:null,previews:null,draft:null,plan:null,navigation:0,loading:false,offline:location.protocol==='file:'};
 const sq=s=>document.querySelector(s);function se(t,text,cls=''){const n=document.createElement(t);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n;}
 function message(text,error=false){sq('#setup-status').textContent=text;sq('#setup-status').className=error?'setup-alert':'setup-muted';}
 function button(text,fn,cls=''){const b=se('button',text,cls);b.type='button';b.onclick=async()=>{b.disabled=true;try{await fn();}catch(e){message(e.message,true);}finally{b.disabled=false;}};return b;}
@@ -15,7 +15,23 @@ async function load(){const token=setupState.token;const results=await Promise.a
 const accountOptions=()=>[{label:'Choose a configured account',value:''},...(setupState.current?.configuration.fis_accounts||[]).map(a=>({label:a.name+' · '+a.account_id,value:a.id}))];
 const profileOptions=()=>[{label:'Select an installed SDK profile',value:''},...(setupState.current?.profiles||[])];
 function heading(title,text){const h=se('div');h.append(se('div','AWS FIS / OPERATOR WORKFLOW','eyebrow'),se('h1',title),se('p',text));return h;}
-async function show(stage){setupState.stage=stage;if(setupState.token)await load();render();}
+async function show(stage){
+  const navigation=++setupState.navigation,token=setupState.token;
+  setupState.stage=stage;setupState.loading=true;
+  const host=sq('#setup-content');
+  // Remove obsolete controls before starting asynchronous reads. Retaining the
+  // previous form lets input disappear when the requested stage finishes loading.
+  host.setAttribute('aria-busy','true');
+  host.replaceChildren(se('p','Loading the selected setup stage…','setup-muted'));
+  document.querySelectorAll('[data-stage]').forEach(b=>b.classList.toggle('active',b.dataset.stage===stage));
+  try{
+    if(token)await load();
+    if(navigation!==setupState.navigation||token!==setupState.token)return;
+    render();
+  }finally{
+    if(navigation===setupState.navigation){setupState.loading=false;host.setAttribute('aria-busy','false');}
+  }
+}
 function render(){document.querySelectorAll('[data-stage]').forEach(b=>b.classList.toggle('active',b.dataset.stage===setupState.stage));sq('#setup-auth').textContent=setupState.token?'Lock':'Unlock';const host=sq('#setup-content');host.replaceChildren();if(!setupState.token){host.append(heading('Connect your AWS environment','No accounts, experiments or measurements have been loaded.'),se('p','Unlock with the local operator token. SDK profiles must already be installed on the host; access keys never enter this page.'));return;}({accounts:accountsPage,agents:agentsPage,targets:targetsPage,plan:planPage,review:reviewPage}[setupState.stage])(host);}
 async function approve(path,sub,after){const form=se('form');const who=field('Approver name'),why=field('Approval rationale','textarea'),confirmation=field('Exact confirmation'),token=field('Separate local approval token','password');form.append(se('p','Review the exact subject before approving. This does not grant AWS permissions.','setup-alert'),output(sub),who.node,why.node,confirmation.node,token.node);const b=se('button','Approve exact operation','primary');b.type='submit';form.append(b);form.onsubmit=async e=>{e.preventDefault();b.disabled=true;try{const result=await sf(path,{expected_digest:sub.digest,confirmation:confirmation.get(),approver:who.get(),rationale:why.get()},token.get());token.input.value='';close();await load();render();message('Recorded: '+(result.id||result.record_id||'operation'));if(after)await after(result);}catch(error){message(error.message,true);}finally{b.disabled=false;}};modal('Exact approval',form);}
 function accountsPage(host){host.append(heading('Account connections','Add or edit connection metadata, test read access, then activate the exact local configuration. Profiles and role assumption stay on the host.'));
@@ -63,7 +79,7 @@ async function opaqueIdentity(r){const ordered=x=>Array.isArray(x)?x.map(ordered
 function reviewPage(host){host.append(heading('Review & activate','Review the complete configuration difference. Activation stores a local version and registers the measurement definition; it does not inject a fault.'));const draft=setupState.draft;if(!draft){host.append(se('p','No proposal in this session. Prepare an account change or measurement plan first.'));return;}host.append(output(draft.data),button('Approve exact local configuration',async()=>{const sub=await sf('setup/drafts/'+draft.id+'/subject');await approve('setup/approve/config/'+draft.id,sub,()=>{setupState.draft=null;message('Configuration activated. Return to the FIS library to select this contract, create a campaign, qualify and approve each exposure.');});},'primary'));}
 
 const SETUP_SHELL="\n<header class=\"aws-header\"><div><span class=\"aws-mark\">AWS / FIS</span><strong>Connect \u2192 prepare \u2192 execute</strong></div><div><a href=\"/\">Experiment operations</a><button id=\"setup-auth\">Unlock</button></div></header>\n<div class=\"aws-layout\"><aside class=\"aws-nav\"><div class=\"eyebrow\">GUIDED PREPARATION</div><nav aria-label=\"Setup stages\"><button data-stage=\"accounts\">1. Account connections</button><button data-stage=\"agents\">2. Agent associations</button><button data-stage=\"targets\">3. FIS target preview</button><button data-stage=\"plan\">4. Measurement & recovery</button><button data-stage=\"review\">5. Review & activate</button></nav><div class=\"aws-boundary\"><strong>Every stage has a distinct effect</strong><p>Read checks observe AWS. A target preview starts a skip-all experiment. Activating a plan changes local configuration. Running a fault requires a separate trial approval.</p><p>Nothing is seeded. No credential material is accepted here.</p></div></aside><main id=\"setup-main\"><div id=\"setup-status\" role=\"status\"></div><div id=\"setup-content\"></div></main></div>\n<dialog id=\"setup-modal\"><div class=\"modal-head\"><h2 id=\"setup-title\"></h2><button id=\"setup-close\" aria-label=\"Close\">\u00d7</button></div><div id=\"setup-body\"></div></dialog>";
-function initialize(){sq('#setup-auth').onclick=()=>{if(setupState.token){setupState.token='';setupState.current=null;setupState.catalog=null;setupState.previews=null;setupState.draft=null;setupState.plan=null;close();if(setupState.lock){setupState.lock();return;}render();return;}const f=se('form'),token=field('Local operator token','password'),b=se('button','Unlock','primary');b.type='submit';f.append(token.node,b);f.onsubmit=async e=>{e.preventDefault();try{setupState.token=token.get();await load();if(setupState.auth)setupState.auth(setupState.token);token.input.value='';close();render();}catch(err){setupState.token='';message(err.message,true);}};modal('Unlock guided setup',f);};sq('#setup-close').onclick=close;document.querySelectorAll('[data-stage]').forEach(b=>b.onclick=()=>show(b.dataset.stage).catch(e=>message(e.message,true)));if(!setupState.token||setupState.current)render();
+function initialize(){sq('#setup-auth').onclick=()=>{if(setupState.token){setupState.navigation++;setupState.loading=false;setupState.token='';setupState.current=null;setupState.catalog=null;setupState.previews=null;setupState.draft=null;setupState.plan=null;close();if(setupState.lock){setupState.lock();return;}render();return;}const f=se('form'),token=field('Local operator token','password'),b=se('button','Unlock','primary');b.type='submit';f.append(token.node,b);f.onsubmit=async e=>{e.preventDefault();try{setupState.token=token.get();await load();if(setupState.auth)setupState.auth(setupState.token);token.input.value='';close();render();}catch(err){setupState.token='';message(err.message,true);}};modal('Unlock guided setup',f);};sq('#setup-close').onclick=close;document.querySelectorAll('[data-stage]').forEach(b=>b.onclick=()=>show(b.dataset.stage).catch(e=>message(e.message,true)));if(!setupState.token||setupState.current)render();
 }
 
 window.GuidedSetup={
@@ -75,7 +91,7 @@ window.GuidedSetup={
    if(back)back.onclick=event=>{event.preventDefault();if(onExit)onExit();};
    if(token){try{await load();render();}catch(error){message(error.message,true);}}
  },
- clear(){setupState.token='';setupState.current=null;setupState.catalog=null;setupState.previews=null;setupState.draft=null;setupState.plan=null;},
+ clear(){setupState.navigation++;setupState.loading=false;setupState.token='';setupState.current=null;setupState.catalog=null;setupState.previews=null;setupState.draft=null;setupState.plan=null;},
  state(){return setupState;}
 };
 if(sq('#setup-auth'))initialize();

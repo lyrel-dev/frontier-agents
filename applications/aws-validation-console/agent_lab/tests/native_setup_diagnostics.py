@@ -12,6 +12,7 @@ from playwright.sync_api import Locator, Browser
 ROOT = Path(__file__).resolve().parents[1]
 original_select = Locator.select_option
 original_page = Browser.new_page
+original_wait = Locator.wait_for
 errors = []
 
 
@@ -21,11 +22,17 @@ def page_with_errors(self, *args, **kwargs):
     return page
 
 
-def inspected_select(self, *args, **kwargs):
+def inspected_call(original, self, *args, **kwargs):
     try:
-        return original_select(self, *args, **kwargs)
+        return original(self, *args, **kwargs)
     except Exception:
         details = {'page_errors': errors[-8:]}
+        try:
+            details['status'] = self.page.locator('#setup-status').inner_text(timeout=1000)[:1500]
+            details['invalid_fields'] = self.page.locator('input:invalid,select:invalid,textarea:invalid').evaluate_all(
+                '(nodes)=>nodes.map(n=>({label:n.getAttribute(\"aria-label\"),type:n.type,missing:n.validity.valueMissing,pattern:n.validity.patternMismatch}))')
+        except Exception:
+            pass
         try:
             details['selectors'] = self.page.locator(
                 'select[aria-label="AWS read service"], '
@@ -42,7 +49,8 @@ def inspected_select(self, *args, **kwargs):
 
 
 if __name__ == '__main__':
-    Locator.select_option = inspected_select
+    Locator.select_option = lambda self,*a,**k: inspected_call(original_select,self,*a,**k)
+    Locator.wait_for = lambda self,*a,**k: inspected_call(original_wait,self,*a,**k)
     Browser.new_page = page_with_errors
     from setup_browser_checks import main
     sys.argv = [sys.argv[0], '--native']
