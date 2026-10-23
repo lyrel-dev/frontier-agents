@@ -1,6 +1,6 @@
 {
-  "revision": "2026-10-23-capability-exposition",
-  "files_compared": 88,
+  "revision": "2026-10-23-educational-sequence",
+  "files_compared": 110,
   "identical_repeated_build": true,
   "boundary": "Same committed inputs and same runner environment; not cross-version reproducibility."
 }
