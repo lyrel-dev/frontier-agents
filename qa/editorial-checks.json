@@ -3,14 +3,14 @@
   "baseline": "13b619a7cddd8249fbaa54931ca2099409eb8890",
   "scope": "Technical wording, selected factual corrections, source/render consistency; not a full service audit.",
   "rendered_documents_checked": [
-    "guides/devops.html",
-    "presentations/devops.html",
-    "guides/security.html",
-    "presentations/security.html",
-    "guides/finops.html",
-    "presentations/finops.html",
     "guides/architecture.html",
     "presentations/architecture.html",
+    "guides/devops.html",
+    "presentations/devops.html",
+    "guides/finops.html",
+    "presentations/finops.html",
+    "guides/security.html",
+    "presentations/security.html",
     "catalog/index.html",
     "catalog/resource-models.html",
     "index.html",
@@ -46,6 +46,131 @@
     "catalog/UC-S08.html"
   ],
   "headings_and_slide_titles": [
+    {
+      "product": "architecture",
+      "id": "A-90",
+      "title": "From one agent execution to product-specific workflows"
+    },
+    {
+      "product": "architecture",
+      "id": "A-91",
+      "title": "Coordination within a service and handoff between services"
+    },
+    {
+      "product": "architecture",
+      "id": "A-00",
+      "title": "Agents, tools, context, and executions"
+    },
+    {
+      "product": "architecture",
+      "id": "A-10",
+      "title": "Concept ownership and the approved entity model"
+    },
+    {
+      "product": "architecture",
+      "id": "A-12",
+      "title": "Capabilities, product features, and mechanisms"
+    },
+    {
+      "product": "architecture",
+      "id": "A-11",
+      "title": "Product specialization and use-case traceability"
+    },
+    {
+      "product": "architecture",
+      "id": "A-09",
+      "title": "Operational objectives and implementation dependencies"
+    },
+    {
+      "product": "architecture",
+      "id": "A-01",
+      "title": "Resource identity across service boundaries"
+    },
+    {
+      "product": "architecture",
+      "id": "A-02",
+      "title": "Knowledge construction and retrieval models"
+    },
+    {
+      "product": "architecture",
+      "id": "A-08",
+      "title": "Integration direction and evidence ownership"
+    },
+    {
+      "product": "architecture",
+      "id": "A-03",
+      "title": "Network, identity, and tool-access boundaries"
+    },
+    {
+      "product": "architecture",
+      "id": "A-04",
+      "title": "Authorization of state-changing operations"
+    },
+    {
+      "product": "architecture",
+      "id": "A-05",
+      "title": "Configuration, execution, and artifact lifecycles"
+    },
+    {
+      "product": "architecture",
+      "id": "A-06",
+      "title": "Cross-team evidence handoffs"
+    },
+    {
+      "product": "architecture",
+      "id": "A-U01",
+      "title": "Cross-platform operational review: worked example"
+    },
+    {
+      "product": "architecture",
+      "id": "A-07",
+      "title": "Architecture assumptions and references"
+    },
+    {
+      "product": "architecture",
+      "id": "slide",
+      "title": "An agent is an executor, not the surrounding workspace"
+    },
+    {
+      "product": "architecture",
+      "id": "slide",
+      "title": "The agent execution cycle"
+    },
+    {
+      "product": "architecture",
+      "id": "slide",
+      "title": "Context and control differ between the three products"
+    },
+    {
+      "product": "architecture",
+      "id": "slide",
+      "title": "Three different meanings of coordination"
+    },
+    {
+      "product": "architecture",
+      "id": "slide",
+      "title": "Cross-service evidence handoff"
+    },
+    {
+      "product": "architecture",
+      "id": "slide",
+      "title": "Controls follow the effect"
+    },
+    {
+      "product": "architecture",
+      "id": "slide",
+      "title": "A use case applies platform facilities to a defined objective"
+    },
+    {
+      "product": "architecture",
+      "id": "slide",
+      "title": "Exercise: one event, three independently scoped inquiries"
+    },
+    {
+      "product": "architecture",
+      "id": "slide",
+      "title": "Reading path after the presentation"
+    },
     {
       "product": "devops",
       "id": "D-90",
@@ -342,6 +467,201 @@
       "title": "Configuration checks before using a workflow"
     },
     {
+      "product": "finops",
+      "id": "F-90",
+      "title": "An analysis request, its context, and the agent execution"
+    },
+    {
+      "product": "finops",
+      "id": "F-91",
+      "title": "How conversations and automations coordinate tasks"
+    },
+    {
+      "product": "finops",
+      "id": "F-92",
+      "title": "Agent-instance scope and source access"
+    },
+    {
+      "product": "finops",
+      "id": "F-93",
+      "title": "Cost-analysis, reporting and optimization workflows"
+    },
+    {
+      "product": "finops",
+      "id": "F-01",
+      "title": "Agent instance, access roles and retained state"
+    },
+    {
+      "product": "finops",
+      "id": "F-09",
+      "title": "Conversations, automations, tasks and artifacts"
+    },
+    {
+      "product": "finops",
+      "id": "F-11",
+      "title": "Instance configuration and task instructions"
+    },
+    {
+      "product": "finops",
+      "id": "F-M02",
+      "title": "Context-file preparation and management"
+    },
+    {
+      "product": "finops",
+      "id": "F-M03",
+      "title": "Persistent preferences and corrections"
+    },
+    {
+      "product": "finops",
+      "id": "F-M04",
+      "title": "Conversation summarization and context limits"
+    },
+    {
+      "product": "finops",
+      "id": "F-03",
+      "title": "Tasks, schedules, and execution history"
+    },
+    {
+      "product": "finops",
+      "id": "F-M05",
+      "title": "Anomaly events and task creation"
+    },
+    {
+      "product": "finops",
+      "id": "F-08",
+      "title": "Supported data sources and publication destinations"
+    },
+    {
+      "product": "finops",
+      "id": "F-05",
+      "title": "Jira projects and Slack channel connections"
+    },
+    {
+      "product": "finops",
+      "id": "F-12",
+      "title": "Service access, storage location, and inference"
+    },
+    {
+      "product": "finops",
+      "id": "F-13",
+      "title": "Queued execution and session runtime"
+    },
+    {
+      "product": "finops",
+      "id": "F-M06",
+      "title": "Publication permissions and approvals"
+    },
+    {
+      "product": "finops",
+      "id": "F-14",
+      "title": "Cost inquiry, anomaly investigation, and recommendation analysis"
+    },
+    {
+      "product": "finops",
+      "id": "F-M01",
+      "title": "Cost queries and recommendation provenance"
+    },
+    {
+      "product": "finops",
+      "id": "F-15",
+      "title": "Conversation, task history, and artifact interfaces"
+    },
+    {
+      "product": "finops",
+      "id": "F-04",
+      "title": "Report generation and artifact management"
+    },
+    {
+      "product": "finops",
+      "id": "F-02",
+      "title": "Administrator, service, and operator permissions"
+    },
+    {
+      "product": "finops",
+      "id": "F-M07",
+      "title": "Retention, cancellation, and deletion"
+    },
+    {
+      "product": "finops",
+      "id": "F-06",
+      "title": "Data, task, and integration failures"
+    },
+    {
+      "product": "finops",
+      "id": "F-10",
+      "title": "Context and evidence in reporting and anomaly use cases"
+    },
+    {
+      "product": "finops",
+      "id": "F-U01",
+      "title": "Cost-variance analysis: worked example"
+    },
+    {
+      "product": "finops",
+      "id": "F-07",
+      "title": "Documentation coverage and references"
+    },
+    {
+      "product": "finops",
+      "id": "slide",
+      "title": "What AWS FinOps Agent does with a request"
+    },
+    {
+      "product": "finops",
+      "id": "slide",
+      "title": "How conversations, automations and tasks coordinate work"
+    },
+    {
+      "product": "finops",
+      "id": "slide",
+      "title": "The agent instance and its access boundaries"
+    },
+    {
+      "product": "finops",
+      "id": "slide",
+      "title": "Analyze historical cost and usage"
+    },
+    {
+      "product": "finops",
+      "id": "slide",
+      "title": "Investigate a cost anomaly"
+    },
+    {
+      "product": "finops",
+      "id": "slide",
+      "title": "Exercise: explain a cost increase from the supplied evidence"
+    },
+    {
+      "product": "finops",
+      "id": "slide",
+      "title": "Prepare a periodic cost report"
+    },
+    {
+      "product": "finops",
+      "id": "slide",
+      "title": "Publication controls depend on the action and invocation"
+    },
+    {
+      "product": "finops",
+      "id": "slide",
+      "title": "Forecasting and commitment coverage answer different questions"
+    },
+    {
+      "product": "finops",
+      "id": "slide",
+      "title": "Prioritize recommendations and measure an implemented change"
+    },
+    {
+      "product": "finops",
+      "id": "slide",
+      "title": "Prepare the cost-management contribution to an operational review"
+    },
+    {
+      "product": "finops",
+      "id": "slide",
+      "title": "Diagnose data, context, execution and delivery separately"
+    },
+    {
       "product": "security",
       "id": "S-90",
       "title": "What AWS Security Agent executes"
@@ -540,326 +860,6 @@
       "product": "security",
       "id": "slide",
       "title": "Operational checks and failure boundaries"
-    },
-    {
-      "product": "finops",
-      "id": "F-90",
-      "title": "An analysis request, its context, and the agent execution"
-    },
-    {
-      "product": "finops",
-      "id": "F-91",
-      "title": "How conversations and automations coordinate tasks"
-    },
-    {
-      "product": "finops",
-      "id": "F-92",
-      "title": "Agent-instance scope and source access"
-    },
-    {
-      "product": "finops",
-      "id": "F-93",
-      "title": "Cost-analysis, reporting and optimization workflows"
-    },
-    {
-      "product": "finops",
-      "id": "F-01",
-      "title": "Agent instance, access roles and retained state"
-    },
-    {
-      "product": "finops",
-      "id": "F-09",
-      "title": "Conversations, automations, tasks and artifacts"
-    },
-    {
-      "product": "finops",
-      "id": "F-11",
-      "title": "Instance configuration and task instructions"
-    },
-    {
-      "product": "finops",
-      "id": "F-M02",
-      "title": "Context-file preparation and management"
-    },
-    {
-      "product": "finops",
-      "id": "F-M03",
-      "title": "Persistent preferences and corrections"
-    },
-    {
-      "product": "finops",
-      "id": "F-M04",
-      "title": "Conversation summarization and context limits"
-    },
-    {
-      "product": "finops",
-      "id": "F-03",
-      "title": "Tasks, schedules, and execution history"
-    },
-    {
-      "product": "finops",
-      "id": "F-M05",
-      "title": "Anomaly events and task creation"
-    },
-    {
-      "product": "finops",
-      "id": "F-08",
-      "title": "Supported data sources and publication destinations"
-    },
-    {
-      "product": "finops",
-      "id": "F-05",
-      "title": "Jira projects and Slack channel connections"
-    },
-    {
-      "product": "finops",
-      "id": "F-12",
-      "title": "Service access, storage location, and inference"
-    },
-    {
-      "product": "finops",
-      "id": "F-13",
-      "title": "Queued execution and session runtime"
-    },
-    {
-      "product": "finops",
-      "id": "F-M06",
-      "title": "Publication permissions and approvals"
-    },
-    {
-      "product": "finops",
-      "id": "F-14",
-      "title": "Cost inquiry, anomaly investigation, and recommendation analysis"
-    },
-    {
-      "product": "finops",
-      "id": "F-M01",
-      "title": "Cost queries and recommendation provenance"
-    },
-    {
-      "product": "finops",
-      "id": "F-15",
-      "title": "Conversation, task history, and artifact interfaces"
-    },
-    {
-      "product": "finops",
-      "id": "F-04",
-      "title": "Report generation and artifact management"
-    },
-    {
-      "product": "finops",
-      "id": "F-02",
-      "title": "Administrator, service, and operator permissions"
-    },
-    {
-      "product": "finops",
-      "id": "F-M07",
-      "title": "Retention, cancellation, and deletion"
-    },
-    {
-      "product": "finops",
-      "id": "F-06",
-      "title": "Data, task, and integration failures"
-    },
-    {
-      "product": "finops",
-      "id": "F-10",
-      "title": "Context and evidence in reporting and anomaly use cases"
-    },
-    {
-      "product": "finops",
-      "id": "F-U01",
-      "title": "Cost-variance analysis: worked example"
-    },
-    {
-      "product": "finops",
-      "id": "F-07",
-      "title": "Documentation coverage and references"
-    },
-    {
-      "product": "finops",
-      "id": "slide",
-      "title": "What AWS FinOps Agent does with a request"
-    },
-    {
-      "product": "finops",
-      "id": "slide",
-      "title": "How conversations, automations and tasks coordinate work"
-    },
-    {
-      "product": "finops",
-      "id": "slide",
-      "title": "The agent instance and its access boundaries"
-    },
-    {
-      "product": "finops",
-      "id": "slide",
-      "title": "Analyze historical cost and usage"
-    },
-    {
-      "product": "finops",
-      "id": "slide",
-      "title": "Investigate a cost anomaly"
-    },
-    {
-      "product": "finops",
-      "id": "slide",
-      "title": "Exercise: explain a cost increase from the supplied evidence"
-    },
-    {
-      "product": "finops",
-      "id": "slide",
-      "title": "Prepare a periodic cost report"
-    },
-    {
-      "product": "finops",
-      "id": "slide",
-      "title": "Publication controls depend on the action and invocation"
-    },
-    {
-      "product": "finops",
-      "id": "slide",
-      "title": "Forecasting and commitment coverage answer different questions"
-    },
-    {
-      "product": "finops",
-      "id": "slide",
-      "title": "Prioritize recommendations and measure an implemented change"
-    },
-    {
-      "product": "finops",
-      "id": "slide",
-      "title": "Prepare the cost-management contribution to an operational review"
-    },
-    {
-      "product": "finops",
-      "id": "slide",
-      "title": "Diagnose data, context, execution and delivery separately"
-    },
-    {
-      "product": "architecture",
-      "id": "A-90",
-      "title": "From one agent execution to product-specific workflows"
-    },
-    {
-      "product": "architecture",
-      "id": "A-91",
-      "title": "Coordination within a service and handoff between services"
-    },
-    {
-      "product": "architecture",
-      "id": "A-00",
-      "title": "Agents, tools, context, and executions"
-    },
-    {
-      "product": "architecture",
-      "id": "A-10",
-      "title": "Concept ownership and the approved entity model"
-    },
-    {
-      "product": "architecture",
-      "id": "A-12",
-      "title": "Capabilities, product features, and mechanisms"
-    },
-    {
-      "product": "architecture",
-      "id": "A-11",
-      "title": "Product specialization and use-case traceability"
-    },
-    {
-      "product": "architecture",
-      "id": "A-09",
-      "title": "Operational objectives and implementation dependencies"
-    },
-    {
-      "product": "architecture",
-      "id": "A-01",
-      "title": "Resource identity across service boundaries"
-    },
-    {
-      "product": "architecture",
-      "id": "A-02",
-      "title": "Knowledge construction and retrieval models"
-    },
-    {
-      "product": "architecture",
-      "id": "A-08",
-      "title": "Integration direction and evidence ownership"
-    },
-    {
-      "product": "architecture",
-      "id": "A-03",
-      "title": "Network, identity, and tool-access boundaries"
-    },
-    {
-      "product": "architecture",
-      "id": "A-04",
-      "title": "Authorization of state-changing operations"
-    },
-    {
-      "product": "architecture",
-      "id": "A-05",
-      "title": "Configuration, execution, and artifact lifecycles"
-    },
-    {
-      "product": "architecture",
-      "id": "A-06",
-      "title": "Cross-team evidence handoffs"
-    },
-    {
-      "product": "architecture",
-      "id": "A-U01",
-      "title": "Cross-platform operational review: worked example"
-    },
-    {
-      "product": "architecture",
-      "id": "A-07",
-      "title": "Architecture assumptions and references"
-    },
-    {
-      "product": "architecture",
-      "id": "slide",
-      "title": "An agent is an executor, not the surrounding workspace"
-    },
-    {
-      "product": "architecture",
-      "id": "slide",
-      "title": "The agent execution cycle"
-    },
-    {
-      "product": "architecture",
-      "id": "slide",
-      "title": "Context and control differ between the three products"
-    },
-    {
-      "product": "architecture",
-      "id": "slide",
-      "title": "Three different meanings of coordination"
-    },
-    {
-      "product": "architecture",
-      "id": "slide",
-      "title": "Cross-service evidence handoff"
-    },
-    {
-      "product": "architecture",
-      "id": "slide",
-      "title": "Controls follow the effect"
-    },
-    {
-      "product": "architecture",
-      "id": "slide",
-      "title": "A use case applies platform facilities to a defined objective"
-    },
-    {
-      "product": "architecture",
-      "id": "slide",
-      "title": "Exercise: one event, three independently scoped inquiries"
-    },
-    {
-      "product": "architecture",
-      "id": "slide",
-      "title": "Reading path after the presentation"
     }
   ],
   "protected_sources": {
