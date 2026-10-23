@@ -201,6 +201,7 @@ def browser_checks():
                 assert speaker.count()==1
                 note_target=speaker.get_attribute('data-review-block')
                 assert '/presentations/devops/' in page.evaluate('(id)=>document.getElementById("review-source-map").textContent.includes(id) ? JSON.parse(document.getElementById("review-source-map").textContent).targets[id].path : ""',note_target)
+                page.locator('#review-notes-open').click()
                 # Import is text-only, and forged/stale hashes are visibly flagged.
                 incoming=page.evaluate('FrontierReview.exportPacket()');item=deepcopy(incoming['comments'][-1]);item['id']='import-test';item['body']='<img src=x onerror=alert(1)>';item['targets'][0]['file_sha256']='0'*64;incoming['comments']=[item]
                 page.locator('#review-import').set_input_files({'name':'review.json','mimeType':'application/json','buffer':json.dumps(incoming).encode()})
