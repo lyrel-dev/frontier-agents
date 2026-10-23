@@ -154,6 +154,18 @@ def main():
                 page.get_by_role('link',name='Experiment operations',exact=True).click();wait(page,"fleetState.view==='catalog'")
                 page.get_by_label('Filter FIS templates').fill('EXT1')
                 check('search filters actual template records',page.get_by_role('button',name='Inspect AWS definition',exact=True).count()==1)
+                page.evaluate("""()=>{const original=window.fetch;let release;
+                  const held=new Promise(resolve=>release=resolve);
+                  window.__releaseFilterRefresh=()=>{release();window.fetch=original};
+                  window.fetch=async(path,options)=>{const response=await original(path,options);if(path==='/api/fis/catalog')await held;return response};
+                  window.__filterRefresh=ar();
+                }""")
+                page.get_by_label('Filter FIS templates').fill('EXTtest')
+                page.evaluate('async()=>{window.__releaseFilterRefresh();await window.__filterRefresh;}')
+                check('a delayed catalogue refresh preserves the current operator search',
+                      page.get_by_label('Filter FIS templates').input_value()=='EXTtest' and
+                      page.get_by_role('button',name='Inspect AWS definition',exact=True).count()==1)
+
                 page.get_by_label('Filter FIS templates').fill('')
                 page.get_by_role('button',name='Inspect AWS definition',exact=True).first.click()
                 check('template inspection retains AWS action definitions','aws:ec2:stop-instances' in page.locator('#aws-modal-body').inner_text())
