@@ -22,6 +22,12 @@ The add-check control remains disabled until the read-operation catalogue is ava
 
 The SDK input descriptor no longer silently truncates nested structures at five levels. It preserves the full supported input shape, including CloudWatch metric-query dimensions. A recursive or over-budget shape is rejected explicitly instead of becoming an incomplete form. Model checks cover every allowlisted read operation, and a separate native-browser check edits nested CloudWatch dimension fields through the served application.
 
+## Atomic trial finalization
+
+The real-worker acceptance run exposed a terminal-state race: CLOSED was committed before the evaluator attached the assessment. A concurrent reader could see a closed trial without its result, and a process interruption in that interval could strand the result permanently. Finalization now computes against the intended terminal state and commits the assessment, its pinned probe capture reference, the terminal state and journal events in one local transaction. The revision and verified cleanup are rechecked before commit. An interruption before that commit leaves FINALIZING for the replacement worker; no second FIS start is issued.
+
+Tests inspect the database through a separate reader before commit, inject a failure inside the transaction, reject stale/mismatched inputs, and restart finalization after an interrupted evaluation. The local transaction does not make AWS mutations transactional or replace provider-operation reconciliation.
+
 ## Reproducible acceptance
 
 Run the Python suite and the native-browser checks, including `python tests/sdk_form_browser_checks.py --native`, followed by worker HTTP and Docker acceptance. The additional `tests/observability_acceptance.py` starts the actual empty application, Prometheus 3.15.1 and Grafana 13.2.4 in a disposable, isolated Docker network namespace. It checks authenticated scraping, executes all baseline panel queries in Prometheus and through Grafana, imports/reads back the generated dashboard, and verifies that no incident measurements were created. It is not a test of real AWS metric content.
