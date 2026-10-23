@@ -154,7 +154,24 @@ def main():
                 page.get_by_role('link',name='Experiment operations',exact=True).click();wait(page,"fleetState.view==='catalog'")
                 page.get_by_label('Filter FIS templates').fill('EXT1')
                 check('search filters actual template records',page.get_by_role('button',name='Inspect AWS definition',exact=True).count()==1)
+                # Hold a real refresh response while the operator edits filters. The
+                # old implementation rebuilt blank inputs and lost the selection.
+                page.evaluate("""()=>{window.__originalFetch=window.fetch;window.fetch=async(p,o)=>{const r=await window.__originalFetch(p,o);if(p==='/api/fis/catalog')await new Promise(resolve=>window.__releaseCatalogue=resolve);return r;};window.__heldRefresh=ar();}""")
+                wait(page,"typeof window.__releaseCatalogue==='function'")
+                page.get_by_label('Filter FIS templates').fill('EXTtest')
+                page.get_by_label('Filter FIS account scope').select_option(index=1)
+                scope=page.get_by_label('Filter FIS account scope').input_value()
+                page.get_by_label('Filter FIS templates').focus()
+                page.evaluate("async()=>{window.__releaseCatalogue();await window.__heldRefresh;window.fetch=window.__originalFetch;delete window.__releaseCatalogue;}")
+                check('delayed catalogue refresh preserves search text and results',
+                      page.get_by_label('Filter FIS templates').input_value()=='EXTtest'
+                      and page.get_by_role('button',name='Inspect AWS definition',exact=True).count()==1)
+                check('delayed catalogue refresh preserves selected account scope',
+                      page.get_by_label('Filter FIS account scope').input_value()==scope)
+                check('catalogue refresh restores keyboard focus to the active filter',
+                      page.evaluate("document.activeElement.dataset.catalogFilter==='search'"))
                 page.get_by_label('Filter FIS templates').fill('')
+                page.get_by_label('Filter FIS account scope').select_option('')
                 page.get_by_role('button',name='Inspect AWS definition',exact=True).first.click()
                 check('template inspection retains AWS action definitions','aws:ec2:stop-instances' in page.locator('#aws-modal-body').inner_text())
                 page.locator('#aws-close').click()
