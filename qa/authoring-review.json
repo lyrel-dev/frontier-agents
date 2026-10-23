@@ -1,6 +1,6 @@
 {
   "schema": "frontier-authoring-validation/v1",
-  "interaction": "contextual-v3",
+  "interaction": "contextual-v4",
   "errors": [],
   "source_mapping": [
     "all registry values equal the approved baseline",
@@ -84,6 +84,46 @@
     },
     {
       "localStorage_failure_visible_and_memory_export_retained": "passed"
+    }
+  ],
+  "hierarchical_selection": [
+    {
+      "pages": 42,
+      "selection_nodes": 12451,
+      "tree_integrity_and_exact_membership": "passed"
+    },
+    {
+      "source_guard_regressions": [
+        "valid section permits one exact member edit without writing",
+        "omitted member rejected",
+        "reordered member rejected",
+        "stale canonical revision rejected",
+        "duplicate roots rejected",
+        "ancestor descendant duplication rejected",
+        "changed scope membership rejected",
+        "unsafe generated-document path rejected",
+        "context-only cell or item cannot authorize edits"
+      ]
+    },
+    {
+      "viewport": 390,
+      "heading_section_chapter_slide_document": "passed",
+      "hidden_members_snapshotted": "passed",
+      "normalized_ancestor_selection": "passed",
+      "one_container_thread_marker": "passed",
+      "autosave_reload_exact_export": "passed",
+      "note_popup_remains_note_only": "passed",
+      "javascript_errors": []
+    },
+    {
+      "viewport": 1440,
+      "heading_section_chapter_slide_document": "passed",
+      "hidden_members_snapshotted": "passed",
+      "normalized_ancestor_selection": "passed",
+      "one_container_thread_marker": "passed",
+      "autosave_reload_exact_export": "passed",
+      "note_popup_remains_note_only": "passed",
+      "javascript_errors": []
     }
   ]
 }
