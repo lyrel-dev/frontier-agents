@@ -1,0 +1,274 @@
+{
+  "revision": "2026-10-23-educational-sequence",
+  "baseline": "1a62b5686ec361d1b4ab894df0a0ab249cfe1d78",
+  "frozen_sources": {
+    "catalog/use-cases.json": {
+      "unchanged": true,
+      "sha256": "e5aae837db20d3dc7383b86cf22f01cb7310c8691e37122b0f11650ecc92900c"
+    },
+    "catalog/mechanisms.json": {
+      "unchanged": true,
+      "sha256": "ef2f2ba7f98a9a33929c2ebfd240e29a42ee0d10fa37c44c0baeb68e48c7f5c7"
+    },
+    "catalog/features.json": {
+      "unchanged": true,
+      "sha256": "fefc21015e00bf043a9bbbe9776caa5ca5cb2de0ab3232ca8a6437ad8ed20763"
+    },
+    "catalog/profiles.json": {
+      "unchanged": true,
+      "sha256": "89d23d92c97b95288e68de2a001186ba5846b18b6dec3774ba545143aea33190"
+    },
+    "catalog/aliases.json": {
+      "unchanged": true,
+      "sha256": "5f1efdc4eb665cdd3d7830c148d653cc2f38a7d4c7cf4cf1f68e538d95ced720"
+    },
+    "catalog/resource-models.json": {
+      "unchanged": true,
+      "sha256": "4565514f203edd099b20fdc1472a3a1472696e147952f838e2163efe2947aa42"
+    }
+  },
+  "presentation_sequences": {
+    "devops": {
+      "slides": 19,
+      "minutes": 58.0,
+      "exercise_minutes": 8.0,
+      "use_cases": [
+        "UC-D01",
+        "UC-D02",
+        "UC-D03",
+        "UC-D04",
+        "UC-D05",
+        "UC-D06",
+        "UC-D07",
+        "UC-D08",
+        "UC-D09",
+        "UC-D10",
+        "UC-D11",
+        "UC-D12",
+        "UC-D13",
+        "UC-D14",
+        "UC-G01"
+      ],
+      "chapter_order": [
+        "Agent composition and shared operating scope",
+        "Incident response: evidence, decisions and controlled effects",
+        "Routine reporting and reliability improvement",
+        "Operational knowledge, change assurance and reviews"
+      ]
+    },
+    "security": {
+      "slides": 12,
+      "minutes": 41.0,
+      "exercise_minutes": 8.0,
+      "use_cases": [
+        "UC-S01",
+        "UC-S02",
+        "UC-S03",
+        "UC-S04",
+        "UC-S05",
+        "UC-S06",
+        "UC-S07",
+        "UC-S08"
+      ],
+      "chapter_order": [
+        "Assessment execution, application scope and context",
+        "Assessment and finding resolution",
+        "Design, requirements and reusable context"
+      ]
+    },
+    "finops": {
+      "slides": 12,
+      "minutes": 40.0,
+      "exercise_minutes": 8.0,
+      "use_cases": [
+        "UC-F01",
+        "UC-F02",
+        "UC-F03",
+        "UC-F04",
+        "UC-F05",
+        "UC-F06",
+        "UC-F07",
+        "UC-G01"
+      ],
+      "chapter_order": [
+        "Analysis, context and instance scope",
+        "Cost inquiry, anomaly investigation and reporting",
+        "Planning, optimization and review"
+      ]
+    },
+    "architecture": {
+      "slides": 9,
+      "minutes": 27.0,
+      "exercise_minutes": 4.0,
+      "use_cases": [
+        "UC-D06",
+        "UC-F05",
+        "UC-G01",
+        "UC-S07"
+      ],
+      "chapter_order": [
+        "Agents and their operating context",
+        "Coordination, boundaries and evidence",
+        "Apply the model to approved operational work"
+      ]
+    }
+  },
+  "diagram_views": {
+    "teaching-devops-agent": {
+      "fixed_layout": "teaching-fixed-v1",
+      "components": 8
+    },
+    "teaching-devops-coordination": {
+      "fixed_layout": "teaching-fixed-v1",
+      "components": 10
+    },
+    "teaching-devops-space": {
+      "fixed_layout": "teaching-fixed-v1",
+      "components": 10
+    },
+    "teaching-devops-incident": {
+      "fixed_layout": "teaching-fixed-v1",
+      "components": 10
+    },
+    "teaching-devops-mitigation": {
+      "fixed_layout": "teaching-fixed-v1",
+      "components": 10
+    },
+    "teaching-devops-learning": {
+      "fixed_layout": "teaching-fixed-v1",
+      "components": 10
+    },
+    "teaching-devops-reporting": {
+      "fixed_layout": "teaching-fixed-v1",
+      "components": 10
+    },
+    "teaching-devops-knowledge": {
+      "fixed_layout": "teaching-fixed-v1",
+      "components": 10
+    },
+    "teaching-devops-change": {
+      "fixed_layout": "teaching-fixed-v1",
+      "components": 10
+    },
+    "teaching-devops-review": {
+      "fixed_layout": "teaching-fixed-v1",
+      "components": 10
+    },
+    "teaching-security-agent": {
+      "fixed_layout": "teaching-fixed-v1",
+      "components": 8
+    },
+    "teaching-security-coordination": {
+      "fixed_layout": "teaching-fixed-v1",
+      "components": 10
+    },
+    "teaching-security-space": {
+      "fixed_layout": "teaching-fixed-v1",
+      "components": 10
+    },
+    "teaching-security-assessment": {
+      "fixed_layout": "teaching-fixed-v1",
+      "components": 10
+    },
+    "teaching-security-repair": {
+      "fixed_layout": "teaching-fixed-v1",
+      "components": 10
+    },
+    "teaching-security-context": {
+      "fixed_layout": "teaching-fixed-v1",
+      "components": 10
+    },
+    "teaching-finops-agent": {
+      "fixed_layout": "teaching-fixed-v1",
+      "components": 8
+    },
+    "teaching-finops-coordination": {
+      "fixed_layout": "teaching-fixed-v1",
+      "components": 10
+    },
+    "teaching-finops-space": {
+      "fixed_layout": "teaching-fixed-v1",
+      "components": 10
+    },
+    "teaching-finops-analysis": {
+      "fixed_layout": "teaching-fixed-v1",
+      "components": 10
+    },
+    "teaching-finops-reporting": {
+      "fixed_layout": "teaching-fixed-v1",
+      "components": 10
+    },
+    "teaching-finops-optimization": {
+      "fixed_layout": "teaching-fixed-v1",
+      "components": 10
+    }
+  },
+  "browser": [
+    {
+      "product": "devops",
+      "width": 390,
+      "slides_checked": 19,
+      "diagram_text_bounds": "passed",
+      "page_overflow": "passed",
+      "javascript_errors": []
+    },
+    {
+      "product": "devops",
+      "width": 1440,
+      "slides_checked": 19,
+      "diagram_text_bounds": "passed",
+      "page_overflow": "passed",
+      "javascript_errors": []
+    },
+    {
+      "product": "security",
+      "width": 390,
+      "slides_checked": 12,
+      "diagram_text_bounds": "passed",
+      "page_overflow": "passed",
+      "javascript_errors": []
+    },
+    {
+      "product": "security",
+      "width": 1440,
+      "slides_checked": 12,
+      "diagram_text_bounds": "passed",
+      "page_overflow": "passed",
+      "javascript_errors": []
+    },
+    {
+      "product": "finops",
+      "width": 390,
+      "slides_checked": 12,
+      "diagram_text_bounds": "passed",
+      "page_overflow": "passed",
+      "javascript_errors": []
+    },
+    {
+      "product": "finops",
+      "width": 1440,
+      "slides_checked": 12,
+      "diagram_text_bounds": "passed",
+      "page_overflow": "passed",
+      "javascript_errors": []
+    },
+    {
+      "product": "architecture",
+      "width": 390,
+      "slides_checked": 9,
+      "diagram_text_bounds": "passed",
+      "page_overflow": "passed",
+      "javascript_errors": []
+    },
+    {
+      "product": "architecture",
+      "width": 1440,
+      "slides_checked": 9,
+      "diagram_text_bounds": "passed",
+      "page_overflow": "passed",
+      "javascript_errors": []
+    }
+  ],
+  "errors": [],
+  "boundary": "Teaching order, frozen content, case coverage and geometry checks. Not live AWS execution, complete fact verification or a claim that automated tests establish educational quality."
+}
