@@ -49,52 +49,47 @@
     {
       "product": "devops",
       "id": "D-01",
-      "title": "Agent Space, configuration and execution"
+      "title": "Agent Spaces and AWS account scope"
     },
     {
       "product": "devops",
       "id": "D-13",
-      "title": "Configuration identities and knowledge relationships"
+      "title": "Assets, identities, and configuration references"
     },
     {
       "product": "devops",
-      "id": "D-12",
-      "title": "Supported integrations and connection directions"
+      "id": "D-15",
+      "title": "AWS-managed agents"
     },
     {
       "product": "devops",
-      "id": "D-02",
-      "title": "Resource roles and operator roles"
+      "id": "D-16",
+      "title": "Custom-agent definitions and configuration"
     },
     {
       "product": "devops",
-      "id": "D-03",
-      "title": "MCP provider registration and tool selection"
+      "id": "D-M03",
+      "title": "Standing instructions and session initialization"
     },
     {
       "product": "devops",
-      "id": "D-04",
-      "title": "Private network connections"
-    },
-    {
-      "product": "devops",
-      "id": "D-05",
-      "title": "Resource discovery and topology construction"
-    },
-    {
-      "product": "devops",
-      "id": "D-M08",
-      "title": "Environment-knowledge consolidation and refresh"
+      "id": "D-M04",
+      "title": "Skills, applicability, and supporting files"
     },
     {
       "product": "devops",
       "id": "D-M01",
-      "title": "Incident-memory construction and retrieval"
+      "title": "Memory construction and progressive retrieval"
+    },
+    {
+      "product": "devops",
+      "id": "D-M08",
+      "title": "Managed knowledge production and refresh"
     },
     {
       "product": "devops",
       "id": "D-M02",
-      "title": "Investigation feedback and corrective memory"
+      "title": "Corrective feedback and reflection memory"
     },
     {
       "product": "devops",
@@ -103,23 +98,43 @@
     },
     {
       "product": "devops",
-      "id": "D-M03",
-      "title": "Global and agent-specific instructions"
-    },
-    {
-      "product": "devops",
-      "id": "D-M04",
-      "title": "Runbook skills and applicability rules"
-    },
-    {
-      "product": "devops",
-      "id": "D-06",
-      "title": "Incident triage, investigation, and prevention"
+      "id": "D-17",
+      "title": "Attachments and repository-backed authoring"
     },
     {
       "product": "devops",
       "id": "D-07",
-      "title": "Operational queries and custom-agent invocations"
+      "title": "On-demand invocation and scheduled triggers"
+    },
+    {
+      "product": "devops",
+      "id": "D-18",
+      "title": "Webhook events, filtering, and payload projection"
+    },
+    {
+      "product": "devops",
+      "id": "D-12",
+      "title": "Supported integrations and connection directions"
+    },
+    {
+      "product": "devops",
+      "id": "D-03",
+      "title": "MCP provider registration and tool selection"
+    },
+    {
+      "product": "devops",
+      "id": "D-20",
+      "title": "Outbound A2A delegation"
+    },
+    {
+      "product": "devops",
+      "id": "D-04",
+      "title": "Private endpoints, routing, and DNS"
+    },
+    {
+      "product": "devops",
+      "id": "D-19",
+      "title": "Invocation state, trajectory, and continuation"
     },
     {
       "product": "devops",
@@ -133,13 +148,53 @@
     },
     {
       "product": "devops",
+      "id": "D-06",
+      "title": "Incident triage, investigation, and prevention"
+    },
+    {
+      "product": "devops",
+      "id": "D-21",
+      "title": "Investigation Reviews and conversational assistance"
+    },
+    {
+      "product": "devops",
+      "id": "D-22",
+      "title": "Release-readiness review and release testing"
+    },
+    {
+      "product": "devops",
+      "id": "D-09",
+      "title": "Console, web application, and inbound remote access"
+    },
+    {
+      "product": "devops",
+      "id": "D-05",
+      "title": "Topology, environment summaries, and export"
+    },
+    {
+      "product": "devops",
+      "id": "D-23",
+      "title": "Artifacts, notifications, and outbound lifecycle events"
+    },
+    {
+      "product": "devops",
+      "id": "D-02",
+      "title": "Resource roles and operator roles"
+    },
+    {
+      "product": "devops",
       "id": "D-08",
       "title": "Configuration APIs and update semantics"
     },
     {
       "product": "devops",
-      "id": "D-09",
-      "title": "Remote access and release-assurance workflows"
+      "id": "D-24",
+      "title": "Identity providers, credential maintenance, and service telemetry"
+    },
+    {
+      "product": "devops",
+      "id": "D-10",
+      "title": "Execution limits and diagnostic procedures"
     },
     {
       "product": "devops",
@@ -150,11 +205,6 @@
       "product": "devops",
       "id": "D-U01",
       "title": "Recurring-alarm investigation: worked example"
-    },
-    {
-      "product": "devops",
-      "id": "D-10",
-      "title": "Execution limits and diagnostic procedures"
     },
     {
       "product": "devops",
@@ -179,17 +229,7 @@
     {
       "product": "devops",
       "id": "slide",
-      "title": "Provider registration and Agent Space association"
-    },
-    {
-      "product": "devops",
-      "id": "slide",
-      "title": "Telemetry, source control, and incident connections"
-    },
-    {
-      "product": "devops",
-      "id": "slide",
-      "title": "Access roles, tool providers and private connectivity"
+      "title": "Managed agents and customer-defined agents"
     },
     {
       "product": "devops",
@@ -209,6 +249,61 @@
     {
       "product": "devops",
       "id": "slide",
+      "title": "Incident pattern analysis and prevention recommendations"
+    },
+    {
+      "product": "devops",
+      "id": "slide",
+      "title": "Operational knowledge and release assurance"
+    },
+    {
+      "product": "devops",
+      "id": "slide",
+      "title": "Health reporting, deployment review, and prevention"
+    },
+    {
+      "product": "devops",
+      "id": "slide",
+      "title": "Webhook triggers: condition and payload projection"
+    },
+    {
+      "product": "devops",
+      "id": "slide",
+      "title": "Provider registration and Agent Space association"
+    },
+    {
+      "product": "devops",
+      "id": "slide",
+      "title": "Telemetry, source control, and incident connections"
+    },
+    {
+      "product": "devops",
+      "id": "slide",
+      "title": "Service-health reporting: workflow dependencies"
+    },
+    {
+      "product": "devops",
+      "id": "slide",
+      "title": "Outbound tools and remote-agent delegation"
+    },
+    {
+      "product": "devops",
+      "id": "slide",
+      "title": "Private connectivity: gateway, DNS, and endpoint routes"
+    },
+    {
+      "product": "devops",
+      "id": "slide",
+      "title": "Stopping future triggers and current invocations"
+    },
+    {
+      "product": "devops",
+      "id": "slide",
+      "title": "Sandbox execution and directed-action approval"
+    },
+    {
+      "product": "devops",
+      "id": "slide",
       "title": "Incident triage and investigation workflow"
     },
     {
@@ -219,22 +314,7 @@
     {
       "product": "devops",
       "id": "slide",
-      "title": "Incident pattern analysis and prevention recommendations"
-    },
-    {
-      "product": "devops",
-      "id": "slide",
-      "title": "Stopping future triggers and current invocations"
-    },
-    {
-      "product": "devops",
-      "id": "slide",
-      "title": "Configured operational-report workflow"
-    },
-    {
-      "product": "devops",
-      "id": "slide",
-      "title": "Sandbox execution and directed-action approval"
+      "title": "Incident triage, investigation, and mitigation"
     },
     {
       "product": "devops",
@@ -244,22 +324,22 @@
     {
       "product": "devops",
       "id": "slide",
-      "title": "Incident triage, investigation, and mitigation"
+      "title": "Access roles, tool providers and private connectivity"
     },
     {
       "product": "devops",
       "id": "slide",
-      "title": "Health reporting, deployment review, and prevention"
+      "title": "Troubleshooting matrix and operating limits"
     },
     {
       "product": "devops",
       "id": "slide",
-      "title": "Operational knowledge and release assurance"
+      "title": "Asset APIs, declarative management, and audit"
     },
     {
       "product": "devops",
       "id": "slide",
-      "title": "Service-health reporting: workflow dependencies"
+      "title": "Configured operational-report workflow"
     },
     {
       "product": "devops",
@@ -270,11 +350,6 @@
       "product": "devops",
       "id": "slide",
       "title": "Worked example: recurring alarm with different current evidence"
-    },
-    {
-      "product": "devops",
-      "id": "slide",
-      "title": "Troubleshooting matrix and operating limits"
     },
     {
       "product": "security",
@@ -288,33 +363,13 @@
     },
     {
       "product": "security",
-      "id": "S-09",
-      "title": "Supported source and collaboration integrations"
-    },
-    {
-      "product": "security",
-      "id": "S-02",
-      "title": "User access and repository connections"
-    },
-    {
-      "product": "security",
-      "id": "S-03",
-      "title": "Test targets, dependencies, and exclusions"
+      "id": "S-12",
+      "title": "Assessment definitions and customization"
     },
     {
       "product": "security",
       "id": "S-M07",
       "title": "Application-context construction and reuse"
-    },
-    {
-      "product": "security",
-      "id": "S-M01",
-      "title": "Credential retrieval and application login"
-    },
-    {
-      "product": "security",
-      "id": "S-M02",
-      "title": "Login-workflow retention and reuse"
     },
     {
       "product": "security",
@@ -328,13 +383,48 @@
     },
     {
       "product": "security",
-      "id": "S-M06",
-      "title": "Encryption keys, identities, and access"
+      "id": "S-M02",
+      "title": "Login-workflow retention and reuse"
+    },
+    {
+      "product": "security",
+      "id": "S-13",
+      "title": "Finding-edit personalization"
+    },
+    {
+      "product": "security",
+      "id": "S-14",
+      "title": "Assessment invocation and repository events"
+    },
+    {
+      "product": "security",
+      "id": "S-09",
+      "title": "Supported source and collaboration integrations"
+    },
+    {
+      "product": "security",
+      "id": "S-15",
+      "title": "Private source access and application connectivity"
+    },
+    {
+      "product": "security",
+      "id": "S-03",
+      "title": "Test targets, dependencies, and exclusions"
+    },
+    {
+      "product": "security",
+      "id": "S-M01",
+      "title": "Credential retrieval and application login"
     },
     {
       "product": "security",
       "id": "S-04",
       "title": "Assessment configuration and run lifecycle"
+    },
+    {
+      "product": "security",
+      "id": "S-06",
+      "title": "Code review, design review, and threat modeling"
     },
     {
       "product": "security",
@@ -348,8 +438,23 @@
     },
     {
       "product": "security",
-      "id": "S-06",
-      "title": "Code review, design review, and threat modeling"
+      "id": "S-16",
+      "title": "Interfaces, findings, and assessment outputs"
+    },
+    {
+      "product": "security",
+      "id": "S-02",
+      "title": "User access and repository connections"
+    },
+    {
+      "product": "security",
+      "id": "S-M06",
+      "title": "Encryption keys, identities, and access"
+    },
+    {
+      "product": "security",
+      "id": "S-07",
+      "title": "Assessment failures and operating limits"
     },
     {
       "product": "security",
@@ -360,11 +465,6 @@
       "product": "security",
       "id": "S-U01",
       "title": "Authorization-finding remediation: worked example"
-    },
-    {
-      "product": "security",
-      "id": "S-07",
-      "title": "Assessment failures and operating limits"
     },
     {
       "product": "security",
@@ -389,32 +489,17 @@
     {
       "product": "security",
       "id": "slide",
-      "title": "Application-source registration and selection"
+      "title": "Application, source and design assessment objectives"
     },
     {
       "product": "security",
       "id": "slide",
-      "title": "Repository, documentation, and Jira connections"
-    },
-    {
-      "product": "security",
-      "id": "slide",
-      "title": "Identity, repository and target configuration"
-    },
-    {
-      "product": "security",
-      "id": "slide",
-      "title": "Repository, pipeline and external tracking integrations"
+      "title": "Assessment configuration rather than custom-agent configuration"
     },
     {
       "product": "security",
       "id": "slide",
       "title": "Application context and assessment criteria"
-    },
-    {
-      "product": "security",
-      "id": "slide",
-      "title": "Authentication reuse and finding personalization"
     },
     {
       "product": "security",
@@ -429,7 +514,22 @@
     {
       "product": "security",
       "id": "slide",
-      "title": "Finding replay and verification boundaries"
+      "title": "Authentication reuse and finding personalization"
+    },
+    {
+      "product": "security",
+      "id": "slide",
+      "title": "Application-source registration and selection"
+    },
+    {
+      "product": "security",
+      "id": "slide",
+      "title": "Repository, documentation, and Jira connections"
+    },
+    {
+      "product": "security",
+      "id": "slide",
+      "title": "Private source access and application-target connectivity"
     },
     {
       "product": "security",
@@ -444,17 +544,17 @@
     {
       "product": "security",
       "id": "slide",
+      "title": "Application assessment: independent configuration choices"
+    },
+    {
+      "product": "security",
+      "id": "slide",
+      "title": "Finding replay and verification boundaries"
+    },
+    {
+      "product": "security",
+      "id": "slide",
       "title": "Finding lineage, remediation and revalidation"
-    },
-    {
-      "product": "security",
-      "id": "slide",
-      "title": "Customer-managed encryption and service identities"
-    },
-    {
-      "product": "security",
-      "id": "slide",
-      "title": "Application, source and design assessment objectives"
     },
     {
       "product": "security",
@@ -464,7 +564,27 @@
     {
       "product": "security",
       "id": "slide",
-      "title": "Application assessment: independent configuration choices"
+      "title": "Assessment interfaces and result records"
+    },
+    {
+      "product": "security",
+      "id": "slide",
+      "title": "Identity, repository and target configuration"
+    },
+    {
+      "product": "security",
+      "id": "slide",
+      "title": "Repository, pipeline and external tracking integrations"
+    },
+    {
+      "product": "security",
+      "id": "slide",
+      "title": "Customer-managed encryption and service identities"
+    },
+    {
+      "product": "security",
+      "id": "slide",
+      "title": "Troubleshooting matrix and assessment limits"
     },
     {
       "product": "security",
@@ -475,11 +595,6 @@
       "product": "security",
       "id": "slide",
       "title": "Worked example: authorization finding through revalidation"
-    },
-    {
-      "product": "security",
-      "id": "slide",
-      "title": "Troubleshooting matrix and assessment limits"
     },
     {
       "product": "finops",
@@ -493,23 +608,8 @@
     },
     {
       "product": "finops",
-      "id": "F-08",
-      "title": "Supported data sources and publication destinations"
-    },
-    {
-      "product": "finops",
-      "id": "F-02",
-      "title": "Administrator, service, and operator permissions"
-    },
-    {
-      "product": "finops",
-      "id": "F-M01",
-      "title": "Cost queries and recommendation provenance"
-    },
-    {
-      "product": "finops",
-      "id": "F-05",
-      "title": "Jira projects and Slack channel connections"
+      "id": "F-11",
+      "title": "Instance configuration and task instructions"
     },
     {
       "product": "finops",
@@ -538,8 +638,23 @@
     },
     {
       "product": "finops",
-      "id": "F-04",
-      "title": "Report generation and artifact management"
+      "id": "F-08",
+      "title": "Supported data sources and publication destinations"
+    },
+    {
+      "product": "finops",
+      "id": "F-05",
+      "title": "Jira projects and Slack channel connections"
+    },
+    {
+      "product": "finops",
+      "id": "F-12",
+      "title": "Service access, storage location, and inference"
+    },
+    {
+      "product": "finops",
+      "id": "F-13",
+      "title": "Queued execution and session runtime"
     },
     {
       "product": "finops",
@@ -548,8 +663,38 @@
     },
     {
       "product": "finops",
+      "id": "F-14",
+      "title": "Cost inquiry, anomaly investigation, and recommendation analysis"
+    },
+    {
+      "product": "finops",
+      "id": "F-M01",
+      "title": "Cost queries and recommendation provenance"
+    },
+    {
+      "product": "finops",
+      "id": "F-15",
+      "title": "Conversation, task history, and artifact interfaces"
+    },
+    {
+      "product": "finops",
+      "id": "F-04",
+      "title": "Report generation and artifact management"
+    },
+    {
+      "product": "finops",
+      "id": "F-02",
+      "title": "Administrator, service, and operator permissions"
+    },
+    {
+      "product": "finops",
       "id": "F-M07",
       "title": "Retention, cancellation, and deletion"
+    },
+    {
+      "product": "finops",
+      "id": "F-06",
+      "title": "Data, task, and integration failures"
     },
     {
       "product": "finops",
@@ -560,11 +705,6 @@
       "product": "finops",
       "id": "F-U01",
       "title": "Cost-variance analysis: worked example"
-    },
-    {
-      "product": "finops",
-      "id": "F-06",
-      "title": "Data, task, and integration failures"
     },
     {
       "product": "finops",
@@ -589,22 +729,7 @@
     {
       "product": "finops",
       "id": "slide",
-      "title": "Data-source access and collaboration connections"
-    },
-    {
-      "product": "finops",
-      "id": "slide",
-      "title": "Cost-data and publication connections"
-    },
-    {
-      "product": "finops",
-      "id": "slide",
-      "title": "Jira and Slack publication controls"
-    },
-    {
-      "product": "finops",
-      "id": "slide",
-      "title": "Access roles and source dependencies"
+      "title": "Instance settings, task instructions, and automations"
     },
     {
       "product": "finops",
@@ -624,27 +749,7 @@
     {
       "product": "finops",
       "id": "slide",
-      "title": "Anomaly investigation and cost driver analysis"
-    },
-    {
-      "product": "finops",
-      "id": "slide",
-      "title": "Optimization recommendation review"
-    },
-    {
-      "product": "finops",
-      "id": "slide",
       "title": "Tasks, schedules and event automations"
-    },
-    {
-      "product": "finops",
-      "id": "slide",
-      "title": "Report artifacts and data lifecycle"
-    },
-    {
-      "product": "finops",
-      "id": "slide",
-      "title": "Historical cost, forecasting and commitment coverage"
     },
     {
       "product": "finops",
@@ -659,17 +764,67 @@
     {
       "product": "finops",
       "id": "slide",
+      "title": "Data-source access and collaboration connections"
+    },
+    {
+      "product": "finops",
+      "id": "slide",
+      "title": "Cost-data and publication connections"
+    },
+    {
+      "product": "finops",
+      "id": "slide",
+      "title": "Jira and Slack publication controls"
+    },
+    {
+      "product": "finops",
+      "id": "slide",
+      "title": "Source interfaces, stored data, and inference location"
+    },
+    {
+      "product": "finops",
+      "id": "slide",
+      "title": "Anomaly investigation and cost driver analysis"
+    },
+    {
+      "product": "finops",
+      "id": "slide",
+      "title": "Optimization recommendation review"
+    },
+    {
+      "product": "finops",
+      "id": "slide",
+      "title": "Historical cost, forecasting and commitment coverage"
+    },
+    {
+      "product": "finops",
+      "id": "slide",
+      "title": "Report artifacts and data lifecycle"
+    },
+    {
+      "product": "finops",
+      "id": "slide",
+      "title": "Conversations, task history, and report artifacts"
+    },
+    {
+      "product": "finops",
+      "id": "slide",
+      "title": "Access roles and source dependencies"
+    },
+    {
+      "product": "finops",
+      "id": "slide",
+      "title": "Troubleshooting matrix and preview limits"
+    },
+    {
+      "product": "finops",
+      "id": "slide",
       "title": "Retained context and session-local execution"
     },
     {
       "product": "finops",
       "id": "slide",
       "title": "Worked example: cost increase decomposition"
-    },
-    {
-      "product": "finops",
-      "id": "slide",
-      "title": "Troubleshooting matrix and preview limits"
     },
     {
       "product": "architecture",
@@ -680,6 +835,11 @@
       "product": "architecture",
       "id": "A-10",
       "title": "Concept ownership and the approved entity model"
+    },
+    {
+      "product": "architecture",
+      "id": "A-12",
+      "title": "Capabilities, product features, and mechanisms"
     },
     {
       "product": "architecture",
@@ -769,7 +929,7 @@
     {
       "product": "architecture",
       "id": "slide",
-      "title": "Operational-review profiles and evidence handoffs"
+      "title": "Use case families across the three platforms"
     },
     {
       "product": "architecture",
@@ -789,6 +949,16 @@
     {
       "product": "architecture",
       "id": "slide",
+      "title": "Operational prerequisites and verification records"
+    },
+    {
+      "product": "architecture",
+      "id": "slide",
+      "title": "Operational-review profiles and evidence handoffs"
+    },
+    {
+      "product": "architecture",
+      "id": "slide",
       "title": "Configuration, execution and artifact lifecycles"
     },
     {
@@ -800,16 +970,6 @@
       "product": "architecture",
       "id": "slide",
       "title": "Exercise: incident, security, and cost evidence handoff"
-    },
-    {
-      "product": "architecture",
-      "id": "slide",
-      "title": "Use case families across the three platforms"
-    },
-    {
-      "product": "architecture",
-      "id": "slide",
-      "title": "Operational prerequisites and verification records"
     }
   ],
   "protected_sources": {
