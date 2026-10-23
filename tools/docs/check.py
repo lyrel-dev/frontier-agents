@@ -19,6 +19,7 @@ from structure import BASELINE
 from model_check import validate_model
 from resource_model import validate as validate_resources
 from editorial_check import validate as validate_editorial
+from exposition_check import validate as validate_exposition
 from mechanism_detail import validate as validate_mechanisms
 from reading_check import validate as validate_reading
 
@@ -120,6 +121,8 @@ def check(browser=False):
     s=evidence['security'];assert s['deployed_revision']==s['proposed_revision'];assert s['test_identity']==s['prepared_revalidation_identity']
     mechanism_result=validate_mechanisms(guides,browser=browser)
     errors.extend(mechanism_result["errors"])
+    exposition_result=validate_exposition(guides)
+    errors.extend(exposition_result["errors"])
     editorial_result=validate_editorial(guides)
     errors.extend(editorial_result["errors"])
     model_result=validate_model(guides, browser=browser)
@@ -138,6 +141,7 @@ def check(browser=False):
     results['mechanism_review']=mechanism_result
     results['relationship_model']=model_result
     results['technical_editorial_review']=editorial_result
+    results['capability_exposition']=exposition_result
     results['product_resource_model']=resource_result
     results['reading_structure']=reading_result
     write('qa/checks.json',json.dumps(results,indent=2))
