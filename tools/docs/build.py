@@ -92,6 +92,19 @@ def inline_svg(key,prefix):
             elif attr in ('href','xlink:href') and value.startswith('#'):node[attr]='#'+mapping.get(value[1:],value[1:])
             elif 'url(#' in value:
                 node[attr]=re.sub(r'url\(#([^)]*)\)',lambda m:'url(#'+mapping.get(m[1],m[1])+')',value)
+    # Inline diagrams share a document: namespace both attribute references
+    # and CSS fragment URLs, then scope selectors to this SVG instance.
+    styles = svg.find_all('style')
+    if styles:
+        svg['id'] = prefix+'-svg-root'
+        for style in styles:
+            css = style.get_text()
+            css = re.sub(r'url\(#([^)]*)\)', lambda m: 'url(#'+mapping.get(m[1],m[1])+')', css)
+            def scope_rule(match):
+                selectors = ','.join('#'+svg['id']+' '+part.strip() for part in match[2].split(','))
+                return match[1]+selectors+'{'
+            css = re.sub(r'(^|})([^{}]+)\{', scope_rule, css)
+            style.string = css
     svg.attrs.pop('width',None);svg.attrs.pop('height',None)
     return str(svg)
 
