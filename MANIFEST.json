@@ -2,8 +2,8 @@
   "revision": "2026-10-23-reading-structure",
   "files": {
     ".github/workflows/document-suite.yml": {
-      "bytes": 3918,
-      "sha256": "5b1410b638533d74b8710d8a4bc02e0b7e23e5d288b244f291f5e2e9c1c084d9"
+      "bytes": 3634,
+      "sha256": "71d95fba3522edfc8f809169b58f3ffb68ef1ff23ed72ec4f1cef4ec57553393"
     },
     "CHANGELOG.md": {
       "bytes": 2349,
