@@ -393,7 +393,7 @@ Topology is assembled from discovered resources and evidence of their relationsh
 
 Discovery collects CloudFormation resources and, for tagged resources outside CloudFormation deployments, uses enabled Resource Explorer. Relationship evidence can include configuration, tags, deployment mapping and observability. Learned topology/pipeline views summarize that evidence; raw-resource views expose different levels of granularity. A missing graph node does not prove the agent cannot investigate the resource. [DS04]
 
-The managed Learning agent maintains environment knowledge. Its page provides knowledge, run history and scheduled-trigger inspection. Its schedules belong to the platform, unlike custom-agent triggers. Newer documentation moves learned topology, dependency, pipeline and tool-use knowledge into memory; older pages still call these learned skills. [DS06] [DS19]
+The managed Learning agent maintains environment knowledge. Its page provides knowledge, run history and scheduled-trigger inspection. Its schedules belong to the platform, unlike custom-agent triggers. The August 27 changelog records the move of learned topology, dependency, pipeline, and tool-use knowledge into memory. Some retrieved pages retain the earlier learned-skills terminology. [DS06] [DS19]
 
 **Engineering verification:** choose one service, identify its actual deployed resources and repository revision, and compare them with the graph. Record missing or incorrectly inferred edges separately. Inspect a learning run and the output's version after refresh; clicking a refresh control is not the completion evidence. Do not enable additional account writes to repair a read/discovery gap.
 
@@ -482,7 +482,7 @@ Selected defaults in the reviewed quota guide: three concurrent investigations p
 
 This diagnostic ordering is an engineering synthesis of D-02 through D-M06, not an additional AWS troubleshooting API.
 
-## 11. Worked example and reference material
+## 11. Appendix: worked example and reference material
 
 The approved operational objectives and prepared example remain separate from the platform-capability explanation.
 
@@ -530,39 +530,39 @@ To troubleshoot a case, locate the first missing relationship. A registered prov
 
 The preceding chapters explain the resource model, integration setup, retained knowledge, and execution paths needed for day-to-day operation. The coverage table distinguishes procedures described here from subjects that remain linked reference material. In particular, a source link for a remote protocol or preview release feature is not a claim that its entire configuration has been reproduced or exercised.
 
-The reference register identifies the official pages supporting product-specific statements. New integration and scheduling material and selected knowledge mechanisms were rechecked on 22 October 2026. Other retained explanations keep their existing sources and review boundaries. Authored diagrams show logical relationships; the worked incident and proposed acceptance checks are not records of live AWS execution.
+The reference register identifies the official pages supporting product-specific statements. The capability exposition follows the supplied outline. Agent definitions, triggers, assets, integration directions, release authentication, and selected knowledge behavior were checked for the 23 October 2026 revision. Retained procedures keep their existing references and review boundaries. Authored diagrams show logical relationships; the worked incident and proposed acceptance checks are not records of live AWS execution.
 
 | AWS subject | Treatment here | Deliberate boundary |
 |---|---|---|
 | Workspace, roles, topology | Configuration and diagnostic model | Exact organization IAM policy remains in official reference |
 | MCP/private connectivity | Authentication decisions and operational sequence | No customer network topology assumed |
 | Knowledge and learning | Producer, retrieval, feedback, activation, attachment, lifecycle | No claims about hidden ranking or model training |
-| Managed/custom execution | Routing, manual runs, schedules, cancellation, observation | Not every external incident provider reproduced |
+| Managed/custom execution | Definitions, routing, on-demand/scheduled/event invocation, continuation, cancellation | Provider-specific event payloads and full protocol schemas remain linked |
 | Assets and directed actions | Distinct update semantics and authorization | Full SDK schemas and denial lists linked |
-| Sandbox/release preview | Configuration and effect boundaries | Full release-profile authoring is deferred |
+| Sandbox/release preview | Runtime scope, test-profile fields, authentication, and effect boundaries | Complete environment and deployment procedures remain linked |
 | Quotas | Selected day-to-day constraints | Complete current quota/Region tables remain authoritative |
 
-**Source-version decisions:** older cached pages and newer indexed AWS content differed for instruction navigation, custom-store attachment and learned-knowledge storage. This edition uses the newer indexed managed-agent, memory, asset and dated-change guidance for those points. The Region table was not reproduced as a complete regional inventory. A retrieval date is not a claim that AWS published the page on that date.
+**Source-version qualifications:** retrieved representations differ for instruction navigation, asset types, trigger coverage, custom-store access, and learned-knowledge storage. The dated change entries and topic-specific procedures support the selected descriptions; the differing representations are recorded in `qa/exposition-review.json`. The guide does not infer publication order from retrieval order or provide a complete regional inventory.
 
 #### Official sources and reviewed sections
 
 - [DS01] Service/feature eligibility; Supported Regions and Feature availability.
 - [DS02] Space creation; primary account and Web App roles; verification.
-- [DS03] MCP requirements; registration, association, authentication, rotation and role-less validation. Newer indexed content used.
+- [DS03] MCP requirements; registration, association, authentication, rotation and role-less validation. Retrieved-source qualifications are recorded in the review notes.
 - [DS04] Topology views, discovery and scope beyond the graph.
 - [DS05] Private gateway operation, firewall rules and connection verification.
 - [DS06] Managed agents; Learning history and platform-owned triggers. Indexed content used.
 - [DS07] Memory production, retrieval, versions, activation, custom-store deletion. Older HTML reconciled with newer indexed content.
 - [DS08] Investigation initiation, triage decisions/corrections and feedback.
 - [DS09] Instruction scoping and new-session behavior; newer indexed navigation used.
-- [DS10] Custom-agent tool/store scope and invocation model. Newer indexed content used.
+- [DS10] Custom-agent tool/store scope and invocation model. Retrieved-source qualifications are recorded in the review notes.
 - [DS11] Skill applicability, format and authoring.
 - [DS12] Custom-agent creation and store selection. Indexed content used.
 - [DS13] Manual execution, schedules, cancellation and trajectories.
 - [DS14] Sandbox execution, network defaults, configuration and preview limits.
 - [DS15] Prevention evaluations and controls.
 - [DS16] Directed-action enablement, preferences replacement, categories, approval and audit.
-- [DS17] Asset operation/permission map, IDs and PATCH metadata. Newer indexed content used.
+- [DS17] Asset operation/permission map, IDs and PATCH metadata. Retrieved-source qualifications are recorded in the review notes.
 - [DS18] Built-in versus custom capabilities.
 - [DS19] Dated changes: monitor default, memory migration, reflections, private ports.
 - [DS20] Access methods and direction; client-specific setup not reproduced.
