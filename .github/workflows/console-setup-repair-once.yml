@@ -7,12 +7,15 @@ permissions:
   contents: write
 concurrency:
   group: console-setup-repair-once
-  cancel-in-progress: false
+  cancel-in-progress: true
 jobs:
   repair:
     if: github.ref == 'refs/heads/feat/aws-fis-console-delivery'
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: applications/aws-validation-console/agent_lab
     steps:
       - uses: actions/checkout@v4
         with:
@@ -20,91 +23,138 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.13'
-      - name: Apply exactly the locally reviewed source changes
-        working-directory: applications/aws-validation-console/agent_lab
+      - name: Apply exact reviewed source transformations
         run: |
           python - <<'PY'
           from pathlib import Path
           import hashlib
           def edit(name, before, after, transform):
-              p=Path(name); raw=p.read_bytes()
+              p=Path(name);raw=p.read_bytes()
               assert hashlib.sha256(raw).hexdigest()==before, name+' baseline differs'
               changed=transform(raw.decode())
               assert hashlib.sha256(changed.encode()).hexdigest()==after, name+' result differs'
               p.write_text(changed)
           def ui(s):
-              s=s.replace("draft:null,plan:null,offline:","draft:null,plan:null,navigation:0,loading:false,offline:")
-              s=s.replace("async function show(stage){setupState.stage=stage;if(setupState.token)await load();render();}","""async function show(stage){
-            const navigation=++setupState.navigation,token=setupState.token;
-            setupState.stage=stage;setupState.loading=true;
-            const host=sq('#setup-content');
-            // Remove obsolete controls before starting asynchronous reads. Retaining the
-            // previous form lets input disappear when the requested stage finishes loading.
-            host.setAttribute('aria-busy','true');
-            host.replaceChildren(se('p','Loading the selected setup stage…','setup-muted'));
-            document.querySelectorAll('[data-stage]').forEach(b=>b.classList.toggle('active',b.dataset.stage===stage));
+              s=s.replace("navigation:0,loading:false,offline:","navigation:0,loading:false,session:0,offline:")
+              s=s.replace("async function sf(path,body,token=setupState.token){if(setupState.offline)","async function sf(path,body,token=setupState.token){const session=setupState.session;if(setupState.offline)")
+              s=s.replace("if(!r.ok)throw Error(value.error||JSON.stringify(value.detail||value));return value;}","if(session!==setupState.session||!setupState.token)throw Error('Session locked; discard the pending response.');if(!r.ok)throw Error(value.error||JSON.stringify(value.detail||value));return value;}")
+              s=s.replace("token.input.value='';close();await load();render();message('Recorded: '","token.input.value='';await load();render();close();message('Recorded: '")
+              s=s.replace("setupState.navigation++;setupState.loading=false;setupState.token='';", "setupState.navigation++;setupState.session++;setupState.loading=false;setupState.token='';")
+              s=s.replace("try{setupState.token=token.get();await load();", "try{setupState.session++;setupState.token=token.get();await load();")
+              s=s.replace("setupState.token=token||'';setupState.exit=", "setupState.session++;setupState.token=token||'';setupState.exit=")
+              s=s.replace("let reads={};sf('setup/read-operations').then(r=>{reads=r;}).catch(e=>message(e.message,true));",'let reads={};')
+              s=s.replace("params=se('div');let editor=null;\nsvc.input.onchange=", "params=se('div');let editor=null,shapeRequest=0;\nconst clearParameters=()=>{shapeRequest++;editor=null;params.replaceChildren();};\nop.input.onchange=clearParameters;\nsvc.input.onchange=")
+              s=s.replace("editor=null;params.replaceChildren();};const loadShape=button('Build resource parameter fields',async()=>{const shape=await sf('setup/read-shape/'+svc.get()+'/'+op.get());editor=sdkValue(shape,'Parameters');params.replaceChildren(editor.node);});", """clearParameters();};const loadShape=button('Build resource parameter fields',async()=>{
+            const service=svc.get(),operation=op.get(),request=++shapeRequest;
+            if(!service||!operation)throw Error('Choose a loaded AWS read service and operation first.');
+            const shape=await sf('setup/read-shape/'+service+'/'+operation);
+            if(request!==shapeRequest||service!==svc.get()||operation!==op.get())return;
+            editor=sdkValue(shape,'Parameters');params.replaceChildren(editor.node);
+          });""")
+              return s.replace("verifierSection.append(verifierHost,button('Add independent check',addVerifier));form.append(verifierSection);", """const addCheck=button('Add independent check',addVerifier);addCheck.disabled=true;
+          const readStatus=se('p','Loading available AWS read operations…','setup-muted');
+          const loadReads=async()=>{
+            addCheck.disabled=true;readStatus.textContent='Loading available AWS read operations…';
             try{
-              if(token)await load();
-              if(navigation!==setupState.navigation||token!==setupState.token)return;
-              render();
-            }finally{
-              if(navigation===setupState.navigation){setupState.loading=false;host.setAttribute('aria-busy','false');}
-            }
-          }""")
-              s=s.replace("clear(){setupState.token='';", "clear(){setupState.navigation++;setupState.loading=false;setupState.token='';")
-              return s.replace("if(setupState.token){setupState.token='';", "if(setupState.token){setupState.navigation++;setupState.loading=false;setupState.token='';")
+              const received=await sf('setup/read-operations');
+              if(!received||!Object.keys(received).length||!Object.values(received).every(v=>Array.isArray(v)&&v.length))throw Error('No usable AWS read-operation catalogue returned.');
+              reads=received;addCheck.disabled=false;readStatus.textContent='AWS read operations loaded. Parameters are invalidated when their operation changes.';
+            }catch(error){readStatus.textContent='Read operations unavailable. Retry without discarding the plan.';throw error;}
+          };
+          verifierSection.append(verifierHost,readStatus,addCheck,button('Reload read operations',loadReads));form.append(verifierSection);
+          loadReads().catch(error=>message(error.message,true));""")
           def browser(s):
-              s=s.replace("'accountType':'SECONDARY'", "'accountType':'source'")
-              insert='''                # Delay only response timing; native mode still uses real HTTP and CSP.
-                          page.evaluate("""()=>{const original=window.fetch;let release;
-                            const pending=new Promise(resolve=>{release=resolve});
-                            window.__releaseSetupRead=()=>{release();window.fetch=original};
-                            window.fetch=async(path,options)=>{if(path==='/api/setup')await pending;return original(path,options)};
-                          }""")
-                          page.locator('[data-stage=accounts]').click()
-                          check('navigation removes stale editable controls while account reads are pending',
-                                page.get_by_label('Connection ID',exact=True).count()==0 and
-                                page.locator('#setup-content').get_attribute('aria-busy')=='true')
-                          page.evaluate('window.__releaseSetupRead()')
-                          page.get_by_label('Connection ID',exact=True).wait_for()
-                          wait_state(page, '!GuidedSetup.state().loading')
-                          check('account form becomes available only after its requested reads complete',
-                                page.locator('#setup-content').get_attribute('aria-busy')=='false')
-                          page.evaluate("""()=>{const original=window.fetch;const releases=[];
-                            window.__setupReadReleases=releases;
-                            window.__restoreSetupFetch=()=>{window.fetch=original};
-                            window.fetch=async(path,options)=>{if(path==='/api/setup')await new Promise(resolve=>releases.push(resolve));return original(path,options)};
-                          }""")
-                          page.locator('[data-stage=agents]').click()
-                          page.locator('[data-stage=accounts]').click()
-                          wait_state(page, 'window.__setupReadReleases.length===2')
-                          page.evaluate('window.__setupReadReleases[1]()')
-                          page.get_by_label('Connection ID',exact=True).fill('retained-input')
-                          page.evaluate('window.__setupReadReleases[0]();window.__restoreSetupFetch()')
-                          page.wait_for_timeout(200)
-                          check('late response from an older stage does not erase input in the selected stage',
-                                page.get_by_label('Connection ID',exact=True).input_value()=='retained-input' and
-                                page.get_by_label('Agent connection',exact=True).count()==0)
-          '''
-              s=s.replace('                def approve_dialog():',insert+'                def approve_dialog():')
-              return s.replace("wait_state(page, '(s)=>GuidedSetup.state().stage===s', arg=stage)","wait_state(page, '(s)=>GuidedSetup.state().stage===s&&!GuidedSetup.state().loading', arg=stage)")
-          def diagnostics(s):
-              s=s.replace('original_page = Browser.new_page','original_page = Browser.new_page\noriginal_wait = Locator.wait_for')
-              s=s.replace("details = {'page_errors': errors[-8:]}","details = {'page_errors': errors[-8:]}\n        try:\n            details['status'] = self.page.locator('#setup-status').inner_text(timeout=1000)[:1500]\n            details['invalid_fields'] = self.page.locator('input:invalid,select:invalid,textarea:invalid').evaluate_all(\n                '(nodes)=>nodes.map(n=>({label:n.getAttribute(\\\"aria-label\\\"),type:n.type,missing:n.validity.valueMissing,pattern:n.validity.patternMismatch}))')\n        except Exception:\n            pass")
-              s=s.replace('def inspected_select(self, *args, **kwargs):','def inspected_call(original, self, *args, **kwargs):').replace('return original_select(self, *args, **kwargs)','return original(self, *args, **kwargs)')
-              return s.replace('Locator.select_option = inspected_select','Locator.select_option = lambda self,*a,**k: inspected_call(original_select,self,*a,**k)\n    Locator.wait_for = lambda self,*a,**k: inspected_call(original_wait,self,*a,**k)')
-          edit('static/setup.js','013e323f4c68096f8a79dbdc2d954ddcdabbabd66185accf856b1546b44a92e5','c67453f5180528e83bcb252e724c5f2139091c48de6cba12b5ef9bf85dba72af',ui)
-          edit('tests/setup_browser_checks.py','31deeabe8b6160d1d30dca81e75e5ad90d01860cdacce96713c309a71294a5ca','4430cd52939353faba4a981c394fdce229ec8386da86837c5590b7165cac2ff9',browser)
-          edit('tests/native_setup_diagnostics.py','329417d7e686b364a413c8bfc9cd379b5c9055d81aa1a3765172e4fd06d77d49','3eff9df00d419db38d7951e76df34e7e12481d4a5647c97ce642b4b0452a21b5',diagnostics)
+              old="""                    page.locator('[data-stage=accounts]').click();page.get_by_label('Connection ID',exact=True).fill(cid)
+                              page.get_by_label('Connection label',exact=True).fill('Test-only '+cid)
+                              page.get_by_label('Expected 12-digit AWS account',exact=True).fill(account)
+                              page.get_by_label('Regions, comma separated',exact=True).fill('eu-central-1')
+                              page.get_by_label('Observer profile',exact=True).select_option(profile)
+                              if cid=='work':page.get_by_label('FIS executor profile (optional)',exact=True).select_option('test-executor')
+                              page.get_by_role('button',name='Review account configuration',exact=True).click()"""
+              new="""                    def fill_account():
+                                  page.locator('[data-stage=accounts]').click();page.get_by_label('Connection ID',exact=True).fill(cid)
+                                  page.get_by_label('Connection label',exact=True).fill('Test-only '+cid)
+                                  page.get_by_label('Expected 12-digit AWS account',exact=True).fill(account)
+                                  page.get_by_label('Regions, comma separated',exact=True).fill('eu-central-1')
+                                  page.get_by_label('Observer profile',exact=True).select_option(profile)
+                                  if cid=='work':page.get_by_label('FIS executor profile (optional)',exact=True).select_option('test-executor')
+                              fill_account()
+                              if cid=='work':
+                                  page.evaluate(\"\"\"()=>{const original=window.fetch;let release;
+                                    const held=new Promise(resolve=>release=resolve);window.__draftResponseReady=false;
+                                    window.__releaseDraftResponse=()=>{release();window.fetch=original};
+                                    window.fetch=async(path,options)=>{const response=await original(path,options);
+                                      if(path==='/api/setup/accounts'){window.__draftResponseReady=true;await held}return response};
+                                  }\"\"\")
+                                  page.get_by_role('button',name='Review account configuration',exact=True).click()
+                                  wait_state(page, 'window.__draftResponseReady')
+                                  page.locator('#setup-auth').click()
+                                  page.evaluate('window.__releaseDraftResponse()')
+                                  page.wait_for_timeout(200)
+                                  check('late account proposal response cannot restore private setup state after locking',
+                                        page.evaluate(\"GuidedSetup.state().draft===null&&GuidedSetup.state().current===null&&GuidedSetup.state().token===''\"))
+                                  page.get_by_role('button',name='Unlock',exact=True).click()
+                                  page.get_by_label('Local operator token',exact=True).fill(OP)
+                                  page.locator('#setup-modal').get_by_role('button',name='Unlock',exact=True).click()
+                                  wait_state(page, 'GuidedSetup.state().current!==null')
+                                  fill_account()
+                              page.get_by_role('button',name='Review account configuration',exact=True).click()"""
+              assert old in s;s=s.replace(old,new)
+              anchor="                page.locator('[data-stage=plan]').click();page.get_by_label('Plan / binding ID',exact=True).wait_for()"
+              new="""                page.evaluate(\"\"\"()=>{const original=window.fetch;let release;
+                            const held=new Promise(resolve=>release=resolve);
+                            window.__releaseReadCatalogue=()=>{release();window.fetch=original};
+                            window.fetch=async(path,options)=>{if(path==='/api/setup/read-operations')await held;return original(path,options)};
+                          }\"\"\")
+          """+anchor+"""
+                          check('cannot add an unusable verifier before the read-operation catalogue loads',
+                                page.get_by_role('button',name='Add independent check',exact=True).is_disabled())
+                          page.evaluate('window.__releaseReadCatalogue()')
+                          wait_state(page, \"!document.querySelector('#setup-content button').disabled && [...document.querySelectorAll('button')].some(b=>b.textContent==='Add independent check'&&!b.disabled)\")
+          """
+              assert anchor in s;s=s.replace(anchor,new)
+              old="                    box.get_by_label('Read operation',exact=True).select_option('describe_instances');box.get_by_role('button',name='Build resource parameter fields',exact=True).click()"
+              new="""                    box.get_by_label('Read operation',exact=True).select_option('describe_instances')
+                              if phase=='baseline':
+                                  page.evaluate(\"\"\"()=>{const original=window.fetch;let release;
+                                    const held=new Promise(resolve=>release=resolve);
+                                    window.__releaseReadShape=()=>{release();window.fetch=original};
+                                    window.fetch=async(path,options)=>{if(path==='/api/setup/read-shape/ec2/describe_instances')await held;return original(path,options)};
+                                  }\"\"\")
+                                  box.get_by_role('button',name='Build resource parameter fields',exact=True).click()
+                                  box.get_by_label('Read operation',exact=True).select_option('describe_volumes')
+                                  page.evaluate('window.__releaseReadShape()')
+                                  wait_state(page, \"[...document.querySelectorAll('button')].some(b=>b.textContent==='Build resource parameter fields'&&!b.disabled)\")
+                                  check('late SDK shape response cannot attach parameters to a different operation',
+                                        box.get_by_label('Add Parameters field',exact=True).count()==0)
+                                  box.get_by_label('Read operation',exact=True).select_option('describe_instances')
+                              box.get_by_role('button',name='Build resource parameter fields',exact=True).click()"""
+              assert old in s;s=s.replace(old,new)
+              needle="                    box.get_by_label('JMESPath response field',exact=True).fill('Reservations[0].Instances[0].State.Name')"
+              new="""                    if phase=='baseline':
+                                  box.get_by_label('Read operation',exact=True).select_option('describe_volumes')
+                                  check('changing the verifier operation invalidates existing resource parameters',
+                                        box.get_by_label('InstanceIds item',exact=True).count()==0)
+                                  box.get_by_label('Read operation',exact=True).select_option('describe_instances')
+                                  box.get_by_role('button',name='Build resource parameter fields',exact=True).click()
+                                  box.get_by_label('Add Parameters field',exact=True).select_option('InstanceIds')
+                                  box.get_by_role('button',name='Add selected field',exact=True).click()
+                                  box.get_by_role('button',name='Add InstanceIds item',exact=True).click()
+                                  box.get_by_label('InstanceIds item',exact=True).fill('i-123')
+          """+needle
+              assert needle in s;return s.replace(needle,new)
+          edit('static/setup.js','c67453f5180528e83bcb252e724c5f2139091c48de6cba12b5ef9bf85dba72af','37e9a2fa5c283ea7b717479473b7ed5356bebcddbf13b5ff51b7ddc195ee1beb',ui)
+          edit('tests/setup_browser_checks.py','4430cd52939353faba4a981c394fdce229ec8386da86837c5590b7165cac2ff9','56d8868a7334349972e1251d8da3b173eeb2bca4d31628153039915375509f67',browser)
           PY
+      - name: Install Python and browser test tools
+        run: |
+          python -m pip install -r requirements-dev.txt
+          python -m playwright install chromium
+          python -c 'from playwright.sync_api import sync_playwright; p=sync_playwright().start(); print("CHROMIUM_PATH="+p.chromium.executable_path); p.stop()' >> "$GITHUB_ENV"
       - name: Verify Python and actual native setup navigation
-        working-directory: applications/aws-validation-console/agent_lab
         env:
           AWS_EC2_METADATA_DISABLED: 'true'
         run: |
-          python -m pip install -r requirements-dev.txt
-          python -m playwright install --with-deps chromium
-          export CHROMIUM_PATH=$(python -c 'from playwright.sync_api import sync_playwright; p=sync_playwright().start(); print(p.chromium.executable_path); p.stop()')
           python build_assets.py
           python -m pytest -q
           python tests/native_setup_diagnostics.py
@@ -117,10 +167,11 @@ jobs:
           path: applications/aws-validation-console/agent_lab/validation/
           retention-days: 7
       - name: Publish only verified application sources
+        working-directory: .
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add applications/aws-validation-console/agent_lab/static/setup.js applications/aws-validation-console/agent_lab/tests/setup_browser_checks.py applications/aws-validation-console/agent_lab/tests/native_setup_diagnostics.py
+          git add applications/aws-validation-console/agent_lab/static/setup.js applications/aws-validation-console/agent_lab/tests/setup_browser_checks.py
           git diff --cached --check
-          git commit -m 'fix(console): preserve guided setup input across asynchronous navigation'
+          git commit -m 'fix(console): guard setup sessions and operation-specific verifier parameters'
           git push origin HEAD:feat/aws-fis-console-delivery
