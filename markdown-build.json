@@ -1,6 +1,6 @@
 {
   "schema": "frontier-markdown-build/v1",
-  "iteration": 2,
-  "scope": "Compile Markdown sources and validate annotations, search, and source-scoped patching",
+  "iteration": 3,
+  "scope": "Validate Markdown compiler, review source anchors, and guarded patching",
   "frozen_model_and_use_cases": true
 }
