@@ -30,6 +30,7 @@ jobs:
       - name: Apply reviewed selection migration once
         run: |
           if [ -f tools/docs/apply_selection_revision.py ]; then python tools/docs/apply_selection_revision.py; fi
+          if [ -f tools/docs/apply_selection_fixes.py ]; then python tools/docs/apply_selection_fixes.py; fi
       - name: Validate canonical Markdown input
         run: |
           python -m compileall -q tools/docs
