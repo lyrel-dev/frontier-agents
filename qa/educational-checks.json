@@ -209,6 +209,7 @@
       "width": 390,
       "slides_checked": 19,
       "diagram_text_bounds": "passed",
+      "scoped_arrowheads": "passed",
       "page_overflow": "passed",
       "javascript_errors": []
     },
@@ -217,6 +218,7 @@
       "width": 1440,
       "slides_checked": 19,
       "diagram_text_bounds": "passed",
+      "scoped_arrowheads": "passed",
       "page_overflow": "passed",
       "javascript_errors": []
     },
@@ -225,6 +227,7 @@
       "width": 390,
       "slides_checked": 12,
       "diagram_text_bounds": "passed",
+      "scoped_arrowheads": "passed",
       "page_overflow": "passed",
       "javascript_errors": []
     },
@@ -233,6 +236,7 @@
       "width": 1440,
       "slides_checked": 12,
       "diagram_text_bounds": "passed",
+      "scoped_arrowheads": "passed",
       "page_overflow": "passed",
       "javascript_errors": []
     },
@@ -241,6 +245,7 @@
       "width": 390,
       "slides_checked": 12,
       "diagram_text_bounds": "passed",
+      "scoped_arrowheads": "passed",
       "page_overflow": "passed",
       "javascript_errors": []
     },
@@ -249,6 +254,7 @@
       "width": 1440,
       "slides_checked": 12,
       "diagram_text_bounds": "passed",
+      "scoped_arrowheads": "passed",
       "page_overflow": "passed",
       "javascript_errors": []
     },
@@ -257,6 +263,7 @@
       "width": 390,
       "slides_checked": 9,
       "diagram_text_bounds": "passed",
+      "scoped_arrowheads": "passed",
       "page_overflow": "passed",
       "javascript_errors": []
     },
@@ -265,6 +272,7 @@
       "width": 1440,
       "slides_checked": 9,
       "diagram_text_bounds": "passed",
+      "scoped_arrowheads": "passed",
       "page_overflow": "passed",
       "javascript_errors": []
     }
