@@ -25,7 +25,7 @@ def validate(guides):
         if expected!=actual:errors.append('Frozen semantic source changed: '+path)
     reviewed={}
     for product in ('devops','security','finops'):
-        chapters=CHAPTERS[product]
+        chapters=[c for c in CHAPTERS[product] if not c.get('teaching')]
         if tuple(c['slug'] for c in chapters[:10])!=DIMENSIONS:
             errors.append(product+': supplied capability sequence not followed')
         if not chapters[-1].get('appendix'):
@@ -61,7 +61,7 @@ def validate(guides):
     if 'sync_guides()' in (ROOT/'tools/docs/build.py').read_text():
         errors.append('Build still overwrites guide prose from the dependency registry')
     result={'revision':'2026-10-23-capability-exposition','baseline':BASELINE,
-            'basis':'Supplied ten-part DevOps capability outline, adapted to documented facilities of the other two services.',
+            'basis':'Supplied ten-part capability reference retained after the agent-first teaching overview; product-specific facilities remain distinct.',
             'frozen_sources':preservation,'guide_structure':reviewed,'distinctions_checked':list(checks),
             'errors':errors,
             'boundary':'Structural and preservation tests supplement the authored review. They do not establish exhaustive AWS coverage, explain undisclosed internals, or represent live service execution.'}
