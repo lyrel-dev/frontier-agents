@@ -63,3 +63,25 @@
 }
 @media(prefers-reduced-motion:reduce){[data-review-ui]{scroll-behavior:auto}}
 @media print{[data-review-ui]{display:none!important}.review-selected,.review-commented,.review-source-block:focus-visible{outline:none!important;background:transparent!important;box-shadow:none!important}.reader-main{padding-left:0}}
+
+/* Global annotation actions are not part of the anchored note popup. */
+#review-global-menu{position:fixed;inset:7vh auto auto 50%;transform:translateX(-50%);margin:0;width:min(720px,calc(100vw - 24px));max-height:84vh;overflow:auto;padding:22px;border:1px solid #adc0d0;border-radius:10px;background:#fff;overscroll-behavior:contain}
+#review-global-menu::backdrop{background:#19304466}
+#review-global-menu h2{font:600 20px/1.3 system-ui;margin:0}
+#review-global-menu h3{font:600 15px/1.4 system-ui;margin:0 0 6px}
+#review-global-menu p{margin:8px 0;overflow-wrap:anywhere}
+#review-global-menu .review-help{font-size:12px;color:#526979}
+#review-global-menu input,#review-global-menu select{font:inherit;box-sizing:border-box;width:100%;padding:8px;margin:8px 0;border:1px solid #a9bac9;border-radius:4px}
+.review-global-actions{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+.review-global-section{border-top:1px solid #d4dee6;padding-top:12px;margin-top:12px}
+.review-collection-entry{border-top:1px solid #d4dee6;padding:12px 0}
+#review-global-menu .review-warning{font-size:12px;border-left:3px solid #b37035;padding:8px;background:#fff2e4}
+#review-local-status{align-self:center;font-size:11px;color:#526979}
+#review-local-status[data-state=failed]{color:#a04924;font-weight:600}
+#review-drawer{width:min(340px,calc(100vw - 24px));padding:12px}
+#review-drawer h2{font-size:16px;margin:0}
+#review-drawer .review-thread:first-child{border:0;margin-top:4px;padding-top:4px}
+#review-drawer textarea{border:0;background:#fafbfd;min-height:110px;margin:10px 0;resize:vertical}
+#review-drawer #review-save{font-size:12px;padding:4px 9px}
+[data-review-ui] button:disabled{opacity:.55;cursor:not-allowed}
+@media(max-width:600px){#review-global-menu{padding:15px}#review-local-status{flex-basis:100%}#review-drawer{max-height:68vh}}
