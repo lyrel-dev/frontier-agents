@@ -77,7 +77,7 @@ jobs:
           roots={'README.md','MANIFEST.json','VALIDATION.md','PUBLISHING.md','CHANGELOG.md','EDITORIAL_STANDARD.md','AUTHORING.md','index.html'}
           raw=subprocess.check_output(['git','status','--porcelain=v1','-z','--untracked-files=all'])
           paths=[]
-          for row in raw.split(b'\\0'):
+          for row in raw.split(bytes([0])):
               if not row:continue
               status=row[:2].decode();path=row[3:].decode()
               if 'R' in status or 'C' in status:raise SystemExit('Review rename separately: '+path)
