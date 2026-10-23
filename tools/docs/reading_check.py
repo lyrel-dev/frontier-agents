@@ -74,15 +74,18 @@ def validate(guides,browser=False):
                         assert page.locator('.chapter:visible').count()==1,'Guide must start with one chapter'
                         assert page.locator('.report-section:visible').count()==len(CHAPTERS[p][0]['sections'])
                         page.locator('#next-chapter').click()
+                        page.wait_for_function('(id)=>document.querySelector(".chapter:not([hidden])").id===id',arg='chapter-'+CHAPTERS[p][1]['slug'])
                         assert page.locator('.chapter:visible').get_attribute('id')=='chapter-'+CHAPTERS[p][1]['slug']
                         page.locator('#previous-chapter').click()
+                        page.wait_for_function('(id)=>document.querySelector(".chapter:not([hidden])").id===id',arg='chapter-'+CHAPTERS[p][0]['slug'])
                         page.locator('#read-all').check();assert page.locator('.chapter:visible').count()==len(CHAPTERS[p])
                         page.locator('#read-all').uncheck()
                         page.locator('#guide-search').fill('nonexistent-zz928');assert page.locator('.report-section:visible').count()==0
                         assert page.locator('#guide-empty').is_visible()
                         mid=next((m['id'] for m in r.mechanisms.values() if m['platform']==p),None)
                         dest=mid or list(g['sections'])[-1]
-                        page.evaluate('(id)=>location.hash=id',dest);page.wait_for_timeout(60)
+                        page.evaluate('(id)=>location.hash=id',dest)
+                        page.wait_for_function('(id)=>{const n=document.getElementById(id);return n&&!n.closest(".chapter").hidden}',arg=dest)
                         assert page.locator('#'+dest).is_visible(),'Deep link must clear search and reveal chapter'
                         assert page.locator('#guide-search').input_value()==''
                         page.reload();assert page.locator('#'+dest).is_visible(),'Reload must preserve deep link'
@@ -117,7 +120,7 @@ def validate(guides,browser=False):
                     results.append({'width':width,'guide_chapters_search_deep_links_reload_print':'passed','case_search_grouping_and_legacy_choices':'passed','workflow_configuration_procedure_return_journey':'passed','all_30_case_pages':'passed','javascript_errors':js})
                 except Exception as exc:
                     import traceback
-                    errors.append('Reading journey '+str(width)+': '+str(exc)+'; '+traceback.format_exc(limit=2))
+                    errors.append('Reading journey '+str(width)+' at '+page.url+': '+str(exc)+'; JavaScript='+str(js)+'; '+traceback.format_exc(limit=2))
                 finally:page.close()
             br.close()
     result={'revision':'2026-10-23-reading-structure','baseline':BASELINE,'scope':'Navigation and reader composition only; concept definitions and use-case semantics remain frozen.',
