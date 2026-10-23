@@ -2,83 +2,24 @@
 
 
 
-Presentation: 80 minutes, including 8 minutes of prepared-result exercises. Questions and breaks are additional.
+Presentation: 58 minutes, including 8 minutes of prepared-result exercises. Questions and breaks are additional.
 
 
 
-## 01. Agent Space, provider associations and custom invocations
+## 01. What an agent is in AWS DevOps Agent
 
-00:00–02:00 · Workspace and resource organization
+00:00–03:00 · Agent composition and shared operating scope
 
-An Agent Space associates account roles and providers. A custom-agent definition selects tools and context; each invocation records a separate execution. Provider registration and space association are distinct configuration operations.
-
-
-
-![DevOps Agent: scope, providers and execution](../assets/diagrams/er-devops-scope.svg)
+Begin with a scoped request, not an asset identifier. Trace it into an execution, then down through an authorized source operation and back to an output. The three upper boxes supply different kinds of context. AWS manages some agent roles; a custom definition gives the customer explicit prompt, tool, skill and store choices. Do not imply that every connected tool is assigned to every custom agent.
 
 
 
-Detailed reference: [Agent Spaces and AWS account scope](../guides/devops.html#D-01)
-
-
-## 02. Agent Space, asset, and invocation identities
-
-02:00–05:00 · Workspace and resource organization
-
-Identify the actual product object before configuring, invoking, correcting or removing it. The resource kind determines which operation is meaningful.
+![An agent uses guidance, procedures, context and authorized operations](../assets/diagrams/teaching-devops-agent.svg)
 
 
 
-Object | Identity or membership | Relationship to inspect
+Detailed reference: [An agent, its configuration, and one execution](../guides/devops.html#D-90)
 
-Agent Space | agentSpaceId and service scope | Account roles and selected associations
-
-Service association | associationId and serviceId | Registered provider plus space-specific configuration
-
-Custom definition | custom_agent assetId | Existing skill and memory-store asset IDs
-
-Memory | Parent store and content version | Activation, attachment and observed retrieval
-
-Invocation or investigation | Execution record and actual interval | Tool evidence, conclusion and any separate approval
-
-
-Detailed reference: [Assets, identities, and configuration references](../guides/devops.html#D-13)
-
-
-## 03. Memory stores, entries and definition references
-
-05:00–08:00 · Workspace and resource organization
-
-A custom definition references existing skill and memory-store assets. A store contains entries; updates create entry versions. Activation and attachment control availability, while retrieval occurs during execution.
-
-
-
-![DevOps Agent: stored knowledge and configuration references](../assets/diagrams/er-devops-knowledge.svg)
-
-
-
-Detailed reference: [Assets, identities, and configuration references](../guides/devops.html#D-13)
-
-
-## 04. Managed agents and customer-defined agents
-
-08:00–11:00 · Agent definition and customization
-
-Agent definition specifies behavior and available resources. Trigger configuration specifies when the definition runs.
-
-
-
-Control | Managed agent | Custom-agent definition
-
-Lifecycle | Provided by AWS | Created and maintained by the customer
-
-Behavior | Global and agent-specific instructions | Customer system prompt
-
-Tools and skills | Platform-managed | Explicitly selected and assigned
-
-Memory access | Applicable managed access | Explicit store attachments
-
-Invocation | Managed workflow entry point | On demand, schedule, or webhook trigger
 
 
 Detailed reference: [AWS-managed agents](../guides/devops.html#D-15)
@@ -88,74 +29,28 @@ Detailed reference: [AWS-managed agents](../guides/devops.html#D-15)
 Detailed reference: [Custom-agent definitions and configuration](../guides/devops.html#D-16)
 
 
-## 05. Environment-knowledge consolidation
+## 02. Instructions, skills, knowledge and integrations have different roles
 
-11:00–13:00 · Knowledge and behavioral context management
+03:00–06:00 · Agent composition and shared operating scope
 
-Discovery, connected evidence, and completed investigations feed distinct retained knowledge. A later execution selects the relevant context; it still reads current source evidence.
-
-
-
-![Environment-knowledge consolidation](../assets/diagrams/devops-knowledge.svg)
+Use one operational example: the prompt asks about checkout timeouts, the skill suggests comparing upstream latency, memory contains an earlier cause, and an authorized telemetry operation returns current observations. Each element contributes something different. The current result can contradict the old memory.
 
 
 
-Detailed reference: [Managed knowledge production and refresh](../guides/devops.html#D-M08)
+Element | Contribution to the execution | Not equivalent to
+
+Instructions / system prompt | Standing behavioral guidance or custom definition | A permission grant
+
+Skill | Applicable or assigned procedure and supporting files | An incident result
+
+Memory | Selected retained facts and lessons | Current telemetry or model retraining
+
+Tool | Callable source operation with arguments and results | The external provider itself
+
+Integration / connection | Authentication, association and a reachable source | Automatic tool assignment to all agents
 
 
-
-Detailed reference: [Topology, environment summaries, and export](../guides/devops.html#D-05)
-
-
-## 06. Memory production, availability and selective retrieval
-
-13:00–15:00 · Knowledge and behavioral context management
-
-Separate retained content, access to the entry, observable retrieval and the correctness of the new conclusion.
-
-
-
-![Incident memory: production, availability and retrieval](../assets/diagrams/mechanism-devops-retrieval.svg)
-
-
-
-Detailed reference: [Memory construction and progressive retrieval](../guides/devops.html#D-M01)
-
-
-
-Detailed reference: [Corrective feedback and reflection memory](../guides/devops.html#D-M02)
-
-
-
-Detailed reference: [Memory-store access, versions, and retention](../guides/devops.html#D-M07)
-
-
-## 07. Memory, instructions and skills
-
-15:00–18:00 · Knowledge and behavioral context management
-
-Availability, selection and diagnostic influence are separate questions for retained context.
-
-
-
-Mechanism | When loaded | Typical content | Lifecycle control
-
-Managed memory | Selected by description during relevant work | Recurring causes and environment understanding | Version, active state and managed refresh
-
-Custom memory | Selected after store attachment | Team or service context | Create, edit, deactivate, detach or delete
-
-Corrective reflection | Future investigation of the alarm | Verified correction to an earlier diagnosis | Latest feedback and visible memory
-
-Agent instructions | Every new applicable session | Standing policies and output rules | Edit and start a new session
-
-Skill | When description and agent scope match | Specialized procedure and references | Edit description, content and targeting
-
-
-Detailed reference: [Memory construction and progressive retrieval](../guides/devops.html#D-M01)
-
-
-
-Detailed reference: [Corrective feedback and reflection memory](../guides/devops.html#D-M02)
+Detailed reference: [An agent, its configuration, and one execution](../guides/devops.html#D-90)
 
 
 
@@ -167,26 +62,164 @@ Detailed reference: [Skills, applicability, and supporting files](../guides/devo
 
 
 
-Detailed reference: [Memory-store access, versions, and retention](../guides/devops.html#D-M07)
-
-
-## 08. Incident pattern analysis and prevention recommendations
-
-18:00–21:00 · Knowledge and behavioral context management
-
-Incident pattern identification produces context and recommendations, not an automatically implemented fix.
+Detailed reference: [Memory construction and progressive retrieval](../guides/devops.html#D-M01)
 
 
 
-Stage | Input | Output | Operator decision
+Detailed reference: [MCP provider registration and tool selection](../guides/devops.html#D-03)
 
-Monitor memory refresh | Recent completed investigations | Monitor-specific recurring-cause context | Inspect version and relevance
 
-Prevention evaluation | Multiple incident investigations | Observability, infrastructure, governance or code recommendations | Run, stop or wait for scheduled evaluation
+## 03. How managed roles contribute to one investigation
 
-Recommendation review | Incident evidence and expected impact | Keep, discard or implemented state | Assign owner and acceptance criteria
+06:00–09:00 · Agent composition and shared operating scope
 
-Corrective feedback | Verified diagnosis correction | Reflection for future investigations | Separate local learning from AWS sharing
+Read this as a responsibility map, not a published RPC call graph. AWS documents incident roles running within investigations, while Learning has its own history and scheduled work. A mitigation proposal does not directly authorize execution. Grader Reviews, customer feedback, learning refresh and prevention evaluation are different activities; avoid turning them into one universal linear pipeline.
+
+
+
+![Managed responsibilities and knowledge reuse](../assets/diagrams/teaching-devops-coordination.svg)
+
+
+
+Detailed reference: [How managed agents contribute to coordinated work](../guides/devops.html#D-91)
+
+
+
+Detailed reference: [AWS-managed agents](../guides/devops.html#D-15)
+
+
+
+Detailed reference: [Incident triage, investigation, and prevention](../guides/devops.html#D-06)
+
+
+## 04. What an Agent Space contains and controls
+
+09:00–12:00 · Agent composition and shared operating scope
+
+The components have not moved; the enclosing scope is now visible. Agent Space is not the agent, a single run, the observed application or a customer VPC. Establish access for the space, then select resources for the particular custom agent. Private routing changes reachability, not the instructions or authority of a tool.
+
+
+
+![The Agent Space contains configuration and execution context](../assets/diagrams/teaching-devops-space.svg)
+
+
+
+Detailed reference: [Agent Space, connections, and access scope](../guides/devops.html#D-92)
+
+
+
+Detailed reference: [Agent Spaces and AWS account scope](../guides/devops.html#D-01)
+
+
+
+Detailed reference: [Assets, identities, and configuration references](../guides/devops.html#D-13)
+
+
+
+Detailed reference: [Supported integrations and connection directions](../guides/devops.html#D-12)
+
+
+## 05. Teaching order for operational workflows
+
+12:00–14:00 · Agent composition and shared operating scope
+
+This order is an instructional choice for DevOps and SRE teams, not an AWS product ranking. The approved use-case groups and definitions remain unchanged. The remaining slides reuse the same architecture, emphasizing the active path and stating the evidence that ends each workflow.
+
+
+
+Priority for this audience | Workflow group | Why it follows here
+
+1 | Incident triage, investigation and mitigation | Immediate diagnosis and the boundary before a change
+
+2 | Health reporting and change summaries | Routine reuse of the evidence-access path
+
+3 | Incident patterns and prevention | Use prior results without substituting them for current evidence
+
+4 | SOPs and topology documentation | Maintain procedures and environment context
+
+5 | Configuration and release assurance | Apply criteria to an explicit resource or revision
+
+6 | Operational review | Combine verified outputs into owned decisions
+
+
+Detailed reference: [Incident response and the order of operational workflows](../guides/devops.html#D-93)
+
+
+## 06. Incident triage and investigation
+
+14:00–17:00 · Incident response: evidence, decisions and controlled effects
+
+Follow the input into triage. A linked event adds context to an existing investigation, so there need not be a new investigation record. A skipped event has a recorded criterion, not a healthy-service verdict. For independent work, inspect telemetry, code and deployment observations. Steering adds current evidence; feedback after completion corrects the recorded diagnosis.
+
+
+
+![Incident triage and current-evidence investigation](../assets/diagrams/teaching-devops-incident.svg)
+
+
+
+Detailed reference: [Incident response and the order of operational workflows](../guides/devops.html#D-93)
+
+
+
+Detailed reference: [Incident triage, investigation, and prevention](../guides/devops.html#D-06)
+
+
+## 07. Mitigation planning and approved execution
+
+17:00–20:00 · Incident response: evidence, decisions and controlled effects
+
+The operator box becomes relevant at the effect boundary. Preserve the distinction between proposing a change and carrying it out. An approved operation still depends on the selected account role and actual parameters. After execution, compare resource state and service measurements; a successful tool call alone does not show that the incident ended.
+
+
+
+![Mitigation planning and separately approved execution](../assets/diagrams/teaching-devops-mitigation.svg)
+
+
+
+Detailed reference: [Incident response and the order of operational workflows](../guides/devops.html#D-93)
+
+
+
+Detailed reference: [Directed actions and approval scope](../guides/devops.html#D-M06)
+
+
+## 08. Incident communication and the investigation record
+
+20:00–22:00 · Incident response: evidence, decisions and controlled effects
+
+The same investigation can supply an incident bulletin. Distinguish an update from a new diagnostic run. The output role and configured collaboration path influence delivery. A request for minute-resolution data does not establish a minute-by-minute custom-agent schedule or delivery guarantee.
+
+
+
+![Incident triage and current-evidence investigation](../assets/diagrams/teaching-devops-incident.svg)
+
+
+
+Detailed reference: [Incident response and the order of operational workflows](../guides/devops.html#D-93)
+
+
+
+Detailed reference: [Artifacts, notifications, and outbound lifecycle events](../guides/devops.html#D-23)
+
+
+
+Detailed reference: [Incident triage, investigation, and prevention](../guides/devops.html#D-06)
+
+
+## 09. How prior incidents inform later investigations
+
+22:00–25:00 · Incident response: evidence, decisions and controlled effects
+
+Trace production and reuse as separate lifecycles. A stored monitor entry establishes retained content. A later observable read establishes retrieval. Neither alone establishes diagnostic correctness. The Learning schedule is not the prevention evaluation schedule, and a correction submitted now is not proof of immediate recall.
+
+
+
+![Investigation history and correction become later context](../assets/diagrams/teaching-devops-learning.svg)
+
+
+
+Detailed reference: [Incident response and the order of operational workflows](../guides/devops.html#D-93)
+
 
 
 Detailed reference: [Memory construction and progressive retrieval](../guides/devops.html#D-M01)
@@ -197,375 +230,233 @@ Detailed reference: [Corrective feedback and reflection memory](../guides/devops
 
 
 
-Detailed reference: [Incident triage, investigation, and prevention](../guides/devops.html#D-06)
-
-
-## 09. Operational knowledge and release assurance
-
-21:00–24:00 · Knowledge and behavioral context management
-
-SOP consolidation maintains reviewed procedural content. Topology documentation records discovered and inferred relationships. Release-readiness analysis and active testing apply to different subjects and have different effects.
-
-
-
-Operational outcome | Completion evidence | Implementation boundary
-
-Consolidate and maintain operational procedures | Conflicting or stale instructions are resolved. | Composed workflow
-
-Document service topology and dependencies | Observed and inferred relationships are distinguished. | Built-in function with composed documentation
-
-Audit resource configurations against approved standards | Each finding identifies resource, rule and observed value. | Configured custom agent
-
-Assess release readiness | The candidate revision is unambiguous. | Preview function
-
-Test a deployed application release | Target revision, identities and permitted effects are explicit. | Preview function
-
-
-Detailed reference: [Skills, applicability, and supporting files](../guides/devops.html#D-M04)
-
-
-
 Detailed reference: [Managed knowledge production and refresh](../guides/devops.html#D-M08)
 
 
+## 10. Exercise: a recurring alarm with a different current cause
 
-Detailed reference: [Console, web application, and inbound remote access](../guides/devops.html#D-09)
+25:00–33:00 · Incident response: evidence, decisions and controlled effects
 
+Use the repository synthetic fixture. Ask which diagram input establishes the old cause, which operation would retrieve current measurements, and what output is justified. Participants should reject repetition of the database cause when current evidence contradicts it. This is a prepared-result exercise, not an AWS response-time measurement.
 
-## 10. Health reporting, deployment review, and prevention
 
-24:00–27:00 · Invocation and triggers
 
-A health report summarizes measurements for a defined period. A deployment review traces actual release records. Pattern analysis and prevention evaluation use multiple investigations to identify and prioritize follow-up work.
+0–2 min | Inspect the earlier incident | Database connections 100/100; inventory p95 40 ms
 
+2–4 min | Compare current observations | Database connections 34/100; inventory p95 2,900 ms
 
+4–6 min | Follow the evidence path | Prior cause is context; current dependency latency is the stronger lead
 
-Operational outcome | Completion evidence | Implementation boundary
+6–8 min | State the conclusion and remaining work | Upstream logs are missing; no live run or automatic rollback is claimed
 
-Assess and report service health and trends | Service dimensions and observation periods are explicit. | Native inquiry or configured reporting
 
-Review deployment and change activity | Deployment states and immutable revisions are traceable. | Configured custom agent
+Detailed reference: [Recurring-alarm investigation: worked example](../guides/devops.html#D-U01)
 
-Identify recurring incident patterns | Supporting investigation identities are retained. | Built-in function
 
-Prioritize incident-prevention work | Accepted proposals retain source incidents. | Built-in function
 
+Detailed reference: [Incident response and the order of operational workflows](../guides/devops.html#D-93)
 
-Detailed reference: [On-demand invocation and scheduled triggers](../guides/devops.html#D-07)
 
+## 11. Service-health reporting from logs and metrics
 
+33:00–36:00 · Routine reporting and reliability improvement
 
-Detailed reference: [Incident triage, investigation, and prevention](../guides/devops.html#D-06)
+The architecture is unchanged. The request is now a report contract, skills contain the reporting procedure, and selected tools retrieve observations. Memory can help interpret service names but cannot replace failed current reads. A trigger creates another invocation; it does not create continuous monitoring.
 
 
-## 11. Webhook triggers: condition and payload projection
 
-27:00–30:00 · Invocation and triggers
+![Service-health reporting reuses the same configured facilities](../assets/diagrams/teaching-devops-reporting.svg)
 
-A JMESPath predicate selects an event. A projection also changes the context passed to the invocation. Neither is an outbound EventBridge notification.
 
 
+Detailed reference: [Incident response and the order of operational workflows](../guides/devops.html#D-93)
 
-Input or result | Service behavior
 
-Active webhook integration | Available event source
 
-False, null, or empty expression result | No invocation
-
-Boolean true | Invocation receives the original payload
-
-Another truthy result | Invocation receives the projected value
-
-Limits | 4,096-character expression; 10,000-character invocation context
-
-Removed source | Trigger remains listed but cannot run
-
-
-Detailed reference: [Webhook events, filtering, and payload projection](../guides/devops.html#D-18)
-
-
-## 12. Provider registration and Agent Space association
-
-30:00–32:00 · External system integrations
-
-Provider authentication is registered at account level. Association and tool selection make an explicit subset available to the Agent Space. The invocation still needs a working authenticated route.
-
-
-
-![Provider registration and Agent Space association](../assets/diagrams/devops-integrations.svg)
-
-
-
-Detailed reference: [Supported integrations and connection directions](../guides/devops.html#D-12)
-
-
-
-Detailed reference: [MCP provider registration and tool selection](../guides/devops.html#D-03)
-
-
-## 13. Telemetry, source control, and incident connections
-
-32:00–34:00 · External system integrations
-
-Choose the evidence source, incident-initiation path, and result destination independently. Registration and Agent Space association are separate setup steps.
-
-
-
-Connection family | Documented systems | Purpose and boundary
-
-AWS evidence | CloudWatch, S3, EKS; selected AWS accounts | Read authorized telemetry, objects, and cluster evidence; EKS has additional access setup.
-
-Telemetry providers | Dynatrace; Datadog, Grafana, New Relic, Splunk | Dynatrace has a documented two-way path; other named providers expose reads and separately configured event initiation.
-
-Code and delivery | GitHub, GitLab; Azure Resources and Azure DevOps | Repository, pipeline, or infrastructure context according to the configured provider and resource scope.
-
-Incident coordination | ServiceNow, PagerDuty, Slack | Provider-specific initiation and communication; not a universal write capability.
-
-Additional interfaces | MCP, webhooks, EventBridge | Selected tools, incoming incident signals, and outgoing lifecycle events are different directions.
-
-
-Detailed reference: [Supported integrations and connection directions](../guides/devops.html#D-12)
-
-
-## 14. Service-health reporting: workflow dependencies
-
-34:00–37:00 · External system integrations
-
-Current telemetry is required for a health conclusion. Context is optional unless the reporting profile depends on it. A recurring profile adds a trigger; an external destination adds a separate publication operation.
-
-
-
-Workflow step | Mechanism and configuration | Completion or failure decision
-
-Read current observations | Authorized evidence sources and explicit scope | Missing current data prevents a health conclusion.
-
-Choose the execution profile | Built-in operational query OR configured custom agent | A native inquiry does not require a custom definition.
-
-Use relevant context | Optional available memory or reviewed reporting procedure | Retained history never substitutes for current observations.
-
-Repeat or publish | Conditional schedule and optional destination | Timing and publication controls remain separate from the report objective.
-
-
-Detailed reference: [MCP provider registration and tool selection](../guides/devops.html#D-03)
-
-
-
-Detailed reference: [On-demand invocation and scheduled triggers](../guides/devops.html#D-07)
-
-
-
-Detailed reference: [Memory construction and progressive retrieval](../guides/devops.html#D-M01)
-
-
-
-Detailed reference: [Memory-store access, versions, and retention](../guides/devops.html#D-M07)
-
-
-## 15. Outbound tools and remote-agent delegation
-
-37:00–40:00 · External system integrations
-
-Integration direction determines which endpoint, identity, and operation must be configured.
-
-
-
-Path | Caller and target | Configuration
-
-Outbound MCP | DevOps Agent calls a tool server | Provider authentication and selected tools
-
-Outbound A2A | DevOps Agent calls an external agent | Agent-card endpoint and supported authentication
-
-Inbound MCP/A2A | External client calls DevOps Agent | Remote-server endpoint and scoped caller credentials
-
-Custom agent | Definition executes inside DevOps Agent | System prompt, assigned tools, skills, stores
-
-
-Detailed reference: [MCP provider registration and tool selection](../guides/devops.html#D-03)
-
-
-
-Detailed reference: [Outbound A2A delegation](../guides/devops.html#D-20)
-
-
-
-Detailed reference: [Console, web application, and inbound remote access](../guides/devops.html#D-09)
-
-
-## 16. Private connectivity: gateway, DNS, and endpoint routes
-
-40:00–43:00 · Network connectivity
-
-Provider authentication and private routing are configured independently.
-
-
-
-Property | Configuration consequence
-
-VPC Lattice resource gateway | Private traffic arrives through gateway interfaces in selected subnets
-
-Shared VPC | Use the documented self-managed connection arrangement
-
-DNS | Select public or in-VPC resolution for the target hostname
-
-Port ranges | Explicitly include nonstandard ports; omitted ranges allow 443
-
-OAuth endpoint | Can use a different private route from the tool endpoint
-
-Scope | Network transport does not relocate the agent service into the VPC
-
-
-Detailed reference: [Private endpoints, routing, and DNS](../guides/devops.html#D-04)
-
-
-## 17. Stopping future triggers and current invocations
-
-43:00–46:00 · Execution runtime and action control
-
-Pause the trigger to stop future starts. Cancel the invocation separately; an in-flight tool call can still complete and previously completed evidence remains.
-
-
-
-![Custom work: future triggers and current invocations](../assets/diagrams/mechanism-devops-cancellation.svg)
+Detailed reference: [Custom-agent definitions and configuration](../guides/devops.html#D-16)
 
 
 
 Detailed reference: [Invocation state, trajectory, and continuation](../guides/devops.html#D-19)
 
 
+## 12. Health-report contents and verification
+
+36:00–38:00 · Routine reporting and reliability improvement
+
+This is an authored report design, not a new AWS feature. Explain the actual artifact the team needs. A short summary and a detailed report can share the query basis while exposing different detail. Neither is useful without the period, failed-read treatment and source evidence.
+
+
+
+Report section | Evidence required | Review question
+
+Scope | Service identities and exact observation interval | Which systems and time period were actually examined?
+
+Measurements | Query, aggregation and material source values | Do displayed values match the source result?
+
+Comparison | Comparable periods and population | Was a change caused by workload mix or a changed calculation?
+
+Exceptions | Failed reads, missing signals and uncertainty | Is missing data incorrectly presented as normal operation?
+
+Actions | Owner, evidence and next check | Which decision is supported, and which is still a hypothesis?
+
+
+Detailed reference: [Incident response and the order of operational workflows](../guides/devops.html#D-93)
+
+
 
 Detailed reference: [On-demand invocation and scheduled triggers](../guides/devops.html#D-07)
 
 
-## 18. Sandbox execution and directed-action approval
+## 13. Incident patterns and prevention priorities
 
-46:00–49:00 · Execution runtime and action control
+38:00–41:00 · Routine reporting and reliability improvement
 
-Execution authority depends on the specific effect; there is no universal read-only agent mode.
-
-
-
-Execution surface | Purpose | Primary controls | Evidence
-
-Sandbox | Investigation-local computation and data processing | Packages, network rules and existing AWS permissions | Code, outputs and failed network calls
-
-Directed AWS action | Eligible resource mutation | Space opt-in, elevated role and specific approval | Approval, CloudTrail and resulting resource state
-
-External MCP mutation | Tool-defined effect | Tool classification, selected tool and approval behavior | Tool arguments and external result
-
-Recommendation only | Describe a possible change | No execution authorization | Proposal, risk, rollback and verification plan
-
-
-Detailed reference: [Sandbox computation and network policy](../guides/devops.html#D-M05)
+Reuse the knowledge-production path but change the question: across incidents, what recurs and which change is justified? Explain the difference between identifying a recurring cause and deciding which intervention to fund or implement. Keep source investigation identities with each conclusion.
 
 
 
-Detailed reference: [Directed actions and approval scope](../guides/devops.html#D-M06)
-
-
-## 19. Incident triage and investigation workflow
-
-49:00–51:00 · Built-in managed workflows
-
-A signal can be linked, skipped, or investigated independently. Steering affects the current analysis; completed-investigation feedback supplies a separate corrective input.
+![Investigation history and correction become later context](../assets/diagrams/teaching-devops-learning.svg)
 
 
 
-![Incident triage and investigation workflow](../assets/diagrams/devops-incident.svg)
+Detailed reference: [Incident response and the order of operational workflows](../guides/devops.html#D-93)
 
 
 
 Detailed reference: [Incident triage, investigation, and prevention](../guides/devops.html#D-06)
 
 
-## 20. Incident triage and investigation lifecycle
 
-51:00–54:00 · Built-in managed workflows
-
-Routing correction, diagnosis correction and mitigation approval are distinct operations.
+Detailed reference: [Memory construction and progressive retrieval](../guides/devops.html#D-M01)
 
 
+## 14. SOP consolidation and skill maintenance
 
-Incoming signal | Alert, ticket, webhook or manual request with incident context.
+41:00–44:00 · Operational knowledge, change assurance and reviews
 
-Triage decision | Linked, skipped or proceed; inspect the reason before diagnosing absence.
-
-Investigation | Evidence collection, hypotheses, root-cause versions and steering.
-
-Closure and feedback | Mitigation decision, recovery evidence and correction of routing or diagnosis.
-
-
-Detailed reference: [Incident triage, investigation, and prevention](../guides/devops.html#D-06)
-
-
-## 21. Incident triage, investigation, and mitigation
-
-54:00–57:00 · Built-in managed workflows
-
-Triage determines routing. Investigation evaluates current evidence. A mitigation plan is a proposal; execution requires the applicable action authorization and a separate recovery check.
+Here the engineer produces procedural content. A skill is not a finding and is not created merely by concatenating incident summaries. Show how a revised SOP reaches the procedural box, how relevance or explicit assignment makes it available, and why the tool-access path remains separate.
 
 
 
-Operational outcome | Completion evidence | Implementation boundary
-
-Triage incident signals | Decision and reason are visible. | Built-in function
-
-Investigate a service incident | Affected service and UTC interval are explicit. | Built-in function
-
-Prepare a mitigation plan | Target and proposed effect are explicit. | Built-in function
-
-Execute an approved mitigation and verify recovery | Exact operation and target were approved. | Controlled action
-
-Prepare an incident-status bulletin | Incident and measurement window are identified. | Configured custom agent
-
-
-Detailed reference: [Incident triage, investigation, and prevention](../guides/devops.html#D-06)
+![Procedure maintenance and environment documentation](../assets/diagrams/teaching-devops-knowledge.svg)
 
 
 
-Detailed reference: [Directed actions and approval scope](../guides/devops.html#D-M06)
-
-
-## 22. Release readiness review and release testing
-
-57:00–59:00 · Built-in managed workflows
-
-Readiness review, managed verification and active application testing are separate preview operations.
+Detailed reference: [Incident response and the order of operational workflows](../guides/devops.html#D-93)
 
 
 
-Preview path | Subject | Primary output | Important boundary
+Detailed reference: [Skills, applicability, and supporting files](../guides/devops.html#D-M04)
 
-Release readiness review | Code change and dependency context | Risk findings and recommended actions | Feature and repository eligibility are specific
 
-Managed verification | Build or test evidence for the change | Verification task and results | Not equivalent to production recovery evidence
 
-Active release testing | Running web application or API | Observed application behavior | Requests can create, modify or delete application data
+Detailed reference: [Attachments and repository-backed authoring](../guides/devops.html#D-17)
 
-Custom-agent release tools | Release Manager tasks and reports | Created or analyzed release task | Use selected tools and inspect task state
+
+## 15. Topology and dependency documentation
+
+44:00–47:00 · Operational knowledge, change assurance and reviews
+
+Use the same diagram but follow source evidence to environment knowledge rather than to an incident diagnosis. Distinguish the observed deployment, its inferred topology, retained understanding and the accepted engineering document. A graph boundary is not an IAM boundary.
+
+
+
+![Procedure maintenance and environment documentation](../assets/diagrams/teaching-devops-knowledge.svg)
+
+
+
+Detailed reference: [Incident response and the order of operational workflows](../guides/devops.html#D-93)
+
+
+
+Detailed reference: [Topology, environment summaries, and export](../guides/devops.html#D-05)
+
+
+
+Detailed reference: [Managed knowledge production and refresh](../guides/devops.html#D-M08)
+
+
+## 16. Deployment review and configuration auditing
+
+47:00–50:00 · Operational knowledge, change assurance and reviews
+
+The deployment-review and configuration-audit objectives remain separate approved cases. They share selected source operations and a controlled comparison procedure. Explain their different acceptance evidence: a deployment report identifies revision and state; an audit finding identifies the resource, rule and observed value.
+
+
+
+![Configuration and release assurance use explicit subjects and effects](../assets/diagrams/teaching-devops-change.svg)
+
+
+
+Detailed reference: [Incident response and the order of operational workflows](../guides/devops.html#D-93)
+
+
+
+Detailed reference: [Custom-agent definitions and configuration](../guides/devops.html#D-16)
+
+
+
+Detailed reference: [Supported integrations and connection directions](../guides/devops.html#D-12)
+
+
+## 17. Release readiness and active release testing
+
+50:00–53:00 · Operational knowledge, change assurance and reviews
+
+Keep the same access and execution model while distinguishing the two subjects. Reviewing code is not equivalent to testing a deployed application. A test profile is native release-test configuration; the catalog configuration recipes are authored guidance, not that resource.
+
+
+
+![Configuration and release assurance use explicit subjects and effects](../assets/diagrams/teaching-devops-change.svg)
+
+
+
+Detailed reference: [Incident response and the order of operational workflows](../guides/devops.html#D-93)
+
 
 
 Detailed reference: [Release-readiness review and release testing](../guides/devops.html#D-22)
 
 
-## 23. Access roles, tool providers and private connectivity
+## 18. Operational reviews: from reports to owned decisions
 
-59:00–62:00 · Administration, security, and automation
+53:00–55:00 · Operational knowledge, change assurance and reviews
 
-Reachability, authentication, tool selection and authorization must each be tested.
+This is the shared review use case applied to reliability work. The team consumes outputs from independently scoped executions. Agent output supplies evidence and proposals; the meeting determines priorities and owners. A later Security or FinOps task receives explicit evidence and its own authorization.
 
 
 
-Configuration area | Decision | Confirmation | Typical failure
+![An operational review consumes independently verified outputs](../assets/diagrams/teaching-devops-review.svg)
 
-Resource access | Allowed accounts, actions and resources | Known resource can be read under expected identity | Missing source data
 
-Operator access | Who can enter and operate the space | Intended operator signs in | Administrator-only access works
 
-MCP provider | Endpoint, authentication and registration | Provider validates or associates successfully | Wrong token endpoint or SigV4 fields
+Detailed reference: [Incident response and the order of operational workflows](../guides/devops.html#D-93)
 
-Tool association | Selected tools for the space or custom agent | Expected tool visible; excluded tool absent | Provider registered but tool unavailable
 
-Private connection | VPC, subnets, security groups and ports | Target host and port reachable | Route or port failure mistaken for credential failure
+
+Detailed reference: [Incident and reporting use cases in the resource model](../guides/devops.html#D-14)
+
+
+## 19. Configuration checks before using a workflow
+
+55:00–58:00 · Operational knowledge, change assurance and reviews
+
+Finish with prerequisites the learner can now explain, rather than opening with identifiers. Refer to the capability chapters for full procedures, provider differences, quotas and APIs. Every use case should be traceable from its input through configured source access to its own completion criteria.
+
+
+
+Check | Object to inspect | Failure interpretation
+
+Operator access | User identity and space role | Can the intended operator enter and act?
+
+Evidence access | Account role, provider association and selected tool | Connection existence does not prove a successful read
+
+Context availability | Instruction scope, skill assignment and memory attachment | Available content may still not be selected
+
+Execution control | Trigger, current invocation and applicable approval | Pausing future starts is not cancelling or undoing work
+
+Completion evidence | Observed sources, output and actual effect | Generated text is not independent verification
 
 
 Detailed reference: [Resource roles and operator roles](../guides/devops.html#D-02)
@@ -579,123 +470,9 @@ Detailed reference: [MCP provider registration and tool selection](../guides/dev
 Detailed reference: [Private endpoints, routing, and DNS](../guides/devops.html#D-04)
 
 
-## 24. Troubleshooting matrix and operating limits
 
-62:00–64:00 · Administration, security, and automation
+Detailed reference: [Memory-store access, versions, and retention](../guides/devops.html#D-M07)
 
-Diagnose the failed layer and retest the smallest relevant operation.
 
 
-
-Symptom | First object to inspect | Second check | Do not do first
-
-No investigation | Triage decision and incident link | Concurrency and trigger status | Broaden all permissions
-
-Missing data | Resource role and source connection | Time window and resource identity | Assume the source has no data
-
-Memory not used | Store/entry active state and description | Agent attachment and new session | Claim retrieval from answer wording
-
-Tool unavailable | Provider association and selected tools | Authentication and private route | Rotate a valid secret without network evidence
-
-Mutation denied | Directed-action enablement and classification | Role trust, exact operation and approval | Treat a chat request as authorization
-
-
-Detailed reference: [Execution limits and diagnostic procedures](../guides/devops.html#D-10)
-
-
-
-Detailed reference: [Documentation coverage and references](../guides/devops.html#D-11)
-
-
-## 25. Asset APIs, declarative management, and audit
-
-64:00–67:00 · Administration, security, and automation
-
-The source of configuration and the audit of its use are separate administrative responsibilities.
-
-
-
-Facility | Supported role | Distinct operation
-
-Asset API | Manage eight asset types | Triggers remain separate resources
-
-CloudFormation Asset | Complete metadata and file set | Per-file edits and historical content operations remain API calls
-
-CloudFormation Trigger | Documented scheduled starts | Do not infer event-trigger properties from UI support
-
-CloudTrail | Attribution of documented service operations | Not a correctness score
-
-CloudWatch usage metrics | Execution time and request counts | Accounting scopes differ by metric
-
-
-Detailed reference: [Configuration APIs and update semantics](../guides/devops.html#D-08)
-
-
-
-Detailed reference: [Identity providers, credential maintenance, and service telemetry](../guides/devops.html#D-24)
-
-
-## 26. Configured operational-report workflow
-
-67:00–69:00 · Worked example and reference material
-
-The team defines the report period and selected evidence. An invocation queries sources, produces a report, and exposes results for review. Schedule timing and the reporting window are separate configuration decisions.
-
-
-
-![Configured operational-report workflow](../assets/diagrams/devops-reporting.svg)
-
-
-
-Detailed reference: [Incident and reporting use cases in the resource model](../guides/devops.html#D-14)
-
-
-
-Detailed reference: [Custom-agent definitions and configuration](../guides/devops.html#D-16)
-
-
-
-Detailed reference: [On-demand invocation and scheduled triggers](../guides/devops.html#D-07)
-
-
-## 27. Incident records and action-specific authorization
-
-69:00–72:00 · Worked example and reference material
-
-A signal can be linked, skipped, or investigated. Steering changes the active analysis; completed-investigation feedback provides a corrective input. Resource mutation requires its separate approval path.
-
-
-
-![DevOps Agent: incident records and directed-action boundary](../assets/diagrams/er-devops-incidents.svg)
-
-
-
-Detailed reference: [Incident and reporting use cases in the resource model](../guides/devops.html#D-14)
-
-
-## 28. Worked example: recurring alarm with different current evidence
-
-72:00–80:00 · Worked example and reference material
-
-Prepared evidence demonstrates how historical context can be useful without becoming the current diagnosis.
-
-
-
-0–2 min | Inspect prior context | Earlier database pool saturation and its verified evidence
-
-2–4 min | Compare current database signals | 34/100 connections and query p95 of 18 ms
-
-4–6 min | Evaluate current dependency signals | Inventory p95 of 2,900 ms and checkout p95 of 3,100 ms
-
-6–8 min | Record the conclusion | Historical memory is relevant; upstream latency is the current lead; cause remains bounded
-
-
-Detailed reference: [Recurring-alarm investigation: worked example](../guides/devops.html#D-U01)
-
-
-
-Detailed reference: [Memory construction and progressive retrieval](../guides/devops.html#D-M01)
-
-
-
-Detailed reference: [Corrective feedback and reflection memory](../guides/devops.html#D-M02)
+Detailed reference: [Invocation state, trajectory, and continuation](../guides/devops.html#D-19)
