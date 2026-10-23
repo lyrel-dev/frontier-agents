@@ -54,3 +54,7 @@ Use the product object, operation, input, output, and condition as the subject o
 Separate product prerequisites from team procedures. A recommended approval is not a native service gate; a proposed acceptance test is not a recorded result. Describe cancellation, deletion, publication, and permission effects for the specific object. Use one reading-conventions paragraph per guide; retain mechanism-specific constraints next to the operation.
 
 Do not declare one retrieved documentation version newer solely because it was indexed more recently. Record conflicting content and qualify the affected procedure. Targeted rechecks do not update the review date of all retained claims. An editorial checker detects selected regressions; it does not establish technical completeness or writing quality.
+
+## Reader hierarchy
+
+Primary navigation follows reader tasks: Guides, Use cases, Resource model, Presentations. Each guide has one chapter hierarchy and one search. Each approved use case has one contextual page containing the unchanged narrative, workflow, configuration and verification. Mechanisms and features link to their product-guide explanations. Internal schema types and migration mappings are not primary reader destinations. Protect all six catalog JSON registers byte-for-byte.
