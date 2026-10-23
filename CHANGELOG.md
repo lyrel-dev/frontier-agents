@@ -14,3 +14,7 @@ Documented distinctions include managed versus custom DevOps execution, assessme
 ## 2026-10-22 — Mechanism configuration and lifecycle review
 
 Reviewed the 40 existing mechanisms and added conditional Security Findings Personalization under the existing finding feature. The approved 30 use cases and the feature, profile, alias and resource-model sources are unchanged. Added detailed narrative, setup, state transitions, controls, observable output, undocumented boundaries and proposed positive/negative verification. Replaced selected slides and figures without increasing the 221-minute programme or 28-minute exercise allocation. No live AWS tests were run.
+
+## 2026-10-23 — Reading structure
+
+Replaced record-type pages with chapter-based guides and dedicated use-case pages. Removed duplicate embedded catalogs and standalone mechanism, feature, profile and consolidation-map editions. Configuration is presented in use-case context; mechanisms and resource configuration link directly to product procedures. Frozen registers and presentation content are unchanged. Added reading-journey and source-preservation tests.
