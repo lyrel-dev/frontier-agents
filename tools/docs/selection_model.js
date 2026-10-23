@@ -9,6 +9,12 @@
     const nodes = source.selections || {};
     const key = element => element?.dataset?.reviewScope;
     const element = id => nodes[id] ? document.getElementById(nodes[id].anchor) : null;
+    const ordered=Object.keys(nodes).sort((a,b)=>nodes[a].order-nodes[b].order);
+    const ends=Object.fromEntries(ordered.map(id=>[id,nodes[id].order]));
+    for(const id of [...ordered].reverse()){
+      const parent=nodes[id].parent;
+      if(parent&&nodes[parent])ends[parent]=Math.max(ends[parent],ends[id]);
+    }
     function ancestors(id) {
       const result=[]; const seen=new Set();
       while (id && nodes[id] && !seen.has(id)) {result.push(id);seen.add(id);id=nodes[id].parent;}
@@ -62,14 +68,16 @@
     function range(from,to,visible) {
       if(!nodes[from]||!nodes[to])return [to];
       const a=nodes[from],b=nodes[to];
-      let ordered;
-      if(a.kind===b.kind&&a.parent===b.parent&&['section','subsection','chapter','slide','group'].includes(a.kind)){
-        ordered=Object.keys(nodes).filter(id=>nodes[id].parent===a.parent&&nodes[id].kind===a.kind).sort((x,y)=>nodes[x].order-nodes[y].order);
-      }else{
-        ordered=visible.filter(id=>nodes[id]&&element(id)?.hasAttribute('data-review-block'));
+      if(a.parent===b.parent){
+        const siblings=ordered.filter(id=>nodes[id].parent===a.parent);
+        const i=siblings.indexOf(from),j=siblings.indexOf(to);
+        return siblings.slice(Math.min(i,j),Math.max(i,j)+1);
       }
-      const i=ordered.indexOf(from),j=ordered.indexOf(to);
-      return i<0||j<0?[to]:ordered.slice(Math.min(i,j),Math.max(i,j)+1);
+      // Fully contained scopes only. Crossing one cell never grants the rest
+      // of its table; a deliberately selected container includes its full span.
+      const first=Math.min(a.order,b.order), last=Math.max(ends[from],ends[to]);
+      const displayed=new Set(visible);
+      return normalize(ordered.filter(id=>displayed.has(id)&&nodes[id].order>=first&&ends[id]<=last));
     }
     return {nodes,key,element,ancestors,normalize,targets,snapshot,validate,stale,locate,associated,range};
   }
