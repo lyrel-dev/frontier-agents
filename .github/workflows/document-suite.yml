@@ -29,7 +29,9 @@ jobs:
           python -m playwright install chromium
       - name: Apply reviewed annotation change once
         run: |
-          if [ -f tools/docs/apply_menu_revision.py ]; then python tools/docs/apply_menu_revision.py; fi
+          for file in apply_menu_revision.py refine_menu_revision.py; do
+            if [ -f "tools/docs/$file" ]; then python "tools/docs/$file"; fi
+          done
       - name: Validate canonical Markdown input
         run: |
           python -m compileall -q tools/docs
