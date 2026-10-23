@@ -21,7 +21,7 @@ BOXES={'request': (15, 280, 205, 140),
  'destination': (1170, 650, 215, 110)}
 PRODUCTS={'devops': {'name': 'AWS DevOps Agent',
             'scope': 'Agent Space — access, definitions, context and execution records',
-            'nodes': {'request': ('external', 'Request / signal', 'Question, incident or configured start'),
+            'nodes': {'request': ('external', 'Request / signal', 'Question, signal or trigger'),
                       'instructions': ('aws', 'Instructions', 'Managed AGENTS.md or custom prompt'),
                       'skills': ('aws', 'Skills', 'Applicable or assigned procedures'),
                       'knowledge': ('aws', 'Memory stores', 'Available context; selected entries'),
@@ -31,7 +31,7 @@ PRODUCTS={'devops': {'name': 'AWS DevOps Agent',
                                       'Provider association; selected operations'),
                       'learning': ('aws', 'Knowledge production', 'Learning runs; feedback reflections'),
                       'sources': ('external', 'Source systems', 'Resources, telemetry, code and deployment'),
-                      'result': ('aws', 'Result / record', 'Findings, proposals, artifacts and history'),
+                      'result': ('aws', 'Result / record', 'Findings, plans, artifacts and history'),
                       'operator': ('external', 'Operator', 'Scope, feedback, approval and review'),
                       'destination': ('external', 'Destination', 'Configured channel or event consumer')},
             'views': {'agent': ('An agent uses guidance, procedures, context and authorized operations',
@@ -244,11 +244,11 @@ def render(key):
  spec=PRODUCTS[product];title,refs,active=spec['views'][view]
  basic=view=='agent';show_scope=view not in ('agent','coordination')
  publish=show_scope and view in ('space','reporting','repair','incident')
- out=[f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 825" role="img" aria-labelledby="{key}-title {key}-desc" data-diagram="{key}" data-layout="teaching-fixed-v1" data-product="{product}" data-view="{view}">',f'<title id="{key}-title">{escape(title)}</title>',f'<desc id="{key}-desc">{escape(DIAGRAMS[key][1])}</desc>',
+ out=[f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 825" role="img" aria-labelledby="{key}-title {key}-desc" data-diagram="{key}" data-layout="teaching-fixed-v1" data-product="{product}" data-view="{view}">',f'<title id="{key}-title">{escape(title)}</title>',f'<desc id="{key}-desc">{escape(DIAGRAMS[key][1])}</desc>',
  '<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M0,0 L8,4 L0,8" fill="#465768"/></marker></defs>',
  '<style>text{font-family:Arial,sans-serif;fill:#182d3d}.label{font-size:21px;font-weight:600}.detail{font-size:19px}.tag{font-size:14px;font-weight:700}.edge{fill:none;stroke:#465768;stroke-width:2.2;marker-end:url(#arrow)}.edge-soft{fill:none;stroke:#6b7785;stroke-width:1.6;stroke-dasharray:7 5;marker-end:url(#arrow)}</style>']
  if show_scope:
-  out.append('<rect x="240" y="35" width="900" height="580" rx="12" fill="#fbfcfd" stroke="#348761" stroke-width="2" stroke-dasharray="9 5"/>')
+  out.append('<rect data-scope-boundary="true" x="240" y="35" width="1160" height="580" rx="12" fill="#fbfcfd" stroke="#348761" stroke-width="2" stroke-dasharray="9 5"/>')
   out.append(f'<text x="255" y="58" font-size="18">{escape(spec["scope"])}</text>')
  paths=[('request','execution','M220 350 H270'),('instructions','execution','M400 222 V270'),('skills','execution','M690 222 V270'),('knowledge','execution','M980 222 V270'),('execution','result','M1110 350 H1170'),('execution','connections','M645 410 V470'),('connections','sources','M645 610 V650')]
  for a,b,d in paths:
@@ -272,7 +272,7 @@ def render(key):
   out.append('<path class="edge-soft" data-edge="operator-skill" d="M118 470 V242 H690 V222"/>')
   out.append('<text x="285" y="237" font-size="16">reviewed procedure</text>')
  if publish:
-  out.append('<path class="edge-soft" data-edge="result-destination" d="M1385 350 H1393 V705 H1385"/>')
+  out.append('<path class="edge-soft" data-edge="result-destination" d="M1385 350 H1420 V705 H1385"/>')
   out+=['<text x="1200" y="565" font-size="16">Optional publication</text>','<text x="1200" y="588" font-size="16">Destination-specific</text>','<text x="1200" y="611" font-size="16">authorization</text>']
  steps=PATHS.get(view,())
  for ident,(x,y,w,h) in BOXES.items():
