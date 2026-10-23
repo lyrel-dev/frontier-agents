@@ -21,6 +21,8 @@ def run():
     pre=HERE/'prepare_markdown_migration.py'
     if pre.exists():subprocess.run([sys.executable,str(pre)],cwd=ROOT,check=True)
     subprocess.run([sys.executable,str(migration)],cwd=ROOT,check=True)
+    acceptance=HERE/'md_check.py'
+    acceptance.write_text(acceptance.read_text().replace('errors.append(str(exc));print(traceback.format_exc())','errors.append(traceback.format_exc());print(traceback.format_exc())'))
     checker=HERE/'check.py';s=checker.read_text();pos=s.rfind('\nif __name__')
     if pos<0:raise RuntimeError('Cannot locate validation entrypoint')
     preflight="\nif __name__ == '__main__':\n    import sys as _sys\n    subprocess.run([_sys.executable, str(ROOT/'tools/docs/md_check.py'), *(['--browser'] if '--browser' in _sys.argv else [])], check=True)\n"
