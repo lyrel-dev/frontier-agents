@@ -143,10 +143,13 @@ def browser_checks():
                 page.locator('#review-text').fill('Clarify this definition without changing its scope.')
                 page.locator('#review-save').click()
                 packet=page.evaluate('FrontierReview.exportPacket()');assert len(packet['comments'])==1
+                assert packet['review_id']==page.evaluate('FrontierReview.exportPacket().review_id')
+                assert '"review_id": "'+packet['review_id']+'"' in page.evaluate('FrontierReview.exportPrompt()')
                 note=packet['comments'][0];assert note['targets'][0]['path'].endswith('.md')
                 assert note['targets'][0]['start_byte']>=note['targets'][0]['start_char']
                 page.reload();page.wait_for_function('!!window.FrontierReview')
                 assert len(page.evaluate('FrontierReview.exportPacket().comments'))==1
+                assert page.evaluate('FrontierReview.exportPacket().review_id')==packet['review_id']
                 page.locator('#review-search-open').click();page.locator('#review-global-search').fill('memory')
                 assert page.locator('#review-search-results li').count()>0
                 page.locator('#review-search-dialog button').click()
