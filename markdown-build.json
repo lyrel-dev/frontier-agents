@@ -1,6 +1,6 @@
 {
   "schema": "frontier-markdown-build/v1",
-  "iteration": 15,
-  "scope": "Semantic container selection and immutable exact-source scope; hierarchical UI and guard regression validation",
+  "iteration": 16,
+  "scope": "Hierarchical selection and source-authority validation with indexed DOM checks",
   "frozen_model_and_use_cases": true
 }
