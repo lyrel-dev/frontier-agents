@@ -50,7 +50,7 @@ jobs:
           p=Path('validation');p.mkdir(exist_ok=True)
           for name in ['browser-review.json','fis-browser-review.json','setup-browser.json','worker-http-review.json','container-runtime.json','observability-acceptance.json','software-acceptance.json','fis-console-pytest.xml']:
               (p/name).unlink(missing_ok=True)
-          (p/'current-run.json').write_text(json.dumps({'epoch':time.time()}))
+          (p/'current-run.json').write_text(json.dumps({'started_at_epoch':time.time()}))
           PY
       - name: Test software and native browser paths without AWS access
         env:
