@@ -2,8 +2,8 @@
   "revision": "markdown-ab9cde9847af90e6",
   "files": {
     ".github/workflows/document-suite.yml": {
-      "bytes": 4219,
-      "sha256": "0fdcc3928f5c2654b956e5eb8bb5a5ef3f0c2b33f209994b12bd9156fb654b2e"
+      "bytes": 4004,
+      "sha256": "dca6354f2f14814941f4dad9dc72b911f2603090dee884e9065233e70cc2c4f2"
     },
     "AUTHORING.md": {
       "bytes": 12404,
@@ -482,8 +482,8 @@
       "sha256": "58679ab86530b7f616a553ae6820362b38e91c5ddc9d5397c7efc410aa5f20d5"
     },
     "qa/authoring-review.json": {
-      "bytes": 2144,
-      "sha256": "4506c64d03b449aaa82f49410d733f0c5a989e1e2a48beefd501d1d40c1ce2e5"
+      "bytes": 3121,
+      "sha256": "5139c1ed8052b06a4af01ebb0b79b4d18f4c4ff429953ce98279f4131919caaa"
     },
     "qa/checks.json": {
       "bytes": 49172,
