@@ -1,6 +1,6 @@
 {
   "schema": "frontier-markdown-build/v1",
-  "iteration": 14,
-  "scope": "Hierarchical reader selection, source-snapshot membership, scoped comments and guarded edits; frozen content unchanged",
+  "iteration": 15,
+  "scope": "Semantic container selection and immutable exact-source scope; hierarchical UI and guard regression validation",
   "frozen_model_and_use_cases": true
 }
