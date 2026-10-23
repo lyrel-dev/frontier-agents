@@ -2,8 +2,8 @@
   "revision": "markdown-0b6e0f010ba70801",
   "files": {
     ".github/workflows/document-suite.yml": {
-      "bytes": 4534,
-      "sha256": "47a609b0e438e897e150c471de783ffc91f0ff6fa0fbd03f44268201fd4d4f21"
+      "bytes": 4149,
+      "sha256": "b3886f145f74b008d568343683c8103d66ae8d89a2b11e99997a5c88b9419f02"
     },
     "AUTHORING.md": {
       "bytes": 16795,
@@ -446,8 +446,8 @@
       "sha256": "63281b3360b60c3311a4662fd16166b0ab509e0e348739d27edab3c02146d085"
     },
     "markdown-build.json": {
-      "bytes": 217,
-      "sha256": "ab72a8fe6012e1bbb761d4b99efc4aa7459325cc6b81470863f411c917d2595c"
+      "bytes": 260,
+      "sha256": "6241f66b673044fef526ea0a9e16fb70276e951a2eba78b84deaea5bab41a238"
     },
     "presentations/architecture-notes.md": {
       "bytes": 9619,
@@ -486,8 +486,8 @@
       "sha256": "adde7cf1eed78027196f10ee06d40addebe1d5dfee801f9b2fe3b42ab30bbc3e"
     },
     "qa/authoring-review.json": {
-      "bytes": 3121,
-      "sha256": "5139c1ed8052b06a4af01ebb0b79b4d18f4c4ff429953ce98279f4131919caaa"
+      "bytes": 4486,
+      "sha256": "4d183fda915cdf1df7307ed3e52994de54526afe444813b6c36dc206e0045833"
     },
     "qa/checks.json": {
       "bytes": 49172,
