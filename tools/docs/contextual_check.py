@@ -25,7 +25,7 @@ def browser_checks(root: Path):
                 page.on('pageerror', lambda e: errors.append(str(e)))
                 page.on('request', lambda r: external.append(r.url) if not r.url.startswith(base) else None)
                 page.goto(base+'/guides/devops.html')
-                page.wait_for_function('window.FrontierReview?.interaction === "contextual-v3"')
+                page.wait_for_function('window.FrontierReview?.interaction === "contextual-v4"')
                 assert page.locator('#review-toggle,#review-toolbar').count() == 0
                 expect(page.locator('#review-block-controls')).to_be_hidden()
                 para = page.locator('.report-section:visible p[data-review-block]').first
@@ -83,7 +83,9 @@ def browser_checks(root: Path):
                 page.locator('#review-drawer .review-panel-heading button').click()
                 candidates.nth(0).hover();page.locator('#review-block-select').click()
                 candidates.nth(2).hover();page.locator('#review-block-select').click(modifiers=['Control'])
-                assert page.locator('.review-selected').count() == 2
+                expected=page.evaluate('''ids=>{const map=JSON.parse(document.getElementById('review-source-map').textContent);return [...new Set(ids.flatMap(id=>map.selections[id].target_ids))];}''', [candidates.nth(0).get_attribute('data-review-scope'),candidates.nth(2).get_attribute('data-review-scope')])
+                actual=page.locator('.review-selected').evaluate_all('(els)=>[...new Set(els.map(el=>el.dataset.reviewBlock))]')
+                assert set(actual)==set(expected), {'selected':actual,'expected':expected}
                 page.locator('#review-clear-selection').click()
                 assert candidates.evaluate_all('(els)=>els.map(el=>el.dataset.reviewBlock)') == ids
 
@@ -114,7 +116,8 @@ def browser_checks(root: Path):
                     page.wait_for_function('!!window.FrontierReview')
                     target=page.locator('[id="'+ident+'"]')
                     expect(target).to_be_visible();target.hover()
-                    if tag=='diagram':target.focus()
+                    # Enter explicitly opens the whole container handle; hover may target its nested cell/item.
+                    target.focus();page.keyboard.press('Enter')
                     expect(page.locator('#review-block-controls')).to_have_attribute('data-block-id',target_id)
                     page.locator('#review-block-comment').click()
                     expect(page.locator('#review-text')).to_be_visible()
