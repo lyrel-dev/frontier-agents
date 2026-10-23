@@ -134,13 +134,15 @@ def guard_checks():
 
 
 if __name__=='__main__':
-    result={'schema':'frontier-authoring-validation/v1','interaction':'contextual-v3','errors':[]}
+    result={'schema':'frontier-authoring-validation/v1','interaction':'contextual-v4','errors':[]}
     try:
         result['source_mapping']=source_checks()
         result['patch_guards']=guard_checks()
         result['browser']=browser_checks(ROOT)
         from annotation_menu_check import validate as validate_menu
         result['annotation_menu']=validate_menu(ROOT)
+        from hierarchy_check import validate as validate_hierarchy
+        result['hierarchical_selection']=validate_hierarchy(ROOT)
     except Exception:
         result['errors'].append(traceback.format_exc())
     (ROOT/'qa/authoring-review.json').write_text(json.dumps(result,indent=2)+'\n')
