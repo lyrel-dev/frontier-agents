@@ -118,17 +118,14 @@ class Reader:
         return str(soup)
 
     def feature_detail(self, feature, current):
-        product = self.model['products'][feature['platform']]
-        ids = product['feature_bindings'][feature['id']]
-        entities = {e['id']:e for e in product['entities']}
-        uses = [c for c in self.cases if any(feature['id'] in s['configuration_features'] for s in c['workflow'])]
-        result = '<details class="feature-reference" id="'+feature['id']+'"><summary>Configuration reference: '+esc(feature['title'])+'</summary>'
-        result += paragraph(feature['configuration'])
-        result += '<p><strong>Configuration objects.</strong> '+esc(', '.join(feature['objects']))+'</p>'
-        result += '<p><strong>Resource definitions.</strong> '+ ' · '.join(anchor('catalog/resource-models.html#'+i,entities[i]['name'],current) for i in ids)+'</p>'
-        result += '<p><strong>Detailed procedures.</strong> '+' · '.join(self.section_link(s,current) for s in feature['sections'])+'</p>'
-        if uses:
-            result += '<p><strong>Use cases.</strong> '+' · '.join(self.link(c['id'],c['title'],current) for c in uses)+'</p>'
+        product=self.model['products'][feature['platform']]
+        entities={e['id']:e for e in product['entities']}
+        ids=product['feature_bindings'][feature['id']]
+        uses=[c for c in self.cases if any(feature['id'] in s['configuration_features'] for s in c['workflow'])]
+        result='<details class="feature-reference" id="'+feature['id']+'"><summary>Resource and use-case references: '+esc(feature['title'])+'</summary>'
+        result+='<p>Read the configuration explanation in '+ ' · '.join(self.section_link(s,current) for s in feature['sections'])+'.</p>'
+        result+='<p>Resource definitions: '+' · '.join(anchor('catalog/resource-models.html#'+i,entities[i]['name'],current) for i in ids)+'</p>'
+        if uses:result+='<p>Applicable use cases: '+' · '.join(self.link(c['id'],c['title'],current) for c in uses)+'</p>'
         return result+'</details>'
 
     def guide(self, product, guide):
@@ -141,21 +138,29 @@ class Reader:
         for number, chapter in enumerate(CHAPTERS[product],1):
             cid = 'chapter-'+chapter['slug']
             nav_sections, content = [], []
+            display_number = 'A' if chapter.get('appendix') else f'{number:02d}'
             for j, sid in enumerate(chapter['sections'],1):
                 section = guide['sections'][sid]
-                mechanisms = [m for m in self.mechanisms.values() if m['platform']==product and m['review']['primary_section']==sid]
-                subnav = '<ul>'+''.join('<li><a href="#'+m['id']+'">'+esc(m['title'])+'</a></li>' for m in mechanisms)+'</ul>' if mechanisms else ''
-                nav_sections.append('<li><a data-section="'+sid+'" href="#'+sid+'">'+str(number)+'.'+str(j)+' '+esc(section['title'])+'</a>'+subnav+'</li>')
+                explanation_sections = {'MX-D-QUERY':'D-21','MX-D-CUSTOM':'D-19','MX-S-PERSONALIZE':'S-13'}
+                mechanisms = [m for m in self.mechanisms.values() if m['platform']==product and explanation_sections.get(m['id'],m['review']['primary_section'])==sid]
+                subnav = ''
+                nav_sections.append('<li><a data-section="'+sid+'" href="#'+sid+'">'+display_number+'.'+str(j)+' '+esc(section['title'])+'</a>'+subnav+'</li>')
                 prose = BeautifulSoup(self.markdown(section['body'],guide['definitions'],links,product+'-'+sid),'html.parser')
-                for heading in prose.select('h4[id^="MX-"]'):
-                    heading.string = re.sub(r'^MX-[A-Z]-[A-Z]+\s+[—-]\s+','',heading.get_text())
+                # Compatibility anchors resolve frozen workflow references to their technical explanation.
+                # They are references, not declarations that every old registry label is a mechanism.
+                for m in mechanisms:
+                    node=prose.new_tag('span',id=m['id'])
+                    node['class']='technical-reference-anchor'
+                    node['aria-label']='Technical reference: '+section['title']
+                    node.string=''
+                    prose.insert(0,node)
                 context = ''.join(self.feature_detail(f,current) for f in self.features.values() if f['platform']==product and f['sections'][0]==sid)
                 related = [c for c in self.cases if any(s['mechanism'] in self.mechanisms and sid in self.mechanisms[s['mechanism']]['sections'] for s in c['workflow']) and product in c['platforms']]
                 if related:
                     context += '<details class="related-reading"><summary>Use cases that apply this section</summary><ul>'+''.join('<li>'+self.link(c['id'],c['title'],current)+'</li>' for c in related)+'</ul></details>'
-                content.append('<section class="report-section" id="'+sid+'" data-chapter="'+chapter['slug']+'"><h3><span class="section-number">'+str(number)+'.'+str(j)+'</span> '+esc(section['title'])+'</h3>'+str(prose)+context+'</section>')
-            nav.append('<li><details open><summary><a href="#'+cid+'">'+f'{number:02d}. '+esc(chapter['title'])+'</a></summary><ol>'+''.join(nav_sections)+'</ol></details></li>')
-            chapters.append('<section class="chapter" data-reader-chapter="'+cid+'" id="'+cid+'"><header><p class="chapter-label">Chapter '+f'{number:02d}'+'</p><h2>'+esc(chapter['title'])+'</h2>'+paragraph(chapter['purpose'])+'</header>'+''.join(content)+'</section>')
+                content.append('<section class="report-section" id="'+sid+'" data-chapter="'+chapter['slug']+'"><h3><span class="section-number">'+display_number+'.'+str(j)+'</span> '+esc(section['title'])+'</h3>'+str(prose)+context+'</section>')
+            nav.append('<li><details open><summary><a href="#'+cid+'">'+display_number+'. '+esc(chapter['title'])+'</a></summary><ol>'+''.join(nav_sections)+'</ol></details></li>')
+            chapters.append('<section class="chapter" data-reader-chapter="'+cid+'" id="'+cid+'"><header><p class="chapter-label">'+('Appendix' if chapter.get('appendix') else 'Chapter '+f'{number:02d}')+'</p><h2>'+esc(chapter['title'])+'</h2>'+paragraph(chapter['purpose'])+'</header>'+''.join(content)+'</section>')
         side = '<aside class="reader-sidebar"><details id="reader-contents" open><summary>Contents</summary><nav class="toc" aria-label="Guide chapters"><ol>'+''.join(nav)+'</ol></nav></details></aside>'
         controls = '<form class="reader-search" role="search"><label for="guide-search">Search this guide</label><div><input id="guide-search" type="search" placeholder="Search explanations and procedures"><button type="reset">Clear</button></div><p id="guide-search-status" role="status"></p></form><div class="reading-controls"><label><input type="checkbox" id="read-all"> Read all chapters</label><button type="button" data-print>Print guide</button></div>'
         breadcrumbs = '<nav class="breadcrumbs" aria-label="Breadcrumb">'+anchor('index.html','Guides',current)+'<span>/</span><span>'+esc(NAMES[product])+'</span></nav>'
@@ -280,13 +285,13 @@ class Reader:
                '| Apply an operational workflow | [Use cases](catalog/index.html) |',
                '| Look up product objects and relationships | [Resource model](catalog/resource-models.html) |',
                '| Present the material | [HTML presentations](presentations/index.html) |','',
-               'Guides have chapter navigation and one search. Each use case has a dedicated page with its narrative, workflow, configuration recipes, verification criteria, and technical references. Mechanisms and feature configuration are explained in their product-guide context rather than in separate record indexes.','',
+               'Guides distinguish workspace organization, definition, context, invocation, integrations, network connectivity, execution controls, managed functions, outputs, and administration. They have chapter navigation and one search. Each use case has a dedicated page with its narrative, workflow, configuration recipes, verification criteria, and technical references. The product guides explain concrete platform facilities and their operating mechanisms by capability dimension. The frozen dependency registers supply references, not a product taxonomy.','',
                '## Product editions','', '| Subject | Guide | Markdown | Presentation | Duration |','|---|---|---|---|---|']
         for p,d in DECKS.items():
             total=sum(s['seconds'] for s in d['slides'])//60;demo=sum(s['seconds'] for s in d['slides'] if s['kind']=='demo')//60
             lines.append(f'| {NAMES[p]} | [Read](guides/{p}.html) | [Source](guides/{p}.md) | [Slides](presentations/{p}.html) | {total} min, including {demo} min exercise |')
         lines+=['','## Source ownership and build','',
-                'The six JSON registers in `catalog/` are frozen at `'+BASELINE+'`. Reader navigation and page composition are maintained in `tools/docs/reader.py`, `reading.css`, and `reading.js`. This revision does not change the model, case selection, workflow semantics, or source claims. Former identifiers remain lookup metadata in `catalog/aliases.json`; they are not a reader-facing chapter.','',
+                'The six JSON registers in `catalog/` are frozen at `'+BASELINE+'`. Reader navigation and page composition are maintained in `tools/docs/reader.py`, `reading.css`, and `reading.js`. This revision preserves the model, case selection, and workflow semantics. Product exposition follows the supplied capability outline; targeted source qualifications are recorded in qa/exposition-review.json. Former identifiers remain lookup metadata in `catalog/aliases.json`; they are not a reader-facing chapter.','',
                 '```text','guides/          Canonical guide prose and HTML books','catalog/         Frozen records, use-case pages, and resource reference','presentations/   HTML decks and notes','assets/diagrams/ Source-linked SVG diagrams','tools/docs/      One renderer and validation toolchain','qa/              Review and validation records','examples/        Synthetic worked evidence','applications/    Independent application; not modified','```','',
                 '```sh','python -m pip install -r tools/docs/requirements.txt','python -m playwright install chromium','python tools/docs/build.py','python tools/docs/check.py --browser','```','',
                 'Graphviz (`dot`) is also required. [Validation scope](VALIDATION.md), [source coverage](guides/coverage.md), and [publishing instructions](PUBLISHING.md) distinguish document checks from live service testing. Git retains previous versions; no manual archives are maintained.']
