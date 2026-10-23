@@ -8,7 +8,33 @@ Start with entity ownership and resource identity. The following chapters compar
 
 **Reading conventions.** Product statements link to official AWS documentation. Configuration recommendations and verification procedures are team guidance; the proposed tests and synthetic examples have not been executed against AWS. Lifecycle tables describe service behavior and operator actions, not an API status enumeration unless explicitly cited. DOC (blue), AWS (green), and EXT (orange) identify concept ownership. Source-review dates and qualifications are recorded in the source registers.
 
-## 01. Concept ownership and product resource models
+Start with the agent overview and workflow walkthroughs. Use the subsequent capability chapters for detailed setup, lifecycle behavior and troubleshooting. The use-case catalog remains separate and unchanged.
+
+## 01. The agent and its operating context
+
+Start with one execution, then add coordinated responsibilities and the surrounding access scope. The same diagram is reused in the workflow walkthroughs.
+
+### A-90 — From one agent execution to product-specific workflows
+
+Begin with one executor working on one scoped request. It uses applicable instructions and contextual information, calls permitted operations, and produces observations and a result. A saved configuration, a particular execution, the workspace containing it and the accepted engineering outcome are different concepts. The diagram is an explanatory cycle, not an assertion of shared implementation internals. [AS701] [AS702] [AS703]
+
+![Agent execution and evidence cycle](../assets/diagrams/agent-execution.svg)
+
+The product terms must then be specialized. DevOps exposes managed roles and custom-agent definitions with selected tools and context. Security exposes assessment-specific settings, inputs, runs and results. FinOps exposes direct conversation, tasks and automations using authorized source data and organizational context. Importing DevOps skill or custom-agent terminology into the other products would obscure their actual configuration model. [AS701] [AS702] [AS703]
+
+Use the approved entity model to keep those concepts distinct, not as a list of headings to reproduce mechanically. The product teaching sequences introduce the worker, expand to coordination and access scope, and then follow the existing use cases through the same fixed-position diagrams. The ten capability dimensions remain the detailed reference organization.
+
+### A-91 — Coordination within a service and handoff between services
+
+Coordination has different meanings at different scopes. Within DevOps incident work, managed responsibilities contribute to an investigation and retained knowledge can inform later work. Within Security, assessment, finding, repair and verification records form an evidence lineage. Within FinOps, requests and automations create work through documented conversation and task paths. Similar words do not establish an identical native agent graph. [AS701] [AS702] [AS703]
+
+![Explicit evidence transfer between independently scoped work](../assets/diagrams/shared-handoff.svg)
+
+Across services, this collection defines a team-managed handoff. An incident result may motivate a security assessment or cost inquiry, but the receiving work needs its own target, evidence, identity, authorization and completion criteria. Transfer source and execution identifiers, relevant observations, unresolved questions and a responsible owner. Do not transfer credentials or treat a generated summary as approval.
+
+This preserves the shared operational-review use case without claiming a built-in cross-service orchestrator. The four-minute tabletop asks participants to define three independently testable questions from one event rather than assume one shared cause.
+
+## 02. Concept ownership and product resource models
 
 Use the entity model to distinguish responsibilities, then compare the product capability dimensions. The model is not a product feature inventory.
 
@@ -140,7 +166,7 @@ These mechanisms are documented separately in the canonical guides: D-M01, D-M02
 
 Security Agent also documents Findings Personalization. It reuses eligible edits from the most recent completed penetration-test run to adjust similar later findings, provided the feature was enabled when the test started. This is a different producer, retained preference and effect from Login Optimization. The latter reuses authentication navigation; personalization changes finding attributes. Disabling personalization preserves the learned preferences while displaying raw findings. Neither behavior proves that an application defect was repaired. The detailed mechanism is [Finding-edit personalization](../guides/security.html#MX-S-PERSONALIZE). [AS401]
 
-## 02. Integration and authorization boundaries
+## 03. Integration and authorization boundaries
 
 An integration connects a source, trigger, target, or destination. The permitted direction and effect determine the relevant network and authorization controls.
 
@@ -197,7 +223,7 @@ The common rule is to examine the actual effect, not to label every agent “rea
 
 **Engineering design:** carry a requested effect and intended target in a work item, but never carry credentials or substitute a ticket approval for the receiving service's native authorization.
 
-## 03. Execution lifecycles and evidence handoffs
+## 04. Execution lifecycles and evidence handoffs
 
 A definition, execution, retained artifact, and external record have separate lifecycles. Team handoffs preserve their identities rather than collapsing them into one status.
 
@@ -249,7 +275,7 @@ The receiving engineer resolves the internal evidence link, validates the resour
 
 **Failure branch:** a task naming “the latest deployment” without an immutable revision cannot establish which change was assessed. Return the work item for clarification rather than letting each product silently choose a different latest revision.
 
-## 04. Cross-platform worked example
+## 05. Cross-platform worked example
 
 The worked example assigns different questions to the three services while retaining the source identity and verification responsibility for each.
 
@@ -265,7 +291,7 @@ The worked example assigns different questions to the three services while retai
 
 **Four-minute exercise:** spend one minute identifying each product's required input, two minutes checking revision/window/identity consistency across the prepared records, and one minute assigning unresolved questions to owners. A purported single root cause is rejected unless evidence actually connects the observations. No live agents or shared runtime are assumed.
 
-## 05. Documentation coverage
+## 06. Documentation coverage
 
 These diagrams and comparisons are logical explanations of documented behavior, not assertions about undisclosed runtime architecture.
 
@@ -317,3 +343,6 @@ The public sources do not justify specifying a shared vector database, embedding
 [AS51]: https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html
 [AS52]: https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html
 [AS53]: https://docs.aws.amazon.com/finops-agent/latest/userguide/setting-up.html
+[AS701]: https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html
+[AS702]: https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html
+[AS703]: https://docs.aws.amazon.com/finops-agent/latest/userguide/task-management.html
