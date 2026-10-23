@@ -1,12 +1,13 @@
 {
   "schema": "frontier-source-map-report/v1",
-  "content_revision": "ab9cde9847af90e674f82b3cc0f4b78e41ca7034f20ba5a8d3265f34486959a2",
+  "content_revision": "0b6e0f010ba708018551fa4c76eef6a8b3b405d330e17d3692dac738e1835a30",
   "source_files": 457,
   "search_blocks": 1455,
   "pages": {
     "index.html": {
       "source_files": [],
-      "mapped_blocks": 0
+      "mapped_blocks": 0,
+      "selection_nodes": 73
     },
     "guides/architecture.html": {
       "source_files": [
@@ -38,7 +39,8 @@
         "content/guides/architecture/sections/A-91.md",
         "content/guides/architecture/sections/A-U01.md"
       ],
-      "mapped_blocks": 121
+      "mapped_blocks": 121,
+      "selection_nodes": 385
     },
     "guides/devops.html": {
       "source_files": [
@@ -114,7 +116,8 @@
         "content/guides/devops/sections/D-M08.md",
         "content/guides/devops/sections/D-U01.md"
       ],
-      "mapped_blocks": 288
+      "mapped_blocks": 288,
+      "selection_nodes": 935
     },
     "guides/finops.html": {
       "source_files": [
@@ -170,7 +173,8 @@
         "content/guides/finops/sections/F-M07.md",
         "content/guides/finops/sections/F-U01.md"
       ],
-      "mapped_blocks": 203
+      "mapped_blocks": 203,
+      "selection_nodes": 683
     },
     "guides/security.html": {
       "source_files": [
@@ -229,14 +233,16 @@
         "content/guides/security/sections/S-M07.md",
         "content/guides/security/sections/S-U01.md"
       ],
-      "mapped_blocks": 215
+      "mapped_blocks": 215,
+      "selection_nodes": 688
     },
     "catalog/UC-D01.html": {
       "source_files": [
         "content/registers/profiles/PR-D-INCIDENT.md",
         "content/registers/use-cases/UC-D01.md"
       ],
-      "mapped_blocks": 13
+      "mapped_blocks": 13,
+      "selection_nodes": 90
     },
     "catalog/UC-D02.html": {
       "source_files": [
@@ -248,7 +254,8 @@
         "content/registers/profiles/PR-EVIDENCE.md",
         "content/registers/use-cases/UC-D02.md"
       ],
-      "mapped_blocks": 26
+      "mapped_blocks": 26,
+      "selection_nodes": 181
     },
     "catalog/UC-D03.html": {
       "source_files": [
@@ -256,7 +263,8 @@
         "content/registers/profiles/PR-D-INCIDENT.md",
         "content/registers/use-cases/UC-D03.md"
       ],
-      "mapped_blocks": 15
+      "mapped_blocks": 15,
+      "selection_nodes": 102
     },
     "catalog/UC-D04.html": {
       "source_files": [
@@ -265,7 +273,8 @@
         "content/registers/profiles/PR-D-ACTION.md",
         "content/registers/use-cases/UC-D04.md"
       ],
-      "mapped_blocks": 18
+      "mapped_blocks": 18,
+      "selection_nodes": 108
     },
     "catalog/UC-D05.html": {
       "source_files": [
@@ -275,7 +284,8 @@
         "content/registers/profiles/PR-D-REPORT.md",
         "content/registers/use-cases/UC-D05.md"
       ],
-      "mapped_blocks": 20
+      "mapped_blocks": 20,
+      "selection_nodes": 138
     },
     "catalog/UC-D06.html": {
       "source_files": [
@@ -289,7 +299,8 @@
         "content/registers/profiles/PR-EVIDENCE.md",
         "content/registers/use-cases/UC-D06.md"
       ],
-      "mapped_blocks": 36
+      "mapped_blocks": 36,
+      "selection_nodes": 234
     },
     "catalog/UC-D07.html": {
       "source_files": [
@@ -300,7 +311,8 @@
         "content/registers/profiles/PR-EVIDENCE.md",
         "content/registers/use-cases/UC-D07.md"
       ],
-      "mapped_blocks": 25
+      "mapped_blocks": 25,
+      "selection_nodes": 158
     },
     "catalog/UC-D08.html": {
       "source_files": [
@@ -309,7 +321,8 @@
         "content/registers/profiles/PR-D-INCIDENT.md",
         "content/registers/use-cases/UC-D08.md"
       ],
-      "mapped_blocks": 17
+      "mapped_blocks": 17,
+      "selection_nodes": 117
     },
     "catalog/UC-D09.html": {
       "source_files": [
@@ -317,7 +330,8 @@
         "content/registers/profiles/PR-D-INCIDENT.md",
         "content/registers/use-cases/UC-D09.md"
       ],
-      "mapped_blocks": 16
+      "mapped_blocks": 16,
+      "selection_nodes": 100
     },
     "catalog/UC-D10.html": {
       "source_files": [
@@ -325,7 +339,8 @@
         "content/registers/profiles/PR-D-PROCEDURE.md",
         "content/registers/use-cases/UC-D10.md"
       ],
-      "mapped_blocks": 17
+      "mapped_blocks": 17,
+      "selection_nodes": 96
     },
     "catalog/UC-D11.html": {
       "source_files": [
@@ -335,7 +350,8 @@
         "content/registers/profiles/PR-EVIDENCE.md",
         "content/registers/use-cases/UC-D11.md"
       ],
-      "mapped_blocks": 25
+      "mapped_blocks": 25,
+      "selection_nodes": 144
     },
     "catalog/UC-D12.html": {
       "source_files": [
@@ -345,7 +361,8 @@
         "content/registers/profiles/PR-D-REPORT.md",
         "content/registers/use-cases/UC-D12.md"
       ],
-      "mapped_blocks": 19
+      "mapped_blocks": 19,
+      "selection_nodes": 133
     },
     "catalog/UC-D13.html": {
       "source_files": [
@@ -353,7 +370,8 @@
         "content/registers/profiles/PR-D-RELEASE.md",
         "content/registers/use-cases/UC-D13.md"
       ],
-      "mapped_blocks": 13
+      "mapped_blocks": 13,
+      "selection_nodes": 98
     },
     "catalog/UC-D14.html": {
       "source_files": [
@@ -361,7 +379,8 @@
         "content/registers/profiles/PR-D-RELEASE.md",
         "content/registers/use-cases/UC-D14.md"
       ],
-      "mapped_blocks": 15
+      "mapped_blocks": 15,
+      "selection_nodes": 98
     },
     "catalog/UC-F01.html": {
       "source_files": [
@@ -370,7 +389,8 @@
         "content/registers/profiles/PR-F-ANALYSIS.md",
         "content/registers/use-cases/UC-F01.md"
       ],
-      "mapped_blocks": 17
+      "mapped_blocks": 17,
+      "selection_nodes": 133
     },
     "catalog/UC-F02.html": {
       "source_files": [
@@ -378,7 +398,8 @@
         "content/registers/profiles/PR-F-ANALYSIS.md",
         "content/registers/use-cases/UC-F02.md"
       ],
-      "mapped_blocks": 15
+      "mapped_blocks": 15,
+      "selection_nodes": 106
     },
     "catalog/UC-F03.html": {
       "source_files": [
@@ -386,7 +407,8 @@
         "content/registers/profiles/PR-F-ANALYSIS.md",
         "content/registers/use-cases/UC-F03.md"
       ],
-      "mapped_blocks": 16
+      "mapped_blocks": 16,
+      "selection_nodes": 106
     },
     "catalog/UC-F04.html": {
       "source_files": [
@@ -400,7 +422,8 @@
         "content/registers/profiles/PR-F-PUBLICATION.md",
         "content/registers/use-cases/UC-F04.md"
       ],
-      "mapped_blocks": 40
+      "mapped_blocks": 40,
+      "selection_nodes": 251
     },
     "catalog/UC-F05.html": {
       "source_files": [
@@ -412,7 +435,8 @@
         "content/registers/profiles/PR-F-PUBLICATION.md",
         "content/registers/use-cases/UC-F05.md"
       ],
-      "mapped_blocks": 33
+      "mapped_blocks": 33,
+      "selection_nodes": 214
     },
     "catalog/UC-F06.html": {
       "source_files": [
@@ -423,7 +447,8 @@
         "content/registers/profiles/PR-F-PUBLICATION.md",
         "content/registers/use-cases/UC-F06.md"
       ],
-      "mapped_blocks": 28
+      "mapped_blocks": 28,
+      "selection_nodes": 167
     },
     "catalog/UC-F07.html": {
       "source_files": [
@@ -431,7 +456,8 @@
         "content/registers/profiles/PR-F-ANALYSIS.md",
         "content/registers/use-cases/UC-F07.md"
       ],
-      "mapped_blocks": 17
+      "mapped_blocks": 17,
+      "selection_nodes": 116
     },
     "catalog/UC-G01.html": {
       "source_files": [
@@ -440,7 +466,8 @@
         "content/registers/profiles/PR-REVIEW.md",
         "content/registers/use-cases/UC-G01.md"
       ],
-      "mapped_blocks": 19
+      "mapped_blocks": 19,
+      "selection_nodes": 133
     },
     "catalog/UC-S01.html": {
       "source_files": [
@@ -453,7 +480,8 @@
         "content/registers/profiles/PR-S-PIPELINE.md",
         "content/registers/use-cases/UC-S01.md"
       ],
-      "mapped_blocks": 31
+      "mapped_blocks": 31,
+      "selection_nodes": 207
     },
     "catalog/UC-S02.html": {
       "source_files": [
@@ -464,7 +492,8 @@
         "content/registers/profiles/PR-S-REVIEW.md",
         "content/registers/use-cases/UC-S02.md"
       ],
-      "mapped_blocks": 22
+      "mapped_blocks": 22,
+      "selection_nodes": 154
     },
     "catalog/UC-S03.html": {
       "source_files": [
@@ -474,7 +503,8 @@
         "content/registers/profiles/PR-S-REVIEW.md",
         "content/registers/use-cases/UC-S03.md"
       ],
-      "mapped_blocks": 19
+      "mapped_blocks": 19,
+      "selection_nodes": 132
     },
     "catalog/UC-S04.html": {
       "source_files": [
@@ -483,7 +513,8 @@
         "content/registers/profiles/PR-S-REVIEW.md",
         "content/registers/use-cases/UC-S04.md"
       ],
-      "mapped_blocks": 19
+      "mapped_blocks": 19,
+      "selection_nodes": 130
     },
     "catalog/UC-S05.html": {
       "source_files": [
@@ -492,7 +523,8 @@
         "content/registers/profiles/PR-S-REVIEW.md",
         "content/registers/use-cases/UC-S05.md"
       ],
-      "mapped_blocks": 17
+      "mapped_blocks": 17,
+      "selection_nodes": 131
     },
     "catalog/UC-S06.html": {
       "source_files": [
@@ -501,7 +533,8 @@
         "content/registers/profiles/PR-S-REVIEW.md",
         "content/registers/use-cases/UC-S06.md"
       ],
-      "mapped_blocks": 18
+      "mapped_blocks": 18,
+      "selection_nodes": 131
     },
     "catalog/UC-S07.html": {
       "source_files": [
@@ -510,7 +543,8 @@
         "content/registers/profiles/PR-S-ASSESS.md",
         "content/registers/use-cases/UC-S07.md"
       ],
-      "mapped_blocks": 19
+      "mapped_blocks": 19,
+      "selection_nodes": 113
     },
     "catalog/UC-S08.html": {
       "source_files": [
@@ -519,7 +553,8 @@
         "content/registers/profiles/PR-S-REVIEW.md",
         "content/registers/use-cases/UC-S08.md"
       ],
-      "mapped_blocks": 19
+      "mapped_blocks": 19,
+      "selection_nodes": 116
     },
     "catalog/index.html": {
       "source_files": [
@@ -591,7 +626,8 @@
         "content/registers/use-cases/UC-S07.md",
         "content/registers/use-cases/UC-S08.md"
       ],
-      "mapped_blocks": 67
+      "mapped_blocks": 67,
+      "selection_nodes": 470
     },
     "catalog/resource-models.html": {
       "source_files": [
@@ -608,7 +644,8 @@
         "content/registers/resource-models/finops.md",
         "content/registers/resource-models/security.md"
       ],
-      "mapped_blocks": 53
+      "mapped_blocks": 53,
+      "selection_nodes": 1049
     },
     "presentations/architecture.html": {
       "source_files": [
@@ -638,7 +675,8 @@
         "content/presentations/architecture/08.md",
         "content/presentations/architecture/09.md"
       ],
-      "mapped_blocks": 95
+      "mapped_blocks": 95,
+      "selection_nodes": 642
     },
     "presentations/devops.html": {
       "source_files": [
@@ -707,7 +745,8 @@
         "content/presentations/devops/18.md",
         "content/presentations/devops/19.md"
       ],
-      "mapped_blocks": 219
+      "mapped_blocks": 219,
+      "selection_nodes": 1704
     },
     "presentations/finops.html": {
       "source_files": [
@@ -753,11 +792,13 @@
         "content/presentations/finops/11.md",
         "content/presentations/finops/12.md"
       ],
-      "mapped_blocks": 149
+      "mapped_blocks": 149,
+      "selection_nodes": 921
     },
     "presentations/index.html": {
       "source_files": [],
-      "mapped_blocks": 0
+      "mapped_blocks": 0,
+      "selection_nodes": 34
     },
     "presentations/security.html": {
       "source_files": [
@@ -805,7 +846,8 @@
         "content/presentations/security/11.md",
         "content/presentations/security/12.md"
       ],
-      "mapped_blocks": 150
+      "mapped_blocks": 150,
+      "selection_nodes": 730
     }
   }
 }
