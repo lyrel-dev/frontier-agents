@@ -215,7 +215,7 @@ def metadata(guides,catalog):
 
 def commit():
     allowed={'guides','catalog','presentations','assets','examples','tools','qa','devops','security','finops','architecture','mechanisms','platforms'}
-    roots={'README.md','CHANGELOG.md','MANIFEST.json','VALIDATION.md','PUBLISHING.md','EDITORIAL_STANDARD.md','SCOPE.md','index.html','documentation-build.json'}
+    roots={'README.md','CHANGELOG.md','MANIFEST.json','VALIDATION.md','PUBLISHING.md','EDITORIAL_STANDARD.md','SCOPE.md','index.html','markdown-build.json'}
     raw=subprocess.check_output(['git','-C',str(ROOT),'status','--porcelain=v1','-z','--untracked-files=all'])
     paths=[]
     for record in raw.split(b'\0'):
