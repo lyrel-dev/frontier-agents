@@ -74,15 +74,9 @@ def install(app,config,store,service):
         from botocore import xform_name
         api_name=next((name for name in model.operation_names if xform_name(name)==op),None)
         if not api_name:raise Blocked('Operation not in the installed SDK model')
-        def shape(s,depth=0):
-            if s is None:return {}
-            out={'type':s.type_name,'required':getattr(s,'required_members',[])}
-            if depth<5:
-                if s.type_name=='structure':out['fields']={k:shape(v,depth+1) for k,v in s.members.items()}
-                elif s.type_name=='list':out['items']=shape(s.member,depth+1)
-                elif s.type_name=='map':out['values']=shape(s.value,depth+1)
-            return out
-        return shape(model.operation_model(api_name).input_shape)
+        from .sdk_shapes import input_shape
+        return input_shape(model.operation_model(api_name).input_shape)
+
     @app.post('/api/setup/test-read')
     def test_read(body:ReadTest):
         from .aws import compare

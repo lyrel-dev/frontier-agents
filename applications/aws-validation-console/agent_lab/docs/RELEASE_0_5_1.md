@@ -10,9 +10,21 @@ This revision includes the previously local-only 0.5.0 account onboarding, guide
 
 The first native repository run exposed a setup-test wait helper that requested JavaScript string evaluation under CSP. The helper now polls through the browser protocol, as the existing response test does. The application Content Security Policy is unchanged; native acceptance still fails rather than falling back to DOM injection.
 
+## Guided setup navigation correction
+
+Native browser acceptance exposed a race in the setup view: navigation kept the previous form editable while configuration reads were outstanding. The completed read then replaced that form, discarding input entered in the meantime. The view now removes obsolete controls immediately, marks loading explicitly, and ignores responses for superseded navigation. Locking invalidates outstanding navigation and pending API responses as well. A successful response arriving after lock cannot restore account proposals or private setup state. Approval dialogs remain open until the updated configuration is loaded, so a refresh cannot discard new input.
+
+The guided browser suite delays real HTTP reads and completes them out of order. It checks that controls become available only after the current stage has loaded and that a late older response cannot erase newer input. It still uses the served Content Security Policy in native mode. Test diagnostics retain bounded errors and field-validity metadata, not credential field values.
+
+## Complete resource-parameter forms
+
+The add-check control remains disabled until the read-operation catalogue is available. Failed catalogue reads can be retried without discarding the plan. Changing a service or operation clears the old parameter editor; delayed schema responses cannot attach fields for a previously selected operation.
+
+The SDK input descriptor no longer silently truncates nested structures at five levels. It preserves the full supported input shape, including CloudWatch metric-query dimensions. A recursive or over-budget shape is rejected explicitly instead of becoming an incomplete form. Model checks cover every allowlisted read operation, and a separate native-browser check edits nested CloudWatch dimension fields through the served application.
+
 ## Reproducible acceptance
 
-Run the existing Python, native-browser, worker HTTP and Docker checks. The additional `tests/observability_acceptance.py` starts the actual empty application, Prometheus 3.15.1 and Grafana 13.2.4 in a disposable, isolated Docker network namespace. It checks authenticated scraping, executes all baseline panel queries in Prometheus and through Grafana, imports/reads back the generated dashboard, and verifies that no incident measurements were created. It is not a test of real AWS metric content.
+Run the Python suite and the native-browser checks, including `python tests/sdk_form_browser_checks.py --native`, followed by worker HTTP and Docker acceptance. The additional `tests/observability_acceptance.py` starts the actual empty application, Prometheus 3.15.1 and Grafana 13.2.4 in a disposable, isolated Docker network namespace. It checks authenticated scraping, executes all baseline panel queries in Prometheus and through Grafana, imports/reads back the generated dashboard, and verifies that no incident measurements were created. It is not a test of real AWS metric content.
 
 The workflow records native browser results and the precise built image IDs. A required dependency that is unavailable fails the job; no check is silently skipped. Provider responses in unit/workflow tests remain isolated fixtures. No credentials or real account bindings are included.
 
@@ -22,6 +34,7 @@ Software and hosting acceptance do not establish a working production incident r
 
 Official contracts used for the execution check:
 
+- https://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_GetMetricData.html
 - https://docs.aws.amazon.com/fis/latest/APIReference/API_GetExperiment.html
 - https://docs.aws.amazon.com/fis/latest/APIReference/API_Experiment.html
 - https://docs.aws.amazon.com/fis/latest/APIReference/API_ListExperimentTargetAccountConfigurations.html

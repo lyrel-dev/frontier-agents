@@ -1,5 +1,8 @@
 # 0.5.1-dev — publication and integration review
 
+- Preserve setup input across asynchronous navigation and configuration approval. Reject late API responses after session lock. Add delayed/out-of-order native-browser regressions.
+- Disable verifier creation until its operation catalogue loads; invalidate old parameter fields when the selected operation changes.
+- Describe complete nested SDK inputs rather than silently truncating them. Reject recursive or oversized shapes explicitly; cover every allowlisted read model and native CloudWatch dimension editing.
 - Close preview cancellation, pending approval, configuration/operation and actual-execution-snapshot gaps.
 - Preserve proven no-response failures without requiring invented task/diagnosis evidence.
 - Add real authenticated Prometheus scraping and Grafana import/query acceptance.
