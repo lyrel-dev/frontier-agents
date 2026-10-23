@@ -8,7 +8,65 @@ This guide separates those configuration facilities from their mechanisms: conte
 
 **Reading conventions.** The dimensions below organize documented FinOps facilities; they do not imply a DevOps-style custom-agent API, arbitrary MCP tool registry, or shared cross-service memory. Official sources support product behavior. DOC/AWS/EXT colors identify ownership. Financial examples use synthetic values; verification procedures are proposed, not live account results.
 
-## 01. Workspace and resource organization
+Start with the agent overview and workflow walkthroughs. Use the subsequent capability chapters for detailed setup, lifecycle behavior and troubleshooting. The use-case catalog remains separate and unchanged.
+
+## 01. The agent and its operating context
+
+Start with one execution, then add coordinated responsibilities and the surrounding access scope. The same diagram is reused in the workflow walkthroughs.
+
+### F-90 — An analysis request, its context, and the agent execution
+
+AWS FinOps Agent answers cost-management questions using authorized AWS source services and organization-specific context. A question specifies a scope and analysis basis. Source services provide cost, anomaly or recommendation evidence. Uploaded files and persistent memory supply mappings, preferences and other context. The agent interprets the available material and produces an answer or artifact. [FS701] [FS703]
+
+![FinOps analysis composition](../assets/diagrams/teaching-finops-agent.svg)
+
+This is not the DevOps custom-agent definition model. Uploaded instructions and templates are context files, not a native SKILL.md registry. A task instruction specifies work, not another agent instance. Recommendation estimates retain the provenance of the upstream source; analysis does not itself authorize an infrastructure change or financial commitment. [FS701]
+
+Read the picture from the question, through the authorized data path, to the result. The contextual inputs explain how organizational terms affect the answer, but they do not replace the source query or its dates, filters and cost basis.
+
+### F-91 — How conversations and automations coordinate tasks
+
+Ordinary requests can be answered directly in a conversation. When the user explicitly asks for a task, the service creates queued work. A scheduled or supported event-based automation creates new tasks when its condition matches. These are execution arrangements within the configured instance, not a roster of cooperating DevOps-style agents. [FS702]
+
+![Direct interaction and task creation](../assets/diagrams/teaching-finops-coordination.svg)
+
+Inspect the automation condition, task identity, analysis result and destination effect separately. A matching anomaly event does not establish that the task completed, and completed analysis does not establish successful publication. Stopping future task creation, cancelling current work and removing retained data have different consequences. [FS702]
+
+The publication path also changes the control question. Jira actions started interactively or from an on-demand task request approval; scheduled or event-driven actions rely on authorization established during automation setup. Slack posting has no per-message approval prompt. There is no single universal approval switch for every effect. [FS702]
+
+### F-92 — Agent-instance scope and source access
+
+The instance groups its configured access, context, conversations, tasks and connections. Data-source permissions, operator access and publication destinations are separate controls. The detailed F-01, F-02 and F-05 sections define their resource identities and setup procedures. [FS701] [FS702]
+
+![FinOps instance and its connections](../assets/diagrams/teaching-finops-space.svg)
+
+Uploaded context files, retained memory and a conversation summary are different representations. Files are maintained through their workspace; conversational corrections update memory; compaction summarizes older conversation content. Applying one control does not update or delete all other copies of a fact. These distinctions matter when a report uses an outdated ownership mapping or format preference. [FS703]
+
+The diagram shows the source-access and output paths without treating the instance as the underlying billing system or a shared memory across AWS agentic services. A verified source result remains necessary even when the organizational context is correctly configured.
+
+## 02. Essential operational workflows
+
+Follow the existing use cases through inputs, context, authorized operations, outputs and the decisions that require an engineer. Teaching priority is an editorial choice, not an AWS ranking.
+
+### F-93 — Cost-analysis, reporting and optimization workflows
+
+For the technical audience, the sequence begins with a reproducible cost inquiry, then anomaly investigation and reporting, before planning and optimization decisions. This teaching order is editorial; the approved cases remain separate.
+
+![Source-backed analysis path](../assets/diagrams/teaching-finops-analysis.svg)
+
+[Historical cost and usage analysis](../catalog/UC-F01.html) establishes accounts, interval, currency, metric, grouping and filters. [Anomaly investigation](../catalog/UC-F05.html) adds a reason to inspect a deviation and, when available, corroborating operational evidence. Numerical contribution, temporal correlation and an established cause are different conclusions. [FS701] [FS702]
+
+![Reporting and publication path](../assets/diagrams/teaching-finops-reporting.svg)
+
+[Periodic reporting](../catalog/UC-F04.html) reuses the query basis and adds a reviewed format, optional recurrence and an explicit destination. A report artifact can originate from a conversation or task; its content and publication outcome should be inspected separately. F-04 and F-M06 explain those controls. [FS702]
+
+[Forecast review](../catalog/UC-F02.html) concerns projected expenditure; [commitment-coverage review](../catalog/UC-F03.html) concerns covered eligible usage. Do not merge their horizons or denominators. [Optimization prioritization](../catalog/UC-F06.html) reviews source recommendations and constraints. [Outcome measurement](../catalog/UC-F07.html) examines a comparable period after an implemented change. An estimate is not the measured result. [FS701]
+
+![Recommendation and team-decision path](../assets/diagrams/teaching-finops-optimization.svg)
+
+The shared [operational-review case](../catalog/UC-G01.html) assembles reconciled reports, unresolved anomalies, original recommendation assumptions and measured outcomes into decisions owned by the team. It does not introduce native cross-service orchestration. The detailed capability chapters provide the access, context, task, output and retention procedures underlying this sequence.
+
+## 03. Workspace and resource organization
 
 The agent instance, connections, conversations, automations, tasks, and artifacts have different identities.
 
@@ -53,7 +111,7 @@ Publication also depends on invocation mode. Jira actions requested interactivel
 
 The model establishes relationships the reader can reason about; it does not provision them. The [feature/resource crosswalk](../catalog/resource-models.html#model-finops) links each approved feature reference to the actual instance, connection, task or context object and its supporting documentation.
 
-## 02. Instance configuration and task definition
+## 04. Instance configuration and task definition
 
 Instance settings control access and context; requests and automations define the work.
 
@@ -72,7 +130,7 @@ The instance is configured with data access, operator access, retained context, 
 
 Create the instance through the wizard, configure the two role paths, and test entry as the intended operator. Then exercise a small source query under the actual data role. The context and task chapters describe the remaining controls. This configuration model should be read on its own terms rather than populated with facilities available in another AWS service. [FS502] [FS509]
 
-## 03. Organizational knowledge and conversation context
+## 05. Organizational knowledge and conversation context
 
 Uploaded files, retained preferences, and compaction are three different context mechanisms.
 
@@ -118,7 +176,7 @@ As a conversation approaches its context limit, older messages are summarized wh
 
 **Engineering procedure:** put critical constraints in a concise current task specification and reference the authoritative file or source record. When resuming a long conversation, ask the agent to restate the comparison basis and unresolved questions, then correct any discrepancy before requesting another calculation. This tests retained context; it does not prove that every earlier message remains available.
 
-## 04. Task invocation and automation
+## 06. Task invocation and automation
 
 Explicit requests, schedules, and supported anomaly events create work through different start conditions.
 
@@ -150,7 +208,7 @@ AWS's IAM examples constrain rule management using service ownership and account
 
 **Failure branch:** a registered automation with no task can mean there was no matching event, the monitor/condition is wrong, or rule permissions failed. A completed task with no message is a different destination/publication problem. Preserve these distinctions during diagnosis.
 
-## 05. Data-source and collaboration integrations
+## 07. Data-source and collaboration integrations
 
 AWS evidence sources and Jira/Slack destinations are configured for different operations.
 
@@ -192,7 +250,7 @@ Register the integration, complete authorization, then add the agent-specific co
 
 **Engineering procedure:** use designated test destinations, post a non-sensitive test result and record its actual location. Confirm that only the intended users can see it. API retries described in the integration guide address transient failures; they do not turn a permission or invalid-destination error into a successful publication.
 
-## 06. Service access and data location
+## 08. Service access and data location
 
 Service interfaces, persistent storage location, and inference geography are distinct properties.
 
@@ -204,7 +262,7 @@ During the documented preview, persistent agent data is stored in `us-east-1`. B
 
 Review the permitted input content before uploading it. Anyone with access to the agent can see its context files. An account-to-owner mapping is reference data, not an integration credential; credential values belong in the provider's supported authorization configuration. [FS504]
 
-## 07. Execution runtime and publication control
+## 09. Execution runtime and publication control
 
 Task queueing and session execution precede destination-specific publication controls.
 
@@ -231,7 +289,7 @@ These are documented differences, not one universal human-approval rule. Automat
 
 **Proposed verification:** in test destinations, record the requested action, invocation type, observed prompt or lack of prompt, and the resulting artifact. A successful Slack post does not demonstrate Jira approval behavior. Removing a future schedule does not retract a previously published message.
 
-## 08. Managed analytical functions
+## 10. Managed analytical functions
 
 Historical analysis, forecasting, coverage, anomaly inquiry, and recommendation analysis use different source results.
 
@@ -275,7 +333,7 @@ aws ce get-cost-and-usage \
 
 The end date is exclusive. This example deliberately has no account, Region or tag filters; add the same approved filters used in the agent question before comparing results. Cost Explorer availability, permissions and API charges still apply. The command was not executed here and must not be compared to a differently scoped agent total. [FS14]
 
-## 09. Interaction surfaces and report artifacts
+## 11. Interaction surfaces and report artifacts
 
 Conversations, task history, report generation, and external publication expose different outputs.
 
@@ -297,7 +355,7 @@ The service supports report artifacts including HTML, PDF and presentation forma
 
 The artifact store has a separate default quota from context-file storage. Deleting an artifact does not necessarily delete external copies previously posted to a collaboration system. [FS10] [FS08]
 
-## 10. Administration, retention, and limits
+## 12. Administration, retention, and limits
 
 Role permissions, retained-data operations, and failure diagnosis must be applied to the correct object.
 
@@ -358,7 +416,7 @@ Selected documented defaults are one agent per account/Region, 100 MB artifact s
 
 The table is engineering troubleshooting guidance based on the cited configuration and integration pages. It is not a claim of a native unified diagnostic workflow.
 
-## 11. Appendix: worked example and reference material
+## 13. Worked example and reference material
 
 The approved reporting and investigation cases are illustrated with a synthetic, reconcilable cost comparison.
 
@@ -481,3 +539,6 @@ The reference register identifies the documented behavior behind these distincti
 [FS56]: https://docs.aws.amazon.com/finops-agent/latest/userguide/slack-integration.html
 [FS57]: https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html
 [FS58]: https://docs.aws.amazon.com/finops-agent/latest/userguide/custom-cost-reporting.html
+[FS701]: https://docs.aws.amazon.com/finops-agent/latest/userguide/what-is.html
+[FS702]: https://docs.aws.amazon.com/finops-agent/latest/userguide/task-management.html
+[FS703]: https://docs.aws.amazon.com/finops-agent/latest/userguide/context-files-and-memory.html
