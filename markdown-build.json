@@ -1,6 +1,6 @@
 {
   "schema": "frontier-markdown-build/v1",
-  "iteration": 18,
-  "scope": "Explicit parent selection, nested ranges, immutable source snapshots and complete review regression suite",
+  "iteration": 19,
+  "scope": "Hierarchical scope selection, source-sharing semantics, immutable membership and precise edit guards",
   "frozen_model_and_use_cases": true
 }
