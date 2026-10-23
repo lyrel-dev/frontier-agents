@@ -102,3 +102,9 @@ The approved entity model is a semantic reference, not a chapter template. Organ
 
 <!-- block: editorial-032 -->
 Guide prose is authored in Markdown. Frozen registry records provide relationships and compatibility identifiers, not automatic chapter prose. The supplied DevOps outline is the editorial basis; other product guides use only their documented facilities rather than inheriting DevOps resource types.
+
+
+<!-- block: editorial-selection-authority -->
+## Reader selections and source-edit authority
+
+Treat reader-visible selection, captured source membership, and edit permission as separate concepts. A section or slide is selectable as one structural unit, including mapped hidden descendants; it is not a wildcard file-edit instruction. Resolve ancestor/descendant overlap, retain immutable ordered target snapshots, and reject stale or ambiguous edit scopes. Keep unmapped elements annotatable without widening their edit authority. Human acceptance must exercise full containers, nested content, source sharing and partial ranges, not only atomic-block controls or highlighted-node counts.
