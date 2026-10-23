@@ -32,12 +32,6 @@ jobs:
       - name: Install Chromium for browser validation
         timeout-minutes: 3
         run: python -m playwright install chromium
-      - name: Apply reviewed reader structure once
-        run: |
-          python -m compileall -q tools/docs
-          for file in apply_reading_structure.py refine_reading_structure.py; do
-            if [ -f "tools/docs/$file" ]; then python "tools/docs/$file"; fi
-          done
       - name: Build guides, linked catalog, figures and HTML presentations
         run: |
           python -m compileall -q tools/docs
