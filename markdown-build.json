@@ -1,6 +1,6 @@
 {
   "schema": "frontier-markdown-build/v1",
-  "iteration": 16,
-  "scope": "Hierarchical selection and source-authority validation with indexed DOM checks",
+  "iteration": 17,
+  "scope": "Parent scopes and complete source membership with nested pointer/focus distinctions",
   "frozen_model_and_use_cases": true
 }
