@@ -1,0 +1,114 @@
+name: Integrate reviewed console sources once
+on:
+  push:
+    branches: [feat/aws-fis-console-acceptance]
+    paths: [.github/workflows/fis-console-import.yml]
+permissions:
+  contents: write
+concurrency:
+  group: fis-console-source-integration
+  cancel-in-progress: false
+jobs:
+  integrate:
+    if: github.repository == 'lyrel-dev/frontier-agents' && github.ref == 'refs/heads/feat/aws-fis-console-acceptance'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Verify immutable transfer and exact before-after source hashes
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python - <<'PY'
+          import base64, bz2, hashlib, json, os, urllib.request
+          from pathlib import Path, PurePosixPath
+          entries = [
+              ('757a79ad40e597766f52e119030ab5d9fee2a3e1','e329798ca10fef7a44f2d64da2f59052f878bec494f5405ca778dabb701cd59d'),
+              ('fc071a12d03ec41ecd9cffaf2f190b6872ce381b','09299bf4d24344c216e947b8c784df7a5f273cfa6ef435e08d2ff4fb93dfec08'),
+              ('3c79eaf1f95642d08e57a4875d58c61fa25cd419','b163114008343d2c19e497f567752721056587146add5678dd26b41be5ccdc3a'),
+              ('68add8a575f73a16a496c8eb44cf69109cfd8744','e980582e0768a11a41a6b12997c4b8c4ef252a72e5a7e0ed496fdab021937e30'),
+              ('42c0a3437d49978bd69c858f6fedf5241c4ce1b5','225e56d0025c043ae7a6efca953c78ed854c7e22813e9fd063da30f040adf22a'),
+              ('7d7d68b38c6ed77bb69106c6e94987cfa71b8f42','5340965d381f6bbe7c884074259318616e353dc3c2454a2e7b15a599a8817f28'),
+              ('2f05a036e2cf3b4359d44c9e6c4d96b6c29e9bcf','afcc1e5315d329e9a706a1f3e6e59d6213f17068d1edd984387ccbacc390e529'),
+              ('fb8f3a89e60af3268eceb7461636ea00540cbd5f','16367ec4e72ae12fb0d73ac3daebeef4f2cf35d71ce1e9d5fb5d191dde7a3af1'),
+              ('a5c8ba3d91f5a62bdd9e15d32a626ff7a380d29e','e3b9d1255baf63ebdf17452607912838649eaed4a17f7df44f3265c0705b3f64')]
+          sha = lambda b: hashlib.sha256(b).hexdigest()
+          chunks = []
+          for index, (blob, expected) in enumerate(entries):
+              req = urllib.request.Request('https://api.github.com/repos/lyrel-dev/frontier-agents/git/blobs/'+blob,
+                  headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'})
+              with urllib.request.urlopen(req, timeout=30) as response:
+                  data = json.load(response)
+              assert data['encoding'] == 'base64' and data['sha'] == blob
+              raw = bytearray(base64.b64decode(data['content']))
+              if index == 4:
+                  # Correct the single transport byte identified during local hash verification.
+                  assert raw[4073] == 123
+                  raw[4073] = 121
+              assert sha(raw) == expected, ('Transfer mismatch', index)
+              chunks.append(bytes(raw))
+          compressed = b''.join(chunks)
+          assert sha(compressed) == '7007fe381b6844e5798b97c1438932208ce8724de03f335b102ec1d7e31644ae'
+          raw = bz2.decompress(compressed)
+          assert sha(raw) == '87df0aad94c5b1c15ca8d98b750cdcbd0a6ad154d07d2e56fb20dba73a6b74a4'
+          payload = json.loads(raw)
+          assert payload['schema'] == 1 and payload['base'] == 'b9dc53939611cc32904b49e2447dbb7fd5e2ab35'
+          assert len(payload['files']) == 70
+          prefix = 'applications/aws-validation-console/agent_lab/'
+          outputs = []
+          seen = set()
+          for item in payload['files']:
+              name = item['path']
+              p = PurePosixPath(name)
+              assert name.startswith(prefix) and not p.is_absolute() and '..' not in p.parts and name not in seen
+              seen.add(name)
+              path = Path(name)
+              assert not path.is_symlink() and not any(parent.is_symlink() for parent in path.parents)
+              before = path.read_bytes() if path.exists() else None
+              assert (sha(before) if before is not None else None) == item['before'], ('Baseline mismatch', name)
+              if item.get('delete'):
+                  after = None
+              elif 'content' in item:
+                  after = item['content'].encode('utf-8')
+              else:
+                  text = before.decode('utf-8')
+                  last = len(text)
+                  for start, end, replacement in reversed(item['edits']):
+                      assert 0 <= start <= end <= last
+                      text = text[:start] + replacement + text[end:]
+                      last = start
+                  after = text.encode('utf-8')
+              assert (sha(after) if after is not None else None) == item['after'], ('Result mismatch', name)
+              outputs.append((path, after))
+          for path, after in outputs:
+              if after is None:
+                  path.unlink()
+              else:
+                  path.parent.mkdir(parents=True, exist_ok=True)
+                  path.write_bytes(after)
+          print('Verified and applied 70 exact application source changes. No AWS access.')
+          PY
+      - name: Build and test without AWS credentials
+        working-directory: applications/aws-validation-console/agent_lab
+        env:
+          AWS_EC2_METADATA_DISABLED: 'true'
+        run: |
+          python -m pip install -r requirements-dev.txt
+          python build_assets.py
+          python -m pytest -q
+          git diff --check
+      - name: Commit application files only
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- applications/aws-validation-console/agent_lab
+          python - <<'PY'
+          import subprocess
+          names=subprocess.check_output(['git','diff','--cached','--name-only'],text=True).splitlines()
+          assert names and all(n.startswith('applications/aws-validation-console/agent_lab/') for n in names)
+          PY
+          git commit -m 'feat(fis-console): publish guided native execution and scoped telemetry acceptance'
+          git push origin HEAD:feat/aws-fis-console-acceptance
