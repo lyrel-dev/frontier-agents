@@ -1,6 +1,6 @@
 {
   "schema": "frontier-markdown-build/v1",
-  "iteration": 4,
-  "scope": "Verify canonical Markdown compiler and source-review guard after diagram registry fix",
+  "iteration": 5,
+  "scope": "Validate canonical Markdown, exact-source review, browser selection and guarded patches",
   "frozen_model_and_use_cases": true
 }
