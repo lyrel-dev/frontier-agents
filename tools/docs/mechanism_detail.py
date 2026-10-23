@@ -1,7 +1,7 @@
-"""Render mechanism detail in the existing guides; validate separately from live operation.
+"""Validate the frozen dependency registry and retained claim mappings.
 
-The review field in catalog/mechanisms.json owns the detailed mechanism prose.
-The registry is retained for traceability. Capability exposition is authored in guides; registry rows are not emitted as peer product mechanisms.
+Authored guide prose explains the actual product capabilities and processes.
+The registry provides compatibility identifiers; it is not a product taxonomy.
 """
 from pathlib import Path
 from collections import defaultdict, Counter
