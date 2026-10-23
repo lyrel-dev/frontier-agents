@@ -35,7 +35,9 @@ jobs:
       - name: Apply reviewed reader structure once
         run: |
           python -m compileall -q tools/docs
-          if [ -f tools/docs/apply_reading_structure.py ]; then python tools/docs/apply_reading_structure.py; fi
+          for file in apply_reading_structure.py refine_reading_structure.py; do
+            if [ -f "tools/docs/$file" ]; then python "tools/docs/$file"; fi
+          done
       - name: Build guides, linked catalog, figures and HTML presentations
         run: |
           python -m compileall -q tools/docs
@@ -59,7 +61,18 @@ jobs:
           Path('qa/rebuild.json').write_text(json.dumps({'revision':revision,'files_compared':len(before),'identical_repeated_build':True,'boundary':'Same committed inputs and same runner environment; not cross-version reproducibility.'},indent=2)+'\n')
           PY
       - name: Validate relationships, examples and rendered behavior
-        run: python tools/docs/check.py --browser
+        run: |
+          if ! python tools/docs/check.py --browser > /tmp/document-check.log 2>&1; then
+            python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('qa/checks.json')
+          print(json.dumps(json.loads(p.read_text()).get('errors',[]),indent=2) if p.exists() else 'No validation record was produced')
+          PY
+            tail -n 20 /tmp/document-check.log
+            exit 1
+          fi
+          python -c "import json; r=json.load(open('qa/checks.json')); print(json.dumps({'revision':r['revision'],'errors':r['errors'],'reading_structure':r.get('reading_structure',{})},indent=2))"
       - name: Commit each documentation change separately
         env:
           DOCUMENTATION_BRANCH: ${{ github.ref_name }}
