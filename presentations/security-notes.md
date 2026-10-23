@@ -2,13 +2,13 @@
 
 
 
-Presentation: 60 minutes, including 8 minutes of prepared-result exercises. Questions and breaks are additional.
+Presentation: 67 minutes, including 8 minutes of prepared-result exercises. Questions and breaks are additional.
 
 
 
 ## 01. Shared configuration and application Agent Spaces
 
-00:00–02:00 · Product-specific resource model
+00:00–02:00 · Workspace and resource organization
 
 Shared registrations and requirement packs are separate from application-scoped configuration. An Agent Space selects sources and users. The target application and published issue retain external ownership.
 
@@ -23,7 +23,7 @@ Detailed reference: [Shared configuration, Agent Spaces and assessments](../guid
 
 ## 02. Assessment configuration, run, and finding identities
 
-02:00–05:00 · Product-specific resource model
+02:00–05:00 · Workspace and resource organization
 
 Identify the actual product object before configuring, invoking, correcting or removing it. The resource kind determines which operation is meaningful.
 
@@ -47,7 +47,7 @@ Detailed reference: [Assessment configurations, runs and result identities](../g
 
 ## 03. Assessment configurations and distinct execution lifecycles
 
-05:00–08:00 · Product-specific resource model
+05:00–08:00 · Workspace and resource organization
 
 Penetration tests, full-code reviews, and threat models have reusable configurations and separate runs. A design review is a one-off assessment. Record the assessed revision and scope for each execution.
 
@@ -60,110 +60,63 @@ Penetration tests, full-code reviews, and threat models have reusable configurat
 Detailed reference: [Assessment configurations, runs and result identities](../guides/security.html#S-10)
 
 
-## 04. Application-source registration and selection
+## 04. Application, source and design assessment objectives
 
-08:00–10:00 · Integrations and access
+08:00–11:00 · Workspace and resource organization
 
-The account registration authorizes a provider. The application selects resources from it. Sources are shared across eligible assessments, while repository write actions are separately enabled.
-
-
-
-![Application-source registration and selection](../assets/diagrams/security-integrations.svg)
+Select the assessment by subject: a running target, a source revision, a design document, or a scoped system model. Authentication and network configuration are variants of the running-application assessment.
 
 
 
-Detailed reference: [Supported source and collaboration integrations](../guides/security.html#S-09)
+Operational outcome | Completion evidence | Implementation boundary
+
+Assess a running application for vulnerabilities | Target revision and owner authorization are retained. | Configured application assessment
+
+Review source code for security issues | Review mode and exact revision are known. | Preview assessment
+
+Review a proposed application design | Design revision and assumptions are explicit. | Preview assessment
+
+Develop and review an application threat model | Boundaries and flows are reviewed before threats. | Preview assessment
 
 
-## 05. Repository, documentation, and Jira connections
-
-10:00–12:00 · Integrations and access
-
-Register the provider, grant its required permissions, and select application resources. Repository comments, remediation proposals, and Jira publication are separate configured operations.
-
-
-
-Provider family | Documented support | Selection or effect
-
-GitHub | Cloud-hosted GitHub and Enterprise; self-hosted Enterprise Server | Select application repositories; private servers may require private connectivity.
-
-GitLab and Bitbucket | GitLab cloud and Self-Managed; Bitbucket Cloud | Provider-specific repository context and eligible review/remediation settings.
-
-Azure DevOps | Git repositories; TFVC unsupported | Entra authorization, organization permissions, repository selection; writes configured separately.
-
-Documentation | Confluence Cloud | Selected pages provide read-only application context.
-
-AWS objects | Same-account S3 resources | Select relevant sources; code-review archives have their own format requirements.
-
-Work tracking | Jira Cloud | Select projects and independently permit issue creation or comments.
-
-
-Detailed reference: [Supported source and collaboration integrations](../guides/security.html#S-09)
-
-
-## 06. Identity, repository and target configuration
-
-12:00–15:00 · Integrations and access
-
-Registration, connection, reachability and authorization must be validated separately.
-
-
-
-Configuration area | Decision | Confirmation | Typical failure
-
-Operator identity | Who can use the web application | Intended user can open the space | Setup administrator only
-
-Repository registration | Provider authorization at account level | Integration visible | Registered but not connected to application
-
-Repository connection | Repository and branch/source selection | Expected revision available | Latest branch differs from deployed target
-
-Target rules | Target, accessible dependency and out-of-scope entries | Preflight shows intended reachability | Dependency accidentally treated as attack target
-
-Private access | VPC route, DNS and security groups | Application endpoint reachable | Network error mistaken for login error
-
-
-Detailed reference: [User access and repository connections](../guides/security.html#S-02)
-
-
-
-Detailed reference: [Test targets, dependencies, and exclusions](../guides/security.html#S-03)
-
-
-## 07. Repository, pipeline and external tracking integrations
-
-15:00–17:00 · Integrations and access
-
-Integrations move source material, triggers and evidence; they do not broaden the authorized target scope.
-
-
-
-Integration | Primary use | Trigger or action | Boundary
-
-Repository provider | Source access and code review | Configured scan or supported change event | Provider and source support vary
-
-S3 source | Code package or design/context material | Selected when creating assessment | Shared across supported capabilities
-
-CI/CD pipeline | Start configured assessment from delivery workflow | Server-side job invocation | Runner is not the assessment engine
-
-Jira | Track findings and revalidation updates | Create issue or add result comment | Project and audience must be appropriate
-
-Evidence export | Point-in-time review or audit record | Download supported report or finding content | Export is not a security certificate
-
-
-Detailed reference: [User access and repository connections](../guides/security.html#S-02)
-
-
-
-Detailed reference: [Finding review and code remediation](../guides/security.html#S-05)
+Detailed reference: [Shared configuration, Agent Spaces and assessments](../guides/security.html#S-01)
 
 
 
 Detailed reference: [Code review, design review, and threat modeling](../guides/security.html#S-06)
 
 
-## 08. Application context and assessment criteria
+## 05. Assessment configuration rather than custom-agent configuration
 
-17:00–19:00 · Knowledge and behavior
+11:00–14:00 · Assessment definition and customization
+
+The reviewed Security Agent model exposes assessment-specific settings, not the DevOps custom-agent prompt, tool, and memory-store schema.
+
+
+
+Facility | Customer-controlled input
+
+Penetration test | Targets, network path, credentials, and scope
+
+Code review | Source revision and vulnerability/requirement settings
+
+Design review | Documents for a one-off assessment
+
+Threat model | Source and scope documents
+
+Repository event | Selected integration and supported review settings
+
+
+Detailed reference: [Assessment definitions and customization](../guides/security.html#S-12)
+
+
+
+Detailed reference: [Assessment invocation and repository events](../guides/security.html#S-14)
+
+
+## 06. Application context and assessment criteria
+
+14:00–16:00 · Application knowledge and assessment criteria
 
 Source evidence and scope documents have different jobs. The assessment uses selected evidence and applicable criteria; a finding is an output of that execution rather than an automatically shared memory.
 
@@ -180,32 +133,9 @@ Detailed reference: [Application-context construction and reuse](../guides/secur
 Detailed reference: [Requirement applicability and evaluation](../guides/security.html#S-M03)
 
 
-## 09. Authentication reuse and finding personalization
+## 07. Login Optimization and retained authentication procedures
 
-19:00–21:00 · Knowledge and behavior
-
-Login Optimization reuses navigation. Findings Personalization reuses eligible edits. Neither establishes that the application was repaired.
-
-
-
-![Security reuse: login navigation and finding preferences](../assets/diagrams/mechanism-security-learning.svg)
-
-
-
-Detailed reference: [Credential retrieval and application login](../guides/security.html#S-M01)
-
-
-
-Detailed reference: [Login-workflow retention and reuse](../guides/security.html#S-M02)
-
-
-
-Detailed reference: [Finding review and code remediation](../guides/security.html#S-05)
-
-
-## 10. Login Optimization and retained authentication procedures
-
-21:00–23:00 · Knowledge and behavior
+16:00–18:00 · Application knowledge and assessment criteria
 
 Login Optimization reuses authentication navigation; it is not general vulnerability memory.
 
@@ -223,9 +153,9 @@ Changed application flow | Verify the actual authenticated identity and update b
 Detailed reference: [Login-workflow retention and reuse](../guides/security.html#S-M02)
 
 
-## 11. Security requirements and requirement packs
+## 08. Security requirements and requirement packs
 
-23:00–26:00 · Knowledge and behavior
+18:00–21:00 · Application knowledge and assessment criteria
 
 Requirement generation replaces pack contents; evaluation applies the reviewed criteria to an assessment.
 
@@ -251,28 +181,93 @@ Detailed reference: [Requirement applicability and evaluation](../guides/securit
 Detailed reference: [Requirement generation and replacement](../guides/security.html#S-M04)
 
 
-## 12. Finding replay and verification boundaries
+## 09. Authentication reuse and finding personalization
 
-26:00–28:00 · Execution workflows
+21:00–23:00 · Application knowledge and assessment criteria
 
-Revalidation creates a linked job. Interpret non-reproduction only after checking the actual target, identity and reached path.
-
-
-
-![Finding revalidation: evidence and result boundaries](../assets/diagrams/mechanism-security-replay.svg)
+Login Optimization reuses navigation. Findings Personalization reuses eligible edits. Neither establishes that the application was repaired.
 
 
 
-Detailed reference: [Finding revalidation and evidence lineage](../guides/security.html#S-M05)
+![Security reuse: login navigation and finding preferences](../assets/diagrams/mechanism-security-learning.svg)
 
 
 
-Detailed reference: [Finding review and code remediation](../guides/security.html#S-05)
+Detailed reference: [Login-workflow retention and reuse](../guides/security.html#S-M02)
+
+
+
+Detailed reference: [Finding-edit personalization](../guides/security.html#S-13)
+
+
+## 10. Application-source registration and selection
+
+23:00–25:00 · External system integrations
+
+The account registration authorizes a provider. The application selects resources from it. Sources are shared across eligible assessments, while repository write actions are separately enabled.
+
+
+
+![Application-source registration and selection](../assets/diagrams/security-integrations.svg)
+
+
+
+Detailed reference: [Supported source and collaboration integrations](../guides/security.html#S-09)
+
+
+## 11. Repository, documentation, and Jira connections
+
+25:00–27:00 · External system integrations
+
+Register the provider, grant its required permissions, and select application resources. Repository comments, remediation proposals, and Jira publication are separate configured operations.
+
+
+
+Provider family | Documented support | Selection or effect
+
+GitHub | Cloud-hosted GitHub and Enterprise; self-hosted Enterprise Server | Select application repositories; private servers may require private connectivity.
+
+GitLab and Bitbucket | GitLab cloud and Self-Managed; Bitbucket Cloud | Provider-specific repository context and eligible review/remediation settings.
+
+Azure DevOps | Git repositories; TFVC unsupported | Entra authorization, organization permissions, repository selection; writes configured separately.
+
+Documentation | Confluence Cloud | Selected pages provide read-only application context.
+
+AWS objects | Same-account S3 resources | Select relevant sources; code-review archives have their own format requirements.
+
+Work tracking | Jira Cloud | Select projects and independently permit issue creation or comments.
+
+
+Detailed reference: [Supported source and collaboration integrations](../guides/security.html#S-09)
+
+
+## 12. Private source access and application-target connectivity
+
+27:00–29:00 · Network connectivity
+
+Source reachability, target reachability, and authenticated application access are independent conditions.
+
+
+
+Path | Purpose | Separate prerequisite
+
+Repository connection | Read source code and revision context | Provider authorization and source selection
+
+Private application route | Reach the test endpoint | VPC path, DNS, security groups
+
+Credential retrieval | Read the configured credential source | Secret or credential-provider permission
+
+Application login | Establish the test identity | Successful target authentication
+
+Target rules | Define what may be tested | Authorized scope and exclusions
+
+
+Detailed reference: [Private source access and application connectivity](../guides/security.html#S-15)
 
 
 ## 13. Credential resolution and application authentication
 
-28:00–31:00 · Execution workflows
+29:00–32:00 · Execution and assessment controls
 
 Credential retrieval can succeed while application authentication still fails.
 
@@ -296,7 +291,7 @@ Detailed reference: [Credential retrieval and application login](../guides/secur
 
 ## 14. Assessment configuration and run lifecycle
 
-31:00–33:00 · Execution workflows
+32:00–34:00 · Execution and assessment controls
 
 A completed run confirms execution, not exhaustive route or vulnerability-class coverage.
 
@@ -318,113 +313,9 @@ Design review | Different one-off lifecycle | Clone to create new work | Indepen
 Detailed reference: [Assessment configuration and run lifecycle](../guides/security.html#S-04)
 
 
-## 15. Finding lineage, remediation and revalidation
+## 15. Application assessment: independent configuration choices
 
-33:00–36:00 · Execution workflows
-
-A Resolved revalidation result applies to the selected finding and execution conditions.
-
-
-
-Original finding | Affected target, revision, identity and validation steps.
-
-Remediation change | Reviewed code or configuration change linked to the finding.
-
-Deployed repair | Known revision on the same authorized test environment.
-
-Revalidation job | Current credentials repeat selected validation steps and preserve the original finding.
-
-
-Detailed reference: [Finding review and code remediation](../guides/security.html#S-05)
-
-
-
-Detailed reference: [Finding revalidation and evidence lineage](../guides/security.html#S-M05)
-
-
-## 16. Customer-managed encryption and service identities
-
-36:00–38:00 · Execution workflows
-
-Encryption configuration and processing geography are separate controls.
-
-
-
-Element | Role in the mechanism | Review question
-
-Customer KMS key | Protects service branch keys | Does the policy allow the intended service identities?
-
-Branch key | Resource-specific stored key material | Which resource and encryption context apply?
-
-Derived wrapping key | Protects data-encryption keys | Is the expected context present?
-
-Administrator identity | Configures resources and key use | Is setup authority separated from daily use?
-
-Web app / assessment / async identity | Performs different data operations | Does each path have the required and only required access?
-
-
-Detailed reference: [Encryption keys, identities, and access](../guides/security.html#S-M06)
-
-
-## 17. Application, source and design assessment objectives
-
-38:00–41:00 · Operational objectives and implementation
-
-Select the assessment by subject: a running target, a source revision, a design document, or a scoped system model. Authentication and network configuration are variants of the running-application assessment.
-
-
-
-Operational outcome | Completion evidence | Implementation boundary
-
-Assess a running application for vulnerabilities | Target revision and owner authorization are retained. | Configured application assessment
-
-Review source code for security issues | Review mode and exact revision are known. | Preview assessment
-
-Review a proposed application design | Design revision and assumptions are explicit. | Preview assessment
-
-Develop and review an application threat model | Boundaries and flows are reviewed before threats. | Preview assessment
-
-
-Detailed reference: [Shared configuration, Agent Spaces and assessments](../guides/security.html#S-01)
-
-
-
-Detailed reference: [Code review, design review, and threat modeling](../guides/security.html#S-06)
-
-
-## 18. Finding disposition, repair and verification
-
-41:00–44:00 · Operational objectives and implementation
-
-Disposition records the team decision about a finding. A remediation proposal changes source only after review and merge. Revalidation evaluates selected findings against the deployed target.
-
-
-
-Operational outcome | Completion evidence | Implementation boundary
-
-Triage and prioritize security findings | Impact and evidence are reviewed. | Native operation
-
-Prepare a code-remediation proposal | The proposal matches the affected revision. | Configured remediation
-
-Revalidate a finding after deployment of a repair | The intended repair is deployed to the target. | Native operation
-
-Consolidate and maintain security requirements | Conflicting policy sources are reconciled. | Composed workflow
-
-
-Detailed reference: [Finding review and code remediation](../guides/security.html#S-05)
-
-
-
-Detailed reference: [Finding revalidation and evidence lineage](../guides/security.html#S-M05)
-
-
-
-Detailed reference: [Requirement generation and replacement](../guides/security.html#S-M04)
-
-
-## 19. Application assessment: independent configuration choices
-
-44:00–47:00 · Operational objectives and implementation
+34:00–37:00 · Execution and assessment controls
 
 Target authorization, public or private connectivity, application credentials, source context, and invocation mode are independent settings. Inspect each setting before interpreting coverage.
 
@@ -460,48 +351,192 @@ Detailed reference: [Assessment configuration and run lifecycle](../guides/secur
 Detailed reference: [Finding revalidation and evidence lineage](../guides/security.html#S-M05)
 
 
-## 20. Original findings and revalidation history
+## 16. Finding replay and verification boundaries
 
-47:00–50:00 · Operational objectives and implementation
+37:00–39:00 · Managed assessment and remediation workflows
 
-Preserve the original finding identity through proposal, deployment, and revalidation. The documentation-defined result association records the outcome of a particular revalidation job; it is not an additional AWS API resource.
-
-
-
-![Security Agent: finding, repair and revalidation lineage](../assets/diagrams/er-security-lineage.svg)
+Revalidation creates a linked job. Interpret non-reproduction only after checking the actual target, identity and reached path.
 
 
 
-Detailed reference: [Finding lineage from assessment to repair verification](../guides/security.html#S-11)
-
-
-## 21. Worked example: authorization finding through revalidation
-
-50:00–58:00 · Worked example
-
-Prepared staging evidence traces the finding, deployed repair and scoped revalidation result.
-
-
-
-0–2 min | Inspect original finding | User A received account B test invoice in revision demo-r1
-
-2–4 min | Inspect reviewed change | Ownership check added and revision demo-r2 deployed
-
-4–6 min | Inspect revalidation context | Actual user A identity and selected path reached
-
-6–8 min | Interpret result | Prepared denial supports the selected path; it does not establish whole-application security
-
-
-Detailed reference: [Authorization-finding remediation: worked example](../guides/security.html#S-U01)
+![Finding revalidation: evidence and result boundaries](../assets/diagrams/mechanism-security-replay.svg)
 
 
 
 Detailed reference: [Finding revalidation and evidence lineage](../guides/security.html#S-M05)
 
 
-## 22. Troubleshooting matrix and assessment limits
 
-58:00–60:00 · Troubleshooting and references
+Detailed reference: [Finding review and code remediation](../guides/security.html#S-05)
+
+
+## 17. Finding lineage, remediation and revalidation
+
+39:00–42:00 · Managed assessment and remediation workflows
+
+A Resolved revalidation result applies to the selected finding and execution conditions.
+
+
+
+Original finding | Affected target, revision, identity and validation steps.
+
+Remediation change | Reviewed code or configuration change linked to the finding.
+
+Deployed repair | Known revision on the same authorized test environment.
+
+Revalidation job | Current credentials repeat selected validation steps and preserve the original finding.
+
+
+Detailed reference: [Finding review and code remediation](../guides/security.html#S-05)
+
+
+
+Detailed reference: [Finding revalidation and evidence lineage](../guides/security.html#S-M05)
+
+
+## 18. Finding disposition, repair and verification
+
+42:00–45:00 · Managed assessment and remediation workflows
+
+Disposition records the team decision about a finding. A remediation proposal changes source only after review and merge. Revalidation evaluates selected findings against the deployed target.
+
+
+
+Operational outcome | Completion evidence | Implementation boundary
+
+Triage and prioritize security findings | Impact and evidence are reviewed. | Native operation
+
+Prepare a code-remediation proposal | The proposal matches the affected revision. | Configured remediation
+
+Revalidate a finding after deployment of a repair | The intended repair is deployed to the target. | Native operation
+
+Consolidate and maintain security requirements | Conflicting policy sources are reconciled. | Composed workflow
+
+
+Detailed reference: [Finding review and code remediation](../guides/security.html#S-05)
+
+
+
+Detailed reference: [Finding revalidation and evidence lineage](../guides/security.html#S-M05)
+
+
+
+Detailed reference: [Requirement generation and replacement](../guides/security.html#S-M04)
+
+
+## 19. Assessment interfaces and result records
+
+45:00–47:00 · Interaction surfaces and outputs
+
+The originating assessment, reviewed revision, deployed revision, and verification job remain separate identities.
+
+
+
+Interface or record | Purpose
+
+Administrative console | Configure application scope, integrations, and access
+
+Assessment workspace | Create and inspect assessments
+
+Run and finding | Identify the analyzed subject and supporting evidence
+
+Repository proposal | Review a generated change before deployment
+
+Revalidation job | Retest selected findings against the current deployment
+
+Jira issue | Track work in an external system
+
+
+Detailed reference: [Interfaces, findings, and assessment outputs](../guides/security.html#S-16)
+
+
+## 20. Identity, repository and target configuration
+
+47:00–50:00 · Administration, security, and limits
+
+Registration, connection, reachability and authorization must be validated separately.
+
+
+
+Configuration area | Decision | Confirmation | Typical failure
+
+Operator identity | Who can use the web application | Intended user can open the space | Setup administrator only
+
+Repository registration | Provider authorization at account level | Integration visible | Registered but not connected to application
+
+Repository connection | Repository and branch/source selection | Expected revision available | Latest branch differs from deployed target
+
+Target rules | Target, accessible dependency and out-of-scope entries | Preflight shows intended reachability | Dependency accidentally treated as attack target
+
+Private access | VPC route, DNS and security groups | Application endpoint reachable | Network error mistaken for login error
+
+
+Detailed reference: [User access and repository connections](../guides/security.html#S-02)
+
+
+
+Detailed reference: [Test targets, dependencies, and exclusions](../guides/security.html#S-03)
+
+
+## 21. Repository, pipeline and external tracking integrations
+
+50:00–52:00 · Administration, security, and limits
+
+Integrations move source material, triggers and evidence; they do not broaden the authorized target scope.
+
+
+
+Integration | Primary use | Trigger or action | Boundary
+
+Repository provider | Source access and code review | Configured scan or supported change event | Provider and source support vary
+
+S3 source | Code package or design/context material | Selected when creating assessment | Shared across supported capabilities
+
+CI/CD pipeline | Start configured assessment from delivery workflow | Server-side job invocation | Runner is not the assessment engine
+
+Jira | Track findings and revalidation updates | Create issue or add result comment | Project and audience must be appropriate
+
+Evidence export | Point-in-time review or audit record | Download supported report or finding content | Export is not a security certificate
+
+
+Detailed reference: [User access and repository connections](../guides/security.html#S-02)
+
+
+
+Detailed reference: [Finding review and code remediation](../guides/security.html#S-05)
+
+
+
+Detailed reference: [Code review, design review, and threat modeling](../guides/security.html#S-06)
+
+
+## 22. Customer-managed encryption and service identities
+
+52:00–54:00 · Administration, security, and limits
+
+Encryption configuration and processing geography are separate controls.
+
+
+
+Element | Role in the mechanism | Review question
+
+Customer KMS key | Protects service branch keys | Does the policy allow the intended service identities?
+
+Branch key | Resource-specific stored key material | Which resource and encryption context apply?
+
+Derived wrapping key | Protects data-encryption keys | Is the expected context present?
+
+Administrator identity | Configures resources and key use | Is setup authority separated from daily use?
+
+Web app / assessment / async identity | Performs different data operations | Does each path have the required and only required access?
+
+
+Detailed reference: [Encryption keys, identities, and access](../guides/security.html#S-M06)
+
+
+## 23. Troubleshooting matrix and assessment limits
+
+54:00–56:00 · Administration, security, and limits
 
 Troubleshooting follows the first failed prerequisite in the assessment chain.
 
@@ -525,3 +560,42 @@ Detailed reference: [Assessment failures and operating limits](../guides/securit
 
 
 Detailed reference: [Documentation coverage and references](../guides/security.html#S-08)
+
+
+## 24. Original findings and revalidation history
+
+56:00–59:00 · Worked example and reference material
+
+Preserve the original finding identity through proposal, deployment, and revalidation. The documentation-defined result association records the outcome of a particular revalidation job; it is not an additional AWS API resource.
+
+
+
+![Security Agent: finding, repair and revalidation lineage](../assets/diagrams/er-security-lineage.svg)
+
+
+
+Detailed reference: [Finding lineage from assessment to repair verification](../guides/security.html#S-11)
+
+
+## 25. Worked example: authorization finding through revalidation
+
+59:00–67:00 · Worked example and reference material
+
+Prepared staging evidence traces the finding, deployed repair and scoped revalidation result.
+
+
+
+0–2 min | Inspect original finding | User A received account B test invoice in revision demo-r1
+
+2–4 min | Inspect reviewed change | Ownership check added and revision demo-r2 deployed
+
+4–6 min | Inspect revalidation context | Actual user A identity and selected path reached
+
+6–8 min | Interpret result | Prepared denial supports the selected path; it does not establish whole-application security
+
+
+Detailed reference: [Authorization-finding remediation: worked example](../guides/security.html#S-U01)
+
+
+
+Detailed reference: [Finding revalidation and evidence lineage](../guides/security.html#S-M05)
