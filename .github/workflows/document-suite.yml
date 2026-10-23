@@ -32,6 +32,12 @@ jobs:
       - name: Install Chromium for browser validation
         timeout-minutes: 3
         run: python -m playwright install chromium
+      - name: Apply reviewed capability exposition once
+        run: |
+          python -m compileall -q tools/docs
+          for file in apply_capability_exposition.py finish_capability_exposition.py; do
+            if [ -f "tools/docs/$file" ]; then python "tools/docs/$file"; fi
+          done
       - name: Build guides, linked catalog, figures and HTML presentations
         run: |
           python -m compileall -q tools/docs
@@ -63,10 +69,10 @@ jobs:
           p=Path('qa/checks.json')
           print(json.dumps(json.loads(p.read_text()).get('errors',[]),indent=2) if p.exists() else 'No validation record was produced')
           PY
-            tail -n 20 /tmp/document-check.log
+            tail -n 25 /tmp/document-check.log
             exit 1
           fi
-          python -c "import json; r=json.load(open('qa/checks.json')); print(json.dumps({'revision':r['revision'],'errors':r['errors'],'reading_structure':r.get('reading_structure',{})},indent=2))"
+          python -c "import json; r=json.load(open('qa/checks.json')); print(json.dumps({'revision':r['revision'],'errors':r['errors'],'capability_exposition':r.get('capability_exposition',{})},indent=2))"
       - name: Commit each documentation change separately
         env:
           DOCUMENTATION_BRANCH: ${{ github.ref_name }}
