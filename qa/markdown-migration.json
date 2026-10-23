@@ -1,0 +1,15 @@
+{
+  "baseline": "4a34aaadc5f9fd0e4dbb492c36aa152730c8ba5a",
+  "guide_sections": 111,
+  "slides": 52,
+  "diagrams": 48,
+  "registers": [
+    "aliases",
+    "features",
+    "mechanisms",
+    "profiles",
+    "resource-models",
+    "use-cases"
+  ],
+  "markdown_sources": 453
+}
