@@ -43,9 +43,8 @@ Use ownership labels and colors consistently: DOC blue for this collection, AWS 
 
 ## Mechanism explanations
 
-Maintain detailed mechanism narratives in the review field of the mechanism registry. The build renders the same explanation inside its primary guide section and includes that section in relevant presenter notes. Do not hand-edit the delimited generated blocks. A mechanism record identifies observable service behavior separately from undisclosed internals. Configuration and lifecycle steps vary in number with the subject. State labels are explanatory unless an exact service enum is cited. Tests are proposed engineering checks until separately executed and recorded.
+Describe the documented process in the capability section that owns it. A mechanism explanation follows its relevant inputs, selection or execution behavior, state changes, and controls. Do not impose a fixed number of steps or render every registry row as an AWS mechanism. Link use-case steps to the corresponding authored explanation. Preserve the frozen registry for traceability, not as a second source of guide prose.
 
-A conditional related-mechanism link can document behavior such as finding personalization without adding an outcome or changing the approved use-case workflow. Eligibility for a mechanism is not evidence that it ran. Material product assertions have section-specific official references; retrieval-version conflicts are recorded rather than silently resolved.
 
 ## Technical language and evidence status
 
@@ -58,3 +57,9 @@ Do not declare one retrieved documentation version newer solely because it was i
 ## Reader hierarchy
 
 Primary navigation follows reader tasks: Guides, Use cases, Resource model, Presentations. Each guide has one chapter hierarchy and one search. Each approved use case has one contextual page containing the unchanged narrative, workflow, configuration and verification. Mechanisms and features link to their product-guide explanations. Internal schema types and migration mappings are not primary reader destinations. Protect all six catalog JSON registers byte-for-byte.
+
+## Capability exposition
+
+The approved entity model is a semantic reference, not a chapter template. Organize platform explanation by the exposed configuration dimensions: scope, definition, context, invocation, integration, connectivity, execution, managed functions, interfaces/outputs, and administration. A feature names a concrete product facility; a mechanism explains its operation. Do not render every dependency-register row as an equivalent mechanism or feature. Implementation recipes remain team-authored setup instructions within use cases; distinguish them from native test-profile resources.
+
+Guide prose is authored in Markdown. Frozen registry records provide relationships and compatibility identifiers, not automatic chapter prose. The supplied DevOps outline is the editorial basis; other product guides use only their documented facilities rather than inheriting DevOps resource types.
