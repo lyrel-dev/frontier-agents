@@ -1,6 +1,6 @@
 {
   "revision": "2026-10-23-markdown-review",
-  "build": 2,
+  "build": 3,
   "scope": ["AWS DevOps Agent", "AWS Security Agent", "AWS FinOps Agent"],
   "shared_architecture": true,
   "canonical_source": "content/**/*.md with YAML frontmatter and persistent block IDs",
