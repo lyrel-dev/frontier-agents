@@ -18,3 +18,7 @@ Reviewed the 40 existing mechanisms and added conditional Security Findings Pers
 ## 2026-10-23 — Reading structure
 
 Replaced record-type pages with chapter-based guides and dedicated use-case pages. Removed duplicate embedded catalogs and standalone mechanism, feature, profile and consolidation-map editions. Configuration is presented in use-case context; mechanisms and resource configuration link directly to product procedures. Frozen registers and presentation content are unchanged. Added reading-journey and source-preservation tests.
+
+## 2026-10-23 — Capability exposition
+
+Reorganized product guides by capability dimension using the supplied DevOps outline. Removed automatic registry-shaped prose, retained frozen model/use-case sources, added omitted DevOps facilities and explicit source-version qualifications, and aligned the HTML curriculum with the revised books.
