@@ -195,6 +195,7 @@ def browser_checks():
                 page.locator('#review-comment').click();page.locator('#review-text').fill('Slide-title comment.');page.locator('#review-save').click()
                 assert '/presentations/devops/' in page.evaluate('FrontierReview.exportPacket().comments').pop()['targets'][0]['path']
                 # Presenter notes are separate Markdown blocks with exact source anchors.
+                page.locator('#review-drawer .review-panel-heading button').click()
                 page.locator('#notes-button').click()
                 speaker=page.locator('.note-block:visible .talk-track > p[data-review-block]').first
                 assert speaker.count()==1
