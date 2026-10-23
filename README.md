@@ -57,3 +57,8 @@ Graphviz (`dot`) must also be installed. Do not edit generated documents. See [A
 Comments are browser-local annotations, not a collaborative cloud service. JSON exports contain source paths, stable block IDs, exact source excerpts, file/block hashes, and separate rendered-text quote selectors. The patch tool rejects stale, unrelated, generated-file, and frozen-record edits; it defaults to a dry run. Existing review exports and locally stored notes remain compatible.
 
 The interface provides contextual annotation, not a full rich-text editor. Comments do not directly mutate source files. Published content and browser tests do not establish live AWS behavior. [Validation](VALIDATION.md) records the checks performed. Git history retains previous editions; no manual archives are maintained.
+
+
+## Annotation controls
+
+Hover over source-backed content to add a note. Its popup contains the note and thread actions only. Text and replies save locally as you type. The document-level **Annotations** menu contains export/import, optional connected-user backend saving, and confirmed clearing of local annotations. Backend saving requires an authenticated host adapter; the static checkout does not supply a backend service. See AUTHORING.md for the adapter contract and persistence limits.
