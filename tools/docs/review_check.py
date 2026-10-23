@@ -6,6 +6,7 @@ from pathlib import Path
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from functools import partial
 import hashlib
+import ast
 import json
 import subprocess
 import tempfile
@@ -39,7 +40,15 @@ def source_checks():
             assert bid in repo.targets
             mapped+=1
     results.append(f'{mapped} rendered source targets match exact Unicode and UTF-8 source ranges')
-    assert not any('DECKS={' in p.read_text() for p in (ROOT/'tools/docs').glob('*.py') if p.name!='migrate_markdown_once.py')
+    # Reject literal deck payloads in Python without matching this assertion's own text.
+    for script in (ROOT/'tools/docs').glob('*.py'):
+        if script.name == 'migrate_markdown_once.py':
+            continue
+        for stmt in ast.walk(ast.parse(script.read_text(encoding='utf-8'))):
+            if isinstance(stmt, (ast.Assign, ast.AnnAssign)):
+                targets = stmt.targets if isinstance(stmt, ast.Assign) else [stmt.target]
+                if any(isinstance(t, ast.Name) and t.id == 'DECKS' for t in targets) and isinstance(stmt.value, (ast.Dict, ast.List)):
+                    raise AssertionError('Literal presentation content remains in '+script.name)
     assert len(repo.select('slide'))==52
     assert len(repo.select('section'))>=111
     return results
