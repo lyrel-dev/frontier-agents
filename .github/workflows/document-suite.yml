@@ -1,18 +1,21 @@
-name: Build and validate engineering documentation
+name: Build Markdown documentation and review
 on:
   workflow_dispatch:
   push:
-    branches: [main, 'docs/**']
-    paths: [documentation-build.json]
+    branches: [main, 'docs/markdown-source-review']
+    paths:
+      - 'content/**'
+      - 'tools/docs/**'
+      - 'markdown-build.json'
 permissions:
   contents: write
 concurrency:
-  group: frontier-documentation-${{ github.ref }}
+  group: frontier-markdown-${{ github.ref }}
   cancel-in-progress: true
 jobs:
   documents:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
         with:
@@ -21,57 +24,68 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Install Graphviz with bounded network retries
-        timeout-minutes: 3
+      - name: Install documentation dependencies
         run: |
-          sudo apt-get -o Acquire::Retries=1 -o Acquire::http::Timeout=20 -o Acquire::https::Timeout=20 update -qq
-          sudo apt-get -o Acquire::Retries=1 -o Acquire::http::Timeout=20 -o Acquire::https::Timeout=20 install -y graphviz
-      - name: Install Python documentation dependencies
-        timeout-minutes: 3
-        run: python -m pip install --timeout 30 --retries 2 -r tools/docs/requirements.txt
-      - name: Install Chromium for browser validation
-        timeout-minutes: 3
-        run: python -m playwright install chromium
-      - name: Build guides, linked catalog, figures and HTML presentations
+          sudo apt-get -o Acquire::Retries=2 update -qq
+          sudo apt-get -o Acquire::Retries=2 install -y graphviz
+          python -m pip install --timeout 30 --retries 2 -r tools/docs/requirements.txt
+          python -m playwright install chromium
+      - name: Validate canonical Markdown input
         run: |
           python -m compileall -q tools/docs
+          python - <<'PY'
+          from pathlib import Path
+          import json,sys
+          sys.path.insert(0,'tools/docs')
+          from markdown_sources import Repository
+          repo=Repository()
+          assert repo.sources,'Missing authored Markdown'
+          for name,value in repo.registers().items():
+              assert value==json.loads(Path('catalog',name+'.json').read_text()),'Frozen projection differs: '+name
+          print('Canonical Markdown files:',len(repo.sources))
+          PY
+      - name: Build and validate published outputs
+        run: |
           python tools/docs/build.py
-      - name: Check repeatable generation
+          python tools/docs/check.py --browser > /tmp/docs-check.log 2>&1 || { tail -n 100 /tmp/docs-check.log; exit 1; }
+          python tools/docs/review_check.py
+      - name: Verify a repeatable build
         run: |
           python - <<'PY'
-          import hashlib, json, subprocess, sys
+          import hashlib,subprocess,sys
           from pathlib import Path
           def hashes():
               paths=[]
               for directory in ('guides','catalog','presentations','assets'):
                   paths.extend(p for p in Path(directory).rglob('*') if p.is_file())
-              paths.extend(Path(p) for p in ('README.md','EDITORIAL_STANDARD.md','CHANGELOG.md','PUBLISHING.md'))
+              paths.extend(Path(p) for p in ('README.md','AUTHORING.md','EDITORIAL_STANDARD.md','PUBLISHING.md'))
               return {p.as_posix():hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(paths)}
           before=hashes()
           subprocess.run([sys.executable,'tools/docs/build.py'],check=True)
-          after=hashes()
-          assert before==after, 'Repeated generation changed document or figure bytes'
-          revision=json.loads(Path('documentation-build.json').read_text())['revision']
-          Path('qa/rebuild.json').write_text(json.dumps({'revision':revision,'files_compared':len(before),'identical_repeated_build':True,'boundary':'Same committed inputs and same runner environment; not cross-version reproducibility.'},indent=2)+'\n')
+          assert before==hashes(),'Markdown compilation is not deterministic'
           PY
-      - name: Validate relationships, examples and rendered behavior
-        run: |
-          if ! python tools/docs/check.py --browser > /tmp/document-check.log 2>&1; then
-            python - <<'PY'
-          import json
-          from pathlib import Path
-          p=Path('qa/checks.json')
-          print(json.dumps(json.loads(p.read_text()).get('errors',[]),indent=2) if p.exists() else 'No validation record was produced')
-          PY
-            tail -n 25 /tmp/document-check.log
-            exit 1
-          fi
-          python -c "import json; r=json.load(open('qa/checks.json')); print(json.dumps({'revision':r['revision'],'errors':r['errors'],'educational_review':r.get('educational_review',{})},indent=2))"
-      - name: Commit each documentation change separately
+      - name: Commit generated documents separately
         env:
-          DOCUMENTATION_BRANCH: ${{ github.ref_name }}
+          TARGET_BRANCH: ${{ github.ref_name }}
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          python tools/docs/build.py --commit
-          git push origin HEAD:"$DOCUMENTATION_BRANCH"
+          python - <<'PY'
+          from pathlib import Path
+          import subprocess
+          allowed={'guides','catalog','presentations','assets','qa'}
+          roots={'README.md','MANIFEST.json','VALIDATION.md','PUBLISHING.md','CHANGELOG.md','EDITORIAL_STANDARD.md','AUTHORING.md','index.html'}
+          raw=subprocess.check_output(['git','status','--porcelain=v1','-z','--untracked-files=all'])
+          paths=[]
+          for row in raw.split(b'\\0'):
+              if not row:continue
+              status=row[:2].decode();path=row[3:].decode()
+              if 'R' in status or 'C' in status:raise SystemExit('Review rename separately: '+path)
+              if Path(path).parts[0] not in allowed and path not in roots:raise SystemExit('Unexpected generated output: '+path)
+              paths.append(path)
+          for path in sorted(set(paths)):
+              subprocess.run(['git','add','--',path],check=True)
+              subprocess.run(['git','commit','-m','docs: compile '+path],check=True,stdout=subprocess.DEVNULL)
+          print('Committed',len(paths),'generated files')
+          PY
+          git push origin HEAD:"$TARGET_BRANCH"
