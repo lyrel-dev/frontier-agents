@@ -10,6 +10,16 @@
   let mode = false, anchor = null, quote = null, editId = null, replyId = null;
   let documentScope = false, storageOK = true, dragStart = null;
   const id = () => globalThis.crypto?.randomUUID?.() || 'review-' + Date.now() + '-' + Math.random().toString(36).slice(2);
+  // A reviewer export and its LLM-request export must identify one review.
+  // Persist that identity independently from individual comment IDs.
+  const reviewKey = 'frontier-document-review-identity-v1';
+  const reviewId = (() => {
+    try {
+      let value = localStorage.getItem(reviewKey);
+      if (!value) { value = id(); localStorage.setItem(reviewKey, value); }
+      return value;
+    } catch (_) { return id(); }
+  })();
   const now = () => new Date().toISOString();
   function node(tag, attrs = {}, text) {
     const n = document.createElement(tag);
@@ -201,7 +211,7 @@
     while(parent) { if(parent.tagName==='DETAILS') parent.open=true; parent=parent.parentElement; }
   }
   function packet() {
-    return {schema:version,review_id:id(),repository:source.repository,exported_at:now(),
+    return {schema:version,review_id:reviewId,repository:source.repository,exported_at:now(),
       coordinate_contract:source.coordinate_contract,
       edit_policy:{source_root:'content/',generated_outputs:'Never edit',frozen_records:'Never edit without separate authorization',
         matching:'Exact block and file hashes only; never fuzzy-match or broaden a requested edit',
