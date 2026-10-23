@@ -1,5 +1,5 @@
 {
-  "revision": "2026-10-23-technical-editorial-review",
+  "revision": "2026-10-23-reading-structure",
   "baseline": "75f7d7c11d29e308e71a1bbe77ad93e9bc9f08a9",
   "guides": 4,
   "canonical_sections": 73,
@@ -19,95 +19,8 @@
   "slides": 80,
   "programme_minutes": 219,
   "exercise_minutes": 28,
-  "local_links_checked": 3451,
-  "browser_checks": [
-    {
-      "subject": "devops",
-      "width": 390,
-      "technical_sections": 23,
-      "slides": 23,
-      "javascript_errors": [],
-      "slides_over_1050px": [],
-      "navigation_filters_hash_notes_timer_print": "passed"
-    },
-    {
-      "subject": "devops",
-      "width": 1440,
-      "technical_sections": 23,
-      "slides": 23,
-      "javascript_errors": [],
-      "slides_over_1050px": [],
-      "navigation_filters_hash_notes_timer_print": "passed"
-    },
-    {
-      "subject": "security",
-      "width": 390,
-      "technical_sections": 19,
-      "slides": 22,
-      "javascript_errors": [],
-      "slides_over_1050px": [],
-      "navigation_filters_hash_notes_timer_print": "passed"
-    },
-    {
-      "subject": "security",
-      "width": 1440,
-      "technical_sections": 19,
-      "slides": 22,
-      "javascript_errors": [],
-      "slides_over_1050px": [],
-      "navigation_filters_hash_notes_timer_print": "passed"
-    },
-    {
-      "subject": "finops",
-      "width": 390,
-      "technical_sections": 18,
-      "slides": 20,
-      "javascript_errors": [],
-      "slides_over_1050px": [],
-      "navigation_filters_hash_notes_timer_print": "passed"
-    },
-    {
-      "subject": "finops",
-      "width": 1440,
-      "technical_sections": 18,
-      "slides": 20,
-      "javascript_errors": [],
-      "slides_over_1050px": [],
-      "navigation_filters_hash_notes_timer_print": "passed"
-    },
-    {
-      "subject": "architecture",
-      "width": 390,
-      "technical_sections": 13,
-      "slides": 15,
-      "javascript_errors": [],
-      "slides_over_1050px": [],
-      "navigation_filters_hash_notes_timer_print": "passed"
-    },
-    {
-      "subject": "architecture",
-      "width": 1440,
-      "technical_sections": 13,
-      "slides": 15,
-      "javascript_errors": [],
-      "slides_over_1050px": [],
-      "navigation_filters_hash_notes_timer_print": "passed"
-    },
-    {
-      "subject": "catalog",
-      "width": 390,
-      "narratives": 30,
-      "filters_and_cross_product_hash": "passed",
-      "javascript_errors": []
-    },
-    {
-      "subject": "catalog",
-      "width": 1440,
-      "narratives": 30,
-      "filters_and_cross_product_hash": "passed",
-      "javascript_errors": []
-    }
-  ],
+  "local_links_checked": 2674,
+  "browser_checks": [],
   "application_changes": [],
   "excluded_scope_hits": [],
   "errors": [],
@@ -200,20 +113,7 @@
       "Unresolved claim evidence rejected",
       "Missing condition and unknown related mechanism rejected"
     ],
-    "browser": [
-      {
-        "width": 390,
-        "mechanism_to_detailed_procedure": "passed",
-        "conditional_personalization_link": "passed",
-        "javascript_errors": []
-      },
-      {
-        "width": 1440,
-        "mechanism_to_detailed_procedure": "passed",
-        "conditional_personalization_link": "passed",
-        "javascript_errors": []
-      }
-    ],
+    "browser": [],
     "errors": [],
     "boundary": "Document-level review and proposed test plans, not live AWS execution or an exhaustive internal algorithm specification."
   },
@@ -239,26 +139,7 @@
       "Missing failure handling rejected",
       "Cross-product configuration assumption rejected"
     ],
-    "browser": [
-      {
-        "width": 390,
-        "reference_filters": "passed",
-        "outcome_mechanism_feature_reverse_navigation": "passed",
-        "former_case_and_support_aliases": "passed",
-        "forecast_coverage_choice": "passed",
-        "shared_profile_filters": "passed",
-        "javascript_errors": []
-      },
-      {
-        "width": 1440,
-        "reference_filters": "passed",
-        "outcome_mechanism_feature_reverse_navigation": "passed",
-        "former_case_and_support_aliases": "passed",
-        "forecast_coverage_choice": "passed",
-        "shared_profile_filters": "passed",
-        "javascript_errors": []
-      }
-    ],
+    "browser": [],
     "errors": [],
     "boundary": "Document dependency and navigation checks. Not a live AWS readiness test, exhaustive source audit or evidence of operational improvement."
   },
@@ -276,11 +157,38 @@
       "guides/architecture.html",
       "presentations/architecture.html",
       "catalog/index.html",
-      "catalog/mechanisms.html",
-      "catalog/features.html",
-      "catalog/profiles.html",
       "catalog/resource-models.html",
-      "index.html"
+      "index.html",
+      "catalog/UC-D01.html",
+      "catalog/UC-D02.html",
+      "catalog/UC-D03.html",
+      "catalog/UC-D04.html",
+      "catalog/UC-D05.html",
+      "catalog/UC-D06.html",
+      "catalog/UC-D07.html",
+      "catalog/UC-D08.html",
+      "catalog/UC-D09.html",
+      "catalog/UC-D10.html",
+      "catalog/UC-D11.html",
+      "catalog/UC-D12.html",
+      "catalog/UC-D13.html",
+      "catalog/UC-D14.html",
+      "catalog/UC-F01.html",
+      "catalog/UC-F02.html",
+      "catalog/UC-F03.html",
+      "catalog/UC-F04.html",
+      "catalog/UC-F05.html",
+      "catalog/UC-F06.html",
+      "catalog/UC-F07.html",
+      "catalog/UC-G01.html",
+      "catalog/UC-S01.html",
+      "catalog/UC-S02.html",
+      "catalog/UC-S03.html",
+      "catalog/UC-S04.html",
+      "catalog/UC-S05.html",
+      "catalog/UC-S06.html",
+      "catalog/UC-S07.html",
+      "catalog/UC-S08.html"
     ],
     "headings_and_slide_titles": [
       {
@@ -1175,5 +1083,65 @@
     ],
     "errors": [],
     "boundary": "Logical documentation model, not an AWS database schema, SDK payload or shared runtime. Green means AWS defines the concept; it does not mean every green item has an independent ARN, CRUD API or equal availability. Relationship multiplicities are qualified individually and are not service quotas."
+  },
+  "reading_structure": {
+    "revision": "2026-10-23-reading-structure",
+    "baseline": "dace05a3ce6aaae02470a817584b8ca3a4cc95be",
+    "scope": "Navigation and reader composition only; concept definitions and use-case semantics remain frozen.",
+    "frozen_sources": {
+      "catalog/use-cases.json": {
+        "unchanged": true,
+        "sha256": "e5aae837db20d3dc7383b86cf22f01cb7310c8691e37122b0f11650ecc92900c"
+      },
+      "catalog/mechanisms.json": {
+        "unchanged": true,
+        "sha256": "ef2f2ba7f98a9a33929c2ebfd240e29a42ee0d10fa37c44c0baeb68e48c7f5c7"
+      },
+      "catalog/features.json": {
+        "unchanged": true,
+        "sha256": "fefc21015e00bf043a9bbbe9776caa5ca5cb2de0ab3232ca8a6437ad8ed20763"
+      },
+      "catalog/profiles.json": {
+        "unchanged": true,
+        "sha256": "89d23d92c97b95288e68de2a001186ba5846b18b6dec3774ba545143aea33190"
+      },
+      "catalog/aliases.json": {
+        "unchanged": true,
+        "sha256": "5f1efdc4eb665cdd3d7830c148d653cc2f38a7d4c7cf4cf1f68e538d95ced720"
+      },
+      "catalog/resource-models.json": {
+        "unchanged": true,
+        "sha256": "4565514f203edd099b20fdc1472a3a1472696e147952f838e2163efe2947aa42"
+      }
+    },
+    "reader_pages_checked": 38,
+    "use_case_pages": 30,
+    "guide_chapters": 26,
+    "retired_reader_pages": [
+      "catalog/mechanisms.html",
+      "catalog/features.html",
+      "catalog/profiles.html",
+      "catalog/migration.md"
+    ],
+    "browser": [
+      {
+        "width": 390,
+        "guide_chapters_search_deep_links_reload_print": "passed",
+        "case_search_grouping_and_legacy_choices": "passed",
+        "workflow_configuration_procedure_return_journey": "passed",
+        "all_30_case_pages": "passed",
+        "javascript_errors": []
+      },
+      {
+        "width": 1440,
+        "guide_chapters_search_deep_links_reload_print": "passed",
+        "case_search_grouping_and_legacy_choices": "passed",
+        "workflow_configuration_procedure_return_journey": "passed",
+        "all_30_case_pages": "passed",
+        "javascript_errors": []
+      }
+    ],
+    "errors": [],
+    "boundary": "Structural, preservation and browser checks do not establish content completeness or live AWS execution."
   }
 }
