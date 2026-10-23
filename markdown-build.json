@@ -1,6 +1,6 @@
 {
   "schema": "frontier-markdown-build/v1",
-  "iteration": 9,
-  "scope": "Canonical Markdown revision and source-anchored review release validation",
+  "iteration": 10,
+  "scope": "Markdown release check: source fidelity, reviewer navigation, exports, guarded edits",
   "frozen_model_and_use_cases": true
 }
