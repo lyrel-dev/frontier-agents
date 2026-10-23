@@ -63,6 +63,7 @@ def plan(review,patch):
     if not isinstance(edits,list) or not edits or len(edits)>2000:
         raise ReviewError('Patch must contain 1–2000 explicit edits')
     repo=Repository()
+    from selection_model import validate_structure
     files={};used=set();authorized=[]
     for edit in edits:
         required={'comment_id','path','block_id','expected_file_sha256','expected_block_sha256','before','after'}
@@ -71,6 +72,7 @@ def plan(review,patch):
         comment=by_id.get(edit['comment_id'])
         if comment is None or comment.get('status')!='open':
             raise ReviewError('Edit must reference an open review comment')
+        validate_structure(comment,repo,ROOT)
         choices=[t for t in comment.get('targets',[]) if isinstance(t,dict) and t.get('block_id')==edit['block_id'] and t.get('path')==edit['path']]
         if len(choices)!=1:
             raise ReviewError('Edit is outside the comment selection or is ambiguous')
