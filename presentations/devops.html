@@ -1452,7 +1452,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,su
 <p>Knowledge production and retrieval are distinct. A completed learning run can update context without proving that a later investigation selected it. To examine stale understanding, inspect the relevant learning run, the retained entry, and the source material used to construct it. The topology and Summary report views described in <a href="../guides/devops.html#D-05">D-05</a> are representations of this understanding; they are not separate memory-store types.</p>
 </section><section class="note-reference"><h3>Topology, environment summaries, and export</h3><p>Topology is assembled from discovered resources and evidence of their relationships. It helps the agent connect a service to its deployment, repository, and dependencies. It is a representation of the environment, not the environment itself: an inferred edge can be wrong and an undiscovered resource can still be readable through an authorized tool.</p>
 <p>Discovery collects CloudFormation resources and, for tagged resources outside CloudFormation deployments, uses enabled Resource Explorer. Relationship evidence can include configuration, tags, deployment mapping and observability. Learned topology/pipeline views summarize that evidence; raw-resource views expose different levels of granularity. A missing graph node does not prove the agent cannot investigate the resource. <a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-what-is-a-devops-agent-topology.html">DS04</a></p>
-<p>The managed Learning agent maintains environment knowledge. Its page provides knowledge, run history and scheduled-trigger inspection. Its schedules belong to the platform, unlike custom-agent triggers. Newer documentation moves learned topology, dependency, pipeline and tool-use knowledge into memory; older pages still call these learned skills. <a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-managed-agents.html">DS06</a> <a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/whats-new.html">DS19</a></p>
+<p>The managed Learning agent maintains environment knowledge. Its page provides knowledge, run history and scheduled-trigger inspection. Its schedules belong to the platform, unlike custom-agent triggers. The August 27 changelog records the move of learned topology, dependency, pipeline, and tool-use knowledge into memory. Some retrieved pages retain the earlier learned-skills terminology. <a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-managed-agents.html">DS06</a> <a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/whats-new.html">DS19</a></p>
 <p><strong>Engineering verification:</strong> choose one service, identify its actual deployed resources and repository revision, and compare them with the graph. Record missing or incorrectly inferred edges separately. Inspect a learning run and the output's version after refresh; clicking a refresh control is not the completion evidence. Do not enable additional account writes to repair a read/discovery gap.</p>
 <p>The topology interface includes application and pipeline views. Downloading PNG, JSON, or Mermaid exports the selected view. The Summary report is a versioned, read-only view derived from environment understanding and is available through the documented console and artifact surfaces. These outputs represent learned context; they are not independent knowledge-store types or access-control boundaries. <a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/whats-new.html">DS506</a></p>
 </section></section><section class="note-block" data-note="5"><h2>Memory production, availability and selective retrieval</h2><div class="talk-track"><p>Separate retained content, access to the entry, observable retrieval and the correctness of the new conclusion.</p><p>Allocated time: 02:00. Use the detailed section references below for configuration and limitations.</p></div><section class="note-reference"><h3>Memory construction and progressive retrieval</h3><p>A memory is retained informational content, represented as a Markdown file in a memory store. A store's description identifies its subject; an entry's description identifies the content within it. This structure supports selective retrieval rather than loading the entire store into every session. <a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html">DS505</a></p>
@@ -3480,7 +3480,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,su
 </table></div>
 <p>This diagnostic ordering is an engineering synthesis of <a href="../guides/devops.html#D-02">D-02</a> through <a href="../guides/devops.html#D-M06">D-M06</a>, not an additional AWS troubleshooting API.</p>
 </section><section class="note-reference"><h3>Documentation coverage and references</h3><p>The preceding chapters explain the resource model, integration setup, retained knowledge, and execution paths needed for day-to-day operation. The coverage table distinguishes procedures described here from subjects that remain linked reference material. In particular, a source link for a remote protocol or preview release feature is not a claim that its entire configuration has been reproduced or exercised.</p>
-<p>The reference register identifies the official pages supporting product-specific statements. New integration and scheduling material and selected knowledge mechanisms were rechecked on 22 October 2026. Other retained explanations keep their existing sources and review boundaries. Authored diagrams show logical relationships; the worked incident and proposed acceptance checks are not records of live AWS execution.</p>
+<p>The reference register identifies the official pages supporting product-specific statements. The capability exposition follows the supplied outline. Agent definitions, triggers, assets, integration directions, release authentication, and selected knowledge behavior were checked for the 23 October 2026 revision. Retained procedures keep their existing references and review boundaries. Authored diagrams show logical relationships; the worked incident and proposed acceptance checks are not records of live AWS execution.</p>
 <div aria-label="Scrollable reference table" class="table-wrap" role="region" tabindex="0"><table>
 <thead>
 <tr>
@@ -3507,8 +3507,8 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,su
 </tr>
 <tr>
 <td>Managed/custom execution</td>
-<td>Routing, manual runs, schedules, cancellation, observation</td>
-<td>Not every external incident provider reproduced</td>
+<td>Definitions, routing, on-demand/scheduled/event invocation, continuation, cancellation</td>
+<td>Provider-specific event payloads and full protocol schemas remain linked</td>
 </tr>
 <tr>
 <td>Assets and directed actions</td>
@@ -3517,8 +3517,8 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,su
 </tr>
 <tr>
 <td>Sandbox/release preview</td>
-<td>Configuration and effect boundaries</td>
-<td>Full release-profile authoring is deferred</td>
+<td>Runtime scope, test-profile fields, authentication, and effect boundaries</td>
+<td>Complete environment and deployment procedures remain linked</td>
 </tr>
 <tr>
 <td>Quotas</td>
@@ -3527,26 +3527,26 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,su
 </tr>
 </tbody>
 </table></div>
-<p><strong>Source-version decisions:</strong> older cached pages and newer indexed AWS content differed for instruction navigation, custom-store attachment and learned-knowledge storage. This edition uses the newer indexed managed-agent, memory, asset and dated-change guidance for those points. The Region table was not reproduced as a complete regional inventory. A retrieval date is not a claim that AWS published the page on that date.</p>
+<p><strong>Source-version qualifications:</strong> retrieved representations differ for instruction navigation, asset types, trigger coverage, custom-store access, and learned-knowledge storage. The dated change entries and topic-specific procedures support the selected descriptions; the differing representations are recorded in <code>qa/exposition-review.json</code>. The guide does not infer publication order from retrieval order or provide a complete regional inventory.</p>
 <h4>Official sources and reviewed sections</h4>
 <ul>
 <li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-supported-regions.html">DS01</a> Service/feature eligibility; Supported Regions and Feature availability.</li>
 <li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/getting-started-with-aws-devops-agent-creating-an-agent-space.html">DS02</a> Space creation; primary account and Web App roles; verification.</li>
-<li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-connecting-mcp-servers.html">DS03</a> MCP requirements; registration, association, authentication, rotation and role-less validation. Newer indexed content used.</li>
+<li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-connecting-mcp-servers.html">DS03</a> MCP requirements; registration, association, authentication, rotation and role-less validation. Retrieved-source qualifications are recorded in the review notes.</li>
 <li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-what-is-a-devops-agent-topology.html">DS04</a> Topology views, discovery and scope beyond the graph.</li>
 <li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-connecting-to-privately-hosted-tools.html">DS05</a> Private gateway operation, firewall rules and connection verification.</li>
 <li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-managed-agents.html">DS06</a> Managed agents; Learning history and platform-owned triggers. Indexed content used.</li>
 <li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html">DS07</a> Memory production, retrieval, versions, activation, custom-store deletion. Older HTML reconciled with newer indexed content.</li>
 <li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-autonomous-incident-response.html">DS08</a> Investigation initiation, triage decisions/corrections and feedback.</li>
 <li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-agent-instructions.html">DS09</a> Instruction scoping and new-session behavior; newer indexed navigation used.</li>
-<li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html">DS10</a> Custom-agent tool/store scope and invocation model. Newer indexed content used.</li>
+<li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html">DS10</a> Custom-agent tool/store scope and invocation model. Retrieved-source qualifications are recorded in the review notes.</li>
 <li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-skills.html">DS11</a> Skill applicability, format and authoring.</li>
 <li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/custom-agents-creating-a-custom-agent.html">DS12</a> Custom-agent creation and store selection. Indexed content used.</li>
 <li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/custom-agents-executing-custom-agents.html">DS13</a> Manual execution, schedules, cancellation and trajectories.</li>
 <li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-sandbox.html">DS14</a> Sandbox execution, network defaults, configuration and preview limits.</li>
 <li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-proactive-incident-prevention.html">DS15</a> Prevention evaluations and controls.</li>
 <li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-working-with-directed-actions.html">DS16</a> Directed-action enablement, preferences replacement, categories, approval and audit.</li>
-<li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-managing-assets.html">DS17</a> Asset operation/permission map, IDs and PATCH metadata. Newer indexed content used.</li>
+<li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-managing-assets.html">DS17</a> Asset operation/permission map, IDs and PATCH metadata. Retrieved-source qualifications are recorded in the review notes.</li>
 <li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html">DS18</a> Built-in versus custom capabilities.</li>
 <li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/whats-new.html">DS19</a> Dated changes: monitor default, memory migration, reflections, private ports.</li>
 <li><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-accessing-devops-agent-index.html">DS20</a> Access methods and direction; client-specific setup not reproduced.</li>
