@@ -29,18 +29,20 @@ def validate(root: Path):
     paths=[root/'index.html',*(root/'guides').glob('*.html'),*(root/'catalog').glob('*.html'),*(root/'presentations').glob('*.html')]
     for path in paths:
         tree=BeautifulSoup(path.read_text(),'html.parser')
-        mapping=json.loads(tree.find(id='review-source-map').string)
+        elements={e['id']:e for e in tree.select('[id]')}
+        mapping=json.loads(elements['review-source-map'].string)
         nodes=mapping['selections'];assert nodes,path
         assert sum(n['kind']=='document' for n in nodes.values())==1
+        target_sets={ident:set(n['target_ids']) for ident,n in nodes.items()}
         for ident,node in nodes.items():
-            element=tree.find(id=node['anchor'])
+            element=elements.get(node['anchor'])
             assert element is not None and element.get('data-review-scope')==ident
-            assert len(node['target_ids'])==len(set(node['target_ids']))
+            assert len(node['target_ids'])==len(target_sets[ident])
             assert all(bid in mapping['targets'] for bid in node['target_ids'])
             seen={ident};parent=node['parent']
             while parent:
                 assert parent in nodes and parent not in seen
-                assert set(node['target_ids']).issubset(nodes[parent]['target_ids'])
+                assert target_sets[ident].issubset(target_sets[parent])
                 seen.add(parent);parent=nodes[parent]['parent']
         pages+=1;total+=len(nodes)
     reports.append({'pages':pages,'selection_nodes':total,'tree_integrity_and_exact_membership':'passed'})
