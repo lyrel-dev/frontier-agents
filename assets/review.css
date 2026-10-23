@@ -85,3 +85,13 @@
 #review-drawer #review-save{font-size:12px;padding:4px 9px}
 [data-review-ui] button:disabled{opacity:.55;cursor:not-allowed}
 @media(max-width:600px){#review-global-menu{padding:15px}#review-local-status{flex-basis:100%}#review-drawer{max-height:68vh}}
+
+/* Scope controls stay outside note popups and do not mutate content. */
+#review-block-controls{max-width:calc(100vw - 16px);flex-wrap:wrap;align-items:center}
+#review-block-controls #review-select-parent{width:auto;min-width:58px!important;font-size:12px;padding:3px 7px!important}
+#review-scope-select{max-width:min(310px,calc(100vw - 160px));font:12px/1.4 system-ui;background:#fff;color:#23435e;border:1px solid #ccd7e1;border-radius:4px;padding:4px;min-height:30px}
+#review-selection-tools{max-width:calc(100vw - 16px);flex-wrap:wrap}
+#review-selection-count{white-space:normal;max-width:min(580px,calc(100vw - 160px));overflow-wrap:anywhere}
+.review-scope-selected{outline:2px solid #315f9b!important;outline-offset:5px;background-color:#e8f0fa24}
+.review-subsection{margin:0;padding:0}
+@media print{.review-scope-selected{outline:none!important;background:transparent!important}}
