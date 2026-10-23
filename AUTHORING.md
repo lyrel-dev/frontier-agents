@@ -55,19 +55,25 @@ python -m http.server 8000 --bind 127.0.0.1
 
 Graphviz must be installed for DOT diagrams. Open the local server's `index.html`. Direct file opening still supports reading and search. Use HTTP on a single local origin for predictable cross-page annotation storage; browser behavior for local-file storage is not consistent.
 
-## Select and annotate
+## Select and annotate while reading
 
-Select **Review** in the lower toolbar. Each source-backed paragraph, heading, list, table, or figure exposes a block handle. Click selects a block; Shift-click selects a range; Ctrl/Command-click toggles individual blocks. Dragging across handles selects a range. Native text selection provides a comment action for a quote. **Document note** associates a note with the source files contributing to the assembled document.
+No Review mode needs to be enabled. Hover over a source-backed paragraph, heading, list, table, figure, slide title, or presenter note. A handle and comment button appear beside that element, normally in its left margin. Click the comment button to open a composer anchored to the selected element. On narrow screens the controls and composer fit within the viewport rather than overlapping the selected text unnecessarily. On a touch device, tap an element to expose its controls.
 
-Use the side panel to add notes, reply, edit, resolve, reopen, or delete a local thread. Notes do not change the published text. The interaction is a standalone, read-only implementation of Notion-style block selection; it does not use Tiptap's licensed Notion template or hosted comments service and is not a general rich-text editor.
+Click the handle to select a block. Shift-click another handle to select a range; Ctrl/Command-click toggles individual blocks. Dragging from a handle selects a range without reordering the document. Selected blocks have a visible outline and a nearby Comment action. Selecting text exposes a floating comment toolbar directly beside the selection. A rendered quote remains distinct from the underlying Markdown range.
 
-**Search all** searches across guides, slides, diagram text, and mapped catalog records. `Ctrl/Command+K` opens the search dialog. A result opens the corresponding chapter or slide. `Ctrl/Command+Alt+M` opens a comment for the current selection.
+Existing annotations have persistent margin markers. Click a marker to open only the threads attached to that element, with the source excerpt and path shown. Reply, edit, resolve, or reopen the thread in that context. Resolved threads remain accessible; stale source hashes are flagged rather than silently attached to different text. The **Notes** control in the document header opens the optional document-wide collection. **Document note** records an observation about the whole document. Export/import controls are in the notes panel under **Export, import and storage**.
+
+Keyboard users can focus a source block with Tab and press `Ctrl/Command+Alt+M` to comment. Enter focuses its handle; arrow keys navigate handles, with Shift extending the selection. Escape dismisses the composer or selection. The hover toolbar remains available on focus, not only under a mouse pointer. Review controls disappear from printed output.
+
+The controls are rendered outside source text so their labels do not contaminate quotes, offsets, tables, or source excerpts. Comments do not mutate published content. This is a standalone contextual annotation interface, not a full rich-text editor: the handle selects blocks but does not move them, and no licensed Tiptap template or hosted comment service is required.
+
+**Search all** searches across guides, slides, diagram text, and mapped catalog records. `Ctrl/Command+K` opens the search dialog. A result opens the corresponding chapter or slide.
 
 ## Storage and sharing
 
 Annotations are stored in this browser's local storage, under the site's origin. They are not a multi-user server database. Clearing browser data removes them. Export regularly. Import merges note identifiers and timestamps; older source hashes remain unchanged and are shown as stale rather than silently reattached. Keep exported reviews out of the public repository unless you have reviewed their contents.
 
-The reader makes no LLM or analytics requests. **Export JSON** saves the machine-readable packet. **Export LLM request** or **Copy LLM request** provides the instructions and source excerpts to submit to an editing model. No provider token is placed in the HTML, and no comments are sent automatically.
+The previous `frontier-review/v1` annotations and storage keys are retained; changing the interaction does not discard existing notes. The reader makes no LLM or analytics requests. **Export JSON** saves the machine-readable packet. **Export LLM request** or **Copy LLM request** provides the instructions and source excerpts to submit to an editing model. No provider token is placed in the HTML, and no comments are sent automatically.
 
 ## Review export contract
 
