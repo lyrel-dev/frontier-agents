@@ -37,7 +37,8 @@ def rendered_text(path: Path) -> str:
 def validate(guides: dict) -> dict:
     errors: list[str] = []
     from presentation import DECKS
-    from mechanism_figures import DIAGRAMS as MECHANISM_FIGURES
+    from markdown_sources import repository
+    MECHANISM_FIGURES = repository().diagrams()
     from mechanism_detail import load
     registry = load()
     entries = {e['id']: e for e in registry['entries']}
