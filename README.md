@@ -62,3 +62,8 @@ The interface provides contextual annotation, not a full rich-text editor. Comme
 ## Annotation controls
 
 Hover over source-backed content to add a note. Its popup contains the note and thread actions only. Text and replies save locally as you type. The document-level **Annotations** menu contains export/import, optional connected-user backend saving, and confirmed clearing of local annotations. Backend saving requires an authenticated host adapter; the static checkout does not supply a backend service. See AUTHORING.md for the adapter contract and persistence limits.
+
+
+### Select a section or complete slide
+
+Hover or focus content, then use **Parent** or **Selection scope** to select a complete subsection, section, chapter, slide, or document. The displayed boundary is independent of Markdown file boundaries. Comments capture an immutable ordered list of exact source targets, including hidden descendants. Annotation-only elements and protected records do not grant source-edit permission. See the selection contract in [AUTHORING.md](AUTHORING.md).
