@@ -28,6 +28,22 @@
     }
   },
   "presentation_sequences": {
+    "architecture": {
+      "slides": 9,
+      "minutes": 27.0,
+      "exercise_minutes": 4.0,
+      "use_cases": [
+        "UC-D06",
+        "UC-F05",
+        "UC-G01",
+        "UC-S07"
+      ],
+      "chapter_order": [
+        "Agents and their operating context",
+        "Coordination, boundaries and evidence",
+        "Apply the model to approved operational work"
+      ]
+    },
     "devops": {
       "slides": 19,
       "minutes": 58.0,
@@ -56,26 +72,6 @@
         "Operational knowledge, change assurance and reviews"
       ]
     },
-    "security": {
-      "slides": 12,
-      "minutes": 41.0,
-      "exercise_minutes": 8.0,
-      "use_cases": [
-        "UC-S01",
-        "UC-S02",
-        "UC-S03",
-        "UC-S04",
-        "UC-S05",
-        "UC-S06",
-        "UC-S07",
-        "UC-S08"
-      ],
-      "chapter_order": [
-        "Assessment execution, application scope and context",
-        "Assessment and finding resolution",
-        "Design, requirements and reusable context"
-      ]
-    },
     "finops": {
       "slides": 12,
       "minutes": 40.0,
@@ -96,20 +92,24 @@
         "Planning, optimization and review"
       ]
     },
-    "architecture": {
-      "slides": 9,
-      "minutes": 27.0,
-      "exercise_minutes": 4.0,
+    "security": {
+      "slides": 12,
+      "minutes": 41.0,
+      "exercise_minutes": 8.0,
       "use_cases": [
-        "UC-D06",
-        "UC-F05",
-        "UC-G01",
-        "UC-S07"
+        "UC-S01",
+        "UC-S02",
+        "UC-S03",
+        "UC-S04",
+        "UC-S05",
+        "UC-S06",
+        "UC-S07",
+        "UC-S08"
       ],
       "chapter_order": [
-        "Agents and their operating context",
-        "Coordination, boundaries and evidence",
-        "Apply the model to approved operational work"
+        "Assessment execution, application scope and context",
+        "Assessment and finding resolution",
+        "Design, requirements and reusable context"
       ]
     }
   },
@@ -119,32 +119,17 @@
       "components": 8,
       "scope_boundary_checked": false
     },
+    "teaching-devops-change": {
+      "fixed_layout": "teaching-fixed-v1",
+      "components": 10,
+      "scope_boundary_checked": true
+    },
     "teaching-devops-coordination": {
       "fixed_layout": "teaching-fixed-v1",
       "components": 10,
       "scope_boundary_checked": false
     },
-    "teaching-devops-space": {
-      "fixed_layout": "teaching-fixed-v1",
-      "components": 11,
-      "scope_boundary_checked": true
-    },
     "teaching-devops-incident": {
-      "fixed_layout": "teaching-fixed-v1",
-      "components": 11,
-      "scope_boundary_checked": true
-    },
-    "teaching-devops-mitigation": {
-      "fixed_layout": "teaching-fixed-v1",
-      "components": 10,
-      "scope_boundary_checked": true
-    },
-    "teaching-devops-learning": {
-      "fixed_layout": "teaching-fixed-v1",
-      "components": 10,
-      "scope_boundary_checked": true
-    },
-    "teaching-devops-reporting": {
       "fixed_layout": "teaching-fixed-v1",
       "components": 11,
       "scope_boundary_checked": true
@@ -154,9 +139,19 @@
       "components": 10,
       "scope_boundary_checked": true
     },
-    "teaching-devops-change": {
+    "teaching-devops-learning": {
       "fixed_layout": "teaching-fixed-v1",
       "components": 10,
+      "scope_boundary_checked": true
+    },
+    "teaching-devops-mitigation": {
+      "fixed_layout": "teaching-fixed-v1",
+      "components": 10,
+      "scope_boundary_checked": true
+    },
+    "teaching-devops-reporting": {
+      "fixed_layout": "teaching-fixed-v1",
+      "components": 11,
       "scope_boundary_checked": true
     },
     "teaching-devops-review": {
@@ -164,34 +159,9 @@
       "components": 10,
       "scope_boundary_checked": true
     },
-    "teaching-security-agent": {
-      "fixed_layout": "teaching-fixed-v1",
-      "components": 8,
-      "scope_boundary_checked": false
-    },
-    "teaching-security-coordination": {
-      "fixed_layout": "teaching-fixed-v1",
-      "components": 10,
-      "scope_boundary_checked": false
-    },
-    "teaching-security-space": {
+    "teaching-devops-space": {
       "fixed_layout": "teaching-fixed-v1",
       "components": 11,
-      "scope_boundary_checked": true
-    },
-    "teaching-security-assessment": {
-      "fixed_layout": "teaching-fixed-v1",
-      "components": 10,
-      "scope_boundary_checked": true
-    },
-    "teaching-security-repair": {
-      "fixed_layout": "teaching-fixed-v1",
-      "components": 11,
-      "scope_boundary_checked": true
-    },
-    "teaching-security-context": {
-      "fixed_layout": "teaching-fixed-v1",
-      "components": 10,
       "scope_boundary_checked": true
     },
     "teaching-finops-agent": {
@@ -199,17 +169,17 @@
       "components": 8,
       "scope_boundary_checked": false
     },
+    "teaching-finops-analysis": {
+      "fixed_layout": "teaching-fixed-v1",
+      "components": 10,
+      "scope_boundary_checked": true
+    },
     "teaching-finops-coordination": {
       "fixed_layout": "teaching-fixed-v1",
       "components": 10,
       "scope_boundary_checked": false
     },
-    "teaching-finops-space": {
-      "fixed_layout": "teaching-fixed-v1",
-      "components": 11,
-      "scope_boundary_checked": true
-    },
-    "teaching-finops-analysis": {
+    "teaching-finops-optimization": {
       "fixed_layout": "teaching-fixed-v1",
       "components": 10,
       "scope_boundary_checked": true
@@ -219,14 +189,62 @@
       "components": 11,
       "scope_boundary_checked": true
     },
-    "teaching-finops-optimization": {
+    "teaching-finops-space": {
+      "fixed_layout": "teaching-fixed-v1",
+      "components": 11,
+      "scope_boundary_checked": true
+    },
+    "teaching-security-agent": {
+      "fixed_layout": "teaching-fixed-v1",
+      "components": 8,
+      "scope_boundary_checked": false
+    },
+    "teaching-security-assessment": {
       "fixed_layout": "teaching-fixed-v1",
       "components": 10,
+      "scope_boundary_checked": true
+    },
+    "teaching-security-context": {
+      "fixed_layout": "teaching-fixed-v1",
+      "components": 10,
+      "scope_boundary_checked": true
+    },
+    "teaching-security-coordination": {
+      "fixed_layout": "teaching-fixed-v1",
+      "components": 10,
+      "scope_boundary_checked": false
+    },
+    "teaching-security-repair": {
+      "fixed_layout": "teaching-fixed-v1",
+      "components": 11,
+      "scope_boundary_checked": true
+    },
+    "teaching-security-space": {
+      "fixed_layout": "teaching-fixed-v1",
+      "components": 11,
       "scope_boundary_checked": true
     }
   },
   "browser": [
     {
+      "product": "architecture",
+      "width": 390,
+      "slides_checked": 9,
+      "diagram_text_bounds": "passed",
+      "scoped_arrowheads": "passed",
+      "page_overflow": "passed",
+      "javascript_errors": []
+    },
+    {
+      "product": "architecture",
+      "width": 1440,
+      "slides_checked": 9,
+      "diagram_text_bounds": "passed",
+      "scoped_arrowheads": "passed",
+      "page_overflow": "passed",
+      "javascript_errors": []
+    },
+    {
       "product": "devops",
       "width": 390,
       "slides_checked": 19,
@@ -239,24 +257,6 @@
       "product": "devops",
       "width": 1440,
       "slides_checked": 19,
-      "diagram_text_bounds": "passed",
-      "scoped_arrowheads": "passed",
-      "page_overflow": "passed",
-      "javascript_errors": []
-    },
-    {
-      "product": "security",
-      "width": 390,
-      "slides_checked": 12,
-      "diagram_text_bounds": "passed",
-      "scoped_arrowheads": "passed",
-      "page_overflow": "passed",
-      "javascript_errors": []
-    },
-    {
-      "product": "security",
-      "width": 1440,
-      "slides_checked": 12,
       "diagram_text_bounds": "passed",
       "scoped_arrowheads": "passed",
       "page_overflow": "passed",
@@ -281,18 +281,18 @@
       "javascript_errors": []
     },
     {
-      "product": "architecture",
+      "product": "security",
       "width": 390,
-      "slides_checked": 9,
+      "slides_checked": 12,
       "diagram_text_bounds": "passed",
       "scoped_arrowheads": "passed",
       "page_overflow": "passed",
       "javascript_errors": []
     },
     {
-      "product": "architecture",
+      "product": "security",
       "width": 1440,
-      "slides_checked": 9,
+      "slides_checked": 12,
       "diagram_text_bounds": "passed",
       "scoped_arrowheads": "passed",
       "page_overflow": "passed",
