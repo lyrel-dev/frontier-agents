@@ -482,8 +482,8 @@
       "sha256": "d9724d601af57189bd8bc6270fd2aac8065629decd8711d7eb5f7b10cb27c605"
     },
     "qa/authoring-review.json": {
-      "bytes": 1602,
-      "sha256": "e3a3701efc76ebf0252e5c9a57ad2dfe07d3eda4c0e804aff9047bc363f8e44d"
+      "bytes": 2144,
+      "sha256": "4506c64d03b449aaa82f49410d733f0c5a989e1e2a48beefd501d1d40c1ce2e5"
     },
     "qa/checks.json": {
       "bytes": 49172,
