@@ -111,7 +111,11 @@ def validate(root: Path):
                 assert page.evaluate('FrontierReview.exportPacket().comments[0].selection.target_ids')==expected
                 section_el=page.locator('[data-review-scope="'+scope_id+'"]');heading=section_el.locator('h3[data-review-block]').first
                 heading.hover();page.locator('#review-scope-select').select_option(scope_id)
-                heading.hover();page.locator('#review-block-select').click(modifiers=['Control'])
+                # select_option dispatches a change without moving the test pointer;
+                # leave and return as a real user does before selecting the child.
+                page.mouse.move(1,1);heading.hover()
+                expect(page.locator('#review-block-controls')).to_have_attribute('data-scope-id',title_scope)
+                page.locator('#review-block-select').click(modifiers=['Control'])
                 assert page.locator('.review-scope-selected').count()==1,'Ancestor selection was not normalized'
                 heading.focus();page.keyboard.press('Enter');page.keyboard.press('Alt+ArrowUp')
                 chapter=section_el.locator('xpath=ancestor::section[@data-reader-chapter][1]')
