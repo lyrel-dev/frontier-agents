@@ -1,6 +1,6 @@
 {
   "schema": "frontier-markdown-build/v1",
-  "iteration": 19,
-  "scope": "Hierarchical scope selection, source-sharing semantics, immutable membership and precise edit guards",
+  "iteration": 20,
+  "scope": "Clean release validation without migration hooks: semantic selections, exact source snapshots, preserved annotation behavior and frozen records",
   "frozen_model_and_use_cases": true
 }
