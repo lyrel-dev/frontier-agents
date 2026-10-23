@@ -302,7 +302,7 @@ class Reader:
                '| Apply an operational workflow | [Use cases](catalog/index.html) |',
                '| Look up product objects and relationships | [Resource model](catalog/resource-models.html) |',
                '| Present the material | [HTML presentations](presentations/index.html) |','',
-               'Guides distinguish workspace organization, definition, context, invocation, integrations, network connectivity, execution controls, managed functions, outputs, and administration. They have chapter navigation and one search. Each use case has a dedicated page with its narrative, workflow, configuration recipes, verification criteria, and technical references. The product guides explain concrete platform facilities and their operating mechanisms by capability dimension. The frozen dependency registers supply references, not a product taxonomy.','',
+               'Guides begin with agent composition, coordination, scope and prioritized workflows. The ten capability dimensions follow as the configuration reference. They have chapter navigation and one search. Each use case has a dedicated page with its narrative, workflow, configuration recipes, verification criteria, and technical references. The product guides explain concrete platform facilities and their operating mechanisms by capability dimension. The frozen dependency registers supply references, not a product taxonomy.','',
                '## Product editions','', '| Subject | Guide | Markdown | Presentation | Duration |','|---|---|---|---|---|']
         for p,d in DECKS.items():
             total=sum(s['seconds'] for s in d['slides'])//60;demo=sum(s['seconds'] for s in d['slides'] if s['kind']=='demo')//60
