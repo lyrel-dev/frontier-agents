@@ -5,7 +5,7 @@ p=Path(__file__).resolve().parent/'md_source.py'
 s=p.read_text();tree=ast.parse(s);f=next(x for x in tree.body if isinstance(x,ast.FunctionDef) and x.name=='stamp_text')
 replacement='''def stamp_text(text, prefix='b'):
     """Persist anchors while preserving every authored character between them."""
-    if '<!-- block:' in text:return text
+    if re.search(r'^<!-- block:',text,flags=re.M):return text
     lines=text.splitlines(keepends=True);ranges=[];end=0
     for t in MD.parse(text):
         if t.map and t.level==0 and t.map[0]>=end:
