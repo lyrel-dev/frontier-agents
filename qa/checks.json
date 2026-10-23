@@ -1443,91 +1443,113 @@
     "diagram_views": {
       "teaching-devops-agent": {
         "fixed_layout": "teaching-fixed-v1",
-        "components": 8
+        "components": 8,
+        "scope_boundary_checked": false
       },
       "teaching-devops-coordination": {
         "fixed_layout": "teaching-fixed-v1",
-        "components": 10
+        "components": 10,
+        "scope_boundary_checked": false
       },
       "teaching-devops-space": {
         "fixed_layout": "teaching-fixed-v1",
-        "components": 11
+        "components": 11,
+        "scope_boundary_checked": true
       },
       "teaching-devops-incident": {
         "fixed_layout": "teaching-fixed-v1",
-        "components": 11
+        "components": 11,
+        "scope_boundary_checked": true
       },
       "teaching-devops-mitigation": {
         "fixed_layout": "teaching-fixed-v1",
-        "components": 10
+        "components": 10,
+        "scope_boundary_checked": true
       },
       "teaching-devops-learning": {
         "fixed_layout": "teaching-fixed-v1",
-        "components": 10
+        "components": 10,
+        "scope_boundary_checked": true
       },
       "teaching-devops-reporting": {
         "fixed_layout": "teaching-fixed-v1",
-        "components": 11
+        "components": 11,
+        "scope_boundary_checked": true
       },
       "teaching-devops-knowledge": {
         "fixed_layout": "teaching-fixed-v1",
-        "components": 10
+        "components": 10,
+        "scope_boundary_checked": true
       },
       "teaching-devops-change": {
         "fixed_layout": "teaching-fixed-v1",
-        "components": 10
+        "components": 10,
+        "scope_boundary_checked": true
       },
       "teaching-devops-review": {
         "fixed_layout": "teaching-fixed-v1",
-        "components": 10
+        "components": 10,
+        "scope_boundary_checked": true
       },
       "teaching-security-agent": {
         "fixed_layout": "teaching-fixed-v1",
-        "components": 8
+        "components": 8,
+        "scope_boundary_checked": false
       },
       "teaching-security-coordination": {
         "fixed_layout": "teaching-fixed-v1",
-        "components": 10
+        "components": 10,
+        "scope_boundary_checked": false
       },
       "teaching-security-space": {
         "fixed_layout": "teaching-fixed-v1",
-        "components": 11
+        "components": 11,
+        "scope_boundary_checked": true
       },
       "teaching-security-assessment": {
         "fixed_layout": "teaching-fixed-v1",
-        "components": 10
+        "components": 10,
+        "scope_boundary_checked": true
       },
       "teaching-security-repair": {
         "fixed_layout": "teaching-fixed-v1",
-        "components": 11
+        "components": 11,
+        "scope_boundary_checked": true
       },
       "teaching-security-context": {
         "fixed_layout": "teaching-fixed-v1",
-        "components": 10
+        "components": 10,
+        "scope_boundary_checked": true
       },
       "teaching-finops-agent": {
         "fixed_layout": "teaching-fixed-v1",
-        "components": 8
+        "components": 8,
+        "scope_boundary_checked": false
       },
       "teaching-finops-coordination": {
         "fixed_layout": "teaching-fixed-v1",
-        "components": 10
+        "components": 10,
+        "scope_boundary_checked": false
       },
       "teaching-finops-space": {
         "fixed_layout": "teaching-fixed-v1",
-        "components": 11
+        "components": 11,
+        "scope_boundary_checked": true
       },
       "teaching-finops-analysis": {
         "fixed_layout": "teaching-fixed-v1",
-        "components": 10
+        "components": 10,
+        "scope_boundary_checked": true
       },
       "teaching-finops-reporting": {
         "fixed_layout": "teaching-fixed-v1",
-        "components": 11
+        "components": 11,
+        "scope_boundary_checked": true
       },
       "teaching-finops-optimization": {
         "fixed_layout": "teaching-fixed-v1",
-        "components": 10
+        "components": 10,
+        "scope_boundary_checked": true
       }
     },
     "browser": [
