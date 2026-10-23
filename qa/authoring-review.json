@@ -1,5 +1,6 @@
 {
   "schema": "frontier-authoring-validation/v1",
+  "interaction": "contextual-v2",
   "errors": [],
   "source_mapping": [
     "all registry values equal the approved baseline",
@@ -25,23 +26,34 @@
   "browser": [
     {
       "viewport": 390,
-      "block_range_text_and_document_comments": "passed",
-      "local_persistence_and_cross_page_notes": "passed",
+      "mode_switch_absent": "passed",
+      "hover_and_element_threads": "passed",
+      "persistent_markers_reply_resolve_reopen": "passed",
+      "quote_range_additive_drag_and_keyboard_selection": "passed",
+      "source_text_and_block_order_preserved": "passed",
+      "heading_list_table_diagram_slide_and_notes": "passed",
       "global_search": "passed",
-      "slide_source_selection": "passed",
-      "export_import_and_stale_warning": "passed",
+      "export_import_stale_hash_and_inert_comment_html": "passed",
+      "print_controls_hidden": "passed",
       "external_requests": [],
       "javascript_errors": []
     },
     {
       "viewport": 1440,
-      "block_range_text_and_document_comments": "passed",
-      "local_persistence_and_cross_page_notes": "passed",
+      "mode_switch_absent": "passed",
+      "hover_and_element_threads": "passed",
+      "persistent_markers_reply_resolve_reopen": "passed",
+      "quote_range_additive_drag_and_keyboard_selection": "passed",
+      "source_text_and_block_order_preserved": "passed",
+      "heading_list_table_diagram_slide_and_notes": "passed",
       "global_search": "passed",
-      "slide_source_selection": "passed",
-      "export_import_and_stale_warning": "passed",
+      "export_import_stale_hash_and_inert_comment_html": "passed",
+      "print_controls_hidden": "passed",
       "external_requests": [],
       "javascript_errors": []
+    },
+    {
+      "touch_tap_annotation": "passed"
     },
     {
       "file_url_search": "passed"
