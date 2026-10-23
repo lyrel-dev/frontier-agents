@@ -63,3 +63,8 @@ Primary navigation follows reader tasks: Guides, Use cases, Resource model, Pres
 The approved entity model is a semantic reference, not a chapter template. Organize platform explanation by the exposed configuration dimensions: scope, definition, context, invocation, integration, connectivity, execution, managed functions, interfaces/outputs, and administration. A feature names a concrete product facility; a mechanism explains its operation. Do not render every dependency-register row as an equivalent mechanism or feature. Implementation recipes remain team-authored setup instructions within use cases; distinguish them from native test-profile resources.
 
 Guide prose is authored in Markdown. Frozen registry records provide relationships and compatibility identifiers, not automatic chapter prose. The supplied DevOps outline is the editorial basis; other product guides use only their documented facilities rather than inheriting DevOps resource types.
+
+
+## Reader selections and source-edit authority
+
+Treat reader-visible selection, captured source membership, and edit permission as separate concepts. A section or slide is selectable as one structural unit, including mapped hidden descendants; it is not a wildcard file-edit instruction. Resolve ancestor/descendant overlap, retain immutable ordered target snapshots, and reject stale or ambiguous edit scopes. Keep unmapped elements annotatable without widening their edit authority. Human acceptance must exercise full containers, nested content, source sharing and partial ranges, not only atomic-block controls or highlighted-node counts.
