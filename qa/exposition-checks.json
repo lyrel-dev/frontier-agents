@@ -1,7 +1,7 @@
 {
   "revision": "2026-10-23-capability-exposition",
   "baseline": "d081eade643537905690c54c4968a2445489cf96",
-  "basis": "Supplied ten-part DevOps capability outline, adapted to documented facilities of the other two services.",
+  "basis": "Supplied ten-part capability reference retained after the agent-first teaching overview; product-specific facilities remain distinct.",
   "frozen_sources": {
     "catalog/use-cases.json": {
       "unchanged": true,
@@ -43,7 +43,7 @@
         "Administration, security, and automation"
       ],
       "appendix": "Worked example and reference material",
-      "sections": 33
+      "sections": 40
     },
     "security": {
       "primary_dimensions": [
@@ -59,7 +59,7 @@
         "Administration, security, and limits"
       ],
       "appendix": "Worked example and reference material",
-      "sections": 24
+      "sections": 28
     },
     "finops": {
       "primary_dimensions": [
@@ -75,7 +75,7 @@
         "Administration, retention, and limits"
       ],
       "appendix": "Worked example and reference material",
-      "sections": 23
+      "sections": 27
     }
   },
   "distinctions_checked": [
