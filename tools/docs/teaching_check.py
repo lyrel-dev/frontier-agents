@@ -49,7 +49,15 @@ def validate(guides,browser=False):
             expected=','.join(str(x) for x in BOXES[ident])
             if position!=expected:errors.append(key+': moved component '+ident)
         if root.get('role')!='img':errors.append(key+': missing accessible diagram role')
-        geometry[key]={'fixed_layout':root.get('data-layout'),'components':len(positions)}
+        scope=next((n for n in root.iter() if n.get('data-scope-boundary')=='true'),None)
+        if scope is not None:
+            sx,sy,sw,sh=(float(scope.get(a)) for a in ('x','y','width','height'))
+            for node in (n for n in root.iter() if 'data-node' in n.attrib):
+                x,y,w,h=map(float,node.get('data-box').split(','))
+                inside=x>=sx and y>=sy and x+w<=sx+sw and y+h<=sy+sh
+                if node.get('data-node')=='result' and not inside:errors.append(key+': execution record shown outside scope')
+                if node.get('data-owner')=='external' and inside:errors.append(key+': external source or actor placed inside scope')
+        geometry[key]={'fixed_layout':root.get('data-layout'),'components':len(positions),'scope_boundary_checked':scope is not None}
     # The teaching view must not turn Security login reuse into an application-source write.
     sec=(ROOT/'assets/diagrams/teaching-security-context.svg').read_text()
     if 'data-edge="learning-knowledge"' in sec:errors.append('Security reuse incorrectly writes application context')
