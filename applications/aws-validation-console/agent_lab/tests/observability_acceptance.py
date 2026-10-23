@@ -57,21 +57,39 @@ def main():
     def base(container, port):
         mapping = inspect(container)['NetworkSettings']['Ports'][str(port) + '/tcp'][0]
         assert mapping['HostIp'] == '127.0.0.1'
-        return 'http://127.0.0.1:' + mapping['HostPort']
+        # Control requests originate on the isolated network, not through host
+        # NAT rules. Host loopback publication is exercised by runtime acceptance.
+        host = '127.0.0.1' if container == console else ('prometheus' if container == prom else grafana)
+        return 'http://' + host + ':' + str(port)
 
     def http(url, *, token=None, basic=None, body=None, method=None, headers=None):
         headers = dict(headers or {})
         if token: headers['Authorization'] = 'Bearer ' + token
         if basic: headers['Authorization'] = 'Basic ' + base64.b64encode(basic.encode()).decode()
-        data = json.dumps(body).encode() if body is not None else None
-        if data is not None: headers['Content-Type'] = 'application/json'
-        request = urllib.request.Request(url, data=data, headers=headers, method=method)
-        try:
-            with urllib.request.urlopen(request, timeout=10) as response:
-                raw = response.read()
-                return response.status, json.loads(raw) if 'json' in response.headers.get('Content-Type', '') else raw.decode()
-        except urllib.error.HTTPError as exc:
-            return exc.code, exc.read().decode()
+        if body is not None: headers['Content-Type'] = 'application/json'
+        # Secrets travel over stdin, not a process command line. This is actual
+        # HTTP against the running services, not a response bridge or API mock.
+        client = r'''
+import json,sys,urllib.request,urllib.error
+p=json.load(sys.stdin)
+b=json.dumps(p['body']).encode() if p['body'] is not None else None
+request=urllib.request.Request(p['url'],data=b,headers=p['headers'],method=p['method'])
+try:
+    with urllib.request.urlopen(request,timeout=5) as response:
+        raw=response.read().decode()
+        body=json.loads(raw) if 'json' in response.headers.get('Content-Type','') else raw
+        print(json.dumps({'status':response.status,'body':body}))
+except urllib.error.HTTPError as exc:
+    print(json.dumps({'status':exc.code,'body':exc.read().decode()}))
+except (OSError,ValueError) as exc:
+    print(json.dumps({'status':0,'body':type(exc).__name__}))
+'''
+        request = {'url':url,'headers':headers,'body':body,'method':method}
+        result = docker('exec','-i',console,'python','-c',client,input=json.dumps(request),check=False)
+        if result.returncode:
+            raise RuntimeError('Telemetry HTTP client failed: ' + result.stderr[-1500:])
+        response = json.loads(result.stdout)
+        return response['status'], response['body']
 
     def wait(predicate, label, seconds=60):
         deadline = time.monotonic() + seconds
@@ -241,11 +259,22 @@ print(json.dumps({'trial_id':t['id'],'assessment_id':a['id'],'latency_ms':max(la
                 'grafana_version':http(gb+'/api/health')[1].get('version'),
                 'prometheus_version':http(pb+'/api/v1/status/buildinfo')[1]['data'].get('version'),
                 'promql_executed':True,'native_aws_accessed':False,
+                'http_client_origin':'Actual HTTP from the console container on the isolated Docker network; host publication is verified by the separate runtime suite.',
                 'measurement':'Five actual loopback HTTP requests; account, agent and business labels are isolated test fixtures.',
                 'not_verified':['AWS evidence collection','Agent response and prevention','Production TLS/credentials','Podman or Kubernetes hosting']}
             out = ROOT / 'validation' / 'observability-acceptance.json'
             out.write_text(json.dumps(report, indent=2)+'\n')
             print(json.dumps(report,indent=2))
+        except Exception:
+            # Retain bounded diagnostics before deleting owned test containers.
+            # Never print environment values or an unredacted test credential.
+            for container in containers:
+                logs=docker('logs',container,check=False)
+                text=(logs.stdout+'\n'+logs.stderr)[-6000:]
+                for key in ('LAB_OPERATOR_TOKEN','LAB_APPROVAL_TOKEN','LAB_METRICS_TOKEN','GF_SECURITY_ADMIN_PASSWORD'):
+                    text=text.replace(env[key],'[REDACTED]')
+                print('DIAGNOSTIC '+container+'\n'+text,flush=True)
+            raise
         finally:
             for container in containers:
                 docker('rm','-f',container,check=False)

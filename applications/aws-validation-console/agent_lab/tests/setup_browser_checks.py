@@ -88,6 +88,13 @@ def main():
                 wait(page,'GuidedSetup.state().current!==null')
                 page.screenshot(path=str(out/'setup-accounts-empty-desktop.png'),full_page=True)
                 check('SDK names are selected without credential fields',page.get_by_label('Observer profile',exact=True).count()==1 and page.get_by_label('AWS access key',exact=True).count()==0)
+                page.evaluate("""()=>{window.__setupOriginalFetch=window.fetch;window.fetch=async(p,o)=>{const r=await window.__setupOriginalFetch(p,o);if(p==='/api/setup')await new Promise(resolve=>window.__releaseSetupRead=resolve);return r;};}""")
+                page.locator('[data-stage=accounts]').click()
+                wait(page,"typeof window.__releaseSetupRead==='function'")
+                check('loading navigation removes stale editable fields',page.get_by_label('Connection ID',exact=True).count()==0 and page.get_by_role('heading',name='Loading account evidence',exact=True).count()==1)
+                page.evaluate("()=>{window.__releaseSetupRead();window.fetch=window.__setupOriginalFetch;}")
+                page.get_by_label('Connection ID',exact=True).wait_for()
+                check('the new form appears only after the read completes',not page.evaluate('GuidedSetup.state().loading'))
                 def approve_dialog():
                     text=page.locator('#setup-body pre').inner_text();subject=json.loads(text)
                     page.get_by_label('Approver name',exact=True).fill('Fixture reviewer')
@@ -104,7 +111,11 @@ def main():
                     page.get_by_label('Observer profile',exact=True).select_option(profile)
                     if cid=='work':page.get_by_label('FIS executor profile (optional)',exact=True).select_option('test-executor')
                     page.get_by_role('button',name='Review account configuration',exact=True).click()
-                    page.get_by_role('button',name='Approve exact local configuration',exact=True).wait_for()
+                    try:
+                        page.get_by_role('button',name='Approve exact local configuration',exact=True).wait_for()
+                    except Exception:
+                        print('Account proposal status:',page.locator('#setup-status').inner_text(),flush=True)
+                        raise
                     check(cid+' remains a proposal before approval',not any(c.id==cid for c in cfg.fis_accounts))
                     page.get_by_role('button',name='Approve exact local configuration',exact=True).click();approve_dialog()
                     check(cid+' activated in the backend without file editing',any(c.id==cid for c in cfg.fis_accounts))
