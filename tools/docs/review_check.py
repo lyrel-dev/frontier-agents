@@ -1,20 +1,17 @@
 #!/usr/bin/env python3
-"""Regression checks for source mapping, review behavior and guarded patching."""
+"""Regression checks for source mapping, contextual review and guarded patching."""
 from __future__ import annotations
 from copy import deepcopy
 from pathlib import Path
-from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
-from functools import partial
-import hashlib
 import ast
 import json
 import subprocess
 import tempfile
-import threading
 import traceback
 from bs4 import BeautifulSoup
 import markdown_sources as ms
 import review_patch as guard
+from contextual_check import browser_checks
 
 ROOT=Path(__file__).resolve().parents[2]
 BASELINE='4a34aaadc5f9fd0e4dbb492c36aa152730c8ba5a'
@@ -40,7 +37,6 @@ def source_checks():
             assert bid in repo.targets
             mapped+=1
     results.append(f'{mapped} rendered source targets match exact Unicode and UTF-8 source ranges')
-    # Reject literal deck payloads in Python without matching this assertion's own text.
     for script in (ROOT/'tools/docs').glob('*.py'):
         if script.name == 'migrate_markdown_once.py':
             continue
@@ -121,7 +117,6 @@ def guard_checks():
             bad=deepcopy(patch);bad['edits'][0]['path']='content/link.md'
             packet=deepcopy(review);packet['comments'][0]['targets'][0]['path']='content/link.md'
             reject('symlink source',packet=packet,proposal=bad);link.unlink()
-            # All files are checked before the first file is replaced.
             second=content/'second.md';second.write_text(raw.replace('id: example','id: second').replace('example-one','second-one').replace('example-two','second-two'))
             second_target=ms.Repository().targets['second-one']
             packet=deepcopy(review);packet['comments'][0]['targets'].append(second_target)
@@ -138,99 +133,12 @@ def guard_checks():
     return outcomes
 
 
-def browser_checks():
-    from playwright.sync_api import sync_playwright
-    class Quiet(SimpleHTTPRequestHandler):
-        def log_message(self,*args):pass
-    server=ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(ROOT)))
-    thread=threading.Thread(target=server.serve_forever,daemon=True);thread.start()
-    base=f'http://127.0.0.1:{server.server_port}'
-    reports=[]
-    try:
-        with sync_playwright() as pw:
-            browser=pw.chromium.launch(headless=True)
-            for width in (390,1440):
-                context=browser.new_context(viewport={'width':width,'height':1000})
-                page=context.new_page();errors=[];external=[]
-                page.on('pageerror',lambda e:errors.append(str(e)))
-                page.on('request',lambda r:external.append(r.url) if not r.url.startswith(base) else None)
-                page.goto(base+'/guides/devops.html');page.wait_for_function('!!window.FrontierReview')
-                page.locator('#review-toggle').click()
-                block=page.locator('.report-section:visible p[data-review-block]').first
-                block.locator('> .review-block-handle').click()
-                page.locator('#review-comment').click()
-                page.locator('#review-text').fill('Clarify this definition without changing its scope.')
-                page.locator('#review-save').click()
-                packet=page.evaluate('FrontierReview.exportPacket()');assert len(packet['comments'])==1
-                assert packet['review_id']==page.evaluate('FrontierReview.exportPacket().review_id')
-                assert '"review_id": "'+packet['review_id']+'"' in page.evaluate('FrontierReview.exportPrompt()')
-                note=packet['comments'][0];assert note['targets'][0]['path'].endswith('.md')
-                assert note['targets'][0]['start_byte']>=note['targets'][0]['start_char']
-                page.reload();page.wait_for_function('!!window.FrontierReview')
-                assert len(page.evaluate('FrontierReview.exportPacket().comments'))==1
-                assert page.evaluate('FrontierReview.exportPacket().review_id')==packet['review_id']
-                page.locator('#review-search-open').click();page.locator('#review-global-search').fill('memory')
-                assert page.locator('#review-search-results li').count()>0
-                page.locator('#review-search-dialog button').click()
-                page.locator('#review-toggle').click()
-                # Consecutive block handles implement Shift range selection.
-                candidates=page.locator('.report-section:visible [data-review-block]')
-                candidates.nth(0).locator('> .review-block-handle').click()
-                candidates.nth(2).locator('> .review-block-handle').click(modifiers=['Shift'])
-                assert page.locator('.review-selected').count()>=3
-                page.locator('#review-comment').click();page.locator('#review-text').fill('Review these adjacent source blocks together.');page.locator('#review-save').click()
-                assert len(page.evaluate('FrontierReview.exportPacket().comments').pop()['targets'])>=3
-                page.locator('#review-document-note').click();page.locator('#review-text').fill('Document-level review note.');page.locator('#review-save').click()
-                assert page.evaluate('FrontierReview.exportPacket().comments').pop()['scope']=='document'
-                # Native text selection is exported separately from exact Markdown coordinates.
-                page.locator('#review-drawer .review-panel-heading button').click()
-                block=page.locator('.report-section:visible p[data-review-block]').first
-                block.evaluate('''el=>{const w=document.createTreeWalker(el,NodeFilter.SHOW_TEXT);const t=w.nextNode();const r=document.createRange();r.setStart(t,0);r.setEnd(t,Math.min(18,t.length));const s=getSelection();s.removeAllRanges();s.addRange(r);el.dispatchEvent(new MouseEvent('mouseup',{bubbles:true}));}''')
-                assert page.locator('#review-text-comment').is_visible()
-                page.locator('#review-text-comment').click();page.locator('#review-text').fill('Clarify the selected wording.');page.locator('#review-save').click()
-                assert page.evaluate('FrontierReview.exportPacket().comments').pop()['selector']['exact']
-                # Source mappings are also present on the actual presentation slide.
-                page.goto(base+'/presentations/devops.html');page.wait_for_function('!!window.FrontierReview');page.locator('#review-toggle').click()
-                slide=page.locator('.slide:visible');slide.locator('h1 > .review-block-handle').click()
-                page.locator('#review-comment').click();page.locator('#review-text').fill('Slide-title comment.');page.locator('#review-save').click()
-                assert '/presentations/devops/' in page.evaluate('FrontierReview.exportPacket().comments').pop()['targets'][0]['path']
-                # Presenter notes are separate Markdown blocks with exact source anchors.
-                page.locator('#review-drawer .review-panel-heading button').click()
-                page.locator('#notes-button').click()
-                speaker=page.locator('.note-block:visible .talk-track > p[data-review-block]').first
-                assert speaker.count()==1
-                note_target=speaker.get_attribute('data-review-block')
-                assert '/presentations/devops/' in page.evaluate('(id)=>document.getElementById("review-source-map").textContent.includes(id) ? JSON.parse(document.getElementById("review-source-map").textContent).targets[id].path : ""',note_target)
-                page.locator('#review-notes-open').click()
-                # Import is text-only, and forged/stale hashes are visibly flagged.
-                incoming=page.evaluate('FrontierReview.exportPacket()');item=deepcopy(incoming['comments'][-1]);item['id']='import-test';item['body']='<img src=x onerror=alert(1)>';item['targets'][0]['file_sha256']='0'*64;incoming['comments']=[item]
-                page.locator('#review-import').set_input_files({'name':'review.json','mimeType':'application/json','buffer':json.dumps(incoming).encode()})
-                assert page.locator('.review-warning').count()>0
-                assert page.locator('#review-drawer img').count()==0
-                with page.expect_download() as download:
-                    page.locator('#review-export').click()
-                downloaded=json.loads(Path(download.value.path()).read_text())
-                assert downloaded['schema']=='frontier-review/v1'
-                page.goto(base+'/catalog/UC-D02.html');page.wait_for_function('!!window.FrontierReview')
-                assert page.locator('.case-narrative [data-review-block]').count()>0
-                assert not external,external
-                assert not errors,errors
-                reports.append({'viewport':width,'block_range_text_and_document_comments':'passed','local_persistence_and_cross_page_notes':'passed',
-                    'global_search':'passed','slide_source_selection':'passed','export_import_and_stale_warning':'passed','external_requests':external,'javascript_errors':errors})
-                context.close()
-            # File URL mode is retained; no fetch of the index is required.
-            page=browser.new_page();page.goto((ROOT/'guides/devops.html').as_uri());page.wait_for_function('!!window.FrontierReview')
-            page.locator('#review-search-open').click();page.locator('#review-global-search').fill('memory');assert page.locator('#review-search-results li').count()>0
-            reports.append({'file_url_search':'passed'})
-            browser.close()
-    finally:
-        server.shutdown();server.server_close();thread.join(timeout=2)
-    return reports
-
 if __name__=='__main__':
-    result={'schema':'frontier-authoring-validation/v1','errors':[]}
+    result={'schema':'frontier-authoring-validation/v1','interaction':'contextual-v2','errors':[]}
     try:
-        result['source_mapping']=source_checks();result['patch_guards']=guard_checks();result['browser']=browser_checks()
+        result['source_mapping']=source_checks()
+        result['patch_guards']=guard_checks()
+        result['browser']=browser_checks(ROOT)
     except Exception:
         result['errors'].append(traceback.format_exc())
     (ROOT/'qa/authoring-review.json').write_text(json.dumps(result,indent=2)+'\n')
