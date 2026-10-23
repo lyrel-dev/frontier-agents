@@ -1,7 +1,7 @@
-name: Validate AWS FIS agent benchmark console
+name: Accept AWS FIS console software
 on:
   push:
-    branches: [feat/aws-fis-agent-benchmark]
+    branches: [feat/aws-fis-agent-benchmark, feat/aws-fis-console-delivery, feat/aws-fis-console-acceptance]
     paths:
       - applications/aws-validation-console/agent_lab/**
       - .github/workflows/aws-fis-agent-benchmark.yml
@@ -13,12 +13,12 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: fis-agent-benchmark-${{ github.ref }}
+  group: fis-console-${{ github.ref }}
   cancel-in-progress: true
 jobs:
   validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     defaults:
       run:
         working-directory: applications/aws-validation-console/agent_lab
@@ -42,7 +42,17 @@ jobs:
           python -m pip install -r requirements-dev.txt
           python -m playwright install --with-deps chromium
           python -c 'from playwright.sync_api import sync_playwright; p=sync_playwright().start(); print("CHROMIUM_PATH="+p.chromium.executable_path); p.stop()' >> "$GITHUB_ENV"
-      - name: Test without AWS access
+      - name: Clear previous generated evidence
+        run: |
+          python - <<'PY'
+          import json,time
+          from pathlib import Path
+          p=Path('validation');p.mkdir(exist_ok=True)
+          for name in ['browser-review.json','fis-browser-review.json','setup-browser.json','worker-http-review.json','container-runtime.json','observability-acceptance.json','software-acceptance.json','fis-console-pytest.xml']:
+              (p/name).unlink(missing_ok=True)
+          (p/'current-run.json').write_text(json.dumps({'epoch':time.time()}))
+          PY
+      - name: Test software and native browser paths without AWS access
         env:
           AWS_EC2_METADATA_DISABLED: 'true'
         run: |
@@ -50,13 +60,20 @@ jobs:
           python -m pytest -q --junitxml=validation/fis-console-pytest.xml
           python tests/browser_checks.py --native
           python tests/fis_browser_checks.py --native
+          python tests/setup_browser_checks.py --native
           python tests/worker_http_acceptance.py
           git diff --check
-      - name: Verify isolated container hosting
+      - name: Verify actual container hosting and configuration persistence
         env:
           AWS_EC2_METADATA_DISABLED: 'true'
         run: python tests/container_runtime_acceptance.py
-      - name: Retain acceptance evidence
+      - name: Verify real Prometheus scraping and Grafana PromQL execution
+        env:
+          AWS_EC2_METADATA_DISABLED: 'true'
+        run: python tests/observability_acceptance.py
+      - name: Record current-source software acceptance only
+        run: python tests/summarize_acceptance.py
+      - name: Retain current-run evidence and generated outputs
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -65,6 +82,7 @@ jobs:
             applications/aws-validation-console/agent_lab/validation/
             applications/aws-validation-console/agent_lab/preview.html
             applications/aws-validation-console/agent_lab/aws-preview.html
+            applications/aws-validation-console/agent_lab/setup-preview.html
             applications/aws-validation-console/agent_lab/grafana/
             applications/aws-validation-console/agent_lab/schemas/
           retention-days: 14
