@@ -124,11 +124,11 @@
     },
     "teaching-devops-space": {
       "fixed_layout": "teaching-fixed-v1",
-      "components": 10
+      "components": 11
     },
     "teaching-devops-incident": {
       "fixed_layout": "teaching-fixed-v1",
-      "components": 10
+      "components": 11
     },
     "teaching-devops-mitigation": {
       "fixed_layout": "teaching-fixed-v1",
@@ -140,7 +140,7 @@
     },
     "teaching-devops-reporting": {
       "fixed_layout": "teaching-fixed-v1",
-      "components": 10
+      "components": 11
     },
     "teaching-devops-knowledge": {
       "fixed_layout": "teaching-fixed-v1",
@@ -164,7 +164,7 @@
     },
     "teaching-security-space": {
       "fixed_layout": "teaching-fixed-v1",
-      "components": 10
+      "components": 11
     },
     "teaching-security-assessment": {
       "fixed_layout": "teaching-fixed-v1",
@@ -172,7 +172,7 @@
     },
     "teaching-security-repair": {
       "fixed_layout": "teaching-fixed-v1",
-      "components": 10
+      "components": 11
     },
     "teaching-security-context": {
       "fixed_layout": "teaching-fixed-v1",
@@ -188,7 +188,7 @@
     },
     "teaching-finops-space": {
       "fixed_layout": "teaching-fixed-v1",
-      "components": 10
+      "components": 11
     },
     "teaching-finops-analysis": {
       "fixed_layout": "teaching-fixed-v1",
@@ -196,7 +196,7 @@
     },
     "teaching-finops-reporting": {
       "fixed_layout": "teaching-fixed-v1",
-      "components": 10
+      "components": 11
     },
     "teaching-finops-optimization": {
       "fixed_layout": "teaching-fixed-v1",
