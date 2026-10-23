@@ -29,7 +29,7 @@ def git(*args):return subprocess.check_output(['git','-C',str(ROOT),*args],text=
 
 def file_manifest():
     roots=('guides','catalog','presentations','assets','examples','tools/docs','qa')
-    paths=[ROOT/p for p in ('README.md','EDITORIAL_STANDARD.md','CHANGELOG.md','PUBLISHING.md','SCOPE.md','VALIDATION.md','index.html','documentation-build.json','.github/workflows/document-suite.yml')]
+    paths=[ROOT/p for p in ('README.md','EDITORIAL_STANDARD.md','CHANGELOG.md','PUBLISHING.md','SCOPE.md','VALIDATION.md','index.html','AUTHORING.md','markdown-build.json','.github/workflows/document-suite.yml')]
     for root in roots:paths.extend(p for p in (ROOT/root).rglob('*') if p.is_file() and '__pycache__' not in p.parts)
     return {p.relative_to(ROOT).as_posix():{'bytes':p.stat().st_size,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in sorted(set(paths)) if p.exists()}
 
