@@ -8,7 +8,63 @@ The guide separates workspace organization, assessment definition, context, invo
 
 **Reading conventions.** These capability dimensions are editorial. The DevOps custom-agent, skill, memory-store, and trigger types are not assumed to exist here. Official sources identify Security Agent's own facilities. DOC/AWS/EXT colors retain the approved ownership convention. Worked examples and verification instructions are team guidance, not executed assessments.
 
-## 01. Workspace and resource organization
+Start with the agent overview and workflow walkthroughs. Use the subsequent capability chapters for detailed setup, lifecycle behavior and troubleshooting. The use-case catalog remains separate and unchanged.
+
+## 01. The agent and its operating context
+
+Start with one execution, then add coordinated responsibilities and the surrounding access scope. The same diagram is reused in the workflow walkthroughs.
+
+### S-90 — What AWS Security Agent executes
+
+AWS Security Agent performs application-security assessments using the sources, criteria, target access and assessment settings configured for the selected work. The public operating model exposes code review, design review, threat modeling and penetration testing, together with finding and remediation operations. It does not expose the DevOps managed-agent roster or an equivalent customer-defined prompt/tool/skill composition. [SS701] [SS702]
+
+![Security assessment composition](../assets/diagrams/teaching-security-agent.svg)
+
+Begin with the question and its evidence. Reviewing a proposed design uses supplied documents and applicable requirements. A source review identifies a code revision. A dynamic assessment needs a deployed target and permitted identity. These inputs cannot be substituted merely because every operation returns findings. Assessment settings, criteria, application context, access and results therefore occupy distinct positions in the diagram. [SS701]
+
+The figure is an explanatory view, not a claim that each box is a separately creatable resource. The approved resource model defines the actual application and shared configuration objects.
+
+### S-91 — How assessment, remediation and verification are coordinated
+
+The useful coordination model is the lineage of work: an assessment produces a finding; a remediation operation can propose a code change; the application team reviews and deploys it; a subsequent verification evaluates the deployed result. The proposal, deployment and verification record remain different objects. [SS701] [SS703]
+
+![Assessment and result lineage](../assets/diagrams/teaching-security-coordination.svg)
+
+These arrows explain responsibilities and evidence handoff. They do not invent named internal peer agents or promise an automatic end-to-end repair loop. Revalidation repeats validation for selected existing findings and retains its relationship to the earlier finding. It is not a new broad discovery run. The original evidence remains necessary to interpret the later result. [SS703]
+
+One-off design reviews and reusable code-review, threat-model or penetration-test configurations also have different execution lifecycles. The detailed procedure must use the lifecycle of the actual assessment rather than a generic instruction to rerun every review. [SS702]
+
+### S-92 — Application Agent Spaces and shared assessment criteria
+
+An Agent Space represents an application or project. It selects application sources, user assignments, assessment configuration and result records. Some facilities, including shared requirement packs and provider registration, have broader scope and are referenced by application work. The diagram's selected-criteria box does not imply that the application owns the shared pack. [SS702]
+
+![Application scope and referenced criteria](../assets/diagrams/teaching-security-space.svg)
+
+Repository authorization, selecting the repository for an application, deciding how it is used, reaching a test endpoint and resolving a test credential are separate configuration decisions. A source registration is not permission to test every deployed application, and retrieving a secret is not proof of successful login as the expected role. The detailed access and authentication chapters explain those paths. [SS701] [SS702]
+
+## 02. Essential operational workflows
+
+Follow the existing use cases through inputs, context, authorized operations, outputs and the decisions that require an engineer. Teaching priority is an editorial choice, not an AWS ranking.
+
+### S-93 — Assessment and finding-resolution workflows
+
+The teaching sequence follows a complete assessment-and-resolution cycle before introducing less frequent configuration details. This is an editorial priority for development and security teams, not an AWS ranking. All approved cases retain their definitions.
+
+![Assessment inputs, access and outputs](../assets/diagrams/teaching-security-assessment.svg)
+
+Start with [assessing a running application](../catalog/UC-S01.html) or [reviewing source code](../catalog/UC-S02.html). The input contract specifies the target or revision, scope, criteria and authorized effects. Public/private connectivity and authentication are variants of the assessment, not new agent types. Interpret findings within the surface that was actually reachable. [SS701]
+
+![Finding-to-verification path](../assets/diagrams/teaching-security-repair.svg)
+
+Then [triage findings](../catalog/UC-S05.html), [prepare a remediation proposal](../catalog/UC-S06.html), and [revalidate after repair](../catalog/UC-S07.html). Record the finding identity, proposed revision, deployed revision and test identity. A finding disposition or merged pull request alone does not establish that the target was repaired. [SS701] [SS703]
+
+Earlier feedback is addressed through [design review](../catalog/UC-S03.html), [threat modeling](../catalog/UC-S04.html), and [security-requirement consolidation](../catalog/UC-S08.html). These use different subjects and lifecycles. Requirement maintenance supplies criteria; application context supplies evidence; retained login procedures and eligible finding personalization supply narrowly scoped reuse rather than universal cross-run memory. S-M03, S-M02 and S-13 explain the respective mechanisms. [SS702]
+
+![Specific retained state and its consumer](../assets/diagrams/teaching-security-context.svg)
+
+The capability chapters below retain the detailed configuration procedures and product-specific constraints. The supplied S-U01 exercise traces a finding through a proposed and deployed repair without asserting that a live assessment was performed.
+
+## 03. Workspace and resource organization
 
 Shared settings, application Agent Spaces, and assessment records have distinct scopes.
 
@@ -53,7 +109,7 @@ These differences determine both operation and failure diagnosis. A draft config
 
 Some relationships deliberately remain unspecified. The public guidance documents retained login reuse but does not establish an independently editable skill resource for it. The diagrams use `?` where counts or parent fields are not documented, rather than inventing a universal resource schema. See the [qualified relationship register](../catalog/resource-models.html#model-security) before translating any diagram into implementation assumptions.
 
-## 02. Assessment definition and customization
+## 04. Assessment definition and customization
 
 Assessment-specific settings select targets, sources, criteria, and effects; they are not custom-agent definitions.
 
@@ -71,7 +127,7 @@ The configurable unit is the selected assessment. A penetration-test definition 
 
 A saved configuration is not a run. Changes to it govern subsequent work, while an earlier run retains its own findings. Design reviews use cloning rather than rerunning one reusable configuration. S-10 describes these resource relationships; S-04 covers execution. [SS501]
 
-## 03. Application knowledge and assessment criteria
+## 05. Application knowledge and assessment criteria
 
 Application context, requirements, retained login procedures, and finding preferences have distinct producers and consumers.
 
@@ -127,7 +183,7 @@ This is separate from Login Optimization: one reuses finding preferences; the ot
 
 ![Login reuse and finding personalization](../assets/diagrams/mechanism-security-learning.svg)
 
-## 04. Assessment invocation
+## 06. Assessment invocation
 
 Manual assessment requests, supported repository events, and pipeline callers initiate the appropriate function.
 
@@ -141,7 +197,7 @@ A CI/CD caller invokes the configured assessment through the documented integrat
 
 The reviewed resource lifecycle does not establish one generic trigger object shared by all assessment types. Use the function-specific invocation procedure and keep scheduled or repository-triggered behavior distinct from the saved assessment definition.
 
-## 05. External system integrations
+## 07. External system integrations
 
 Source-provider authorization, application-source selection, and publication permissions are separate settings.
 
@@ -175,7 +231,7 @@ Private source-control access, penetration-test network access, and credential r
 
 Publishing a finding to Jira is a destination operation. The site registration supplies authorization, the Agent Space selects a project and allowed create/comment actions, and publication creates an external record. Removing an integration does not remove the already-created issue. This configuration is different from attaching a source repository for analysis. [SS415] [SS416] [SS417]
 
-## 06. Network connectivity
+## 08. Network connectivity
 
 Private source access and private application access are independent network paths.
 
@@ -187,7 +243,7 @@ For a private assessment target, configure the documented VPC access and the nec
 
 The target list also has scope semantics. A supporting login or content endpoint may need access without becoming a test target. The Target, Accessible, and Out-of-scope rules in S-03 describe that distinction. Network troubleshooting should preserve the authorized test surface rather than remove exclusions to obtain a successful connection. [SS08]
 
-## 07. Execution and assessment controls
+## 09. Execution and assessment controls
 
 Target rules, credential resolution, and run state determine the scope and conditions of a dynamic assessment.
 
@@ -254,7 +310,7 @@ Task-hours aggregate work across concurrent tasks; they are not wall-clock durat
 
 **Engineering run record:** capture the configuration ID, target revision, authenticated roles, exclusions, run ID, configured limit, start/end times and incomplete areas. Inspect findings and execution/log evidence while the run operates. Stop on unexpected effects; preserve an incomplete outcome rather than relabeling it a pass. These recordkeeping recommendations do not add product-level guarantees.
 
-## 08. Managed assessment and remediation workflows
+## 10. Managed assessment and remediation workflows
 
 Code/design review, threat modeling, finding handling, repair proposals, and revalidation produce different records.
 
@@ -294,7 +350,7 @@ After a repair reaches the original test environment, open the completed penetra
 
 The original finding is preserved and linked to the new job. A non-reproduction result is scoped to that finding and execution conditions. An authentication or environment failure can undermine its interpretation; inspect reachability before treating a result as evidence of repair. [SS13]
 
-## 09. Interaction surfaces and outputs
+## 11. Interaction surfaces and outputs
 
 Console administration, assessment workspaces, source comments, findings, and external issues are distinct surfaces.
 
@@ -313,7 +369,7 @@ The Management Console provides administrative configuration and access manageme
 
 A generated remediation proposal is not a deployed revision. A repository comment is not a penetration-test execution. A linked Jira issue tracks work in another system. Preserve the originating assessment and finding identifiers across those surfaces. S-05 and S-11 provide the detailed result lifecycle. [SS501] [SS502]
 
-## 10. Administration, security, and limits
+## 12. Administration, security, and limits
 
 User access, encryption identities, and execution limits require product-specific configuration.
 
@@ -366,7 +422,7 @@ The reviewed quota page distinguishes assessment capacity from spending controls
 
 This ordering is engineering guidance derived from the cited procedures. It does not claim that every error message has one unique cause. [SS06] [SS09] [SS18]
 
-## 11. Appendix: worked example and reference material
+## 13. Worked example and reference material
 
 Follow the approved finding workflow and inspect the prepared evidence without changing the use-case catalog.
 
@@ -509,3 +565,6 @@ The source register supports product behavior rather than the synthetic applicat
 [SS56]: https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html
 [SS57]: https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart-threat-model.html
 [SS58]: https://docs.aws.amazon.com/securityagent/latest/userguide/connect-jira.html
+[SS701]: https://docs.aws.amazon.com/securityagent/latest/userguide/how-it-works.html
+[SS702]: https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html
+[SS703]: https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html
