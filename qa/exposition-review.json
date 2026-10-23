@@ -90,5 +90,7 @@
       "minutes": 38,
       "exercise_minutes": 4
     }
-  }
+  },
+  "link_review": "References to previously combined remote/release sections now resolve to the authored managed-workflow explanations; custom definition and invocation references are distinguished without rewriting frozen records.",
+  "source_qualification_review": "Removed unsupported newer/older wording in retained DevOps notes; dated changes and retrieval discrepancies remain explicit."
 }
