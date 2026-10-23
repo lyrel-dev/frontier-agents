@@ -76,6 +76,25 @@ def guard_checks():
             assert 'Reviewed paragraph' in path.read_text() and 'Second paragraph must remain unchanged.' in path.read_text()
             assert path.read_text().count('<!-- block:')==2
             path.write_text(raw);outcomes.append('dry-run and exact Unicode block replacement')
+            scoped=deepcopy(review)
+            scoped['comments'][0]['scope']='text'
+            scoped['comments'][0]['selector']={'type':'TextQuoteSelector','exact':'First'}
+            changes,_=guard.plan(scoped,patch)
+            assert 'Reviewed paragraph' in changes[path]['after']
+            outcomes.append('exact selected text can be edited without widening block scope')
+            def reject_text(proposal):
+                try:guard.plan(scoped,proposal)
+                except (ValueError,KeyError,TypeError):pass
+                else:raise AssertionError('Text review authorized edits outside its quote')
+            widened=deepcopy(patch)
+            widened['edits'][0]['after']=edit['before'].replace('First','Reviewed').replace('paragraph','sentence')
+            reject_text(widened)
+            ambiguous=deepcopy(scoped)
+            ambiguous['comments'][0]['selector']['exact']='with paragraph'
+            try:guard.plan(ambiguous,patch)
+            except (ValueError,KeyError,TypeError):pass
+            else:raise AssertionError('Nonmatching rendered quote accepted for patch')
+            outcomes.append('text selection rejects edits outside quote and unmappable selections')
             def reject(label,packet=review,proposal=patch):
                 snapshot=path.read_bytes()
                 try:guard.plan(packet,proposal)
