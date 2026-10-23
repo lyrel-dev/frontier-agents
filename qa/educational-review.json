@@ -39,5 +39,22 @@
     "resource-models": "4565514f203edd099b20fdc1472a3a1472696e147952f838e2163efe2947aa42"
   },
   "priority_basis": "Audience-based editorial order, not AWS ranking.",
-  "live_aws_execution": false
+  "live_aws_execution": false,
+  "visual_review": {
+    "basis": "Rendered the branch DevOps coordination SVG locally and inspected its label and connector layout.",
+    "findings": [
+      "A responsibility caption touched the execution-box border.",
+      "Arrow origins were inside resized boxes.",
+      "Generic execution wording obscured the managed-incident view.",
+      "The publication path needed an explicit external destination."
+    ],
+    "corrections": [
+      "Move coordination note to the figure footer.",
+      "Terminate paths at current box boundaries.",
+      "Add named responsibilities and concise action descriptions.",
+      "Use product-specific external destination with a qualified publication path.",
+      "Use larger diagram labels and numbered reading steps; retain frozen ownership colors."
+    ],
+    "validation": "The amended views are subsequently checked in the browser for text bounds and layout; the inspected prior image is not claimed as an amended-output screenshot."
+  }
 }
