@@ -1,4 +1,4 @@
-/* Contextual source annotations. Read-only content; no network or LLM calls. */
+/* Contextual notes. Automatic local persistence; explicit authenticated backend adapter only. */
 (() => {
   'use strict';
   const sourceNode = document.getElementById('review-source-map');
@@ -11,6 +11,8 @@
   const allBlocks = [...document.querySelectorAll('[data-review-block]')];
   let active = null, anchor = null, quote = null, selectionRect = null;
   let pending = null, editing = null, replying = null, threadBlock = null;
+  let replyDraftId = null, backend = null, backendSession = null, backendBusy = false;
+  let backendGeneration = 0;
   let panelAnchor = null, returnFocus = null, drag = null, suppressClick = false;
   let storageOK = true, hideTimer = null, layoutFrame = null, selectionTimer = null;
   const uid = () => globalThis.crypto?.randomUUID?.() || 'review-' + Date.now() + '-' + Math.random().toString(36).slice(2);
@@ -41,7 +43,7 @@
   function surface(tag, attrs = {}) {
     const el = node(tag,{'data-review-ui':'true',...attrs});
     el.addEventListener('keydown',event => {
-      if (event.key === 'Escape') { event.preventDefault(); closePanel(); clearSelection(); }
+      if (event.key === 'Escape') { event.preventDefault(); closePanel(); clearSelection(); if (globalMenu.open) globalMenu.close(); }
       event.stopPropagation();
     });
     return el;
@@ -55,9 +57,9 @@
   }
   let notes = readStore();
   function saveStore() {
-    try { localStorage.setItem(STORE,JSON.stringify(notes)); }
+    try { localStorage.setItem(STORE,JSON.stringify(notes)); storageOK = true; }
     catch (_) { storageOK = false; }
-    refreshAnchors();
+    refreshAnchors(); updateLocalStatus();
   }
   function packet() {
     return {schema:SCHEMA,review_id:reviewId,repository:source.repository,exported_at:now(),coordinate_contract:source.coordinate_contract,
@@ -87,11 +89,11 @@
     const link = node('a',{href:url,download:name}); link.click(); setTimeout(()=>URL.revokeObjectURL(url),1000);
   }
 
-  // Document-wide functions stay in the document header. Annotation itself has no mode switch.
-  const documentTools = surface('nav',{id:'review-document-tools','aria-label':'Document search and notes'});
+  // Global actions are separate from the note popup; no annotation mode is required.
+  const documentTools = surface('nav',{id:'review-document-tools','aria-label':'Document search and annotations'});
+  const localStatus = node('span',{id:'review-local-status',role:'status','aria-live':'polite'},'Automatic local save');
   documentTools.append(button('Search all',()=>{ searchDialog.showModal(); searchInput.focus(); },{id:'review-search-open'}),
-    button('Document note',()=>composeDocument(),{id:'review-document-note'}),
-    button('Notes',()=>openCollection(),{id:'review-notes-open'}));
+    button('Annotations',()=>openCollection(),{id:'review-notes-open','aria-haspopup':'dialog'}), localStatus);
   (document.querySelector('main') || document.body).prepend(documentTools);
 
   // Portalled controls do not insert buttons/text into paragraphs, lists, tables or source offsets.
@@ -114,32 +116,37 @@
   const markerLayer = surface('div',{id:'review-markers','aria-label':'Anchored comments'}); document.body.append(markerLayer);
   const markers = new Map();
 
-  const panel = surface('aside',{id:'review-drawer',role:'dialog','aria-modal':'false','aria-label':'Comments on selected content',hidden:true});
+  // The anchored popup contains only the note/thread and its editing actions.
+  const panel = surface('aside',{id:'review-drawer',role:'dialog','aria-modal':'false','aria-label':'Note',hidden:true});
   const panelHeading = node('div',{class:'review-panel-heading'});
-  const panelTitle = node('h2',{},'Comments');
-  panelHeading.append(panelTitle,button('Close',()=>closePanel(),{'aria-label':'Close comments'}));
-  const status = node('p',{id:'review-status',role:'status'});
-  const targetInfo = node('p',{id:'review-target-summary',class:'review-help'});
-  const excerpt = node('blockquote',{id:'review-context-quote',hidden:true});
+  const panelTitle = node('h2',{},'Note');
+  panelHeading.append(panelTitle,button('Close',()=>closePanel(),{'aria-label':'Close note'}));
   const editor = node('div',{id:'review-composer',hidden:true});
-  const author = node('input',{id:'review-author',placeholder:'Reviewer name (optional)','aria-label':'Reviewer name'});
-  const kind = node('select',{id:'review-kind','aria-label':'Annotation type'});
-  kind.append(node('option',{value:'comment'},'Comment'),node('option',{value:'note'},'Note'));
-  const text = node('textarea',{id:'review-text',rows:4,placeholder:'Describe the correction or add a note.','aria-label':'Comment or note'});
-  const save = button('Save comment',()=>commit(),{id:'review-save'});
-  editor.append(author,kind,text,save,button('Cancel',()=>{ editor.hidden=true;pending=null;editing=null;replying=null; },{id:'review-cancel'}));
-  const filter = node('select',{id:'review-note-filter','aria-label':'Filter comments'});
-  for (const [value,label] of [['anchor','This element'],['page','This document'],['all','All stored documents'],['open','Open comments']]) filter.append(node('option',{value},label));
-  filter.addEventListener('change',()=>renderThreads());
+  // Author/kind remain annotation metadata, not form controls in the note popup.
+  const author = {value:''}, kind = {value:'comment'};
+  const text = node('textarea',{id:'review-text',rows:4,placeholder:'Write a note…','aria-label':'Note text'});
+  const save = button('Done',()=>commit(),{id:'review-save',title:'Close the editor. Changes are saved locally as you type.'});
+  editor.append(text,save);
   const threads = node('div',{id:'review-threads'});
-  const io = node('details',{class:'review-io'}); io.append(node('summary',{},'Export, import and storage'));
-  io.append(node('p',{class:'review-help'},location.protocol==='file:'?'Notes stay in this browser. Use localhost for predictable cross-page storage; export before clearing browser data.':'Notes stay in this browser on this origin. Export to back up or share; nothing is sent automatically.'));
-  io.append(button('Export JSON',()=>download('frontier-review.json',JSON.stringify(packet(),null,2),'application/json'),{id:'review-export'}),
-    button('Export LLM request',()=>download('frontier-review-request.md',prompt(),'text/markdown'),{id:'review-export-prompt'}),
+  panel.append(panelHeading,editor,threads); document.body.append(panel);
+
+  // One document-level menu owns collection management and all I/O operations.
+  const globalMenu = surface('dialog',{id:'review-global-menu','aria-label':'Annotation menu'});
+  const globalHeading = node('div',{class:'review-panel-heading'});
+  globalHeading.append(node('h2',{},'Annotations'),button('Close',()=>globalMenu.close(),{'aria-label':'Close annotation menu'}));
+  const status = node('p',{id:'review-status',role:'status'});
+  const storageStatus = node('p',{id:'review-storage-status',class:'review-help',role:'status'});
+  const globalActions = node('div',{class:'review-global-actions'});
+  globalActions.append(button('Add document note',()=>{globalMenu.close();composeDocument();},{id:'review-document-note'}));
+  const io = node('section',{class:'review-global-actions','aria-label':'Export and import'});
+  io.append(button('Export JSON',()=>{autosave();download('frontier-review.json',JSON.stringify(packet(),null,2),'application/json');},{id:'review-export'}),
+    button('Export LLM request',()=>{autosave();download('frontier-review-request.md',prompt(),'text/markdown');},{id:'review-export-prompt'}),
     button('Copy LLM request',async()=>{
-      try { await navigator.clipboard.writeText(prompt());status.textContent='Request copied. Nothing was sent automatically.'; }
+      autosave();
+      try { await navigator.clipboard.writeText(prompt());status.textContent='Request copied. Nothing was sent to an LLM.'; }
       catch (_) { status.textContent='Clipboard unavailable; use Export LLM request.'; }
     },{id:'review-copy'}));
+  const importLabel = node('label',{for:'review-import',class:'review-help'},'Import annotations');
   const importInput = node('input',{type:'file',id:'review-import',accept:'.json,application/json','aria-label':'Import review JSON'});
   importInput.addEventListener('change',async()=>{
     const file = importInput.files[0]; if (!file) return;
@@ -149,12 +156,108 @@
       const merged=new Map(notes.map(note=>[note.id,note]));
       for (const note of incoming.comments) if (!merged.has(note.id) || note.updated_at>merged.get(note.id).updated_at) merged.set(note.id,note);
       const combined=[...merged.values()];validatePacket({schema:SCHEMA,comments:combined});notes=combined;
-      saveStore();filter.value='all';renderThreads();status.textContent=`Imported ${incoming.comments.length} annotations. Stale source references are not reassigned.`;
+      saveStore();filter.value='all';renderCollection();status.textContent=`Imported ${incoming.comments.length} annotations. Stale source references are not reassigned.`;
     } catch (error) { status.textContent='Import rejected: '+error.message; }
     importInput.value='';
   });
-  io.append(importInput);
-  panel.append(panelHeading,targetInfo,excerpt,status,editor,filter,threads,io); document.body.append(panel);
+  const backendStatus = node('p',{id:'review-backend-status',class:'review-help',role:'status'},'No backend is connected. Notes are saved in this browser.');
+  const backendButton = button('Save to backend',()=>saveBackend(),{id:'review-backend-save',disabled:true});
+  const backendSection = node('section',{class:'review-global-section','aria-label':'Backend storage'});
+  backendSection.append(backendButton,backendStatus);
+  const clearActions = node('section',{class:'review-global-actions','aria-label':'Clear local annotations'});
+  clearActions.append(button('Clear this document',()=>clearNotes('document'),{id:'review-clear-document'}),
+    button('Clear all local annotations',()=>clearNotes('all'),{id:'review-clear-all'}));
+  const filter = node('select',{id:'review-note-filter','aria-label':'Filter annotations'});
+  for(const [value,label] of [['page','This document'],['all','All stored documents'],['open','Open notes']])filter.append(node('option',{value},label));
+  filter.addEventListener('change',()=>renderCollection());
+  const collection = node('div',{id:'review-collection'});
+  globalMenu.append(globalHeading,storageStatus,status,globalActions,io,importLabel,importInput,backendSection,clearActions,
+    node('p',{class:'review-help'},'Clear removes local notes, comments and replies only; it does not delete a previously saved backend copy.'),filter,collection);
+  document.body.append(globalMenu);
+  globalMenu.addEventListener('close',()=>{if(panel.hidden)document.querySelector('#review-notes-open').focus({preventScroll:true});});
+
+  function updateLocalStatus() {
+    const message=storageOK?'Saved locally automatically':'Local save unavailable — export your notes';
+    localStatus.textContent=message;localStatus.dataset.state=storageOK?'saved':'failed';
+    storageStatus.textContent=storageOK
+      ? 'Notes and replies are saved in this browser as you type. Backend saving is a separate, explicit action.'
+      : 'Browser storage failed or is unavailable. Your current notes remain in memory; export them before closing this page.';
+  }
+  function clearNotes(scope) {
+    const question=scope==='all'?'Clear every local note, comment and reply on this browser origin?':'Clear this document’s local notes, comments and replies?';
+    if(!confirm(question+' Previously saved backend copies will not be deleted.'))return;
+    closePanel();pending=null;editing=null;replying=null;replyDraftId=null;text.value='';
+    notes=scope==='all'?[]:notes.filter(note=>note.document!==source.document);
+    clearSelection();saveStore();renderCollection();
+    status.textContent=storageOK?'Local annotations cleared. Backend copies were not changed.':'Cleared in memory, but local storage could not be updated.';
+  }
+  function renderCollection() {
+    collection.replaceChildren();
+    const values=notes.filter(note=>filter.value==='all'||filter.value==='open'&&note.status==='open'||filter.value==='page'&&note.document===source.document);
+    if(!values.length)collection.append(node('p',{},'No annotations in this view.'));
+    for(const item of values){
+      const card=node('article',{class:'review-collection-entry','data-comment-id':item.id});
+      card.append(node('h3',{},item.document_title||item.document),node('p',{class:'review-comment-body'},item.body||'Empty note'));
+      if(stale(item))card.append(node('p',{class:'review-warning'},'Source changed. Review this anchor before editing the source.'));
+      const target=allBlocks.find(block=>item.targets.some(t=>t.block_id===block.dataset.reviewBlock&&t.path===source.targets[t.block_id]?.path));
+      if(target || item.document===source.document){
+        card.append(button('Open note',()=>{
+          globalMenu.close();
+          if(target&&item.scope!=='document'){reveal(target);target.scrollIntoView({block:'center'});openThreads(target);}
+          else {threadBlock=null;showPanel(null);editor.hidden=true;renderThreads();}
+        }));
+      } else if(/^[A-Za-z0-9_./-]+\.html$/.test(item.document)&&!item.document.split('/').includes('..')){
+        const prefix='../'.repeat(source.document.split('/').length-1);
+        card.append(node('a',{href:prefix+item.document},'Open document'));
+      }
+      collection.append(card);
+    }
+  }
+  async function setBackend(adapter) {
+    if(adapter!==null&&(!adapter||typeof adapter.getSession!=='function'||typeof adapter.saveReview!=='function'))throw new TypeError('Backend requires getSession() and saveReview(packet, options)');
+    backend=adapter;backendSession=null;backendGeneration++;
+    return refreshBackend();
+  }
+  function requestWithTimeout(operation) {
+    const controller=new AbortController();let timer;
+    const timeout=new Promise((_,reject)=>{timer=setTimeout(()=>{controller.abort();reject(new Error('Backend request timed out'));},15000);});
+    return Promise.race([Promise.resolve().then(()=>operation(controller.signal)),timeout]).finally(()=>clearTimeout(timer));
+  }
+  async function refreshBackend() {
+    const adapter=backend, generation=backendGeneration;
+    backendButton.disabled=true;
+    if(!adapter){backendSession=null;backendStatus.textContent='No backend is connected. Notes are saved in this browser.';return;}
+    if(backendBusy)return;
+    backendStatus.textContent='Checking the connected user…';
+    try {
+      const session=await requestWithTimeout(signal=>adapter.getSession({signal}));
+      if(adapter!==backend||generation!==backendGeneration)return;
+      backendSession=session&&typeof session.user?.id==='string'&&session.user.id.trim()?session:null;
+      backendButton.disabled=!backendSession;
+      backendStatus.textContent=backendSession?'Connected as '+(session.user.displayName||session.user.id)+'. Save explicitly to copy these annotations to the backend.':'Sign in through the host application to save to the backend. Local saving remains active.';
+    } catch(error) {
+      if(adapter!==backend||generation!==backendGeneration)return;
+      backendSession=null;backendStatus.textContent='Backend session unavailable: '+error.message+'. Local notes are retained.';
+    }
+  }
+  async function saveBackend() {
+    if(backendBusy)return;
+    autosave();await refreshBackend();
+    if(!backendSession||!backend)return;
+    const adapter=backend, generation=backendGeneration, userId=backendSession.user.id, snapshot=packet();
+    backendBusy=true;backendButton.disabled=true;backendStatus.textContent='Saving a copy to the backend…';
+    try {
+      const receipt=await requestWithTimeout(signal=>adapter.saveReview(copy(snapshot),{signal}));
+      if(adapter!==backend||generation!==backendGeneration)throw new Error('Backend connection changed during saving');
+      const session=await requestWithTimeout(signal=>adapter.getSession({signal}));
+      if(session?.user?.id!==userId)throw new Error('Connected user changed; verify the backend result');
+      if(receipt?.saved!==true||typeof receipt.id!=='string'||!receipt.id.trim())throw new Error('Backend did not confirm a saved record');
+      const newer=JSON.stringify(snapshot.comments)!==JSON.stringify(notes);
+      backendStatus.textContent='Backend confirmed '+receipt.id+'. '+(newer?'Newer local changes have not been sent.':'Local annotations are also retained.');
+    } catch(error) {
+      backendStatus.textContent='Backend save failed: '+error.message+'. Local annotations are retained.';
+    } finally {backendBusy=false;backendButton.disabled=!backendSession||adapter!==backend;}
+  }
 
   function associated(note,bid) { return note.scope!=='document' && note.targets.some(t=>t.block_id===bid && t.path===source.targets[bid]?.path); }
   function stale(note) {
@@ -196,82 +299,92 @@
   function clearSelection() {
     selected.clear();anchor=null;quote=null;selectionRect=null;paintSelection();
   }
-  function contextQuote(targets,selector) {
-    if(selector?.exact)return selector.exact;
-    const block=active && targets.some(t=>t.block_id===active.dataset.reviewBlock)?active:allBlocks.find(b=>targets.some(t=>t.block_id===b.dataset.reviewBlock));
-    return block?.textContent?.trim().slice(0,300) || '';
-  }
-  function showPanel(element,view='anchor') {
-    returnFocus=document.activeElement;panelAnchor=element || null;panel.hidden=false;
-    panel.dataset.context=element?'element':'document';filter.value=view;
-    gutter.hidden=true;selectionTools.hidden=true;status.textContent='';scheduleLayout();
+  function showPanel(element) {
+    returnFocus=document.activeElement;panelAnchor=element||null;panel.hidden=false;
+    panel.dataset.context=element?'element':'document';panelTitle.textContent='Note';
+    gutter.hidden=true;selectionTools.hidden=true;scheduleLayout();
   }
   function compose(element) {
-    if(!selected.size && element)choose(element);
+    closePanel();
+    if(!selected.size&&element)choose(element);
     if(!selected.size)return;
     const targets=copy([...selected].map(bid=>source.targets[bid]).filter(Boolean));
     pending={scope:quote?'text':'blocks',targets,selector:quote?copy(quote):null};
-    threadBlock=targets[0]?.block_id;editing=null;replying=null;
-    showPanel(element,'anchor');panelTitle.textContent='Comment on '+(quote?'selected text':targets.length===1?labelFor(element):targets.length+' blocks');
-    targetInfo.textContent=targets.length+' source block(s) · '+[...new Set(targets.map(t=>t.path))].join(', ');
-    if(targets.some(t=>t.protected))targetInfo.textContent+=' · Frozen source: comments do not authorize edits.';
-    excerpt.textContent=contextQuote(targets,quote);excerpt.hidden=!excerpt.textContent;
-    editor.hidden=false;kind.value='comment';text.value='';save.textContent='Save comment';renderThreads();text.focus({preventScroll:true});scheduleLayout();
+    threadBlock=targets[0]?.block_id;editing=null;replying=null;replyDraftId=null;
+    showPanel(element);editor.hidden=false;kind.value='comment';author.value=backendSession?.user?.displayName||'';text.value='';
+    renderThreads();text.focus({preventScroll:true});scheduleLayout();
   }
   function composeDocument() {
-    pending={scope:'document',targets:copy(Object.values(source.targets)),selector:null};threadBlock=null;editing=null;replying=null;
-    showPanel(null,'page');panelTitle.textContent='Document note';targetInfo.textContent=source.title;
-    excerpt.hidden=true;editor.hidden=false;kind.value='note';text.value='';save.textContent='Save note';renderThreads();text.focus({preventScroll:true});
+    closePanel();pending={scope:'document',targets:copy(Object.values(source.targets)),selector:null};
+    threadBlock=null;editing=null;replying=null;replyDraftId=null;
+    showPanel(null);editor.hidden=false;kind.value='note';text.value='';renderThreads();text.focus({preventScroll:true});
   }
   function openCollection() {
-    pending=null;threadBlock=null;showPanel(null,'page');panelTitle.textContent='Document notes';targetInfo.textContent=source.title;
-    excerpt.hidden=true;editor.hidden=true;renderThreads();filter.focus({preventScroll:true});
+    closePanel();clearSelection();filter.value='page';renderCollection();updateLocalStatus();status.textContent='';
+    if(!globalMenu.open)globalMenu.showModal();refreshBackend();
   }
   function openThreads(element) {
-    pending=null;editing=null;replying=null;threadBlock=element.dataset.reviewBlock;activate(element);
-    showPanel(element,'anchor');panelTitle.textContent='Comments on '+labelFor(element);targetInfo.textContent=source.targets[threadBlock]?.path || '';
-    excerpt.textContent=element.textContent.trim().slice(0,300);excerpt.hidden=!excerpt.textContent;
-    editor.hidden=true;renderThreads();panelHeading.querySelector('button').focus({preventScroll:true});
+    closePanel();pending=null;editing=null;replying=null;replyDraftId=null;threadBlock=element.dataset.reviewBlock;activate(element);
+    showPanel(element);editor.hidden=true;renderThreads();panelHeading.querySelector('button').focus({preventScroll:true});
   }
   function closePanel() {
-    panel.hidden=true;pending=null;editing=null;replying=null;editor.hidden=true;panelAnchor=null;
-    if(returnFocus?.isConnected && visible(returnFocus))returnFocus.focus({preventScroll:true});
+    autosave();panel.hidden=true;pending=null;editing=null;replying=null;replyDraftId=null;editor.hidden=true;panelAnchor=null;
+    if(returnFocus?.isConnected&&visible(returnFocus))returnFocus.focus({preventScroll:true});
     paintSelection();
   }
-  function commit() {
-    const body=text.value.trim();if(!body){status.textContent='Write a comment before saving.';return;}
-    if(body.length>100000){status.textContent='Comment exceeds 100,000 characters.';return;}
-    const timestamp=now();let item;
-    if(replying){item=notes.find(n=>n.id===replying);if(!item)return;item.replies||=[];item.replies.push({id:uid(),body,author:author.value.trim(),created_at:timestamp});item.updated_at=timestamp;}
-    else if(editing){item=notes.find(n=>n.id===editing);if(!item)return;item.body=body;item.author=author.value.trim();item.updated_at=timestamp;}
-    else {
-      if(!pending){status.textContent='Select content again before adding a new comment.';return;}
-      if(notes.length>=2000){status.textContent='Export and remove old notes before adding more (2,000 limit).';return;}
+  function autosave() {
+    if(editor.hidden||panel.hidden||!pending&&!editing&&!replying)return;
+    const body=text.value;
+    if(body.length>100000){localStatus.textContent='Note exceeds 100,000 characters; newest input is not saved';localStatus.dataset.state='failed';return;}
+    const timestamp=now();let item,changed=false;
+    if(replying){
+      item=notes.find(n=>n.id===replying);if(!item)return;
+      item.replies||=[];let reply=item.replies.find(r=>r.id===replyDraftId);
+      if(!reply){if(!body.trim())return;reply={id:uid(),body,author:author.value.trim(),created_at:timestamp};replyDraftId=reply.id;item.replies.push(reply);changed=true;}
+      else if(reply.body!==body){reply.body=body;changed=true;}
+      if(changed)item.updated_at=timestamp;
+    } else if(editing){
+      item=notes.find(n=>n.id===editing);if(!item)return;
+      if(item.body!==body){item.body=body;item.updated_at=timestamp;changed=true;}
+    } else {
+      if(!body.trim()||!pending)return;
+      if(notes.length>=2000){localStatus.textContent='Local note limit reached; export and clear older annotations';localStatus.dataset.state='failed';return;}
       item={id:uid(),kind:kind.value,body,author:author.value.trim(),status:'open',created_at:timestamp,updated_at:timestamp,
-        document:source.document,document_title:source.title,content_revision:nowSource,...copy(pending),replies:[]};notes.push(item);
+        document:source.document,document_title:source.title,content_revision:nowSource,...copy(pending),replies:[]};
+      notes.push(item);editing=item.id;pending=null;changed=true;
     }
-    saveStore();pending=null;editing=null;replying=null;editor.hidden=true;text.value='';clearSelection();
-    renderThreads();status.textContent=storageOK?'Saved locally and anchored to the source.':'Saved in memory only; export now.';
+    if(changed)saveStore();
+  }
+  text.addEventListener('input',autosave);
+  window.addEventListener('pagehide',autosave);
+  document.addEventListener('visibilitychange',()=>{if(document.hidden)autosave();});
+  function commit() {
+    autosave();pending=null;editing=null;replying=null;replyDraftId=null;editor.hidden=true;text.value='';
+    clearSelection();renderThreads();
   }
   function renderThreads() {
     threads.replaceChildren();
-    const values=notes.filter(n=>filter.value==='all' || filter.value==='open'&&n.status==='open' || filter.value==='page'&&n.document===source.document || filter.value==='anchor'&&threadBlock&&associated(n,threadBlock));
-    if(!values.length)threads.append(node('p',{},'No comments on this selection.'));
+    const values=notes.filter(note=>threadBlock?associated(note,threadBlock):note.scope==='document'&&note.document===source.document);
     for(const item of values){
+      if(editing===item.id&&!editor.hidden)continue;
       const card=node('section',{class:'review-thread','data-comment-id':item.id});
-      card.append(node('h3',{},`${item.kind==='note'?'Note':'Comment'} · ${item.status}`));
-      if(filter.value!=='anchor')card.append(node('p',{class:'review-help'},item.document_title||item.document));
-      if(stale(item))card.append(node('p',{class:'review-warning'},'Source changed or is missing. This anchor is stale; source edits will be rejected.'));
-      card.append(node('p',{class:'review-comment-body'},item.body));
-      if(item.selector?.exact)card.append(node('blockquote',{},item.selector.exact));
-      card.append(node('p',{class:'review-help'},`${item.author||'Reviewer'} · ${item.updated_at}`));
-      if(item.targets[0])card.append(node('code',{},`${item.targets[0].path}:${item.targets[0].start_line}–${item.targets[0].end_line}`));
+      if(stale(item))card.append(node('p',{class:'review-warning'},'The source changed. Review the anchor before editing source text.'));
+      card.append(node('p',{class:'review-comment-body'},item.body||'Empty note'));
       const actions=node('div',{class:'review-actions'});
-      actions.append(button('Locate',()=>locate(item)),button('Reply',()=>{replying=item.id;editing=null;editor.hidden=false;text.value='';save.textContent='Save reply';text.focus();}),
-        button('Edit',()=>{editing=item.id;replying=null;editor.hidden=false;text.value=item.body;author.value=item.author||'';save.textContent='Save changes';text.focus();}),
-        button(item.status==='resolved'?'Reopen':'Resolve',()=>{item.status=item.status==='resolved'?'open':'resolved';item.updated_at=now();saveStore();renderThreads();}),
-        button('Delete',()=>{if(confirm('Delete this local annotation and its replies?')){notes=notes.filter(n=>n.id!==item.id);saveStore();renderThreads();}}));
-      card.append(actions);for(const reply of item.replies||[])card.append(node('p',{class:'review-reply'},`${reply.author||'Reviewer'}: ${reply.body}`));threads.append(card);
+      actions.append(button('Reply',()=>{
+        autosave();replying=item.id;editing=null;pending=null;replyDraftId=null;editor.hidden=false;text.value='';text.focus();
+      }),button('Edit',()=>{
+        autosave();editing=item.id;replying=null;pending=null;replyDraftId=null;editor.hidden=false;text.value=item.body;author.value=item.author||'';renderThreads();text.focus();
+      }),button(item.status==='resolved'?'Reopen':'Resolve',()=>{
+        autosave();item.status=item.status==='resolved'?'open':'resolved';item.updated_at=now();saveStore();renderThreads();
+      }),button('Delete',()=>{
+        if(confirm('Delete this local note and its replies?')){
+          if(editing===item.id||replying===item.id){editing=null;replying=null;pending=null;replyDraftId=null;editor.hidden=true;text.value='';}
+          notes=notes.filter(n=>n.id!==item.id);saveStore();renderThreads();
+        }
+      }));
+      for(const reply of item.replies||[])card.append(node('p',{class:'review-reply'},reply.body));
+      card.append(actions);threads.append(card);
     }
     scheduleLayout();
   }
@@ -303,7 +416,7 @@
       marker.classList.toggle('review-marker-resolved',!open.length);marker.classList.toggle('review-marker-stale',relevant.some(stale));
       markerLayer.append(marker);markers.set(block,marker);
     }
-    document.querySelector('#review-notes-open').textContent='Notes'+(notes.length?' ('+notes.length+')':'');scheduleLayout();
+    document.querySelector('#review-notes-open').textContent='Annotations'+(notes.length?' ('+notes.length+')':'');scheduleLayout();
   }
   function place(element,left,top) {
     const width=element.offsetWidth,height=element.offsetHeight;
@@ -409,7 +522,15 @@
   document.addEventListener('pointerdown',event=>{
     if(!inUI(event.target)&&!ownerBlock(event.target)&&panel.hidden){clearSelection();gutter.hidden=true;}
   });
-  window.addEventListener('storage',event=>{if(event.key===STORE){notes=readStore();refreshAnchors();if(!panel.hidden)renderThreads();}});
+  window.addEventListener('storage',event=>{
+    if(event.key===STORE){
+      notes=readStore();
+      if(editing&&!notes.some(n=>n.id===editing)||replying&&!notes.some(n=>n.id===replying)){
+        pending=null;editing=null;replying=null;replyDraftId=null;text.value='';editor.hidden=true;panel.hidden=true;
+      }
+      refreshAnchors();updateLocalStatus();if(!panel.hidden)renderThreads();if(globalMenu.open)renderCollection();
+    }
+  });
 
   const searchDialog=surface('dialog',{id:'review-search-dialog','aria-label':'Search all documentation'});
   const searchInput=node('input',{type:'search',id:'review-global-search',placeholder:'Search guides, slides, diagrams and use cases','aria-label':'Search all documentation'});
@@ -432,7 +553,11 @@
   }
   searchInput.addEventListener('input',runSearch);typeFilter.addEventListener('change',runSearch);
   searchDialog.addEventListener('keydown',event=>{if(event.key==='Escape')searchDialog.close();});
-  window.FrontierReview={exportPacket:packet,exportPrompt:prompt,validatePacket,sourceRevision:source.content_revision,interaction:'contextual-v2'};
+  window.FrontierReview={exportPacket:packet,exportPrompt:prompt,validatePacket,setBackend,sourceRevision:source.content_revision,interaction:'contextual-v3'};
+  if(window.FrontierReviewBackend){
+    setBackend(window.FrontierReviewBackend).catch(error=>{backendStatus.textContent='Invalid backend adapter: '+error.message;});
+  }
+  updateLocalStatus();
   refreshAnchors();
   let initial='';try{initial=decodeURIComponent((window.__reviewInitialHash||location.hash).slice(1));}catch(_){}
   if(initial.startsWith('review-')){const element=document.getElementById(initial);if(element){reveal(element);setTimeout(()=>element.scrollIntoView({block:'center'}),0);}}
