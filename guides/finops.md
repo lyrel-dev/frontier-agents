@@ -358,7 +358,7 @@ Selected documented defaults are one agent per account/Region, 100 MB artifact s
 
 The table is engineering troubleshooting guidance based on the cited configuration and integration pages. It is not a claim of a native unified diagnostic workflow.
 
-## 11. Worked example and reference material
+## 11. Appendix: worked example and reference material
 
 The approved reporting and investigation cases are illustrated with a synthetic, reconcilable cost comparison.
 
