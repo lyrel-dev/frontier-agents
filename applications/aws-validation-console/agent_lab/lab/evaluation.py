@@ -53,8 +53,15 @@ def result(outcome, reason, sources=None):
     return {'outcome':outcome,'reason':reason,'source_record_ids':sources or []}
 
 
-def evaluate_trial(store, trial_id, binding):
-    trial=store.entity(trial_id); data=trial['data']
+def evaluate_trial(store, trial_id, binding, *, final_state=None, closed_at=None):
+    trial=store.entity(trial_id)
+    revision=trial['revision']
+    if final_state is not None:
+        if trial['state']!='FINALIZING' or final_state not in {'CLOSED','CLOSED_ABORTED'} or not closed_at:
+            raise Blocked('Invalid finalization request')
+        # Evaluate the intended final state without publishing it to readers yet.
+        trial={**trial,'state':final_state,'data':{**trial['data'],'closed_at':closed_at}}
+    data=trial['data']
     spec_record=store.record(data['experiment_ref']); spec=Experiment.model_validate(spec_record['data'])
     probe=next(p for p in binding.probes if p.id==spec.probe_id)
     records=store.records(trial_id); bykind={}
@@ -195,6 +202,9 @@ def evaluate_trial(store, trial_id, binding):
                          'No automatic causal credit is awarded to the agent.',
                          'Cited structured diagnostic claims use attributed human extraction, not an objective language-understanding oracle.',
                          'Local hashes detect consistency changes; they do not sign producer identity.']}
+    if final_state is not None:
+        from .finalization import finalize_trial
+        return finalize_trial(store,trial_id,body,expected_revision=revision,state=final_state,closed_at=closed_at)
     record=store.put_record('assessment',trial_id,body)
     store.update(trial_id,changes={'assessment_id':record['id']},event='trial.assessed')
     return record

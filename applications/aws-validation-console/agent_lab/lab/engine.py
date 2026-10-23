@@ -322,8 +322,7 @@ class Engine:
             return
         if state=='FINALIZING':
             final='CLOSED_ABORTED' if d.get('aborted') else 'CLOSED'
-            self.store.update(tid,state=final,changes={'closed_at':iso(now)},event='trial.closed')
-            evaluate_trial(self.store,tid,binding)
+            evaluate_trial(self.store,tid,binding,final_state=final,closed_at=iso(now))
 
     def campaign_step(self,campaign):
         d=campaign['data']; cid=campaign['id']; spec=Experiment.model_validate(self.store.record(d['experiment_ref'])['data'])
