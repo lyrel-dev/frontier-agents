@@ -10,7 +10,7 @@ Start with entity ownership and resource identity. The following chapters compar
 
 ## 01. Concept ownership and product resource models
 
-Read the approved conceptual model, its ownership notation and each product specialization before comparing knowledge or execution behavior.
+Use the entity model to distinguish responsibilities, then compare the product capability dimensions. The model is not a product feature inventory.
 
 ### A-00 — Agents, tools, context, and executions
 
@@ -41,6 +41,25 @@ The product diagrams refine the model rather than flattening the products into i
 Relationships are qualified in three classes. A solid relationship is explicitly documented. A dashed logical relationship is an explanatory association inferred from the described behavior, such as recording a task's optional automation origin without asserting a particular API field. A dashed editorial relationship is introduced by this collection, such as linking a use-case step to a mechanism. Exact multiplicity remains `?` when the reviewed source does not establish it. `0..*` describes a repeatable logical relationship, not an unlimited service quota.
 
 The [resource-model reference](../catalog/resource-models.html) is the generated dictionary and relationship register. It links back to the maintained guide explanations and forward to feature dependencies. It is not a new parallel use-case catalog or a database migration for any AWS service.
+
+### A-12 — Capabilities, product features, and mechanisms
+
+The model relates operational objectives to documented implementation facilities. It is not the table of contents of every product guide. Organizing a book into one chapter per entity would put a network route, a prompt, a review result, and a use case at the same explanatory level.
+
+A capability dimension groups a kind of customer control: workspace organization, definition, context, invocation, integrations, connectivity, execution, managed workflows, outputs, or administration. Within a dimension, a feature names a concrete service facility. A mechanism explains how that facility operates. The approved use cases remain separate descriptions of operational objectives. [AS01] [AS02] [AS03]
+
+| Product facility | Mechanism to explain | Application in the existing catalog |
+|---|---|---|
+| DevOps memory stores | Description-led store/entry selection and retained-version lifecycle | Historical context during incident investigation |
+| DevOps event trigger | Webhook event matching, JMESPath condition/projection, then invocation | Event-driven execution where the chosen implementation permits it |
+| Security Login Optimization | Retain successful navigation and reuse it for subsequent authentication | Authenticated application assessment |
+| Security requirement pack | Select applicable criteria during an eligible review | Design or source review against organizational requirements |
+| FinOps automation | Match a schedule or supported anomaly event and create a task | Periodic reporting or anomaly investigation |
+| FinOps conversation context | Summarize older messages near the context limit | Continued analysis within a conversation |
+
+An implementation profile in the approved model means an authored grouping of configuration choices. In the reading edition it appears as configuration instructions for the relevant use case. It is not an AWS agent type or service resource. The native DevOps release-testing `test_profile` is a different, explicitly documented resource. The model and the catalog are retained unchanged; product explanations identify what AWS exposes and what the team supplies. [AS01]
+
+The concrete retrieval, event-processing, authentication-reuse, and compaction behaviors are documented separately by their products; the table is an editorial comparison, not a shared implementation. [AS501] [AS502] [AS503]
 
 ### A-11 — Product specialization and use-case traceability
 
@@ -274,44 +293,27 @@ The public sources do not justify specifying a shared vector database, embedding
 - [AS14] Security revalidation lineage.
 
 [AS01]: https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-what-is-a-devops-agent-topology.html
-
 [AS02]: https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html
-
 [AS03]: https://docs.aws.amazon.com/finops-agent/latest/userguide/creating-an-agent.html
-
 [AS04]: https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html
-
 [AS05]: https://docs.aws.amazon.com/devopsagent/latest/userguide/whats-new.html
-
 [AS06]: https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html
-
 [AS07]: https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html
-
 [AS08]: https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-integrations-and-knowledge-connecting-mcp-servers.html
-
 [AS09]: https://docs.aws.amazon.com/finops-agent/latest/userguide/jira-integration.html
-
 [AS10]: https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-working-with-directed-actions.html
-
 [AS11]: https://docs.aws.amazon.com/securityagent/latest/userguide/perform-penetration-test.html
-
 [AS12]: https://docs.aws.amazon.com/finops-agent/latest/userguide/agent-guardrail-control.html
-
 [AS13]: https://docs.aws.amazon.com/devopsagent/latest/userguide/custom-agents-executing-custom-agents.html
-
 [AS14]: https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html
-
 [AS30]: https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html
-
 [AS31]: https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html
-
 [AS32]: https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html
-
-[AS50]: https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html
-
-[AS51]: https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html
-
-[AS52]: https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html
-
-[AS53]: https://docs.aws.amazon.com/finops-agent/latest/userguide/setting-up.html
 [AS401]: https://docs.aws.amazon.com/securityagent/latest/userguide/review-penetration-findings.html
+[AS50]: https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html
+[AS501]: https://docs.aws.amazon.com/devopsagent/latest/userguide/custom-agents-executing-custom-agents.html
+[AS502]: https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html
+[AS503]: https://docs.aws.amazon.com/finops-agent/latest/userguide/context-files-and-memory.html
+[AS51]: https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html
+[AS52]: https://docs.aws.amazon.com/finops-agent/latest/userguide/data-protection.html
+[AS53]: https://docs.aws.amazon.com/finops-agent/latest/userguide/setting-up.html
