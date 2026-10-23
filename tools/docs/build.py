@@ -97,7 +97,7 @@ def inline_svg(key,prefix):
 
 def figure(key,prefix):
     title,description,refs,_=DIAGRAMS[key]
-    return f'<figure class="diagram" data-diagram-key="{key}"><div class="diagram-viewport">{inline_svg(key,prefix)}</div><figcaption><strong>{esc(title)}.</strong> {esc(description)} <span class="diagram-scope">Logical model. Entity ownership and relationship qualifications are defined in the resource register.</span> <a href="../assets/diagrams/{key}.svg" target="_blank" rel="noopener">Open full-size SVG</a></figcaption></figure>'
+    return f'<figure class="diagram" data-diagram-key="{key}"><div class="diagram-viewport">{inline_svg(key,prefix)}</div><figcaption><strong>{esc(title)}.</strong> {esc(description)} <span class="diagram-scope">Logical teaching or resource view; ownership colors and qualified native relationships are defined in the resource model.</span> <a href="../assets/diagrams/{key}.svg" target="_blank" rel="noopener">Open full-size SVG</a></figcaption></figure>'
 
 def render_markdown(text,definitions,links,prefix):
     text=re.sub(r'^<!-- mechanism-review:(?:start|end) [^>]+ -->\s*$', '', text, flags=re.M)
@@ -148,7 +148,9 @@ def table(rows):
     return '<div class="table-wrap" tabindex="0"><table><thead><tr>'+''.join('<th scope="col">'+esc(x)+'</th>' for x in rows[0])+'</tr></thead><tbody>'+''.join('<tr>'+''.join('<td>'+esc(x)+'</td>' for x in r)+'</tr>' for r in rows[1:])+'</tbody></table></div>'
 
 def slide_body(s,prefix):
-    if s['kind']=='diagram':return figure(s['diagram'],prefix)
+    if s['kind']=='diagram':
+        explanation = '<ol class="diagram-steps">'+''.join('<li>'+esc(x)+'</li>' for x in s.get('explain',[]))+'</ol>' if s.get('explain') else ''
+        return figure(s['diagram'],prefix)+explanation
     if s['kind'] in ('table','demo'):
         rows=s['data'] if s['kind']=='table' else [['Time','Action','Prepared evidence'],*s['data']]
         return table(rows)
