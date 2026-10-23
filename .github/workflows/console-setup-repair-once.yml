@@ -86,9 +86,6 @@ jobs:
                                 page.get_by_label('Connection ID',exact=True).input_value()=='retained-input' and
                                 page.get_by_label('Agent connection',exact=True).count()==0)
           '''
-              # YAML indentation is stripped uniformly. Restore the intended Python test indentation.
-              lines=insert.splitlines(True)
-              insert=lines[0]+''.join(line[10:] if line.startswith(' '*10) else line for line in lines[1:])
               s=s.replace('                def approve_dialog():',insert+'                def approve_dialog():')
               return s.replace("wait_state(page, '(s)=>GuidedSetup.state().stage===s', arg=stage)","wait_state(page, '(s)=>GuidedSetup.state().stage===s&&!GuidedSetup.state().loading', arg=stage)")
           def diagnostics(s):
