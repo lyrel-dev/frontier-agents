@@ -17,7 +17,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   validate:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 25
     env:
       AWS_EC2_METADATA_DISABLED: 'true'
@@ -43,8 +43,8 @@ jobs:
         id: tools
         run: |
           python -m pip install -r requirements-dev.txt
-          python -m playwright install --with-deps chromium
-          python -c 'from playwright.sync_api import sync_playwright; p=sync_playwright().start(); print("CHROMIUM_PATH="+p.chromium.executable_path); p.stop()' >> "$GITHUB_ENV"
+          python -m playwright install chromium
+          python -c 'from playwright.sync_api import sync_playwright; p=sync_playwright().start(); b=p.chromium.launch(headless=True); print("CHROMIUM_PATH="+p.chromium.executable_path); b.close(); p.stop()' >> "$GITHUB_ENV"
       - name: Clear previous generated evidence and build assets
         id: build
         run: |
