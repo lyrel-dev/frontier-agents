@@ -319,7 +319,7 @@ class Reader:
             self.guide(p,g)
         for case in self.cases:
             self.case_page(case)
-        self.case_index();self.home();self.finish_other_pages();self.readme()
+        self.case_index();self.home();self.finish_other_pages()
         for path in RETIRED:
             (ROOT/path).unlink(missing_ok=True)
         # Keep generated notes navigable after retiring record-type pages.
