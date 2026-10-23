@@ -105,6 +105,12 @@ def annotate_titles(soup,current,repo):
             if target_for_title(source):attach(element.h1,target_for_title(source))
             notes=[target for target in source.targets() if not target['field'] and target['markdown'].strip()!='## Presenter notes']
             if notes and element.select_one('.slide-explanation'):attach(element.select_one('.slide-explanation'),notes[-1])
+        # The visible presenter track repeats the slide's Markdown notes. Both
+        # instances must resolve to the same block rather than a generated HTML span.
+        for note_block,slide_source in zip(soup.select('.note-block'),repo.select('slide',product)):
+            notes=[t for t in slide_source.targets() if not t['field'] and t['markdown'].strip()!='## Presenter notes']
+            paragraph=note_block.select_one('.talk-track > p')
+            if notes and paragraph:attach(paragraph,notes[-1])
 
 
 def annotate_records(soup,current,repo):
