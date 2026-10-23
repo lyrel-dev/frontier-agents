@@ -1,0 +1,107 @@
+---
+id: settings-structure
+kind: settings
+data:
+  baseline: 75f7d7c11d29e308e71a1bbe77ad93e9bc9f08a9
+  types:
+    D-01: overview
+    D-02: configuration
+    D-03: configuration
+    D-04: mechanism
+    D-05: mechanism
+    D-06: operation
+    D-07: operation
+    D-08: operation
+    D-09: reference
+    D-10: troubleshooting
+    D-11: evidence
+    S-01: overview
+    S-02: configuration
+    S-03: configuration
+    S-04: operation
+    S-05: operation
+    S-06: operation
+    S-07: troubleshooting
+    S-08: evidence
+    F-01: overview
+    F-02: configuration
+    F-03: operation
+    F-04: operation
+    F-05: configuration
+    F-06: troubleshooting
+    F-07: evidence
+    A-01: overview
+    A-02: mechanism
+    A-03: mechanism
+    A-04: mechanism
+    A-05: operation
+    A-06: operation
+    A-07: evidence
+    D-12: reference
+    S-09: reference
+    F-08: reference
+    A-00: overview
+    A-08: reference
+    A-09: overview
+    D-13: reference
+    D-14: reference
+    S-10: reference
+    S-11: reference
+    F-09: reference
+    F-10: reference
+    A-10: overview
+    A-11: reference
+    D-15: reference
+    D-16: reference
+    D-M03: reference
+    D-M04: reference
+    D-M01: reference
+    D-M08: reference
+    D-M02: reference
+    D-17: reference
+    D-18: reference
+    D-20: reference
+    D-19: reference
+    D-21: reference
+    D-22: reference
+    D-23: reference
+    D-24: reference
+    S-12: reference
+    S-13: reference
+    S-14: reference
+    S-15: reference
+    S-16: reference
+    F-11: reference
+    F-12: reference
+    F-13: reference
+    F-14: reference
+    F-15: reference
+    A-12: reference
+    D-90: overview
+    D-91: overview
+    D-92: overview
+    D-93: overview
+    D-94: overview
+    D-95: overview
+    D-96: overview
+    S-90: overview
+    S-91: overview
+    S-92: overview
+    S-93: overview
+    F-90: overview
+    F-91: overview
+    F-92: overview
+    F-93: overview
+    A-90: overview
+    A-91: overview
+  labels:
+    overview: Overview and capabilities
+    configuration: Configuration
+    mechanism: Mechanism
+    operation: Operation
+    example: Worked example
+    troubleshooting: Troubleshooting
+    reference: Reference
+    evidence: Official evidence
+---
+
