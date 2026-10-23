@@ -88,6 +88,21 @@ def plan(review,patch):
                 raise ReviewError('Stale '+field+'; re-review the current source: '+edit['path'])
         if edit['before']!=current['markdown'] or supplied.get('markdown')!=current['markdown']:
             raise ReviewError('Source excerpt differs; fuzzy replacement is not permitted')
+        # A selected text quote is narrower than its enclosing Markdown block.
+        # Only exact, unique source text can authorize an automated sub-block edit;
+        # rendered selections spanning markup/multiple blocks require explicit block review.
+        if comment.get('scope')=='text':
+            selector=comment.get('selector')
+            quote=selector.get('exact') if isinstance(selector,dict) else None
+            if not isinstance(quote,str) or not quote.strip():
+                raise ReviewError('Text-scoped edit requires an exact selected quote')
+            before=edit['before']
+            if before.count(quote)!=1:
+                raise ReviewError('Selected rendered text cannot be uniquely mapped to source Markdown; select a block')
+            at=before.index(quote)
+            prefix,suffix=before[:at],before[at+len(quote):]
+            if not edit['after'].startswith(prefix) or not edit['after'].endswith(suffix):
+                raise ReviewError('Text-scoped edit changed Markdown outside the selected quote')
         if '\x00' in edit['after'] or '\r' in edit['after'] or len(edit['after'].encode())>1_000_000:
             raise ReviewError('Invalid replacement text or replacement exceeds 1 MB')
         if re.search(r'^<!-- block:',edit['after'],re.M):
