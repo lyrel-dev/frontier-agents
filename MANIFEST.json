@@ -2,8 +2,8 @@
   "revision": "2026-10-23-capability-exposition",
   "files": {
     ".github/workflows/document-suite.yml": {
-      "bytes": 4302,
-      "sha256": "2923cc4e5ce49da3feefe25b2e5494ecb83ab49cca5241aeda43df3b390f05c0"
+      "bytes": 3755,
+      "sha256": "98f98f74b66e5760b9cf8b6fcff9bd090b2dad9578d388d79b7ca103f53360ef"
     },
     "CHANGELOG.md": {
       "bytes": 2690,
@@ -14,8 +14,8 @@
       "sha256": "8217af1f1f4f5c345c776b46b9e3c20938556d7ec224480e812c5a3857d22f0c"
     },
     "PUBLISHING.md": {
-      "bytes": 1153,
-      "sha256": "9253560c8cf27419e3a82120ff8554b5af8a4ed70aa26cf90da256e61d5a00d4"
+      "bytes": 1354,
+      "sha256": "9fe96fa6b67d4cca3407d7a5a993aedfc7c1c305635cc1d49c210e54f7c92019"
     },
     "README.md": {
       "bytes": 3250,
@@ -295,7 +295,7 @@
     },
     "documentation-build.json": {
       "bytes": 1476,
-      "sha256": "0c2dc5e34a7543c64b12412bbb1be0bb35c2a9d93ea365189cac4510aca53d51"
+      "sha256": "afbab7156f8209d319fdebc95c3533cbb75c2bfb1b9e5ea115671865bd514a1f"
     },
     "examples/prepared-evidence.json": {
       "bytes": 2346,
@@ -310,8 +310,8 @@
       "sha256": "c7e465af2a8d094cd01585f71deaa09d16e459fcbd75377dcb5282bb83293cbe"
     },
     "guides/coverage.md": {
-      "bytes": 46035,
-      "sha256": "82f5850282abba85fc150165fd33c78829a0142b17c9527c16131304fc965b9b"
+      "bytes": 46168,
+      "sha256": "a579f39164d3f11d5b912e97b7cc3817bb379e1467ca9314549b19a8968afbc6"
     },
     "guides/devops.html": {
       "bytes": 208867,
@@ -446,8 +446,8 @@
       "sha256": "42f803246ca5e60f9efa59963c03ef9ebf4bd0f5417d27949540537bd5089a28"
     },
     "tools/docs/build.py": {
-      "bytes": 17645,
-      "sha256": "3364d5267948f7a5e68ecd91c53858bb65ab722861c2d2b0ffd2275bc1309d7a"
+      "bytes": 17979,
+      "sha256": "6ba5b35ba9499454414654ccbbc93d3b89bd8beef20d95cbdfbac841b0ed31eb"
     },
     "tools/docs/check.py": {
       "bytes": 14645,
