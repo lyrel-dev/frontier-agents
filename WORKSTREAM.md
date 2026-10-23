@@ -11,85 +11,86 @@ repository:
   target_branch: main
   implementation_branch: docs/annotation-menu-autosave
   implementation_baseline: c9db501798470a2dbfc3961eafaef9fd431f52c0
-  validated_output_before_handoff: cfdf280e98e6d4ef78bb0131c6140f167a50e629
+  validated_output_before_handoff: f2272fd0659d3eb803e702730e55de664f64306f
   handoff_path: WORKSTREAM.md
   handoff_role: Operational metadata, not an HTML compiler input
 objective:
-  primary: Maintain factual, educational AWS DevOps, Security and FinOps Agent guides,
-    a searchable approved use-case catalog, diagrams and HTML presentations. Author
-    published components in Markdown/YAML, provide contextual annotation during normal
-    reading, and export exact source references for guarded LLM edits.
+  primary: >-
+    Maintain factual, educational AWS DevOps, Security and FinOps Agent guides,
+    an approved searchable use-case catalog, diagrams and HTML presentations.
+    Author published components in Markdown/YAML, provide contextual notes during
+    normal reading, and export exact source references for guarded LLM edits.
   success_criteria:
-  - One canonical Markdown/YAML source per published component.
-  - Agent-first explanations followed by documented workflows and configuration.
-  - Approved model and thirty use cases unchanged without separate authorization.
-  - Hover/focus controls and text-selection comments without a Review mode.
-  - Persistent source-linked comment markers and element-scoped threads.
-  - Exact source hashes, explicit edit scope, dry-run review and guarded application.
-  - Deterministic generation and tested desktop, mobile and touch interaction.
+    - One canonical Markdown/YAML source per published component.
+    - Agent-first explanations followed by documented workflows and configuration.
+    - Approved model and thirty use cases preserved without separate change authorization.
+    - Hover/focus annotation controls with a note-only popup and no Review mode.
+    - Automatic local persistence of note text, edits, replies and annotation mutations.
+    - Global annotation menu for export/import, connected-user backend save and confirmed clear.
+    - Exact source hashes, explicit edit scope, dry-run review and guarded application.
+    - Repeatable generation and tested desktop, mobile and touch interaction.
 scope:
   included:
-  - Canonical documentation, compiler, generated HTML and source maps.
-  - Search, local contextual comments, export and source patch validation.
-  - Documentation CI, technical review and educational quality.
+    - Canonical documentation, compiler, generated HTML and source maps.
+    - Search, contextual notes, local persistence, export and source patch validation.
+    - Optional authenticated host adapter for explicit backend saving.
+    - Documentation CI, technical review and educational quality.
   excluded:
-  - Independent applications/ code and its workflow.
-  - Live AWS operations or claims of service acceptance.
-  - Unauthorized changes to frozen case/model records.
-  - Automatic LLM transmission, provider credentials or shared annotation backend.
-  - General rich-text editing or reordering published document blocks.
+    - Independent applications/ code and its workflow.
+    - Live AWS operations or claims of service acceptance.
+    - Unauthorized changes to frozen case/model records.
+    - Automatic LLM transmission or model-provider credentials.
+    - Deployment of an authentication service, shared note database or collaboration server.
+    - General rich-text editing or reordering of published document blocks.
 frozen_contract:
   approved_primary_use_cases: 30
   former_identifiers_mapped: 54
-  protected_registers:
-  - use-cases
-  - mechanisms
-  - features
-  - profiles
-  - aliases
-  - resource-models
+  protected_registers: [use-cases, mechanisms, features, profiles, aliases, resource-models]
   authored_records: content/registers/**/*.md
   generated_projections: catalog/*.json
   rule: Preserve identities, semantics, relationships, variants and acceptance criteria.
 source_contract:
   canonical_root: content/
   format: UTF-8 Markdown with YAML front matter, LF endings and stable block IDs
-  compiled_outputs:
-  - guides/
-  - catalog/
-  - presentations/
-  - assets/
+  compiled_outputs: [guides/, catalog/, presentations/, assets/]
   validation_records: qa/
-  handoff_exception: WORKSTREAM.md is authored operational metadata at repository
-    root.
+  handoff_exception: WORKSTREAM.md is authored operational metadata at repository root.
 contextual_annotation_contract:
   version: contextual-v3
-  user_requirement: Annotation controls appear on document elements during normal
-    reading.
-  supersedes: Mandatory Review toggle, fixed bottom toolbar and unfiltered primary
-    drawer.
-  hover_and_focus: Left-gutter block selection handle and direct comment action.
+  user_requirement: >-
+    Annotate document elements during normal reading. Show only the relevant note
+    in its popup; put collection operations in a global menu. Save locally automatically.
+  supersedes: Mandatory Review toggle, bottom toolbar and global operations inside the note popup.
+  hover_and_focus: Left-gutter selection handle and direct comment action.
   selection: Floating action for text quotes, ranges and additive block selections.
-  persisted_comments: Margin markers reopen element-scoped threads and source context.
-  input_methods:
-  - pointer_hover
-  - pointer_drag_selection
-  - keyboard
-  - touch_tap
+  popup: Note text, replies and note-level editing actions only; no source paths or quoted source context.
+  global_controls:
+    - Add document note and browse the annotation collection.
+    - Export JSON, export or copy an LLM request, and import annotations.
+    - Save an explicit snapshot to a backend for a connected user.
+    - Confirm clearing this document or all local notes, comments and replies.
+  input_methods: [pointer_hover, pointer_drag_selection, keyboard, touch_tap]
   drag_effect: Selection only; no document reordering.
-  global_controls: 'Annotations menu: export/import, connected-user backend save,
-    confirmed clear and collection browsing'
-  rendering: Controls outside source text; no source-coordinate contamination.
+  rendering: Controls outside source text; source coordinates are not contaminated.
+  local_persistence: On note/reply input and every annotation mutation; Done only closes the editor.
   storage: Existing browser localStorage keys retained, per origin.
+  clear_scope: Local only; saved backend copies are not deleted.
+  storage_failure: Warn visibly and retain the in-memory export instead of claiming successful persistence.
   export_schema: frontier-review/v1
   patch_schema: frontier-source-patch/v1
   direct_llm_submission: false
   frozen_record_edits: forbidden
   user_acceptance: pending
-  popup: Note/thread and note-level editing actions only
-  local_persistence: Automatic on note/reply input and every annotation mutation
-  backend_save: Explicit host adapter call for an authenticated connected user; no
-    deployed backend included
+backend_contract:
+  availability: Optional host integration; no backend is deployed by this repository.
+  registration: FrontierReview.setBackend(adapter) or window.FrontierReviewBackend
+  session_method: getSession({signal}) returns null or a user with a nonempty string id.
+  save_method: saveReview(packet, {signal}) confirms persistence with saved=true and a nonempty id.
+  enablement: Adapter and connected user required; session is rechecked before saving.
+  transmission: Explicit Save to backend only; typing never triggers a remote write.
+  failure_behavior: Keep local annotations and report failure or missing confirmation.
+  server_responsibility: Authentication, ownership, authorization, CSRF/TLS where applicable, limits and retention.
+  production_backend_tested: false
 implementation_snapshot:
   markdown_sources: 457
   guides: 4
@@ -99,284 +100,241 @@ implementation_snapshot:
   diagram_definitions: 48
   source_mapped_html_pages: 42
   verified_source_targets: 2184
-  scope_of_counts: Existing content inventory; consult current generated QA for derived
-    counts.
+  scope_of_counts: Inspected content inventory; current generated QA remains authoritative.
 validation_snapshot:
-  branch_run: https://github.com/lyrel-dev/frontier-agents/actions/runs/39950131103
+  branch_run: https://github.com/lyrel-dev/frontier-agents/actions/runs/39966489147
   branch_conclusion: success
-  browser_widths_px:
-  - 390
-  - 1440
+  browser_widths_px: [390, 1440]
   touch_tap_test: passed
-  contextual_browser_errors: 0
+  automatic_local_persistence_tests: passed
+  backend_adapter_tests: Mocked connected-user, success, failure, expiry and unconfirmed response.
+  local_clear_confirmation_tests: passed
+  storage_failure_export_test: passed
+  source_mapping_errors: 0
   patch_guard_regressions: 15
   preserved_frozen_registers: true
   repeated_build: passed
-  local_visual_review: Representative fixture at desktop and mobile widths, not all
-    published pages.
+  visual_boundary: Automated rendered-browser checks; no new manual screenshot acceptance is claimed.
   live_aws_execution: false
   records:
-  - qa/checks.json
-  - qa/authoring-review.json
-  - qa/source-map.json
-  - qa/educational-checks.json
-  - qa/relationships.json
-  - qa/resource-models.json
-  status: This revision requires the current CI run; prior run links are historical.
+    - qa/checks.json
+    - qa/authoring-review.json
+    - qa/source-map.json
+    - qa/educational-checks.json
+    - qa/relationships.json
+    - qa/resource-models.json
 milestones:
-- id: M01
-  status: done
-  name: Consolidate prior entries into 30 approved outcomes
-- id: M02
-  status: done
-  name: Approve concept model and specialize AWS product resources
-- id: M03
-  status: done
-  name: Review selected lifecycles and factual/editorial distinctions
-- id: M04
-  status: done
-  name: Establish agent-first teaching and prioritized workflows
-- id: M05
-  status: done
-  name: Migrate published components to Markdown/YAML
-- id: M06
-  status: done
-  name: Source mapping, local search, annotation exports and guarded patching
-  qualification: The original toggle-based annotation UX was rejected and is superseded
-    by M08.
-- id: M07
-  status: done
-  name: Validate source integrity and Markdown CI
-- id: M08
-  status: implemented_and_automated_tests_passed
-  name: Contextual hover annotations and source-anchored threads
-  qualification: Human acceptance remains open; no claim of full editor feature parity.
-- id: M09
-  status: implementation_pending_validation
-  name: Minimal note popup, global annotation menu and automatic local persistence
+  - {id: M01, status: done, name: Consolidate prior entries into thirty approved outcomes}
+  - {id: M02, status: done, name: Approve concept model and specialize AWS product resources}
+  - {id: M03, status: done, name: Review selected lifecycles and factual/editorial distinctions}
+  - {id: M04, status: done, name: Establish agent-first teaching and prioritized workflows}
+  - {id: M05, status: done, name: Migrate published components to Markdown/YAML}
+  - id: M06
+    status: done
+    name: Source mapping, local search, exports and guarded patching
+    qualification: The original toggle-based annotation UX was rejected and superseded.
+  - {id: M07, status: done, name: Validate source integrity and Markdown CI}
+  - id: M08
+    status: implemented_and_automated_tests_passed
+    name: Contextual hover annotations and anchored threads
+    qualification: Human acceptance remains open; no claim of rich-text-editor feature parity.
+  - id: M09
+    status: implemented_and_automated_tests_passed
+    name: Note-only popup, global annotation menu and automatic local persistence
+    qualification: Backend tested through adapter mocks, not a deployed authenticated service.
 roadmap:
-- id: N01
-  priority: P0
-  status: pending_human_review
-  name: Editorial and instructional acceptance
-  tasks:
-  - Review agent composition, coordinated work, workspace and prioritized workflows.
-  - Eliminate redundant, ambiguous or promotional wording without changing frozen
-    semantics.
-  - Read guides and slides together and inspect diagram legibility and explanation.
-  done_when: Technical reviewers accept the terminology, narrative and workflow traceability.
-- id: N02
-  priority: P0
-  status: pending_human_review
-  name: Current official-source accuracy audit
-  tasks:
-  - Recheck high-impact AWS behavior, availability, identity, permission and lifecycle
-    claims.
-  - Distinguish documented behavior from team procedures, inference and synthetic
-    evidence.
-  - Preserve references and explicitly qualify differing documentation representations.
-  done_when: Material product claims have current, reviewable and product-specific
-    support.
-- id: N03
-  priority: P0
-  status: automated_checks_passed_human_acceptance_pending
-  name: Contextual review-to-source edit round trip
-  tasks:
-  - Demonstrate hover/focus/tap comments and persistent element-scoped threads.
-  - Export matching JSON and LLM requests with stable identities and exact source
-    targets.
-  - Review, validate and explicitly apply a proposed source correction, then inspect
-    rebuilt output.
-  - Reject stale, protected, ambiguous and out-of-scope proposals.
-  done_when: A reviewer accepts the contextual interaction and observes only authorized
-    source changes.
-- id: N04
-  priority: P1
-  status: planned
-  name: Compiler, search and accessibility hardening
-  tasks:
-  - Exercise source additions, moves, deletion, metadata/reference failures and stable
-    anchors.
-  - Test nested elements, table cells, nearby comments and narrow/mobile viewports.
-  - Evaluate keyboard focus, search relevance, large-document performance and print.
-  done_when: Authoring failures are actionable and context/source navigation remains
-    reliable.
-- id: N05
-  priority: P1
-  status: planned
-  name: Review security and release controls
-  tasks:
-  - Extend adversarial packet, path, Unicode, hash and exact-edit boundary tests.
-  - Preserve dry-run review and independent protection of frozen records.
-  - Avoid concurrent branch edits while CI commits generated outputs.
-  done_when: Invalid or unrelated edits cannot bypass source guards and release checks
-    preserve scope.
-- id: N06
-  priority: P2
-  status: optional_not_authorized
-  name: Direct provider submission or shared annotations
-  tasks:
-  - Seek explicit scope and authorization before adding external transmission or shared
-    storage.
-  - Define consent, identity, secrets, retention, access, audit and conflict controls.
-  done_when: Any new external service is explicitly authorized and its boundaries
-    are tested.
-- id: N07
-  priority: P1
-  status: planned
-  name: Final quality and repository hygiene
-  tasks:
-  - Remove superseded navigation/generators, not historical Git records.
-  - Preserve one canonical content source and independent application code.
-  - Refresh QA and handoff while keeping evidence gaps separate from build status.
-  done_when: Both mandatory automated checks and human technical acceptance are complete.
+  - id: N01
+    priority: P0
+    status: pending_human_review
+    name: Editorial and instructional acceptance
+    tasks:
+      - Review agent composition, coordinated work, workspace and prioritized workflows.
+      - Remove redundant, ambiguous or promotional wording without changing frozen semantics.
+      - Read guides and slides together; inspect diagram clarity and explanation.
+    done_when: Technical reviewers accept terminology, narrative and workflow traceability.
+  - id: N02
+    priority: P0
+    status: pending_human_review
+    name: Current official-source accuracy audit
+    tasks:
+      - Recheck material AWS behavior, availability, identity, permission and lifecycle claims.
+      - Distinguish documented behavior from team procedures, inference and synthetic evidence.
+      - Preserve citations and qualify conflicting documentation representations.
+    done_when: Material product claims have current, reviewable, product-specific support.
+  - id: N03
+    priority: P0
+    status: automated_checks_passed_human_acceptance_pending
+    name: Contextual annotation and source-edit acceptance
+    tasks:
+      - Demonstrate note-only hover/focus/tap popups and global annotation operations.
+      - Verify local persistence without Done, after closing and after reload.
+      - Export precise review JSON and LLM request with stable identities.
+      - Review, validate and explicitly apply an authorized source correction, then rebuild.
+      - Reject stale, frozen, ambiguous and out-of-scope edit proposals.
+    done_when: A reviewer accepts the interaction and observes only authorized source changes.
+  - id: N04
+    priority: P1
+    status: planned
+    name: Compiler, search and accessibility hardening
+    tasks:
+      - Exercise source additions, moves, deletion, metadata failures and stable anchors.
+      - Test nested elements, tables, adjacent annotations and narrow layouts.
+      - Evaluate keyboard focus, search relevance, performance and printing.
+    done_when: Authoring failures are actionable and source navigation remains reliable.
+  - id: N05
+    priority: P1
+    status: planned
+    name: Review security and release controls
+    tasks:
+      - Expand adversarial packet, path, Unicode, hash and exact-edit boundary tests.
+      - Preserve dry-run approval and independent protection of frozen records.
+      - Avoid concurrent edits while CI commits generated outputs.
+    done_when: Invalid edits cannot bypass guards and releases preserve repository scope.
+  - id: N06
+    priority: P1
+    status: host_integration_required_for_backend
+    name: Production backend integration and optional collaboration
+    tasks:
+      - Connect the adapter to an authorized host session and storage endpoint when available.
+      - Validate server-side ownership, authorization, CSRF protection, failures and retention.
+      - Treat collaborative storage and direct LLM submission as separately scoped future work.
+    done_when: A real authenticated backend is explicitly connected and its boundaries are verified.
+  - id: N07
+    priority: P1
+    status: planned
+    name: Final quality and repository hygiene
+    tasks:
+      - Remove superseded generators and navigation, not Git history.
+      - Preserve one canonical source and independent application code.
+      - Refresh QA and handoff while keeping evidence gaps distinct from build status.
+    done_when: Mandatory automated checks and human technical acceptance are complete.
 operating_rules:
-- Edit content/**/*.md, not generated HTML, JSON, SVG or assembled guides.
-- Do not reinstate a mandatory Review mode or controls that contaminate source text.
-- Preserve frozen model/cases, block IDs and exact patch authorization.
-- Do not auto-send comments or source excerpts to any provider.
-- Do not treat passing documentation tests as live AWS or human editorial acceptance.
-- Keep Git history; no manual archives or parallel editions.
-next_action: Validate contextual-v3 behavior and backend adapter boundaries, then
-  complete N01/N03 human acceptance.
+  - Edit content/**/*.md, not generated HTML, JSON, SVG or assembled guides.
+  - Keep global export/backend/clear controls out of note popups.
+  - Preserve automatic local persistence and do not require a Save click.
+  - Do not reinstate a mandatory Review mode or contaminate source text with controls.
+  - Preserve frozen model/cases, stable block IDs and exact patch authorization.
+  - Do not automatically transmit annotations or source excerpts to any provider.
+  - Do not equate documentation tests with live AWS, production-backend or human acceptance.
+  - Use Git history; do not create manual archives or parallel editions.
+next_action: N01/N03 human acceptance; connect and test the backend adapter only with an authorized host.
 ---
 
 # Workstream handoff
 
-## Purpose and status
+## Objective and status
 
-Maintain an educational, technically sourced collection for **AWS DevOps Agent, AWS Security Agent, and AWS FinOps Agent**, consisting of guides, a searchable use-case catalog, resource/workflow diagrams, and HTML presentations. Published document components are authored in Markdown with YAML front matter. Reviewers annotate the rendered material and export comments that identify the exact Markdown source to be changed.
+Maintain factual, educational documentation for **AWS DevOps Agent, AWS Security Agent and AWS FinOps Agent**: guides, the approved use-case catalog, resource and workflow diagrams, and HTML presentations. Published content is authored in Markdown with YAML front matter. Rendered elements remain linked to precise source blocks so reviewers can annotate material and request tightly scoped edits from an LLM.
 
-The latest work corrects the interaction requirement: **annotation is part of normal reading, not a separate Review mode**. The original implementation had usable source mapping and patch safeguards, but its mandatory toggle, fixed bottom toolbar, and general-purpose drawer did not meet the user's Notion-style interaction request. Those controls have been replaced by element hover/focus controls, a selection toolbar, persistent source-linked comment markers, and element-scoped threads. The JSON export and guarded-edit contracts remain unchanged.
+The current revision is **contextual-v3**. It implements the latest user clarification: the anchored popup shows only the relevant note and its thread actions; export, backend saving, collection management and clearing belong in a global menu; and note text, edits and replies are saved locally automatically. The branch validation linked above passed. Human editorial and interaction acceptance remain open.
 
-Implementation validation and human acceptance are different. Automated tests establish the recorded behaviors and preservation checks. They do not establish that every guide is well explained, every AWS statement is current, or that the interaction has received final user acceptance. Technical and educational review remains open.
+The inspected implementation baseline was `c9db501798470a2dbfc3961eafaef9fd431f52c0`. Validated output before this handoff was `f2272fd0659d3eb803e702730e55de664f64306f`. These are evidence references, not instructions to work from an old checkout. Future contributors must begin from the current branch.
 
-## Non-negotiable decisions and context
+## Context and frozen decisions
 
-The catalog was consolidated from **54 overlapping entries to 30 approved operational outcomes**. Former identifiers remain navigation metadata. The conceptual entity relationship model was approved and specialized for DevOps, Security, and FinOps without suggesting identical memory, runtime, permission, or execution models. The model and the six canonical registers remain frozen; an annotation does not authorize changing them.
+The original 54 overlapping catalog records were consolidated into **30 approved operational outcomes**. Former identifiers remain navigation metadata. The conceptual entity model was approved and then specialized for the three products without assuming common native agent, memory, permission or execution models. The six registers remain frozen. A review comment or UI revision does not authorize changes to their identities, relationships, objectives, variants or completion criteria.
 
-Do not reinstate the rejected taxonomy-as-document design. A use case expresses an operational objective; a feature is a concrete product facility; a mechanism explains documented behavior. The historical “implementation profile” records are authored configuration recipes, not a native AWS resource or a parallel reader-facing product taxonomy. Their identities and relations are retained, but they must not dictate generic, repetitive chapter prose.
+Do not repeat the rejected taxonomy-as-document approach. Use cases state operational objectives; features identify concrete product facilities; mechanisms explain documented behavior. Historical implementation-profile records are authored configuration recipes, not an AWS-native resource or another reader-facing feature taxonomy. They remain for traceability but must not generate repetitive, interchangeable prose.
 
-The instructional sequence begins with an agent's instructions, skills/procedures, informational context, tools, and execution; then explains coordination and workspace scope; then traces the prioritized workflows using stable diagrams. For DevOps, the priority remains incident operations, operational reporting, reliability improvement, operational knowledge, configuration/release assurance, and operational reviews. Security follows assessment and finding lineage. FinOps follows instance context, source-backed analysis, tasks, automation, and publication. This ordering is editorial, not an AWS ranking.
+The instructional sequence begins with an agent's instructions, procedures/skills, informational context, tools and execution, then adds coordinated responsibilities and the workspace boundary. Workflows reuse that visual vocabulary. DevOps prioritizes incident operations, reporting, reliability improvement, operational knowledge, configuration/release assurance and operational reviews. Security follows assessment and finding lineage. FinOps follows instance context, source-backed analysis, tasks, automation and publication. This teaching priority is editorial, not an AWS ranking.
 
-The ten capability dimensions remain a configuration reference after the introduction. Diagrams use DOC blue, AWS green, and EXT orange for concept ownership. They are logical explanations, not undisclosed service call graphs. Presentations are HTML-only, and their budgets include explicitly allocated exercises. No live AWS execution or measured accuracy/productivity/security/savings result has been established.
+The ten capability dimensions remain a detailed reference after the introduction. DOC blue, AWS green and EXT orange identify ownership in diagrams; they do not reveal private AWS implementation. Presentations remain HTML-only. Their allocated exercise time must not be presented as measured live-agent completion time.
 
-## Current interaction contract
+## Annotation interaction contract
 
-1. Hover over a source-backed paragraph, heading, list, table, diagram, slide element, or presenter note. A handle and comment action appear beside the element, ordinarily in the left gutter. No Review switch exists.
-2. Click its comment control to open an element-anchored note editor without source-path or excerpt metadata. The controls also appear on keyboard focus; touch users tap the element.
-3. Select text to reveal the nearby floating comment action. Use handle clicks, Shift ranges, Ctrl/Command toggling, or handle dragging to select blocks. Dragging selects; it never reorders authored content.
-4. Saved annotations retain visible margin markers. Clicking a marker opens threads for that element, rather than requiring a search through unrelated document notes. Replies, resolution and reopening remain available.
-5. The document header exposes Search all and the global Annotations menu. That menu contains document notes, collection browsing, export/import, explicit connected-user backend saving, and confirmed local clearing. The note popup contains no global actions.
-6. Controls are portalled outside source text; they do not insert button labels inside paragraphs, tables, or source excerpts. Keyboard and touch alternatives remain available, comments are rendered as text, and annotation controls disappear when printing.
+Hover or focus a source-backed paragraph, heading, list, table, figure, slide element or presenter note. The nearby gutter exposes a block handle and direct comment action. Touch users tap the element. Text selection exposes a floating comment action. Shift selects a range, Ctrl/Command toggles blocks, and dragging selects blocks without reordering the document. No Review mode is required.
 
-The component is a standalone read-only contextual annotation implementation. It is not the licensed Tiptap Notion editor, a full content editor, or a collaborative server. Those are not current requirements. Existing browser storage keys and `frontier-review/v1` exports are retained to avoid discarding previous notes.
+The anchored popup contains **note text, replies and note-level actions**. It does not contain source paths, copied source excerpts, author/type forms, collection filters, exports or backend controls. Persistent markers reopen the relevant thread. Source metadata is retained in exported review records, not removed from the editing contract.
 
-## Source and compiler layout
+The document header has **Search all** and **Annotations**. The Annotations menu provides the note collection, document-level notes, filtering, JSON and LLM-request export, import, explicit backend saving, and confirmed local clearing. Clearing one document or all local annotations removes their notes, comments and replies from browser storage; it does not delete previously saved backend copies.
+
+Text and replies are persisted to localStorage on input, with stable note/reply IDs across subsequent edits. **Done closes the editor; it is not a save prerequisite.** Closing or reloading does not require another save action. Other mutations, including resolution, reopening, imports and clearing, also update localStorage automatically. Storage failures are reported visibly, while the current in-memory notes remain exportable. Browser storage is finite and may be unavailable; never display a successful local-save claim after a failed write.
+
+The interface is a standalone, read-only contextual annotation implementation, not a licensed Tiptap Notion editor or collaborative rich-text application. Controls are rendered outside source-backed text, preserving quote offsets and table content. Existing storage keys and export schemas remain compatible with prior notes.
+
+## Backend saving
+
+The static documentation has no deployed authentication or storage backend. The user has authorized the **save option for a connected user**, implemented through a host adapter rather than an invented login service.
+
+Register an adapter with `FrontierReview.setBackend(adapter)` after the reader loads, or assign `window.FrontierReviewBackend` beforehand. `getSession({signal})` returns `null` or an authenticated host user's nonempty string ID and optional display name. `saveReview(packet, {signal})` returns `{saved: true, id}` only after successful server persistence. The UI disables saving without the adapter and connected user, rechecks the session before saving, and requires a confirmation receipt before reporting success. Timeout, failure, missing confirmation or user changes do not discard local notes.
+
+Backend saving is an **explicit snapshot operation**. Typing saves only locally and never triggers a remote write. A backend copy may be older than subsequent local edits. Clearing local annotations does not erase server copies.
+
+The host/server must provide authentication, authorization, note ownership, CSRF protection where needed, TLS, limits and retention. It must derive identity from the actual session rather than trust a user ID inside review JSON. Do not place credentials in generated HTML or annotation localStorage. Adapter tests use controlled mocks; no production backend or server authorization was tested in this revision.
+
+## Canonical source and tooling layout
 
 | Location | Responsibility |
 |---|---|
-| `content/guides/<product>/index.md` | Guide introduction and official references |
-| `content/guides/<product>/chapters/` | Chapter order, membership, and introductions |
-| `content/guides/<product>/sections/` | Authored technical explanations and procedures |
-| `content/presentations/<product>/` | Markdown slide bodies, notes, timings, and deck metadata |
-| `content/diagrams/` | DOT/SVG fences and captions |
-| `content/registers/` | Frozen records and relationships represented in YAML/Markdown |
+| `content/guides/<product>/index.md` | Guide introductions and official references |
+| `content/guides/<product>/chapters/` | Chapter order, membership and introductory prose |
+| `content/guides/<product>/sections/` | Technical explanation and procedures |
+| `content/presentations/<product>/` | Slide Markdown, notes, timing and deck metadata |
+| `content/diagrams/` | DOT/SVG source fences and captions |
+| `content/registers/` | Frozen records and relationships in YAML/Markdown |
 | `content/configuration/` | Rendering metadata |
-| `content/site/` | README, authoring, editorial, and publication instructions |
-| `tools/docs/markdown_sources.py` | Parser, stable IDs, record resolution, and source coordinates |
-| `tools/docs/build.py`, `renderer.py`, `source_views.py` | Compiler and compatibility projections |
-| `tools/docs/source_review.py` | Rendered source anchors and collection search index |
-| `tools/docs/review.js`, `review.css` | Contextual selection, comments, markers, search, and export |
-| `tools/docs/review_patch.py` | Guarded exact-source patch validation/application |
-| `tools/docs/review_check.py` | Source integrity and patch regression checks |
-| `tools/docs/contextual_check.py` | Generated-document contextual interaction acceptance tests |
-| `.github/workflows/document-suite.yml` | Source validation, build, browser checks, repeatability, generated commits |
+| `content/site/` | Authored README, editorial, authoring and publishing instructions |
+| `tools/docs/markdown_sources.py` | Parsing, source identities, relationships and coordinates |
+| `tools/docs/build.py`, `renderer.py`, `source_views.py` | Compilation and compatibility projections |
+| `tools/docs/source_review.py` | Source-map attachment and collection search index |
+| `tools/docs/review.js`, `review.css` | Contextual popups, global menu, local persistence and backend adapter |
+| `tools/docs/review_patch.py` | Exact-scope source patch validation/application |
+| `tools/docs/contextual_check.py` | Existing contextual-selection and source-integrity browser journeys |
+| `tools/docs/annotation_menu_check.py` | Note-only popup, automatic persistence, clear and backend-adapter checks |
+| `tools/docs/review_check.py` | Source guards and combined annotation acceptance |
+| `.github/workflows/document-suite.yml` | Build, browser checks, repeatability and generated commits |
 
-Every compiled source has YAML `id` and `kind` fields. Block markers of the form `<!-- block: identifier -->` provide stable source identity independent of the title or filename. Do not regenerate IDs during ordinary prose edits. The compiler must not change authored `content/` files.
+Each source has YAML `id` and `kind`. Stable `<!-- block: identifier -->` markers identify selectable source blocks independently of their titles or filenames. Preserve these markers through ordinary prose edits. Source splits, merges or new IDs are explicit authoring changes, not automatic side effects of a comment.
 
-`guides/`, `presentations/`, `catalog/*.json`, generated catalog HTML, SVG output, search data, and source maps are outputs. Do not edit them as alternative sources. `WORKSTREAM.md` is a standalone root handoff with machine-readable metadata, not a compiled product document. No manual archives or secondary editions should be created; Git preserves history.
+Generated HTML, assembled guide Markdown, `catalog/*.json`, SVG files, search data and source maps are outputs, not alternate authoring locations. This root `WORKSTREAM.md` is operational handoff metadata, not a compiled product document. The independent `applications/` tree and its workflow remain outside scope.
 
-## Review storage and LLM edit contract
+## Source-scoped LLM correction contract
 
-Comments are stored in browser `localStorage`, per origin. Localhost gives predictable cross-page behavior; direct file URLs have browser-specific persistence behavior. Clearing storage removes local notes. Export is the current backup and portability mechanism. There is no user-account service, synchronization, or shared reviewer database.
+Annotations store their original document, source path, source/block IDs, exact Markdown excerpt, file and block SHA-256, Unicode code-point and UTF-8 byte intervals, and line ranges. Rendered text quotations separately use UTF-16 DOM coordinates. Do not conflate those units.
 
-An export identifies the original document, source path, source ID and block ID; exact Markdown text; full-file and block SHA-256; Unicode code-point and UTF-8 byte intervals; and line ranges. Rendered text selection separately records a quote and UTF-16 DOM positions. These units must not be confused or converted by assuming they are identical.
+An editing model must return `frontier-source-patch/v1` bound to an open comment and stable review ID. Each edit names the authorized source, exact previous text and hashes. Text-scoped edits may alter only a unique verbatim quote in the selected Markdown block, preserving its prefix and suffix. Formatted, repeated or cross-block selections that cannot be mapped uniquely require an explicit block-level review. Fuzzy replacement and silent re-anchoring are prohibited.
 
-The editing model returns `frontier-source-patch/v1` JSON bound to an open comment and the stable `review_id`. Every edit must identify the permitted source and exact previous text and hashes. Text-scoped edits can replace only a unique verbatim source quote, preserving the rest of the block. Formatting, repeated text, or cross-block selections that make that mapping ambiguous require explicit block-level review. Never introduce fuzzy matching or silent re-anchoring.
+The guard rejects stale versions, frozen records, generated paths, unrelated targets, symlinks, traversal, duplicate or overlapping edits and changed block identities. Validation is a dry run; application requires `--write` after a human has reviewed the diff. Comments and quoted material are untrusted data, not permission to execute commands or modify other files. LLM submission remains manual and separate from backend note saving.
 
-The patch tool rejects generated paths, traversal, symlinks, frozen records, unrelated targets, stale file/block versions, duplicate or overlapping changes, and changed block identities. It defaults to a dry run. Applying a patch requires `--write` after a human reviews the diff. Comments and source quotations are untrusted data, not instructions to run commands or grant permissions.
+## Completed work and evidence
 
-No comment is transmitted to an LLM automatically. Export JSON and Export/Copy LLM request are manual handoff operations. Direct provider submission or shared annotation storage requires a separately approved security/privacy design and is not part of this release.
+M01–M02 established and froze the outcome catalog and product resource models. M03–M04 reviewed selected operating lifecycles and replaced generic cards with agent-first teaching and stable workflow diagrams. M05 moved published content to Markdown/YAML. M06–M07 added source mapping, review export, patch guards and CI. M08 replaced the rejected Review-toggle UI with contextual annotation. M09 now separates the note popup from global operations and adds input-time local persistence plus an optional connected-user save adapter.
 
-## Completed roadmap and correction history
+The successful branch run `39966489147` covers document generation, frozen-record preservation, existing browser journeys, the added menu/autosave tests, and repeatable output. `qa/authoring-review.json` records zero errors, 2,184 verified source targets, all 15 patch-guard regression cases, mobile/desktop contextual checks, touch input, and the new menu tests. The new cases test note/reply/edit persistence without Done, stable IDs, export precision, clear confirmation/cancellation, backend session and save outcomes, and localStorage failure reporting.
 
-- M01–M02: consolidate and freeze the 30 operational outcomes; approve the conceptual entity model and document native AWS product-resource differences.
-- M03–M04: review selected operating lifecycles and source claims; replace repetitive taxonomy cards with agent-first teaching, stable diagrams and prioritized workflow exposition.
-- M05: migrate published components to Markdown/YAML; preserve generated routes, identifiers, 52 slides, and the approved records.
-- M06–M07: implement source mapping, local search/comments, export, and guarded edits; establish source, browser and CI validation. The original interaction design was subsequently rejected; these milestones did not constitute approval of the toggle-based UX.
-- M08: replace the mandatory Review mode with contextual controls and anchored threads; update the browser suite, authoring instructions and this handoff. The current QA record specifies what was tested. M09 further separates global operations from note popups and adds automatic local persistence. Human acceptance is still pending.
-
-The pre-correction snapshot contained 457 Markdown sources, 111 guide sections, 48 diagrams, 52 slides, 42 mapped HTML pages, 2,184 verified rendered targets and 1,455 indexed entries. Those counts describe the inspected baseline, not an immutable quality criterion; consult generated QA for the current output. The independent `applications/` code and its workflow remain outside this workstream.
+These tests establish the recorded behavior, not editorial quality, current truth of every AWS claim, successful live AWS operation or production backend security. Human acceptance and a real host/backend integration test remain open.
 
 ## Remaining roadmap
 
-### N01 — Technical and educational acceptance (P0)
+**N01 — Technical and educational acceptance (P0).** Read guides end to end and review their slides as a first-time technical audience would. Verify the agent definition, instructions/skills/knowledge/tools distinctions, coordinated responsibilities and workspace before workflows. Remove repetition, ambiguous wording and promotional phrasing. Explain diagram arrows, ownership, outputs, authorizations and human decisions in surrounding prose. Automated checks alone cannot close this stage.
 
-Read the guides from beginning to end and review the presentations as a first-time technical audience would. Verify the agent definition, instructions/skills/knowledge/tool distinctions, coordinated responsibilities, and Agent Space before operational workflows. Remove redundancy and promotional phrasing. Ensure diagram arrows, ownership colors, source accesses, outputs, approvals, and human decisions are explained in prose. Automated structural checks alone cannot close this stage.
+**N02 — Official-source accuracy audit (P0).** Recheck high-impact AWS claims: availability, account/Region constraints, permissions, retained state, trigger/cancellation behavior, publication and revalidation. Distinguish AWS behavior from authored procedures, synthetic evidence and inference. Preserve claim-level citations and qualify differing retrieved versions. Do not infer undisclosed internal algorithms or shared runtimes from similar naming.
 
-### N02 — Current official-source audit (P0)
+**N03 — Human review/edit acceptance (P0).** Demonstrate a hover/touch/focus note, text/range annotation, persistent marker, automatic local reload, global export and clear, and an approved source edit. Inspect matching JSON/LLM exports and precise source targets, validate a model patch, review its diff, apply explicitly, rebuild and inspect the result. Rejection of stale, frozen and ambiguous proposals is part of acceptance. No UI screenshot or automated test substitutes for the user's approval of the experience.
 
-Recheck high-impact AWS claims, including product availability, account/Region limits, identity and permissions, memory production/retrieval, cancellation, publication, and revalidation. Retain exact reference attribution and distinguish AWS behavior, team-authored procedures, synthetic examples, and inference. Resolve or explicitly qualify differing retrieved source versions. No internal routing algorithm or cross-service runtime should be inferred from similar naming.
+**N04 — Compiler, accessibility and search hardening (P1).** Exercise source additions, moves, renaming/deletion, nested blocks and tables, narrow layouts, nearby annotations, keyboard focus, search relevance, large-document performance and printing. Maintain stable source identity and actionable errors. Check existing notes remain accessible across rendered representations.
 
-### N03 — Human review-to-source acceptance (P0)
+**N05 — Security and release controls (P1).** Expand adversarial import/patch cases, including malformed packets, stale/missing targets, Unicode offsets, path traversal, frozen records, overlaps and prompt-injection text. Preserve manual diff review. Ensure the branch validated is the branch published; avoid concurrent contributor changes during generated-output pushes. Never force-push to hide a conflict.
 
-Demonstrate the actual normal-reading interaction: hover, comment, text selection, multi-block selection, anchored thread reopening, and keyboard/touch access. Export one JSON packet and its LLM request, inspect exact Markdown targets, propose a change, validate it, review the diff, apply with approval, rebuild, and inspect the result. Exercise stale, ambiguous, protected, and out-of-scope rejection paths. Confirm previous notes remain accessible. Mark this complete only after a reviewer accepts the experience, not merely because tests pass.
+**N06 — Production backend integration (P1 when a host is available).** Connect the documented adapter to the actual authenticated session and persistence API. Test server-derived ownership, authorization, CSRF, response/error semantics and retention. Shared multi-user editing and direct LLM submission remain separately scoped; they are not delivered by this adapter.
 
-### N04 — Maintenance, accessibility, and search hardening (P1)
+**N07 — Final quality and repository hygiene (P1).** Keep one canonical content source, remove superseded generators and stale navigation, and maintain current QA and handoff records. Preserve the independent application and Git history. Do not declare complete editorial acceptance while substantive review remains open.
 
-Exercise add/move/rename/delete authoring cases, nested blocks and table cells, narrow viewports, large figures, multiple comments at nearby anchors, keyboard focus, touch selection and print. Evaluate search relevance and source navigation. Extend diagnostics for broken references and metadata. Keep source IDs stable and reject ambiguous patches.
+## Working procedure
 
-### N05 — Security and release controls (P1)
+Start from current `main` and read this handoff, `AUTHORING.md`, `PUBLISHING.md` and the current QA. For substantive changes, create a documentation branch. Edit canonical Markdown or the relevant UI/tooling source; preserve all frozen semantics and block IDs. Do not put export, backend or clear controls back inside the note popup and do not introduce a Save prerequisite for local persistence.
 
-Continue adversarial testing of imports, malformed packets, stale/missing targets, Unicode offsets, paths, hashes, frozen records, overlapping replacements, and prompt-injection content. Preserve manual diff review. Ensure the CI branch being validated is the branch being published; avoid concurrent edits during the bot's generated-output push. Never force-push to conceal a conflict or overwrite another contributor's change.
+Run the following after installing Graphviz and the documented Python/Chromium dependencies:
 
-### N06 — Optional provider submission or shared comments (P2; not authorized)
-
-Only design direct LLM submission, secrets handling, shared storage or multi-user editing after explicit approval. Define authentication, authorization, consent, confidentiality, retention, conflict handling and audit requirements before implementing. Do not call the current local review interface a collaborative editor.
-
-### N07 — Final quality and repository hygiene (P1)
-
-Remove stale navigation and superseded generators rather than preserving parallel editions. Verify one canonical source per component. Keep current source-review gaps distinct from passing build checks, and refresh the validation/handoff records. Do not declare the whole documentation complete while substantive editorial or product-source review remains open.
-
-## Working procedure for the next contributor
-
-Start from current `main`, read this handoff and `AUTHORING.md`, and inspect the current source and QA records. Create a documentation branch for a substantive change. Edit the relevant `content/**/*.md` file, keeping stable IDs and frozen semantics. For UI work, edit `tools/docs/review.js` and `review.css` and extend `contextual_check.py`; do not restore a mandatory annotation mode or inject controls into source text.
-
-Run:
-
-    python -m pip install -r tools/docs/requirements.txt
-    python -m playwright install chromium
     python tools/docs/build.py
     python tools/docs/check.py --browser
     python tools/docs/review_check.py
 
-Graphviz is also required. Review generated pages in a browser. A repeated build must preserve authored Markdown bytes and produce the same generated content in the same environment. The main QA records are `qa/checks.json`, `qa/authoring-review.json`, `qa/source-map.json`, `qa/educational-checks.json`, `qa/relationships.json`, and `qa/resource-models.json`.
-
-For an exported review:
+Inspect the affected generated pages as well as test records. A second build must preserve authored bytes and reproduce outputs in the same environment. Source review and browser rendering are distinct checks. For a model-produced correction:
 
     python tools/docs/review_patch.py validate review.json patch.json
     python tools/docs/review_patch.py apply review.json patch.json --write
 
-Inspect the dry-run diff before the second command. Rebuild and rerun checks after an approved edit. Do not commit private review exports without authorization. Preserve the independent application and use Git history, not ZIPs or archive folders.
+Review the dry-run diff before the second command. Rebuild and rerun acceptance after applying it. Keep private review exports local unless their publication is explicitly authorized. Commit the maintained source and generated outputs through Git; do not create ZIP archives or parallel editions.
 
-The immediate next action remains reviewer-led instructional acceptance (N01) and a human-accepted contextual review/edit round trip (N03), not redesign of the frozen model or catalog.
-
-
-## Contextual-v3 update: local-first notes and global operations
-
-The user clarified that the anchored popup must show only the note. Export, save-to-backend, and clearing controls belong in a global menu, and all annotations must persist locally automatically. The current revision removes global operations, source excerpts/paths, and author/type forms from the note popup. Note text, edits, and replies save on input; Done is not a save prerequisite. Existing note IDs, storage keys, source mappings and patch safeguards remain unchanged.
-
-The document-level Annotations menu provides collection browsing, export/import, confirmed local clearing, and explicit backend save. Backend save requires an authenticated host adapter; absent a connected user or adapter it is disabled. The compiler does not deploy a backend. No remote write occurs merely because a user types. Server authorization and data ownership must be enforced by the host implementation, independently of the exported source metadata.
-
-The additional acceptance tests cover reload without Done, reply/edit persistence, popup/global-control separation, local clearing/cancellation, export after input, authenticated adapter success/failure/session changes, and storage failures. Human acceptance and live backend validation remain distinct from mocked adapter regression tests. The approved model, use cases, and independent application remain frozen/out of scope.
+The immediate next steps are N01/N03 human acceptance and, only with an authorized host available, a real backend-adapter integration test. The approved model and use-case catalog are not being redesigned.
