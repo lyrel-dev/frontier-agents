@@ -1,6 +1,6 @@
 {
   "schema": "frontier-markdown-build/v1",
-  "iteration": 1,
-  "scope": "Markdown authoring, search, block annotations, exact source review export",
+  "iteration": 2,
+  "scope": "Compile Markdown sources and validate annotations, search, and source-scoped patching",
   "frozen_model_and_use_cases": true
 }
