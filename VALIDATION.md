@@ -1,5 +1,7 @@
 # Documentation validation
 
+The current reader revision is covered by [frozen-record and reading-journey checks](qa/reading-structure.json). Model and use-case sources are unchanged. Guide navigation, search, contextual configuration, and deep links are tested separately from service behavior.
+
 Stage 3 adds [mechanism lifecycle and preservation checks](qa/mechanism-review.json) and [claim-specific source review](qa/mechanism-source-review.json). Proposed AWS tests are documented but were not executed. Existing outcome, feature, profile, alias and resource-model sources are checked against the Stage 2 baseline.
 
 The current [machine-readable results](qa/checks.json) distinguish source structure, rendered behavior, and synthetic examples. The [content revision record](qa/content-review.json) identifies cleanup and editorial changes; the [source review record](qa/source-review.json) identifies new and selectively rechecked official material.
