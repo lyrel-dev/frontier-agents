@@ -1,0 +1,94 @@
+{
+  "date": "2026-10-23",
+  "baseline": "d081eade643537905690c54c4968a2445489cf96",
+  "basis": "User-supplied ten-part capability outline; retained guide procedures; targeted official-documentation corroboration.",
+  "scope": "Platform exposition and chapter/curriculum composition. Entity model and use-case semantics remain frozen.",
+  "frozen_sources": {
+    "use-cases": true,
+    "mechanisms": true,
+    "features": true,
+    "profiles": true,
+    "aliases": true,
+    "resource-models": true
+  },
+  "conceptual_corrections": [
+    "Capabilities organize customer controls; they are not outcome labels.",
+    "Concrete product facilities are described within capability dimensions, not a homogeneous feature-record index.",
+    "Mechanisms describe selection, loading, event evaluation, routing, continuation, or lifecycle behavior; assessment and reporting remain functions/workflows.",
+    "Implementation profiles are authored configuration recipes, not native platform resources; native release test profiles remain distinct.",
+    "Provider integration, network transport, inbound invocation, and outbound event delivery are separate dimensions.",
+    "Frozen dependency registers are retained for identifiers and relationships, not rendered as an authoritative product taxonomy."
+  ],
+  "official_rechecks": [
+    {
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/custom-agents-executing-custom-agents.html",
+      "supports": "Event and schedule triggers; JMESPath predicate/projection; context limits; invocation concurrency and cancellation",
+      "qualification": "The directly retrieved representation was schedule-only; the indexed detailed page includes event triggers."
+    },
+    {
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html",
+      "supports": "Explicit tool/skill/store selection and automatic continuation subagents",
+      "qualification": "Overview retains schedule-only wording; use execution procedure for trigger coverage."
+    },
+    {
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-managed-agents.html",
+      "supports": "Managed roster, editable instructions, Learning history and platform-owned triggers"
+    },
+    {
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-managing-assets.html",
+      "supports": "Eight asset types, CloudFormation support, API and declarative distinctions",
+      "qualification": "Directly retrieved representation lists six types; indexed page and dated change log include memory types."
+    },
+    {
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/whats-new.html",
+      "supports": "Dated additions including Teams, OIDC administration, source import, shared-VPC routing, knowledge conversion, outputs, and metrics",
+      "qualification": "The indexed changelog contains October entries; the direct representation ended in July. No relative age is inferred solely from retrieval order."
+    },
+    {
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html",
+      "supports": "Assessment-specific resource and execution lifecycles"
+    },
+    {
+      "url": "https://docs.aws.amazon.com/securityagent/latest/userguide/provide-testing-credentials.html",
+      "supports": "Credential resolution and retained login procedure"
+    },
+    {
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/task-management.html",
+      "supports": "Conversation versus task; schedule/event creation; approval by invocation type"
+    },
+    {
+      "url": "https://docs.aws.amazon.com/finops-agent/latest/userguide/context-files-and-memory.html",
+      "supports": "Files, memory, and compaction have different loading and lifecycle behavior"
+    },
+    {
+      "url": "https://docs.aws.amazon.com/devopsagent/latest/userguide/release-management-release-testing.html",
+      "supports": "UI/API test-profile authentication; TOTP for both, email for UI only; real application requests including writes."
+    }
+  ],
+  "boundary": "No live AWS execution; retained statements keep their previous sources. The supplied document governs structure, not a claim that AWS publishes this taxonomy.",
+  "presentation_changes": "Existing useful tables/figures/exercises retained and ordered by the capability chapters; new slides cover managed/custom definition, event filters, integration direction, transport, and administrative APIs.",
+  "removed_rendering": "Automatic mechanism-review blocks and their nested index headings; frozen references resolve to authored technical sections.",
+  "routing_corrections": {
+    "MX-D-QUERY": "D-21: conversational assistance",
+    "MX-D-CUSTOM": "D-19: custom invocation",
+    "MX-S-PERSONALIZE": "S-13: finding-edit personalization"
+  },
+  "timing": {
+    "devops": {
+      "minutes": 80,
+      "exercise_minutes": 8
+    },
+    "security": {
+      "minutes": 67,
+      "exercise_minutes": 8
+    },
+    "finops": {
+      "minutes": 63,
+      "exercise_minutes": 8
+    },
+    "architecture": {
+      "minutes": 38,
+      "exercise_minutes": 4
+    }
+  }
+}
