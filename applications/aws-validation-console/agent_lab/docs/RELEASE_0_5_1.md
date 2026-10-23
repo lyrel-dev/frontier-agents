@@ -47,3 +47,9 @@ Official contracts used for the execution check:
 - https://docs.aws.amazon.com/fis/latest/userguide/experiment-options.html
 - https://prometheus.io/docs/prometheus/latest/querying/api/
 - https://grafana.com/docs/grafana/latest/developer-resources/api-reference/http-api/
+
+## Catalogue refresh and monitoring transport
+
+The catalogue now preserves search and account/Region filters in authenticated in-memory view state. A delayed return-from-setup refresh or periodic refresh cannot clear those inputs; locking clears them. Native acceptance explicitly delays the catalogue response while the operator changes the search.
+
+Monitoring acceptance no longer assumes host NAT mappings exist on Docker's internal bridge. The application, Prometheus and Grafana share an internal network namespace with no published host ports. Fixed Python HTTP assertions run inside that namespace; the request credentials travel through stdin, not process arguments or error logs. The test still exercises real authentication, scraping, every baseline PromQL expression, Grafana dashboard import/readback, and Grafana datasource queries. Thirteen transport checks cover allowed endpoints, actual HTTP authentication, retryable unavailability, malformed results and credential-safe errors.
