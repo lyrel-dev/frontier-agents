@@ -1,0 +1,92 @@
+{
+  "revision": "2026-10-23-capability-exposition",
+  "baseline": "d081eade643537905690c54c4968a2445489cf96",
+  "basis": "Supplied ten-part DevOps capability outline, adapted to documented facilities of the other two services.",
+  "frozen_sources": {
+    "catalog/use-cases.json": {
+      "unchanged": true,
+      "sha256": "e5aae837db20d3dc7383b86cf22f01cb7310c8691e37122b0f11650ecc92900c"
+    },
+    "catalog/mechanisms.json": {
+      "unchanged": true,
+      "sha256": "ef2f2ba7f98a9a33929c2ebfd240e29a42ee0d10fa37c44c0baeb68e48c7f5c7"
+    },
+    "catalog/features.json": {
+      "unchanged": true,
+      "sha256": "fefc21015e00bf043a9bbbe9776caa5ca5cb2de0ab3232ca8a6437ad8ed20763"
+    },
+    "catalog/profiles.json": {
+      "unchanged": true,
+      "sha256": "89d23d92c97b95288e68de2a001186ba5846b18b6dec3774ba545143aea33190"
+    },
+    "catalog/aliases.json": {
+      "unchanged": true,
+      "sha256": "5f1efdc4eb665cdd3d7830c148d653cc2f38a7d4c7cf4cf1f68e538d95ced720"
+    },
+    "catalog/resource-models.json": {
+      "unchanged": true,
+      "sha256": "4565514f203edd099b20fdc1472a3a1472696e147952f838e2163efe2947aa42"
+    }
+  },
+  "guide_structure": {
+    "devops": {
+      "primary_dimensions": [
+        "Workspace and resource organization",
+        "Agent definition and customization",
+        "Knowledge and behavioral context management",
+        "Invocation and triggers",
+        "External system integrations",
+        "Network connectivity",
+        "Execution runtime and action control",
+        "Built-in managed workflows",
+        "Interaction surfaces, outputs, and outbound events",
+        "Administration, security, and automation"
+      ],
+      "appendix": "Worked example and reference material",
+      "sections": 33
+    },
+    "security": {
+      "primary_dimensions": [
+        "Workspace and resource organization",
+        "Assessment definition and customization",
+        "Application knowledge and assessment criteria",
+        "Assessment invocation",
+        "External system integrations",
+        "Network connectivity",
+        "Execution and assessment controls",
+        "Managed assessment and remediation workflows",
+        "Interaction surfaces and outputs",
+        "Administration, security, and limits"
+      ],
+      "appendix": "Worked example and reference material",
+      "sections": 24
+    },
+    "finops": {
+      "primary_dimensions": [
+        "Workspace and resource organization",
+        "Instance configuration and task definition",
+        "Organizational knowledge and conversation context",
+        "Task invocation and automation",
+        "Data-source and collaboration integrations",
+        "Service access and data location",
+        "Execution runtime and publication control",
+        "Managed analytical functions",
+        "Interaction surfaces and report artifacts",
+        "Administration, retention, and limits"
+      ],
+      "appendix": "Worked example and reference material",
+      "sections": 23
+    }
+  },
+  "distinctions_checked": [
+    "Managed roster and definition controls",
+    "Custom-agent definition distinct from invocation",
+    "Actual event-evaluation mechanism",
+    "Outbound delegation distinct from inbound access",
+    "Transport distinct from provider",
+    "Asset versus trigger",
+    "Service usage telemetry"
+  ],
+  "errors": [],
+  "boundary": "Structural and preservation tests supplement the authored review. They do not establish exhaustive AWS coverage, explain undisclosed internals, or represent live service execution."
+}
