@@ -1,6 +1,6 @@
 {
   "schema": "frontier-markdown-build/v1",
-  "iteration": 13,
-  "scope": "Note-only popup, global annotation menu, reload-safe local autosave, connected-user backend adapter and precise export",
+  "iteration": 14,
+  "scope": "Hierarchical reader selection, source-snapshot membership, scoped comments and guarded edits; frozen content unchanged",
   "frozen_model_and_use_cases": true
 }
