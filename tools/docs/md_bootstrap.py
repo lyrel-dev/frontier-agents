@@ -15,6 +15,7 @@ def run():
     migration=HERE/'migrate_markdown.py'
     text=migration.read_text().replace('import build as old','import render as old')
     text=text.replace("p=HERE/'build.py';s=p.read_text()", "p=HERE/'render.py';s=p.read_text()")
+    text=text.replace("if not root and isinstance(item.get('id'),str):", "if not root and index and isinstance(item.get('id'),str) and ((len(trail)==2 and trail[0]=='entries') or (registry=='resource-models' and len(trail)>=2 and trail[-2] in ('entities','relationships','concepts'))):")
     text=text.replace('The publication workflow runs for Markdown and compiler changes as well as explicit build requests.', 'Request publication by updating documentation-build.json or manually dispatching the existing documentation workflow after source changes.')
     migration.write_text(text)
     pre=HERE/'prepare_markdown_migration.py'
