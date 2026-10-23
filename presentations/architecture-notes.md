@@ -2,59 +2,43 @@
 
 
 
-Presentation: 38 minutes, including 4 minutes of prepared-result exercises. Questions and breaks are additional.
+Presentation: 27 minutes, including 4 minutes of prepared-result exercises. Questions and breaks are additional.
 
 
 
-## 01. Concept ownership and resource identity
+## 01. An agent is an executor, not the surrounding workspace
 
-00:00–03:00 · Concept ownership and product resource models
+00:00–03:00 · Agents and their operating context
 
-Blue, green and orange classify concept ownership. Resource kind and source qualification prevent false equivalence.
-
-
-
-Class | What it defines | Examples | Interpretation
-
-Documentation-defined | How the reference explains operational work | Use case; mechanism explanation; implementation profile | Not an AWS resource or SDK payload
-
-AWS-defined resource | A documented service facility | Agent Space; assessment configuration; automation | Use the exact product namespace and lifecycle
-
-AWS-defined state or view | A documented representation or component | Topology; retained login procedure; conversation summary | Do not invent independent CRUD operations
-
-External or engineering-owned | Original system or accepted artifact | Repository revision; deployed target; Jira issue; review | Preserve source identity and independent authorization
-
-
-Detailed reference: [Concept ownership and the approved entity model](../guides/architecture.html#A-10)
-
-
-## 02. Product-specific configuration and execution models
-
-03:00–06:00 · Concept ownership and product resource models
-
-Similar responsibilities do not imply interchangeable resources, permissions or deletion behavior.
+Start with the simple execution cycle, then identify the actual nouns of each service. This is an explanatory comparison, not a common AWS resource type or a universal internal agent framework.
 
 
 
-Responsibility | DevOps | Security | FinOps
+Concept | Meaning in this collection | Example
 
-Scope | Operational Agent Space | Application Agent Space; shared requirements | Independent instance; finops-agent AgentSpace IAM name
+Agent | A configured or managed AI executor using permitted operations and context | DevOps managed role or custom definition
 
-Reusable definition | Custom agent; skill; test profile | Assessment-specific configuration | Automation; instance settings
+Execution | One scoped piece of work and its evidence | Investigation, assessment run or task
 
-Execution | Investigation; invocation; Learning run | Run; one-off design review; revalidation job | Conversation work; task
+Context | Information and procedures made available through product-specific paths | Skill, application context or uploaded cost mapping
 
-Retained context | Stores, memories and versions | Application context; requirements; login procedure | Files; persistent memory; conversation summary
+Workspace | Configuration and access scope around work | Operational Agent Space, application Agent Space or FinOps instance
+
+Result | A produced record that still needs interpretation | Diagnosis, finding or report
 
 
-Detailed reference: [Product specialization and use-case traceability](../guides/architecture.html#A-11)
+Detailed reference: [From one agent execution to product-specific workflows](../guides/architecture.html#A-90)
 
 
-## 03. Agent execution and evidence cycle
 
-06:00–08:00 · Concept ownership and product resource models
+Detailed reference: [Agents, tools, context, and executions](../guides/architecture.html#A-00)
 
-A task and its configuration guide an execution. Authorized tools return observations. Those observations can lead to another step or a result. Retention is a separate, product-specific path.
+
+## 02. The agent execution cycle
+
+03:00–06:00 · Agents and their operating context
+
+A request supplies scope; applicable context informs an execution; authorized operations return observations; the execution produces a result or another step. Retention and action approval are separate product-specific paths. This logical cycle does not disclose the foundation model or internal orchestration implementation.
 
 
 
@@ -62,123 +46,78 @@ A task and its configuration guide an execution. Authorized tools return observa
 
 
 
+Detailed reference: [From one agent execution to product-specific workflows](../guides/architecture.html#A-90)
+
+
+
 Detailed reference: [Agents, tools, context, and executions](../guides/architecture.html#A-00)
 
 
-## 04. Retained context: producers, consumers, and lifecycle
+## 03. Context and control differ between the three products
 
-08:00–10:00 · Concept ownership and product resource models
+06:00–09:00 · Agents and their operating context
 
-The three services do not expose one common memory mechanism.
-
-
-
-Material | Producer | Consumer | Lifecycle distinction
-
-Incident memory | Managed learning or corrective feedback | Relevant later investigation | Version, active state and bounded retention
-
-Login procedure | Successful authenticated navigation | Later security test session | Configuration-specific reuse
-
-Requirement pack | Administrator or document generation | Eligible design/code assessment | Enablement and replacement
-
-Reference file | FinOps operator upload | Task or conversation | Soft delete and restore
-
-Conversational memory | Conversation preferences, corrections and task outcomes | Later FinOps session | Update or forget
+Do not carry the DevOps meaning of skills or custom agent into the other two products. Similar responsibilities can be implemented through different configuration objects and lifecycle rules.
 
 
-Detailed reference: [Resource identity across service boundaries](../guides/architecture.html#A-01)
+
+Concern | DevOps | Security | FinOps
+
+Behavior | Managed instructions or custom prompt | Assessment settings and criteria | Request, task instructions and context files
+
+Reusable context | Skills and selected memory | Application context, requirements and specific retained state | Files, persistent memory and conversation summary
+
+Execution | Managed investigation or custom invocation | Assessment-specific run or one-off review | Conversation or explicit queued task
+
+Scope | Operational Agent Space | Application Agent Space with shared settings | Agent instance and destination connections
+
+
+Detailed reference: [From one agent execution to product-specific workflows](../guides/architecture.html#A-90)
 
 
 
 Detailed reference: [Knowledge construction and retrieval models](../guides/architecture.html#A-02)
-
-
-## 05. Operational objectives, mechanisms and features
-
-10:00–12:00 · Concept ownership and product resource models
-
-The use case supplies the objective and completion criteria. Each workflow step links to a mechanism and its product feature. The implementation profile supplies environment-specific configuration and verification steps.
-
-
-
-![Outcome, workflow, mechanism, and feature relationships](../assets/diagrams/workflow-feature-map.svg)
 
 
 
 Detailed reference: [Capabilities, product features, and mechanisms](../guides/architecture.html#A-12)
 
 
+## 04. Three different meanings of coordination
 
-Detailed reference: [Operational objectives and implementation dependencies](../guides/architecture.html#A-09)
+09:00–12:00 · Coordination, boundaries and evidence
 
-
-## 06. Service-health reporting: required and conditional dependencies
-
-12:00–15:00 · Concept ownership and product resource models
-
-A missing required data source blocks the corresponding conclusion. Optional history changes the available context. Schedule and destination dependencies apply only to profiles that enable them.
+The term multi-agent must not collapse these cases. Explain exactly what passes: a signal, a retained entry, a finding identity, an event, or a team-owned handoff. Where the service does not document the internal graph, leave it unspecified.
 
 
 
-Element | Purpose | Configuration and evidence
+Level | Documented or authored relationship | Boundary
 
-Current telemetry | Required basis for the health conclusion | Selected source tools; verify period and material measurement.
+Inside DevOps incident work | Managed roles contribute to an investigation; Learning supplies later context | No customer-authored internal routing graph is implied
 
-Historical context | Optional interpretation of prior behavior | Available relevant memory; distinguish retrieval from correctness.
+Within a Security or FinOps workflow | Linked assessments/results or automation-created tasks | Not a documented roster of DevOps-style peer agents
 
-Recurring execution | Conditional on the chosen reporting profile | Configured trigger; timing and measurement window differ.
+Across the three products | A team transfers explicit evidence and a new request | Separate identities, scope and authorization
 
-External destination | Optional publication effect | Destination-specific authorization and delivery result.
-
-
-Detailed reference: [Operational objectives and implementation dependencies](../guides/architecture.html#A-09)
+Acceptance | A reviewer checks the receiving work against its own criteria | A generated summary is not a transferred approval
 
 
-
-Detailed reference: [Knowledge construction and retrieval models](../guides/architecture.html#A-02)
+Detailed reference: [Coordination within a service and handoff between services](../guides/architecture.html#A-91)
 
 
 
-Detailed reference: [Authorization of state-changing operations](../guides/architecture.html#A-04)
-
-
-## 07. Use case families across the three platforms
-
-15:00–18:00 · Concept ownership and product resource models
-
-Similar business labels can map to different platform objects and authorization boundaries.
+Detailed reference: [Product specialization and use-case traceability](../guides/architecture.html#A-11)
 
 
 
-Family | DevOps Agent | Security Agent | FinOps Agent
-
-Event response | Incident triage and investigation | Assessment run from configured target or source | Anomaly-triggered investigation
-
-Recurring review | Health and operational review report | Scheduled assessment or review workflow | Cost and FinOps review report
-
-Pattern analysis | Recurring causes and prevention recommendations | Finding personalization; cross-run trend analysis is team-composed | Cost drivers and optimization candidates
-
-Documentation | Topology, SOP skills and environment memory | Threat model and requirement packs | Context files and report artifacts
-
-Controlled effect | Directed resource action | Repository remediation or issue tracking | Jira/Slack publication; engineering change outside agent
+Detailed reference: [Cross-team evidence handoffs](../guides/architecture.html#A-06)
 
 
-Detailed reference: [Resource identity across service boundaries](../guides/architecture.html#A-01)
+## 05. Cross-service evidence handoff
 
+12:00–15:00 · Coordination, boundaries and evidence
 
-
-Detailed reference: [Architecture assumptions and references](../guides/architecture.html#A-07)
-
-
-
-Detailed reference: [Knowledge construction and retrieval models](../guides/architecture.html#A-02)
-
-
-## 08. Team-managed evidence handoff
-
-18:00–20:00 · Integration and authorization boundaries
-
-An operational finding can become input to separate security and cost work. Each receiving service uses its own configuration and authorization; only identifiers, evidence references, and decisions are handed over.
+A team may use an incident investigation to frame a security assessment or a cost inquiry. The handoff carries evidence identities, target revision, period, question and owner. It does not transfer credentials, permissions or an established root cause.
 
 
 
@@ -186,184 +125,120 @@ An operational finding can become input to separate security and cost work. Each
 
 
 
+Detailed reference: [Coordination within a service and handoff between services](../guides/architecture.html#A-91)
+
+
+
+Detailed reference: [Cross-team evidence handoffs](../guides/architecture.html#A-06)
+
+
+
 Detailed reference: [Integration direction and evidence ownership](../guides/architecture.html#A-08)
 
 
+## 06. Controls follow the effect
 
-Detailed reference: [Cross-team evidence handoffs](../guides/architecture.html#A-06)
+15:00–18:00 · Coordination, boundaries and evidence
 
-
-## 09. Connectivity, identity and authorization
-
-20:00–22:00 · Integration and authorization boundaries
-
-Reachability and prompt guidance do not establish authorization for an effect.
+Network reachability and instruction text do not establish authorization. Conversely, an approved effect still requires the correct technical identity. Show how each control belongs to the operation rather than to a vague autonomy level.
 
 
 
-Connectivity | Can the endpoint, repository, account or application be reached?
+Effect | Control to identify | Evidence to retain
 
-Identity | Which operator, role, credential or application user authenticated?
+Read source data | Source identity, permission and network path | Actual source result and scope
 
-Permission | Which read, test, publication or mutation operation is allowed?
+Change infrastructure | Directed-action configuration and applicable approval | Requested parameters, attribution and resulting state
 
-Behavioral guidance | Which instructions, skills or prompt rules shape the work?
+Exercise an application | Authorized target, test identity and exclusions | Run, tested revision and observations
 
+Publish externally | Destination and invocation-specific rule | Actual issue, comment or message result
 
-Detailed reference: [Network, identity, and tool-access boundaries](../guides/architecture.html#A-03)
-
-
-## 10. Execution and approval boundaries
-
-22:00–24:00 · Integration and authorization boundaries
-
-Approval follows the concrete effect; there is no universal human-approved agent mode.
-
-
-
-Effect | Required control | Evidence
-
-AWS resource mutation | Specific directed-action enablement, role and approval | Approval and resulting resource state
-
-Application security testing | Authorized target, credentials, exclusions and stop owner | Run identity, requests and findings
-
-Repository change | Provider access and normal code-review controls | Patch, pull request, tests and reviewer
-
-Jira or Slack publication | Destination and invocation-specific rule | Issue/comment/post and task history
-
-Recommendation only | No execution authority | Proposal and acceptance criteria
-
-
-Detailed reference: [Authorization of state-changing operations](../guides/architecture.html#A-04)
-
-
-## 11. Operational prerequisites and verification records
-
-24:00–27:00 · Integration and authorization boundaries
-
-Check access, execution scope, context, effects, and result evidence separately. Record unmet prerequisites and unresolved results before handing work to the next owner.
-
-
-
-Check | Record to inspect | Failure interpretation
-
-Source access | Calling identity, selected operation and returned resource | An inaccessible source leaves an evidence gap.
-
-Execution scope | Configuration ID, revision, target and observation period | A completed run against the wrong subject is not acceptance.
-
-Retained context | Applicable file, memory or procedural state | Availability and observed use are separate checks.
-
-State-changing operation | Target, permitted effect and required approval | A generated recommendation is not authorization.
-
-Result and handoff | Source references, execution ID, reviewer and unresolved items | Completion and delivery do not establish correctness.
-
-
-Detailed reference: [Network, identity, and tool-access boundaries](../guides/architecture.html#A-03)
-
+Accept a conclusion | Independent engineering or financial review | Acceptance verdict and unresolved questions
 
 
 Detailed reference: [Authorization of state-changing operations](../guides/architecture.html#A-04)
 
 
 
-Detailed reference: [Configuration, execution, and artifact lifecycles](../guides/architecture.html#A-05)
+Detailed reference: [Network, identity, and tool-access boundaries](../guides/architecture.html#A-03)
+
+
+## 07. A use case applies platform facilities to a defined objective
+
+18:00–21:00 · Apply the model to approved operational work
+
+Use the frozen use cases to apply—not redefine—the concepts. A configuration recipe is a way to supply environment-specific choices for an objective. It is not an AWS facility or a new type of agent.
 
 
 
-Detailed reference: [Cross-team evidence handoffs](../guides/architecture.html#A-06)
+Example | Facilities used | Completion evidence
 
+Service-health report | Current source reads; optional context; optional custom schedule | Measurements, interval and explicit gaps
 
-## 12. Operational-review profiles and evidence handoffs
+Finding revalidation | Original finding; deployed repair; configured test identity | Revalidation result under stated conditions
 
-27:00–30:00 · Execution lifecycles and evidence handoffs
+Cost anomaly investigation | Anomaly, cost queries and optional change evidence | Reconciled contribution and causal limits
 
-The reliability profile uses service measurements and incident records. The cost profile uses reconciled amounts and recommendations. Both produce decisions, assigned owners, and unresolved evidence requests; neither transfers service permissions.
-
-
-
-Profile | Reviewed inputs | Review outcome
-
-Reliability | Health, deployments, incident patterns and prevention proposals | Priorities, owners and evidence needed for closure.
-
-Cost management | Reconciled amounts, anomalies, recommendations and measured outcomes | Decisions with estimates separate from observed benefits.
-
-Combined team review | Independently configured service results | Retained source identities; no shared credentials or approval.
-
-
-Detailed reference: [Cross-team evidence handoffs](../guides/architecture.html#A-06)
-
+Operational review | Reviewed outputs and team-owned decisions | Owners, actions and criteria for closure
 
 
 Detailed reference: [Operational objectives and implementation dependencies](../guides/architecture.html#A-09)
 
 
 
-Detailed reference: [Cross-platform operational review: worked example](../guides/architecture.html#A-U01)
+Detailed reference: [From one agent execution to product-specific workflows](../guides/architecture.html#A-90)
 
 
-## 13. Configuration, execution and artifact lifecycles
+## 08. Exercise: one event, three independently scoped inquiries
 
-30:00–32:00 · Execution lifecycles and evidence handoffs
+21:00–25:00 · Apply the model to approved operational work
 
-Stopping future starts does not reverse completed effects or delete retained evidence.
-
-
-
-Layer | Create or configure | Stop or remove | What may remain
-
-Configuration | Agent, assessment, automation or connection | Disable, detach or delete | Prior executions and outputs
-
-Future execution | Schedule or event trigger | Pause/disable/delete trigger | Existing tasks or runs
-
-Current execution | Invocation, assessment or task | Cancel or stop where supported | Partial results and audit history
-
-Retained context | Memory, requirement or file | Deactivate, replace, forget or soft-delete | Versions or recoverable data
-
-External artifact | Ticket, message or exported report | Destination-specific removal | Copies outside the platform
-
-
-Detailed reference: [Configuration, execution, and artifact lifecycles](../guides/architecture.html#A-05)
-
-
-## 14. Handoff record between platforms and teams
-
-32:00–34:00 · Execution lifecycles and evidence handoffs
-
-A handoff transfers evidence and responsibility, not credentials or authorization.
+Use the supplied tabletop. The same event can motivate three questions without establishing one shared cause or one shared execution. Ask the audience which facts are transferred and which must be verified again by the receiving workflow.
 
 
 
-Field | Required content | Reason
+0–1 min | Define the observation | Service symptom, revision and observation period
 
-Origin | Platform, configuration and execution identifiers | Trace the producing context
+1–2 min | Assign incident work | Current evidence and unresolved dependencies
 
-Subject | Service, revision, target and UTC window | Avoid ambiguous scope
+2–3 min | Define Security and FinOps questions | Authorized target/revision and comparable cost basis
 
-Evidence | Source links, findings, totals and failed reads | Support independent review
-
-Request | Question, owner, deadline and permitted effect | Bound the receiving work
-
-Acceptance | Required check and unresolved questions | Prevent generated text from becoming automatic closure
-
-
-Detailed reference: [Cross-team evidence handoffs](../guides/architecture.html#A-06)
-
-
-## 15. Exercise: incident, security, and cost evidence handoff
-
-34:00–38:00 · Cross-platform worked example
-
-The same business event creates different evidence obligations for each platform.
-
-
-
-0–1 min | Define the observation | Latency, application revision, authorization identity and cost window
-
-1–2 min | Assign DevOps work | Investigate current service evidence and dependency path
-
-2–3 min | Assign Security and FinOps work | Assess the authorized application change; reconcile related cost movement
-
-3–4 min | State unresolved questions | No single shared root cause or cross-agent runtime is assumed
+3–4 min | Record handoff and acceptance | Separate owners, permissions and verification criteria
 
 
 Detailed reference: [Cross-platform operational review: worked example](../guides/architecture.html#A-U01)
+
+
+
+Detailed reference: [Coordination within a service and handoff between services](../guides/architecture.html#A-91)
+
+
+## 09. Reading path after the presentation
+
+25:00–27:00 · Apply the model to approved operational work
+
+The presentation builds the mental model and demonstrates its use. The guide retains detailed configuration, source qualifications and limits. Do not turn the reference taxonomy into the required teaching order.
+
+
+
+Need | Read | Expected understanding
+
+Understand one product | Agent overview, then capability chapters | Objects, context, access and work
+
+Perform a task | Approved use-case page | Scope, workflow, configuration and acceptance
+
+Inspect identity and ownership | Resource model | Product-specific objects and qualified relationships
+
+Configure or troubleshoot | Detailed procedure and official reference | Actual controls, limits and expected observations
+
+
+Detailed reference: [From one agent execution to product-specific workflows](../guides/architecture.html#A-90)
+
+
+
+Detailed reference: [Capabilities, product features, and mechanisms](../guides/architecture.html#A-12)
+
+
+
+Detailed reference: [Architecture assumptions and references](../guides/architecture.html#A-07)
