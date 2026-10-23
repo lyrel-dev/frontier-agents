@@ -32,6 +32,12 @@ jobs:
       - name: Install Chromium for browser validation
         timeout-minutes: 3
         run: python -m playwright install chromium
+      - name: Apply reviewed teaching sequence once
+        run: |
+          python -m compileall -q tools/docs
+          for file in apply_teaching_revision.py refine_teaching_figures.py; do
+            if [ -f "tools/docs/$file" ]; then python "tools/docs/$file"; fi
+          done
       - name: Build guides, linked catalog, figures and HTML presentations
         run: |
           python -m compileall -q tools/docs
@@ -66,7 +72,7 @@ jobs:
             tail -n 25 /tmp/document-check.log
             exit 1
           fi
-          python -c "import json; r=json.load(open('qa/checks.json')); print(json.dumps({'revision':r['revision'],'errors':r['errors'],'capability_exposition':r.get('capability_exposition',{})},indent=2))"
+          python -c "import json; r=json.load(open('qa/checks.json')); print(json.dumps({'revision':r['revision'],'errors':r['errors'],'educational_review':r.get('educational_review',{})},indent=2))"
       - name: Commit each documentation change separately
         env:
           DOCUMENTATION_BRANCH: ${{ github.ref_name }}
