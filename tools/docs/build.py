@@ -20,7 +20,7 @@ from markdown_it import MarkdownIt
 from structure import CHAPTERS, DECK_CHAPTERS, LABELS, REVISION, section_type
 from presentation import DECKS
 from diagrams import DIAGRAMS, build as build_diagrams
-import catalog as catalogue
+import reader
 import resource_model
 import mechanism_detail
 
@@ -142,37 +142,7 @@ def frame(title,body,view,key='',total=0,depth=1):
 
 def options(values,label):return '<option value="">'+esc(label)+'</option>'+''.join(f'<option value="{esc(v)}">{esc(v)}</option>' for v in sorted(values))
 
-def catalog_sources(e,guides):return catalogue.sources(e,guides)
-def catalog_controls(entries,platform=False):return catalogue.controls(entries,platform)
-def catalog_entry(e,guides,embedded=False):return catalogue.entry(e,guides,embedded)
-def catalog_content(catalog,guides,key=None):return catalogue.content(catalog,guides,key)
 
-def report(key,g,guides,catalog):
-    links=links_for(guides,key);deck=DECKS[key];minutes,exercise=totals(deck)
-    toc=[];chapters=[];flat=ordered_ids(key)
-    for number,c in enumerate(CHAPTERS[key],1):
-        nav=[];content=[]
-        for j,sid in enumerate(c['sections'],1):
-            s=g['sections'][sid];n=f'{number}.{j}'
-            detail_items=[e for e in mechanism_detail.load()['entries'] if e['platform']==key and e['review']['primary_section']==sid]
-            detail_nav=''.join(f'<li><a href="#{e["id"]}" data-mechanism="{e["id"]}">{esc(e["title"])}</a></li>' for e in detail_items)
-            detail_nav=('<ol class="mechanism-toc">'+detail_nav+'</ol>') if detail_nav else ''
-            nav.append(f'<li><a href="#{sid}" data-section="{sid}"><span>{n}</span> {esc(s["title"])}</a>{detail_nav}</li>')
-            content.append(f'<section class="report-section" id="{sid}" data-kind="{section_type(sid)}" data-chapter="{c["slug"]}"><div class="section-meta">{n} · {sid} · {esc(LABELS[section_type(sid)])}</div><h3><a href="#{sid}">{esc(s["title"])}</a></h3>{render_markdown(s["body"],g["definitions"],links,key+"-"+sid)}</section>')
-        toc.append(f'<details open><summary>{number:02d}. {esc(c["title"])}</summary><ol>{"".join(nav)}</ol></details>')
-        chapters.append(f'<section class="chapter" id="chapter-{c["slug"]}" data-chapter="{c["slug"]}"><header class="chapter-heading"><span class="chapter-number">Chapter {number:02d}</span><h2>{esc(c["title"])}</h2><p>{esc(c["purpose"])}</p></header>{"".join(content)}</section>')
-    intro=BeautifulSoup(render_markdown(g['intro'],g['definitions'],links,key+'-intro'),'html.parser')
-    if intro.h1:intro.h1.decompose()
-    chapter_options=''.join(f'<option value="{c["slug"]}">{i:02d}. {esc(c["title"])}</option>' for i,c in enumerate(CHAPTERS[key],1))
-    kinds=dict.fromkeys(section_type(s) for s in flat)
-    type_options=''.join(f'<option value="{t}">{esc(LABELS[t])}</option>' for t in kinds)
-    catalog_panel=''
-    if key in PLATFORMS:
-        cases=[e for e in catalog['entries'] if catalogue.includes(e,key)]
-        toc.append(f'<details open data-usecase-toc><summary>{len(CHAPTERS[key])+1:02d}. Operational use cases</summary><ol><li><a href="#use-case-catalog">Search and read {len(cases)} workflows</a></li></ol></details>')
-        catalog_panel=f'<section id="use-case-catalog" class="embedded-catalog" data-usecase-catalog><header class="chapter-heading"><span class="chapter-number">Chapter {len(CHAPTERS[key])+1:02d}</span><h2>Operational use cases</h2><p>The preceding chapters explain configuration and mechanisms. These workflows apply them to recurring engineering tasks. Read the situation, execution, and interpretation before using the reference fields.</p></header>{catalog_content(catalog,guides,key)}</section>'
-    body=f'''<div class="book-layout"><aside class="toc" aria-label="Table of contents"><p class="toc-title">{esc(deck['title'])}</p><div class="toc-actions"><button id="nav-expand">Expand</button><button id="nav-collapse">Collapse</button></div>{''.join(toc)}</aside><main id="main" class="book"><header class="book-title"><p class="eyebrow">Engineering guide</p><h1>{esc(deck['title'])}</h1>{intro}<div class="reading-links"><a href="../presentations/{key}.html">HTML presentation</a><a href="{key}.md">Markdown source</a><a href="../catalog/index.html{'?platform='+key if key in PLATFORMS else ''}">Use-case catalog</a></div></header><div class="filter-bar"><input id="search" type="search" aria-label="Search guide" placeholder="Search the technical chapters"><select id="chapter" aria-label="Chapter"><option value="">All chapters</option>{chapter_options}</select><select id="type" aria-label="Section type"><option value="">All section types</option>{type_options}</select><button id="reset">Reset</button><button data-print>Print</button></div><p id="search-status" class="result-count" aria-live="polite"></p><p id="empty-results" hidden>No technical sections match. The operational catalog has its own search below.</p>{''.join(chapters)}{catalog_panel}<footer>Logical diagrams and authored workflows are explanatory material. Source links support product behavior; no live AWS execution or measured improvement is claimed.</footer></main></div>'''
-    write(f'guides/{key}.html',catalogue.decorate(frame(deck['title']+' — guide',body,'report',key)))
 
 def table(rows):
     return '<div class="table-wrap" tabindex="0"><table><thead><tr>'+''.join('<th scope="col">'+esc(x)+'</th>' for x in rows[0])+'</tr></thead><tbody>'+''.join('<tr>'+''.join('<td>'+esc(x)+'</td>' for x in r)+'</tr>' for r in rows[1:])+'</tbody></table></div>'
@@ -213,26 +183,9 @@ def presentation(key,g,guides):
     write(f'presentations/{key}.html',frame(d['title']+' — presentation',body,'presentation',key,total))
     write(f'presentations/{key}-notes.md','\n\n'.join(transcript))
 
-def build_catalog(catalog,guides):
-    catalogue.build_pages(catalog,guides,frame,write)
 
-def indexes(catalog):
-    rows=[]
-    for key,d in DECKS.items():
-        total,exercise=totals(d)
-        rows.append(f'<tr><th scope="row">{esc(d["title"])}</th><td><a href="guides/{key}.html">Guide</a></td><td><a href="presentations/{key}.html">HTML presentation</a></td><td>{total//60} min, including {exercise//60} min exercise</td></tr>')
-    programme=sum(totals(d)[0] for d in DECKS.values())//60;exercises=sum(totals(d)[1] for d in DECKS.values())//60
-    body=f'<main id="main" class="index-main"><header class="book-title"><p class="eyebrow">Engineering reference</p><h1>AWS operational agents</h1><p>Technical reference for the resource models, integrations, retained context, and execution workflows of three AWS services. The guides define product behavior and configuration. The catalog links operational objectives to mechanisms and implementation profiles. HTML presentations use the same sources.</p></header><h2>Guides and presentations</h2><div class="table-wrap"><table><thead><tr><th>Subject</th><th>Reference</th><th>Teaching edition</th><th>Delivery budget</th></tr></thead><tbody>{"".join(rows)}</tbody></table></div><h2>Operational use cases</h2><p><a href="catalog/index.html">Browse the grouped and searchable catalog</a>. Its {len(catalog["entries"])} narratives explain situations, evidence-gathering work, and the resulting decisions. Reference fields and official sources are available alongside the prose.</p><h2>Implementation references</h2><p>Follow a workflow into its <a href="catalog/mechanisms.html">mechanisms</a>, inspect the <a href="catalog/features.html">features and affected outcomes</a>, and choose a <a href="catalog/profiles.html">configuration profile</a>. The <a href="catalog/migration.md">consolidation map</a> explains where every former record now belongs.</p><h2>Reading order</h2><p>Start with <a href="guides/architecture.html#A-00">Agents, tools, context, and executions</a>. Then select a product guide, follow its integration and knowledge chapters, and use the catalog to find the relevant workflow. All presentations are HTML; no server or external script library is required.</p><p>The full programme is {programme} minutes, including {exercises} minutes of prepared-result exercises. Questions and breaks are additional. These budgets do not promise live agent completion within the exercise time.</p><footer><a href="VALIDATION.md">Validation boundary</a> · <a href="guides/coverage.md">Coverage and source mapping</a> · <a href="applications/aws-validation-console/README.md">Separate readiness-console application</a></footer></main>'
-    write('index.html',frame('AWS operational agents',body,'index',depth=0))
-    presbody=body.replace('href="guides/','href="../guides/').replace('href="catalog/','href="../catalog/').replace('href="presentations/','href="').replace('href="VALIDATION.md','href="../VALIDATION.md').replace('href="applications/','href="../applications/')
-    write('presentations/index.html',frame('HTML presentation collection',presbody,'index',depth=1))
 
 def metadata(guides,catalog):
-    total=sum(totals(d)[0] for d in DECKS.values())//60;exercise=sum(totals(d)[1] for d in DECKS.values())//60
-    rows=['| Subject | Guide | HTML presentation | Duration |','|---|---|---|---|']
-    for key,d in DECKS.items():
-        t,e=totals(d);rows.append(f'| {d["title"]} | [HTML](guides/{key}.html) / [Markdown](guides/{key}.md) | [Slides](presentations/{key}.html) / [Notes](presentations/{key}-notes.md) | {t//60} min including {e//60} min exercise |')
-    write('README.md','# AWS operational agents\n\nOpen `index.html` from a repository checkout. The guides, catalog, and presentations work locally; GitHub source preview does not execute HTML controls.\n\n'+'\n'.join(rows)+f'\n\nThe programme is **{total} minutes including {exercise} minutes of prepared-result exercises**. Questions and breaks are additional.\n\n## Mechanism configuration and lifecycle\n\nThe [mechanism index](catalog/mechanisms.html) links to reviewed procedures in each guide: triggers, inputs, state changes, configuration, controls, observable results and explicitly unexecuted verification plans. See the [Stage 3 review](qa/mechanism-review.json) and [claim-level source record](qa/mechanism-source-review.json). The 30 approved outcomes are unchanged.\n\n## Product resource models\n\n[Read the ownership-coded resource models](catalog/resource-models.html). The guides introduce the model in their overview, explain identities and lifecycles, and trace the approved use cases through concrete resource bindings. [Model source](catalog/resource-models.json) and [review evidence](qa/product-source-review.json) are maintained with the build.\n\n## Operational use cases\n\n[Read and search the catalog](catalog/index.html). All {len(catalog["entries"])} workflows are narrated in prose and grouped by operational purpose. Workflow steps link to shared mechanisms, concrete feature configuration and implementation profiles. Browse the [mechanism index](catalog/mechanisms.html), [feature impact index](catalog/features.html), [profiles](catalog/profiles.html) and [consolidation map](catalog/migration.md).\n\n## Repository layout\n\n```text\nguides/          Maintained Markdown guides and generated HTML\ncatalog/         Canonical cases, mechanisms, features, profiles, aliases and product resource data; generated reading indexes\npresentations/   Generated HTML decks and presenter notes\nassets/diagrams/ Generated, accessible SVG figures\nexamples/        Synthetic evidence used in worked examples\ntools/docs/      Rendering, diagrams, presentation outline, and checks\nqa/              Current validation and source-review records\napplications/    Independently maintained readiness-console application\n```\n\nEach guide introduces the agent and its resource model, describes supported integrations, explains knowledge production and retrieval, and then follows operational workflows. Stable identifiers connect use cases, mechanisms, diagrams, and presentation references. Superseded entry-point directories and generators are removed; Git retains history.\n\n## Build and validate\n\nInstall Graphviz (`dot`) and Python dependencies, then run:\n\n```sh\npython -m pip install -r tools/docs/requirements.txt\npython -m playwright install chromium\npython tools/docs/build.py\npython tools/docs/check.py --browser\n```\n\nSee [publishing](PUBLISHING.md), [editorial rules](EDITORIAL_STANDARD.md), [source coverage](guides/coverage.md), and [validation](VALIDATION.md). No live AWS operation is represented by the synthetic examples or document checks.\n')
     coverage=['# Guide and source coverage','The source map below identifies the references attached to each maintained section. It is not a claim that every upstream page was freshly audited. Product-specific resource identities and relationships were reviewed on 22 October 2026; retained sections keep their earlier references. See [the product-model source record](../qa/product-source-review.json) and [the earlier source-review record](../qa/source-review.json).']
     for key,g in guides.items():
         coverage+=['## '+DECKS[key]['title'],'| Section | Subject | Official references |','|---|---|---|']
@@ -241,7 +194,9 @@ def metadata(guides,catalog):
     coverage+=['## Diagram scope','Figures are logical models of documented resource relationships or explicitly labeled documentation dependencies, not descriptions of undisclosed infrastructure. Dashed cross-product handoffs are team-composed.','| Figure | Detailed guide |','|---|---|']
     for key,(title,description,refs,dot) in DIAGRAMS.items():coverage.append(f'| [{title}](../assets/diagrams/{key}.svg) | '+', '.join(refs)+' |')
     write('guides/coverage.md','\n'.join(coverage))
-    write('PUBLISHING.md','# Publishing documentation\n\nEdit guide prose outside the delimited generated blocks in `guides/*.md`; edit detailed mechanism prose and its claim references in the `review` fields of `catalog/mechanisms.json`. The build synchronizes those blocks before rendering. Edit cases in `catalog/use-cases.json`, mechanism and feature relationships in `catalog/mechanisms.json` and `catalog/features.json`, recipes in `catalog/profiles.json`, product entities and relationships in `catalog/resource-models.json`, chapter membership in `tools/docs/structure.py`, slide content in `tools/docs/presentation.py`, and figures in `tools/docs/diagrams.py`.\n\nRun `python tools/docs/build.py` and `python tools/docs/check.py --browser`. Inspect rendered prose, diagrams, and slides as well as the recorded checks. Trigger the documentation workflow through `documentation-build.json`; generated documentation changes are committed separately on the checked-out branch. Promote a tested branch without overwriting intervening changes.\n\nDo not maintain compressed distributions, historical copies, old forwarding pages, or alternate renderers. Git is the revision history. Preserve `applications/` and its workflow. Repository publication is not website hosting.\n')
+
+    write('PUBLISHING.md','# Publishing documentation\n\nThe six catalog JSON registers (use-cases, mechanisms, features, profiles, aliases, resource-models) are frozen at dace05a3ce6aaae02470a817584b8ca3a4cc95be. Do not change their definitions, identifiers, relationships, or use-case semantics during reader revisions.\n\nAuthored product prose lives in guides/*.md. Detailed mechanism blocks are generated from the frozen register. Chapter membership remains in tools/docs/structure.py; reader layout is in reader.py, reading.css, and reading.js; presentation content remains in presentation.py. Update rendered navigation without introducing another parallel guide or record-type index.\n\nRun python tools/docs/build.py and python tools/docs/check.py --browser. The reading checks compare frozen records byte-for-byte and test complete task-to-procedure reading journeys. Trigger the existing workflow through documentation-build.json and publish only after validation.\n\nGit retains previous versions. Do not create manual archives, migration copies, or forwarding editions. Preserve the independent application and its workflow. Repository publication does not deploy a website.\n')
+
 
 def commit():
     allowed={'guides','catalog','presentations','assets','examples','tools','qa','devops','security','finops','architecture','mechanisms','platforms'}
@@ -261,10 +216,10 @@ def commit():
 def build():
     mechanism_detail.sync_guides()
     build_diagrams();guides=load_guides();catalog=load_catalog()
-    for key,g in guides.items():report(key,g,guides,catalog);presentation(key,g,guides)
-    build_catalog(catalog,guides);indexes(catalog);metadata(guides,catalog)
+    for key,g in guides.items():presentation(key,g,guides)
+    metadata(guides,catalog)
     resource_model.resource_index(guides,frame,write,figure)
-    resource_model.integrate_pages(write)
+    reader.render(guides,render_markdown,write)
     print(json.dumps({'guides':len(guides),'sections':sum(len(g['sections']) for g in guides.values()),'diagrams':len(DIAGRAMS),'use_cases':len(catalog['entries']),'slides':sum(len(d['slides']) for d in DECKS.values())},indent=2))
 
 if __name__=='__main__':
