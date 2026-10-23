@@ -366,7 +366,7 @@ The reviewed quota page distinguishes assessment capacity from spending controls
 
 This ordering is engineering guidance derived from the cited procedures. It does not claim that every error message has one unique cause. [SS06] [SS09] [SS18]
 
-## 11. Worked example and reference material
+## 11. Appendix: worked example and reference material
 
 Follow the approved finding workflow and inspect the prepared evidence without changing the use-case catalog.
 
