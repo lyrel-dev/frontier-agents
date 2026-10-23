@@ -22,3 +22,7 @@ Replaced record-type pages with chapter-based guides and dedicated use-case page
 ## 2026-10-23 — Capability exposition
 
 Reorganized product guides by capability dimension using the supplied DevOps outline. Removed automatic registry-shaped prose, retained frozen model/use-case sources, added omitted DevOps facilities and explicit source-version qualifications, and aligned the HTML curriculum with the revised books.
+
+## 2026-10-23 — Agent-first educational sequence
+
+Teach the configured worker, service coordination and access scope before operational workflows. Reuse fixed-layout product diagrams. Retain the approved model and all use cases. Replace the previous presentation outline rather than adding another course.
