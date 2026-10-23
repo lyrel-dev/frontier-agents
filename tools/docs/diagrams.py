@@ -171,6 +171,10 @@ def build():
     out=ROOT/'assets/diagrams';out.mkdir(parents=True,exist_ok=True)
     ns='{http://www.w3.org/2000/svg}'
     for key,(title,description,sections,dot) in DIAGRAMS.items():
+        if key.startswith('teaching-'):
+            from teaching_diagrams import build_one
+            build_one(key, out)
+            continue
         src='digraph G { graph [bgcolor="transparent",pad="0.25",nodesep="0.35",ranksep="0.6",fontname="DejaVu Sans",fontsize=16]; node [shape=box,style="rounded,filled",fillcolor="#edf5f4",color="#496b78",fontcolor="#142c3e",fontname="DejaVu Sans",fontsize=14,margin="0.18,0.12"]; edge [color="#496b78",fontname="DejaVu Sans",fontsize=11,arrowsize=0.75];\n'+dot+'\n}'
         proc=subprocess.run(['dot','-Tsvg'],input=src,text=True,capture_output=True,check=True)
         root=ET.fromstring(proc.stdout)
@@ -238,6 +242,9 @@ DIAGRAMS.update(diagram_definitions())
 
 from mechanism_figures import DIAGRAMS as MECHANISM_DIAGRAMS
 DIAGRAMS.update(MECHANISM_DIAGRAMS)
+
+from teaching_diagrams import DIAGRAMS as TEACHING_DIAGRAMS
+DIAGRAMS.update(TEACHING_DIAGRAMS)
 
 if __name__=='__main__':
     print(build())
