@@ -74,8 +74,10 @@ def validate(guides,browser=False):
                             if s.get('diagram','').startswith('teaching-'):
                                 clipped=page.locator('.slide:visible').evaluate('''root=>[...root.querySelectorAll('g[data-node]')].flatMap(g=>{const b=g.querySelector('rect').getBBox();return [...g.querySelectorAll('text')].filter(t=>{const x=t.getBBox();return x.x<b.x-1||x.y<b.y-1||x.x+x.width>b.x+b.width+2||x.y+x.height>b.y+b.height+2}).map(t=>({node:g.dataset.node,text:t.textContent}))})''')
                                 if clipped:raise AssertionError(s['diagram']+': clipped node text '+json.dumps(clipped))
+                                bad_markers=page.locator('.slide:visible').evaluate("""root=>[...root.querySelectorAll('svg[data-layout]')].flatMap(svg=>{const marker=svg.querySelector('marker');return [...svg.querySelectorAll('path[data-edge]')].filter(p=>!getComputedStyle(p).markerEnd.includes('#'+marker.id)).map(p=>p.dataset.edge)})""")
+                                if bad_markers:raise AssertionError(s['diagram']+': missing scoped arrowheads '+str(bad_markers))
                         if js:raise AssertionError(str(js))
-                        screens.append({'product':p,'width':width,'slides_checked':len(d['slides']),'diagram_text_bounds':'passed','page_overflow':'passed','javascript_errors':js})
+                        screens.append({'product':p,'width':width,'slides_checked':len(d['slides']),'diagram_text_bounds':'passed','scoped_arrowheads':'passed','page_overflow':'passed','javascript_errors':js})
                     except Exception as exc:errors.append(p+' at '+str(width)+': '+str(exc))
                     finally:page.close()
             br.close()
