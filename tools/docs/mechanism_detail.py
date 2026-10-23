@@ -57,7 +57,7 @@ def block(entry):
     for i,t in enumerate(d['test'],1):lines.append(f'{i}. {t}')
     lines.append('')
     if entry.get('related_mechanisms'):
-        lines.append('**Related mechanism.** '+' '.join(f"[{r['id']}](../catalog/mechanisms.html#{r['id']}): {r['dependency']} — {r['condition']}" for r in entry['related_mechanisms']))
+        lines.append('**Related mechanism.** '+' '.join(f"[{r['id']}](../guides/{entry['platform']}.html#{r['id']}): {r['dependency']} — {r['condition']}" for r in entry['related_mechanisms']))
         lines.append('')
     lines.extend(['**Source mapping**','',markdown_table(['Reference','Documentation section','Supported behavior'],[['['+c['source']+']',c['section'],c['assertion']] for c in d['claims']]),''])
     return '\n'.join(lines)
@@ -109,20 +109,6 @@ def sync_guides():
         path.write_text(re.sub(r'\n{3,}', '\n\n', body.rstrip()+'\n\n'+definitions+'\n'+newdefs+'\n'),encoding='utf-8')
 
 
-def index_summary(entry):
-    d=entry.get('review')
-    if not d:return ''
-    refs=load()['review_sources'];ident=entry['id'];product=entry['platform']
-    text='<section class="mechanism-review-summary"><h3>Configuration, lifecycle and verification</h3>'
-    text+='<p><strong>'+esc(d['kind'])+'.</strong> '+esc(d['inputs'])+'</p>'
-    text+='<p><a href="../guides/'+product+'.html#'+ident+'">Read the configuration, lifecycle, and verification procedure</a></p>'
-    text+='<p><strong>Implementation limits.</strong> '+esc(d['undocumented'])+'</p>'
-    text+='<ul class="claim-evidence">'+''.join('<li><a href="'+esc(refs[c['source']]['url'])+'">'+esc(c['source']+' — '+c['section'])+'</a>: '+esc(c['assertion'])+'</li>' for c in d['claims'])+'</ul>'
-    if entry.get('related_mechanisms'):
-        text+='<h3>Conditional related mechanisms</h3><ul>'+''.join('<li><a href="mechanisms.html#'+esc(r['id'])+'">'+esc(r['id'])+'</a> — '+esc(r['dependency']+': '+r['condition'])+'</li>' for r in entry['related_mechanisms'])+'</ul>'
-    parents=[p for p in load()['entries'] if any(r['id']==ident for r in p.get('related_mechanisms',[]))]
-    if parents:text+='<p>Related from: '+' · '.join('<a href="mechanisms.html#'+esc(p['id'])+'">'+esc(p['title'])+'</a>' for p in parents)+'</p>'
-    return text+'</section>'
 
 
 def source_record():
@@ -197,27 +183,7 @@ def validate(guides,browser=False):
             if not node or node.name!='h4':errors.append(e['id']+': detailed guide anchor missing')
     for mid in ('MX-D-CUSTOM','MX-F-FILES','MX-S-PERSONALIZE','MX-F-JIRA','MX-F-SLACK'):
         if not current[mid]['review']['undocumented']:errors.append(mid+': unknown boundary missing')
-    if browser and not errors:
-        from playwright.sync_api import sync_playwright
-        with sync_playwright() as pw:
-            br=pw.chromium.launch(headless=True)
-            for width in (390,1440):
-                page=br.new_page(viewport={'width':width,'height':1000});js=[];page.on('pageerror',lambda err:js.append(str(err)))
-                try:
-                    for mid in ('MX-D-RECALL','MX-S-PERSONALIZE','MX-F-SLACK'):
-                        e=current[mid];page.goto((ROOT/'catalog/mechanisms.html').as_uri()+'#'+mid)
-                        page.locator('#'+mid+' .mechanism-review-summary a[href*="../guides/"]').click()
-                        page.wait_for_function('(mid)=>location.hash==="#"+mid',arg=mid)
-                        assert page.locator('h4#'+mid).is_visible()
-                        assert not page.evaluate('document.documentElement.scrollWidth>innerWidth+2')
-                    page.goto((ROOT/'catalog/mechanisms.html').as_uri()+'#MX-S-FINDING')
-                    page.locator('#MX-S-FINDING a[href="mechanisms.html#MX-S-PERSONALIZE"]').click()
-                    assert page.locator('#MX-S-PERSONALIZE').is_visible()
-                    assert not js
-                    results.append({'width':width,'mechanism_to_detailed_procedure':'passed','conditional_personalization_link':'passed','javascript_errors':js})
-                except Exception as exc:errors.append('Mechanism detail browser '+str(width)+': '+str(exc))
-                finally:page.close()
-            br.close()
+    # Browser navigation is validated across the new reading paths in reading_check.
     result={'stage':3,'reviewed_on':DATE,'baseline':BASELINE,'reviewed_mechanisms':len(data['entries']),
             'distribution':dict(Counter(e['platform'] for e in data['entries'])),
             'official_sources':len(data['review_sources']),'claim_mappings':sum(len(e['review']['claims']) for e in data['entries']),
