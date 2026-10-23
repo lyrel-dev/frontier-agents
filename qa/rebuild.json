@@ -1,6 +1,6 @@
 {
-  "revision": "2026-10-23-technical-editorial-review",
-  "files_compared": 62,
+  "revision": "2026-10-23-reading-structure",
+  "files_compared": 88,
   "identical_repeated_build": true,
   "boundary": "Same committed inputs and same runner environment; not cross-version reproducibility."
 }
