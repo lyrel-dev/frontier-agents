@@ -20,26 +20,7 @@
     "Missing failure handling rejected",
     "Cross-product configuration assumption rejected"
   ],
-  "browser": [
-    {
-      "width": 390,
-      "reference_filters": "passed",
-      "outcome_mechanism_feature_reverse_navigation": "passed",
-      "former_case_and_support_aliases": "passed",
-      "forecast_coverage_choice": "passed",
-      "shared_profile_filters": "passed",
-      "javascript_errors": []
-    },
-    {
-      "width": 1440,
-      "reference_filters": "passed",
-      "outcome_mechanism_feature_reverse_navigation": "passed",
-      "former_case_and_support_aliases": "passed",
-      "forecast_coverage_choice": "passed",
-      "shared_profile_filters": "passed",
-      "javascript_errors": []
-    }
-  ],
+  "browser": [],
   "errors": [],
   "boundary": "Document dependency and navigation checks. Not a live AWS readiness test, exhaustive source audit or evidence of operational improvement."
 }
