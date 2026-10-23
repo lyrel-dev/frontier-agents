@@ -1,5 +1,5 @@
 """Maintained chapter membership and presentation grouping."""
-REVISION="2026-10-23-technical-editorial-review"
+REVISION = '2026-10-23-reading-structure'
 BASELINE='75f7d7c11d29e308e71a1bbe77ad93e9bc9f08a9'
 CHAPTERS={'devops': [{'slug': 'model',
              'title': 'Resource model and scope',
