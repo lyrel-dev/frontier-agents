@@ -2,8 +2,8 @@
   "revision": "2026-10-23-capability-exposition",
   "files": {
     ".github/workflows/document-suite.yml": {
-      "bytes": 3755,
-      "sha256": "98f98f74b66e5760b9cf8b6fcff9bd090b2dad9578d388d79b7ca103f53360ef"
+      "bytes": 3642,
+      "sha256": "17316e2eb4d8d563851fc70b9323dba27e725f567e7e908b58bdc94c4dc1077f"
     },
     "CHANGELOG.md": {
       "bytes": 2690,
