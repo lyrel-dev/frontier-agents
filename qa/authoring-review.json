@@ -1,6 +1,6 @@
 {
   "schema": "frontier-authoring-validation/v1",
-  "interaction": "contextual-v2",
+  "interaction": "contextual-v3",
   "errors": [],
   "source_mapping": [
     "all registry values equal the approved baseline",
@@ -57,6 +57,33 @@
     },
     {
       "file_url_search": "passed"
+    }
+  ],
+  "annotation_menu": [
+    {
+      "viewport": 390,
+      "popup_note_only": "passed",
+      "global_menu_actions": "passed",
+      "automatic_note_reply_edit_persistence_without_done": "passed",
+      "stable_note_ids": "passed",
+      "explicit_authenticated_backend_adapter_success_failure_and_expiry": "passed",
+      "export_source_precision": "passed",
+      "confirmed_document_and_all_local_clear": "passed",
+      "javascript_errors": []
+    },
+    {
+      "viewport": 1440,
+      "popup_note_only": "passed",
+      "global_menu_actions": "passed",
+      "automatic_note_reply_edit_persistence_without_done": "passed",
+      "stable_note_ids": "passed",
+      "explicit_authenticated_backend_adapter_success_failure_and_expiry": "passed",
+      "export_source_precision": "passed",
+      "confirmed_document_and_all_local_clear": "passed",
+      "javascript_errors": []
+    },
+    {
+      "localStorage_failure_visible_and_memory_export_retained": "passed"
     }
   ]
 }
