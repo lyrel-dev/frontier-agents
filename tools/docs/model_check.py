@@ -103,67 +103,7 @@ def validate_model(guides,browser=False):
     assert any('acceptance/failure' in x for x in schema_errors(bad,mechanisms,features,profiles,aliases,guides));regression.append('Missing failure handling rejected')
     bad=deepcopy(profiles);bad[0]['platforms']=['security']
     assert any('unqualified cross-product' in x for x in schema_errors(cases,mechanisms,features,bad,aliases,guides));regression.append('Cross-product configuration assumption rejected')
-    for file,items in [('mechanisms',mechanisms),('features',features),('profiles',profiles)]:
-        page=BeautifulSoup((ROOT/f'catalog/{file}.html').read_text(),'html.parser')
-        if {a['id'] for a in page.select('.reference-entry')}!={r['id'] for r in items}:errors.append(file+': reference render/source mismatch')
-        for r in items:
-            node=page.find(id=r['id'])
-            if node and not node.select('a[href*="../catalog/"]'):errors.append(r['id']+': missing dependency navigation')
-    feature_page=BeautifulSoup((ROOT/'catalog/features.html').read_text(),'html.parser')
-    node=feature_page.find(id='FT-D-MEMORY')
-    if not node or not node.find('a',href='../catalog/index.html#UC-D02') or not node.find('a',href='../catalog/index.html#UC-D06'):errors.append('Memory impact index omits incident or health-report consumers')
-    if browser and not errors:
-        from playwright.sync_api import sync_playwright
-        with sync_playwright() as pw:
-            br=pw.chromium.launch(headless=True)
-            for width in (390,1440):
-                page=br.new_page(viewport={'width':width,'height':1000});js_errors=[];page.on('pageerror',lambda err:js_errors.append(str(err)))
-                try:
-                    for file,items in [('mechanisms',mechanisms),('features',features),('profiles',profiles)]:
-                        page.goto((ROOT/f'catalog/{file}.html').as_uri())
-                        assert page.locator('.reference-entry:visible').count()==len(items)
-                        page.locator('[data-ref-search]').fill('nonexistent-zz928')
-                        assert page.locator('.reference-entry:visible').count()==0
-                        assert page.locator('[data-ref-empty]').is_visible()
-                        page.locator('[data-ref-reset]').click()
-                        page.locator('[data-ref-platform]').select_option('security')
-                        expected=sum('security' in r.get('platforms',[r.get('platform')]) for r in items)
-                        assert page.locator('.reference-entry:visible').count()==expected
-                        assert not page.evaluate('document.documentElement.scrollWidth>innerWidth+2')
-                    page.goto((ROOT/'catalog/index.html').as_uri()+'#D-UC03')
-                    page.wait_for_function("location.hash==='#UC-D02'")
-                    assert page.locator('#UC-D02').is_visible()
-                    page.goto((ROOT/'catalog/index.html').as_uri()+'#S-UC05')
-                    page.wait_for_url('**/mechanisms.html#MX-S-LOGIN')
-                    assert page.locator('#MX-S-LOGIN').is_visible()
-                    page.goto((ROOT/'catalog/index.html').as_uri()+'#F-UC04')
-                    assert page.locator('#F-UC04').is_visible()
-                    assert page.locator('#F-UC04 a').count()==2
-                    page.goto((ROOT/'catalog/index.html').as_uri())
-                    page.locator('[data-uc-platform]').select_option('devops')
-                    assert page.locator('.usecase-entry:visible').count()==15
-                    assert page.locator('#UC-G01').is_visible()
-                    page.locator('[data-uc-platform]').select_option('finops')
-                    assert page.locator('.usecase-entry:visible').count()==8
-                    assert page.locator('#UC-G01').is_visible()
-                    page.locator('[data-uc-reset]').click();page.locator('[data-uc-search]').fill('Investigation steering')
-                    assert page.locator('#UC-D02').is_visible()
-                    page.locator('[data-uc-reset]').click();page.locator('[data-uc-search]').fill('Persistent reporting preferences')
-                    assert page.locator('[data-supporting-matches]').is_visible()
-                    assert page.locator('[data-supporting-matches] a[href="../catalog/mechanisms.html#MX-F-MEMORY"]').is_visible()
-                    page.locator('[data-uc-reset]').click();page.locator('#UC-D06 summary').click()
-                    assert page.locator('#UC-D06 .workflow-steps > li').count()==len(next(c for c in cases if c['id']=='UC-D06')['workflow'])
-                    page.locator('#UC-D06 a[href="../catalog/mechanisms.html#MX-D-RECALL"]').click()
-                    assert page.locator('#MX-D-RECALL').is_visible()
-                    page.locator('#MX-D-RECALL a[href="../catalog/features.html#FT-D-MEMORY"]').click()
-                    assert page.locator('#FT-D-MEMORY').is_visible()
-                    page.locator('#FT-D-MEMORY a[href="../catalog/index.html#UC-D06"]').first.click()
-                    assert page.locator('#UC-D06').is_visible()
-                    errors.extend(js_errors)
-                    browser_results.append({'width':width,'reference_filters':'passed','outcome_mechanism_feature_reverse_navigation':'passed','former_case_and_support_aliases':'passed','forecast_coverage_choice':'passed','shared_profile_filters':'passed','javascript_errors':js_errors})
-                except Exception as exc:errors.append('Relationship browser check at '+str(width)+': '+str(exc))
-                finally:page.close()
-            br.close()
+    # Reader composition and reverse navigation are checked in reading_check.
     result={'schema_version':2,'primary_cases':len(cases),'primary_distribution':dict(Counter(c['platform'] for c in cases)),'mechanisms':len(mechanisms),'features':len(features),'implementation_profiles':len(profiles),'former_identifiers_mapped':len(aliases),'workflow_steps':sum(len(c['workflow']) for c in cases),'mechanism_bindings':sum(s['mechanism'] is not None for c in cases for s in c['workflow']),'supporting_records_reclassified':sum(a['disposition'].startswith('Supporting') for a in aliases),'regression_checks':regression,'browser':browser_results,'errors':errors,'boundary':'Document dependency and navigation checks. Not a live AWS readiness test, exhaustive source audit or evidence of operational improvement.'}
     (ROOT/'qa/relationships.json').write_text(json.dumps(result,indent=2)+'\n')
     return result
