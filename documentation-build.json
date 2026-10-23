@@ -1,6 +1,6 @@
 {
   "revision": "2026-10-23-reading-structure",
-  "build": 1,
+  "build": 2,
   "scope": ["AWS DevOps Agent", "AWS Security Agent", "AWS FinOps Agent"],
   "shared_architecture": true,
   "canonical_source": "Authored guides/*.md plus generated mechanism-detail blocks from catalog/mechanisms.json",
