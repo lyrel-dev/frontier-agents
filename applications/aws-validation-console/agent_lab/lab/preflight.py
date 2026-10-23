@@ -19,27 +19,8 @@ class ReadOnlyAWS(AWS):
         raise Blocked('Preflight has no AWS write capability')
 
     def safety_lever(self):
-        self.identity('fault')
-        at = iso()
-        try:
-            response = self.client('fault', 'fis').get_safety_lever(id='default')
-            body = normal(response)
-            record = self.store.put_record('aws', self.owner, {
-                'side': 'fault', 'account_id': self.b.workload.account_id,
-                'region': self.b.workload.region, 'service': 'fis',
-                'operation': 'get_safety_lever', 'parameters': {'id': 'default'},
-                'requested_at': at, 'received_at': iso(),
-                'request_id': response.get('ResponseMetadata', {}).get('RequestId'),
-                'response': body, 'response_sha256': digest(body)})
-            lever = body.get('safetyLever', {})
-            if lever.get('id') != 'default':
-                raise Blocked('Unexpected FIS safety lever identity')
-            return {'status': lever.get('state', {}).get('status'), 'source': record['id']}
-        except Exception as exc:
-            self.store.put_record('collection_error', self.owner, {
-                'side': 'fault', 'service': 'fis', 'operation': 'get_safety_lever',
-                'at': at, 'code': error_code(exc)})
-            raise
+        from .fis_safety import read_safety_lever
+        return read_safety_lever(self)
 
 
 def source_fingerprint():

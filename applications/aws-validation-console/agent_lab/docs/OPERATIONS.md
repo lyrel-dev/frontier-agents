@@ -1,3 +1,7 @@
+# Current preparation path
+
+Use [Guided onboarding](ONBOARDING.md) for accounts, native previews and the measurement plan. [Native FIS](NATIVE_FIS.md) specifies selector and multi-account scope; legacy direct contracts remain isolated.
+
 # Operator procedure and state meanings
 
 ## Before enabling execution
@@ -6,13 +10,13 @@ Confirm ownership of the non-production service, target resources and traffic pa
 
 Runbook state checks must interrogate the deployed resource state, not rely only on a successful Automation status. Store the reviewed source/deployment artifact and diff digest in the runbook contract. The worker executes only fixed parameters and numeric document versions. Add a separately reviewed rollback instrument for effects requiring rollback.
 
-The local machine must reach the workload's approved CIDRs, the AWS endpoints and its own local volume. DNS answers are checked and the socket is pinned to an approved address. TLS still checks the original hostname. Redirects, proxies from environment, metadata/link-local addresses, raw response-body storage, and browser-configured URLs are not supported.
+The local machine must reach the workload's approved CIDRs, the AWS endpoints and its own local volume. DNS answers are checked and the socket is pinned to an approved address. TLS still checks the original hostname. Redirects, proxies from environment, metadata/link-local addresses, raw response-body storage, are not supported. Guided probe URLs and CIDRs require an exact separately approved configuration; an unapproved URL is never probed.
 
 ## Response sequence
 
 `DRAFT → QUALIFYING → READY → BASELINING → EXPOSING → OBSERVING → CLEANING → SETTLING → FINALIZING → CLOSED`
 
-Qualification captures account/association reads, exact template content and target set, finite action budgets, stop alarms, baseline resource checks, incident-alarm enablement and registered document hashes. It is not an IAM simulator and cannot establish the result of a future AWS write.
+Qualification captures account/association reads, exact template content, approved target policy and native runtime budget, stop alarms, baseline resource checks, incident-alarm enablement and registered document hashes. It is not an IAM simulator and cannot establish the result of a future AWS write.
 
 The baseline must satisfy the registered error/latency limits and delivered-request minimum for every bucket. A missing or late probe slot is not silently backfilled. The worker qualifies the template again before starting the fault. The actual FIS experiment ID and resolved resources are retained. A changed target set, failed/skipped required action or worker gap prevents a successful completed exposure.
 
@@ -31,7 +35,7 @@ If you use assisted mode, the worker creates an INVESTIGATION task with a unique
 - **RESTORE_REQUIRED:** new trials are blocked. Use independent cloud-side recovery and any approved rollback. After verification, request **Recheck restoration**. This reuses the original stop/cleanup authorization, not an arbitrary new command.
 - **CLOSED_ABORTED / CLOSED_BLOCKED:** retain the attempt. A numerical chart does not upgrade a blocked or aborted lifecycle into a qualified prevention pair.
 
-If the local host disappears, use the pre-established cloud-side stop alarms and FIS controls. The finite action duration constrains exposure, but cannot prove restoration. Stop/cancel only your owned experiment/execution unless the account-level emergency procedure explicitly calls for the broader FIS safety lever. Test this procedure before relying on the console.
+If the local host disappears, use the pre-established cloud-side stop alarms and FIS controls. Action durations, where present, do not prove restoration. A native operator deadline cannot constrain lasting or one-shot effects when the local host is absent. Stop/cancel only your owned experiment/execution unless the account-level emergency procedure explicitly calls for the broader FIS safety lever. Test this procedure before relying on the console.
 
 ## Diagnosis and intervention
 

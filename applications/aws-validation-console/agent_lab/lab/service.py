@@ -30,6 +30,7 @@ class Service:
             raise Blocked('Observation must outlast the maximum fault budget plus the stable recovery interval')
         if not set(spec.oracle.affected_resource_arns)<=set(fault.target_arns): raise Blocked('Oracle resources exceed approved fault targets')
         if not set(spec.oracle.required_checks)<={c.id for c in binding.checks}: raise Blocked('Unregistered ground-truth verifier')
+        if not {r.metric_id for r in spec.business_requirements}<={m.id for m in binding.metrics}: raise Blocked('Unregistered business metric')
         if not set(spec.intervention_runbook_ids)<={r.id for r in binding.runbooks}: raise Blocked('Unregistered intervention runbook')
         if spec.mode=='assisted' and not binding.requester_profile: raise Blocked('Assisted mode needs an explicit agent requester profile')
         return self.store.put_record('experiment','workspace',spec.model_dump(mode='json'),f'experiment:{spec.id}@{spec.revision}')

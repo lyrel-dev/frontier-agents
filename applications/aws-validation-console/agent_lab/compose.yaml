@@ -1,7 +1,7 @@
 services:
   agent-lab:
     build: .
-    image: local/devops-agent-lab:0.4.0-rc1
+    image: local/devops-agent-lab:0.5.1-dev
     ports:
       - "127.0.0.1:8787:8787"
     environment:
@@ -17,6 +17,6 @@ services:
     cap_drop: [ALL]
     security_opt: [no-new-privileges:true]
     restart: unless-stopped
-    stop_grace_period: 30s
+    stop_grace_period: 45s
 volumes:
   workspace:

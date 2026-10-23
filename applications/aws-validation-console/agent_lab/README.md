@@ -1,18 +1,14 @@
-# AWS FIS account orchestration and agent benchmarks
+# AWS FIS agent benchmark console — 0.5.1-dev
 
-**0.4.0-rc1 — live AWS and agent-performance acceptance pending.**
+This revision publishes the guided account/native FIS implementation and adds
+restricted telemetry access plus exact-source operational acceptance. It is a
+development build: a passing software run is not evidence that a real AWS agent
+responded correctly or that the product's live Definition of Done is closed.
 
-The default `/` view discovers existing FIS templates across a configured set of AWS accounts and Regions, maps them to approved agent-response measurement contracts, and sequences qualified FIS trials through the durable executor. Frozen benchmarks retain unsuccessful and unstarted attempts and separate incomparable service/template/agent cohorts. The detailed response and prevention workspace remains at `/response`.
+The application starts empty with AWS writes disabled. No runtime seed/imported
+successes or credentials are supplied. Test fixtures are under `tests/` only.
 
-Start with [the AWS/FIS operating guide](docs/FIS_FLEET.md). Account discovery needs only read permissions and is independent of execution configuration. No account, incident, experiment or measurement is preloaded.
-
-The local controller tests an existing Agent Space in account A against an authorized non-production service in account B. It drives a measured baseline, an approved finite FIS exposure, native incident correlation, investigation collection, independent workload observation and verified cleanup. Prevention links an actual evaluation and versioned recommendation to an approved implementation and comparable replay.
-
-The installation is empty. `config.json` disables AWS writes. No account, incident, result or measurement is seeded. Test providers exist only under `tests/` and are not loaded by the application. Legacy workbench results are not imported or upgraded.
-
-## Run
-
-Use Python 3.13:
+## Start
 
 ```sh
 python -m venv .venv
@@ -22,52 +18,46 @@ python build_assets.py
 python run.py --with-worker
 ```
 
-Open `http://127.0.0.1:8787`. Unlock using the local operator token. The separate approval token authorizes an exact displayed action; neither token is an AWS credential. In managed operation, supply `LAB_OPERATOR_TOKEN` and `LAB_APPROVAL_TOKEN` through the local secret mechanism. Protect logs and data volumes.
+Open `http://127.0.0.1:8787`. Use the printed local operator token, not an AWS key.
+The separate approval token is required for exact configuration and execution
+approvals. Production credentials, SSO and role trust remain host/administrator
+configuration. The main console's **Guided setup** selects installed profiles,
+verifies account identities, discovers Agent Spaces and associations, prepares
+existing FIS templates and defines the response measurements through forms.
 
-The API and worker can also run separately against the same local directory:
+## Workflows
 
-```sh
-python run.py --config config.local.json --data data
-python worker.py --config config.local.json --data data
-```
+- [Guided onboarding](docs/ONBOARDING.md): account scopes, exact approvals,
+  typed AWS verifier fields, incident correlation and requirement setup.
+- [Native FIS](docs/NATIVE_FIS.md): single- and multi-account templates,
+  target previews, fresh scope checks, actual execution and restoration.
+- [Campaigns and benchmarks](docs/FIS_FLEET.md): discovery, queue control,
+  denominator/exclusion handling, pinned results and comparison limits.
+- [Response/prevention operations](docs/OPERATIONS.md): native delivery,
+  grounded diagnosis, approved interventions and recommendation/change/replay.
 
-Only one worker can own the workspace. Closing the browser does not stop a trial. Independent cloud-side stop conditions and recovery procedures are mandatory.
+The new hosting/telemetry work is described in
+[OPERABILITY.md](docs/OPERABILITY.md). `GET /healthz` checks the API process;
+`GET /readyz` requires a recent running worker heartbeat. Neither tests AWS.
 
-## Connect the actual environment
+## Prometheus and Grafana
 
-For discovery, populate `config/fis-accounts.template.json` locally with the approved account set and Regions. For execution, also complete `config/binding.template.json` for each workload/Agent Space pair. It describes one finite, explicit-target EC2 stop example, not a universal fault recipe. Supply the real account IDs, regions, profiles, Agent Space/association, exact native incident-reference contract, approved targets, pinned instruments, verifiers, business-path probe and service-owned limits. Keep observation, fault execution, change execution and optional task creation identities separate from the agent's own cross-account role.
+Set a distinct `LAB_METRICS_TOKEN` or `LAB_METRICS_TOKEN_FILE`. That credential
+permits **GET /api/metrics only**; it cannot read configuration, evidence or
+backups, and cannot start/approve a cloud action. Never give Prometheus an
+operator or approval credential. Exact internal hostnames can be supplied through
+`LAB_ALLOWED_HOSTS`; wildcard hosts and arbitrary endpoint changes are rejected.
 
-```sh
-python configure.py --check config.local.json
-python acceptance.py preflight --config config.local.json \
-  --experiment experiment.local.json --data data --read-aws \
-  --output local-acceptance/read-checks.json
-```
+Metrics carry the frozen assessment, Agent Space, service, workload account,
+Region, template revision and native/assisted mode. They are trial summaries,
+not live service telemetry; every scrape re-exposes frozen values. Observation
+age remains visible. Missing measurements are absent, never zero-filled.
 
-Without `--read-aws`, preflight is an offline plan. Add `--probe` only to send one explicit business-path GET. Preflight never starts a fault, runbook, investigation or evaluation. A successful read check is not execution approval or evidence that the agent can handle an incident. See [ACCEPTANCE_GATE.md](docs/ACCEPTANCE_GATE.md) for report semantics and the required live gates.
+Download the configured dashboard from `/api/grafana` with the operator
+credential. The dashboard includes observed business requirements and an Agent
+Space filter. No Prometheus or Grafana server is bundled inside the application.
 
-## Execute and evaluate
-
-Register the actual experiment before a task exists. Create a response trial, qualify it, inspect the captured prerequisites, approve the exact subject and start. Native mode never creates a substitute investigation when delivery fails. Assisted mode cannot validate native triggering.
-
-The worker persists operation intent and idempotency identity before dispatch. Uncertain outcomes require reconciliation; unresolved restoration blocks further unrelated execution. It never executes arbitrary agent prose. A mitigation must map to a registered, version-pinned runbook with separate approval and independent state verification.
-
-Results separate challenge, measurement, native delivery, response, cited diagnosis, intervention, recovery, attribution and cleanup. Diagnosis uses attributed human extraction against the frozen oracle. Recovery following a change is not automatically a causal effect of the agent.
-
-For prevention, register the comparison before baseline, request an approved agent evaluation, pin a recommendation version, verify its approved implementation and run a matched replay. Failed, aborted, excluded and incomplete attempts remain visible. Earlier-investigation claims require a qualified post-change benign control. One pair does not establish general prevention competence.
-
-## Evidence, graphs and acceptance
-
-SQLite retains source records, observations, approvals, provider identities and frozen assessments. Graphs support inspection, zoom, series selection, source tables and CSV without filling missing data. `/api/metrics` and `/api/grafana` expose measured derived gauges and a dashboard proposal behind authentication. Configuration and report exports may contain sensitive resource identifiers.
-
-```sh
-python acceptance.py audit --data data --trial "$BASELINE_TRIAL_ID" \
-  --campaign "$CAMPAIGN_ID" --output local-acceptance/evidence-audit.json
-```
-
-The audit reads a consistent database snapshot. `reviewable` means local completeness and hash consistency, not live certification or an agent pass. Source authenticity and the authorized live experiment remain independent obligations.
-
-## Tests
+## Checks
 
 ```sh
 python -m pip install -r requirements-dev.txt
@@ -75,15 +65,36 @@ python build_assets.py
 python -m pytest -q
 python tests/browser_checks.py --native
 python tests/fis_browser_checks.py --native
+python tests/setup_browser_checks.py --native
 python tests/worker_http_acceptance.py
-# Requires Docker; no AWS account configuration or credentials:
 python tests/container_runtime_acceptance.py
+python tests/observability_acceptance.py
 ```
 
-Set `CHROMIUM_PATH` as needed. `--native` requires real browser HTTP navigation and does not fall back to a bridge. `--bridge` is an explicitly limited authoring-sandbox harness. Browser tests delay the workspace HTTP response to cover unlock/load ordering. Unit and worker tests use test-only AWS/agent providers; loopback probes make real local requests. Neither validates an AWS account.
+The final two scripts require Docker and fail rather than skip when it is absent.
+The observability check runs the real console, Prometheus and Grafana on an
+internal-only network. It checks actual scraping, missing data, label retention,
+dashboard import/readback and execution of generated PromQL. Its positive
+measurement is real loopback HTTP latency; account, agent and business labels
+are explicit test fixtures in a disposable workspace, not AWS results.
 
-## Documents and repository
+CI uses native HTTP browser navigation, not the authoring environment's bridge.
+Each run clears prior generated evidence, then records its exact source and
+artifact hashes in `validation/software-acceptance.json`. Inspect that run's
+result; do not reuse counts from earlier revisions as acceptance of this one.
 
-[Operations](docs/OPERATIONS.md) · [Safety](docs/SAFETY.md) · [Coverage](docs/COVERAGE.md) · [Deployment](docs/DEPLOYMENT.md) · [API](docs/API.md) · [Live acceptance](docs/LIVE_ACCEPTANCE.md) · [Acceptance commands](docs/ACCEPTANCE_GATE.md)
+## Status and boundaries
 
-Source is on `feat/aws-fis-agent-benchmark` in `lyrel-dev/frontier-agents`, under `applications/aws-validation-console/agent_lab/`, based on the reviewed response-lab branch. This work does not modify `main` or merge either branch. Generated `aws-preview.html`, `preview.html`, schemas and dashboard are rebuilt with `build_assets.py`; local configuration, credentials and acceptance exports must not be committed.
+The implementation has a durable single-host worker, independent probes, actual
+FIS execution adapters, native incident observation, grounded human diagnosis
+review, approved Automation changes and matched prevention replay. It does not
+create credentials, remove required approvals, validate unknown business-metric
+producers or execute arbitrary agent prose. Preview is neither a target lock nor
+an action-permission test. Independent cloud-side recovery remains mandatory.
+
+The current target is `feat/aws-fis-console-acceptance`, based on remote
+`b9dc53939611cc32904b49e2447dbb7fd5e2ab35`. No main-branch merge is implied.
+[DELIVERY_ACCEPTANCE.md](docs/DELIVERY_ACCEPTANCE.md) retains the open live gates:
+real account/IAM access, incident delivery, agent findings, multi-account cleanup,
+recommendation efficacy, intended-host credentials and independent business
+measurement acceptance. **The full Definition of Done remains open.**

@@ -15,6 +15,8 @@ from .util import iso, dt, error_code
 
 class Worker:
     def __init__(self,config:Configuration,store,*,engine=None):
+        from .setup import refresh
+        refresh(config,store)
         self.config=config; self.store=store; self.engine=engine or Engine(config,store)
         self.fleet=Fleet(config,store)
         self.stop_event=threading.Event(); self.owner=None; self.thread=None
@@ -91,6 +93,8 @@ class Worker:
                 if not self.thread.is_alive():
                     raise RuntimeError('Probe scheduler stopped unexpectedly')
                 self.store.meta('worker',{'pid':os.getpid(),'heartbeat_at':iso(),'state':'running'})
+                from .setup import refresh
+                refresh(self.config,self.store)
                 self.engine.step()
                 self.fleet.step()
                 self.store.meta('worker',{'pid':os.getpid(),'heartbeat_at':iso(),'state':'running'})

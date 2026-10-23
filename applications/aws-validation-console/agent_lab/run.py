@@ -27,9 +27,11 @@ def main():
     approval=os.environ.get('LAB_APPROVAL_TOKEN') or secrets.token_urlsafe(32)
     if 'LAB_OPERATOR_TOKEN' not in os.environ: print('Local operator token (keep private): '+operator,flush=True)
     if 'LAB_APPROVAL_TOKEN' not in os.environ: print('Separate approval token (keep private): '+approval,flush=True)
-    app=create_app(config,store,operator,approval)
+    from lab.hosting import metrics_secret
+    app=create_app(config,store,operator,approval,metrics_token=metrics_secret(),
+                   hosts=os.environ.get('LAB_ALLOWED_HOSTS'))
     server=uvicorn.Server(uvicorn.Config(app,host=os.environ.get('LAB_BIND','127.0.0.1'),
-                         port=int(os.environ.get('LAB_PORT','8787')),access_log=False))
+                         port=int(os.environ.get('LAB_PORT','8787')),access_log=False,proxy_headers=False))
     worker=None; worker_thread=None
     supervisor_stop=threading.Event()
     if args.with_worker:

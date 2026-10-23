@@ -17,3 +17,7 @@ preview.html
 local-acceptance/
 
 aws-preview.html
+
+setup-preview.html
+
+secrets/

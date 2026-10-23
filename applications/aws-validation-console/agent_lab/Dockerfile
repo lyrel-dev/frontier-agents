@@ -8,9 +8,9 @@ RUN pip install --no-cache-dir -r requirements.txt \
  && mkdir /data && chown 10001:10001 /data && chmod 700 /data
 COPY lab/ ./lab/
 COPY static/ ./static/
-COPY run.py worker.py configure.py config.json ./
+COPY run.py worker.py configure.py acceptance.py config.json ./
 USER 10001:10001
 VOLUME ["/data"]
 EXPOSE 8787
-HEALTHCHECK --interval=30s --timeout=4s --retries=3 CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8787/healthz',timeout=3)"
+HEALTHCHECK --interval=30s --timeout=4s --retries=3 CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8787/readyz',timeout=3)"
 CMD ["python","run.py","--with-worker"]

@@ -34,7 +34,7 @@ const host=document.getElementById('charts');
 function chart(title,unit,series){const box=document.createElement('div');host.append(box);LabCharts.draw(box,{title,unit,series});}
 if(data.assessment?.kind==='assessment'){
  const summary=data.assessment.data;
- for(const [metric,value]of Object.entries(summary.metrics))chart(metric.replaceAll('_',' '),metric.endsWith('_seconds')?'s':metric.endsWith('_ms')?'ms':'measured',[{name:'Pinned observation',isolated:true,points:value===null?[]:[{t:data.assessment.created_at,value,source:data.assessment.id}]}]);
+ for(const [metric,value]of Object.entries(summary.metrics)){const def=summary.metric_definitions?.[metric];chart(def?.title||metric.replaceAll('_',' '),def?.unit||(metric.endsWith('_seconds')?'s':metric.endsWith('_ms')?'ms':'measured'),[{name:'Pinned observation',isolated:true,points:value===null?[]:[{t:data.assessment.created_at,value,source:data.assessment.id}]}]);}
  chart('Real probe latency','ms',[{name:'Recorded workload',points:data.probes.map(p=>({t:p.at,value:p.attempted?p.latency_ms:null})),interval_ms:15000}]);
  const rows=document.getElementById('claims');for(const [key,val]of Object.entries(summary.dimensions)){const tr=document.createElement('tr');for(const text of [key,val.outcome,val.reason]){const td=document.createElement('td');td.textContent=text;tr.append(td);}rows.append(tr);}
 }

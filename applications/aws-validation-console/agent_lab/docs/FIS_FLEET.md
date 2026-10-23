@@ -1,12 +1,12 @@
 # AWS FIS account catalogue and agent-response campaigns
 
-Version 0.4.0-rc1 makes the AWS/FIS view the default console. It discovers existing AWS definitions, registers bounded measured-response campaigns, and dispatches qualified trials through the existing FIS executor. It does not create or modify experiment templates, grant IAM permissions, or supply artificial incidents or measurements.
+Version 0.5.0-dev makes the AWS/FIS view the default console. It discovers existing AWS definitions, registers bounded measured-response campaigns, and dispatches qualified trials through the existing FIS executor. It does not create or modify experiment templates, grant IAM permissions, or supply artificial incidents or measurements.
 
 ## Connect the account set
 
-The administrator configures `fis_accounts` in the local configuration. Each entry has a stable local ID, expected 12-digit account ID, SDK profile and explicit Region list. The same account/Region cannot appear twice. Profile-based role assumption and SSO remain SDK/host configuration; no access key, profile path, endpoint override or role session is accepted from the browser. Account IDs and sanitized scope are visible only after local authentication.
+Use Guided setup to propose and separately approve `fis_accounts` in the persisted workspace configuration. Local JSON remains an optional bootstrap method. Each entry has a stable local ID, expected 12-digit account ID, SDK profile and explicit Region list. The same account/Region cannot appear twice. Profile-based role assumption and SSO remain SDK/host configuration; no access key, profile path, endpoint override or role session is accepted from the browser. Account IDs and sanitized scope are visible only after local authentication.
 
-Use `config/fis-accounts.template.json` as a structure, not a ready-made account. Replace its environment placeholders locally and run `python configure.py --check config.local.json`. An explicit account set can exist without any executable agent/workload binding. If `fis_accounts` is empty, the console derives the unique account/Region scopes from its existing agent/workload bindings. The distributed configuration contains neither accounts nor bindings.
+The default GUI path requires no JSON editing; select installed SDK profiles and review the exact proposal. `config/fis-accounts.template.json` remains available only for optional bootstrap automation. An explicit account set can exist without any executable agent/workload binding. If `fis_accounts` is empty, the console derives the unique account/Region scopes from its existing agent/workload bindings. The distributed configuration contains neither accounts nor bindings.
 
 Start the durable worker and API with `python run.py --config config.local.json --with-worker`. Open the loopback URL and unlock with the operator token. `/` is the AWS view; `/response` retains detailed diagnosis, intervention and prevention controls. The worker must remain running for discovery and campaign progression.
 
@@ -20,19 +20,15 @@ The coverage claim is **all returned definitions in successfully enumerated conf
 
 ## From a discovered template to an executable contract
 
-Select **Inspect AWS definition** to review actions, parameters, targets, IAM role, stop conditions, options and source provenance. The template remains the source of fault configuration. Add a measurement contract using **Attach measurement contract**, supplying the generated `schemas/experiment.schema.json` shape. The contract names an approved binding, fault instrument and probe, independent ground truth, response limits and cleanup obligations. It is not a second FIS template.
+Select **Inspect AWS definition**, then **Guided setup**. The form-based workflow selects actual Agent Space associations, approves a target preview, builds typed account-scoped verifiers, probe/incident/measurement requirements and reviewed runbooks, then commits the binding and immutable contract atomically. The older raw-contract attachment remains an advanced API compatibility path, not an operator prerequisite.
 
-A valid mapping requires the same workload account/Region, template ID and canonical execution-content hash as the administrator-approved fault instrument. The binding identifies the Agent Space and incident route, so the selected experiment is associated with a specific service and agent. Existing matching experiment contracts are discovered automatically. Different Agent Spaces can be mapped to separate contracts against the same service and FIS definition.
-
-Discovery is intentionally broader than execution. Multi-account FIS definitions, dynamic tag/filter/parameter selectors, random subsets, unsupported actions and unbounded effects remain visible with blockers. The inherited executor currently qualifies **single-target-account, explicit-ARN, finite-action templates** with independent baseline/effect/cleanup checks and approved stop alarms. A fleet campaign may sequence such templates across multiple connected accounts; it is not one AWS multi-account FIS experiment. Broader execution requires account-specific target-resolution and safety adapters, not bypassing the blocker.
-
-The controller re-reads the template and verifies its approved fingerprint at qualification and dispatch. Discovery never authorizes an old snapshot, and target preview is not substituted for action permission checks.
+Guided native contracts support AWS-resolved dynamic selectors and multi-account definitions. Account-role maps, target envelopes, independent per-account checks and fresh dispatch previews are mandatory. See [ONBOARDING.md](ONBOARDING.md) and [NATIVE_FIS.md](NATIVE_FIS.md) for exact semantics. Legacy contracts retain their original explicit-target finite-action checks. The AWS template is not rewritten by either path.
 
 ## Orchestrate a campaign
 
 Select template/agent-contract pairs in the library, register repetitions, actual-exposure comparability tolerance, pause-on-failure policy and a note about Agent Space history/carryover. At most 100 physical trials are enumerated. The plan pins definitions, bindings and source hashes before any trial begins.
 
-**Activate queue** allows the durable worker to register and qualify the next child. It does not grant mutation authority. Each child waits at READY until a holder of the separate approval credential approves the exact action/target digest. The worker then runs the existing baseline, fresh FIS safety-lever guard, idempotent `StartExperiment`, resolved-target/effect checks, native incident correlation, independent probes and restoration. The resulting actual FIS experiment ID is shown in the queue.
+**Activate queue** allows the durable worker to register and qualify the next child. It does not grant mutation authority. Each child waits at READY until a holder of the separate approval credential approves the exact action/target digest. The worker then runs the existing baseline, fresh FIS safety-lever guard, idempotent `StartExperiment`, resolved-target/effect checks, native incident correlation, independent probes and restoration. A fresh skip-all preview is checked before the separate run-all operation. Both provider IDs are retained; the actual fault-execution ID is shown in the queue.
 
 The order is repeat-major and selection-order, with one physical exposure at a time across the workspace. Different agent contracts cause separate sequential replays; the console does not claim simultaneous observation or isolate other agents already monitoring the service. Incident routing and any independent agent actions must be controlled and recorded by the operator. Agent history is not reset.
 
@@ -50,7 +46,7 @@ Cohorts hash workload account/Region/service, FIS definition content, fault targ
 
 The report supplies planned/registered/started/qualified counts, response and diagnosis distributions, response-pass fraction, measured no-response failures, and per-metric sample count, missing count, median and nearest-rank p95. Latency quantiles condition on available observations, not all attempts; counts make that denominator explicit. Small samples do not support a confidence or generalization claim. Interactive graphs retain one point per measured trial; isolated scalar observations are not turned into trends. CSV exports all attempts. JSON includes plan and source hashes plus captured trial projections.
 
-Correct diagnosis still requires the existing grounded review. Benchmarks do not convert task creation into correct reasoning, service recovery into agent-attributable remediation, or a response campaign into evidence of prevention. The existing recommendation/change/replay workspace remains available for prevention testing.
+Configured data-correctness, collateral-regression and application requirements retain independent verdicts and metric definitions in the report. Correct diagnosis still requires the existing grounded review. Benchmarks do not convert task creation into correct reasoning, service recovery into agent-attributable remediation, or a response campaign into evidence of prevention. The existing recommendation/change/replay workspace remains available for prevention testing.
 
 ## API and IAM
 

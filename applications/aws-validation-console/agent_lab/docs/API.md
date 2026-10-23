@@ -37,3 +37,37 @@ Definitions use `experiment:<id>@<revision>` references. Reusing an identical re
 A known prerequisite failure is HTTP 409, unknown record 404, bad schema 422, and missing authorization 401. A request failure is not a zero-data measurement. The server does not expose Swagger, arbitrary filesystem paths, AWS profile editing, raw command execution or cloud credentials.
 
 The local projection is mutable and revisioned; source records, event entries and probe captures are append-only. Frozen reports check hashes but do not authenticate the original producer. Scoped exports may refer to earlier global hash-chain entries; use the database backup for full-chain inspection.
+
+## Guided setup / native preview API (0.5)
+
+All `/api/setup/*` endpoints require the existing same-origin local authentication. `/approve/` routes require the separate approval token. Request contracts are generated as `account_draft`, `configuration_draft` and `guided_plan` schemas.
+
+| Route | Purpose |
+|---|---|
+| GET `/api/setup` | Current approved configuration/revision, installed profile names and blocking work. |
+| POST `/api/setup/accounts` | Account proposal; no AWS write and no immediate activation. |
+| POST `/api/setup/drafts` | Strict configuration proposal with expected base digest. |
+| GET `/api/setup/drafts/{id}/subject` | Exact configuration/experiment review subject. |
+| POST `/api/setup/approve/config/{id}` | Atomically activate an approved local revision and guided experiment. |
+| POST `/api/setup/connections/{id}/check` | Explicit AWS identity and selected read tests. |
+| POST `/api/setup/connections/{id}/agents` | Paginated Agent Space/association enumeration. |
+| GET `/api/setup/preview-subject/{record}` | Exact skip-all approval subject. |
+| POST `/api/setup/approve/preview/{record}` | Queue approved real AWS target preview. |
+| GET `/api/setup/previews` | Preview jobs, provider IDs and captured results. |
+| POST `/api/setup/previews/{id}/cancel` | Cancel pending or stop/reconcile owned preview. |
+| GET `/api/setup/read-operations` | Read-verifier allowlist. |
+| GET `/api/setup/read-shape/{service}/{operation}` | Installed SDK input shape used by form controls. |
+| POST `/api/setup/test-read` | Account-scoped verifier read and predicate inspection, not incident validation. |
+| POST `/api/setup/runbook` | Read actual numeric Automation version for content review; no execution. |
+| POST `/api/setup/compose` | Produce a local proposal from template, preview and form fields. |
+
+Rejected/stale proposals are not overwritten. Failed configuration activation rolls back the binding and experiment together. The browser cannot provide credentials, arbitrary SDK endpoints or unallowlisted read operations. Native preview is a write operation even though it skips fault actions.
+
+## Hosting and scrape authorization (0.5.1)
+
+`GET /readyz` returns 200 only when the worker is running with a recent heartbeat;
+503 otherwise. `/healthz` remains API liveness. Neither endpoint calls AWS or
+returns account metadata. The optional metrics credential permits only
+`GET /api/metrics`. It cannot use any other API route or method. Operator access
+continues to support dashboard export. Host allowlisting is administrator startup
+configuration, not a browser request or an AWS endpoint setting.

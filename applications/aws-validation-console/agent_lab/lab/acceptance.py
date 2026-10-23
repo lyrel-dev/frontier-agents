@@ -51,6 +51,9 @@ def audit(store, trial_id, campaign_id=None):
     expected_accounts = {'agent': binding['agent']['account_id'], 'requester': binding['agent']['account_id'],
                          'workload': binding['workload']['account_id'], 'fault': binding['workload']['account_id'],
                          'change': binding['workload']['account_id']}
+    expected_accounts['fault']=(binding.get('orchestrator') or binding['workload'])['account_id']
+    expected_accounts.update({'target:'+a['account_id']:a['account_id'] for a in binding.get('target_accounts',[])})
+    expected_accounts['target:'+binding['workload']['account_id']]=binding['workload']['account_id']
     require('source_account_scope', bool(sources) and all(
         r['data'].get('side') in expected_accounts
         and r['data'].get('account_id') == expected_accounts[r['data']['side']]

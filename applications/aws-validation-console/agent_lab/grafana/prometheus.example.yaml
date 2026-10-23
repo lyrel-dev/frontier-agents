@@ -1,4 +1,5 @@
-# Native-host example only. Supply a private token file; do not commit its contents.
+# Native-host example. Use the distinct scrape-only secret, never the operator token.
+# For a container/service hostname, set LAB_ALLOWED_HOSTS to exact approved names.
 global:
   scrape_interval: 30s
 scrape_configs:
@@ -6,6 +7,6 @@ scrape_configs:
     metrics_path: /api/metrics
     authorization:
       type: Bearer
-      credentials_file: /run/secrets/agent-lab-operator-token
+      credentials_file: /run/secrets/agent-lab-metrics-token
     static_configs:
       - targets: ["127.0.0.1:8787"]

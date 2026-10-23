@@ -33,11 +33,17 @@ class Reconcile(BaseModel):
     provider_id: str=Field(pattern=r'^[A-Za-z0-9_.-]{1,128}$')
 
 
-def create_app(config:Configuration,store:Store,operator_token:str,approval_token:str,*,service=None):
+def create_app(config:Configuration,store:Store,operator_token:str,approval_token:str,*,service=None,metrics_token=None,hosts=None):
     if len(operator_token)<24 or len(approval_token)<24 or operator_token==approval_token:
         raise ValueError('Two distinct local tokens of at least 24 characters are required')
+    from .hosting import allowed_hosts, metrics_secret
+    metrics_token=metrics_secret({'LAB_METRICS_TOKEN': metrics_token})
+    if metrics_token and metrics_token in (operator_token,approval_token):
+        raise ValueError('The metrics token must differ from both operational credentials')
     app=FastAPI(title='DevOps Agent experiment console',version=__version__,docs_url=None,redoc_url=None,openapi_url=None)
-    app.add_middleware(TrustedHostMiddleware,allowed_hosts=['127.0.0.1','localhost','[::1]','testserver'])
+    app.add_middleware(TrustedHostMiddleware,allowed_hosts=allowed_hosts(hosts))
+    from .setup import refresh
+    refresh(config,store)
     svc=service or Service(config,store)
 
     @app.middleware('http')
@@ -45,7 +51,11 @@ def create_app(config:Configuration,store:Store,operator_token:str,approval_toke
         if request.url.path.startswith('/api/'):
             supplied=request.headers.get('authorization','').removeprefix('Bearer ')
             role='approver' if hmac.compare_digest(supplied,approval_token) else 'operator' if hmac.compare_digest(supplied,operator_token) else None
+            if metrics_token and hmac.compare_digest(supplied,metrics_token):
+                role='metrics'
             if role is None: return JSONResponse({'error':'Unauthorized'},401)
+            if role=='metrics' and (request.method!='GET' or request.url.path!='/api/metrics'):
+                return JSONResponse({'error':'Scrape credential permits GET /api/metrics only'},403)
             if '/approve/' in request.url.path and role!='approver': return JSONResponse({'error':'Approval credential required'},403)
             if request.method not in ('GET','HEAD'):
                 origin=request.headers.get('origin')
@@ -58,6 +68,7 @@ def create_app(config:Configuration,store:Store,operator_token:str,approval_toke
                 body=await request.body()
                 if len(body)>1_048_576: return JSONResponse({'error':'Request too large'},413)
             request.state.role=role
+            if role!='metrics': refresh(config,store)
         response=await call_next(request)
         response.headers['Cache-Control']='no-store'
         response.headers['X-Content-Type-Options']='nosniff'
@@ -76,6 +87,17 @@ def create_app(config:Configuration,store:Store,operator_token:str,approval_toke
     @app.get('/healthz')
     def health(): return {'status':'ok','version':__version__}
 
+    @app.get('/readyz')
+    def ready():
+        from .util import utcnow, dt
+        worker=store.meta('worker') or {}
+        try:
+            age=(utcnow()-dt(worker['heartbeat_at'])).total_seconds()
+            ok=worker.get('state')=='running' and 0<=age<=max(60,config.poll_seconds*3)
+        except (ValueError,KeyError,TypeError):
+            ok=False
+        return JSONResponse({'status':'ready' if ok else 'not_ready'},200 if ok else 503)
+
     @app.get('/',response_class=HTMLResponse)
     def index(): return (ROOT/'static/aws.html').read_text()
 
@@ -84,7 +106,7 @@ def create_app(config:Configuration,store:Store,operator_token:str,approval_toke
 
     @app.get('/static/{name}')
     def static(name:str):
-        allowed={'app.js':'text/javascript','charts.js':'text/javascript','style.css':'text/css','aws.js':'text/javascript','aws.css':'text/css'}
+        allowed={'app.js':'text/javascript','charts.js':'text/javascript','style.css':'text/css','aws.js':'text/javascript','aws.css':'text/css','setup.js':'text/javascript','setup.css':'text/css'}
         if name not in allowed: raise HTTPException(404)
         return Response((ROOT/'static'/name).read_text(),media_type=allowed[name])
 
@@ -173,14 +195,16 @@ def create_app(config:Configuration,store:Store,operator_token:str,approval_toke
         with tempfile.TemporaryDirectory() as directory:
             p=Path(directory)/'backup.sqlite3';store.backup(p)
             return Response(p.read_bytes(),media_type='application/vnd.sqlite3',headers={'Content-Disposition':'attachment; filename="agent-validation.sqlite3"'})
-    @app.get('/api/metrics',response_class=PlainTextResponse)
+    @app.get('/api/metrics')
     def metrics():
         from .metrics import prometheus
-        return prometheus(store)
+        return Response(prometheus(store),media_type='text/plain; version=0.0.4; charset=utf-8')
     @app.get('/api/grafana')
     def grafana():
         from .metrics import dashboard
-        return dashboard()
+        return dashboard(store)
     from .fis_api import install
     install(app, config, store, svc)
+    from .setup_api import install as setup_routes
+    setup_routes(app,config,store,svc)
     return app

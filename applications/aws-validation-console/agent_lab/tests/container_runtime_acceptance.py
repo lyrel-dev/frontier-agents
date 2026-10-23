@@ -52,9 +52,12 @@ def main():
     def inspect(name):
         return json.loads(docker('inspect', name).stdout)[0]
 
-    def request(base, path, authenticated=True):
+    def request(base, path, authenticated=True, *, body=None, approval=False):
         headers = {'Authorization': 'Bearer ' + env['LAB_OPERATOR_TOKEN']} if authenticated else {}
-        req = urllib.request.Request(base + path, headers=headers)
+        if approval: headers['Authorization']='Bearer '+env['LAB_APPROVAL_TOKEN']
+        if body is not None: headers['Content-Type']='application/json'
+        req = urllib.request.Request(base + path, headers=headers,
+            data=json.dumps(body).encode() if body is not None else None)
         try:
             with urllib.request.urlopen(req, timeout=4) as response:
                 return response.status, response.read()
@@ -119,6 +122,21 @@ def main():
         passed('second combined process fails before serving when the worker lock is owned',
                duplicate.returncode != 0 and 'already owns' in duplicate.stderr
                and request(base, '/healthz', False)[0] == 200)
+        passed('readiness reports a live worker, independently of process liveness',
+               request(base, '/readyz', False)[0] == 200)
+        setup=json.loads(request(base, '/api/setup')[1])
+        configuration=setup['configuration'];configuration['poll_seconds']=2
+        proposed=json.loads(request(base,'/api/setup/drafts',body={
+            'configuration':configuration,'base_digest':setup['digest'],
+            'rationale':'Hosting acceptance: no accounts, local worker interval only.'})[1])
+        subject=json.loads(request(base,'/api/setup/drafts/'+proposed['id']+'/subject')[1])
+        approval={'expected_digest':subject['digest'],'confirmation':subject['confirmation'],
+            'approver':'Hosting test','rationale':'Exact disposable local configuration; no cloud access.'}
+        route='/api/setup/approve/config/'+proposed['id']
+        passed('container requires the separate credential to activate local configuration',
+               request(base,route,body=approval)[0]==403 and request(base,route,body=approval,approval=True)[0]==200)
+        passed('activated configuration is visible through the actual served API',
+               json.loads(request(base,'/api/setup')[1])['configuration']['poll_seconds']==2)
         marker_id = 'hosting-acceptance-' + uuid.uuid4().hex
         script = ("import json\nfrom lab.store import Store\n"
                   "r=Store('/data').put_record('hosting_acceptance','container-test',"
@@ -135,6 +153,8 @@ def main():
         docker('kill', '--signal', 'KILL', first)
         docker('rm', first)
         base, info = start_container(second)
+        passed('approved workspace configuration survives container replacement',
+               json.loads(request(base,'/api/setup')[1])['configuration']['poll_seconds']==2)
         record = json.loads(request(base, '/api/records/' + marker_id)[1])
         passed('record data and hash survive abrupt idle-container replacement',
                record['sha256'] == marker['sha256'] and record['data'] == marker['data'])

@@ -109,6 +109,9 @@ class Broker:
             result=self.aws.experiment(provider_id); value=result['experiment']
             if value.get('experimentTemplateId')!=p['experimentTemplateId'] or value.get('tags',{}).get('ValidationOperation')!=op['id'] or value.get('tags',{}).get('ValidationTrial')!=op['owner']:
                 raise Blocked('Experiment does not belong to this operation')
+            expected_mode=p.get('experimentOptions',{}).get('actionsMode','run-all')
+            if value.get('experimentOptions',{}).get('actionsMode','run-all')!=expected_mode:
+                raise Blocked('Reconciled FIS operation has the wrong actions mode')
             response={'experiment':value}
         elif operation=='start_automation_execution':
             result=self.aws.automation(provider_id); value=result['execution']

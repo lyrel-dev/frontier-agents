@@ -42,7 +42,7 @@ spec:
         app: agent-lab
     spec:
       automountServiceAccountToken: false
-      terminationGracePeriodSeconds: 30
+      terminationGracePeriodSeconds: 45
       securityContext:
         runAsNonRoot: true
         runAsUser: 10001
@@ -52,7 +52,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: api
-          image: local/devops-agent-lab:0.4.0-rc1
+          image: local/devops-agent-lab:0.5.1-dev
           imagePullPolicy: IfNotPresent
           command: [python, run.py, --config, /config/config.json, --data, /data/workspace]
           ports:
@@ -85,7 +85,7 @@ spec:
               mountPath: /tmp
           readinessProbe:
             httpGet:
-              path: /healthz
+              path: /readyz
               port: 8787
               httpHeaders:
                 - name: Host
@@ -96,7 +96,7 @@ spec:
             requests: {cpu: 100m, memory: 128Mi}
             limits: {cpu: "1", memory: 512Mi}
         - name: worker
-          image: local/devops-agent-lab:0.4.0-rc1
+          image: local/devops-agent-lab:0.5.1-dev
           imagePullPolicy: IfNotPresent
           command: [python, worker.py, --config, /config/config.json, --data, /data/workspace]
           securityContext:

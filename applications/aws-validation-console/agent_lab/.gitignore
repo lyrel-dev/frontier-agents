@@ -29,3 +29,18 @@ schemas/*.json
 grafana/agent-validation.json
 validation/fis-*.json
 validation/fis-*.xml
+
+setup-preview.html
+validation/delivery-*.json
+validation/delivery-*.xml
+validation/setup-browser.json
+
+validation/browser-review.json
+validation/worker-http-review.json
+
+# Current-source CI evidence only; no locally captured account data in Git.
+validation/iteration-*
+validation/observability-acceptance.json
+validation/software-acceptance.json
+secrets/
+validation/current-run.json

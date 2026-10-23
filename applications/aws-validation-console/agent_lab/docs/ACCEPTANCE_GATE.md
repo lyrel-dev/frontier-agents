@@ -1,6 +1,6 @@
 # Next target: live two-account acceptance
 
-The release candidate is committed on `feat/devops-agent-response-lab` under `applications/aws-validation-console/agent_lab/`. The default branch is not changed by this work. The previous workbench and its results remain separate.
+Current source is a local 0.5.0-dev implementation based on `feat/aws-fis-agent-benchmark` at b9dc5393. See DELIVERY_ACCEPTANCE.md for publication and live acceptance status. The previous workbench and its results remain separate.
 
 ## Gate 1 — read qualification
 
@@ -22,9 +22,9 @@ python acceptance.py preflight --config config.local.json \
   --output local-acceptance/read-and-path-checks.json
 ```
 
-The experiment file uses the existing `Experiment` contract (generate `schemas/experiment.schema.json` with `python build_assets.py`). It must name configured fault/probe IDs, actual resource ARNs, a diagnosis oracle and service-owned limits. Registration can also be performed in the console; preflight does not register or start a trial.
+For GUI-created plans, use `--experiment-ref experiment:ID@REVISION` instead of `--experiment`; the CLI loads the active approved workspace configuration. The optional experiment file uses the existing `Experiment` contract (generate `schemas/experiment.schema.json` with `python build_assets.py`). It must name configured fault/probe IDs, actual resource ARNs, a diagnosis oracle and service-owned limits. Registration can also be performed in the console; preflight does not register or start a trial.
 
-The read check verifies both STS identities; the existing association; pinned, duration-bounded FIS and required Automation documents; baseline resource checks; incident and stop alarms; the FIS safety lever; and bounded reads of the configured incident sources and metrics. Configured metric windows with missing/partial data block the check. A native delivery receipt source is required: an alarm alone cannot establish accepted incident delivery.
+The read check verifies both STS identities; the existing association; pinned native FIS/target-account configuration (or legacy duration-bounded FIS) and required Automation documents; baseline resource checks; incident and stop alarms; the FIS safety lever; and bounded reads of the configured incident sources and metrics. Configured metric windows with missing/partial data block the check. A native delivery receipt source is required: an alarm alone cannot establish accepted incident delivery.
 
 `fis:GetSafetyLever` is an additional read permission for the workload fault profile. The command only reads the `default` lever; it never disengages it. `engaged`, `engaging`, denied or unknown states block qualification. An administrator must decide whether an engaged lever should remain engaged. Do not change it merely to satisfy a test.
 
