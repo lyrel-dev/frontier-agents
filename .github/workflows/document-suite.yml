@@ -3,7 +3,10 @@ on:
   workflow_dispatch:
   push:
     branches: [main, 'docs/**']
-    paths: ['markdown-build.json']
+    paths:
+      - 'content/**'
+      - 'tools/docs/**'
+      - 'markdown-build.json'
 permissions:
   contents: write
 concurrency:
@@ -28,11 +31,6 @@ jobs:
           sudo apt-get -o Acquire::Retries=1 -o Acquire::http::Timeout=20 -o Acquire::https::Timeout=20 install -y graphviz
           python -m pip install --timeout 30 --retries 2 -r tools/docs/requirements.txt
           python -m playwright install chromium
-      - name: Apply reviewed selection migration once
-        run: |
-          if [ -f tools/docs/apply_selection_revision.py ]; then python tools/docs/apply_selection_revision.py; fi
-          if [ -f tools/docs/apply_selection_fixes.py ]; then python tools/docs/apply_selection_fixes.py; fi
-          if [ -f tools/docs/apply_selection_focus.py ]; then python tools/docs/apply_selection_focus.py; fi
       - name: Validate canonical Markdown input
         run: |
           python -m compileall -q tools/docs
@@ -76,8 +74,8 @@ jobs:
           python - <<'PY'
           from pathlib import Path
           import subprocess
-          allowed={'guides','catalog','presentations','assets','qa','tools','content'}
-          roots={'README.md','MANIFEST.json','VALIDATION.md','PUBLISHING.md','CHANGELOG.md','EDITORIAL_STANDARD.md','AUTHORING.md','WORKSTREAM.md','index.html'}
+          allowed={'guides','catalog','presentations','assets','qa'}
+          roots={'README.md','MANIFEST.json','VALIDATION.md','PUBLISHING.md','CHANGELOG.md','EDITORIAL_STANDARD.md','AUTHORING.md','index.html'}
           raw=subprocess.check_output(['git','status','--porcelain=v1','-z','--untracked-files=all'])
           paths=[]
           for row in raw.split(bytes([0])):
