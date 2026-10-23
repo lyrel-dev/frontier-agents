@@ -127,12 +127,33 @@ def main():
                     page.get_by_role('button',name='Approve exact operation',exact=True).click()
                     wait_state(page, '!document.querySelector("#setup-modal").open')
                 for cid,account,profile in [('work',ACCOUNT_B,'test-workload'),('agent',ACCOUNT_A,'test-agent')]:
-                    page.locator('[data-stage=accounts]').click();page.get_by_label('Connection ID',exact=True).fill(cid)
-                    page.get_by_label('Connection label',exact=True).fill('Test-only '+cid)
-                    page.get_by_label('Expected 12-digit AWS account',exact=True).fill(account)
-                    page.get_by_label('Regions, comma separated',exact=True).fill('eu-central-1')
-                    page.get_by_label('Observer profile',exact=True).select_option(profile)
-                    if cid=='work':page.get_by_label('FIS executor profile (optional)',exact=True).select_option('test-executor')
+                    def fill_account():
+                        page.locator('[data-stage=accounts]').click();page.get_by_label('Connection ID',exact=True).fill(cid)
+                        page.get_by_label('Connection label',exact=True).fill('Test-only '+cid)
+                        page.get_by_label('Expected 12-digit AWS account',exact=True).fill(account)
+                        page.get_by_label('Regions, comma separated',exact=True).fill('eu-central-1')
+                        page.get_by_label('Observer profile',exact=True).select_option(profile)
+                        if cid=='work':page.get_by_label('FIS executor profile (optional)',exact=True).select_option('test-executor')
+                    fill_account()
+                    if cid=='work':
+                        page.evaluate("""()=>{const original=window.fetch;let release;
+                          const held=new Promise(resolve=>release=resolve);window.__draftResponseReady=false;
+                          window.__releaseDraftResponse=()=>{release();window.fetch=original};
+                          window.fetch=async(path,options)=>{const response=await original(path,options);
+                            if(path==='/api/setup/accounts'){window.__draftResponseReady=true;await held}return response};
+                        }""")
+                        page.get_by_role('button',name='Review account configuration',exact=True).click()
+                        wait_state(page, 'window.__draftResponseReady')
+                        page.locator('#setup-auth').click()
+                        page.evaluate('window.__releaseDraftResponse()')
+                        page.wait_for_timeout(200)
+                        check('late account proposal response cannot restore private setup state after locking',
+                              page.evaluate("GuidedSetup.state().draft===null&&GuidedSetup.state().current===null&&GuidedSetup.state().token===''"))
+                        page.get_by_role('button',name='Unlock',exact=True).click()
+                        page.get_by_label('Local operator token',exact=True).fill(OP)
+                        page.locator('#setup-modal').get_by_role('button',name='Unlock',exact=True).click()
+                        wait_state(page, 'GuidedSetup.state().current!==null')
+                        fill_account()
                     page.get_by_role('button',name='Review account configuration',exact=True).click()
                     page.get_by_role('button',name='Approve exact local configuration',exact=True).wait_for()
                     check(cid+' remains a proposal before approval',not any(c.id==cid for c in cfg.fis_accounts))
@@ -154,7 +175,17 @@ def main():
                 t=template();rec=store.put_record('fis_template',scope['id'],{'scope_id':scope['id'],'account_id':ACCOUNT_B,'region':'eu-central-1','template_id':t['id'],'template':t,'contract_sha256':digest(template_contract(t)),'target_accounts':[],'complete':True})
                 preview=store.put_record('fis_preview_result','fixture-preview',{'template_record_id':rec['id'],'template_id':t['id'],'template_sha256':digest(template_contract(t)),'target_accounts':[],'target_accounts_sha256':digest([]),'account_id':ACCOUNT_B,'region':'eu-central-1','targets':[{'targetName':'Instances','resourceType':'aws:ec2:instance','targetInformation':{'arn':TARGET}}],'captured_at':iso(),'provider_id':'fixture-skip-only'})
                 store.create('fis_preview','COMPLETE',{'provider_id':'fixture-skip-only','result_id':preview['id']})
+                page.evaluate("""()=>{const original=window.fetch;let release;
+                  const held=new Promise(resolve=>release=resolve);
+                  window.__releaseReadCatalogue=()=>{release();window.fetch=original};
+                  window.fetch=async(path,options)=>{if(path==='/api/setup/read-operations')await held;return original(path,options)};
+                }""")
                 page.locator('[data-stage=plan]').click();page.get_by_label('Plan / binding ID',exact=True).wait_for()
+                check('cannot add an unusable verifier before the read-operation catalogue loads',
+                      page.get_by_role('button',name='Add independent check',exact=True).is_disabled())
+                page.evaluate('window.__releaseReadCatalogue()')
+                wait_state(page, "!document.querySelector('#setup-content button').disabled && [...document.querySelectorAll('button')].some(b=>b.textContent==='Add independent check'&&!b.disabled)")
+
                 fields={'Plan / binding ID':'guided-trial','Plan title':'Test-only guided plan','Service ID':'test-service','Agent Region':'eu-central-1','Business-path HTTPS URL':'https://example.com/business','Allowed destination CIDRs, comma separated':'192.0.2.0/24','Maximum accepted latency (ms)':'1000','Maximum accepted error ratio':'0.01','Incident CloudWatch alarm name':'TestAlarm','Native external-reference system':'fixture-native','Reference ID format':'{alarm_arn}','Delivery receipt log group':'/fixture/receipts','Explain the actual source-to-task correlation':'Test-only exact alarm ARN is used as the integration reference.','Maximum fault runtime seconds':'60','Ground-truth mechanism code':'capacity-loss','Actual expected failure mechanism':'The approved serving instance becomes unavailable during the test.','Diagnosis rubric':'Identify the actual stopped resource and its impact with source citations.','Test hypothesis':'Native investigation responds to the controlled serving capacity interruption.','Action prerequisites and permission review':'Test-only reviewed target role permissions and action prerequisites.','Recovery that remains operable without this console':'Test-only independent restoration is reviewed before any authorized exposure.','Blast-radius and stop-alarm review':'Test-only exact instance and independent CloudWatch stop condition.'}
                 for label,value in fields.items():page.get_by_label(label,exact=True).fill(value)
                 page.get_by_label('Agent account connection',exact=True).select_option('agent');page.get_by_role('button',name='Load agent choices',exact=True).click()
@@ -166,9 +197,33 @@ def main():
                     box=page.locator('.setup-row').filter(has=page.get_by_label('Check ID',exact=True)).last
                     box.get_by_label('Check ID',exact=True).fill(phase+'-resource');box.get_by_label('Phase',exact=True).select_option(phase)
                     box.get_by_label('Verifier account connection',exact=True).select_option('work');box.get_by_label('AWS read service',exact=True).select_option('ec2')
-                    box.get_by_label('Read operation',exact=True).select_option('describe_instances');box.get_by_role('button',name='Build resource parameter fields',exact=True).click()
+                    box.get_by_label('Read operation',exact=True).select_option('describe_instances')
+                    if phase=='baseline':
+                        page.evaluate("""()=>{const original=window.fetch;let release;
+                          const held=new Promise(resolve=>release=resolve);
+                          window.__releaseReadShape=()=>{release();window.fetch=original};
+                          window.fetch=async(path,options)=>{if(path==='/api/setup/read-shape/ec2/describe_instances')await held;return original(path,options)};
+                        }""")
+                        box.get_by_role('button',name='Build resource parameter fields',exact=True).click()
+                        box.get_by_label('Read operation',exact=True).select_option('describe_volumes')
+                        page.evaluate('window.__releaseReadShape()')
+                        wait_state(page, "[...document.querySelectorAll('button')].some(b=>b.textContent==='Build resource parameter fields'&&!b.disabled)")
+                        check('late SDK shape response cannot attach parameters to a different operation',
+                              box.get_by_label('Add Parameters field',exact=True).count()==0)
+                        box.get_by_label('Read operation',exact=True).select_option('describe_instances')
+                    box.get_by_role('button',name='Build resource parameter fields',exact=True).click()
                     box.get_by_label('Add Parameters field',exact=True).wait_for();box.get_by_label('Add Parameters field',exact=True).select_option('InstanceIds');box.get_by_role('button',name='Add selected field',exact=True).click()
                     box.get_by_role('button',name='Add InstanceIds item',exact=True).click();box.get_by_label('InstanceIds item',exact=True).fill('i-123')
+                    if phase=='baseline':
+                        box.get_by_label('Read operation',exact=True).select_option('describe_volumes')
+                        check('changing the verifier operation invalidates existing resource parameters',
+                              box.get_by_label('InstanceIds item',exact=True).count()==0)
+                        box.get_by_label('Read operation',exact=True).select_option('describe_instances')
+                        box.get_by_role('button',name='Build resource parameter fields',exact=True).click()
+                        box.get_by_label('Add Parameters field',exact=True).select_option('InstanceIds')
+                        box.get_by_role('button',name='Add selected field',exact=True).click()
+                        box.get_by_role('button',name='Add InstanceIds item',exact=True).click()
+                        box.get_by_label('InstanceIds item',exact=True).fill('i-123')
                     box.get_by_label('JMESPath response field',exact=True).fill('Reservations[0].Instances[0].State.Name')
                     box.get_by_label('Expected value',exact=True).fill('stopped' if phase=='fault' else 'running')
                     box.get_by_label('Why this independently verifies the phase',exact=True).fill('Read the independently observed resource state for '+phase+'.')
