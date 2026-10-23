@@ -28,6 +28,8 @@ def wrap_subsections(soup):
     for section in list(soup.select('.report-section')):
         stack = [(3, section)]
         for child in list(section.contents):
+            if isinstance(child, Tag) and any(c in child.get('class',[]) for c in ('feature-reference','related-reading')):
+                stack=[(3,section)]
             if isinstance(child, Tag) and re.fullmatch(r'h[4-6]', child.name or ''):
                 level = int(child.name[1])
                 while len(stack) > 1 and stack[-1][0] >= level:
