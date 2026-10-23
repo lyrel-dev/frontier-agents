@@ -77,3 +77,11 @@
   addEventListener('hashchange',reveal);if(hash())reveal();
  }
 })();
+
+(() => { if(document.body.dataset.reader !== 'guide') return;
+ const intro=document.querySelector('.guide-introduction');
+ const first=document.querySelector('[data-reader-chapter]');
+ if(!intro || !first) return;
+ const update=()=>{intro.hidden=first.hidden && !document.getElementById('read-all').checked;};
+ new MutationObserver(update).observe(first,{attributes:true,attributeFilter:['hidden']});
+ addEventListener('afterprint',update);update();})();
