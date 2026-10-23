@@ -1,9 +1,17 @@
 # Publishing documentation
 
-The six catalog JSON registers (use-cases, mechanisms, features, profiles, aliases, resource-models) are frozen at dace05a3ce6aaae02470a817584b8ca3a4cc95be. Do not change their definitions, identifiers, relationships, or use-case semantics during reader revisions.
+Edit canonical Markdown under `content/`. YAML front matter identifies each document, section, slide, diagram, or approved record. The compiler regenerates the existing HTML routes and supporting projections. Do not edit generated HTML, SVG, assembled guide Markdown, or catalog JSON.
 
-Product capability explanations and official references are authored in guides/*.md. Frozen registers supply identifiers and relationships; they do not generate chapter prose or define a homogeneous product taxonomy. Chapter membership remains in tools/docs/structure.py; reader layout is in reader.py, reading.css, and reading.js; presentation content remains in presentation.py. Keep the supplied capability dimensions, detailed product explanations, and separate use-case catalog. Do not replace explanation with registry-field cards or add another parallel guide.
+## Approved records
 
-Run python tools/docs/build.py and python tools/docs/check.py --browser. The reading checks compare frozen records byte-for-byte and test complete task-to-procedure reading journeys. Trigger the existing workflow through documentation-build.json and publish only after validation.
+The entity model and use cases are frozen. Their Markdown representation reconstructs the approved JSON values without changing identities, relationships, objectives, workflow conditions, or completion criteria. Preservation tests continue to compare these projections against the approved revision. Neither a review comment nor a model-produced patch authorizes a change to frozen records.
 
-Git retains previous versions. Do not create manual archives, migration copies, or forwarding editions. Preserve the independent application and its workflow. Repository publication does not deploy a website.
+## Validation and publication
+
+Run `python tools/docs/build.py`, `python tools/docs/check.py --browser`, and `python tools/docs/review_check.py`. Inspect the generated documents and any source diff. Verify a second build produces identical content outputs and leaves all `content/` files unchanged. Publish only after the checks complete successfully. The source-editing and review contracts are documented in [AUTHORING.md](AUTHORING.md).
+
+The documentation workflow builds the branch being changed. Generated files are committed separately. Do not change the independent application or its workflow. Repository publication is not deployment of a hosted website.
+
+## History and private review data
+
+Use Git history for previous versions; do not create manual archives or replacement editions. Review exports contain the reviewer's comments and selected source excerpts. Keep them local unless their publication has been explicitly reviewed. Exporting or copying an LLM request does not send it to a provider automatically.
