@@ -1,0 +1,50 @@
+{
+  "schema": "frontier-authoring-validation/v1",
+  "errors": [],
+  "source_mapping": [
+    "all registry values equal the approved baseline",
+    "2184 rendered source targets match exact Unicode and UTF-8 source ranges"
+  ],
+  "patch_guards": [
+    "dry-run and exact Unicode block replacement",
+    "exact selected text can be edited without widening block scope",
+    "text selection rejects edits outside quote and unmappable selections",
+    "review identity mismatch",
+    "path traversal",
+    "generated output target",
+    "unselected source block",
+    "nonexact source excerpt",
+    "block identity insertion",
+    "duplicate edits",
+    "resolved comment",
+    "stale file even when selected block is unchanged",
+    "frozen record despite forged protection flag",
+    "symlink source",
+    "batch preflight prevents partial application"
+  ],
+  "browser": [
+    {
+      "viewport": 390,
+      "block_range_text_and_document_comments": "passed",
+      "local_persistence_and_cross_page_notes": "passed",
+      "global_search": "passed",
+      "slide_source_selection": "passed",
+      "export_import_and_stale_warning": "passed",
+      "external_requests": [],
+      "javascript_errors": []
+    },
+    {
+      "viewport": 1440,
+      "block_range_text_and_document_comments": "passed",
+      "local_persistence_and_cross_page_notes": "passed",
+      "global_search": "passed",
+      "slide_source_selection": "passed",
+      "export_import_and_stale_warning": "passed",
+      "external_requests": [],
+      "javascript_errors": []
+    },
+    {
+      "file_url_search": "passed"
+    }
+  ]
+}
