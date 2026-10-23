@@ -130,92 +130,92 @@
       "sha256": "d85d4794db60295bff25c941adf7c9dfec0c23066d58551f3432562e28852fe2"
     },
     "assets/diagrams/teaching-devops-agent.svg": {
-      "bytes": 5266,
-      "sha256": "557e9898ee93529b6dca65b606c22b5db1230508ab6dffc298cbf92c7c1b6be1"
+      "bytes": 5165,
+      "sha256": "070bdfc302e42bc975096f33ae7123b19bc29bc1cea030fac1b4e4698e147fa5"
     },
     "assets/diagrams/teaching-devops-change.svg": {
-      "bytes": 7411,
-      "sha256": "463752ddd5f93729f264f57dbce46d960ca206ff04e88818311b97f92a300bf5"
+      "bytes": 7338,
+      "sha256": "9255843504e71145bd51b923d10e52889931fed6cb56a5e276d7d32f309ff003"
     },
     "assets/diagrams/teaching-devops-coordination.svg": {
-      "bytes": 7510,
-      "sha256": "1b826995bfcf801ded5144a37e168163cc82556e8dfaf30d4d3ba8b080d9d65e"
+      "bytes": 7409,
+      "sha256": "6c1e33e55ca2051f0f5d39f551f74e898ad96bffdbf6a1c5e59488877fa0e007"
     },
     "assets/diagrams/teaching-devops-incident.svg": {
-      "bytes": 8938,
-      "sha256": "6423f1464d8cdb63c37e58b0ab013bfb9d7d3090540e0f80d0505581a6ee5c3f"
+      "bytes": 8865,
+      "sha256": "71e9c72f52bdbe758927b74f1f157b9c3b40772f549c287df0a964b46d2635c5"
     },
     "assets/diagrams/teaching-devops-knowledge.svg": {
-      "bytes": 7576,
-      "sha256": "563679eda1c117c11d12e91b540cc85df323804ec99f1e6ef55b37e3e03d5434"
+      "bytes": 7503,
+      "sha256": "ead50e2fa1021dd19a327f8f4d5fe14c0754daa6f238ef76e82b7f73962f89dc"
     },
     "assets/diagrams/teaching-devops-learning.svg": {
-      "bytes": 7580,
-      "sha256": "22c456172098b68186b47c828cd2f24789b056cf7a14134095ec5a3cd62460da"
+      "bytes": 7507,
+      "sha256": "9f3e9faeb540971d22d0cfefe371bf270766c2563576ccb4fdc24e896aecf441"
     },
     "assets/diagrams/teaching-devops-mitigation.svg": {
-      "bytes": 8427,
-      "sha256": "2b59c7820b1ed4fbac119476c5940a79e805bfaf788322af53c17e1bfb037255"
+      "bytes": 8354,
+      "sha256": "df9e04176594206a87d537a99955b3d911df903479b5ee53ba2fc3696989a32b"
     },
     "assets/diagrams/teaching-devops-reporting.svg": {
-      "bytes": 8100,
-      "sha256": "43dabb5793a93e005ec18f002740accae2fae6ec191963e3131c17894e6d1d5b"
+      "bytes": 8027,
+      "sha256": "ed731f7ab12dab44acd993527ac43df4f97b1bda7d2b6621b370ad571f35dd9e"
     },
     "assets/diagrams/teaching-devops-review.svg": {
-      "bytes": 7310,
-      "sha256": "7f7c251cca003fb1366c5adf9e453096ae88c4e7c3049ad6130aa1fb6809b2f5"
+      "bytes": 7237,
+      "sha256": "0ddbe82d646d2bf20fa2742ac7a703ba61cdf91b47fddec73c3e9d0519edbeb1"
     },
     "assets/diagrams/teaching-devops-space.svg": {
-      "bytes": 7408,
-      "sha256": "5bd7bffcf90fa6fd4299e9e3bd30db967f8debf491068b599ee673f75359a3bb"
+      "bytes": 7335,
+      "sha256": "775307d1ff23e1013824459f43e5b212b0a1dd62fc3ba5c6f6397d5c8886d72d"
     },
     "assets/diagrams/teaching-finops-agent.svg": {
       "bytes": 5268,
-      "sha256": "a35371b0b7618e59d9c497b31e66445eafe290b5a67c991fdb321279dcd3e609"
+      "sha256": "7d7636c0118a0988b6780c05436f7e1d6061ba05020e7cec5c05f2985d230f1e"
     },
     "assets/diagrams/teaching-finops-analysis.svg": {
-      "bytes": 7360,
-      "sha256": "66f92b23920f558b7dfa6c3d801eb2b8aea8bcc17a8a5416dc17b909634c9f93"
+      "bytes": 7388,
+      "sha256": "6b91b77f7a5093ec6accbfb571ff3f65d7bda5d9e1846bcccf0f03338a6e626a"
     },
     "assets/diagrams/teaching-finops-coordination.svg": {
       "bytes": 6626,
-      "sha256": "5aee367b0648354895beaed805683d7224760ec39bd65e23c05e1bef5af5cee1"
+      "sha256": "c80e8d04978b1fdd10f9b7ab764313b0cdab47d61c3fea4fe78ac4570e5e8cab"
     },
     "assets/diagrams/teaching-finops-optimization.svg": {
-      "bytes": 7555,
-      "sha256": "05a469d9393fc242defabb24b16f30a591ae32907def8cd18a10f417019ea877"
+      "bytes": 7583,
+      "sha256": "603b6ed6f46715e464da5151290927a84b05520fd4b937638be3991e9c91f3db"
     },
     "assets/diagrams/teaching-finops-reporting.svg": {
-      "bytes": 8044,
-      "sha256": "d00215ba6481417cbc69f1d346fb4ed7aef6b2c79e7a28e4bdf6575ee6dd35f1"
+      "bytes": 8072,
+      "sha256": "00ea9d556154e05c7abd863cbc58010134e6fc5c2e99def64db9fbbbcf2fd2e4"
     },
     "assets/diagrams/teaching-finops-space.svg": {
-      "bytes": 7333,
-      "sha256": "1f63eb3fc2d52e9cdf34c32acc03828a4e3b9299b0165a8e4ed16c19cefaadcc"
+      "bytes": 7361,
+      "sha256": "c70b4b4d629363cfe2339969df6a502cff0d4bbacb86b720a60139db6056fa42"
     },
     "assets/diagrams/teaching-security-agent.svg": {
       "bytes": 5289,
-      "sha256": "25c595152c485f2d8e4c35fd45a92a235c9aaa48dfd8f1d95538fbd05c3b27bf"
+      "sha256": "3e521eee7de8afa72aa3744799a9d331a7d348536edce0333c08c5743116043c"
     },
     "assets/diagrams/teaching-security-assessment.svg": {
-      "bytes": 7416,
-      "sha256": "47de49d6e890331090948f424f786e2c6831db493a447fd8f7fd176146a0574b"
+      "bytes": 7444,
+      "sha256": "02e795f2d6aa019cb0eda9aa44f962ebe214ec73707269e70eafcf857278f57c"
     },
     "assets/diagrams/teaching-security-context.svg": {
-      "bytes": 7421,
-      "sha256": "75ba8f1e893be148960103ba67eccbc61527831e64c11e2300e3247df4fb677c"
+      "bytes": 7449,
+      "sha256": "463d9148a7e3b5fe0b5ce0e0faaf1cbda1c7582c68e4191a10182234a6034ab0"
     },
     "assets/diagrams/teaching-security-coordination.svg": {
       "bytes": 6698,
-      "sha256": "b823d20c8dc4a2a1d869310c76f59d34084a96933733085d40502598813c5148"
+      "sha256": "76447ff6cd61cb0c673343b514d73fb447ad1407e50a4ba16836f8690f815bb9"
     },
     "assets/diagrams/teaching-security-repair.svg": {
-      "bytes": 8240,
-      "sha256": "9d4d2c6179c0cd7b45967fbf289c5d231aeec1efddd53295230b79ff2f62545b"
+      "bytes": 8268,
+      "sha256": "0ac7c89052ef86192fa8202ef6e2d094968df89d38e539eaa62ffd5e0c02ccf2"
     },
     "assets/diagrams/teaching-security-space.svg": {
-      "bytes": 7388,
-      "sha256": "a16b059d05a2eab105f1a4ff7bbedc5a191c70c95b11fb03d30e7a8919176499"
+      "bytes": 7416,
+      "sha256": "4a4331940d513b69807f1692be75f6979cc1677d2e10d3e48c3a7ee8b126194a"
     },
     "assets/diagrams/workflow-feature-map.svg": {
       "bytes": 8042,
@@ -383,7 +383,7 @@
     },
     "documentation-build.json": {
       "bytes": 1442,
-      "sha256": "d42101ec2e45e9e4159d705ec0a40ffb9b260472e16d98f2480e659990fc1c60"
+      "sha256": "cb4cc45e60c8691ed670ccb1ad3d786644fb6a62183ce1c4a9cf4a86a4375b19"
     },
     "examples/prepared-evidence.json": {
       "bytes": 2346,
@@ -402,24 +402,24 @@
       "sha256": "45af5b1fb1b9af39fc83e206d6c77ad072f8b78a9f49d92a465f4ae814155e5b"
     },
     "guides/devops.html": {
-      "bytes": 317977,
-      "sha256": "0e09151a9ed35af7653df2fa18989b086f113ca7553f4d09dcd8ac926de4514d"
+      "bytes": 317191,
+      "sha256": "0f73449653b9066ad6ede79607f7de21c88d99ef57771cebe0df0f8ffa609aac"
     },
     "guides/devops.md": {
       "bytes": 90016,
       "sha256": "84a2a0a06ef2deb69da09f24e3a3d75ec332f494cf224a22371979924b86b932"
     },
     "guides/finops.html": {
-      "bytes": 200797,
-      "sha256": "6007534ebb6e8b064a56974f099fca8983cf13df1e9b6a38091a4acb9c3e8209"
+      "bytes": 200909,
+      "sha256": "43e4423771ba224bc72ff8decbde6a32a7afec9f7effabac521d4d6516c22db2"
     },
     "guides/finops.md": {
       "bytes": 57207,
       "sha256": "5f1d17d8864fd1f00a9a35c6249de4e910ebcea48b4445a27730afc138f56595"
     },
     "guides/security.html": {
-      "bytes": 235648,
-      "sha256": "feba802ce097e4bcbe667c3584259bcd2d9da6d4fd811358a07bfab39237a5de"
+      "bytes": 235760,
+      "sha256": "56298ba6288747def52a33cb166e64b6e14f6827d104f48bdbaf0e7b410ca6f3"
     },
     "guides/security.md": {
       "bytes": 65296,
@@ -442,16 +442,16 @@
       "sha256": "6c5b28e381e67ccfc17256654e1c716aecd7fdc98c82e79187a92452d9594467"
     },
     "presentations/devops.html": {
-      "bytes": 810944,
-      "sha256": "45d52a42bb08a96f3efc0495fc0bd969a3f396324c789c57de67d9e429a526e7"
+      "bytes": 807446,
+      "sha256": "3ad1589fd2e8c4e591528a19136fe263fd41adf2b31c6008839d3f1f568159ed"
     },
     "presentations/finops-notes.md": {
       "bytes": 10746,
       "sha256": "71e1c450f3855ca824a91afb10ebcf485a80c9c5fbfecbb29caac9e3c5a3a5dd"
     },
     "presentations/finops.html": {
-      "bytes": 416403,
-      "sha256": "1d20b7ba97f045a3e04f69c7850b220b171c2b1bb7120cb2dda03fa5e3e1e3e7"
+      "bytes": 417103,
+      "sha256": "d68531e3c80d19e7be8b8f8a343ba50f3bfac17fbaf250cb74c9657f8d7b41a5"
     },
     "presentations/index.html": {
       "bytes": 20014,
@@ -462,12 +462,12 @@
       "sha256": "989c53f819841dff3f1bbf980c8be07b554b5407df0255a742b7c4616dde9508"
     },
     "presentations/security.html": {
-      "bytes": 465202,
-      "sha256": "f81bfcc528fc7bd8c3588fbab760a18ce24c56febd38e4a64ea687729cbe4fd2"
+      "bytes": 465930,
+      "sha256": "8cb50f6105cceed3fdced1cc580f93f0647f6b2456d31aadd279f39a600f79cd"
     },
     "qa/checks.json": {
-      "bytes": 48292,
-      "sha256": "941cff1ea5d0cfa6d5a01cb4327ec54cfdc259b362ba23aa9b40a813078061b3"
+      "bytes": 49178,
+      "sha256": "3434eacef0a8e6208024cdc5fa6afa3f041961466369be169a38b2e9162597c1"
     },
     "qa/content-review.json": {
       "bytes": 937,
@@ -478,12 +478,12 @@
       "sha256": "86b9bc2ca0a4fdd3034c4630b7f443b3bc31ec7d68768e32fffec995855e8f1c"
     },
     "qa/educational-checks.json": {
-      "bytes": 7492,
-      "sha256": "a5f488995d4fd1b52f9d2fa684af652a6ccc7eb58d7afdd2832413d0dbe49366"
+      "bytes": 8334,
+      "sha256": "331d74ca00899879a1f22b58986a218eeb86cd0be35cc681e0f18b67e1da2b39"
     },
     "qa/educational-review.json": {
-      "bytes": 5374,
-      "sha256": "4f2b8740322dd52577ebd69baea3e083cf19a97036ae611d39865e509c45a627"
+      "bytes": 5852,
+      "sha256": "66cde2747a76dc98f98ad4a9774ba653fc6392cc0bd6a53331b5f89a4d7ad884"
     },
     "qa/exposition-checks.json": {
       "bytes": 3571,
@@ -614,12 +614,12 @@
       "sha256": "9e86b97219bff81a15a172f18ccc82448eed6d24ce538e6f4e9910479d0b89bd"
     },
     "tools/docs/teaching_check.py": {
-      "bytes": 6986,
-      "sha256": "77a75acf79ba5cdf50db2ecadaa324e801d09834022477782f8ce6169bb701bf"
+      "bytes": 7703,
+      "sha256": "d526f3566362fe8961cd02bf8c4cf1c81618c7d2f2d9a3dfe0bd56eacec15873"
     },
     "tools/docs/teaching_diagrams.py": {
-      "bytes": 21836,
-      "sha256": "eb438bedd109b26c7b7556dbfc6c2c008a4a5e1e3766004daec94635c7fa089a"
+      "bytes": 21849,
+      "sha256": "36f8550866b5fd0737780274e74eb8d8782e814f5c3068af76d3e9bb3abd1966"
     }
   },
   "excluded": [
