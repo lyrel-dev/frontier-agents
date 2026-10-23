@@ -86,20 +86,7 @@
     "Unresolved claim evidence rejected",
     "Missing condition and unknown related mechanism rejected"
   ],
-  "browser": [
-    {
-      "width": 390,
-      "mechanism_to_detailed_procedure": "passed",
-      "conditional_personalization_link": "passed",
-      "javascript_errors": []
-    },
-    {
-      "width": 1440,
-      "mechanism_to_detailed_procedure": "passed",
-      "conditional_personalization_link": "passed",
-      "javascript_errors": []
-    }
-  ],
+  "browser": [],
   "errors": [],
   "boundary": "Document-level review and proposed test plans, not live AWS execution or an exhaustive internal algorithm specification."
 }
