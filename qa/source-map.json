@@ -1,0 +1,811 @@
+{
+  "schema": "frontier-source-map-report/v1",
+  "content_revision": "4f7af1115a18cc86a8b22403f84ae07e5f90ee880fd05e2f46d6e0b40102f9de",
+  "source_files": 457,
+  "search_blocks": 1455,
+  "pages": {
+    "index.html": {
+      "source_files": [],
+      "mapped_blocks": 0
+    },
+    "guides/architecture.html": {
+      "source_files": [
+        "content/diagrams/agent-execution.md",
+        "content/diagrams/er-concept-model.md",
+        "content/diagrams/shared-handoff.md",
+        "content/diagrams/workflow-feature-map.md",
+        "content/guides/architecture/chapters/01-agent-overview.md",
+        "content/guides/architecture/chapters/02-models.md",
+        "content/guides/architecture/chapters/03-boundaries.md",
+        "content/guides/architecture/chapters/04-lifecycle.md",
+        "content/guides/architecture/chapters/05-example.md",
+        "content/guides/architecture/chapters/06-evidence.md",
+        "content/guides/architecture/index.md",
+        "content/guides/architecture/sections/A-00.md",
+        "content/guides/architecture/sections/A-01.md",
+        "content/guides/architecture/sections/A-02.md",
+        "content/guides/architecture/sections/A-03.md",
+        "content/guides/architecture/sections/A-04.md",
+        "content/guides/architecture/sections/A-05.md",
+        "content/guides/architecture/sections/A-06.md",
+        "content/guides/architecture/sections/A-07.md",
+        "content/guides/architecture/sections/A-08.md",
+        "content/guides/architecture/sections/A-09.md",
+        "content/guides/architecture/sections/A-10.md",
+        "content/guides/architecture/sections/A-11.md",
+        "content/guides/architecture/sections/A-12.md",
+        "content/guides/architecture/sections/A-90.md",
+        "content/guides/architecture/sections/A-91.md",
+        "content/guides/architecture/sections/A-U01.md"
+      ],
+      "mapped_blocks": 121
+    },
+    "guides/devops.html": {
+      "source_files": [
+        "content/diagrams/devops-incident.md",
+        "content/diagrams/devops-integrations.md",
+        "content/diagrams/er-devops-incidents.md",
+        "content/diagrams/er-devops-knowledge.md",
+        "content/diagrams/er-devops-scope.md",
+        "content/diagrams/mechanism-devops-cancellation.md",
+        "content/diagrams/mechanism-devops-retrieval.md",
+        "content/diagrams/teaching-devops-agent.md",
+        "content/diagrams/teaching-devops-change.md",
+        "content/diagrams/teaching-devops-coordination.md",
+        "content/diagrams/teaching-devops-incident.md",
+        "content/diagrams/teaching-devops-knowledge.md",
+        "content/diagrams/teaching-devops-learning.md",
+        "content/diagrams/teaching-devops-mitigation.md",
+        "content/diagrams/teaching-devops-reporting.md",
+        "content/diagrams/teaching-devops-review.md",
+        "content/diagrams/teaching-devops-space.md",
+        "content/guides/devops/chapters/01-agent-overview.md",
+        "content/guides/devops/chapters/02-workflow-overview.md",
+        "content/guides/devops/chapters/03-workspace.md",
+        "content/guides/devops/chapters/04-definition.md",
+        "content/guides/devops/chapters/05-knowledge.md",
+        "content/guides/devops/chapters/06-invocation.md",
+        "content/guides/devops/chapters/07-integrations.md",
+        "content/guides/devops/chapters/08-network.md",
+        "content/guides/devops/chapters/09-runtime.md",
+        "content/guides/devops/chapters/10-managed-workflows.md",
+        "content/guides/devops/chapters/11-interfaces.md",
+        "content/guides/devops/chapters/12-administration.md",
+        "content/guides/devops/chapters/13-examples.md",
+        "content/guides/devops/index.md",
+        "content/guides/devops/sections/D-01.md",
+        "content/guides/devops/sections/D-02.md",
+        "content/guides/devops/sections/D-03.md",
+        "content/guides/devops/sections/D-04.md",
+        "content/guides/devops/sections/D-05.md",
+        "content/guides/devops/sections/D-06.md",
+        "content/guides/devops/sections/D-07.md",
+        "content/guides/devops/sections/D-08.md",
+        "content/guides/devops/sections/D-09.md",
+        "content/guides/devops/sections/D-10.md",
+        "content/guides/devops/sections/D-11.md",
+        "content/guides/devops/sections/D-12.md",
+        "content/guides/devops/sections/D-13.md",
+        "content/guides/devops/sections/D-14.md",
+        "content/guides/devops/sections/D-15.md",
+        "content/guides/devops/sections/D-16.md",
+        "content/guides/devops/sections/D-17.md",
+        "content/guides/devops/sections/D-18.md",
+        "content/guides/devops/sections/D-19.md",
+        "content/guides/devops/sections/D-20.md",
+        "content/guides/devops/sections/D-21.md",
+        "content/guides/devops/sections/D-22.md",
+        "content/guides/devops/sections/D-23.md",
+        "content/guides/devops/sections/D-24.md",
+        "content/guides/devops/sections/D-90.md",
+        "content/guides/devops/sections/D-91.md",
+        "content/guides/devops/sections/D-92.md",
+        "content/guides/devops/sections/D-93.md",
+        "content/guides/devops/sections/D-94.md",
+        "content/guides/devops/sections/D-95.md",
+        "content/guides/devops/sections/D-96.md",
+        "content/guides/devops/sections/D-M01.md",
+        "content/guides/devops/sections/D-M02.md",
+        "content/guides/devops/sections/D-M03.md",
+        "content/guides/devops/sections/D-M04.md",
+        "content/guides/devops/sections/D-M05.md",
+        "content/guides/devops/sections/D-M06.md",
+        "content/guides/devops/sections/D-M07.md",
+        "content/guides/devops/sections/D-M08.md",
+        "content/guides/devops/sections/D-U01.md"
+      ],
+      "mapped_blocks": 288
+    },
+    "guides/finops.html": {
+      "source_files": [
+        "content/diagrams/er-finops-context.md",
+        "content/diagrams/er-finops-scope.md",
+        "content/diagrams/er-finops-work.md",
+        "content/diagrams/finops-integrations.md",
+        "content/diagrams/teaching-finops-agent.md",
+        "content/diagrams/teaching-finops-analysis.md",
+        "content/diagrams/teaching-finops-coordination.md",
+        "content/diagrams/teaching-finops-optimization.md",
+        "content/diagrams/teaching-finops-reporting.md",
+        "content/diagrams/teaching-finops-space.md",
+        "content/guides/finops/chapters/01-agent-overview.md",
+        "content/guides/finops/chapters/02-workflow-overview.md",
+        "content/guides/finops/chapters/03-workspace.md",
+        "content/guides/finops/chapters/04-definition.md",
+        "content/guides/finops/chapters/05-knowledge.md",
+        "content/guides/finops/chapters/06-invocation.md",
+        "content/guides/finops/chapters/07-integrations.md",
+        "content/guides/finops/chapters/08-network.md",
+        "content/guides/finops/chapters/09-runtime.md",
+        "content/guides/finops/chapters/10-managed-workflows.md",
+        "content/guides/finops/chapters/11-interfaces.md",
+        "content/guides/finops/chapters/12-administration.md",
+        "content/guides/finops/chapters/13-examples.md",
+        "content/guides/finops/index.md",
+        "content/guides/finops/sections/F-01.md",
+        "content/guides/finops/sections/F-02.md",
+        "content/guides/finops/sections/F-03.md",
+        "content/guides/finops/sections/F-04.md",
+        "content/guides/finops/sections/F-05.md",
+        "content/guides/finops/sections/F-06.md",
+        "content/guides/finops/sections/F-07.md",
+        "content/guides/finops/sections/F-08.md",
+        "content/guides/finops/sections/F-09.md",
+        "content/guides/finops/sections/F-10.md",
+        "content/guides/finops/sections/F-11.md",
+        "content/guides/finops/sections/F-12.md",
+        "content/guides/finops/sections/F-13.md",
+        "content/guides/finops/sections/F-14.md",
+        "content/guides/finops/sections/F-15.md",
+        "content/guides/finops/sections/F-90.md",
+        "content/guides/finops/sections/F-91.md",
+        "content/guides/finops/sections/F-92.md",
+        "content/guides/finops/sections/F-93.md",
+        "content/guides/finops/sections/F-M01.md",
+        "content/guides/finops/sections/F-M02.md",
+        "content/guides/finops/sections/F-M03.md",
+        "content/guides/finops/sections/F-M04.md",
+        "content/guides/finops/sections/F-M05.md",
+        "content/guides/finops/sections/F-M06.md",
+        "content/guides/finops/sections/F-M07.md",
+        "content/guides/finops/sections/F-U01.md"
+      ],
+      "mapped_blocks": 203
+    },
+    "guides/security.html": {
+      "source_files": [
+        "content/diagrams/er-security-assessments.md",
+        "content/diagrams/er-security-lineage.md",
+        "content/diagrams/er-security-scope.md",
+        "content/diagrams/mechanism-security-learning.md",
+        "content/diagrams/security-context.md",
+        "content/diagrams/security-integrations.md",
+        "content/diagrams/teaching-security-agent.md",
+        "content/diagrams/teaching-security-assessment.md",
+        "content/diagrams/teaching-security-context.md",
+        "content/diagrams/teaching-security-coordination.md",
+        "content/diagrams/teaching-security-repair.md",
+        "content/diagrams/teaching-security-space.md",
+        "content/guides/security/chapters/01-agent-overview.md",
+        "content/guides/security/chapters/02-workflow-overview.md",
+        "content/guides/security/chapters/03-workspace.md",
+        "content/guides/security/chapters/04-definition.md",
+        "content/guides/security/chapters/05-knowledge.md",
+        "content/guides/security/chapters/06-invocation.md",
+        "content/guides/security/chapters/07-integrations.md",
+        "content/guides/security/chapters/08-network.md",
+        "content/guides/security/chapters/09-runtime.md",
+        "content/guides/security/chapters/10-managed-workflows.md",
+        "content/guides/security/chapters/11-interfaces.md",
+        "content/guides/security/chapters/12-administration.md",
+        "content/guides/security/chapters/13-examples.md",
+        "content/guides/security/index.md",
+        "content/guides/security/sections/S-01.md",
+        "content/guides/security/sections/S-02.md",
+        "content/guides/security/sections/S-03.md",
+        "content/guides/security/sections/S-04.md",
+        "content/guides/security/sections/S-05.md",
+        "content/guides/security/sections/S-06.md",
+        "content/guides/security/sections/S-07.md",
+        "content/guides/security/sections/S-08.md",
+        "content/guides/security/sections/S-09.md",
+        "content/guides/security/sections/S-10.md",
+        "content/guides/security/sections/S-11.md",
+        "content/guides/security/sections/S-12.md",
+        "content/guides/security/sections/S-13.md",
+        "content/guides/security/sections/S-14.md",
+        "content/guides/security/sections/S-15.md",
+        "content/guides/security/sections/S-16.md",
+        "content/guides/security/sections/S-90.md",
+        "content/guides/security/sections/S-91.md",
+        "content/guides/security/sections/S-92.md",
+        "content/guides/security/sections/S-93.md",
+        "content/guides/security/sections/S-M01.md",
+        "content/guides/security/sections/S-M02.md",
+        "content/guides/security/sections/S-M03.md",
+        "content/guides/security/sections/S-M04.md",
+        "content/guides/security/sections/S-M05.md",
+        "content/guides/security/sections/S-M06.md",
+        "content/guides/security/sections/S-M07.md",
+        "content/guides/security/sections/S-U01.md"
+      ],
+      "mapped_blocks": 215
+    },
+    "catalog/UC-D01.html": {
+      "source_files": [
+        "content/registers/profiles/PR-D-INCIDENT.md",
+        "content/registers/use-cases/UC-D01.md"
+      ],
+      "mapped_blocks": 13
+    },
+    "catalog/UC-D02.html": {
+      "source_files": [
+        "content/registers/mechanisms/MX-D-FEEDBACK.md",
+        "content/registers/mechanisms/MX-D-INVESTIGATE.md",
+        "content/registers/mechanisms/MX-D-READ.md",
+        "content/registers/mechanisms/MX-D-RECALL.md",
+        "content/registers/profiles/PR-D-INCIDENT.md",
+        "content/registers/profiles/PR-EVIDENCE.md",
+        "content/registers/use-cases/UC-D02.md"
+      ],
+      "mapped_blocks": 26
+    },
+    "catalog/UC-D03.html": {
+      "source_files": [
+        "content/registers/mechanisms/MX-D-INVESTIGATE.md",
+        "content/registers/profiles/PR-D-INCIDENT.md",
+        "content/registers/use-cases/UC-D03.md"
+      ],
+      "mapped_blocks": 15
+    },
+    "catalog/UC-D04.html": {
+      "source_files": [
+        "content/registers/mechanisms/MX-D-ACTION.md",
+        "content/registers/mechanisms/MX-D-READ.md",
+        "content/registers/profiles/PR-D-ACTION.md",
+        "content/registers/use-cases/UC-D04.md"
+      ],
+      "mapped_blocks": 18
+    },
+    "catalog/UC-D05.html": {
+      "source_files": [
+        "content/registers/mechanisms/MX-D-CUSTOM.md",
+        "content/registers/mechanisms/MX-D-READ.md",
+        "content/registers/mechanisms/MX-D-SCHEDULE.md",
+        "content/registers/profiles/PR-D-REPORT.md",
+        "content/registers/use-cases/UC-D05.md"
+      ],
+      "mapped_blocks": 20
+    },
+    "catalog/UC-D06.html": {
+      "source_files": [
+        "content/registers/mechanisms/MX-D-CUSTOM.md",
+        "content/registers/mechanisms/MX-D-QUERY.md",
+        "content/registers/mechanisms/MX-D-READ.md",
+        "content/registers/mechanisms/MX-D-RECALL.md",
+        "content/registers/mechanisms/MX-D-SCHEDULE.md",
+        "content/registers/profiles/PR-D-QUERY.md",
+        "content/registers/profiles/PR-D-REPORT.md",
+        "content/registers/profiles/PR-EVIDENCE.md",
+        "content/registers/use-cases/UC-D06.md"
+      ],
+      "mapped_blocks": 36
+    },
+    "catalog/UC-D07.html": {
+      "source_files": [
+        "content/registers/mechanisms/MX-D-CUSTOM.md",
+        "content/registers/mechanisms/MX-D-READ.md",
+        "content/registers/mechanisms/MX-D-SCHEDULE.md",
+        "content/registers/profiles/PR-D-REPORT.md",
+        "content/registers/profiles/PR-EVIDENCE.md",
+        "content/registers/use-cases/UC-D07.md"
+      ],
+      "mapped_blocks": 25
+    },
+    "catalog/UC-D08.html": {
+      "source_files": [
+        "content/registers/mechanisms/MX-D-PREVENT.md",
+        "content/registers/mechanisms/MX-D-RECALL.md",
+        "content/registers/profiles/PR-D-INCIDENT.md",
+        "content/registers/use-cases/UC-D08.md"
+      ],
+      "mapped_blocks": 17
+    },
+    "catalog/UC-D09.html": {
+      "source_files": [
+        "content/registers/mechanisms/MX-D-PREVENT.md",
+        "content/registers/profiles/PR-D-INCIDENT.md",
+        "content/registers/use-cases/UC-D09.md"
+      ],
+      "mapped_blocks": 16
+    },
+    "catalog/UC-D10.html": {
+      "source_files": [
+        "content/registers/mechanisms/MX-D-SKILL.md",
+        "content/registers/profiles/PR-D-PROCEDURE.md",
+        "content/registers/use-cases/UC-D10.md"
+      ],
+      "mapped_blocks": 17
+    },
+    "catalog/UC-D11.html": {
+      "source_files": [
+        "content/registers/mechanisms/MX-D-READ.md",
+        "content/registers/mechanisms/MX-D-TOPOLOGY.md",
+        "content/registers/profiles/PR-D-KNOWLEDGE.md",
+        "content/registers/profiles/PR-EVIDENCE.md",
+        "content/registers/use-cases/UC-D11.md"
+      ],
+      "mapped_blocks": 25
+    },
+    "catalog/UC-D12.html": {
+      "source_files": [
+        "content/registers/mechanisms/MX-D-CUSTOM.md",
+        "content/registers/mechanisms/MX-D-READ.md",
+        "content/registers/mechanisms/MX-D-SKILL.md",
+        "content/registers/profiles/PR-D-REPORT.md",
+        "content/registers/use-cases/UC-D12.md"
+      ],
+      "mapped_blocks": 19
+    },
+    "catalog/UC-D13.html": {
+      "source_files": [
+        "content/registers/mechanisms/MX-D-READINESS.md",
+        "content/registers/profiles/PR-D-RELEASE.md",
+        "content/registers/use-cases/UC-D13.md"
+      ],
+      "mapped_blocks": 13
+    },
+    "catalog/UC-D14.html": {
+      "source_files": [
+        "content/registers/mechanisms/MX-D-TEST.md",
+        "content/registers/profiles/PR-D-RELEASE.md",
+        "content/registers/use-cases/UC-D14.md"
+      ],
+      "mapped_blocks": 15
+    },
+    "catalog/UC-F01.html": {
+      "source_files": [
+        "content/registers/mechanisms/MX-F-FILES.md",
+        "content/registers/mechanisms/MX-F-QUERY.md",
+        "content/registers/profiles/PR-F-ANALYSIS.md",
+        "content/registers/use-cases/UC-F01.md"
+      ],
+      "mapped_blocks": 17
+    },
+    "catalog/UC-F02.html": {
+      "source_files": [
+        "content/registers/mechanisms/MX-F-QUERY.md",
+        "content/registers/profiles/PR-F-ANALYSIS.md",
+        "content/registers/use-cases/UC-F02.md"
+      ],
+      "mapped_blocks": 15
+    },
+    "catalog/UC-F03.html": {
+      "source_files": [
+        "content/registers/mechanisms/MX-F-QUERY.md",
+        "content/registers/profiles/PR-F-ANALYSIS.md",
+        "content/registers/use-cases/UC-F03.md"
+      ],
+      "mapped_blocks": 16
+    },
+    "catalog/UC-F04.html": {
+      "source_files": [
+        "content/registers/mechanisms/MX-F-ARTIFACT.md",
+        "content/registers/mechanisms/MX-F-FILES.md",
+        "content/registers/mechanisms/MX-F-JIRA.md",
+        "content/registers/mechanisms/MX-F-QUERY.md",
+        "content/registers/mechanisms/MX-F-TASK.md",
+        "content/registers/profiles/PR-F-ANALYSIS.md",
+        "content/registers/profiles/PR-F-AUTOMATION.md",
+        "content/registers/profiles/PR-F-PUBLICATION.md",
+        "content/registers/use-cases/UC-F04.md"
+      ],
+      "mapped_blocks": 40
+    },
+    "catalog/UC-F05.html": {
+      "source_files": [
+        "content/registers/mechanisms/MX-F-EVENT.md",
+        "content/registers/mechanisms/MX-F-QUERY.md",
+        "content/registers/mechanisms/MX-F-TASK.md",
+        "content/registers/profiles/PR-F-ANALYSIS.md",
+        "content/registers/profiles/PR-F-AUTOMATION.md",
+        "content/registers/profiles/PR-F-PUBLICATION.md",
+        "content/registers/use-cases/UC-F05.md"
+      ],
+      "mapped_blocks": 33
+    },
+    "catalog/UC-F06.html": {
+      "source_files": [
+        "content/registers/mechanisms/MX-F-FILES.md",
+        "content/registers/mechanisms/MX-F-JIRA.md",
+        "content/registers/mechanisms/MX-F-QUERY.md",
+        "content/registers/profiles/PR-F-ANALYSIS.md",
+        "content/registers/profiles/PR-F-PUBLICATION.md",
+        "content/registers/use-cases/UC-F06.md"
+      ],
+      "mapped_blocks": 28
+    },
+    "catalog/UC-F07.html": {
+      "source_files": [
+        "content/registers/mechanisms/MX-F-QUERY.md",
+        "content/registers/profiles/PR-F-ANALYSIS.md",
+        "content/registers/use-cases/UC-F07.md"
+      ],
+      "mapped_blocks": 17
+    },
+    "catalog/UC-G01.html": {
+      "source_files": [
+        "content/registers/mechanisms/MX-D-CUSTOM.md",
+        "content/registers/mechanisms/MX-F-TASK.md",
+        "content/registers/profiles/PR-REVIEW.md",
+        "content/registers/use-cases/UC-G01.md"
+      ],
+      "mapped_blocks": 19
+    },
+    "catalog/UC-S01.html": {
+      "source_files": [
+        "content/registers/mechanisms/MX-S-ACCESS.md",
+        "content/registers/mechanisms/MX-S-AUTH.md",
+        "content/registers/mechanisms/MX-S-CONTEXT.md",
+        "content/registers/mechanisms/MX-S-LOGIN.md",
+        "content/registers/mechanisms/MX-S-RUN.md",
+        "content/registers/profiles/PR-S-ASSESS.md",
+        "content/registers/profiles/PR-S-PIPELINE.md",
+        "content/registers/use-cases/UC-S01.md"
+      ],
+      "mapped_blocks": 31
+    },
+    "catalog/UC-S02.html": {
+      "source_files": [
+        "content/registers/mechanisms/MX-S-CODE.md",
+        "content/registers/mechanisms/MX-S-CONTEXT.md",
+        "content/registers/mechanisms/MX-S-CRITERIA.md",
+        "content/registers/mechanisms/MX-S-FINDING.md",
+        "content/registers/profiles/PR-S-REVIEW.md",
+        "content/registers/use-cases/UC-S02.md"
+      ],
+      "mapped_blocks": 22
+    },
+    "catalog/UC-S03.html": {
+      "source_files": [
+        "content/registers/mechanisms/MX-S-CONTEXT.md",
+        "content/registers/mechanisms/MX-S-CRITERIA.md",
+        "content/registers/mechanisms/MX-S-DESIGN.md",
+        "content/registers/profiles/PR-S-REVIEW.md",
+        "content/registers/use-cases/UC-S03.md"
+      ],
+      "mapped_blocks": 19
+    },
+    "catalog/UC-S04.html": {
+      "source_files": [
+        "content/registers/mechanisms/MX-S-CONTEXT.md",
+        "content/registers/mechanisms/MX-S-THREAT.md",
+        "content/registers/profiles/PR-S-REVIEW.md",
+        "content/registers/use-cases/UC-S04.md"
+      ],
+      "mapped_blocks": 19
+    },
+    "catalog/UC-S05.html": {
+      "source_files": [
+        "content/registers/mechanisms/MX-S-FINDING.md",
+        "content/registers/mechanisms/MX-S-JIRA.md",
+        "content/registers/profiles/PR-S-REVIEW.md",
+        "content/registers/use-cases/UC-S05.md"
+      ],
+      "mapped_blocks": 17
+    },
+    "catalog/UC-S06.html": {
+      "source_files": [
+        "content/registers/mechanisms/MX-S-FINDING.md",
+        "content/registers/mechanisms/MX-S-FIX.md",
+        "content/registers/profiles/PR-S-REVIEW.md",
+        "content/registers/use-cases/UC-S06.md"
+      ],
+      "mapped_blocks": 18
+    },
+    "catalog/UC-S07.html": {
+      "source_files": [
+        "content/registers/mechanisms/MX-S-AUTH.md",
+        "content/registers/mechanisms/MX-S-REVALIDATE.md",
+        "content/registers/profiles/PR-S-ASSESS.md",
+        "content/registers/use-cases/UC-S07.md"
+      ],
+      "mapped_blocks": 19
+    },
+    "catalog/UC-S08.html": {
+      "source_files": [
+        "content/registers/mechanisms/MX-S-CRITERIA.md",
+        "content/registers/mechanisms/MX-S-GENERATE.md",
+        "content/registers/profiles/PR-S-REVIEW.md",
+        "content/registers/use-cases/UC-S08.md"
+      ],
+      "mapped_blocks": 19
+    },
+    "catalog/index.html": {
+      "source_files": [
+        "content/registers/aliases/D-UC03.md",
+        "content/registers/aliases/D-UC04.md",
+        "content/registers/aliases/D-UC05.md",
+        "content/registers/aliases/D-UC06.md",
+        "content/registers/aliases/D-UC08.md",
+        "content/registers/aliases/D-UC09.md",
+        "content/registers/aliases/D-UC11.md",
+        "content/registers/aliases/D-UC12.md",
+        "content/registers/aliases/D-UC13.md",
+        "content/registers/aliases/D-UC14.md",
+        "content/registers/aliases/D-UC15.md",
+        "content/registers/aliases/D-UC16.md",
+        "content/registers/aliases/D-UC17.md",
+        "content/registers/aliases/D-UC19.md",
+        "content/registers/aliases/D-UC20.md",
+        "content/registers/aliases/F-UC01.md",
+        "content/registers/aliases/F-UC02.md",
+        "content/registers/aliases/F-UC03.md",
+        "content/registers/aliases/F-UC04.md",
+        "content/registers/aliases/F-UC05.md",
+        "content/registers/aliases/F-UC06.md",
+        "content/registers/aliases/F-UC07.md",
+        "content/registers/aliases/F-UC08.md",
+        "content/registers/aliases/F-UC09.md",
+        "content/registers/aliases/F-UC10.md",
+        "content/registers/aliases/F-UC11.md",
+        "content/registers/aliases/F-UC12.md",
+        "content/registers/aliases/F-UC16.md",
+        "content/registers/aliases/S-UC01.md",
+        "content/registers/aliases/S-UC02.md",
+        "content/registers/aliases/S-UC03.md",
+        "content/registers/aliases/S-UC04.md",
+        "content/registers/aliases/S-UC05.md",
+        "content/registers/aliases/S-UC06.md",
+        "content/registers/aliases/S-UC07.md",
+        "content/registers/aliases/S-UC08.md",
+        "content/registers/aliases/S-UC11.md",
+        "content/registers/aliases/S-UC12.md",
+        "content/registers/aliases/S-UC13.md",
+        "content/registers/aliases/S-UC16.md",
+        "content/registers/use-cases/UC-D02.md",
+        "content/registers/use-cases/UC-D03.md",
+        "content/registers/use-cases/UC-D04.md",
+        "content/registers/use-cases/UC-D05.md",
+        "content/registers/use-cases/UC-D06.md",
+        "content/registers/use-cases/UC-D07.md",
+        "content/registers/use-cases/UC-D08.md",
+        "content/registers/use-cases/UC-D09.md",
+        "content/registers/use-cases/UC-D10.md",
+        "content/registers/use-cases/UC-D11.md",
+        "content/registers/use-cases/UC-D12.md",
+        "content/registers/use-cases/UC-D14.md",
+        "content/registers/use-cases/UC-F01.md",
+        "content/registers/use-cases/UC-F03.md",
+        "content/registers/use-cases/UC-F04.md",
+        "content/registers/use-cases/UC-F05.md",
+        "content/registers/use-cases/UC-F06.md",
+        "content/registers/use-cases/UC-F07.md",
+        "content/registers/use-cases/UC-G01.md",
+        "content/registers/use-cases/UC-S01.md",
+        "content/registers/use-cases/UC-S02.md",
+        "content/registers/use-cases/UC-S03.md",
+        "content/registers/use-cases/UC-S04.md",
+        "content/registers/use-cases/UC-S05.md",
+        "content/registers/use-cases/UC-S06.md",
+        "content/registers/use-cases/UC-S07.md",
+        "content/registers/use-cases/UC-S08.md"
+      ],
+      "mapped_blocks": 67
+    },
+    "catalog/resource-models.html": {
+      "source_files": [
+        "content/diagrams/er-devops-incidents.md",
+        "content/diagrams/er-devops-knowledge.md",
+        "content/diagrams/er-devops-scope.md",
+        "content/diagrams/er-finops-context.md",
+        "content/diagrams/er-finops-scope.md",
+        "content/diagrams/er-finops-work.md",
+        "content/diagrams/er-security-assessments.md",
+        "content/diagrams/er-security-lineage.md",
+        "content/diagrams/er-security-scope.md",
+        "content/registers/resource-models/devops.md",
+        "content/registers/resource-models/finops.md",
+        "content/registers/resource-models/security.md"
+      ],
+      "mapped_blocks": 53
+    },
+    "presentations/architecture.html": {
+      "source_files": [
+        "content/diagrams/agent-execution.md",
+        "content/diagrams/shared-handoff.md",
+        "content/diagrams/workflow-feature-map.md",
+        "content/guides/architecture/sections/A-00.md",
+        "content/guides/architecture/sections/A-02.md",
+        "content/guides/architecture/sections/A-03.md",
+        "content/guides/architecture/sections/A-04.md",
+        "content/guides/architecture/sections/A-06.md",
+        "content/guides/architecture/sections/A-07.md",
+        "content/guides/architecture/sections/A-08.md",
+        "content/guides/architecture/sections/A-09.md",
+        "content/guides/architecture/sections/A-11.md",
+        "content/guides/architecture/sections/A-12.md",
+        "content/guides/architecture/sections/A-90.md",
+        "content/guides/architecture/sections/A-91.md",
+        "content/guides/architecture/sections/A-U01.md",
+        "content/presentations/architecture/01.md",
+        "content/presentations/architecture/02.md",
+        "content/presentations/architecture/03.md",
+        "content/presentations/architecture/04.md",
+        "content/presentations/architecture/05.md",
+        "content/presentations/architecture/06.md",
+        "content/presentations/architecture/07.md",
+        "content/presentations/architecture/08.md",
+        "content/presentations/architecture/09.md"
+      ],
+      "mapped_blocks": 95
+    },
+    "presentations/devops.html": {
+      "source_files": [
+        "content/diagrams/devops-incident.md",
+        "content/diagrams/devops-integrations.md",
+        "content/diagrams/er-devops-incidents.md",
+        "content/diagrams/er-devops-knowledge.md",
+        "content/diagrams/er-devops-scope.md",
+        "content/diagrams/mechanism-devops-cancellation.md",
+        "content/diagrams/mechanism-devops-retrieval.md",
+        "content/diagrams/teaching-devops-agent.md",
+        "content/diagrams/teaching-devops-change.md",
+        "content/diagrams/teaching-devops-coordination.md",
+        "content/diagrams/teaching-devops-incident.md",
+        "content/diagrams/teaching-devops-knowledge.md",
+        "content/diagrams/teaching-devops-learning.md",
+        "content/diagrams/teaching-devops-mitigation.md",
+        "content/diagrams/teaching-devops-reporting.md",
+        "content/diagrams/teaching-devops-review.md",
+        "content/diagrams/teaching-devops-space.md",
+        "content/guides/devops/sections/D-01.md",
+        "content/guides/devops/sections/D-02.md",
+        "content/guides/devops/sections/D-03.md",
+        "content/guides/devops/sections/D-04.md",
+        "content/guides/devops/sections/D-05.md",
+        "content/guides/devops/sections/D-06.md",
+        "content/guides/devops/sections/D-07.md",
+        "content/guides/devops/sections/D-12.md",
+        "content/guides/devops/sections/D-13.md",
+        "content/guides/devops/sections/D-14.md",
+        "content/guides/devops/sections/D-15.md",
+        "content/guides/devops/sections/D-16.md",
+        "content/guides/devops/sections/D-17.md",
+        "content/guides/devops/sections/D-19.md",
+        "content/guides/devops/sections/D-22.md",
+        "content/guides/devops/sections/D-23.md",
+        "content/guides/devops/sections/D-90.md",
+        "content/guides/devops/sections/D-91.md",
+        "content/guides/devops/sections/D-92.md",
+        "content/guides/devops/sections/D-93.md",
+        "content/guides/devops/sections/D-M01.md",
+        "content/guides/devops/sections/D-M02.md",
+        "content/guides/devops/sections/D-M03.md",
+        "content/guides/devops/sections/D-M04.md",
+        "content/guides/devops/sections/D-M06.md",
+        "content/guides/devops/sections/D-M07.md",
+        "content/guides/devops/sections/D-M08.md",
+        "content/guides/devops/sections/D-U01.md",
+        "content/presentations/devops/01.md",
+        "content/presentations/devops/02.md",
+        "content/presentations/devops/03.md",
+        "content/presentations/devops/04.md",
+        "content/presentations/devops/05.md",
+        "content/presentations/devops/06.md",
+        "content/presentations/devops/07.md",
+        "content/presentations/devops/08.md",
+        "content/presentations/devops/09.md",
+        "content/presentations/devops/10.md",
+        "content/presentations/devops/11.md",
+        "content/presentations/devops/12.md",
+        "content/presentations/devops/13.md",
+        "content/presentations/devops/14.md",
+        "content/presentations/devops/15.md",
+        "content/presentations/devops/16.md",
+        "content/presentations/devops/17.md",
+        "content/presentations/devops/18.md",
+        "content/presentations/devops/19.md"
+      ],
+      "mapped_blocks": 219
+    },
+    "presentations/finops.html": {
+      "source_files": [
+        "content/diagrams/er-finops-context.md",
+        "content/diagrams/er-finops-scope.md",
+        "content/diagrams/teaching-finops-agent.md",
+        "content/diagrams/teaching-finops-analysis.md",
+        "content/diagrams/teaching-finops-coordination.md",
+        "content/diagrams/teaching-finops-optimization.md",
+        "content/diagrams/teaching-finops-reporting.md",
+        "content/diagrams/teaching-finops-space.md",
+        "content/guides/finops/sections/F-01.md",
+        "content/guides/finops/sections/F-02.md",
+        "content/guides/finops/sections/F-03.md",
+        "content/guides/finops/sections/F-04.md",
+        "content/guides/finops/sections/F-05.md",
+        "content/guides/finops/sections/F-06.md",
+        "content/guides/finops/sections/F-10.md",
+        "content/guides/finops/sections/F-11.md",
+        "content/guides/finops/sections/F-14.md",
+        "content/guides/finops/sections/F-90.md",
+        "content/guides/finops/sections/F-91.md",
+        "content/guides/finops/sections/F-92.md",
+        "content/guides/finops/sections/F-93.md",
+        "content/guides/finops/sections/F-M01.md",
+        "content/guides/finops/sections/F-M02.md",
+        "content/guides/finops/sections/F-M03.md",
+        "content/guides/finops/sections/F-M04.md",
+        "content/guides/finops/sections/F-M05.md",
+        "content/guides/finops/sections/F-M06.md",
+        "content/guides/finops/sections/F-M07.md",
+        "content/guides/finops/sections/F-U01.md",
+        "content/presentations/finops/01.md",
+        "content/presentations/finops/02.md",
+        "content/presentations/finops/03.md",
+        "content/presentations/finops/04.md",
+        "content/presentations/finops/05.md",
+        "content/presentations/finops/06.md",
+        "content/presentations/finops/07.md",
+        "content/presentations/finops/08.md",
+        "content/presentations/finops/09.md",
+        "content/presentations/finops/10.md",
+        "content/presentations/finops/11.md",
+        "content/presentations/finops/12.md"
+      ],
+      "mapped_blocks": 149
+    },
+    "presentations/index.html": {
+      "source_files": [],
+      "mapped_blocks": 0
+    },
+    "presentations/security.html": {
+      "source_files": [
+        "content/diagrams/er-security-assessments.md",
+        "content/diagrams/er-security-scope.md",
+        "content/diagrams/mechanism-security-learning.md",
+        "content/diagrams/security-context.md",
+        "content/diagrams/teaching-security-agent.md",
+        "content/diagrams/teaching-security-assessment.md",
+        "content/diagrams/teaching-security-context.md",
+        "content/diagrams/teaching-security-coordination.md",
+        "content/diagrams/teaching-security-repair.md",
+        "content/diagrams/teaching-security-space.md",
+        "content/guides/security/sections/S-01.md",
+        "content/guides/security/sections/S-02.md",
+        "content/guides/security/sections/S-03.md",
+        "content/guides/security/sections/S-04.md",
+        "content/guides/security/sections/S-05.md",
+        "content/guides/security/sections/S-06.md",
+        "content/guides/security/sections/S-07.md",
+        "content/guides/security/sections/S-10.md",
+        "content/guides/security/sections/S-12.md",
+        "content/guides/security/sections/S-13.md",
+        "content/guides/security/sections/S-90.md",
+        "content/guides/security/sections/S-91.md",
+        "content/guides/security/sections/S-92.md",
+        "content/guides/security/sections/S-93.md",
+        "content/guides/security/sections/S-M01.md",
+        "content/guides/security/sections/S-M02.md",
+        "content/guides/security/sections/S-M03.md",
+        "content/guides/security/sections/S-M04.md",
+        "content/guides/security/sections/S-M05.md",
+        "content/guides/security/sections/S-M07.md",
+        "content/guides/security/sections/S-U01.md",
+        "content/presentations/security/01.md",
+        "content/presentations/security/02.md",
+        "content/presentations/security/03.md",
+        "content/presentations/security/04.md",
+        "content/presentations/security/05.md",
+        "content/presentations/security/06.md",
+        "content/presentations/security/07.md",
+        "content/presentations/security/08.md",
+        "content/presentations/security/09.md",
+        "content/presentations/security/10.md",
+        "content/presentations/security/11.md",
+        "content/presentations/security/12.md"
+      ],
+      "mapped_blocks": 150
+    }
+  }
+}
