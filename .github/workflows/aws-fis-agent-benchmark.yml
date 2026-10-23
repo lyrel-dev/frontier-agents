@@ -19,6 +19,8 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     timeout-minutes: 25
+    env:
+      AWS_EC2_METADATA_DISABLED: 'true'
     defaults:
       run:
         working-directory: applications/aws-validation-console/agent_lab
@@ -38,11 +40,13 @@ jobs:
         with:
           python-version: '3.13'
       - name: Install test tools
+        id: tools
         run: |
           python -m pip install -r requirements-dev.txt
           python -m playwright install --with-deps chromium
           python -c 'from playwright.sync_api import sync_playwright; p=sync_playwright().start(); print("CHROMIUM_PATH="+p.chromium.executable_path); p.stop()' >> "$GITHUB_ENV"
-      - name: Clear previous generated evidence
+      - name: Clear previous generated evidence and build assets
+        id: build
         run: |
           python - <<'PY'
           import json,time
@@ -52,27 +56,33 @@ jobs:
               (p/name).unlink(missing_ok=True)
           (p/'current-run.json').write_text(json.dumps({'started_at_epoch':time.time()}))
           PY
-      - name: Test software and native browser paths without AWS access
-        env:
-          AWS_EC2_METADATA_DISABLED: 'true'
-        run: |
           python build_assets.py
-          python -m pytest -q --junitxml=validation/fis-console-pytest.xml
-          python tests/browser_checks.py --native
-          python tests/fis_browser_checks.py --native
-          python tests/setup_browser_checks.py --native
-          python tests/worker_http_acceptance.py
-          git diff --check
+      - name: Python regression tests
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        run: python -m pytest -q --junitxml=validation/fis-console-pytest.xml
+      - name: Native response-console browser acceptance
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        run: python tests/browser_checks.py --native
+      - name: Native FIS workspace browser acceptance
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        run: python tests/fis_browser_checks.py --native
+      - name: Native guided-setup browser acceptance
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        run: python tests/setup_browser_checks.py --native
+      - name: Durable-worker and actual HTTP acceptance
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        run: python tests/worker_http_acceptance.py
       - name: Verify actual container hosting and configuration persistence
-        env:
-          AWS_EC2_METADATA_DISABLED: 'true'
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: python tests/container_runtime_acceptance.py
       - name: Verify real Prometheus scraping and Grafana PromQL execution
-        env:
-          AWS_EC2_METADATA_DISABLED: 'true'
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: python tests/observability_acceptance.py
       - name: Record current-source software acceptance only
-        run: python tests/summarize_acceptance.py
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        run: |
+          python tests/summarize_acceptance.py
+          git diff --check
       - name: Retain current-run evidence and generated outputs
         if: always()
         uses: actions/upload-artifact@v4
