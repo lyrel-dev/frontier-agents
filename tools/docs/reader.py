@@ -117,13 +117,31 @@ class Reader:
                 a['href'] = relative(self.targets[fragment],current)
         return str(soup)
 
+    @staticmethod
+    def mechanism_section(mechanism):
+        overrides={'MX-D-QUERY':'D-21','MX-D-CUSTOM':'D-19','MX-S-PERSONALIZE':'S-13'}
+        if mechanism['id'] in overrides:
+            return overrides[mechanism['id']]
+        primary=mechanism['review']['primary_section']
+        if mechanism['platform']=='devops' and primary=='D-09':
+            return 'D-22'
+        return primary
+
+    @staticmethod
+    def feature_section(feature):
+        if feature['id']=='FT-D-CUSTOM':
+            return 'D-16'
+        if feature['platform']=='devops' and feature['sections'][0]=='D-09':
+            return 'D-22'
+        return feature['sections'][0]
+
     def feature_detail(self, feature, current):
         product=self.model['products'][feature['platform']]
         entities={e['id']:e for e in product['entities']}
         ids=product['feature_bindings'][feature['id']]
         uses=[c for c in self.cases if any(feature['id'] in s['configuration_features'] for s in c['workflow'])]
         result='<details class="feature-reference" id="'+feature['id']+'"><summary>Resource and use-case references: '+esc(feature['title'])+'</summary>'
-        result+='<p>Read the configuration explanation in '+ ' · '.join(self.section_link(s,current) for s in feature['sections'])+'.</p>'
+        result+='<p>Read the configuration explanation in '+ ' · '.join(self.section_link(s,current) for s in dict.fromkeys([self.feature_section(feature),*feature['sections']]))+'.</p>'
         result+='<p>Resource definitions: '+' · '.join(anchor('catalog/resource-models.html#'+i,entities[i]['name'],current) for i in ids)+'</p>'
         if uses:result+='<p>Applicable use cases: '+' · '.join(self.link(c['id'],c['title'],current) for c in uses)+'</p>'
         return result+'</details>'
@@ -141,8 +159,7 @@ class Reader:
             display_number = 'A' if chapter.get('appendix') else f'{number:02d}'
             for j, sid in enumerate(chapter['sections'],1):
                 section = guide['sections'][sid]
-                explanation_sections = {'MX-D-QUERY':'D-21','MX-D-CUSTOM':'D-19','MX-S-PERSONALIZE':'S-13'}
-                mechanisms = [m for m in self.mechanisms.values() if m['platform']==product and explanation_sections.get(m['id'],m['review']['primary_section'])==sid]
+                mechanisms = [m for m in self.mechanisms.values() if m['platform']==product and self.mechanism_section(m)==sid]
                 subnav = ''
                 nav_sections.append('<li><a data-section="'+sid+'" href="#'+sid+'">'+display_number+'.'+str(j)+' '+esc(section['title'])+'</a>'+subnav+'</li>')
                 prose = BeautifulSoup(self.markdown(section['body'],guide['definitions'],links,product+'-'+sid),'html.parser')
@@ -154,8 +171,8 @@ class Reader:
                     node['aria-label']='Technical reference: '+section['title']
                     node.string=''
                     prose.insert(0,node)
-                context = ''.join(self.feature_detail(f,current) for f in self.features.values() if f['platform']==product and f['sections'][0]==sid)
-                related = [c for c in self.cases if any(s['mechanism'] in self.mechanisms and sid in self.mechanisms[s['mechanism']]['sections'] for s in c['workflow']) and product in c['platforms']]
+                context = ''.join(self.feature_detail(f,current) for f in self.features.values() if f['platform']==product and self.feature_section(f)==sid)
+                related = [c for c in self.cases if any(s['mechanism'] in self.mechanisms and sid==self.mechanism_section(self.mechanisms[s['mechanism']]) for s in c['workflow']) and product in c['platforms']]
                 if related:
                     context += '<details class="related-reading"><summary>Use cases that apply this section</summary><ul>'+''.join('<li>'+self.link(c['id'],c['title'],current)+'</li>' for c in related)+'</ul></details>'
                 content.append('<section class="report-section" id="'+sid+'" data-chapter="'+chapter['slug']+'"><h3><span class="section-number">'+display_number+'.'+str(j)+'</span> '+esc(section['title'])+'</h3>'+str(prose)+context+'</section>')
@@ -200,10 +217,10 @@ class Reader:
             # Profiles can be shared by several operations; preserve applicability, do not promote every mechanism to required.
             body += '<details><summary>Supporting procedures for this configuration</summary><p>This recipe is reused by multiple workflows. The required, optional, or conditional dependencies for this use case are specified in its workflow above.</p><ul>'+''.join('<li>'+self.link(mid,self.mechanisms[mid]['title'],current)+'</li>' for mid in profile['mechanisms'])+'</ul></details></section>'
         body += '</section><section id="verification"><h2>4. Verification and limits</h2><h3>Completion criteria</h3>'+listing(case['completion'])+'<h3>Prerequisites and availability</h3>'+paragraph(case['availability'])+'<h3>Limitations</h3>'+paragraph(case['constraints'])+'<h3>Example request</h3><blockquote>'+paragraph(case['example'])+'</blockquote><p>Verification procedures are proposed checks. This documentation does not report a live execution of the workflow.</p></section>'
-        refs = list(dict.fromkeys(s for s in case['sections']))
+        refs = list(dict.fromkeys([*(self.mechanism_section(self.mechanisms[step['mechanism']]) for step in case['workflow'] if step['mechanism'] in self.mechanisms),*case['sections']]))
         body += '<section id="references"><h2>5. Technical references</h2><ul>'+''.join('<li>'+self.section_link(s,current)+'</li>' for s in refs)+'</ul>'
         g = self.guides[case['platform']]
-        source_ids = sorted({r for s in refs for r in g['sections'][s]['sources']})
+        source_ids = sorted({r for s in refs if s in g['sections'] for r in g['sections'][s]['sources']})
         body += '<details><summary>Official documentation linked by these sections</summary><ul>'+''.join('<li><a href="'+esc(g['refs'][r])+'">'+esc(r)+' — '+esc(g['refs'][r].split('/')[-1].replace('.html','').replace('-',' '))+'</a></li>' for r in source_ids)+'</ul></details></section>'
         group = [c for c in self.cases if c['platform']==case['platform'] and c['group']==case['group']]
         body += '<nav class="related-cases" aria-label="Related use cases"><h2>Related use cases</h2><ul>'+''.join('<li>'+self.link(c['id'],c['title'],current)+'</li>' for c in group if c['id']!=case['id'])+'</ul>'+anchor('catalog/index.html','Return to all use cases',current)+'</nav></main></div>'
