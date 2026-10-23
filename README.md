@@ -17,10 +17,10 @@ Guides distinguish workspace organization, definition, context, invocation, inte
 
 | Subject | Guide | Markdown | Presentation | Duration |
 |---|---|---|---|---|
-| AWS DevOps Agent | [Read](guides/devops.html) | [Source](guides/devops.md) | [Slides](presentations/devops.html) | 80 min, including 8 min exercise |
-| AWS Security Agent | [Read](guides/security.html) | [Source](guides/security.md) | [Slides](presentations/security.html) | 67 min, including 8 min exercise |
-| AWS FinOps Agent | [Read](guides/finops.html) | [Source](guides/finops.md) | [Slides](presentations/finops.html) | 63 min, including 8 min exercise |
-| Cross-service architecture | [Read](guides/architecture.html) | [Source](guides/architecture.md) | [Slides](presentations/architecture.html) | 38 min, including 4 min exercise |
+| AWS DevOps Agent | [Read](guides/devops.html) | [Source](guides/devops.md) | [Slides](presentations/devops.html) | 58 min, including 8 min exercise |
+| AWS Security Agent | [Read](guides/security.html) | [Source](guides/security.md) | [Slides](presentations/security.html) | 41 min, including 8 min exercise |
+| AWS FinOps Agent | [Read](guides/finops.html) | [Source](guides/finops.md) | [Slides](presentations/finops.html) | 40 min, including 8 min exercise |
+| Cross-service architecture | [Read](guides/architecture.html) | [Source](guides/architecture.md) | [Slides](presentations/architecture.html) | 27 min, including 4 min exercise |
 
 ## Source ownership and build
 
