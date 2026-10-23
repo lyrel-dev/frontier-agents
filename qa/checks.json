@@ -1,11 +1,13 @@
 {
-  "revision": "2026-10-23-capability-exposition",
+  "revision": "2026-10-23-educational-sequence",
   "baseline": "75f7d7c11d29e308e71a1bbe77ad93e9bc9f08a9",
   "guides": 4,
-  "canonical_sections": 94,
+  "canonical_sections": 111,
   "previous_identifiers_retained": 73,
   "new_sections": [
     "A-12",
+    "A-90",
+    "A-91",
     "D-15",
     "D-16",
     "D-17",
@@ -16,16 +18,31 @@
     "D-22",
     "D-23",
     "D-24",
+    "D-90",
+    "D-91",
+    "D-92",
+    "D-93",
+    "D-94",
+    "D-95",
+    "D-96",
     "F-11",
     "F-12",
     "F-13",
     "F-14",
     "F-15",
+    "F-90",
+    "F-91",
+    "F-92",
+    "F-93",
     "S-12",
     "S-13",
     "S-14",
     "S-15",
-    "S-16"
+    "S-16",
+    "S-90",
+    "S-91",
+    "S-92",
+    "S-93"
   ],
   "authored_use_case_narratives": 30,
   "narrative_paragraphs": 60,
@@ -35,13 +52,13 @@
     "finops": 7,
     "architecture": 1
   },
-  "logical_diagrams": 26,
-  "rendered_diagram_instances": 95,
+  "logical_diagrams": 48,
+  "rendered_diagram_instances": 195,
   "html_presentations": 4,
-  "slides": 91,
-  "programme_minutes": 248,
+  "slides": 52,
+  "programme_minutes": 166,
   "exercise_minutes": 28,
-  "local_links_checked": 2670,
+  "local_links_checked": 2988,
   "browser_checks": [],
   "application_changes": [],
   "excluded_scope_hits": [],
@@ -215,6 +232,41 @@
     "headings_and_slide_titles": [
       {
         "product": "devops",
+        "id": "D-90",
+        "title": "An agent, its configuration, and one execution"
+      },
+      {
+        "product": "devops",
+        "id": "D-91",
+        "title": "How managed agents contribute to coordinated work"
+      },
+      {
+        "product": "devops",
+        "id": "D-92",
+        "title": "Agent Space, connections, and access scope"
+      },
+      {
+        "product": "devops",
+        "id": "D-93",
+        "title": "Incident response and the order of operational workflows"
+      },
+      {
+        "product": "devops",
+        "id": "D-94",
+        "title": "Health reporting and deployment review"
+      },
+      {
+        "product": "devops",
+        "id": "D-95",
+        "title": "Incident learning, procedure maintenance, and topology documentation"
+      },
+      {
+        "product": "devops",
+        "id": "D-96",
+        "title": "Configuration assurance, release assurance, and operational reviews"
+      },
+      {
+        "product": "devops",
         "id": "D-01",
         "title": "Agent Spaces and AWS account scope"
       },
@@ -381,142 +433,117 @@
       {
         "product": "devops",
         "id": "slide",
-        "title": "Agent Space, provider associations and custom invocations"
+        "title": "What an agent is in AWS DevOps Agent"
       },
       {
         "product": "devops",
         "id": "slide",
-        "title": "Agent Space, asset, and invocation identities"
+        "title": "Instructions, skills, knowledge and integrations have different roles"
       },
       {
         "product": "devops",
         "id": "slide",
-        "title": "Memory stores, entries and definition references"
+        "title": "How managed roles contribute to one investigation"
       },
       {
         "product": "devops",
         "id": "slide",
-        "title": "Managed agents and customer-defined agents"
+        "title": "What an Agent Space contains and controls"
       },
       {
         "product": "devops",
         "id": "slide",
-        "title": "Environment-knowledge consolidation"
+        "title": "Teaching order for operational workflows"
       },
       {
         "product": "devops",
         "id": "slide",
-        "title": "Memory production, availability and selective retrieval"
+        "title": "Incident triage and investigation"
       },
       {
         "product": "devops",
         "id": "slide",
-        "title": "Memory, instructions and skills"
+        "title": "Mitigation planning and approved execution"
       },
       {
         "product": "devops",
         "id": "slide",
-        "title": "Incident pattern analysis and prevention recommendations"
+        "title": "Incident communication and the investigation record"
       },
       {
         "product": "devops",
         "id": "slide",
-        "title": "Operational knowledge and release assurance"
+        "title": "How prior incidents inform later investigations"
       },
       {
         "product": "devops",
         "id": "slide",
-        "title": "Health reporting, deployment review, and prevention"
+        "title": "Exercise: a recurring alarm with a different current cause"
       },
       {
         "product": "devops",
         "id": "slide",
-        "title": "Webhook triggers: condition and payload projection"
+        "title": "Service-health reporting from logs and metrics"
       },
       {
         "product": "devops",
         "id": "slide",
-        "title": "Provider registration and Agent Space association"
+        "title": "Health-report contents and verification"
       },
       {
         "product": "devops",
         "id": "slide",
-        "title": "Telemetry, source control, and incident connections"
+        "title": "Incident patterns and prevention priorities"
       },
       {
         "product": "devops",
         "id": "slide",
-        "title": "Service-health reporting: workflow dependencies"
+        "title": "SOP consolidation and skill maintenance"
       },
       {
         "product": "devops",
         "id": "slide",
-        "title": "Outbound tools and remote-agent delegation"
+        "title": "Topology and dependency documentation"
       },
       {
         "product": "devops",
         "id": "slide",
-        "title": "Private connectivity: gateway, DNS, and endpoint routes"
+        "title": "Deployment review and configuration auditing"
       },
       {
         "product": "devops",
         "id": "slide",
-        "title": "Stopping future triggers and current invocations"
+        "title": "Release readiness and active release testing"
       },
       {
         "product": "devops",
         "id": "slide",
-        "title": "Sandbox execution and directed-action approval"
+        "title": "Operational reviews: from reports to owned decisions"
       },
       {
         "product": "devops",
         "id": "slide",
-        "title": "Incident triage and investigation workflow"
+        "title": "Configuration checks before using a workflow"
       },
       {
-        "product": "devops",
-        "id": "slide",
-        "title": "Incident triage and investigation lifecycle"
+        "product": "security",
+        "id": "S-90",
+        "title": "What AWS Security Agent executes"
       },
       {
-        "product": "devops",
-        "id": "slide",
-        "title": "Incident triage, investigation, and mitigation"
+        "product": "security",
+        "id": "S-91",
+        "title": "How assessment, remediation and verification are coordinated"
       },
       {
-        "product": "devops",
-        "id": "slide",
-        "title": "Release readiness review and release testing"
+        "product": "security",
+        "id": "S-92",
+        "title": "Application Agent Spaces and shared assessment criteria"
       },
       {
-        "product": "devops",
-        "id": "slide",
-        "title": "Access roles, tool providers and private connectivity"
-      },
-      {
-        "product": "devops",
-        "id": "slide",
-        "title": "Troubleshooting matrix and operating limits"
-      },
-      {
-        "product": "devops",
-        "id": "slide",
-        "title": "Asset APIs, declarative management, and audit"
-      },
-      {
-        "product": "devops",
-        "id": "slide",
-        "title": "Configured operational-report workflow"
-      },
-      {
-        "product": "devops",
-        "id": "slide",
-        "title": "Incident records and action-specific authorization"
-      },
-      {
-        "product": "devops",
-        "id": "slide",
-        "title": "Worked example: recurring alarm with different current evidence"
+        "product": "security",
+        "id": "S-93",
+        "title": "Assessment and finding-resolution workflows"
       },
       {
         "product": "security",
@@ -641,127 +668,82 @@
       {
         "product": "security",
         "id": "slide",
-        "title": "Shared configuration and application Agent Spaces"
+        "title": "What AWS Security Agent executes"
       },
       {
         "product": "security",
         "id": "slide",
-        "title": "Assessment configuration, run, and finding identities"
+        "title": "How assessment, repair and verification relate"
       },
       {
         "product": "security",
         "id": "slide",
-        "title": "Assessment configurations and distinct execution lifecycles"
+        "title": "Application Agent Spaces and shared requirements"
       },
       {
         "product": "security",
         "id": "slide",
-        "title": "Application, source and design assessment objectives"
+        "title": "Assess an authorized running application"
       },
       {
         "product": "security",
         "id": "slide",
-        "title": "Assessment configuration rather than custom-agent configuration"
+        "title": "Review source code and proposed changes"
       },
       {
         "product": "security",
         "id": "slide",
-        "title": "Application context and assessment criteria"
+        "title": "Triage findings and prepare a remediation proposal"
       },
       {
         "product": "security",
         "id": "slide",
-        "title": "Login Optimization and retained authentication procedures"
+        "title": "Revalidate a finding after deploying the repair"
       },
       {
         "product": "security",
         "id": "slide",
-        "title": "Security requirements and requirement packs"
+        "title": "Exercise: trace a finding to a deployed repair"
       },
       {
         "product": "security",
         "id": "slide",
-        "title": "Authentication reuse and finding personalization"
+        "title": "Design review and application threat modeling"
       },
       {
         "product": "security",
         "id": "slide",
-        "title": "Application-source registration and selection"
+        "title": "Maintain security requirements and assessment criteria"
       },
       {
         "product": "security",
         "id": "slide",
-        "title": "Repository, documentation, and Jira connections"
+        "title": "Three distinct forms of retained context"
       },
       {
         "product": "security",
         "id": "slide",
-        "title": "Private source access and application-target connectivity"
+        "title": "Operational checks and failure boundaries"
       },
       {
-        "product": "security",
-        "id": "slide",
-        "title": "Credential resolution and application authentication"
+        "product": "finops",
+        "id": "F-90",
+        "title": "An analysis request, its context, and the agent execution"
       },
       {
-        "product": "security",
-        "id": "slide",
-        "title": "Assessment configuration and run lifecycle"
+        "product": "finops",
+        "id": "F-91",
+        "title": "How conversations and automations coordinate tasks"
       },
       {
-        "product": "security",
-        "id": "slide",
-        "title": "Application assessment: independent configuration choices"
+        "product": "finops",
+        "id": "F-92",
+        "title": "Agent-instance scope and source access"
       },
       {
-        "product": "security",
-        "id": "slide",
-        "title": "Finding replay and verification boundaries"
-      },
-      {
-        "product": "security",
-        "id": "slide",
-        "title": "Finding lineage, remediation and revalidation"
-      },
-      {
-        "product": "security",
-        "id": "slide",
-        "title": "Finding disposition, repair and verification"
-      },
-      {
-        "product": "security",
-        "id": "slide",
-        "title": "Assessment interfaces and result records"
-      },
-      {
-        "product": "security",
-        "id": "slide",
-        "title": "Identity, repository and target configuration"
-      },
-      {
-        "product": "security",
-        "id": "slide",
-        "title": "Repository, pipeline and external tracking integrations"
-      },
-      {
-        "product": "security",
-        "id": "slide",
-        "title": "Customer-managed encryption and service identities"
-      },
-      {
-        "product": "security",
-        "id": "slide",
-        "title": "Troubleshooting matrix and assessment limits"
-      },
-      {
-        "product": "security",
-        "id": "slide",
-        "title": "Original findings and revalidation history"
-      },
-      {
-        "product": "security",
-        "id": "slide",
-        "title": "Worked example: authorization finding through revalidation"
+        "product": "finops",
+        "id": "F-93",
+        "title": "Cost-analysis, reporting and optimization workflows"
       },
       {
         "product": "finops",
@@ -881,117 +863,72 @@
       {
         "product": "finops",
         "id": "slide",
-        "title": "Instance roles and destination connections"
+        "title": "What AWS FinOps Agent does with a request"
       },
       {
         "product": "finops",
         "id": "slide",
-        "title": "Instance, conversation, task, and artifact identities"
+        "title": "How conversations, automations and tasks coordinate work"
       },
       {
         "product": "finops",
         "id": "slide",
-        "title": "Conversations, automations, tasks and artifacts"
+        "title": "The agent instance and its access boundaries"
       },
       {
         "product": "finops",
         "id": "slide",
-        "title": "Instance settings, task instructions, and automations"
+        "title": "Analyze historical cost and usage"
       },
       {
         "product": "finops",
         "id": "slide",
-        "title": "Files, memory and conversation-context lifecycles"
+        "title": "Investigate a cost anomaly"
       },
       {
         "product": "finops",
         "id": "slide",
-        "title": "Context files, memory and conversation compaction"
+        "title": "Exercise: explain a cost increase from the supplied evidence"
       },
       {
         "product": "finops",
         "id": "slide",
-        "title": "Conversation actions, queued tasks, and publication approval"
+        "title": "Prepare a periodic cost report"
       },
       {
         "product": "finops",
         "id": "slide",
-        "title": "Tasks, schedules and event automations"
+        "title": "Publication controls depend on the action and invocation"
       },
       {
         "product": "finops",
         "id": "slide",
-        "title": "Reporting, anomaly investigation and optimization"
+        "title": "Forecasting and commitment coverage answer different questions"
       },
       {
         "product": "finops",
         "id": "slide",
-        "title": "Cost-anomaly investigation: trigger and publication controls"
+        "title": "Prioritize recommendations and measure an implemented change"
       },
       {
         "product": "finops",
         "id": "slide",
-        "title": "Data-source access and collaboration connections"
+        "title": "Prepare the cost-management contribution to an operational review"
       },
       {
         "product": "finops",
         "id": "slide",
-        "title": "Cost-data and publication connections"
+        "title": "Diagnose data, context, execution and delivery separately"
       },
       {
-        "product": "finops",
-        "id": "slide",
-        "title": "Jira and Slack publication controls"
+        "product": "architecture",
+        "id": "A-90",
+        "title": "From one agent execution to product-specific workflows"
       },
       {
-        "product": "finops",
-        "id": "slide",
-        "title": "Source interfaces, stored data, and inference location"
-      },
-      {
-        "product": "finops",
-        "id": "slide",
-        "title": "Anomaly investigation and cost driver analysis"
-      },
-      {
-        "product": "finops",
-        "id": "slide",
-        "title": "Optimization recommendation review"
-      },
-      {
-        "product": "finops",
-        "id": "slide",
-        "title": "Historical cost, forecasting and commitment coverage"
-      },
-      {
-        "product": "finops",
-        "id": "slide",
-        "title": "Report artifacts and data lifecycle"
-      },
-      {
-        "product": "finops",
-        "id": "slide",
-        "title": "Conversations, task history, and report artifacts"
-      },
-      {
-        "product": "finops",
-        "id": "slide",
-        "title": "Access roles and source dependencies"
-      },
-      {
-        "product": "finops",
-        "id": "slide",
-        "title": "Troubleshooting matrix and preview limits"
-      },
-      {
-        "product": "finops",
-        "id": "slide",
-        "title": "Retained context and session-local execution"
-      },
-      {
-        "product": "finops",
-        "id": "slide",
-        "title": "Worked example: cost increase decomposition"
+        "product": "architecture",
+        "id": "A-91",
+        "title": "Coordination within a service and handoff between services"
       },
       {
         "product": "architecture",
@@ -1066,77 +1003,47 @@
       {
         "product": "architecture",
         "id": "slide",
-        "title": "Concept ownership and resource identity"
+        "title": "An agent is an executor, not the surrounding workspace"
       },
       {
         "product": "architecture",
         "id": "slide",
-        "title": "Product-specific configuration and execution models"
+        "title": "The agent execution cycle"
       },
       {
         "product": "architecture",
         "id": "slide",
-        "title": "Agent execution and evidence cycle"
+        "title": "Context and control differ between the three products"
       },
       {
         "product": "architecture",
         "id": "slide",
-        "title": "Retained context: producers, consumers, and lifecycle"
+        "title": "Three different meanings of coordination"
       },
       {
         "product": "architecture",
         "id": "slide",
-        "title": "Operational objectives, mechanisms and features"
+        "title": "Cross-service evidence handoff"
       },
       {
         "product": "architecture",
         "id": "slide",
-        "title": "Service-health reporting: required and conditional dependencies"
+        "title": "Controls follow the effect"
       },
       {
         "product": "architecture",
         "id": "slide",
-        "title": "Use case families across the three platforms"
+        "title": "A use case applies platform facilities to a defined objective"
       },
       {
         "product": "architecture",
         "id": "slide",
-        "title": "Team-managed evidence handoff"
+        "title": "Exercise: one event, three independently scoped inquiries"
       },
       {
         "product": "architecture",
         "id": "slide",
-        "title": "Connectivity, identity and authorization"
-      },
-      {
-        "product": "architecture",
-        "id": "slide",
-        "title": "Execution and approval boundaries"
-      },
-      {
-        "product": "architecture",
-        "id": "slide",
-        "title": "Operational prerequisites and verification records"
-      },
-      {
-        "product": "architecture",
-        "id": "slide",
-        "title": "Operational-review profiles and evidence handoffs"
-      },
-      {
-        "product": "architecture",
-        "id": "slide",
-        "title": "Configuration, execution and artifact lifecycles"
-      },
-      {
-        "product": "architecture",
-        "id": "slide",
-        "title": "Handoff record between platforms and teams"
-      },
-      {
-        "product": "architecture",
-        "id": "slide",
-        "title": "Exercise: incident, security, and cost evidence handoff"
+        "title": "Reading path after the presentation"
       }
     ],
     "protected_sources": {
@@ -1221,7 +1128,7 @@
   "capability_exposition": {
     "revision": "2026-10-23-capability-exposition",
     "baseline": "d081eade643537905690c54c4968a2445489cf96",
-    "basis": "Supplied ten-part DevOps capability outline, adapted to documented facilities of the other two services.",
+    "basis": "Supplied ten-part capability reference retained after the agent-first teaching overview; product-specific facilities remain distinct.",
     "frozen_sources": {
       "catalog/use-cases.json": {
         "unchanged": true,
@@ -1263,7 +1170,7 @@
           "Administration, security, and automation"
         ],
         "appendix": "Worked example and reference material",
-        "sections": 33
+        "sections": 40
       },
       "security": {
         "primary_dimensions": [
@@ -1279,7 +1186,7 @@
           "Administration, security, and limits"
         ],
         "appendix": "Worked example and reference material",
-        "sections": 24
+        "sections": 28
       },
       "finops": {
         "primary_dimensions": [
@@ -1295,7 +1202,7 @@
           "Administration, retention, and limits"
         ],
         "appendix": "Worked example and reference material",
-        "sections": 23
+        "sections": 27
       }
     },
     "distinctions_checked": [
@@ -1390,7 +1297,7 @@
     },
     "reader_pages_checked": 38,
     "use_case_pages": 30,
-    "guide_chapters": 38,
+    "guide_chapters": 45,
     "retired_reader_pages": [
       "catalog/mechanisms.html",
       "catalog/features.html",
@@ -1417,5 +1324,279 @@
     ],
     "errors": [],
     "boundary": "Structural, preservation and browser checks do not establish content completeness or live AWS execution."
+  },
+  "educational_review": {
+    "revision": "2026-10-23-educational-sequence",
+    "baseline": "1a62b5686ec361d1b4ab894df0a0ab249cfe1d78",
+    "frozen_sources": {
+      "catalog/use-cases.json": {
+        "unchanged": true,
+        "sha256": "e5aae837db20d3dc7383b86cf22f01cb7310c8691e37122b0f11650ecc92900c"
+      },
+      "catalog/mechanisms.json": {
+        "unchanged": true,
+        "sha256": "ef2f2ba7f98a9a33929c2ebfd240e29a42ee0d10fa37c44c0baeb68e48c7f5c7"
+      },
+      "catalog/features.json": {
+        "unchanged": true,
+        "sha256": "fefc21015e00bf043a9bbbe9776caa5ca5cb2de0ab3232ca8a6437ad8ed20763"
+      },
+      "catalog/profiles.json": {
+        "unchanged": true,
+        "sha256": "89d23d92c97b95288e68de2a001186ba5846b18b6dec3774ba545143aea33190"
+      },
+      "catalog/aliases.json": {
+        "unchanged": true,
+        "sha256": "5f1efdc4eb665cdd3d7830c148d653cc2f38a7d4c7cf4cf1f68e538d95ced720"
+      },
+      "catalog/resource-models.json": {
+        "unchanged": true,
+        "sha256": "4565514f203edd099b20fdc1472a3a1472696e147952f838e2163efe2947aa42"
+      }
+    },
+    "presentation_sequences": {
+      "devops": {
+        "slides": 19,
+        "minutes": 58.0,
+        "exercise_minutes": 8.0,
+        "use_cases": [
+          "UC-D01",
+          "UC-D02",
+          "UC-D03",
+          "UC-D04",
+          "UC-D05",
+          "UC-D06",
+          "UC-D07",
+          "UC-D08",
+          "UC-D09",
+          "UC-D10",
+          "UC-D11",
+          "UC-D12",
+          "UC-D13",
+          "UC-D14",
+          "UC-G01"
+        ],
+        "chapter_order": [
+          "Agent composition and shared operating scope",
+          "Incident response: evidence, decisions and controlled effects",
+          "Routine reporting and reliability improvement",
+          "Operational knowledge, change assurance and reviews"
+        ]
+      },
+      "security": {
+        "slides": 12,
+        "minutes": 41.0,
+        "exercise_minutes": 8.0,
+        "use_cases": [
+          "UC-S01",
+          "UC-S02",
+          "UC-S03",
+          "UC-S04",
+          "UC-S05",
+          "UC-S06",
+          "UC-S07",
+          "UC-S08"
+        ],
+        "chapter_order": [
+          "Assessment execution, application scope and context",
+          "Assessment and finding resolution",
+          "Design, requirements and reusable context"
+        ]
+      },
+      "finops": {
+        "slides": 12,
+        "minutes": 40.0,
+        "exercise_minutes": 8.0,
+        "use_cases": [
+          "UC-F01",
+          "UC-F02",
+          "UC-F03",
+          "UC-F04",
+          "UC-F05",
+          "UC-F06",
+          "UC-F07",
+          "UC-G01"
+        ],
+        "chapter_order": [
+          "Analysis, context and instance scope",
+          "Cost inquiry, anomaly investigation and reporting",
+          "Planning, optimization and review"
+        ]
+      },
+      "architecture": {
+        "slides": 9,
+        "minutes": 27.0,
+        "exercise_minutes": 4.0,
+        "use_cases": [
+          "UC-D06",
+          "UC-F05",
+          "UC-G01",
+          "UC-S07"
+        ],
+        "chapter_order": [
+          "Agents and their operating context",
+          "Coordination, boundaries and evidence",
+          "Apply the model to approved operational work"
+        ]
+      }
+    },
+    "diagram_views": {
+      "teaching-devops-agent": {
+        "fixed_layout": "teaching-fixed-v1",
+        "components": 8
+      },
+      "teaching-devops-coordination": {
+        "fixed_layout": "teaching-fixed-v1",
+        "components": 10
+      },
+      "teaching-devops-space": {
+        "fixed_layout": "teaching-fixed-v1",
+        "components": 10
+      },
+      "teaching-devops-incident": {
+        "fixed_layout": "teaching-fixed-v1",
+        "components": 10
+      },
+      "teaching-devops-mitigation": {
+        "fixed_layout": "teaching-fixed-v1",
+        "components": 10
+      },
+      "teaching-devops-learning": {
+        "fixed_layout": "teaching-fixed-v1",
+        "components": 10
+      },
+      "teaching-devops-reporting": {
+        "fixed_layout": "teaching-fixed-v1",
+        "components": 10
+      },
+      "teaching-devops-knowledge": {
+        "fixed_layout": "teaching-fixed-v1",
+        "components": 10
+      },
+      "teaching-devops-change": {
+        "fixed_layout": "teaching-fixed-v1",
+        "components": 10
+      },
+      "teaching-devops-review": {
+        "fixed_layout": "teaching-fixed-v1",
+        "components": 10
+      },
+      "teaching-security-agent": {
+        "fixed_layout": "teaching-fixed-v1",
+        "components": 8
+      },
+      "teaching-security-coordination": {
+        "fixed_layout": "teaching-fixed-v1",
+        "components": 10
+      },
+      "teaching-security-space": {
+        "fixed_layout": "teaching-fixed-v1",
+        "components": 10
+      },
+      "teaching-security-assessment": {
+        "fixed_layout": "teaching-fixed-v1",
+        "components": 10
+      },
+      "teaching-security-repair": {
+        "fixed_layout": "teaching-fixed-v1",
+        "components": 10
+      },
+      "teaching-security-context": {
+        "fixed_layout": "teaching-fixed-v1",
+        "components": 10
+      },
+      "teaching-finops-agent": {
+        "fixed_layout": "teaching-fixed-v1",
+        "components": 8
+      },
+      "teaching-finops-coordination": {
+        "fixed_layout": "teaching-fixed-v1",
+        "components": 10
+      },
+      "teaching-finops-space": {
+        "fixed_layout": "teaching-fixed-v1",
+        "components": 10
+      },
+      "teaching-finops-analysis": {
+        "fixed_layout": "teaching-fixed-v1",
+        "components": 10
+      },
+      "teaching-finops-reporting": {
+        "fixed_layout": "teaching-fixed-v1",
+        "components": 10
+      },
+      "teaching-finops-optimization": {
+        "fixed_layout": "teaching-fixed-v1",
+        "components": 10
+      }
+    },
+    "browser": [
+      {
+        "product": "devops",
+        "width": 390,
+        "slides_checked": 19,
+        "diagram_text_bounds": "passed",
+        "page_overflow": "passed",
+        "javascript_errors": []
+      },
+      {
+        "product": "devops",
+        "width": 1440,
+        "slides_checked": 19,
+        "diagram_text_bounds": "passed",
+        "page_overflow": "passed",
+        "javascript_errors": []
+      },
+      {
+        "product": "security",
+        "width": 390,
+        "slides_checked": 12,
+        "diagram_text_bounds": "passed",
+        "page_overflow": "passed",
+        "javascript_errors": []
+      },
+      {
+        "product": "security",
+        "width": 1440,
+        "slides_checked": 12,
+        "diagram_text_bounds": "passed",
+        "page_overflow": "passed",
+        "javascript_errors": []
+      },
+      {
+        "product": "finops",
+        "width": 390,
+        "slides_checked": 12,
+        "diagram_text_bounds": "passed",
+        "page_overflow": "passed",
+        "javascript_errors": []
+      },
+      {
+        "product": "finops",
+        "width": 1440,
+        "slides_checked": 12,
+        "diagram_text_bounds": "passed",
+        "page_overflow": "passed",
+        "javascript_errors": []
+      },
+      {
+        "product": "architecture",
+        "width": 390,
+        "slides_checked": 9,
+        "diagram_text_bounds": "passed",
+        "page_overflow": "passed",
+        "javascript_errors": []
+      },
+      {
+        "product": "architecture",
+        "width": 1440,
+        "slides_checked": 9,
+        "diagram_text_bounds": "passed",
+        "page_overflow": "passed",
+        "javascript_errors": []
+      }
+    ],
+    "errors": [],
+    "boundary": "Teaching order, frozen content, case coverage and geometry checks. Not live AWS execution, complete fact verification or a claim that automated tests establish educational quality."
   }
 }
