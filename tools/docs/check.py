@@ -20,6 +20,7 @@ from model_check import validate_model
 from resource_model import validate as validate_resources
 from editorial_check import validate as validate_editorial
 from exposition_check import validate as validate_exposition
+from teaching_check import validate as validate_teaching
 from mechanism_detail import validate as validate_mechanisms
 from reading_check import validate as validate_reading
 
@@ -144,6 +145,9 @@ def check(browser=False):
     results['capability_exposition']=exposition_result
     results['product_resource_model']=resource_result
     results['reading_structure']=reading_result
+    teaching_result=validate_teaching(guides,browser=browser)
+    errors.extend(teaching_result['errors'])
+    results['educational_review']=teaching_result
     write('qa/checks.json',json.dumps(results,indent=2))
     if errors:raise SystemExit(json.dumps(results,indent=2))
     write('VALIDATION.md','# Documentation validation\n\nThe current reader revision is covered by [frozen-record and reading-journey checks](qa/reading-structure.json). Model and use-case sources are unchanged. Guide navigation, search, contextual configuration, and deep links are tested separately from service behavior.\n\nStage 3 adds [mechanism lifecycle and preservation checks](qa/mechanism-review.json) and [claim-specific source review](qa/mechanism-source-review.json). Proposed AWS tests are documented but were not executed. Existing outcome, feature, profile, alias and resource-model sources are checked against the Stage 2 baseline.\n\nThe current [machine-readable results](qa/checks.json) distinguish source structure, rendered behavior, and synthetic examples. The [content revision record](qa/content-review.json) identifies cleanup and editorial changes; the [source review record](qa/source-review.json) identifies new and selectively rechecked official material.\n\nThe [product resource checks](qa/resource-models.json) verify entity ownership, qualified relationships, all feature/resource bindings and unchanged approved catalog sources. [Product-source evidence](qa/product-source-review.json) identifies the exact reviewed claims and version qualifications.\n\nThe [relationship checks](qa/relationships.json) additionally validate all 54 former-record mappings, 30 outcome definitions, workflow dependency types, feature configuration references, implementation profiles, reverse impact links and semantic regression cases. These are modeled dependencies, not live availability tests.\n\nChecks cover stable section identifiers, source mapping, use-case narratives, local links, unique SVG identifiers and accessibility descriptions, report and catalog filtering, chapter and slide navigation, notes, timers, hash links, and print-state restoration at desktop and mobile widths. The synthetic cost arithmetic and incident/security evidence relationships are checked separately.\n\nThese are not live AWS tests, an exhaustive upstream-documentation audit, or a claim that passing structural checks alone establishes good technical writing. The diagrams are logical explanatory models. No productivity, accuracy, security coverage, or savings result has been measured.\n\nThe application tree and its workflow are compared with the pinned baseline and must remain unchanged. Superseded document entry points and generators are removed rather than archived.\n')
