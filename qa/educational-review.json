@@ -1,0 +1,43 @@
+{
+  "revision": "2026-10-23-educational-sequence",
+  "baseline": "1a62b5686ec361d1b4ab894df0a0ab249cfe1d78",
+  "requested_change": "Definition of an agent, coordinated responsibilities and enclosing space before prioritized workflows; stable diagram reused through the flows.",
+  "source_basis": "User-supplied capability outline retained for detailed chapters; official DevOps managed/custom/space/memory/incident guidance rechecked; Security and FinOps keep their native resource and execution models.",
+  "corrections": [
+    "The opening no longer starts with asset identifiers.",
+    "Teaching order is distinct from the ten-dimension reference taxonomy.",
+    "Same product diagram keeps node positions and ownership across overlays.",
+    "Managed incident responsibilities are not presented as a configurable internal call graph.",
+    "Security record lineage and FinOps task creation are not portrayed as DevOps-style peer agents.",
+    "Each workflow identifies its input, source path, output and independent acceptance boundary.",
+    "Model, cases and dependencies remain frozen."
+  ],
+  "reviewed_official_urls": [
+    "https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-agent-instructions.html",
+    "https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-devops-agent-memories.html",
+    "https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-what-are-devops-agent-spaces.html",
+    "https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-autonomous-incident-response.html",
+    "https://docs.aws.amazon.com/devopsagent/latest/userguide/production-operations-proactive-incident-prevention.html",
+    "https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-custom-agents-index.html",
+    "https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-managed-agents.html",
+    "https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-working-with-directed-actions.html",
+    "https://docs.aws.amazon.com/finops-agent/latest/userguide/context-files-and-memory.html",
+    "https://docs.aws.amazon.com/finops-agent/latest/userguide/task-management.html",
+    "https://docs.aws.amazon.com/finops-agent/latest/userguide/what-is.html",
+    "https://docs.aws.amazon.com/securityagent/latest/userguide/how-it-works.html",
+    "https://docs.aws.amazon.com/securityagent/latest/userguide/revalidate-findings.html",
+    "https://docs.aws.amazon.com/securityagent/latest/userguide/understand-lifecycle.html"
+  ],
+  "retrieval_qualification": "Direct and indexed representations of the DevOps custom/managed documentation differ. Attachment terminology and indexed full custom/managed content support explicit memory attachment and managed roles; no internal ranking or routing algorithm is inferred.",
+  "source_changes": "Only teaching exposition, presentation sequence, diagram overlays and reader controls change; retained guide sections retain their previous source review dates.",
+  "frozen_sha256": {
+    "use-cases": "e5aae837db20d3dc7383b86cf22f01cb7310c8691e37122b0f11650ecc92900c",
+    "mechanisms": "ef2f2ba7f98a9a33929c2ebfd240e29a42ee0d10fa37c44c0baeb68e48c7f5c7",
+    "features": "fefc21015e00bf043a9bbbe9776caa5ca5cb2de0ab3232ca8a6437ad8ed20763",
+    "profiles": "89d23d92c97b95288e68de2a001186ba5846b18b6dec3774ba545143aea33190",
+    "aliases": "5f1efdc4eb665cdd3d7830c148d653cc2f38a7d4c7cf4cf1f68e538d95ced720",
+    "resource-models": "4565514f203edd099b20fdc1472a3a1472696e147952f838e2163efe2947aa42"
+  },
+  "priority_basis": "Audience-based editorial order, not AWS ranking.",
+  "live_aws_execution": false
+}
