@@ -2,8 +2,8 @@
   "revision": "2026-10-23-educational-sequence",
   "files": {
     ".github/workflows/document-suite.yml": {
-      "bytes": 3920,
-      "sha256": "c18ba714acd1e3effe210cbf4f0a6f0eadab8cb909973bb4a295734042a9394c"
+      "bytes": 3636,
+      "sha256": "39ec9108ca555092cc613feaec552473cd34fff9bd03abdb299c39498fd450d2"
     },
     "CHANGELOG.md": {
       "bytes": 2999,
