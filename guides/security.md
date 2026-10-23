@@ -653,7 +653,7 @@ Editing a finding changes its recorded attributes; it does not repair the applic
 2. Trace the claim to the supplied identity, request and affected revision.
 3. Hide/unhide unverified findings and verify that changed visibility is not reported as remediation.
 
-**Related mechanism.** [MX-S-PERSONALIZE](../catalog/mechanisms.html#MX-S-PERSONALIZE): conditional — Findings Personalization was enabled at test start and eligible edits are available; it changes finding attributes, not application state.
+**Related mechanism.** [MX-S-PERSONALIZE](../guides/security.html#MX-S-PERSONALIZE): conditional — Findings Personalization was enabled at test start and eligible edits are available; it changes finding attributes, not application state.
 
 **Source mapping**
 
