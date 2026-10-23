@@ -2,7 +2,7 @@
 """Build the maintained narrative guides, use-case catalog, and HTML presentations.
 
 Canonical prose lives in guides/*.md; catalog narratives live in JSON. This
-renderer preserves authored prose and regenerates delimited mechanism-detail blocks from the registry. Diagrams and presentations have their
+renderer preserves authored capability explanations; frozen registries supply links, not chapter prose. Diagrams and presentations have their
 own maintained definitions beside this file. No external runtime assets are used.
 """
 from __future__ import annotations
@@ -214,7 +214,6 @@ def commit():
         subprocess.run(['git','commit','-m','docs: publish '+path],cwd=ROOT,check=True)
 
 def build():
-    mechanism_detail.sync_guides()
     build_diagrams();guides=load_guides();catalog=load_catalog()
     for key,g in guides.items():presentation(key,g,guides)
     metadata(guides,catalog)
