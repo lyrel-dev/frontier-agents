@@ -99,12 +99,12 @@ Each annotation contains its type, author, text, replies, status, document, and 
 | `field` | `title` for a selected YAML title scalar; otherwise a body block |
 | `protected` | Display hint for an approved/frozen record; the patch guard derives protection independently |
 
-For text selection, a separate quote selector carries the exact rendered text, prefix/suffix context, and UTF-16 positions within the first and last rendered blocks. These DOM offsets are not passed off as Markdown offsets. Inline formatting can make a rendered quote discontinuous in Markdown. The exact source block remains the editing unit; the quote tells the reviewer which portion requires attention.
+For text selection, a separate quote selector carries the exact rendered text, prefix/suffix context, and UTF-16 positions within the first and last rendered blocks. These DOM offsets are not passed off as Markdown offsets. **An automated text-scoped patch may change only a unique verbatim occurrence of that quote in the selected Markdown block.** If the quote crosses blocks or Markdown formatting makes that mapping ambiguous, validation rejects the patch; select and review the full source block explicitly instead. Block-selected comments may propose a replacement for the entire selected block.
 
 <!-- block: authoring-patches -->
 ## Validate a model-produced patch
 
-The editing model must return `frontier-source-patch/v1` JSON with the exported `review_id`. Each edit names an open `comment_id`, source `path`, `block_id`, expected file/block hashes, exact `before` excerpt, and replacement `after` Markdown. Generated documents, unrelated blocks, symlinks, traversal paths, stale versions, duplicate or overlapping edits, and frozen registers are rejected.
+The editing model must return `frontier-source-patch/v1` JSON with the exported `review_id`. The JSON and LLM-request exports from the same browser review share a stable review identity across page reloads. Each edit names an open `comment_id`, source `path`, `block_id`, expected file/block hashes, exact `before` excerpt, and replacement `after` Markdown. Generated documents, unrelated blocks, symlinks, traversal paths, stale versions, duplicate or overlapping edits, and frozen registers are rejected.
 
 ```sh
 python tools/docs/review_patch.py validate review.json patch.json
