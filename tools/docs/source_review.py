@@ -6,6 +6,7 @@ from collections import defaultdict
 from bs4 import BeautifulSoup
 from markdown_it import MarkdownIt
 from markdown_sources import repository, ROOT, FIELD
+from selection_model import compile_selections
 
 HERE=Path(__file__).resolve().parent
 MD=MarkdownIt('commonmark',{'html':False}).enable('table')
@@ -34,7 +35,12 @@ def body_html(source,renderer,definitions='',links=None,prefix='',role=None):
         if role=='slide' and in_notes:continue
         rendered=renderer(text,definitions,links or {},prefix+'-'+target['block_id'])
         soup=BeautifulSoup(rendered,'html.parser')
-        node=soup.find(True)
+        children=[n for n in soup.contents if getattr(n,'name',None)]
+        if len(children)>1:
+            node=soup.new_tag('div',attrs={'class':'review-source-fragment'})
+            for child in list(soup.contents):node.append(child.extract())
+            soup.append(node)
+        else:node=soup.find(True)
         if node:attach(node,target)
         pieces.append(str(soup))
     return ''.join(pieces)
@@ -163,7 +169,8 @@ def finish():
                 if len(text)>1:
                     search.append({'block_id':bid,'title':target['title'],'text':text[:18000],'kind':target['source_kind'],
                                    'product':target['product'],'source':target['path'],'page':current,'anchor':element['id']})
-        packet={'schema':'frontier-source-map/v1','repository':'lyrel-dev/frontier-agents','content_revision':repo.revision,
+        selections=compile_selections(soup,current,local,repo.revision)
+        packet={'selection_schema':'frontier-selection/v1','selections':selections,'schema':'frontier-source-map/v1','repository':'lyrel-dev/frontier-agents','content_revision':repo.revision,
                 'document':current,'title':soup.title.get_text() if soup.title else current,'targets':local,
                 'source_files':sorted({target['path'] for target in local.values()}),
                 'coordinate_contract':'source offsets are Unicode code points and UTF-8 bytes; DOM selectors use UTF-16 code units'}
@@ -172,15 +179,15 @@ def finish():
         depth='../'*(len(Path(current).parts)-1)
         capture=soup.new_tag('script',attrs={'data-review-ui':'true'});capture.string='window.__reviewInitialHash=location.hash;';soup.head.insert(0,capture)
         css=soup.new_tag('link',attrs={'rel':'stylesheet','href':depth+'assets/review.css','data-review-ui':'true'});soup.head.append(css)
-        for asset in ('search-index.js','review.js'):
+        for asset in ('search-index.js','selection_model.js','review.js'):
             script=soup.new_tag('script',attrs={'src':depth+'assets/'+asset,'data-review-ui':'true','defer':True});soup.body.append(script)
         path.write_text(str(soup)+'\n',encoding='utf-8')
-        mappings[current]={'source_files':packet['source_files'],'mapped_blocks':len(local)}
+        mappings[current]={'source_files':packet['source_files'],'mapped_blocks':len(local),'selection_nodes':len(selections)}
     rank=lambda item:0 if item['page'].startswith('guides/') else 1 if item['page'].startswith('catalog/') else 2
     unique={}
     for item in sorted(search,key=rank):unique.setdefault(item['block_id'],item)
     content={'schema':'frontier-search/v1','revision':repo.revision,'entries':list(unique.values())}
     (ROOT/'assets/search-index.js').write_text('window.FRONTIER_SEARCH='+json.dumps(content,ensure_ascii=False).replace('<','\\u003c')+';\n')
-    for name in ('review.js','review.css'):(ROOT/'assets'/name).write_text((HERE/name).read_text())
+    for name in ('review.js','review.css','selection_model.js'):(ROOT/'assets'/name).write_text((HERE/name).read_text())
     (ROOT/'qa/source-map.json').write_text(json.dumps({'schema':'frontier-source-map-report/v1','content_revision':repo.revision,
        'source_files':len(repo.sources),'search_blocks':len(unique),'pages':mappings},indent=2)+'\n')
