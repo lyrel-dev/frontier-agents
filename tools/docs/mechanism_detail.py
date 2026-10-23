@@ -1,8 +1,7 @@
 """Render mechanism detail in the existing guides; validate separately from live operation.
 
 The review field in catalog/mechanisms.json owns the detailed mechanism prose.
-Generated, delimited Markdown blocks keep GitHub's readable edition aligned with
-HTML and speaker notes. Prose outside those blocks remains manually maintained.
+The registry is retained for traceability. Capability exposition is authored in guides; registry rows are not emitted as peer product mechanisms.
 """
 from pathlib import Path
 from collections import defaultdict, Counter
@@ -29,59 +28,6 @@ def load():
 
 def esc(value):
     return escape(str(value),quote=True)
-
-
-def markdown_table(headers,rows):
-    def cell(value):
-        return str(value).replace('|','\\|').replace('\n',' ')
-    return '\n'.join(['| '+' | '.join(headers)+' |','|'+'---|'*len(headers),*['| '+' | '.join(cell(v) for v in row)+' |' for row in rows]])
-
-
-def block(entry):
-    d=entry['review'];refs=list(dict.fromkeys(c['source'] for c in d['claims']))
-    cite=' '.join('['+r+']' for r in refs)
-    lines=[f"#### {entry['id']} — {entry['title']}",'']
-    lines.extend(p+' '+cite+'\n' for p in d['narrative'])
-    lines.extend(['**Inputs.** '+d['inputs'],''])
-    if d.get('diagram'):
-        lines.extend([f"![{entry['title']}: state and control paths](../assets/diagrams/{d['diagram']}.svg)",''])
-    lines.extend(['**Configuration**',''])
-    for i,(control,procedure,scope) in enumerate(d['configuration'],1):
-        lines.append(f'{i}. **{control} — {scope.rstrip(".")}.** {procedure}')
-    lines.extend(['',cite,'','**Lifecycle and operator actions**','',
-                  markdown_table(['Initial condition','Operation or event','Result'],d['lifecycle']), '',
-                  '**Constraints.** '+d['controls'],'',
-                  '**Inspection points.** '+d['observable_output'],'',
-                  '**Implementation limits.** '+d['undocumented'],'',
-                  '**Verification procedure (proposed)**',''])
-    for i,t in enumerate(d['test'],1):lines.append(f'{i}. {t}')
-    lines.append('')
-    if entry.get('related_mechanisms'):
-        lines.append('**Related mechanism.** '+' '.join(f"[{r['id']}](../guides/{entry['platform']}.html#{r['id']}): {r['dependency']} — {r['condition']}" for r in entry['related_mechanisms']))
-        lines.append('')
-    lines.extend(['**Source mapping**','',markdown_table(['Reference','Documentation section','Supported behavior'],[['['+c['source']+']',c['section'],c['assertion']] for c in d['claims']]),''])
-    return '\n'.join(lines)
-
-
-def section_boundaries(body):
-    """Locate canonical sections without treating headings inside examples as structure."""
-    marks=[];offset=0;fence=None
-    for line in body.splitlines(keepends=True):
-        marker=re.match(r'^\s*(`{3,}|~{3,})',line)
-        if marker:
-            token=marker[1]
-            if fence is None:fence=(token[0],len(token))
-            elif token[0]==fence[0] and len(token)>=fence[1]:fence=None
-            offset+=len(line);continue
-        if fence is None:
-            section=re.match(r'^###\s+([DSFA]-(?:M|U)?\d+)\s+[—-]\s+',line)
-            if section:marks.append((offset,section[1]))
-            elif re.match(r'^##\s+\d{2}\.\s+',line):marks.append((offset,None))
-        offset+=len(line)
-    result={}
-    for i,(start,sid) in enumerate(marks):
-        if sid:result[sid]=(start,marks[i+1][0] if i+1<len(marks) else len(body))
-    return result
 
 
 def sync_guides():
@@ -180,7 +126,7 @@ def validate(guides,browser=False):
         for e in data['entries']:
             if e['platform']!=product:continue
             node=page.find(id=e['id'])
-            if not node or node.name!='h4':errors.append(e['id']+': detailed guide anchor missing')
+            if not node or not node.find_parent(class_='report-section'):errors.append(e['id']+': technical reference destination missing')
     for mid in ('MX-D-CUSTOM','MX-F-FILES','MX-S-PERSONALIZE','MX-F-JIRA','MX-F-SLACK'):
         if not current[mid]['review']['undocumented']:errors.append(mid+': unknown boundary missing')
     # Browser navigation is validated across the new reading paths in reading_check.
