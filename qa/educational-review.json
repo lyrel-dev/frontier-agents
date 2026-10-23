@@ -54,9 +54,15 @@
       "Add named responsibilities and concise action descriptions.",
       "Use product-specific external destination with a qualified publication path.",
       "Use larger diagram labels and numbered reading steps; retain frozen ownership colors.",
-      "Namespace CSS marker URLs and scope SVG styles per inline diagram; test computed marker references in the HTML presentation."
+      "Namespace CSS marker URLs and scope SVG styles per inline diagram; test computed marker references in the HTML presentation.",
+      "Extend the visible workspace boundary around its execution results; external actors, sources and publication destinations remain outside."
     ],
-    "validation": "The amended views are subsequently checked in the browser for text bounds and layout; the inspected prior image is not claimed as an amended-output screenshot."
+    "validation": "The amended views are subsequently checked in the browser for text bounds and layout; the inspected prior image is not claimed as an amended-output screenshot.",
+    "amended_asset_review": {
+      "path": "assets/diagrams/teaching-devops-coordination.svg",
+      "git_blob_sha": "eefb3804e01a5cad7d87957acf2708e3d5d94acb",
+      "method": "Copied the fetched SVG bytes, verified the Git blob hash, rendered locally and visually inspected the amended role, label and connector layout."
+    }
   },
   "last_source_retrieval": {
     "custom_agents": "Direct official page confirms prompt, selected tools, assigned skills and invocation; its representation omits some retained-context material present in the supplied source and earlier indexed review.",
