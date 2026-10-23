@@ -2,158 +2,46 @@
 
 
 
-Presentation: 63 minutes, including 8 minutes of prepared-result exercises. Questions and breaks are additional.
+Presentation: 40 minutes, including 8 minutes of prepared-result exercises. Questions and breaks are additional.
 
 
 
-## 01. Instance roles and destination connections
+## 01. What AWS FinOps Agent does with a request
 
-00:00–02:00 · Workspace and resource organization
+00:00–03:00 · Analysis, context and instance scope
 
-The instance uses separate data-access and operator roles. Account-level Jira or Slack registration is followed by an instance-specific project or channel connection.
-
-
-
-![FinOps Agent: instance access and integration connections](../assets/diagrams/er-finops-scope.svg)
+The labels deliberately differ from DevOps. Uploaded context files are not a native SKILL.md registry, and a requested task is not a custom-agent asset. Recommendation estimates come from their upstream services and must retain their provenance.
 
 
 
-Detailed reference: [Agent instance, access roles and retained state](../guides/finops.html#F-01)
-
-
-## 02. Instance, conversation, task, and artifact identities
-
-02:00–05:00 · Workspace and resource organization
-
-Identify the actual product object before configuring, invoking, correcting or removing it. The resource kind determines which operation is meaningful.
+![FinOps analysis combines source data and organizational context](../assets/diagrams/teaching-finops-agent.svg)
 
 
 
-Object | Identity or membership | Lifecycle distinction
+Detailed reference: [An analysis request, its context, and the agent execution](../guides/finops.html#F-90)
 
-Agent instance | finops-agent AgentSpace actions and agentspace ARN | Service-specific scope; not a DevOps resource
-
-Integration / connection | Account registration / instance destination binding | Authorization and destination selection differ
-
-Conversation / task | Interaction / separately recorded execution | A direct answer need not create a task
-
-Automation | Rule that creates future tasks | Deleting a rule does not delete existing work
-
-File / memory / artifact | Reference input / retained context / output | Each has its own update and removal behavior
-
-
-Detailed reference: [Conversations, automations, tasks and artifacts](../guides/finops.html#F-09)
-
-
-## 03. Conversations, automations, tasks and artifacts
-
-05:00–08:00 · Workspace and resource organization
-
-A conversation may answer directly. An explicit task has a separate queue and execution record. An automation creates future tasks. Report artifacts can originate from a conversation or task.
-
-
-
-![FinOps Agent: conversation, automation and task records](../assets/diagrams/er-finops-work.svg)
-
-
-
-Detailed reference: [Conversations, automations, tasks and artifacts](../guides/finops.html#F-09)
-
-
-## 04. Instance settings, task instructions, and automations
-
-08:00–11:00 · Instance configuration and task definition
-
-The instance exposes these facilities independently. A task instruction is not a DevOps custom-agent definition.
-
-
-
-Control | What it configures
-
-Data role | Authorized AWS data-source operations
-
-Operator access | Entry and web-application operations
-
-Context files and memory | Organization-specific reference and retained preferences
-
-Task request | Instructions for one separately recorded execution
-
-Automation | Future task creation on schedule or supported event
-
-Destination connection | Agent-specific Jira project or Slack channel
 
 
 Detailed reference: [Instance configuration and task instructions](../guides/finops.html#F-11)
 
 
 
-Detailed reference: [Service access, storage location, and inference](../guides/finops.html#F-12)
+Detailed reference: [Cost queries and recommendation provenance](../guides/finops.html#F-M01)
 
 
-## 05. Files, memory and conversation-context lifecycles
+## 02. How conversations, automations and tasks coordinate work
 
-11:00–13:00 · Organizational knowledge and conversation context
+03:00–06:00 · Analysis, context and instance scope
 
-Soft deletion and restoration apply to files. Forgetting updates memory. Compaction changes working context; these operations are not interchangeable.
-
-
-
-![FinOps context: three independent lifecycle operations](../assets/diagrams/mechanism-finops-context.svg)
+Do not draw each task as another agent. A schedule or supported anomaly event creates a new task from its automation. Disabling that automation stops future creation; current tasks and existing outputs retain their separate lifecycle.
 
 
 
-Detailed reference: [Context-file preparation and management](../guides/finops.html#F-M02)
+![Requests and automations coordinate work through tasks](../assets/diagrams/teaching-finops-coordination.svg)
 
 
 
-Detailed reference: [Persistent preferences and corrections](../guides/finops.html#F-M03)
-
-
-
-Detailed reference: [Conversation summarization and context limits](../guides/finops.html#F-M04)
-
-
-## 06. Context files, memory and conversation compaction
-
-13:00–16:00 · Organizational knowledge and conversation context
-
-File retrieval, cross-session memory and within-session compaction require separate tests.
-
-
-
-Mechanism | Producer | Typical content | Lifecycle
-
-Reference file | Operator upload | Account ownership, allocation rules and reporting standards | Upload, soft delete and restore
-
-Conversational memory | Conversation preferences, corrections and task outcomes | Preferences, corrections and ownership details | Update or forget across sessions
-
-Conversation context | Current interaction | Recent messages and summarized older messages | Compaction near context limit
-
-Ephemeral runtime | Service execution | Loaded persistent context for a session | Destroyed after session
-
-Agent-instance boundary | Agent configuration | Instance-specific files, memory and queue | No shared memory across instances
-
-
-Detailed reference: [Context-file preparation and management](../guides/finops.html#F-M02)
-
-
-
-Detailed reference: [Persistent preferences and corrections](../guides/finops.html#F-M03)
-
-
-
-Detailed reference: [Conversation summarization and context limits](../guides/finops.html#F-M04)
-
-
-## 07. Conversation actions, queued tasks, and publication approval
-
-16:00–18:00 · Task invocation and automation
-
-A conversation can request Jira or Slack publication directly. Explicit tasks and automations use the queue. Jira confirmation depends on invocation mode; Slack has no per-message approval.
-
-
-
-![FinOps tasks and destination-specific authorization](../assets/diagrams/mechanism-finops-publication.svg)
+Detailed reference: [How conversations and automations coordinate tasks](../guides/finops.html#F-91)
 
 
 
@@ -164,409 +52,255 @@ Detailed reference: [Tasks, schedules, and execution history](../guides/finops.h
 Detailed reference: [Anomaly events and task creation](../guides/finops.html#F-M05)
 
 
+## 03. The agent instance and its access boundaries
 
-Detailed reference: [Publication permissions and approvals](../guides/finops.html#F-M06)
+06:00–09:00 · Analysis, context and instance scope
 
+Registration of an integration and an instance-specific destination connection are distinct. The same source permission does not authorize publication to every channel. Instance-local retained context is not a shared memory across the three AWS products.
 
-## 08. Tasks, schedules and event automations
 
-18:00–21:00 · Task invocation and automation
 
-An automation stores the trigger and task instructions. Each created task has its own execution history and publication result.
+![Instance-scoped context, work and destinations](../assets/diagrams/teaching-finops-space.svg)
 
 
 
-Object | Creation path | Execution behavior | Stop control
+Detailed reference: [Agent-instance scope and source access](../guides/finops.html#F-92)
 
-On-demand task | User request | Enters shared task queue | Cancel running task where supported
 
-Scheduled automation | Prompt plus schedule | Creates a task at each match | Disable or delete future starts
 
-Event automation | Prompt plus COST_ANOMALY trigger | Managed rule creates a task for matching event | Disable/delete automation
+Detailed reference: [Agent instance, access roles and retained state](../guides/finops.html#F-01)
 
-Task record | Created by request or automation | Tracks status and result | Record remains after automation removal
-
-Delivery result | Task invokes configured destination | Records post/issue outcome | Inspect independently from analysis result
-
-
-Detailed reference: [Tasks, schedules, and execution history](../guides/finops.html#F-03)
-
-
-
-Detailed reference: [Anomaly events and task creation](../guides/finops.html#F-M05)
-
-
-## 09. Reporting, anomaly investigation and optimization
-
-21:00–24:00 · Task invocation and automation
-
-Reporting formats source analysis. Anomaly investigation evaluates a deviation. Recommendation review prioritizes upstream proposals; savings measurement evaluates an implemented change using comparable periods.
-
-
-
-Operational outcome | Completion evidence | Implementation boundary
-
-Prepare a periodic cost report | Period and cost basis remain consistent. | Configured recurring task
-
-Investigate a cost anomaly | Affected dimensions and monetary contributions reconcile. | Native analysis with optional automation
-
-Prioritize optimization recommendations | Original source assumptions are retained. | Native function with team review
-
-Measure the outcome of an implemented optimization | Before and after periods are comparable. | Composed workflow
-
-
-Detailed reference: [Tasks, schedules, and execution history](../guides/finops.html#F-03)
-
-
-
-Detailed reference: [Report generation and artifact management](../guides/finops.html#F-04)
-
-
-
-Detailed reference: [Cost queries and recommendation provenance](../guides/finops.html#F-M01)
-
-
-## 10. Cost-anomaly investigation: trigger and publication controls
-
-24:00–27:00 · Task invocation and automation
-
-Inspect event matching, task creation, source queries, and publication as separate steps. Jira approval depends on how the action starts. Slack publication requires destination review before invocation.
-
-
-
-Step | Feature configuration | Acceptance boundary
-
-Create work | Explicit task or supported anomaly automation | Event matching and queued execution are separate.
-
-Investigate | Authorized cost, anomaly and optional change evidence | Reconcile amounts; correlation is not proven cause.
-
-Publish to Jira | Configured project and invocation type | Interactive approval differs from setup-authorized automation.
-
-Publish to Slack | Configured channel and audience | No per-message approval prompt; review scope before invocation.
-
-
-Detailed reference: [Anomaly events and task creation](../guides/finops.html#F-M05)
-
-
-
-Detailed reference: [Cost queries and recommendation provenance](../guides/finops.html#F-M01)
-
-
-
-Detailed reference: [Publication permissions and approvals](../guides/finops.html#F-M06)
-
-
-## 11. Data-source access and collaboration connections
-
-27:00–29:00 · Data-source and collaboration integrations
-
-AWS source access is controlled by the agent data role. Collaboration uses account-level registration and an agent-specific destination. Successful source retrieval and successful publication are independent checks.
-
-
-
-![Data-source access and collaboration connections](../assets/diagrams/finops-integrations.svg)
-
-
-
-Detailed reference: [Supported data sources and publication destinations](../guides/finops.html#F-08)
-
-
-
-Detailed reference: [Jira projects and Slack channel connections](../guides/finops.html#F-05)
-
-
-## 12. Cost-data and publication connections
-
-29:00–31:00 · Data-source and collaboration integrations
-
-Data-role permissions control AWS evidence retrieval. Provider registration and agent connections control the available collaboration destinations.
-
-
-
-Source or destination | Information supplied | Interpretation
-
-Cost Explorer | Cost and usage results, forecasts, coverage | Preserve dates, metric, account scope, and grouping.
-
-Cost Anomaly Detection | Deviation and supported event source | A trigger for investigation, not proof of cause.
-
-Cost Optimization Hub / Compute Optimizer | Upstream recommendation and estimate | Review assumptions; estimate is not realized saving.
-
-CloudTrail | Recorded operational changes | Temporal association requires additional causal evidence.
-
-Jira Cloud / Slack | Supported publication actions | Destination and invocation type determine the approval behavior.
-
-
-Detailed reference: [Supported data sources and publication destinations](../guides/finops.html#F-08)
-
-
-## 13. Jira and Slack publication controls
-
-31:00–33:00 · Data-source and collaboration integrations
-
-Approval behavior depends on both the action and the invocation path.
-
-
-
-Action | Interactive or on-demand | Scheduled or event automation | Review point
-
-Create Jira issue | Approval prompt | Pre-authorized during setup | Project, content and owner
-
-Add Jira comment | Approval prompt | Pre-authorized during setup | Issue and disclosure scope
-
-Post Slack message | No approval prompt | No approval prompt | Channel and sensitive content
-
-Register integration | Account-level authorization | Same registration reused | Provider account/workspace
-
-Bind destination | Agent-specific project or channel | Automation uses this binding | Actual connection and app membership
-
-
-Detailed reference: [Jira projects and Slack channel connections](../guides/finops.html#F-05)
-
-
-
-Detailed reference: [Publication permissions and approvals](../guides/finops.html#F-M06)
-
-
-## 14. Source interfaces, stored data, and inference location
-
-33:00–35:00 · Service access and data location
-
-Storage geography, inference geography, and source authorization answer different configuration questions.
-
-
-
-Boundary | Documented property
-
-AWS source access | Data-role permissions for the named source services
-
-Collaboration access | Registered Jira or Slack integration and instance connection
-
-Persistent storage | Preview data stored in us-east-1
-
-Inference | Can use other US Regions
-
-Private-tool networking | No DevOps VPC resource-gateway interface is asserted for this service
-
-
-Detailed reference: [Service access, storage location, and inference](../guides/finops.html#F-12)
-
-
-## 15. Anomaly investigation and cost driver analysis
-
-35:00–38:00 · Managed analytical functions
-
-Numerical contribution, correlated change and established cause are different conclusions.
-
-
-
-Evidence source | Question answered | Typical conclusion | Limit
-
-Cost Anomaly Detection | What deviation was detected? | Affected service, account and impact | Detection is not causal proof
-
-Cost Explorer | Was movement usage, rate or both? | Dimensioned contribution | Depends on chosen basis and filters
-
-CloudTrail event history | Which API activity occurred nearby? | Candidate operational change | Temporal correlation only
-
-Workload owner evidence | Did behavior or volume change? | Service-specific explanation | May remain unavailable
-
-Automation history | Was the event matched and processed? | Task and delivery result | Delivery failure differs from investigation failure
-
-
-Detailed reference: [Cost queries and recommendation provenance](../guides/finops.html#F-M01)
-
-
-
-Detailed reference: [Anomaly events and task creation](../guides/finops.html#F-M05)
-
-
-## 16. Optimization recommendation review
-
-38:00–40:00 · Managed analytical functions
-
-The agent surfaces and contextualizes recommendations; it does not authorize infrastructure or financial changes.
-
-
-
-Review element | Source | Decision question | Record
-
-Recommendation | Cost Optimization Hub or Compute Optimizer | What action and assumptions are proposed? | Recommendation ID and source
-
-Estimated benefit | Upstream recommendation model | Does it overlap with another candidate? | Estimate and exclusions
-
-Operational constraint | Service owner and telemetry | What reliability, performance or recovery requirement applies? | Accepted constraint
-
-Authorization | Normal engineering and financial process | Who approves the change or commitment? | Change or purchase record
-
-Measurement | Post-change cost and service data | Was the expected effect observed on a comparable basis? | Measured outcome and attribution limit
-
-
-Detailed reference: [Cost queries and recommendation provenance](../guides/finops.html#F-M01)
-
-
-## 17. Historical cost, forecasting and commitment coverage
-
-40:00–43:00 · Managed analytical functions
-
-Historical analysis reports observed cost under a specified query. Forecasting estimates a future period. Commitment coverage reports the covered share of eligible usage. Retain the source and calculation basis for each.
-
-
-
-Operational outcome | Completion evidence | Implementation boundary
-
-Analyze historical cost and usage | Dates, metric, currency and filters are explicit. | Native function
-
-Review a cost forecast | Forecast horizon and source are identified. | Native function
-
-Review commitment coverage | Commitment type, period and eligible scope are explicit. | Native function
-
-
-Detailed reference: [Cost queries and recommendation provenance](../guides/finops.html#F-M01)
-
-
-
-Detailed reference: [Supported data sources and publication destinations](../guides/finops.html#F-08)
-
-
-## 18. Report artifacts and data lifecycle
-
-43:00–45:00 · Interaction surfaces and report artifacts
-
-Stopping future work, cancelling current work and removing retained data are different operations.
-
-
-
-Object | Create or revise | Remove or stop | What may remain
-
-Report artifact | Generate and request revision | Delete artifact | Externally copied report
-
-Context file | Upload and restore | Soft delete | Retained recoverable content
-
-Memory item | Remember or update | Forget | Independent file or conversation text
-
-Task | Request or automation | Cancel execution | Task record and published output
-
-Automation | Schedule or event trigger | Disable or delete | Previously created tasks
-
-Agent instance | Create and configure | Delete whole instance | External artifacts and destinations
-
-
-Detailed reference: [Report generation and artifact management](../guides/finops.html#F-04)
-
-
-
-Detailed reference: [Retention, cancellation, and deletion](../guides/finops.html#F-M07)
-
-
-## 19. Conversations, task history, and report artifacts
-
-45:00–47:00 · Interaction surfaces and report artifacts
-
-Not every answer is a task, and not every artifact has a task as its parent. A report revision must retain its intended analytical basis.
-
-
-
-Workspace | Purpose
-
-Conversation | Immediate analytical interaction
-
-Tasks | Separately queued work and its results
-
-Automations | Rules that create future tasks
-
-Context files | Uploaded organizational reference material
-
-Artifacts | Generated reports, including conversation-originated reports
-
-
-Detailed reference: [Conversation, task history, and artifact interfaces](../guides/finops.html#F-15)
-
-
-## 20. Access roles and source dependencies
-
-47:00–50:00 · Administration, retention, and limits
-
-Data access and team access should be tested independently and with known expected results.
-
-
-
-Responsibility | Purpose | Source dependency | Acceptance test
-
-Administrator permission | Create agent and permitted roles | Service setup APIs | Configured instance exists
-
-Agent data role | Read cost, recommendation and event sources | Cost Explorer, CloudTrail and optimization services | Known query and source provenance
-
-Operator role | Use supported web-app operations | Agent web application | Intended operator performs task
-
-User permission | Enter the specific agent | Identity Center or IAM access | Non-admin user signs in
-
-Event-rule permission | Manage service-owned matching rule | EventBridge and anomaly monitor | Automation and managed rule visible
 
 
 Detailed reference: [Administrator, service, and operator permissions](../guides/finops.html#F-02)
 
 
 
+Detailed reference: [Jira projects and Slack channel connections](../guides/finops.html#F-05)
+
+
+## 04. Analyze historical cost and usage
+
+09:00–12:00 · Cost inquiry, anomaly investigation and reporting
+
+The first analytical task establishes a repeatable query contract. A different cost basis or period can explain two apparently conflicting totals. Preserve failed reads and missing ownership mappings rather than inventing an allocation.
+
+
+
+![Historical cost and anomaly analysis retain source provenance](../assets/diagrams/teaching-finops-analysis.svg)
+
+
+
+Detailed reference: [Cost-analysis, reporting and optimization workflows](../guides/finops.html#F-93)
+
+
+
+Detailed reference: [Cost inquiry, anomaly investigation, and recommendation analysis](../guides/finops.html#F-14)
+
+
+
 Detailed reference: [Cost queries and recommendation provenance](../guides/finops.html#F-M01)
 
 
-## 21. Troubleshooting matrix and preview limits
+## 05. Investigate a cost anomaly
 
-50:00–52:00 · Administration, retention, and limits
+12:00–15:00 · Cost inquiry, anomaly investigation and reporting
 
-Validate data, retained context, execution and external effects as separate layers.
-
-
-
-Symptom | First object to inspect | Second check | Interpretation
-
-Total differs | Metric, dates, filters and dimensions | Accessible source and currency | Query contract failure
-
-Context ignored | File state or memory item | New session and exact preference | Retrieval/retention failure
-
-Automation did not run | Trigger, status and last-triggered time | Managed rule and event condition | Event matching failure
-
-Task ran, no message | Task result | Destination connection and action result | Publication failure
-
-Unexpected write | Action and invocation approval rule | Destination and automation setup | Control-model misunderstanding
-
-
-Detailed reference: [Data, task, and integration failures](../guides/finops.html#F-06)
+An anomaly is a reason to investigate, not proof of cause. EventBridge matching, task creation, analytical completion and destination delivery are distinct inspection points. A nearby CloudTrail event is corroborating evidence only when its relation to the cost change is established.
 
 
 
-Detailed reference: [Documentation coverage and references](../guides/finops.html#F-07)
-
-
-## 22. Retained context and session-local execution
-
-52:00–55:00 · Worked example and reference material
-
-Files, retained preferences, and conversation summaries supply different context. File restoration, memory correction, and conversation compaction operate on different state.
+![Historical cost and anomaly analysis retain source provenance](../assets/diagrams/teaching-finops-analysis.svg)
 
 
 
-![FinOps Agent: retained inputs and session context](../assets/diagrams/er-finops-context.svg)
+Detailed reference: [Cost-analysis, reporting and optimization workflows](../guides/finops.html#F-93)
+
+
+
+Detailed reference: [Anomaly events and task creation](../guides/finops.html#F-M05)
+
+
+
+Detailed reference: [Cost queries and recommendation provenance](../guides/finops.html#F-M01)
+
+
+## 06. Exercise: explain a cost increase from the supplied evidence
+
+15:00–23:00 · Cost inquiry, anomaly investigation and reporting
+
+Use the committed synthetic cost table and its arithmetic checks. Participants should identify which claim follows from the numbers and which requires service-owner evidence. Do not present the synthetic change as an observed AWS saving or real customer event.
+
+
+
+0–2 min | Fix the comparison contract | Same period basis, scope and unit rates
+
+2–4 min | Reconcile the supplied table | Quantity × rate and component totals
+
+4–6 min | Assess the proposed driver | Separate arithmetic attribution from change-event correlation
+
+6–8 min | Assign follow-up | Name missing workload evidence and the responsible owner
+
+
+Detailed reference: [Cost-variance analysis: worked example](../guides/finops.html#F-U01)
+
+
+
+Detailed reference: [Cost queries and recommendation provenance](../guides/finops.html#F-M01)
+
+
+## 07. Prepare a periodic cost report
+
+23:00–26:00 · Cost inquiry, anomaly investigation and reporting
+
+Reporting reuses source-backed analysis and adds a stable presentation contract. An artifact may originate in a conversation or a task. A scheduled automation creates successive tasks; it does not make their periods or currencies comparable automatically.
+
+
+
+![Periodic reporting adds a task definition and publication path](../assets/diagrams/teaching-finops-reporting.svg)
+
+
+
+Detailed reference: [Cost-analysis, reporting and optimization workflows](../guides/finops.html#F-93)
+
+
+
+Detailed reference: [Report generation and artifact management](../guides/finops.html#F-04)
+
+
+
+Detailed reference: [Tasks, schedules, and execution history](../guides/finops.html#F-03)
+
+
+## 08. Publication controls depend on the action and invocation
+
+26:00–29:00 · Cost inquiry, anomaly investigation and reporting
+
+Do not teach a universal human-approval switch. The action and invocation mode determine the documented behavior. The destination audience and permitted content must be reviewed before enabling an unattended publication path.
+
+
+
+Action | Conversation / on-demand task | Scheduled / event automation
+
+Create Jira issue or comment | Approval request | Authorization established during automation setup
+
+Post Slack message | No per-message approval prompt | No per-message approval prompt
+
+Read cost or recommendation data | Source permissions apply | Source permissions apply
+
+Verify delivery | Inspect destination and action result | Inspect task result and destination
+
+
+Detailed reference: [Publication permissions and approvals](../guides/finops.html#F-M06)
+
+
+
+Detailed reference: [Jira projects and Slack channel connections](../guides/finops.html#F-05)
+
+
+## 09. Forecasting and commitment coverage answer different questions
+
+29:00–32:00 · Planning, optimization and review
+
+These are two approved cases, not two labels for one output. A forecast concerns expected expenditure; coverage concerns eligible usage and commitments. Retain the distinct query basis and completion criteria.
+
+
+
+Analysis | Question | Required interpretation
+
+Cost forecast | What expenditure is projected for the selected horizon? | Source, period, scope and uncertainty
+
+Commitment coverage | What eligible usage is covered by existing commitments? | Commitment type, eligible usage and period
+
+Comparison | Are assumptions and filters compatible? | Do not combine unlike denominators
+
+Decision | What follow-up is justified? | Agent analysis is not purchase authorization
+
+
+Detailed reference: [Cost-analysis, reporting and optimization workflows](../guides/finops.html#F-93)
+
+
+
+Detailed reference: [Cost inquiry, anomaly investigation, and recommendation analysis](../guides/finops.html#F-14)
+
+
+## 10. Prioritize recommendations and measure an implemented change
+
+32:00–35:00 · Planning, optimization and review
+
+Show the two separate objectives on the same path. First prioritize candidates; later measure the actual outcome of an implemented action. They use different evidence and are not one automatic optimization loop.
+
+
+
+![Recommendations are reviewed before engineering change and measurement](../assets/diagrams/teaching-finops-optimization.svg)
+
+
+
+Detailed reference: [Cost-analysis, reporting and optimization workflows](../guides/finops.html#F-93)
+
+
+
+Detailed reference: [Cost inquiry, anomaly investigation, and recommendation analysis](../guides/finops.html#F-14)
+
+
+
+Detailed reference: [Cost queries and recommendation provenance](../guides/finops.html#F-M01)
+
+
+## 11. Prepare the cost-management contribution to an operational review
+
+35:00–37:00 · Planning, optimization and review
+
+The shared operational-review case has a cost-management profile. That profile is authored setup guidance, not a platform resource. The team receives evidence from separately scoped work and decides what happens next.
+
+
+
+![Periodic reporting adds a task definition and publication path](../assets/diagrams/teaching-finops-reporting.svg)
+
+
+
+Detailed reference: [Cost-analysis, reporting and optimization workflows](../guides/finops.html#F-93)
 
 
 
 Detailed reference: [Context and evidence in reporting and anomaly use cases](../guides/finops.html#F-10)
 
 
-## 23. Worked example: cost increase decomposition
+## 12. Diagnose data, context, execution and delivery separately
 
-55:00–63:00 · Worked example and reference material
+37:00–40:00 · Planning, optimization and review
 
-Prepared quantities and rates demonstrate reconciliation, not AWS pricing or realized savings.
-
-
-
-0–2 min | Confirm comparison contract | Two complete windows, same scope, metric, currency and basis
-
-2–4 min | Reconcile totals | 1,400 baseline; 1,974 comparison; delta 574
-
-4–6 min | Attribute arithmetic | Storage +200; requests +100; transfer +274
-
-6–8 min | Assess causal evidence | Prepared export evidence supports transfer only; storage and request causes remain unresolved
+Return to the diagram: each symptom belongs to a specific object or path. The operator should be able to distinguish a missing source result from a stale mapping and a failed delivery. Use the detailed guide for lifecycle procedures and preview constraints.
 
 
-Detailed reference: [Cost-variance analysis: worked example](../guides/finops.html#F-U01)
+
+Symptom | Inspect | Do not infer
+
+Totals disagree | Dates, basis, scope and filters | That one answer is correct because it is generated
+
+Wrong ownership | Source mapping and retained preference | That editing a file updates every memory
+
+Work did not start | Automation condition and task history | That an existing automation proves execution
+
+No destination result | Connection and action outcome | That analytical completion proves publication
+
+Old context persists | File, memory and conversation lifecycle | That compaction or cancellation deletes stored content
+
+
+Detailed reference: [Data, task, and integration failures](../guides/finops.html#F-06)
+
+
+
+Detailed reference: [Context-file preparation and management](../guides/finops.html#F-M02)
+
+
+
+Detailed reference: [Persistent preferences and corrections](../guides/finops.html#F-M03)
+
+
+
+Detailed reference: [Conversation summarization and context limits](../guides/finops.html#F-M04)
+
+
+
+Detailed reference: [Retention, cancellation, and deletion](../guides/finops.html#F-M07)
