@@ -65,7 +65,7 @@ def validate(guides: dict) -> dict:
             titles.append({'product': product, 'id': 'slide', 'title': slide['title']})
             if not slide['message'].strip():
                 errors.append(product+': missing presenter explanation')
-    for relative in ('catalog/index.html','catalog/mechanisms.html','catalog/features.html','catalog/profiles.html','catalog/resource-models.html','index.html'):
+    for relative in ('catalog/index.html','catalog/resource-models.html','index.html',*[p.relative_to(ROOT).as_posix() for p in sorted((ROOT/'catalog').glob('UC-*.html'))]):
         hits = language_hits(rendered_text(ROOT/relative))
         if hits:
             errors.append(relative+': promotional phrasing '+', '.join(sorted(set(hits))))
