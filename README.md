@@ -10,6 +10,7 @@ Technical guides, a searchable use-case catalog, resource diagrams, and HTML pre
 | Operational tasks | [Use cases](catalog/index.html) |
 | Entity definitions and relationships | [Resource model](catalog/resource-models.html) |
 | Teaching editions | [HTML presentations](presentations/index.html) |
+| Obsidian DevOps dossier | [Markdown framework and presentation](content/obsidian/aws-devops-agent/README.md) |
 | Authoring, annotations, and source patches | [Authoring guide](AUTHORING.md) |
 | Workstream status and next steps | [Handoff](WORKSTREAM.md) |
 
