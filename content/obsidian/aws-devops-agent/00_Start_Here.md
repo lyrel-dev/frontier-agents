@@ -10,8 +10,9 @@ tags:
 - index
 type: index
 created: '2026-10-31'
-updated: '2026-10-31'
+updated: '2026-11-05'
 source_cutoff: '2026-10-31'
+api_addendum_source_cutoff: '2026-11-05'
 status: documentation-vetted
 related:
 - '[[AWS_DevOps_Agent_Presentation]]'
@@ -35,8 +36,14 @@ This Markdown dossier begins with an agent primer, develops a mechanism taxonomy
 | Study the mechanism taxonomy | [[Agent_Foundations]] and [[Mechanism_Catalog]] |
 | Compare agent roles and controls | [[Agent_Roles_and_Capabilities]] and [[Platform_Capabilities]] |
 | Implement operational patterns | [[Orchestration_and_Use_Cases]] |
+| Design an investigation UI from the official API | [[Investigation_Data_Model]] and [[Investigation_UI_Contract]] |
+| Inspect exact API operations, fields and source pins | [[Investigation_API_Catalog]] and [[Investigation_API_Sources]] |
 | Reuse a diagram | [[Diagram_Atlas]] |
 | Resolve a source or interface question | [[Source_Index]] and [[Reference_Evidence_Gaps_and_Demo]] |
+
+## Investigation API addendum
+
+The four investigation-design notes were separately reviewed on **5 November 2026**. They cover the public Task/Execution/Journal model, derived timelines/graphs/artifacts, live synchronization, immutable application snapshots and the remaining public-contract gaps. Nine reviewed Mermaid diagrams accompany the analysis. The original presentation and framework retain their 31 October source cutoff.
 
 ## Present in Obsidian
 

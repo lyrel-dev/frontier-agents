@@ -9,8 +9,9 @@ tags:
 - diagrams
 type: diagrams
 created: '2026-10-31'
-updated: '2026-10-31'
+updated: '2026-11-05'
 source_cutoff: '2026-10-31'
+api_addendum_source_cutoff: '2026-11-05'
 status: documentation-vetted
 related:
 - '[[AWS_DevOps_Agent_Presentation]]'
@@ -23,6 +24,10 @@ product: devops
 # Diagram atlas
 
 All diagrams are editable Mermaid source. Captions identify the relationship shown and its evidence boundary. The presentation uses P01–P19; deeper conceptual diagrams remain embedded in the framework chapters. Use [[Validation_and_Use]] for rendering and review scope.
+
+## Investigation API and UI model addendum
+
+The original presentation figures below retain their 31 October 2026 evidence cutoff. The separately reviewed **5 November 2026** addendum adds six ER diagrams in [[Investigation_Data_Model]] and an approval ER diagram, synchronization sequence and historical-capture flow in [[Investigation_UI_Contract]]. They show proposed logical models with explicit native-versus-derived boundaries. See [[Investigation_API_Sources]] for their source pins and rendering review.
 
 ## P01 — The agent loop
 
