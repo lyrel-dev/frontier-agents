@@ -1,0 +1,227 @@
+{
+  "format": "aws-construct-mapping-rules/1",
+  "status": "REVIEWED_DESIGN_RULES",
+  "scope": "Map constructs described in the pinned AWS solution analyses into the consolidated model. These are application design rules, not claims about complete current AWS SDK coverage or implemented adapters.",
+  "rules": [
+    {
+      "id": "MAP-01",
+      "title": "Count source concepts, aliases and target entities separately",
+      "decision": "Use a declared source population and retain source-service scope. Count a diagram symbol once per source service; collapse naming aliases only when the source establishes that they mean the same concept. Never treat mapping rows, native DTO names or spelling aliases as entity totals.",
+      "requiredEvidence": ["A pinned source file and exact declaration or dictionary entry", "An explicit alias decision and source semantic kind", "An independently extracted denominator and per-population counts"],
+      "example": "The source Task and application Investigation aggregate remain two source constructs even when both contribute to consolidated Investigation. HealthEvent and HEALTH_EVENT can be spelling aliases of one concept.",
+      "failureMode": "Reporting 340 aliases or 174 mapping rows as 340 or 174 represented entities.",
+      "acceptance": "Every declared source symbol resolves to exactly one audited construct; source and target totals are reported as a many-to-many mapping.",
+      "schemaPointers": [],
+      "sourcePaths": ["consolidated-operations-console/MAPPING.md", "consolidated-operations-console/model/adapter-profiles.json"]
+    },
+    {
+      "id": "MAP-02",
+      "title": "Promote a concept to an entity for identity and lifecycle",
+      "decision": "Use a first-class entity when the application needs to identify, authorize, retrieve, relate or retain the concept independently through its lifecycle. A native resource can supply that identity, but a native DTO or a screen section alone does not justify a new root. A scoped child may still be an entity when it has meaningful identity and lifecycle.",
+      "requiredEvidence": ["Stable or explicitly provisional identity with full scope", "A lifecycle and authoritative publisher", "A concrete cross-module use case requiring independent references or reads"],
+      "example": "Experiment, Finding and Execution have substantive identities and lifecycle. An experiment action remains an owned FISAction when its control and interpretation belong to the Experiment.",
+      "failureMode": "Creating one console CRUD entity for every AWS response structure, action parameter or configuration block.",
+      "acceptance": "The proposed entity has one owner/version contract and an explicit use case that cannot be represented clearly as an owned value or retained source profile.",
+      "schemaPointers": ["#/$defs/Experiment", "#/$defs/Finding", "#/$defs/Execution", "#/$defs/FISAction"],
+      "sourcePaths": ["consolidated-operations-console/DESIGN_PRINCIPLES.md", "aws/fis/analysis/report.md"]
+    },
+    {
+      "id": "MAP-03",
+      "title": "Keep versions on the substantive entity",
+      "decision": "Every entity has stable identity plus version, createdAt and updatedAt. An old revision/history class maps to a version of its substantive owner or to exact evidence of that owner. Do not introduce an entity whose only purpose is to hold a version. Provider versions, schema versions and attempt numbers remain separate domain values.",
+      "requiredEvidence": ["A documented logical key independent of content digest", "A source-ID/version migration rule", "Exact references to retained representations"],
+      "example": "ScenarioRevision maps to a PUBLISHED Scenario version. AssetVersion maps to an Asset representation with nativeVersion/source/files. SourceRevision maps to Source identity plus version.",
+      "failureMode": "Reintroducing ScenarioRevision, SourceRevision or separate governance/enrichment version counters.",
+      "acceptance": "All target entities require the common metadata; owned values have no competing entity clock and historical reads never fall back to latest.",
+      "schemaPointers": ["#/$defs/Scenario", "#/$defs/Asset", "#/$defs/Source", "#/$defs/EntityRef"],
+      "sourcePaths": ["consolidated-operations-console/MODEL.md", "consolidated-operations-console/api/PROTOCOL.md"]
+    },
+    {
+      "id": "MAP-04",
+      "title": "Use owned values for details with one lifecycle owner",
+      "decision": "Represent parameters, policy components, action details, files and configuration values inside their owning entity when they have no independent application lifecycle. Their local keys can identify members, but their changes advance the owner's version. A standalone value definition is insufficient unless an owner actually binds it.",
+      "requiredEvidence": ["A reachable typed owner property or a discriminator-enforced binding", "Collection semantics, member keys and relevant cardinality", "Owner-level concurrency and publication rules"],
+      "example": "Asset.files contains AssetFile values and Scenario.definition contains StepDefinition values. A declared EventDescription type with no owner binding does not establish normalized description coverage.",
+      "failureMode": "Pointing a crosswalk to a value name that is absent, unbound, or reachable only through untyped JSON.",
+      "acceptance": "The typed value is reachable from the named owner under the correct discriminator, and the source concept's essential semantics can be expressed there.",
+      "schemaPointers": ["#/$defs/Asset/properties/files", "#/$defs/Scenario/properties/definition", "#/$defs/StepDefinition", "#/$defs/EventDescription"],
+      "sourcePaths": ["consolidated-operations-console/model/schema.json", "aws/fis/analysis/workflow/model.md"]
+    },
+    {
+      "id": "MAP-05",
+      "title": "Preserve full provider identity independently of access",
+      "decision": "Retain provider/service, partition, account, region, parent keys and native identity where applicable. A Connection records the authorized access path; it does not determine native object identity. Friendly names, unqualified IDs and digests cannot establish cross-source identity.",
+      "requiredEvidence": ["A source-specific identity tuple and stability statement", "Verified provider bindings or explicit unresolved identity", "The parent ownership required for reads and mutations"],
+      "example": "Health event context qualifies impacts by event/account context. FIS pod identity includes cluster and namespace. Switching the reader connection does not create a new native object.",
+      "failureMode": "Joining different native objects by name, or duplicating an object for every credential/connection that observes it.",
+      "acceptance": "Identity is scoped and stable where supported; ambiguity remains explicit and no reference itself grants authority.",
+      "schemaPointers": ["#/$defs/SourceIdentity", "#/$defs/OwningScope", "#/$defs/Connection", "#/$defs/ProviderBinding", "#/$defs/ResourceMatch"],
+      "sourcePaths": ["aws/health/analysis/report.md", "aws/fis/analysis/report.md", "consolidated-operations-console/api/PROTOCOL.md"]
+    },
+    {
+      "id": "MAP-06",
+      "title": "Give relationships one owner and explicit provenance",
+      "decision": "Represent membership and association facts as owned values or qualified references unless they need an independent lifecycle. Specify the authoritative writer, parent consistency, direction and observation evidence. Derive inverse indexes instead of introducing a second mutable authority.",
+      "requiredEvidence": ["Owner and member identity", "Parent consistency and inverse-view rules", "Evidence for imported or inferred association claims"],
+      "example": "Service owns System/UserJourney memberships. Execution task memberships are observed relations; one mandatory Investigation parent must not be invented.",
+      "failureMode": "Two editable service lists, fabricated parentage, or an unqualified inferred relationship presented as a provider fact.",
+      "acceptance": "A relationship's owner, key and evidence are explicit, and a historical relationship does not join current parent content silently.",
+      "schemaPointers": ["#/$defs/Service/properties/memberships", "#/$defs/ServiceMembership", "#/$defs/TaskExecutionMembership", "#/$defs/Execution"],
+      "sourcePaths": ["aws/resilience-hub/analysis/report.md", "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md"]
+    },
+    {
+      "id": "MAP-07",
+      "title": "Keep retained content, receipt and interpretation distinct",
+      "decision": "Map native content to Source, its observation occurrence to Observation, and a computed interpretation to Projection. A repeated poll can observe the same Source version. Changed content advances the Source; receipt order is not provider event order.",
+      "requiredEvidence": ["Stable source identity and representation/profile/operation key", "Exact Source reference on each observation", "Provider, transport, observation and local publication time meanings"],
+      "example": "EventRevision and EntityRevision contribute retained Source versions and observations without creating new event or impact identities for every poll. A→B→A content yields successive versions, not a return to version 1.",
+      "failureMode": "Counting repeated receipts as new domain objects, conflating observation time with provider time, or refreshing evidence freshness by recomputing a view.",
+      "acceptance": "Source identity, observation occurrence and interpretation identity are independently explainable and use the same entity-version mechanism.",
+      "schemaPointers": ["#/$defs/Source", "#/$defs/Observation", "#/$defs/Projection"],
+      "sourcePaths": ["consolidated-operations-console/MODEL.md", "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md"]
+    },
+    {
+      "id": "MAP-08",
+      "title": "Retain native DTO breadth without claiming normalization",
+      "decision": "Keep native summaries, detail documents, streams, nested values and deferred administration shapes in registered Source profiles with their unknown fields and provider values. State explicitly when the representation remains raw retention. A profile's observedFields hints do not constitute an enforced normalized model or implemented adapter.",
+      "requiredEvidence": ["Registered profile and complete source identity", "Known field hints plus unknown-field/value retention policy", "Named normalization and mutation deferrals"],
+      "example": "A native FIS template or DevOps Trigger can remain inspectable through Source without becoming a console CRUD root. A retained target selector is not a typed Experiment target-selection collection.",
+      "failureMode": "Calling an arbitrary Source.payload or an existing profile ID complete normalized coverage.",
+      "acceptance": "Retention coverage and typed model coverage have separate statuses; no unsupported product capability is inferred from a retained payload.",
+      "schemaPointers": ["#/$defs/Source/properties/payload", "#/$defs/Source/properties/profile", "#/$defs/FieldPresence"],
+      "sourcePaths": ["consolidated-operations-console/model/adapter-profiles.json", "consolidated-operations-console/CONTEXT_AND_SCOPE.md"]
+    },
+    {
+      "id": "MAP-09",
+      "title": "Use typed projections for conclusions and views",
+      "decision": "Represent a computed result with a declared Projection profile, a typed result shape, exact inputs, rule identity, cutoff and coverage. A UI view, timeline or graph name alone does not prove that a corresponding normalized profile exists. Preserve uncertainty and candidate selection rules.",
+      "requiredEvidence": ["A registered discriminator that binds to a schema", "Exact subject and input references", "Selection/reducer meaning and coverage requirements"],
+      "example": "LIFECYCLE_EXPOSURE, INVESTIGATION_RESULT and EVALUATION are typed profiles. A retained TimelineItem profile must not be counted as a typed Projection profile unless its result contract is actually added.",
+      "failureMode": "Inventing an unavailable profile, presenting an inferred hypothesis as native truth, or dropping the rationale behind a current status.",
+      "acceptance": "The schema/profile combination can encode the source view's essential semantics, and later interpretation creates another representation without rewriting old evidence.",
+      "schemaPointers": ["#/$defs/Projection", "#/$defs/LifecycleExposure", "#/$defs/InvestigationResult", "#/$defs/Evaluation"],
+      "sourcePaths": ["consolidated-operations-console/model/schema.json", "consolidated-operations-console/model/adapter-profiles.json"]
+    },
+    {
+      "id": "MAP-10",
+      "title": "Separate historical captures from ordinary version history",
+      "decision": "Use Snapshot for a deliberate closed historical capture over exact entity representations and evidence. Use ordinary entity history for successive versions of one identity. Structural parent IDs and raw JSON must not become implicit joins to current state.",
+      "requiredEvidence": ["Exact retained members and closure rules", "Capture interval/cutoff and coverage", "Typed contents binding where normalized capture semantics are claimed"],
+      "example": "A topology capture owns GraphContents; a policy-context capture owns PolicyContext. Snapshot.members pins entity versions instead of embedding competing authoritative entity copies.",
+      "failureMode": "Treating Snapshot as a universal untyped replacement for every missing model, or reconstructing an old assessment from today's policy/configuration.",
+      "acceptance": "Historical captures are reproducible from their exact members, and typed capture contents preserve the relevant source semantics.",
+      "schemaPointers": ["#/$defs/Snapshot", "#/$defs/GraphContents", "#/$defs/PolicyContext", "#/$defs/EntityRef"],
+      "sourcePaths": ["consolidated-operations-console/api/PROTOCOL.md", "aws/resilience-hub/analysis/report.md"]
+    },
+    {
+      "id": "MAP-11",
+      "title": "Model collection coverage and per-item failures explicitly",
+      "decision": "Represent bounded queries and reads with Collection and ReadAttempt, retaining empty successes and failures. Qualify pagination, detail, identity and claim coverage independently. A batch's failed item must retain its subject/context; HTTP success or a completed page chain does not prove a complete claim.",
+      "requiredEvidence": ["Fixed query, authorization and parent scope", "Request/response evidence including empty and partial success", "Error subject identity and independent coverage dimensions"],
+      "example": "AWS Health failedSet entries need event/account attribution. A general transport ReadError alone cannot serve as a normalized item-error collection.",
+      "failureMode": "Treating HTTP 200 as complete success or mapping a collection of contextual item failures to one undifferentiated error.",
+      "acceptance": "The model can explain precisely what was requested, what returned, which subjects failed and what claims the evidence supports.",
+      "schemaPointers": ["#/$defs/Collection", "#/$defs/ReadAttempt", "#/$defs/ReadError", "#/$defs/Coverage"],
+      "sourcePaths": ["aws/health/analysis/report.md", "aws/fis/analysis/report.md", "consolidated-operations-console/api/PROTOCOL.md"]
+    },
+    {
+      "id": "MAP-12",
+      "title": "Preserve independent state dimensions and meanings",
+      "decision": "Map provider state, technical execution, acceptance, cleanup, artifact readiness, local disposition and work verification separately. Preserve the original vocabulary and qualification. Similar labels from different AWS products are not interchangeable states or entity kinds.",
+      "requiredEvidence": ["Each state dimension's owner and evidence", "Unknown/unavailable semantics", "A documented mapping for every normalized interpretation"],
+      "example": "The FIS report's local RESILIENCE_ASSESSMENT is an EVALUATION projection, not the native ResilienceAssessment entity. An approved tool action is not proof of resumed execution or success.",
+      "failureMode": "Merging distinct assessments because names match, or interpreting completed execution as successful acceptance or remediation.",
+      "acceptance": "Independent dimensions can disagree without losing information; source and target meanings are explicit in the crosswalk.",
+      "schemaPointers": ["#/$defs/Run", "#/$defs/ServiceStatus", "#/$defs/ResilienceAssessment", "#/$defs/Evaluation", "#/$defs/ApprovalRequest"],
+      "sourcePaths": ["aws/fis/analysis/report.md", "aws/resilience-hub/analysis/report.md", "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md"]
+    },
+    {
+      "id": "MAP-13",
+      "title": "Give local work and mixed authority explicit owners",
+      "decision": "Keep assignment, completion and verification in WorkItem. Keep recommendation estimates/notes and dependency governance in their owning entity as values with narrow write authority. All fields of a given entity still serialize through its one version boundary.",
+      "requiredEvidence": ["Field authority and command owner", "Exact verification evidence", "One expectedVersion guard for each changed entity"],
+      "example": "Recommendation.enrichment has no independent workState or version. Dependency.governance has application authority while observed fields retain collector authority, using the same Dependency version.",
+      "failureMode": "Separate overlay clocks, duplicated task ownership, or local completion changing provider impact/finding state.",
+      "acceptance": "There is one owner for each editable value and no hidden mutation under an unchanged entity version.",
+      "schemaPointers": ["#/$defs/WorkItem", "#/$defs/Recommendation/properties/enrichment", "#/$defs/Dependency/properties/governance"],
+      "sourcePaths": ["consolidated-operations-console/DESIGN_PRINCIPLES.md", "consolidated-operations-console/api/PROTOCOL.md"]
+    },
+    {
+      "id": "MAP-14",
+      "title": "Separate API DTOs and commands from entity reads",
+      "decision": "Map request/response wrappers as transport shapes, not domain entities. Expose deliberate operations with closed writable inputs. Distinguish a local catalog edit from native dispatch; a provider action is only present when an explicit command contract and authority exist.",
+      "requiredEvidence": ["Operation effect, permission and input/output schemas", "Named target entity and expected-version/source preconditions", "Native operation binding or explicit deferral"],
+      "example": "UpdateService edits local catalog metadata; UpdateResilienceServiceConfiguration is an explicit provider command. A native SendMessage event union remains a stream DTO rather than another entity per event variant.",
+      "failureMode": "Generating CRUD from a native response shape or claiming a deferred AWS write exists because its payload is retained.",
+      "acceptance": "Read models and write DTOs are separate and every external effect has a named durable command boundary.",
+      "schemaPointers": ["#/$defs/Command", "#/$defs/Service"],
+      "sourcePaths": ["consolidated-operations-console/api/operations.json", "consolidated-operations-console/api/PROTOCOL.md"]
+    },
+    {
+      "id": "MAP-15",
+      "title": "Treat admission, replay and external outcome as separate facts",
+      "decision": "Map intent to Command and later outcome to authoritative observations and entity versions. Use immutable receipts, intent tokens and current authorization. A retryable console response cannot authorize blindly repeating an uncertain creating provider call.",
+      "requiredEvidence": ["Exact admitted intent and returned version references", "Replay identity and expiry guarantees", "Native effect identity and non-creating reconciliation"],
+      "example": "A decision Command can be accepted before provider approval is definitive. ResumeExecution requires the exact successful decision version and approval context. Cancellation does not establish remote cessation or cleanup.",
+      "failureMode": "Replaying latest results instead of the original receipt, or conflating accepted stop/cancel with completed cleanup.",
+      "acceptance": "The application can distinguish requested, admitted, dispatched, observed, failed and uncertain effects without rewriting prior records.",
+      "schemaPointers": ["#/$defs/Command", "#/$defs/ExternalOperationRef", "#/$defs/CancellationIntent"],
+      "sourcePaths": ["consolidated-operations-console/api/PROTOCOL.md", "aws/fis/analysis/workflow/model.md"]
+    },
+    {
+      "id": "MAP-16",
+      "title": "Preserve metric and evaluation meaning in typed contracts",
+      "decision": "When a metric, criterion or evaluation is normalized, retain query identity, dimensions, units, aggregation/window rules, missing-data semantics, threshold/evaluator identity and denominator. A generic binding or arbitrary inputs map is insufficient proof that those contracts exist.",
+      "requiredEvidence": ["Typed metric/query and criterion definitions or an explicitly pinned operation schema", "Exact evidence and evaluation cutoff", "Fixed required-criterion denominator and units/absence policy"],
+      "example": "The admitted workflow criteria must not shrink when a step is skipped. A named MetricBinding crosswalk requires a real typed value/profile binding before it can be counted as normalized.",
+      "failureMode": "Treating a missing sample as zero, a JSON inputs bag as a metric model, or skipped checks as a higher pass rate.",
+      "acceptance": "A retained evaluation can be interpreted from its exact definition, evidence, denominator and evaluator contract; unknown inputs remain unknown.",
+      "schemaPointers": ["#/$defs/StepDefinition", "#/$defs/CheckResult", "#/$defs/Admission", "#/$defs/Evaluation"],
+      "sourcePaths": ["aws/fis/analysis/report.md", "aws/fis/analysis/workflow/model.md"]
+    },
+    {
+      "id": "MAP-17",
+      "title": "Keep presence, future provider values and units lossless",
+      "decision": "Preserve unknown native fields/enums and distinguish omitted, null, empty, zero, unavailable and not requested. State units and time precision explicitly. Writable normalized inputs remain closed and strict; read tolerance must not manufacture success.",
+      "requiredEvidence": ["Source field-presence and raw-payload retention", "Units, time and normalization rules", "Output-tolerance and input-validation boundaries"],
+      "example": "An omitted Health aggregate account breakdown is not zero affected accounts. Unknown FIS runtime state is retained instead of mapped to success. Native timestamp precision remains in source evidence if normalized precision differs.",
+      "failureMode": "Defaulting unfamiliar provider values to healthy/completed, or deleting richer detail because a later summary omits it.",
+      "acceptance": "A consumer can distinguish unavailable or unrequested information from a known value and inspect the original source when normalization is incomplete.",
+      "schemaPointers": ["#/$defs/FieldPresence", "#/$defs/Source", "#/$defs/Timestamp", "#/$defs/StateDimension"],
+      "sourcePaths": ["consolidated-operations-console/api/PROTOCOL.md", "aws/health/analysis/report.md"]
+    },
+    {
+      "id": "MAP-18",
+      "title": "Keep external identity and administration at their real boundary",
+      "decision": "Reference accounts, organizations, credentials, external resources and integration configuration without inventing duplicate ownership. Retain administrative breadth through named profiles until a concrete use case requires normalized management. Historical configuration is evidence, never a surviving permission grant.",
+      "requiredEvidence": ["Actual external owner and identity scope", "Current access checks independent of retained versions", "Explicit managed-versus-referenced responsibility"],
+      "example": "Workspace is the application scope; AgentSpace is a native DevOps object. Account and organization references do not become new console tenancy entities, and a captured credential reference cannot restore revoked access.",
+      "failureMode": "Conflating provider account/AgentSpace with application tenancy or treating stored configuration as authorization.",
+      "acceptance": "The console owns only its stated domain and preserves the external identifiers and current authorization boundaries needed for its use cases.",
+      "schemaPointers": ["#/$defs/Workspace", "#/$defs/AgentSpace", "#/$defs/Connection", "#/$defs/OrganizationMembership", "#/$defs/OrganizationAccess"],
+      "sourcePaths": ["consolidated-operations-console/CONTEXT_AND_SCOPE.md", "consolidated-operations-console/api/PROTOCOL.md"]
+    },
+    {
+      "id": "MAP-19",
+      "title": "Require a concrete proof for each coverage claim",
+      "decision": "Record source evidence, semantic kind, owner, exact schema paths, profile bindings and preserved invariants per construct. Distinguish NORMALIZED, RETAINED_ONLY, PARTIAL and UNMAPPED. A pointer's existence is structural evidence; semantic completeness still needs source-to-target review.",
+      "requiredEvidence": ["Source declaration and prior use", "Resolvable target schema pointers and registered profile IDs", "Essential semantic checks and any limitations"],
+      "example": "A GraphEdge type proves typed endpoints and relationKind; it does not by itself prove preservation of every native edge relation/property grouping. A named but unbound EventDescription is not complete normalized coverage.",
+      "failureMode": "A green alias-existence check being reported as complete model or adapter coverage.",
+      "acceptance": "Every status is inspectable, denominators are reproducible, gaps have clear remedies, and runtime conformance is reported separately.",
+      "schemaPointers": ["#/$defs/GraphEdge", "#/$defs/EventDescription"],
+      "sourcePaths": ["consolidated-operations-console/tools/validate.py", "consolidated-operations-console/model/adapter-profiles.json"]
+    },
+    {
+      "id": "MAP-20",
+      "title": "Close gaps with the smallest coherent extension",
+      "decision": "First bind an existing typed value correctly, then add a narrow owned value/profile if the use case requires it. Introduce a new entity only if identity, lifecycle and authority justify it under MAP-02. Keep consciously retained-only capabilities explicit and avoid generic mutable extension bags.",
+      "requiredEvidence": ["The user-facing use case affected by the gap", "The smallest typed owner/profile change and migration impact", "Validation examples and a deliberate API decision where writes are involved"],
+      "example": "A missing Experiment selector collection or contextual batch-error collection usually calls for typed owned values, not ExperimentSelectorVersion or CollectionItemErrorVersion entities. Deferred native administration can stay retained-only.",
+      "failureMode": "Repairing coverage by adding a class for every source name, or claiming completeness by placing everything in generic JSON.",
+      "acceptance": "The correction restores required meaning while preserving a simple owner/version contract and explicit scope; entity count increases only when justified.",
+      "schemaPointers": ["#/$defs/Experiment", "#/$defs/ReadAttempt", "#/$defs/Source"],
+      "sourcePaths": ["consolidated-operations-console/DESIGN_PRINCIPLES.md", "consolidated-operations-console/CONSOLIDATION_PLAN.md"]
+    }
+  ]
+}

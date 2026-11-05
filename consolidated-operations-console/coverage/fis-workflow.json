@@ -1,0 +1,3360 @@
+{
+  "format": "consolidated-coverage-source-audit/1",
+  "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+  "targetCommit": "20650d3cf051ad457378704c15f48f77565a611c",
+  "scope": {
+    "sourceServices": [
+      "fis",
+      "workflow"
+    ],
+    "definition": "Independent audit of all 34 FIS and 11 workflow class/ER symbols, plus explicitly named source dictionary, structured-schema and control constructs. Aliases do not increase construct counts. Runtime implementation is outside this data-model coverage check.",
+    "sourceEntityDeclarationRule": "FIS ER nodes are original logical record declarations, regardless of AWS/application ownership. Workflow explicitly declares six entities; its owned-value diagram does not promote the other types to domain entities.",
+    "excluded": [
+      "Sequence/state-diagram actors and states",
+      "Primitive schema helpers Key/PropertyName",
+      "StepMap collection wrapper, which is not a separate domain construct",
+      "Every individual native field or derived presentation metric",
+      "Native SDK types mentioned only as bibliography links"
+    ],
+    "normalizationRule": "A meaningful typed counterpart suffices when remaining native details are deliberately retained through exact Source evidence. Raw retention alone is not normalized coverage. PARTIAL identifies a missing promised identity/relation/lifecycle/value contract, not merely an unindexed optional native field."
+  },
+  "constructs": [
+    {
+      "id": "fis:ExperimentTemplate",
+      "sourceService": "fis",
+      "sourceName": "ExperimentTemplate",
+      "aliases": [
+        "EXPERIMENT_TEMPLATE"
+      ],
+      "sourceSemanticKind": "NATIVE_RESOURCE",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a logical record/node in the original FIS ER model; this does not assert an independent AWS CRUD root.",
+      "sourceCountBasis": "DIAGRAM",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/diagrams/01_execution.mmd",
+          "symbol": "EXPERIMENT_TEMPLATE",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/diagrams/02_catalog_templates.mmd",
+          "symbol": "EXPERIMENT_TEMPLATE",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/report.md",
+          "heading": "3. Definitions, catalog metadata, and templates",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Reusable native fault experiment definition, with named actions, selectors, role/configuration and account setup. Historical execution reads its captured runtime configuration rather than the latest template.",
+      "identity": "Owning AWS scope plus template ARN or template ID. No native template-revision ID is assumed.",
+      "mappingAliases": [
+        "EXPERIMENT_TEMPLATE",
+        "ExperimentTemplate"
+      ],
+      "registryDispositions": [
+        "retainedAdapterDto"
+      ],
+      "registryCanonicalEntities": [
+        "Source"
+      ],
+      "canonicalEntities": [
+        "Source"
+      ],
+      "schemaPointers": [
+        "#/$defs/Source/properties/identity",
+        "#/$defs/Source/properties/profile",
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.fis.template/v1"
+      ],
+      "coverageLevel": "RETAINED_ONLY",
+      "coverageReason": "The registered template Source preserves the native configuration and exact version. The model deliberately has no normalized template entity or template-management operation.",
+      "gaps": []
+    },
+    {
+      "id": "fis:CatalogAction",
+      "sourceService": "fis",
+      "sourceName": "CatalogAction",
+      "aliases": [
+        "CATALOG_ACTION",
+        "Action"
+      ],
+      "sourceSemanticKind": "NATIVE_RESOURCE",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a logical record/node in the original FIS ER model; this does not assert an independent AWS CRUD root.",
+      "sourceCountBasis": "DIAGRAM",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/diagrams/01_execution.mmd",
+          "symbol": "CATALOG_ACTION",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/diagrams/02_catalog_templates.mmd",
+          "symbol": "CATALOG_ACTION",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/report.md",
+          "heading": "3. Definitions, catalog metadata, and templates",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "A catalog capability such as aws:ec2:stop-instances, describing supported inputs and target slots; distinct from every named use of that capability.",
+      "identity": "Native catalog ID/ARN within retrieval scope.",
+      "mappingAliases": [
+        "CATALOG_ACTION",
+        "Action"
+      ],
+      "registryDispositions": [
+        "retainedAdapterDto"
+      ],
+      "registryCanonicalEntities": [
+        "Source"
+      ],
+      "canonicalEntities": [
+        "Source"
+      ],
+      "schemaPointers": [
+        "#/$defs/Source/properties/identity",
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.fis.action-catalog/v1"
+      ],
+      "coverageLevel": "RETAINED_ONLY",
+      "coverageReason": "Catalog identity, descriptions and metadata are retained under the action-catalog profile. No normalized catalog-action type is bound into the canonical model.",
+      "gaps": []
+    },
+    {
+      "id": "fis:ActionParameterDefinition",
+      "sourceService": "fis",
+      "sourceName": "ActionParameterDefinition",
+      "aliases": [
+        "ACTION_PARAMETER_DEFINITION",
+        "ActionParameter"
+      ],
+      "sourceSemanticKind": "OWNED_VALUE",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a logical record/node in the original FIS ER model; this does not assert an independent AWS CRUD root.",
+      "sourceCountBasis": "DIAGRAM",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/diagrams/02_catalog_templates.mmd",
+          "symbol": "ACTION_PARAMETER_DEFINITION",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/report.md",
+          "heading": "3. Definitions, catalog metadata, and templates",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Parameter name plus returned description/requiredness under a catalog action. The old model explicitly refused to invent units, ranges or validation rules not supplied by a separate adapter.",
+      "identity": "Catalog action identity plus parameter-map key.",
+      "mappingAliases": [
+        "ACTION_PARAMETER_DEFINITION"
+      ],
+      "registryDispositions": [
+        "ownedValue"
+      ],
+      "registryCanonicalEntities": [
+        "Source"
+      ],
+      "canonicalEntities": [
+        "Source"
+      ],
+      "schemaPointers": [
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.fis.action-catalog/v1"
+      ],
+      "coverageLevel": "RETAINED_ONLY",
+      "coverageReason": "The descriptor remains inside the raw catalog Source payload; there is no FisParameterDefinition value in model/schema.json despite the ownedValue label.",
+      "gaps": []
+    },
+    {
+      "id": "fis:ActionTargetSlot",
+      "sourceService": "fis",
+      "sourceName": "ActionTargetSlot",
+      "aliases": [
+        "ACTION_TARGET_SLOT",
+        "ActionTarget"
+      ],
+      "sourceSemanticKind": "OWNED_VALUE",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a logical record/node in the original FIS ER model; this does not assert an independent AWS CRUD root.",
+      "sourceCountBasis": "DIAGRAM",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/diagrams/02_catalog_templates.mmd",
+          "symbol": "ACTION_TARGET_SLOT",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/report.md",
+          "heading": "3. Definitions, catalog metadata, and templates",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Catalog action slot name and accepted native resource type, used when interpreting template and runtime bindings.",
+      "identity": "Catalog action plus target-slot map key.",
+      "mappingAliases": [
+        "ACTION_TARGET_SLOT"
+      ],
+      "registryDispositions": [
+        "ownedValue"
+      ],
+      "registryCanonicalEntities": [
+        "Source"
+      ],
+      "canonicalEntities": [
+        "Source"
+      ],
+      "schemaPointers": [
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.fis.action-catalog/v1"
+      ],
+      "coverageLevel": "RETAINED_ONLY",
+      "coverageReason": "The slot descriptor is retained in the action-catalog profile; runtime slot bindings are typed separately on FISAction.",
+      "gaps": []
+    },
+    {
+      "id": "fis:ResourceType",
+      "sourceService": "fis",
+      "sourceName": "ResourceType",
+      "aliases": [
+        "RESOURCE_TYPE",
+        "TargetResourceType"
+      ],
+      "sourceSemanticKind": "NATIVE_RESOURCE",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a logical record/node in the original FIS ER model; this does not assert an independent AWS CRUD root.",
+      "sourceCountBasis": "DIAGRAM",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/diagrams/02_catalog_templates.mmd",
+          "symbol": "RESOURCE_TYPE",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/report.md",
+          "heading": "3. Definitions, catalog metadata, and templates",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Read-only native target resource-type catalog entry, with its description and parameter metadata.",
+      "identity": "Native resourceType string within observed scope.",
+      "mappingAliases": [
+        "RESOURCE_TYPE",
+        "TargetResourceType"
+      ],
+      "registryDispositions": [
+        "retainedAdapterDto"
+      ],
+      "registryCanonicalEntities": [
+        "Source"
+      ],
+      "canonicalEntities": [
+        "Source"
+      ],
+      "schemaPointers": [
+        "#/$defs/Source/properties/identity",
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.fis.resource-type/v1"
+      ],
+      "coverageLevel": "RETAINED_ONLY",
+      "coverageReason": "The resource-type profile preserves the native catalog entry. A Resource instance is a different concept, so this is correctly not promoted to a Resource entity.",
+      "gaps": []
+    },
+    {
+      "id": "fis:TemplateAction",
+      "sourceService": "fis",
+      "sourceName": "TemplateAction",
+      "aliases": [
+        "TEMPLATE_ACTION",
+        "ExperimentTemplateAction"
+      ],
+      "sourceSemanticKind": "OWNED_VALUE",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a logical record/node in the original FIS ER model; this does not assert an independent AWS CRUD root.",
+      "sourceCountBasis": "DIAGRAM",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/diagrams/02_catalog_templates.mmd",
+          "symbol": "TEMPLATE_ACTION",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/report.md",
+          "heading": "3. Definitions, catalog metadata, and templates",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Named configured action under one template, retaining capability ID, parameters, description, predecessors and target bindings.",
+      "identity": "Template identity plus action-map key; two names can invoke the same catalog action.",
+      "mappingAliases": [
+        "TEMPLATE_ACTION"
+      ],
+      "registryDispositions": [
+        "ownedValue"
+      ],
+      "registryCanonicalEntities": [
+        "Source"
+      ],
+      "canonicalEntities": [
+        "Source"
+      ],
+      "schemaPointers": [
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.fis.template/v1"
+      ],
+      "coverageLevel": "RETAINED_ONLY",
+      "coverageReason": "Template children are preserved in aws.fis.template/v1. FISAction is a runtime child and is not a typed template-action counterpart.",
+      "gaps": []
+    },
+    {
+      "id": "fis:TemplateTarget",
+      "sourceService": "fis",
+      "sourceName": "TemplateTarget",
+      "aliases": [
+        "TEMPLATE_TARGET"
+      ],
+      "sourceSemanticKind": "OWNED_VALUE",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a logical record/node in the original FIS ER model; this does not assert an independent AWS CRUD root.",
+      "sourceCountBasis": "DIAGRAM",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/diagrams/02_catalog_templates.mmd",
+          "symbol": "TEMPLATE_TARGET",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/report.md",
+          "heading": "3. Definitions, catalog metadata, and templates",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Named template selector with supplied selection mode, resource type, identifiers/tags/filters and parameters.",
+      "identity": "Template identity plus selector-map key.",
+      "mappingAliases": [
+        "TEMPLATE_TARGET"
+      ],
+      "registryDispositions": [
+        "ownedValue"
+      ],
+      "registryCanonicalEntities": [
+        "Source"
+      ],
+      "canonicalEntities": [
+        "Source"
+      ],
+      "schemaPointers": [
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.fis.template/v1"
+      ],
+      "coverageLevel": "RETAINED_ONLY",
+      "coverageReason": "The selector is retained in the template payload. No normalized template-target collection is declared.",
+      "gaps": []
+    },
+    {
+      "id": "fis:TemplateBinding",
+      "sourceService": "fis",
+      "sourceName": "TemplateBinding",
+      "aliases": [
+        "TEMPLATE_BINDING"
+      ],
+      "sourceSemanticKind": "RELATIONSHIP",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a logical record/node in the original FIS ER model; this does not assert an independent AWS CRUD root.",
+      "sourceCountBasis": "DIAGRAM",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/diagrams/02_catalog_templates.mmd",
+          "symbol": "TEMPLATE_BINDING",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/report.md",
+          "heading": "3. Definitions, catalog metadata, and templates",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Association from a named template action slot to a selector in that same template.",
+      "identity": "Template identity, action name and slot name.",
+      "mappingAliases": [
+        "TEMPLATE_BINDING"
+      ],
+      "registryDispositions": [
+        "ownedValue"
+      ],
+      "registryCanonicalEntities": [
+        "Source"
+      ],
+      "canonicalEntities": [
+        "Source"
+      ],
+      "schemaPointers": [
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.fis.template/v1"
+      ],
+      "coverageLevel": "RETAINED_ONLY",
+      "coverageReason": "The native template targets map preserves the association. No typed normalized template binding is bound outside the retained payload.",
+      "gaps": []
+    },
+    {
+      "id": "fis:TemplateDependency",
+      "sourceService": "fis",
+      "sourceName": "TemplateDependency",
+      "aliases": [
+        "TEMPLATE_DEPENDENCY"
+      ],
+      "sourceSemanticKind": "RELATIONSHIP",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a logical record/node in the original FIS ER model; this does not assert an independent AWS CRUD root.",
+      "sourceCountBasis": "DIAGRAM",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/diagrams/02_catalog_templates.mmd",
+          "symbol": "TEMPLATE_DEPENDENCY",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/report.md",
+          "heading": "3. Definitions, catalog metadata, and templates",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Predecessor/successor relationship among named actions in one template, separate from the application workflow DAG.",
+      "identity": "Template identity and the two action names.",
+      "mappingAliases": [
+        "TEMPLATE_DEPENDENCY"
+      ],
+      "registryDispositions": [
+        "ownedValue"
+      ],
+      "registryCanonicalEntities": [
+        "Source"
+      ],
+      "canonicalEntities": [
+        "Source"
+      ],
+      "schemaPointers": [
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.fis.template/v1"
+      ],
+      "coverageLevel": "RETAINED_ONLY",
+      "coverageReason": "The native startAfter array is retained under the template profile. The console StepDefinition.needs field belongs to a different DAG and cannot count as this mapping.",
+      "gaps": []
+    },
+    {
+      "id": "fis:TemplateTargetAccount",
+      "sourceService": "fis",
+      "sourceName": "TemplateTargetAccount",
+      "aliases": [
+        "TEMPLATE_TARGET_ACCOUNT",
+        "TargetAccountConfiguration"
+      ],
+      "sourceSemanticKind": "NATIVE_RESOURCE",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a logical record/node in the original FIS ER model; this does not assert an independent AWS CRUD root.",
+      "sourceCountBasis": "DIAGRAM",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/diagrams/02_catalog_templates.mmd",
+          "symbol": "TEMPLATE_TARGET_ACCOUNT",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/report.md",
+          "heading": "3. Definitions, catalog metadata, and templates",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Template-scoped native account configuration with account ID, role ARN and description. Native APIs address and mutate it separately within its template.",
+      "identity": "Template identity plus account ID; native child resource, not a global account directory.",
+      "mappingAliases": [
+        "TEMPLATE_TARGET_ACCOUNT"
+      ],
+      "registryDispositions": [
+        "ownedValue"
+      ],
+      "registryCanonicalEntities": [
+        "Source"
+      ],
+      "canonicalEntities": [
+        "Source"
+      ],
+      "schemaPointers": [
+        "#/$defs/Source/properties/identity",
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.fis.target-account/v1"
+      ],
+      "coverageLevel": "RETAINED_ONLY",
+      "coverageReason": "The target-account profile retains the complete scoped native child. There is no typed template-account owned value in the canonical schema and its administration is deferred.",
+      "gaps": []
+    },
+    {
+      "id": "fis:ExperimentRun",
+      "sourceService": "fis",
+      "sourceName": "ExperimentRun",
+      "aliases": [
+        "EXPERIMENT_RUN",
+        "Experiment"
+      ],
+      "sourceSemanticKind": "NATIVE_RESOURCE",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a logical record/node in the original FIS ER model; this does not assert an independent AWS CRUD root.",
+      "sourceCountBasis": "DIAGRAM",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/diagrams/01_execution.mmd",
+          "symbol": "EXPERIMENT_RUN",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/diagrams/03_targeting.mmd",
+          "symbol": "EXPERIMENT_RUN",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/diagrams/04_evidence_reports.mmd",
+          "symbol": "EXPERIMENT_RUN",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/diagrams/05_assessments.mmd",
+          "symbol": "EXPERIMENT_RUN",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/report.md",
+          "heading": "2. Core execution model",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "One actual AWS FIS experiment with native identity, runtime action graph, selected scope, execution state and independently observed report/evidence readiness.",
+      "identity": "Experiment ARN, or partition/orchestrator account/Region/native experiment ID.",
+      "mappingAliases": [
+        "EXPERIMENT_RUN",
+        "Experiment"
+      ],
+      "registryDispositions": [
+        "canonicalEntity"
+      ],
+      "registryCanonicalEntities": [
+        "Experiment"
+      ],
+      "canonicalEntities": [
+        "Experiment",
+        "Source",
+        "Observation"
+      ],
+      "schemaPointers": [
+        "#/$defs/Experiment",
+        "#/$defs/Experiment/properties/identity",
+        "#/$defs/Experiment/properties/selectedObservation"
+      ],
+      "profileIds": [
+        "aws.fis.experiment/v1"
+      ],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "Experiment is a first-class versioned entity with scoped native identity, selected Observation, owned FISAction values, memberships, resolution coverage and report state. Native configuration fields not indexed locally remain pinned through its Source evidence.",
+      "gaps": [],
+      "retainedNativeDetails": [
+        "Native creation/start/end times, role, tags, options, full selectors and error/configuration details remain in the selected native Source."
+      ]
+    },
+    {
+      "id": "fis:ActionExecution",
+      "sourceService": "fis",
+      "sourceName": "ActionExecution",
+      "aliases": [
+        "ACTION_EXECUTION",
+        "ExperimentAction"
+      ],
+      "sourceSemanticKind": "OWNED_VALUE",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a logical record/node in the original FIS ER model; this does not assert an independent AWS CRUD root.",
+      "sourceCountBasis": "DIAGRAM",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/diagrams/01_execution.mmd",
+          "symbol": "ACTION_EXECUTION",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/diagrams/03_targeting.mmd",
+          "symbol": "ACTION_EXECUTION",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/diagrams/04_evidence_reports.mmd",
+          "symbol": "ACTION_EXECUTION",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/report.md",
+          "heading": "4. ExperimentRun and ActionExecution field inventory",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "One named runtime action in an experiment, with actual state, predecessor names and slot bindings. It has no independent stop/retry API.",
+      "identity": "Experiment identity plus action-map key, never catalog actionId alone.",
+      "mappingAliases": [
+        "ACTION_EXECUTION"
+      ],
+      "registryDispositions": [
+        "ownedValue"
+      ],
+      "registryCanonicalEntities": [
+        "Experiment"
+      ],
+      "canonicalEntities": [
+        "Experiment"
+      ],
+      "schemaPointers": [
+        "#/$defs/Experiment/properties/actions",
+        "#/$defs/FISAction"
+      ],
+      "profileIds": [
+        "aws.fis.experiment/v1"
+      ],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "Experiment.actions binds FISAction, which preserves owner-local actionName, actionId, state, same-experiment predecessor names, slot bindings and exact observed provenance. Runtime fields that are not local indexes remain in the pinned native payload.",
+      "gaps": [],
+      "retainedNativeDetails": [
+        "Description, raw parameters, state reason and provider start/end times are retained native detail, not explicit FISAction properties."
+      ]
+    },
+    {
+      "id": "fis:ActionDependency",
+      "sourceService": "fis",
+      "sourceName": "ActionDependency",
+      "aliases": [
+        "ACTION_DEPENDENCY"
+      ],
+      "sourceSemanticKind": "RELATIONSHIP",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a logical record/node in the original FIS ER model; this does not assert an independent AWS CRUD root.",
+      "sourceCountBasis": "DIAGRAM",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/diagrams/01_execution.mmd",
+          "symbol": "ACTION_DEPENDENCY",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/report.md",
+          "heading": "2. Core execution model",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Directed predecessor/successor edges between actions in the same experiment; never a workflow StepRun relation.",
+      "identity": "Experiment identity and predecessor/successor action names.",
+      "mappingAliases": [
+        "ACTION_DEPENDENCY"
+      ],
+      "registryDispositions": [
+        "ownedValue"
+      ],
+      "registryCanonicalEntities": [
+        "Experiment"
+      ],
+      "canonicalEntities": [
+        "Experiment"
+      ],
+      "schemaPointers": [
+        "#/$defs/Experiment/properties/actions",
+        "#/$defs/FISAction/properties/actionName",
+        "#/$defs/FISAction/properties/startAfter"
+      ],
+      "profileIds": [],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "FISAction.startAfter is a typed owner-local predecessor-name list under Experiment.actions. It preserves the relation without an extra relationship entity or version.",
+      "gaps": []
+    },
+    {
+      "id": "fis:TargetSelection",
+      "sourceService": "fis",
+      "sourceName": "TargetSelection",
+      "aliases": [
+        "TARGET_SELECTION",
+        "ExperimentTarget"
+      ],
+      "sourceSemanticKind": "OWNED_VALUE",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a logical record/node in the original FIS ER model; this does not assert an independent AWS CRUD root.",
+      "sourceCountBasis": "DIAGRAM",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/diagrams/03_targeting.mmd",
+          "symbol": "TARGET_SELECTION",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/report.md",
+          "heading": "5. Target selectors, resolved memberships, and accounts",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Named runtime selector retaining intended selection, resource type and original selector criteria, including a selector that resolves to no resources.",
+      "identity": "Experiment identity plus targetName.",
+      "mappingAliases": [
+        "TARGET_SELECTION"
+      ],
+      "registryDispositions": [
+        "ownedValue"
+      ],
+      "registryCanonicalEntities": [
+        "Experiment"
+      ],
+      "canonicalEntities": [
+        "Source",
+        "Experiment"
+      ],
+      "schemaPointers": [
+        "#/$defs/Experiment/properties/selectedObservation",
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.fis.experiment/v1"
+      ],
+      "coverageLevel": "RETAINED_ONLY",
+      "coverageReason": "Experiment has no typed selector collection. The full targets map remains in the exact native experiment Source. Membership rows cannot substitute for an empty or unresolved selector definition.",
+      "gaps": [
+        "The registry labels this ownedValue→Experiment without identifying an actual typed ExperimentTargetSelector path; normalization is retained-only."
+      ]
+    },
+    {
+      "id": "fis:ActionTargetBinding",
+      "sourceService": "fis",
+      "sourceName": "ActionTargetBinding",
+      "aliases": [
+        "ACTION_TARGET_BINDING"
+      ],
+      "sourceSemanticKind": "RELATIONSHIP",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a logical record/node in the original FIS ER model; this does not assert an independent AWS CRUD root.",
+      "sourceCountBasis": "DIAGRAM",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/diagrams/03_targeting.mmd",
+          "symbol": "ACTION_TARGET_BINDING",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/report.md",
+          "heading": "5. Target selectors, resolved memberships, and accounts",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Action-slot to named runtime selector relationship; the slot name is distinct from both targetName and resource identity.",
+      "identity": "Experiment identity, actionName and slotName.",
+      "mappingAliases": [
+        "ACTION_TARGET_BINDING"
+      ],
+      "registryDispositions": [
+        "ownedValue"
+      ],
+      "registryCanonicalEntities": [
+        "Experiment"
+      ],
+      "canonicalEntities": [
+        "Experiment"
+      ],
+      "schemaPointers": [
+        "#/$defs/FISAction/properties/targetBindings",
+        "#/$defs/FISAction/properties/actionName",
+        "#/$defs/Experiment/properties/actions"
+      ],
+      "profileIds": [],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "FISAction.targetBindings is a typed string map whose keys are slots and whose values are native selector names. The selector payload itself is retained separately and must not be reconstructed from current inventory.",
+      "gaps": []
+    },
+    {
+      "id": "fis:ExperimentTargetAccount",
+      "sourceService": "fis",
+      "sourceName": "ExperimentTargetAccount",
+      "aliases": [
+        "EXPERIMENT_TARGET_ACCOUNT",
+        "ExperimentTargetAccountConfiguration"
+      ],
+      "sourceSemanticKind": "OWNED_VALUE",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a logical record/node in the original FIS ER model; this does not assert an independent AWS CRUD root.",
+      "sourceCountBasis": "DIAGRAM",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/diagrams/03_targeting.mmd",
+          "symbol": "EXPERIMENT_TARGET_ACCOUNT",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/report.md",
+          "heading": "5. Target selectors, resolved memberships, and accounts",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Run-scoped snapshot of configured account ID, role and description; configuration count does not prove selected resources or per-account fault success.",
+      "identity": "Experiment identity plus account ID.",
+      "mappingAliases": [
+        "EXPERIMENT_TARGET_ACCOUNT"
+      ],
+      "registryDispositions": [
+        "ownedValue"
+      ],
+      "registryCanonicalEntities": [
+        "Experiment",
+        "Source"
+      ],
+      "canonicalEntities": [
+        "Source"
+      ],
+      "schemaPointers": [
+        "#/$defs/Source/properties/identity",
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.fis.target-account/v1"
+      ],
+      "coverageLevel": "RETAINED_ONLY",
+      "coverageReason": "aws.fis.target-account/v1 retains this native record under its experiment/account identity. Experiment has no targetAccounts property or typed ExperimentTargetAccount value.",
+      "gaps": [
+        "The ownedValue registry label is stronger than the current typed model: account records are retained Sources only."
+      ]
+    },
+    {
+      "id": "fis:ResolvedTargetMembership",
+      "sourceService": "fis",
+      "sourceName": "ResolvedTargetMembership",
+      "aliases": [
+        "RESOLVED_TARGET_MEMBERSHIP",
+        "ResolvedTarget"
+      ],
+      "sourceSemanticKind": "RELATIONSHIP",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a logical record/node in the original FIS ER model; this does not assert an independent AWS CRUD root.",
+      "sourceCountBasis": "DIAGRAM",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/diagrams/03_targeting.mmd",
+          "symbol": "RESOLVED_TARGET_MEMBERSHIP",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/report.md",
+          "heading": "5. Target selectors, resolved memberships, and accounts",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Every experiment/selector membership of a resolved object, retaining full targetInformation even when no stable Resource identity can be established.",
+      "identity": "Owner-local membership/ingestion key with source provenance; preserve duplicate selector membership independently of deduplicated resources.",
+      "mappingAliases": [
+        "RESOLVED_TARGET_MEMBERSHIP"
+      ],
+      "registryDispositions": [
+        "ownedValue"
+      ],
+      "registryCanonicalEntities": [
+        "Experiment",
+        "Source"
+      ],
+      "canonicalEntities": [
+        "Experiment",
+        "Resource",
+        "Observation",
+        "Source"
+      ],
+      "schemaPointers": [
+        "#/$defs/Experiment/properties/targetMemberships",
+        "#/$defs/TargetMembership",
+        "#/$defs/FISAction/properties/targetBindings"
+      ],
+      "profileIds": [
+        "aws.fis.experiment/v1",
+        "console.fis.target-resolution/v1"
+      ],
+      "coverageLevel": "PARTIAL",
+      "coverageReason": "Experiment.targetMemberships binds a typed TargetMembership with optional source/resource identity and exact Observation, but the selector relationship is not separately typed. Its only selectionKey is opaque, and the fixture combines selector and resource into workers:instance-1.",
+      "gaps": [
+        "No targetName/selectorKey property binds a membership to the selector named by FISAction.targetBindings; consumers must inspect raw source or guess a selectionKey encoding.",
+        "The model must preserve unresolved and repeated memberships without treating targetInformation as a globally unique Resource."
+      ]
+    },
+    {
+      "id": "fis:ResourceIdentity",
+      "sourceService": "fis",
+      "sourceName": "ResourceIdentity",
+      "aliases": [
+        "RESOURCE_IDENTITY"
+      ],
+      "sourceSemanticKind": "EXTERNAL_IDENTITY",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a logical record/node in the original FIS ER model; this does not assert an independent AWS CRUD root.",
+      "sourceCountBasis": "DIAGRAM",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/diagrams/03_targeting.mmd",
+          "symbol": "RESOURCE_IDENTITY",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/report.md",
+          "heading": "5. Target selectors, resolved memberships, and accounts",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Optional normalized identity for an actually selected resource, separate from the membership and any claim that a fault succeeded.",
+      "identity": "Qualified provider/type/account/Region/native key; richer parent scope for types such as pod identity.",
+      "mappingAliases": [
+        "RESOURCE_IDENTITY"
+      ],
+      "registryDispositions": [
+        "ownedValue"
+      ],
+      "registryCanonicalEntities": [
+        "Resource",
+        "Experiment"
+      ],
+      "canonicalEntities": [
+        "Resource",
+        "Experiment"
+      ],
+      "schemaPointers": [
+        "#/$defs/Resource/properties/identity",
+        "#/$defs/SourceIdentity",
+        "#/$defs/TargetMembership/properties/sourceIdentity",
+        "#/$defs/TargetMembership/properties/resourceId"
+      ],
+      "profileIds": [],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "Resource and SourceIdentity preserve qualified/provisional identity; TargetMembership separately carries optional resourceId, identityCompleteness and source identity. No name-only join is required.",
+      "gaps": []
+    },
+    {
+      "id": "fis:TargetResolutionObservation",
+      "sourceService": "fis",
+      "sourceName": "TargetResolutionObservation",
+      "aliases": [
+        "TARGET_RESOLUTION_OBSERVATION"
+      ],
+      "sourceSemanticKind": "APPLICATION_ENTITY",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a logical record/node in the original FIS ER model; this does not assert an independent AWS CRUD root.",
+      "sourceCountBasis": "DIAGRAM",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/diagrams/03_targeting.mmd",
+          "symbol": "TARGET_RESOLUTION_OBSERVATION",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/report.md",
+          "heading": "5. Target selectors, resolved memberships, and accounts",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Evidence that resolution ended, together with the exact selector/query, pages read, time interval and collection completeness; an empty page alone cannot prove an empty scope.",
+      "identity": "Bounded experiment/selector collection and its exact observations.",
+      "mappingAliases": [
+        "TARGET_RESOLUTION_OBSERVATION"
+      ],
+      "registryDispositions": [
+        "ownedValue"
+      ],
+      "registryCanonicalEntities": [
+        "Collection",
+        "Experiment",
+        "Source",
+        "Observation"
+      ],
+      "canonicalEntities": [
+        "Experiment",
+        "Collection",
+        "ReadAttempt",
+        "Source",
+        "Observation"
+      ],
+      "schemaPointers": [
+        "#/$defs/Experiment/properties/resolutionCoverage",
+        "#/$defs/Coverage",
+        "#/$defs/Coverage/properties/readAttempts",
+        "#/$defs/Collection",
+        "#/$defs/ReadAttempt"
+      ],
+      "profileIds": [
+        "console.fis.target-resolution/v1"
+      ],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "Experiment.resolutionCoverage and Coverage explicitly separate resolution, pagination, detail, identity and claim dimensions; exact ReadAttempt refs retain request/response coverage evidence, and the named target-resolution profile retains source-specific details.",
+      "gaps": []
+    },
+    {
+      "id": "fis:ExecutionEvidence",
+      "sourceService": "fis",
+      "sourceName": "ExecutionEvidence",
+      "aliases": [
+        "EXECUTION_EVIDENCE"
+      ],
+      "sourceSemanticKind": "APPLICATION_ENTITY",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a logical record/node in the original FIS ER model; this does not assert an independent AWS CRUD root.",
+      "sourceCountBasis": "DIAGRAM",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/diagrams/04_evidence_reports.mmd",
+          "symbol": "EXECUTION_EVIDENCE",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/report.md",
+          "heading": "8. Evidence and audit model",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Retained raw execution/audit envelope and source location, with source/observation times and optional experiment/action/selector/account correlation.",
+      "identity": "Channel record identity/location in native owner scope; a FIS log id is an experiment ID and cannot alone deduplicate events.",
+      "mappingAliases": [
+        "EXECUTION_EVIDENCE"
+      ],
+      "registryDispositions": [
+        "canonicalEntity"
+      ],
+      "registryCanonicalEntities": [
+        "Source",
+        "Observation"
+      ],
+      "canonicalEntities": [
+        "Source",
+        "Observation"
+      ],
+      "schemaPointers": [
+        "#/$defs/Source/properties/identity",
+        "#/$defs/Source/properties/payload",
+        "#/$defs/Source/properties/profile",
+        "#/$defs/Observation"
+      ],
+      "profileIds": [
+        "aws.fis.execution-evidence/v1"
+      ],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "Source retains the exact scoped envelope/profile/version/digest and Observation retains its occurrence/channel/times. Raw execution content is intentional source evidence, not a promised normalized action-result object.",
+      "gaps": []
+    },
+    {
+      "id": "fis:StateObservation",
+      "sourceService": "fis",
+      "sourceName": "StateObservation",
+      "aliases": [
+        "STATE_OBSERVATION"
+      ],
+      "sourceSemanticKind": "APPLICATION_ENTITY",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a logical record/node in the original FIS ER model; this does not assert an independent AWS CRUD root.",
+      "sourceCountBasis": "DIAGRAM",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/diagrams/04_evidence_reports.mmd",
+          "symbol": "STATE_OBSERVATION",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/report.md",
+          "heading": "8. Evidence and audit model",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "An observed experiment/action state at a source time and collection interval, independently of the UI receiving or selecting it.",
+      "identity": "Scoped source state representation plus distinct observation occurrence.",
+      "mappingAliases": [
+        "STATE_OBSERVATION"
+      ],
+      "registryDispositions": [
+        "canonicalEntity"
+      ],
+      "registryCanonicalEntities": [
+        "Source",
+        "Observation"
+      ],
+      "canonicalEntities": [
+        "Source",
+        "Observation",
+        "Experiment"
+      ],
+      "schemaPointers": [
+        "#/$defs/Source",
+        "#/$defs/Observation/properties/sourceTime",
+        "#/$defs/Observation/properties/observedAt",
+        "#/$defs/Experiment/properties/selectedObservation",
+        "#/$defs/FISAction/properties/selectedObservation"
+      ],
+      "profileIds": [
+        "aws.fis.execution-evidence/v1",
+        "aws.fis.experiment/v1"
+      ],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "Source versions and Observation times preserve state history; Experiment and FISAction select exact observed state for their representations. Repeated receipt is not a new native lifecycle event.",
+      "gaps": []
+    },
+    {
+      "id": "fis:ExperimentReport",
+      "sourceService": "fis",
+      "sourceName": "ExperimentReport",
+      "aliases": [
+        "EXPERIMENT_REPORT"
+      ],
+      "sourceSemanticKind": "OWNED_VALUE",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a logical record/node in the original FIS ER model; this does not assert an independent AWS CRUD root.",
+      "sourceCountBasis": "DIAGRAM",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/diagrams/04_evidence_reports.mmd",
+          "symbol": "EXPERIMENT_REPORT",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/report.md",
+          "heading": "6. Supporting configuration and report objects",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Report configuration/readiness and generated artifacts, with a lifecycle independent of experiment execution or resilience acceptance.",
+      "identity": "Owning experiment plus exact observed report source.",
+      "mappingAliases": [
+        "EXPERIMENT_REPORT"
+      ],
+      "registryDispositions": [
+        "ownedValue"
+      ],
+      "registryCanonicalEntities": [
+        "Experiment",
+        "Source"
+      ],
+      "canonicalEntities": [
+        "Experiment",
+        "Source"
+      ],
+      "schemaPointers": [
+        "#/$defs/Experiment/properties/report",
+        "#/$defs/FISReport"
+      ],
+      "profileIds": [
+        "aws.fis.report/v1"
+      ],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "Experiment.report binds FISReport, separating configurationState, raw report state, selected Observation and artifact references. Source evidence retains provider-specific reason/error/configuration detail.",
+      "gaps": [],
+      "retainedNativeDetails": [
+        "Native report reason/error and full configuration remain in the exact report/experiment Source."
+      ]
+    },
+    {
+      "id": "fis:ReportArtifact",
+      "sourceService": "fis",
+      "sourceName": "ReportArtifact",
+      "aliases": [
+        "REPORT_ARTIFACT",
+        "ExperimentReportS3Report"
+      ],
+      "sourceSemanticKind": "OWNED_VALUE",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a logical record/node in the original FIS ER model; this does not assert an independent AWS CRUD root.",
+      "sourceCountBasis": "DIAGRAM",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/diagrams/04_evidence_reports.mmd",
+          "symbol": "REPORT_ARTIFACT",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/report.md",
+          "heading": "6. Supporting configuration and report objects",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Native report artifact descriptor containing ARN and reportType, with separately authorized content retrieval.",
+      "identity": "Reported artifact location plus version/digest when known, under its observed report.",
+      "mappingAliases": [
+        "REPORT_ARTIFACT"
+      ],
+      "registryDispositions": [
+        "ownedValue"
+      ],
+      "registryCanonicalEntities": [
+        "Experiment",
+        "Snapshot"
+      ],
+      "canonicalEntities": [
+        "Experiment",
+        "Source",
+        "Snapshot"
+      ],
+      "schemaPointers": [
+        "#/$defs/FISReport/properties/artifacts",
+        "#/$defs/ArtifactRef"
+      ],
+      "profileIds": [
+        "aws.fis.report/v1"
+      ],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "FISReport.artifacts binds ArtifactRef for the managed locator, version/digest and availability. The native report descriptor remains retained so its ARN and open reportType are not fabricated from a download URL.",
+      "gaps": [],
+      "retainedNativeDetails": [
+        "Native reportType/ARN and unhydrated descriptors may require the exact Source until managed-artifact metadata is established."
+      ]
+    },
+    {
+      "id": "fis:StopCondition",
+      "sourceService": "fis",
+      "sourceName": "StopCondition",
+      "aliases": [
+        "STOP_CONDITION",
+        "ExperimentStopCondition"
+      ],
+      "sourceSemanticKind": "OWNED_VALUE",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a logical record/node in the original FIS ER model; this does not assert an independent AWS CRUD root.",
+      "sourceCountBasis": "DIAGRAM",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/diagrams/04_evidence_reports.mmd",
+          "symbol": "STOP_CONDITION",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/report.md",
+          "heading": "6. Supporting configuration and report objects",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Runtime safety source/value configuration. source=none is explicit and has no alarm reference; configured conditions are not historical alarm transitions.",
+      "identity": "Owning experiment plus condition occurrence/source-value.",
+      "mappingAliases": [
+        "STOP_CONDITION"
+      ],
+      "registryDispositions": [
+        "ownedValue"
+      ],
+      "registryCanonicalEntities": [
+        "Experiment",
+        "Source"
+      ],
+      "canonicalEntities": [
+        "Source"
+      ],
+      "schemaPointers": [
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.fis.experiment/v1"
+      ],
+      "coverageLevel": "RETAINED_ONLY",
+      "coverageReason": "The complete native stopConditions array is retained by the experiment profile. No typed StopCondition value or Experiment property is declared.",
+      "gaps": [
+        "The registry ownedValue label does not identify a bound typed FisStopCondition; consumer safety inspection currently requires the Source."
+      ]
+    },
+    {
+      "id": "fis:CloudWatchAlarm",
+      "sourceService": "fis",
+      "sourceName": "CloudWatchAlarm",
+      "aliases": [
+        "CLOUDWATCH_ALARM"
+      ],
+      "sourceSemanticKind": "EXTERNAL_IDENTITY",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a logical record/node in the original FIS ER model; this does not assert an independent AWS CRUD root.",
+      "sourceCountBasis": "DIAGRAM",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/diagrams/04_evidence_reports.mmd",
+          "symbol": "CLOUDWATCH_ALARM",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/report.md",
+          "heading": "7. Lifecycle and operator controls",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Qualified external alarm referenced by safety configuration; its state and transition history must come from separate observations.",
+      "identity": "Alarm ARN or complete provider/account/Region/native alarm key.",
+      "mappingAliases": [
+        "CLOUDWATCH_ALARM"
+      ],
+      "registryDispositions": [
+        "ownedValue"
+      ],
+      "registryCanonicalEntities": [
+        "Resource"
+      ],
+      "canonicalEntities": [
+        "Resource",
+        "Source"
+      ],
+      "schemaPointers": [
+        "#/$defs/Resource/properties/identity",
+        "#/$defs/SourceIdentity"
+      ],
+      "profileIds": [
+        "aws.cloudwatch.alarm/v1"
+      ],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "Resource/SourceIdentity can represent the external alarm without treating it as a FIS experiment or inventing its state from a stop event.",
+      "gaps": []
+    },
+    {
+      "id": "fis:AlarmObservation",
+      "sourceService": "fis",
+      "sourceName": "AlarmObservation",
+      "aliases": [
+        "ALARM_OBSERVATION"
+      ],
+      "sourceSemanticKind": "APPLICATION_ENTITY",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a logical record/node in the original FIS ER model; this does not assert an independent AWS CRUD root.",
+      "sourceCountBasis": "DIAGRAM",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/diagrams/04_evidence_reports.mmd",
+          "symbol": "ALARM_OBSERVATION",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/report.md",
+          "heading": "8. Evidence and audit model",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Observed alarm state or transition with source time, exact alarm identity and coverage; distinct from notification receipt or FIS termination.",
+      "identity": "Qualified alarm plus exact observed state/history window.",
+      "mappingAliases": [
+        "ALARM_OBSERVATION"
+      ],
+      "registryDispositions": [
+        "canonicalEntity"
+      ],
+      "registryCanonicalEntities": [
+        "Source",
+        "Observation"
+      ],
+      "canonicalEntities": [
+        "Source",
+        "Observation"
+      ],
+      "schemaPointers": [
+        "#/$defs/Source/properties/payload",
+        "#/$defs/Source/properties/profile",
+        "#/$defs/Observation/properties/source"
+      ],
+      "profileIds": [
+        "aws.cloudwatch.alarm/v1"
+      ],
+      "coverageLevel": "RETAINED_ONLY",
+      "coverageReason": "The alarm profile retains state/history output in Source/Observation. Its observedFields are documentation hints, not a bound machine-readable alarm-result value schema.",
+      "gaps": [
+        "A typed alarm/transition evidence profile is needed before claiming normalized state/notification-proof fields; native evidence itself has a retention path."
+      ]
+    },
+    {
+      "id": "fis:AwsScope",
+      "sourceService": "fis",
+      "sourceName": "AwsScope",
+      "aliases": [
+        "AWS_SCOPE"
+      ],
+      "sourceSemanticKind": "OWNED_VALUE",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a logical record/node in the original FIS ER model; this does not assert an independent AWS CRUD root.",
+      "sourceCountBasis": "DIAGRAM",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/diagrams/04_evidence_reports.mmd",
+          "symbol": "AWS_SCOPE",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/report.md",
+          "heading": "8. Evidence and audit model",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Provider ownership tuple for an experiment or scoped safety lever, distinct from application tenant scope or target-account configuration.",
+      "identity": "Partition, owning account and Region (with explicit null/inapplicable dimensions where appropriate).",
+      "mappingAliases": [
+        "AWS_SCOPE"
+      ],
+      "registryDispositions": [
+        "ownedValue"
+      ],
+      "registryCanonicalEntities": [
+        "Source",
+        "Resource"
+      ],
+      "canonicalEntities": [
+        "Source",
+        "Resource",
+        "Experiment"
+      ],
+      "schemaPointers": [
+        "#/$defs/SourceIdentity/properties/scope",
+        "#/$defs/OwningScope",
+        "#/$defs/Experiment/properties/identity"
+      ],
+      "profileIds": [],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "SourceIdentity.scope binds OwningScope, preserving ownership independently of Workspace and Connection.",
+      "gaps": []
+    },
+    {
+      "id": "fis:SafetyLever",
+      "sourceService": "fis",
+      "sourceName": "SafetyLever",
+      "aliases": [
+        "SAFETY_LEVER"
+      ],
+      "sourceSemanticKind": "NATIVE_RESOURCE",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a logical record/node in the original FIS ER model; this does not assert an independent AWS CRUD root.",
+      "sourceCountBasis": "DIAGRAM",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/diagrams/04_evidence_reports.mmd",
+          "symbol": "SAFETY_LEVER",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/report.md",
+          "heading": "7. Lifecycle and operator controls",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Native account/Region control that admits or stops FIS work; an unknown local observation is not absence of the one-per-supported-scope control.",
+      "identity": "Provider partition/orchestrator account/Region plus native lever ID.",
+      "mappingAliases": [
+        "SAFETY_LEVER"
+      ],
+      "registryDispositions": [
+        "retainedAdapterDto"
+      ],
+      "registryCanonicalEntities": [
+        "Source"
+      ],
+      "canonicalEntities": [
+        "Source"
+      ],
+      "schemaPointers": [
+        "#/$defs/Source/properties/identity",
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.fis.safety-lever/v1"
+      ],
+      "coverageLevel": "RETAINED_ONLY",
+      "coverageReason": "The safety-lever Source profile retains identity and state. A dedicated canonical entity and mutation capability are intentionally deferred.",
+      "gaps": []
+    },
+    {
+      "id": "fis:MetricBinding",
+      "sourceService": "fis",
+      "sourceName": "MetricBinding",
+      "aliases": [
+        "METRIC_BINDING"
+      ],
+      "sourceSemanticKind": "APPLICATION_ENTITY",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a logical record/node in the original FIS ER model; this does not assert an independent AWS CRUD root.",
+      "sourceCountBasis": "DIAGRAM",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/diagrams/05_assessments.mmd",
+          "symbol": "METRIC_BINDING",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/report.md",
+          "heading": "9. Workload assessment model",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Versioned workload telemetry/query specification identifying provider/scope, dimensions, statistic, unit, period, windows and normalization contract.",
+      "identity": "Stable binding identity plus an immutable query/normalization revision, reusable by experiment assessments.",
+      "mappingAliases": [
+        "METRIC_BINDING"
+      ],
+      "registryDispositions": [
+        "ownedValue"
+      ],
+      "registryCanonicalEntities": [
+        "Scenario"
+      ],
+      "canonicalEntities": [
+        "Scenario"
+      ],
+      "schemaPointers": [
+        "#/$defs/Scenario/properties/definition",
+        "#/$defs/StepDefinition/properties/inputBindings",
+        "#/$defs/OperationLock/properties/inputSchemaDigest"
+      ],
+      "profileIds": [],
+      "coverageLevel": "PARTIAL",
+      "coverageReason": "Scenario and operation locks can pin typed operation inputs, but there is no bound MetricBinding value, schema or registered input contract showing how these required dimensions map. Arbitrary StepDefinition.inputBindings alone does not prove this mapping.",
+      "gaps": [
+        "The named MetricBinding representation has no actual typed schema/path or declared metric-query input schema.",
+        "A targeted module-owned/profile schema should define query, units, window and normalization pins without introducing a new entity solely for versions."
+      ]
+    },
+    {
+      "id": "fis:ExperimentMetricBinding",
+      "sourceService": "fis",
+      "sourceName": "ExperimentMetricBinding",
+      "aliases": [
+        "EXPERIMENT_METRIC_BINDING"
+      ],
+      "sourceSemanticKind": "RELATIONSHIP",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a logical record/node in the original FIS ER model; this does not assert an independent AWS CRUD root.",
+      "sourceCountBasis": "DIAGRAM",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/diagrams/05_assessments.mmd",
+          "symbol": "EXPERIMENT_METRIC_BINDING",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/report.md",
+          "heading": "9. Workload assessment model",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Exact association of an experiment and telemetry binding revision/window; several assessments can use different bindings for the same experiment.",
+      "identity": "Experiment identity plus exact binding revision and evaluation/observation window.",
+      "mappingAliases": [
+        "EXPERIMENT_METRIC_BINDING"
+      ],
+      "registryDispositions": [
+        "ownedValue"
+      ],
+      "registryCanonicalEntities": [
+        "Run",
+        "Experiment"
+      ],
+      "canonicalEntities": [],
+      "schemaPointers": [],
+      "profileIds": [],
+      "coverageLevel": "UNMAPPED",
+      "coverageReason": "The registry targets Run and Experiment, but neither has a metric-binding association and no MetricBindingReference definition exists. Generic input JSON is not an explicit relation; the original FIS study permits an experiment assessment with no console Run.",
+      "gaps": [
+        "No bound owner-local relation preserves experiment→exact telemetry definition/window independently of an orchestration Run."
+      ]
+    },
+    {
+      "id": "fis:MetricObservation",
+      "sourceService": "fis",
+      "sourceName": "MetricObservation",
+      "aliases": [
+        "METRIC_OBSERVATION"
+      ],
+      "sourceSemanticKind": "APPLICATION_ENTITY",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a logical record/node in the original FIS ER model; this does not assert an independent AWS CRUD root.",
+      "sourceCountBasis": "DIAGRAM",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/diagrams/05_assessments.mmd",
+          "symbol": "METRIC_OBSERVATION",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/report.md",
+          "heading": "9. Workload assessment model",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Numeric workload series/query result with query/binding identity, unit, time window, coverage and samples; missing values must not silently become zero.",
+      "identity": "Exact binding/query revision plus series and observation window.",
+      "mappingAliases": [
+        "METRIC_OBSERVATION"
+      ],
+      "registryDispositions": [
+        "canonicalEntity"
+      ],
+      "registryCanonicalEntities": [
+        "Source",
+        "Observation"
+      ],
+      "canonicalEntities": [
+        "Source",
+        "Observation"
+      ],
+      "schemaPointers": [
+        "#/$defs/Source/properties/profile",
+        "#/$defs/Source/properties/payload",
+        "#/$defs/Observation/properties/source"
+      ],
+      "profileIds": [
+        "aws.cloudwatch.metric/v1"
+      ],
+      "coverageLevel": "RETAINED_ONLY",
+      "coverageReason": "The metric profile retains these facts through Source/Observation, but observedFields are strings rather than a linked numeric sample/query schema. The registry claim of typed normalized samples is unverified.",
+      "gaps": [
+        "No machine-readable metric-query/sample profile is bound; validators cannot establish units, numeric samples or window semantics from generic JsonValue."
+      ]
+    },
+    {
+      "id": "fis:AssessmentCriterion",
+      "sourceService": "fis",
+      "sourceName": "AssessmentCriterion",
+      "aliases": [
+        "ASSESSMENT_CRITERION"
+      ],
+      "sourceSemanticKind": "APPLICATION_ENTITY",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a logical record/node in the original FIS ER model; this does not assert an independent AWS CRUD root.",
+      "sourceCountBasis": "DIAGRAM",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/diagrams/05_assessments.mmd",
+          "symbol": "ASSESSMENT_CRITERION",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/report.md",
+          "heading": "9. Workload assessment model",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Immutable threshold/recovery predicate specification with timing anchor, unit, stable-window and missing-data rules, selected at an exact revision for evaluation.",
+      "identity": "Criterion identity/key and immutable configuration revision.",
+      "mappingAliases": [
+        "ASSESSMENT_CRITERION"
+      ],
+      "registryDispositions": [
+        "ownedValue"
+      ],
+      "registryCanonicalEntities": [
+        "Scenario"
+      ],
+      "canonicalEntities": [
+        "Scenario",
+        "Projection"
+      ],
+      "schemaPointers": [
+        "#/$defs/StepDefinition/properties/checkRole",
+        "#/$defs/StepDefinition/properties/required",
+        "#/$defs/StepDefinition/properties/inputBindings",
+        "#/$defs/CheckResult/properties/predicateDigest",
+        "#/$defs/Evaluation/properties/criteria"
+      ],
+      "profileIds": [
+        "console.workflow.evaluation/v1"
+      ],
+      "coverageLevel": "PARTIAL",
+      "coverageReason": "StepDefinition can mark a required criterion and its locked operation/input schema, while CheckResult pins predicateDigest and coverage. No concrete metric/recovery criterion profile specifies the old FIS timing/unit/missing-data contract, especially for evaluation without a Run.",
+      "gaps": [
+        "The broad CheckDefinition label needs a bound criterion/evaluator input contract for the prior telemetry-specific semantics; a name and arbitrary input object are insufficient."
+      ]
+    },
+    {
+      "id": "fis:ResilienceAssessment",
+      "sourceService": "fis",
+      "sourceName": "ResilienceAssessment",
+      "aliases": [
+        "RESILIENCE_ASSESSMENT"
+      ],
+      "sourceSemanticKind": "DERIVED_VIEW",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a logical record/node in the original FIS ER model; this does not assert an independent AWS CRUD root.",
+      "sourceCountBasis": "DIAGRAM",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/diagrams/05_assessments.mmd",
+          "symbol": "RESILIENCE_ASSESSMENT",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/report.md",
+          "heading": "9. Workload assessment model",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Application evaluation of a FIS experiment against exact criteria and captured evidence, preserving verdict, window/cutoff and later reevaluations. This is not AWS ResilienceAssessment.",
+      "identity": "Application assessment identity / named projection and accepted input/rule revision.",
+      "mappingAliases": [
+        "RESILIENCE_ASSESSMENT"
+      ],
+      "registryDispositions": [
+        "projectionProfile"
+      ],
+      "registryCanonicalEntities": [
+        "Projection",
+        "Snapshot"
+      ],
+      "canonicalEntities": [
+        "Projection",
+        "Snapshot"
+      ],
+      "schemaPointers": [
+        "#/$defs/Projection",
+        "#/$defs/Evaluation",
+        "#/$defs/Evaluation/properties/inputSnapshot",
+        "#/$defs/Evaluation/properties/evidenceCutoffAt"
+      ],
+      "profileIds": [
+        "console.workflow.evaluation/v1"
+      ],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "Projection profile EVALUATION binds Evaluation with exact subject, input Snapshot, evidence cutoff, verdict/finality and criterion results. It can evaluate a native Experiment without creating a workflow Run.",
+      "gaps": []
+    },
+    {
+      "id": "fis:AssessmentEvidence",
+      "sourceService": "fis",
+      "sourceName": "AssessmentEvidence",
+      "aliases": [
+        "ASSESSMENT_EVIDENCE"
+      ],
+      "sourceSemanticKind": "RELATIONSHIP",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a logical record/node in the original FIS ER model; this does not assert an independent AWS CRUD root.",
+      "sourceCountBasis": "DIAGRAM",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/diagrams/05_assessments.mmd",
+          "symbol": "ASSESSMENT_EVIDENCE",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/report.md",
+          "heading": "9. Workload assessment model",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Citations from an assessment result to exactly the observations accepted by its evaluator before the cutoff.",
+      "identity": "Owning criterion/evaluation plus exact accepted evidence reference.",
+      "mappingAliases": [
+        "ASSESSMENT_EVIDENCE"
+      ],
+      "registryDispositions": [
+        "ownedValue"
+      ],
+      "registryCanonicalEntities": [
+        "StepAttempt",
+        "Projection"
+      ],
+      "canonicalEntities": [
+        "Projection",
+        "StepAttempt",
+        "Snapshot"
+      ],
+      "schemaPointers": [
+        "#/$defs/CheckResult/properties/evidenceRefs",
+        "#/$defs/EvidenceRef",
+        "#/$defs/Evaluation/properties/inputSnapshot",
+        "#/$defs/Evaluation/properties/evidenceCutoffAt"
+      ],
+      "profileIds": [
+        "console.workflow.evaluation/v1"
+      ],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "CheckResult.evidenceRefs and Evaluation inputSnapshot/evidenceCutoffAt preserve exact citation and cutoff as owned values; no extra relationship entity is required.",
+      "gaps": []
+    },
+    {
+      "id": "fis:ExperimentOptions",
+      "sourceService": "fis",
+      "sourceName": "ExperimentOptions",
+      "aliases": [],
+      "sourceSemanticKind": "OWNED_VALUE",
+      "originalEntityDeclaration": false,
+      "declarationReason": "An owned value, native nested shape, reference or control construct; not an additional original domain entity.",
+      "sourceCountBasis": "DICTIONARY",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/report.md",
+          "heading": "6. Supporting configuration and report objects",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Preview/run mode, account targeting and empty-target behavior supplied by the native experiment.",
+      "identity": "Owner-local experiment/template configuration value.",
+      "mappingAliases": [],
+      "registryDispositions": [],
+      "registryCanonicalEntities": [],
+      "canonicalEntities": [
+        "Source"
+      ],
+      "schemaPointers": [
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.fis.experiment/v1"
+      ],
+      "coverageLevel": "RETAINED_ONLY",
+      "coverageReason": "The value is preserved inside the named native Source profile; no distinct normalized value schema/path is bound. This is retention coverage, not an extra entity.",
+      "gaps": []
+    },
+    {
+      "id": "fis:SafetyLeverState",
+      "sourceService": "fis",
+      "sourceName": "SafetyLeverState",
+      "aliases": [],
+      "sourceSemanticKind": "OWNED_VALUE",
+      "originalEntityDeclaration": false,
+      "declarationReason": "An owned value, native nested shape, reference or control construct; not an additional original domain entity.",
+      "sourceCountBasis": "DICTIONARY",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/report.md",
+          "heading": "6. Supporting configuration and report objects",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Native safety-control status and reason, distinct from requested state or confirmed experiment cessation.",
+      "identity": "Value on the exact scoped SafetyLever source representation.",
+      "mappingAliases": [],
+      "registryDispositions": [],
+      "registryCanonicalEntities": [],
+      "canonicalEntities": [
+        "Source"
+      ],
+      "schemaPointers": [
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.fis.safety-lever/v1"
+      ],
+      "coverageLevel": "RETAINED_ONLY",
+      "coverageReason": "The value is preserved inside the named native Source profile; no distinct normalized value schema/path is bound. This is retention coverage, not an extra entity.",
+      "gaps": []
+    },
+    {
+      "id": "fis:ExperimentLogConfiguration",
+      "sourceService": "fis",
+      "sourceName": "ExperimentLogConfiguration",
+      "aliases": [],
+      "sourceSemanticKind": "OWNED_VALUE",
+      "originalEntityDeclaration": false,
+      "declarationReason": "An owned value, native nested shape, reference or control construct; not an additional original domain entity.",
+      "sourceCountBasis": "DICTIONARY",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/report.md",
+          "heading": "6. Supporting configuration and report objects",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Log schema version and configured CloudWatch Logs/S3 destinations; it does not claim logs were collected.",
+      "identity": "Owner-local captured experiment logging configuration.",
+      "mappingAliases": [],
+      "registryDispositions": [],
+      "registryCanonicalEntities": [],
+      "canonicalEntities": [
+        "Source"
+      ],
+      "schemaPointers": [
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.fis.experiment/v1"
+      ],
+      "coverageLevel": "RETAINED_ONLY",
+      "coverageReason": "The value is preserved inside the named native Source profile; no distinct normalized value schema/path is bound. This is retention coverage, not an extra entity.",
+      "gaps": []
+    },
+    {
+      "id": "fis:ExperimentReportConfiguration",
+      "sourceService": "fis",
+      "sourceName": "ExperimentReportConfiguration",
+      "aliases": [],
+      "sourceSemanticKind": "OWNED_VALUE",
+      "originalEntityDeclaration": false,
+      "declarationReason": "An owned value, native nested shape, reference or control construct; not an additional original domain entity.",
+      "sourceCountBasis": "DICTIONARY",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/report.md",
+          "heading": "6. Supporting configuration and report objects",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Requested dashboard/report outputs and before/after observation windows, separate from generated-report state.",
+      "identity": "Owner-local captured experiment reporting configuration.",
+      "mappingAliases": [],
+      "registryDispositions": [],
+      "registryCanonicalEntities": [],
+      "canonicalEntities": [
+        "Source"
+      ],
+      "schemaPointers": [
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.fis.experiment/v1",
+        "aws.fis.report/v1"
+      ],
+      "coverageLevel": "RETAINED_ONLY",
+      "coverageReason": "The value is preserved inside the named native Source profile; no distinct normalized value schema/path is bound. This is retention coverage, not an extra entity.",
+      "gaps": []
+    },
+    {
+      "id": "fis:ExperimentState",
+      "sourceService": "fis",
+      "sourceName": "ExperimentState",
+      "aliases": [],
+      "sourceSemanticKind": "OWNED_VALUE",
+      "originalEntityDeclaration": false,
+      "declarationReason": "An owned value, native nested shape, reference or control construct; not an additional original domain entity.",
+      "sourceCountBasis": "DICTIONARY",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/report.md",
+          "heading": "ExperimentRun",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Native execution status, reason and optional structured error object; unknown provider values remain visible.",
+      "identity": "Value on the exact native experiment representation.",
+      "mappingAliases": [],
+      "registryDispositions": [],
+      "registryCanonicalEntities": [],
+      "canonicalEntities": [
+        "Experiment",
+        "Source"
+      ],
+      "schemaPointers": [
+        "#/$defs/Experiment/properties/rawExperimentState",
+        "#/$defs/Experiment/properties/selectedObservation"
+      ],
+      "profileIds": [
+        "aws.fis.experiment/v1"
+      ],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "The experiment status is typed as an open native string and its exact source retains reason/error detail; it remains independent of workflow and assessment status.",
+      "gaps": []
+    },
+    {
+      "id": "fis:ExperimentError",
+      "sourceService": "fis",
+      "sourceName": "ExperimentError",
+      "aliases": [],
+      "sourceSemanticKind": "OWNED_VALUE",
+      "originalEntityDeclaration": false,
+      "declarationReason": "An owned value, native nested shape, reference or control construct; not an additional original domain entity.",
+      "sourceCountBasis": "DICTIONARY",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/report.md",
+          "heading": "ExperimentRun",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Native experiment error accountId, code and unparsed location; it is not an action-specific success/failure map.",
+      "identity": "Error value in an exact experiment state/source representation.",
+      "mappingAliases": [],
+      "registryDispositions": [],
+      "registryCanonicalEntities": [],
+      "canonicalEntities": [
+        "Source"
+      ],
+      "schemaPointers": [
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.fis.experiment/v1"
+      ],
+      "coverageLevel": "RETAINED_ONLY",
+      "coverageReason": "The value is preserved inside the named native Source profile; no distinct normalized value schema/path is bound. This is retention coverage, not an extra entity.",
+      "gaps": []
+    },
+    {
+      "id": "workflow:Scenario",
+      "sourceService": "workflow",
+      "sourceName": "Scenario",
+      "aliases": [],
+      "sourceSemanticKind": "APPLICATION_ENTITY",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Listed among the six domain entities in workflow/model.md §1.",
+      "sourceCountBasis": "DIAGRAM",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/workflow/diagrams/01_entities.mmd",
+          "symbol": "Scenario",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/workflow/model.md",
+          "heading": "1. Entities, ownership and identity",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Authoring aggregate root for display/catalog metadata and published operational programs.",
+      "identity": "Opaque scenarioId in trusted workspace.",
+      "mappingAliases": [
+        "Scenario"
+      ],
+      "registryDispositions": [
+        "canonicalEntity"
+      ],
+      "registryCanonicalEntities": [
+        "Scenario"
+      ],
+      "canonicalEntities": [
+        "Scenario"
+      ],
+      "schemaPointers": [
+        "#/$defs/Scenario"
+      ],
+      "profileIds": [],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "Scenario owns DRAFT/PUBLISHED/ARCHIVED representations under one common entity version. The old mutable revision pointer is deliberately replaced by exact version selection; it is not a lost entity.",
+      "gaps": []
+    },
+    {
+      "id": "workflow:ScenarioRevision",
+      "sourceService": "workflow",
+      "sourceName": "ScenarioRevision",
+      "aliases": [],
+      "sourceSemanticKind": "HISTORY_REPRESENTATION",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Listed among the six domain entities in workflow/model.md §1.",
+      "sourceCountBasis": "DIAGRAM",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/workflow/diagrams/01_entities.mmd",
+          "symbol": "ScenarioRevision",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/workflow/diagrams/02_owned_values.mmd",
+          "symbol": "ScenarioRevision",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/workflow/model.md",
+          "heading": "2. Publication and admission",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Original immutable published program entity, locking definitions, implementations, schemas, expression/reducer contracts and digest.",
+      "identity": "Original scenarioRevisionId under Scenario; now same scenarioId plus entity version.",
+      "mappingAliases": [
+        "ScenarioRevision"
+      ],
+      "registryDispositions": [
+        "canonicalEntity"
+      ],
+      "registryCanonicalEntities": [
+        "Scenario"
+      ],
+      "canonicalEntities": [
+        "Scenario",
+        "Run"
+      ],
+      "schemaPointers": [
+        "#/$defs/Scenario/properties/version",
+        "#/$defs/Scenario/properties/definition",
+        "#/$defs/Scenario/properties/state",
+        "#/$defs/ScenarioDefinition",
+        "#/$defs/Run/properties/scenario"
+      ],
+      "profileIds": [],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "Publication is an exact PUBLISHED Scenario version with ScenarioDefinition and locks; Run.scenario pins it. No version-only entity is introduced.",
+      "gaps": []
+    },
+    {
+      "id": "workflow:Run",
+      "sourceService": "workflow",
+      "sourceName": "Run",
+      "aliases": [],
+      "sourceSemanticKind": "APPLICATION_ENTITY",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Listed among the six domain entities in workflow/model.md §1.",
+      "sourceCountBasis": "DIAGRAM",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/workflow/diagrams/01_entities.mmd",
+          "symbol": "Run",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/workflow/diagrams/02_owned_values.mmd",
+          "symbol": "Run",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/workflow/model.md",
+          "heading": "1. Entities, ownership and identity",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Admitted execution aggregate owning selected program, inputs, StepRuns, cancellation intent and separately sealed execution/assessment/finalization outcomes.",
+      "identity": "Opaque runId within workspace.",
+      "mappingAliases": [
+        "Run"
+      ],
+      "registryDispositions": [
+        "canonicalEntity"
+      ],
+      "registryCanonicalEntities": [
+        "Run"
+      ],
+      "canonicalEntities": [
+        "Run",
+        "Snapshot"
+      ],
+      "schemaPointers": [
+        "#/$defs/Run",
+        "#/$defs/Run/properties/steps",
+        "#/$defs/Run/properties/inputSnapshot"
+      ],
+      "profileIds": [],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "Run retains exact Scenario/input Snapshot/StepRun versions and independent outcome dimensions. Common entity version replaces projectionVersion without adding another root.",
+      "gaps": []
+    },
+    {
+      "id": "workflow:StepRun",
+      "sourceService": "workflow",
+      "sourceName": "StepRun",
+      "aliases": [],
+      "sourceSemanticKind": "APPLICATION_ENTITY",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Listed among the six domain entities in workflow/model.md §1.",
+      "sourceCountBasis": "DIAGRAM",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/workflow/diagrams/01_entities.mmd",
+          "symbol": "StepRun",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/workflow/model.md",
+          "heading": "1. Entities, ownership and identity",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "One owned step record for every compiled main/finalizer step, including skipped steps with zero attempts.",
+      "identity": "runId plus stepKey, with a stable canonical stepRunId.",
+      "mappingAliases": [
+        "StepRun"
+      ],
+      "registryDispositions": [
+        "canonicalEntity"
+      ],
+      "registryCanonicalEntities": [
+        "StepRun"
+      ],
+      "canonicalEntities": [
+        "StepRun",
+        "Run"
+      ],
+      "schemaPointers": [
+        "#/$defs/StepRun",
+        "#/$defs/Run/properties/steps"
+      ],
+      "profileIds": [],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "StepRun retains owner identity, skip/outcome, selected exact attempt and complete known attempt references; it does not gain an independent retry/status API.",
+      "gaps": []
+    },
+    {
+      "id": "workflow:StepAttempt",
+      "sourceService": "workflow",
+      "sourceName": "StepAttempt",
+      "aliases": [],
+      "sourceSemanticKind": "APPLICATION_ENTITY",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Listed among the six domain entities in workflow/model.md §1.",
+      "sourceCountBasis": "DIAGRAM",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/workflow/diagrams/01_entities.mmd",
+          "symbol": "StepAttempt",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/workflow/diagrams/02_owned_values.mmd",
+          "symbol": "StepAttempt",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/workflow/model.md",
+          "heading": "5. Retries, cancellation and finalization",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Durable attempt preserving dispatch intent/key, once-resolved inputs, checkpoint, outputs/errors, external effects and evidence while transport retries/resume retain the same attempt.",
+      "identity": "StepRun owner plus attemptNo; dispatch key persists before external effect.",
+      "mappingAliases": [
+        "StepAttempt"
+      ],
+      "registryDispositions": [
+        "canonicalEntity"
+      ],
+      "registryCanonicalEntities": [
+        "StepAttempt"
+      ],
+      "canonicalEntities": [
+        "StepAttempt"
+      ],
+      "schemaPointers": [
+        "#/$defs/StepAttempt",
+        "#/$defs/StepAttempt/properties/dispatchKey",
+        "#/$defs/StepAttempt/properties/externalOperations",
+        "#/$defs/StepAttempt/properties/evidenceRefs"
+      ],
+      "profileIds": [],
+      "coverageLevel": "PARTIAL",
+      "coverageReason": "StepAttempt correctly preserves identity/version, dispatch key, outcome, exact evidence and ExternalOperationRef values. The prior contract also requires sealed evaluated input and durable typed resume checkpoints, but there is no corresponding input digest/reference or checkpoint value on this entity.",
+      "gaps": [
+        "No typed resolved-input reference/digest or resume checkpoint exists on StepAttempt; StepDefinition inputBindings are authoring expressions, not per-attempt evaluated inputs.",
+        "Runtime implementation may store private scheduler details, but the retained replay/recovery facts promised by the source mapping need an explicit contract or a declared deferred boundary."
+      ]
+    },
+    {
+      "id": "workflow:Evidence",
+      "sourceService": "workflow",
+      "sourceName": "Evidence",
+      "aliases": [],
+      "sourceSemanticKind": "APPLICATION_ENTITY",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Listed among the six domain entities in workflow/model.md §1.",
+      "sourceCountBasis": "DIAGRAM",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/workflow/diagrams/01_entities.mmd",
+          "symbol": "Evidence",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/workflow/diagrams/02_owned_values.mmd",
+          "symbol": "Evidence",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/workflow/model.md",
+          "heading": "6. Evidence and assertions",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Immutable evidence retained for one Run, with optional producer attempt and explicit imported-source provenance; input/query identity, adapter/schema versions and coverage are recorded.",
+      "identity": "Original run-owned evidenceId; shared consolidation uses exact Source/Observation identities.",
+      "mappingAliases": [
+        "Evidence"
+      ],
+      "registryDispositions": [
+        "canonicalEntity"
+      ],
+      "registryCanonicalEntities": [
+        "Source",
+        "Observation"
+      ],
+      "canonicalEntities": [
+        "Source",
+        "Observation",
+        "StepAttempt",
+        "Snapshot"
+      ],
+      "schemaPointers": [
+        "#/$defs/Source",
+        "#/$defs/Observation",
+        "#/$defs/StepAttempt/properties/evidenceRefs",
+        "#/$defs/Snapshot/properties/members",
+        "#/$defs/EvidenceRef"
+      ],
+      "profileIds": [],
+      "coverageLevel": "PARTIAL",
+      "coverageReason": "Source/Observation provide versioned payload and receipt, and run inputs/attempts pin exact evidence. The original run-owned evidence manifest, producer versus consumer role and import-origin metadata are not explicitly typed in the new shared records or evidence references.",
+      "gaps": [
+        "Run has no explicit evidence manifest as claimed by the existing mapping; closure can traverse input Snapshot and selected child attempts but does not distinguish produced, consumed and imported roles.",
+        "No declared producer/import provenance value binds the shared evidence to its old run-owned semantics. Clarify this consolidation decision or add owner-local typed citation metadata."
+      ]
+    },
+    {
+      "id": "workflow:StepDefinition",
+      "sourceService": "workflow",
+      "sourceName": "StepDefinition",
+      "aliases": [
+        "Step"
+      ],
+      "sourceSemanticKind": "OWNED_VALUE",
+      "originalEntityDeclaration": false,
+      "declarationReason": "An owned value, native nested shape, reference or control construct; not an additional original domain entity.",
+      "sourceCountBasis": "DIAGRAM",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/workflow/diagrams/02_owned_values.mmd",
+          "symbol": "StepDefinition",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/workflow/model.md",
+          "heading": "Owned values and external references",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Owner-local compiled step key, operation alias, inputs, dependencies, graph phase, timeout, retry, applicability and assessment role.",
+      "identity": "Scenario version plus stepKey.",
+      "mappingAliases": [
+        "StepDefinition"
+      ],
+      "registryDispositions": [
+        "ownedValue"
+      ],
+      "registryCanonicalEntities": [
+        "Scenario"
+      ],
+      "canonicalEntities": [
+        "Scenario"
+      ],
+      "schemaPointers": [
+        "#/$defs/ScenarioDefinition/properties/steps",
+        "#/$defs/StepDefinition"
+      ],
+      "profileIds": [],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "ScenarioDefinition.steps binds StepDefinition and its typed DAG/control fields, including input-schema-pinned extension values.",
+      "gaps": []
+    },
+    {
+      "id": "workflow:OperationLock",
+      "sourceService": "workflow",
+      "sourceName": "OperationLock",
+      "aliases": [],
+      "sourceSemanticKind": "OWNED_VALUE",
+      "originalEntityDeclaration": false,
+      "declarationReason": "An owned value, native nested shape, reference or control construct; not an additional original domain entity.",
+      "sourceCountBasis": "DIAGRAM",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/workflow/diagrams/02_owned_values.mmd",
+          "symbol": "OperationLock",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/workflow/model.md",
+          "heading": "2. Publication and admission",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Resolved immutable operation implementation/input/output schemas and capability contract retained by the published program.",
+      "identity": "Scenario version plus operation alias and pinned digests.",
+      "mappingAliases": [
+        "OperationLock"
+      ],
+      "registryDispositions": [
+        "ownedValue"
+      ],
+      "registryCanonicalEntities": [
+        "Scenario"
+      ],
+      "canonicalEntities": [
+        "Scenario"
+      ],
+      "schemaPointers": [
+        "#/$defs/ScenarioDefinition/properties/operationLocks",
+        "#/$defs/OperationLock"
+      ],
+      "profileIds": [],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "ScenarioDefinition.operationLocks binds OperationLock with exact implementation and schema digests, effect kind and capabilities. Native provider version strings do not substitute for these locks.",
+      "gaps": []
+    },
+    {
+      "id": "workflow:AdmissionSnapshot",
+      "sourceService": "workflow",
+      "sourceName": "AdmissionSnapshot",
+      "aliases": [],
+      "sourceSemanticKind": "OWNED_VALUE",
+      "originalEntityDeclaration": false,
+      "declarationReason": "An owned value, native nested shape, reference or control construct; not an additional original domain entity.",
+      "sourceCountBasis": "DIAGRAM",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/workflow/diagrams/02_owned_values.mmd",
+          "symbol": "AdmissionSnapshot",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/workflow/model.md",
+          "heading": "2. Publication and admission",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Validated inputs, selected exact program, authorized bindings, observed inventory context, enabled steps and fixed required-criterion denominator at Run admission.",
+      "identity": "Owned by the admitted Run; now a RUN_INPUT Snapshot containing Admission.",
+      "mappingAliases": [
+        "AdmissionSnapshot"
+      ],
+      "registryDispositions": [
+        "ownedValue"
+      ],
+      "registryCanonicalEntities": [
+        "Run"
+      ],
+      "canonicalEntities": [
+        "Run",
+        "Snapshot"
+      ],
+      "schemaPointers": [
+        "#/$defs/Run/properties/inputSnapshot",
+        "#/$defs/Snapshot/allOf/2/then/properties/contents",
+        "#/$defs/Admission"
+      ],
+      "profileIds": [],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "Run.inputSnapshot pins a Snapshot whose RUN_INPUT conditional schema binds contents to Admission, including exact Scenario and Connection references, inputs, scopes, criterion set and policy/concurrency digest.",
+      "gaps": []
+    },
+    {
+      "id": "workflow:DeploymentRef",
+      "sourceService": "workflow",
+      "sourceName": "DeploymentRef",
+      "aliases": [],
+      "sourceSemanticKind": "EXTERNAL_IDENTITY",
+      "originalEntityDeclaration": false,
+      "declarationReason": "An owned value, native nested shape, reference or control construct; not an additional original domain entity.",
+      "sourceCountBasis": "DICTIONARY",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/workflow/model.md",
+          "heading": "Owned values and external references",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Reference to externally owned deployment inventory and the revision observed at admission; it never freezes the live deployed system.",
+      "identity": "Qualified deployment identity and captured inventory version in its bounded context.",
+      "mappingAliases": [
+        "DeploymentRef"
+      ],
+      "registryDispositions": [
+        "ownedValue"
+      ],
+      "registryCanonicalEntities": [
+        "Run",
+        "Scenario"
+      ],
+      "canonicalEntities": [
+        "Snapshot",
+        "Run"
+      ],
+      "schemaPointers": [
+        "#/$defs/Admission/properties/deploymentIdentity",
+        "#/$defs/Admission/properties/subjectRefs",
+        "#/$defs/SourceIdentity",
+        "#/$defs/EntityRef"
+      ],
+      "profileIds": [],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "Admission preserves deploymentIdentity and exact subjectRefs; the enclosing Snapshot captures their authorized versions. There is deliberately no speculative Deployment entity.",
+      "gaps": []
+    },
+    {
+      "id": "workflow:ConnectionRef",
+      "sourceService": "workflow",
+      "sourceName": "ConnectionRef",
+      "aliases": [],
+      "sourceSemanticKind": "EXTERNAL_IDENTITY",
+      "originalEntityDeclaration": false,
+      "declarationReason": "An owned value, native nested shape, reference or control construct; not an additional original domain entity.",
+      "sourceCountBasis": "DICTIONARY",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/workflow/model.md",
+          "heading": "Owned values and external references",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Reference to an authorized credential/access-path owner, not copied secrets or a grant of authority.",
+      "identity": "Connection identity plus exact admitted version.",
+      "mappingAliases": [
+        "ConnectionRef"
+      ],
+      "registryDispositions": [
+        "ownedValue"
+      ],
+      "registryCanonicalEntities": [
+        "Run",
+        "Scenario"
+      ],
+      "canonicalEntities": [
+        "Connection",
+        "Scenario",
+        "Snapshot"
+      ],
+      "schemaPointers": [
+        "#/$defs/ResolvedBinding/properties/connection",
+        "#/$defs/ResolvedBinding",
+        "#/$defs/BindingDeclaration"
+      ],
+      "profileIds": [],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "ResolvedBinding.connection is an exact Connection reference with authorization context, scopes and provider bindings; the Scenario only declares required capability.",
+      "gaps": []
+    },
+    {
+      "id": "workflow:ResourceRef",
+      "sourceService": "workflow",
+      "sourceName": "ResourceRef",
+      "aliases": [],
+      "sourceSemanticKind": "EXTERNAL_IDENTITY",
+      "originalEntityDeclaration": false,
+      "declarationReason": "An owned value, native nested shape, reference or control construct; not an additional original domain entity.",
+      "sourceCountBasis": "DICTIONARY",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/workflow/model.md",
+          "heading": "Owned values and external references",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Reference to inventory/resource identity at an exact observation, with complete native scope retained where relevant.",
+      "identity": "Canonical Resource identity/version and independently qualified provider identity.",
+      "mappingAliases": [
+        "ResourceRef"
+      ],
+      "registryDispositions": [
+        "ownedValue"
+      ],
+      "registryCanonicalEntities": [
+        "Run",
+        "Scenario"
+      ],
+      "canonicalEntities": [
+        "Resource",
+        "Snapshot",
+        "Run"
+      ],
+      "schemaPointers": [
+        "#/$defs/EntityRef",
+        "#/$defs/Admission/properties/subjectRefs",
+        "#/$defs/SourceIdentity",
+        "#/$defs/ProviderBinding"
+      ],
+      "profileIds": [],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "EntityRef and Admission.subjectRefs pin canonical resource versions; SourceIdentity and ProviderBinding preserve native scope. A reference itself never grants permission.",
+      "gaps": []
+    },
+    {
+      "id": "workflow:CheckResult",
+      "sourceService": "workflow",
+      "sourceName": "CheckResult",
+      "aliases": [],
+      "sourceSemanticKind": "OWNED_VALUE",
+      "originalEntityDeclaration": false,
+      "declarationReason": "An owned value, native nested shape, reference or control construct; not an additional original domain entity.",
+      "sourceCountBasis": "DIAGRAM",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/workflow/diagrams/02_owned_values.mmd",
+          "symbol": "CheckResult",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/workflow/model.md",
+          "heading": "Owned values and external references",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Sealed assertion outcome with reason, pinned predicate/evaluator, evidence and cutoff, distinct from technical execution failure.",
+      "identity": "Owner attempt/evaluation plus check key under exact program/inputs.",
+      "mappingAliases": [
+        "CheckResult"
+      ],
+      "registryDispositions": [
+        "ownedValue"
+      ],
+      "registryCanonicalEntities": [
+        "StepAttempt",
+        "Projection"
+      ],
+      "canonicalEntities": [
+        "StepAttempt",
+        "Projection"
+      ],
+      "schemaPointers": [
+        "#/$defs/StepAttempt/properties/checkResult",
+        "#/$defs/CheckResult",
+        "#/$defs/CriterionResult"
+      ],
+      "profileIds": [
+        "console.workflow.check-result/v1"
+      ],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "StepAttempt.checkResult binds CheckResult, and Evaluation.criteria binds CriterionResult. Verdict, predicate digest, exact evidence, cutoff, claim type and coverage are typed. Optional explanatory actual/expected values remain a profile/documentation discrepancy rather than a missing verdict entity.",
+      "gaps": [],
+      "retainedNativeDetails": [
+        "The source/profile text advertises actual/expected summaries, but the normalized CheckResult has no such properties. If retained as raw source detail, the profile should say so explicitly."
+      ]
+    },
+    {
+      "id": "workflow:Observation",
+      "sourceService": "workflow",
+      "sourceName": "Observation",
+      "aliases": [],
+      "sourceSemanticKind": "OWNED_VALUE",
+      "originalEntityDeclaration": false,
+      "declarationReason": "An owned value, native nested shape, reference or control construct; not an additional original domain entity.",
+      "sourceCountBasis": "DICTIONARY",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/workflow/adapters.md",
+          "heading": "1. Common adapter contract",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Typed adapter-result content containing value, evidence IDs, collection state, claim coverage, scope/window, observed time and source; unavailable does not fabricate an empty value.",
+      "identity": "Owned immutable evidence/adapter-result content, not the new global Observation receipt identity.",
+      "mappingAliases": [
+        "Observation"
+      ],
+      "registryDispositions": [
+        "ownedValue"
+      ],
+      "registryCanonicalEntities": [
+        "Source",
+        "Observation"
+      ],
+      "canonicalEntities": [
+        "Source",
+        "Observation",
+        "Collection"
+      ],
+      "schemaPointers": [
+        "#/$defs/Observation",
+        "#/$defs/Source/properties/payload",
+        "#/$defs/Coverage"
+      ],
+      "profileIds": [
+        "aws.logs.query/v1",
+        "aws.cloudwatch.alarm/v1",
+        "aws.cloudwatch.metric/v1"
+      ],
+      "coverageLevel": "PARTIAL",
+      "coverageReason": "The consolidated Observation is a typed receipt and Source retains payload; Coverage is typed elsewhere. The old adapter Observation value contract is not bound as a normalized source payload schema, and its name must not be mistaken for identical semantics.",
+      "gaps": [
+        "No bound adapter-result value schema establishes value/collection/coverage/scope/window together; the existing source profiles provide field hints only."
+      ]
+    },
+    {
+      "id": "workflow:ExternalOperationRef",
+      "sourceService": "workflow",
+      "sourceName": "ExternalOperationRef",
+      "aliases": [],
+      "sourceSemanticKind": "OWNED_VALUE",
+      "originalEntityDeclaration": false,
+      "declarationReason": "An owned value, native nested shape, reference or control construct; not an additional original domain entity.",
+      "sourceCountBasis": "DIAGRAM",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/workflow/diagrams/02_owned_values.mmd",
+          "symbol": "ExternalOperationRef",
+          "kind": "CLASS_OR_ER_DIAGRAM"
+        },
+        {
+          "path": "aws/fis/analysis/workflow/model.md",
+          "heading": "Owned values and external references",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Qualified provider handle and stable originEffectKey, including an unknown native ID after a lost response, with independent remote disposition and reconciliation evidence.",
+      "identity": "Originating dispatch intent/effect ordinal plus provider handle once known.",
+      "mappingAliases": [
+        "ExternalOperationRef"
+      ],
+      "registryDispositions": [
+        "ownedValue"
+      ],
+      "registryCanonicalEntities": [
+        "StepAttempt",
+        "Command"
+      ],
+      "canonicalEntities": [
+        "StepAttempt",
+        "Command"
+      ],
+      "schemaPointers": [
+        "#/$defs/ExternalOperationRef",
+        "#/$defs/StepAttempt/properties/externalOperations",
+        "#/$defs/Command/properties/effects"
+      ],
+      "profileIds": [],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "StepAttempt.externalOperations binds ExternalOperationRef with stable pre-dispatch key, optional provider/entity identity, exact observations and remote disposition.",
+      "gaps": []
+    },
+    {
+      "id": "workflow:CancellationIntent",
+      "sourceService": "workflow",
+      "sourceName": "CancellationIntent",
+      "aliases": [],
+      "sourceSemanticKind": "CONTROL_VALUE",
+      "originalEntityDeclaration": false,
+      "declarationReason": "An owned value, native nested shape, reference or control construct; not an additional original domain entity.",
+      "sourceCountBasis": "DICTIONARY",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/workflow/model.md",
+          "heading": "5. Retries, cancellation and finalization",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "First accepted cancellation principal/time/reason and command, monotonic and independent of actual remote termination or cleanup.",
+      "identity": "Singleton owned by Run; corresponding durable Command identity.",
+      "mappingAliases": [
+        "CancellationIntent"
+      ],
+      "registryDispositions": [
+        "ownedValue"
+      ],
+      "registryCanonicalEntities": [
+        "Run",
+        "Command"
+      ],
+      "canonicalEntities": [
+        "Run",
+        "Command"
+      ],
+      "schemaPointers": [
+        "#/$defs/Run/properties/cancellationIntent",
+        "#/$defs/CancellationIntent"
+      ],
+      "profileIds": [],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "Run.cancellationIntent binds CancellationIntent, preserving actor, accepted time, reason and commandId under the Run entity version.",
+      "gaps": []
+    },
+    {
+      "id": "workflow:ArtifactRef",
+      "sourceService": "workflow",
+      "sourceName": "ArtifactRef",
+      "aliases": [],
+      "sourceSemanticKind": "OWNED_VALUE",
+      "originalEntityDeclaration": false,
+      "declarationReason": "An owned value, native nested shape, reference or control construct; not an additional original domain entity.",
+      "sourceCountBasis": "DICTIONARY",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/workflow/model.md",
+          "heading": "Owned values and external references",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Durable evidence-content locator/version/media/size/digest with access resolved independently of temporary download URLs.",
+      "identity": "External content locator and known version/digest; owner-local reference value.",
+      "mappingAliases": [
+        "ArtifactRef"
+      ],
+      "registryDispositions": [
+        "ownedValue"
+      ],
+      "registryCanonicalEntities": [
+        "Source",
+        "Snapshot"
+      ],
+      "canonicalEntities": [
+        "Source",
+        "Snapshot",
+        "Experiment"
+      ],
+      "schemaPointers": [
+        "#/$defs/ArtifactRef",
+        "#/$defs/Source/properties/artifact",
+        "#/$defs/FISReport/properties/artifacts"
+      ],
+      "profileIds": [],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "Source.artifact and FISReport/Asset references reuse ArtifactRef with explicit availability and nullable unknown length/version/digest.",
+      "gaps": []
+    },
+    {
+      "id": "workflow:ExecutionError",
+      "sourceService": "workflow",
+      "sourceName": "ExecutionError",
+      "aliases": [],
+      "sourceSemanticKind": "OWNED_VALUE",
+      "originalEntityDeclaration": false,
+      "declarationReason": "An owned value, native nested shape, reference or control construct; not an additional original domain entity.",
+      "sourceCountBasis": "DICTIONARY",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/workflow/model.md",
+          "heading": "Owned values and external references",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Structured technical error with code, category, safe message/provider detail and adapter retry eligibility; false checks and unresolved effects have different meanings.",
+      "identity": "Fact owned by an exact StepAttempt or Command attempt.",
+      "mappingAliases": [
+        "ExecutionError"
+      ],
+      "registryDispositions": [
+        "ownedValue"
+      ],
+      "registryCanonicalEntities": [
+        "StepAttempt",
+        "Command"
+      ],
+      "canonicalEntities": [
+        "StepAttempt",
+        "Command"
+      ],
+      "schemaPointers": [
+        "#/$defs/StepAttempt/properties/outcome",
+        "#/$defs/CommandAttempt/properties/outcome"
+      ],
+      "profileIds": [],
+      "coverageLevel": "PARTIAL",
+      "coverageReason": "StepAttempt.outcome and CommandAttempt.outcome distinguish broad technical outcomes, but neither entity owns an ExecutionError value. ReadError is collector-owned and does not bind into workflow attempts.",
+      "gaps": [
+        "No code/category/retry-eligibility/safe diagnostic value or exact error evidence contract is bound to StepAttempt/CommandAttempt despite the mapping claim."
+      ]
+    },
+    {
+      "id": "workflow:CaptureSessionHandle",
+      "sourceService": "workflow",
+      "sourceName": "CaptureSessionHandle",
+      "aliases": [
+        "capture-session handle"
+      ],
+      "sourceSemanticKind": "CONTROL_VALUE",
+      "originalEntityDeclaration": false,
+      "declarationReason": "An owned value, native nested shape, reference or control construct; not an additional original domain entity.",
+      "sourceCountBasis": "CONTROL",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/workflow/adapters.md",
+          "heading": "Complete notification example",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Bounded durable observation-session handle recording receiver/topic identity, starting cursor, capabilities and lease expiry before injection; an operational reference, not a seventh public aggregate.",
+      "identity": "Capture operation effect/handle retained by its owning attempt.",
+      "mappingAliases": [
+        "capture-session handle"
+      ],
+      "registryDispositions": [
+        "ownedValue"
+      ],
+      "registryCanonicalEntities": [
+        "StepAttempt",
+        "Scenario",
+        "Run"
+      ],
+      "canonicalEntities": [
+        "StepAttempt"
+      ],
+      "schemaPointers": [
+        "#/$defs/StepAttempt/properties/externalOperations",
+        "#/$defs/ExternalOperationRef"
+      ],
+      "profileIds": [],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "ExternalOperationRef supplies the stable owner-local handle/effect identity and exact observations; source-specific session metadata belongs to its locked adapter contract.",
+      "gaps": []
+    },
+    {
+      "id": "workflow:OperationRegistry",
+      "sourceService": "workflow",
+      "sourceName": "OperationRegistry",
+      "aliases": [
+        "operation registry"
+      ],
+      "sourceSemanticKind": "CONTROL_VALUE",
+      "originalEntityDeclaration": false,
+      "declarationReason": "An owned value, native nested shape, reference or control construct; not an additional original domain entity.",
+      "sourceCountBasis": "CONTROL",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/workflow/model.md",
+          "heading": "2. Publication and admission",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Immutable lookup of implementation/input/output contracts by digest, separate from mutable authoring aliases.",
+      "identity": "Registry contract digest; Scenario owns the exact OperationLock references.",
+      "mappingAliases": [
+        "operation registry"
+      ],
+      "registryDispositions": [
+        "ownedValue"
+      ],
+      "registryCanonicalEntities": [
+        "StepAttempt",
+        "Scenario",
+        "Run"
+      ],
+      "canonicalEntities": [
+        "Scenario"
+      ],
+      "schemaPointers": [
+        "#/$defs/OperationLock",
+        "#/$defs/ScenarioDefinition/properties/operationLocks"
+      ],
+      "profileIds": [],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "OperationLock/ScenarioDefinition retain the declared immutable registry references and capabilities. The registry service/storage implementation is explicitly a later runtime responsibility.",
+      "gaps": []
+    },
+    {
+      "id": "workflow:CriterionDenominator",
+      "sourceService": "workflow",
+      "sourceName": "CriterionDenominator",
+      "aliases": [
+        "criterion denominator"
+      ],
+      "sourceSemanticKind": "CONTROL_VALUE",
+      "originalEntityDeclaration": false,
+      "declarationReason": "An owned value, native nested shape, reference or control construct; not an additional original domain entity.",
+      "sourceCountBasis": "CONTROL",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/workflow/model.md",
+          "heading": "2. Publication and admission",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Exact required criterion set frozen at admission; skips/failure/cancellation do not shrink it.",
+      "identity": "Admission-owned requiredCriterionKeys set, interpreted with the published Scenario version.",
+      "mappingAliases": [
+        "criterion denominator"
+      ],
+      "registryDispositions": [
+        "ownedValue"
+      ],
+      "registryCanonicalEntities": [
+        "StepAttempt",
+        "Scenario",
+        "Run"
+      ],
+      "canonicalEntities": [
+        "Snapshot",
+        "Run",
+        "Projection"
+      ],
+      "schemaPointers": [
+        "#/$defs/Admission/properties/requiredCriterionKeys",
+        "#/$defs/Evaluation/properties/requiredCriterionKeys",
+        "#/$defs/StepDefinition/properties/checkRole"
+      ],
+      "profileIds": [],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "Admission.requiredCriterionKeys and Evaluation.requiredCriterionKeys bind the preserved set; semantic checks compare it with enabled required criterion definitions.",
+      "gaps": []
+    },
+    {
+      "id": "workflow:FinalizationResult",
+      "sourceService": "workflow",
+      "sourceName": "FinalizationResult",
+      "aliases": [
+        "finalization result"
+      ],
+      "sourceSemanticKind": "CONTROL_VALUE",
+      "originalEntityDeclaration": false,
+      "declarationReason": "An owned value, native nested shape, reference or control construct; not an additional original domain entity.",
+      "sourceCountBasis": "CONTROL",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/workflow/model.md",
+          "heading": "4. Execution and assessment are separate facts",
+          "kind": "MODEL_DICTIONARY_OR_EXPLANATION"
+        }
+      ],
+      "previousUse": "Independent cleanup outcome and unresolved-effect facts at sealing; successful criteria or local cancellation cannot imply remote quiescence.",
+      "identity": "Run-owned finalization state and exact finalizer/effect evidence.",
+      "mappingAliases": [
+        "finalization result"
+      ],
+      "registryDispositions": [
+        "ownedValue"
+      ],
+      "registryCanonicalEntities": [
+        "StepAttempt",
+        "Scenario",
+        "Run"
+      ],
+      "canonicalEntities": [
+        "Run",
+        "StepAttempt"
+      ],
+      "schemaPointers": [
+        "#/$defs/Run/properties/finalizationState",
+        "#/$defs/Run/properties/effectState",
+        "#/$defs/Run/properties/steps",
+        "#/$defs/ExternalOperationRef/properties/remoteDisposition"
+      ],
+      "profileIds": [],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "Run.finalizationState/effectState remain independent, and exact StepRun/StepAttempt references expose every selected finalizer and ExternalOperationRef.remoteDisposition. A duplicated finalization entity is unnecessary.",
+      "gaps": []
+    },
+    {
+      "id": "workflow:InputSchema",
+      "sourceService": "workflow",
+      "sourceName": "InputSchema",
+      "aliases": [],
+      "sourceSemanticKind": "CONTROL_VALUE",
+      "originalEntityDeclaration": false,
+      "declarationReason": "An owned value, native nested shape, reference or control construct; not an additional original domain entity.",
+      "sourceCountBasis": "SCHEMA_VALUE",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/workflow/scenario.schema.json",
+          "symbol": "InputSchema",
+          "kind": "JSON_SCHEMA_DEFINITION",
+          "pointer": "#/$defs/InputSchema"
+        }
+      ],
+      "previousUse": "Closed object schema for authoring/admission input values, independent of one particular scenario input object.",
+      "identity": "Owned schema content/digest within published Scenario definition.",
+      "mappingAliases": [],
+      "registryDispositions": [],
+      "registryCanonicalEntities": [],
+      "canonicalEntities": [
+        "Scenario",
+        "Snapshot"
+      ],
+      "schemaPointers": [
+        "#/$defs/ScenarioDefinition/properties/inputSchema",
+        "#/$defs/ScenarioDefinition/properties/inputSchemaDigest",
+        "#/$defs/Admission/properties/inputValues"
+      ],
+      "profileIds": [],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "ScenarioDefinition.inputSchema and inputSchemaDigest preserve the schema, with closed-top-level validation at publication and admission input validation.",
+      "gaps": []
+    },
+    {
+      "id": "workflow:BindingDeclaration",
+      "sourceService": "workflow",
+      "sourceName": "BindingDeclaration",
+      "aliases": [
+        "Binding"
+      ],
+      "sourceSemanticKind": "OWNED_VALUE",
+      "originalEntityDeclaration": false,
+      "declarationReason": "An owned value, native nested shape, reference or control construct; not an additional original domain entity.",
+      "sourceCountBasis": "SCHEMA_VALUE",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/workflow/scenario.schema.json",
+          "symbol": "Binding",
+          "kind": "JSON_SCHEMA_DEFINITION",
+          "pointer": "#/$defs/Binding"
+        }
+      ],
+      "previousUse": "Named authoring declaration that requires a connection capability; resolved access is supplied by trusted admission context.",
+      "identity": "Scenario version and owner-local binding key.",
+      "mappingAliases": [],
+      "registryDispositions": [],
+      "registryCanonicalEntities": [],
+      "canonicalEntities": [
+        "Scenario",
+        "Snapshot"
+      ],
+      "schemaPointers": [
+        "#/$defs/ScenarioDefinition/properties/bindings",
+        "#/$defs/BindingDeclaration",
+        "#/$defs/Admission/properties/resolvedBindings"
+      ],
+      "profileIds": [],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "ScenarioDefinition.bindings binds BindingDeclaration with CONNECTION kind and capability; Admission.resolvedBindings records the exact authorized Connection context.",
+      "gaps": []
+    },
+    {
+      "id": "workflow:WorkflowPolicies",
+      "sourceService": "workflow",
+      "sourceName": "WorkflowPolicies",
+      "aliases": [
+        "Policies"
+      ],
+      "sourceSemanticKind": "OWNED_VALUE",
+      "originalEntityDeclaration": false,
+      "declarationReason": "An owned value, native nested shape, reference or control construct; not an additional original domain entity.",
+      "sourceCountBasis": "SCHEMA_VALUE",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/workflow/scenario.schema.json",
+          "symbol": "Policies",
+          "kind": "JSON_SCHEMA_DEFINITION",
+          "pointer": "#/$defs/Policies"
+        }
+      ],
+      "previousUse": "Independent main/finalization time budgets and deployment-concurrency policy in the authoring contract.",
+      "identity": "Owned policy value within Scenario version, pinned by Admission policyDigest.",
+      "mappingAliases": [],
+      "registryDispositions": [],
+      "registryCanonicalEntities": [],
+      "canonicalEntities": [
+        "Scenario",
+        "Snapshot"
+      ],
+      "schemaPointers": [
+        "#/$defs/ScenarioDefinition/properties/policies",
+        "#/$defs/WorkflowPolicies",
+        "#/$defs/Admission/properties/policyDigest"
+      ],
+      "profileIds": [],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "ScenarioDefinition.policies binds WorkflowPolicies with corresponding budgets and QUEUE/REJECT deployment policy; the value shares its Scenario version.",
+      "gaps": []
+    },
+    {
+      "id": "workflow:RetryPolicy",
+      "sourceService": "workflow",
+      "sourceName": "RetryPolicy",
+      "aliases": [
+        "Retry"
+      ],
+      "sourceSemanticKind": "OWNED_VALUE",
+      "originalEntityDeclaration": false,
+      "declarationReason": "An owned value, native nested shape, reference or control construct; not an additional original domain entity.",
+      "sourceCountBasis": "SCHEMA_VALUE",
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/workflow/scenario.schema.json",
+          "symbol": "Retry",
+          "kind": "JSON_SCHEMA_DEFINITION",
+          "pointer": "#/$defs/Retry"
+        }
+      ],
+      "previousUse": "Bounded deliberate retry policy for eligible technical errors, distinct from transport polling, checkpoint recovery or retry-until-green.",
+      "identity": "Owned by a StepDefinition inside an exact Scenario version.",
+      "mappingAliases": [],
+      "registryDispositions": [],
+      "registryCanonicalEntities": [],
+      "canonicalEntities": [
+        "Scenario",
+        "StepAttempt"
+      ],
+      "schemaPointers": [
+        "#/$defs/StepDefinition/properties/retry",
+        "#/$defs/RetryPolicy",
+        "#/$defs/StepAttempt/properties/attemptNo"
+      ],
+      "profileIds": [],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "StepDefinition.retry binds RetryPolicy; attempt identity/effect reconciliation stays in StepAttempt/ExternalOperationRef and trusted adapter semantics.",
+      "gaps": []
+    }
+  ],
+  "findings": [
+    {
+      "id": "COV-FIS-01",
+      "title": "Retained provider configuration is mislabeled as normalized owned values",
+      "severity": "MEDIUM",
+      "category": "RETENTION_BOUNDARY_CLARIFICATION",
+      "affectedConstructIds": [
+        "fis:TargetSelection",
+        "fis:ExperimentTargetAccount",
+        "fis:StopCondition",
+        "fis:ActionParameterDefinition",
+        "fis:ActionTargetSlot",
+        "fis:TemplateAction",
+        "fis:TemplateTarget",
+        "fis:TemplateBinding",
+        "fis:TemplateDependency",
+        "fis:TemplateTargetAccount"
+      ],
+      "evidence": [
+        {
+          "path": "consolidated-operations-console/model/schema.json",
+          "symbol": "$defs/Experiment"
+        },
+        {
+          "path": "consolidated-operations-console/model/adapter-profiles.json",
+          "symbol": "mappings[sourceService=fis]"
+        }
+      ],
+      "finding": "The mapping calls these ownedValue representations, but their named typed classes/properties do not exist. Complete payloads have deliberate Source retention paths. This is not data loss, but it is not normalized contract coverage.",
+      "recommendation": "Mark retention-only explicitly with exact profile and JSON member paths. Promote only the small owned values required by current queries; native template/account/lever management can remain deferred."
+    },
+    {
+      "id": "COV-FIS-02",
+      "title": "Resolved memberships lack a typed selector join",
+      "severity": "HIGH",
+      "category": "MODEL_RELATIONSHIP_GAP",
+      "affectedConstructIds": [
+        "fis:ResolvedTargetMembership",
+        "fis:TargetSelection",
+        "fis:ActionTargetBinding"
+      ],
+      "evidence": [
+        {
+          "path": "consolidated-operations-console/model/schema.json",
+          "symbol": "$defs/TargetMembership"
+        },
+        {
+          "path": "consolidated-operations-console/model/schema.json",
+          "symbol": "$defs/FISAction/properties/targetBindings"
+        },
+        {
+          "path": "consolidated-operations-console/model/examples.json",
+          "symbol": "Experiment.targetMemberships.selectionKey=workers:instance-1"
+        }
+      ],
+      "finding": "Action bindings name selectors, but memberships provide only selectionKey, whose fixture value combines selector and resource. No documented typed selector field or canonical encoding makes that relation safely queryable. Empty selectors also have no normalized record.",
+      "recommendation": "Use a small Experiment-owned selector value/key and an explicit selector reference/key on TargetMembership. Keep opaque membership identity separate; retain the complete raw selector and targetInformation in Source. No new entity is needed."
+    },
+    {
+      "id": "COV-FIS-03",
+      "title": "Telemetry binding and experiment-assessment linkage are not concretely mapped",
+      "severity": "HIGH",
+      "category": "MODEL_MAPPING_GAP",
+      "affectedConstructIds": [
+        "fis:MetricBinding",
+        "fis:ExperimentMetricBinding",
+        "fis:MetricObservation",
+        "fis:AssessmentCriterion"
+      ],
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/report.md",
+          "heading": "9. Workload assessment model"
+        },
+        {
+          "path": "consolidated-operations-console/model/schema.json",
+          "symbol": "$defs/StepDefinition/properties/inputBindings"
+        },
+        {
+          "path": "consolidated-operations-console/model/adapter-profiles.json",
+          "symbol": "aws.cloudwatch.metric/v1"
+        }
+      ],
+      "finding": "MetricBinding/MetricBindingReference/CheckDefinition names in the crosswalk do not resolve to concrete value shapes or bound input schemas. ExperimentMetricBinding has no property/relation at all. The metric profile documents fields but does not bind typed samples or query/window/unit semantics. Evaluation can target an Experiment without a Run, so a Run-only generic input is insufficient.",
+      "recommendation": "Define narrow versioned profile/input schemas for telemetry queries, samples and criterion parameters; bind them to Source/Scenario or captured evaluation contents. Represent the experiment-to-exact-binding/window association as an owned reference value in captured evaluation context, preserving no-Run assessments."
+    },
+    {
+      "id": "COV-FW-01",
+      "title": "Attempt recovery facts have no declared value contract",
+      "severity": "HIGH",
+      "category": "MODEL_LIFECYCLE_GAP",
+      "affectedConstructIds": [
+        "workflow:StepAttempt",
+        "workflow:ExecutionError"
+      ],
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/workflow/adapters.md",
+          "heading": "1. Common adapter contract"
+        },
+        {
+          "path": "aws/fis/analysis/workflow/model.md",
+          "heading": "5. Retries, cancellation and finalization"
+        },
+        {
+          "path": "consolidated-operations-console/model/schema.json",
+          "symbol": "$defs/StepAttempt"
+        }
+      ],
+      "finding": "The source specifies once-evaluated/sealed inputs, typed durable checkpoints and structured technical errors. The current attempt tracks identity, status, evidence and external effects but has no checkpoint/resolved-input contract or workflow error value. ReadError belongs to collection and is not a substitute.",
+      "recommendation": "Add only the durable owned facts required for exact resume/input/error interpretation, or explicitly defer their normalization and identify their retained typed profile. Keep transient lease/queue implementation details outside the domain model."
+    },
+    {
+      "id": "COV-FW-02",
+      "title": "Evidence ownership and production/import roles need an explicit consolidation rule",
+      "severity": "MEDIUM",
+      "category": "PROVENANCE_MAPPING_GAP",
+      "affectedConstructIds": [
+        "workflow:Evidence",
+        "workflow:Observation"
+      ],
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/workflow/model.md",
+          "heading": "1. Entities, ownership and identity"
+        },
+        {
+          "path": "aws/fis/analysis/workflow/adapters.md",
+          "heading": "1. Common adapter contract"
+        },
+        {
+          "path": "consolidated-operations-console/model/schema.json",
+          "symbol": "$defs/StepAttempt/properties/evidenceRefs"
+        },
+        {
+          "path": "consolidated-operations-console/MAPPING.md",
+          "symbol": "Evidence / Observation workflow rows"
+        }
+      ],
+      "finding": "Shared Source/Observation and exact references are appropriate, but they do not explicitly preserve the earlier run-owned evidence manifest, producer/import role, or the complete typed adapter Observation result. The mapping prose currently claims those roles remain explicit.",
+      "recommendation": "State how run evidence closure is selected and represent producer/consumer/import provenance as an owned citation value where required. Define registered adapter-result schemas for value/collection/coverage/scope/window. Do not add a duplicate Evidence or Version entity."
+    },
+    {
+      "id": "COV-FW-03",
+      "title": "A normalized profile advertises fields absent from its bound value",
+      "severity": "LOW",
+      "category": "PROFILE_PRECISION",
+      "affectedConstructIds": [
+        "workflow:CheckResult"
+      ],
+      "evidence": [
+        {
+          "path": "consolidated-operations-console/model/adapter-profiles.json",
+          "symbol": "console.workflow.check-result/v1.observedFields.typedContent"
+        },
+        {
+          "path": "consolidated-operations-console/model/schema.json",
+          "symbol": "$defs/CheckResult"
+        }
+      ],
+      "finding": "The profile and predecessor describe actual/expected summaries, but the bound CheckResult schema has neither. Core check outcome, evidence and cutoff are normalized, so this does not remove CheckResult concept coverage.",
+      "recommendation": "Say which details remain in retained Source and which are normalized, or add a narrow optional explanatory value if a reviewed use case requires it."
+    },
+    {
+      "id": "COV-FW-04",
+      "title": "Evaluation profile identity wording retains removed revision-resource names",
+      "severity": "LOW",
+      "category": "STALE_MAPPING_TEXT",
+      "affectedConstructIds": [
+        "fis:ResilienceAssessment"
+      ],
+      "evidence": [
+        {
+          "path": "consolidated-operations-console/model/adapter-profiles.json",
+          "symbol": "console.workflow.evaluation/v1.identityBasis"
+        }
+      ],
+      "finding": "identityBasis still says projectionRevisionId and inputSnapshotId even though V2 uses a stable Projection identity/version and exact Snapshot reference.",
+      "recommendation": "Update the profile wording to the current common entity/version/reference contract; do not reintroduce revision entities."
+    }
+  ],
+  "verification": {
+    "status": "PASS",
+    "diagramSymbols": 45,
+    "diagramSymbolsWithExactlyOneConstruct": 45,
+    "distinctPinnedSourceFiles": 11,
+    "sourceEvidenceEntries": 122,
+    "allSourcePathsAndHeadingsExist": true,
+    "allTargetSchemaPointersResolve": true,
+    "allCanonicalEntitiesAndProfilesExist": true,
+    "findingsReferenceKnownConstructs": true,
+    "note": "Source/source-symbol coverage and typed mapping inspection do not establish a production adapter implementation or full native SDK conformance."
+  }
+}

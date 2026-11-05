@@ -13,6 +13,8 @@ The deliverable is a data model and **108 typed AWS RPC style operation contract
 | Question | Document |
 | --- | --- |
 | Where can I review every entity and operation with use cases and source history? | [Complete HTML reference](reference.html) · [Reference sources and checks](reference/README.md) |
+| How much of the original AWS models is actually represented? | [Verified coverage and counts](COVERAGE.md) · [Every audited source construct](coverage/CATALOG.md) |
+| How should an AWS construct map into this model? | [Mapping decision rules](MAPPING_RULES.md) · [Machine-readable rules](coverage/mapping-rules.json) |
 | What previous work exists on main? | [Complete inventory](INVENTORY.md) · [File manifest](inventory.json) |
 | What is the application and this phase's scope? | [Context and scope](CONTEXT_AND_SCOPE.md) |
 | Which design rules govern this revision? | [Design principles and their provenance](DESIGN_PRINCIPLES.md) |
@@ -65,5 +67,7 @@ The authenticated context supplies Workspace and actor scope. Provider commands 
 `model/schema.json` is the authoritative logical contract. The reference, diagram atlas and API artifacts are kept consistent with it. [VALIDATION.md](VALIDATION.md) records the exact reproduction commands, renderer versions, executed checks and evidence limits.
 
 The self-contained [HTML reference](reference.html) combines the schemas, examples, Draw.io exports and source crosswalks with reviewed use-case and historical narratives. It covers all 36 entities and 108 operations, works offline, and links to pinned earlier definitions. Rebuild it with `python tools/build_reference.py` from this directory; `--check` verifies exact reproduction and coverage. [Reference maintenance and QA](reference/README.md) explains the inputs and checks.
+
+The source-coverage audit independently distinguishes source entities, class/ER declarations, aliases and native DTO shapes. Rebuild its catalog, counts and mapping rulebook with `python tools/build_coverage.py`, then regenerate the HTML. Use `--check` on both builders to verify that the committed artifacts match their reviewed inputs. The audit qualifies earlier mapping claims and records gaps; it does not change the 36-entity or 108-operation contracts.
 
 The revision preserves the original service analyses and frozen source inventory. Changes are confined to `consolidated-operations-console/`.

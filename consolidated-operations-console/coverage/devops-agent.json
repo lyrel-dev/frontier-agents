@@ -1,0 +1,4032 @@
+{
+  "schemaVersion": "source-coverage-audit/1",
+  "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+  "targetCommit": "20650d3cf051ad457378704c15f48f77565a611c",
+  "scope": "AWS DevOps Agent original solution model declarations, named model dictionaries and separate selected native SDK shape catalog.",
+  "countingRules": [
+    "The fixed benchmark is the 34 distinct class/ER symbols independently extracted from the eight original ER diagrams (D01–D07 and U02); sequence/workflow actors are excluded.",
+    "A source symbol belongs to exactly one catalog concept; only genuine name/case aliases are combined. Native Task and application Investigation remain distinct, as do generic SourceRevision and journal-specific JournalRecordRevision.",
+    "Named identity, semantic-entity and API-wide model dictionary concepts supplement the diagram benchmark. Ordinary fields, every possible graph category, asset-type value and operation are not counted as new entities.",
+    "originalEntityDeclaration records an explicit source class/entity declaration; sourceSemanticKind states what that construct means. Neither says it must become a target entity.",
+    "The 52 selected native SDK structures/unions form a supplementary resource/value/wrapper universe and must not be added to business-entity counts. Their exact heading names are audited separately.",
+    "NORMALIZED means an essential typed entity/value/profile binding preserves the source concept; it does not claim all optional native members or complete SDK-schema conformance.",
+    "RETAINED_ONLY means a named registered profile preserves source evidence, but payload JsonValue and observedFields text are not a typed normalized model.",
+    "PARTIAL means a typed core exists but an essential source distinction or explicit source contract member is absent/narrowed; gaps name the limit. UNMAPPED would mean no substantiated target representation.",
+    "All statuses describe proposed contracts. No production adapter, runtime enforcement or customer data coverage has been demonstrated."
+  ],
+  "summary": {
+    "fixedClassErSymbols": 34,
+    "fixedClassErConcepts": 34,
+    "fixedClassErCoverage": {
+      "NORMALIZED": 21,
+      "RETAINED_ONLY": 2,
+      "PARTIAL": 11
+    },
+    "fixedClassErSemanticKinds": {
+      "NATIVE_RESOURCE": 7,
+      "APPLICATION_ENTITY": 10,
+      "OWNED_VALUE": 5,
+      "RELATIONSHIP": 5,
+      "HISTORY_REPRESENTATION": 4,
+      "DERIVED_VIEW": 2,
+      "EXTERNAL_IDENTITY": 1
+    },
+    "broaderNamedConcepts": 59,
+    "broaderCoverage": {
+      "NORMALIZED": 24,
+      "RETAINED_ONLY": 24,
+      "PARTIAL": 11
+    },
+    "broaderSemanticKinds": {
+      "NATIVE_RESOURCE": 11,
+      "APPLICATION_ENTITY": 10,
+      "OWNED_VALUE": 10,
+      "RELATIONSHIP": 5,
+      "HISTORY_REPRESENTATION": 4,
+      "DERIVED_VIEW": 10,
+      "EXTERNAL_IDENTITY": 2,
+      "TRANSPORT_DTO": 6,
+      "CONTROL_VALUE": 1
+    },
+    "originalEntityDeclarations": 46,
+    "distinctTargetEntities": [
+      "AgentSpace",
+      "ApprovalRequest",
+      "Asset",
+      "Collection",
+      "Command",
+      "Connection",
+      "Execution",
+      "Investigation",
+      "JournalRecord",
+      "Observation",
+      "Projection",
+      "ReadAttempt",
+      "Resource",
+      "Snapshot",
+      "Source"
+    ],
+    "nativeSdkShapes": 52,
+    "nativeSdkShapeCoverage": {
+      "PARTIAL": 1,
+      "RETAINED_ONLY": 41,
+      "NORMALIZED": 10
+    },
+    "nativeSdkShapeRoles": {
+      "RESOURCE": 10,
+      "VALUE": 25,
+      "WRAPPER": 17
+    },
+    "normalizationGaps": 6,
+    "unmappedBenchmarkSymbols": []
+  },
+  "constructs": [
+    {
+      "id": "devops-agent:AgentSpace",
+      "sourceService": "devops-agent",
+      "sourceName": "AgentSpace",
+      "aliases": [
+        "SPACE"
+      ],
+      "sourceSemanticKind": "NATIVE_RESOURCE",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a class/ER model construct: SPACE.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "Identity and scope",
+          "kind": "MODEL_DICTIONARY"
+        },
+        {
+          "path": "aws/devops-agent/analysis/diagrams/D01-workspace-associations.mmd",
+          "symbol": "SPACE",
+          "kind": "DIAGRAM"
+        }
+      ],
+      "previousUse": "The native workspace scopes tasks, executions, journal records, associations and assets. It is not the application tenant.",
+      "identity": "Owning partition/account/Region + agentSpaceId; ARN is an alias.",
+      "mappingAliases": [
+        "AgentSpace",
+        "SPACE"
+      ],
+      "canonicalEntities": [
+        "AgentSpace",
+        "Source",
+        "Observation"
+      ],
+      "schemaPointers": [
+        "#/$defs/AgentSpace",
+        "#/$defs/AgentSpace/properties/identity",
+        "#/$defs/AgentSpace/properties/associations"
+      ],
+      "profileIds": [
+        "aws.devops-agent.agent-space/v1"
+      ],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "AgentSpace provides a typed scoped entity and association collection with exact selected observation. Peripheral provider configuration remains in its retained Source.",
+      "gaps": [],
+      "benchmarkSymbols": [
+        "SPACE"
+      ]
+    },
+    {
+      "id": "devops-agent:Association",
+      "sourceService": "devops-agent",
+      "sourceName": "Association",
+      "aliases": [
+        "ASSOCIATION"
+      ],
+      "sourceSemanticKind": "NATIVE_RESOURCE",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a class/ER model construct: ASSOCIATION.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "Diagram D01 — workspace, association and external reference",
+          "kind": "MODEL_DICTIONARY"
+        },
+        {
+          "path": "aws/devops-agent/analysis/diagrams/D01-workspace-associations.mmd",
+          "symbol": "ASSOCIATION",
+          "kind": "DIAGRAM"
+        }
+      ],
+      "previousUse": "A native space-scoped integration association carries its own ID, configuration discriminator and optional registered-service relation. Built-in serviceId aws does not require a registration.",
+      "identity": "Owning AgentSpace + associationId; serviceId is not unique within the space.",
+      "mappingAliases": [
+        "Association",
+        "ASSOCIATION"
+      ],
+      "canonicalEntities": [
+        "AgentSpace",
+        "Source"
+      ],
+      "schemaPointers": [
+        "#/$defs/AgentSpace/properties/associations",
+        "#/$defs/AgentAssociation"
+      ],
+      "profileIds": [
+        "aws.devops-agent.association/v1"
+      ],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "AgentAssociation is a typed owned value in each AgentSpace version with associationId, serviceId, configurationKind, optional registration identity and exact source. Demotion to an owned value preserves its source identity; native configuration remains Source-backed.",
+      "gaps": [],
+      "benchmarkSymbols": [
+        "ASSOCIATION"
+      ]
+    },
+    {
+      "id": "devops-agent:RegisteredService",
+      "sourceService": "devops-agent",
+      "sourceName": "RegisteredService",
+      "aliases": [
+        "REGISTERED_SERVICE"
+      ],
+      "sourceSemanticKind": "NATIVE_RESOURCE",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a class/ER model construct: REGISTERED_SERVICE.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "Diagram D01 — workspace, association and external reference",
+          "kind": "MODEL_DICTIONARY"
+        },
+        {
+          "path": "aws/devops-agent/analysis/diagrams/D01-workspace-associations.mmd",
+          "symbol": "REGISTERED_SERVICE",
+          "kind": "DIAGRAM"
+        }
+      ],
+      "previousUse": "Provider integration registration supplies service type, accessible resources, connection configuration and native registration lifecycle; it may resolve an association.",
+      "identity": "Owning partition/account/Region + registered serviceId.",
+      "mappingAliases": [
+        "RegisteredService",
+        "REGISTERED_SERVICE"
+      ],
+      "canonicalEntities": [
+        "Source"
+      ],
+      "schemaPointers": [
+        "#/$defs/Source/properties/identity",
+        "#/$defs/Source/properties/profile",
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.registered-service/v1"
+      ],
+      "coverageLevel": "RETAINED_ONLY",
+      "coverageReason": "A named registration profile retains the provider record; no normalized registration value/entity or management contract exists. It is correctly kept distinct from workload Service.",
+      "gaps": [],
+      "benchmarkSymbols": [
+        "REGISTERED_SERVICE"
+      ]
+    },
+    {
+      "id": "devops-agent:Task",
+      "sourceService": "devops-agent",
+      "sourceName": "Task",
+      "aliases": [
+        "TASK"
+      ],
+      "sourceSemanticKind": "NATIVE_RESOURCE",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a class/ER model construct: TASK.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "Native field groups and meaning",
+          "kind": "MODEL_DICTIONARY"
+        },
+        {
+          "path": "aws/devops-agent/analysis/diagrams/D01-workspace-associations.mmd",
+          "symbol": "TASK",
+          "kind": "DIAGRAM"
+        },
+        {
+          "path": "aws/devops-agent/analysis/diagrams/D02-investigation-core.mmd",
+          "symbol": "TASK",
+          "kind": "DIAGRAM"
+        }
+      ],
+      "previousUse": "A native backlog work item has scoped identity, task type, status, priority, native version, optional execution pointer and external/primary-task references. The native catalog contains multiple task types.",
+      "identity": "Owning scope + AgentSpace + taskId.",
+      "mappingAliases": [
+        "Task",
+        "TASK"
+      ],
+      "canonicalEntities": [
+        "Investigation",
+        "Source",
+        "Observation"
+      ],
+      "schemaPointers": [
+        "#/$defs/Investigation",
+        "#/$defs/Investigation/properties/nativeTaskVersion",
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.task/v1"
+      ],
+      "coverageLevel": "PARTIAL",
+      "coverageReason": "The INVESTIGATION task facet has a typed entity with identity/status/version and scoped links. EVALUATION, RELEASE_READINESS_REVIEW and RELEASE_TESTING tasks remain retained Task documents; priority and other native header fields are read through the retained source.",
+      "gaps": [
+        "Only the INVESTIGATION discriminator is normalized as an application aggregate; the native Task family is broader."
+      ],
+      "benchmarkSymbols": [
+        "TASK"
+      ],
+      "notes": "Task and Investigation share a registry mapping row, but the source defines Task as a native resource and Investigation as an application composition over one task type."
+    },
+    {
+      "id": "devops-agent:Investigation",
+      "sourceService": "devops-agent",
+      "sourceName": "Investigation",
+      "aliases": [
+        "INVESTIGATION"
+      ],
+      "sourceSemanticKind": "APPLICATION_ENTITY",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a class/ER model construct: INVESTIGATION.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "3. Investigation aggregate and keys",
+          "kind": "MODEL_DICTIONARY"
+        },
+        {
+          "path": "aws/devops-agent/analysis/diagrams/D05-artifacts-assets.mmd",
+          "symbol": "INVESTIGATION",
+          "kind": "DIAGRAM"
+        },
+        {
+          "path": "aws/devops-agent/analysis/diagrams/D06-historical-snapshots.mmd",
+          "symbol": "INVESTIGATION",
+          "kind": "DIAGRAM"
+        }
+      ],
+      "previousUse": "An application composition over an INVESTIGATION Task, observed execution memberships, journals, phase results and historical captures.",
+      "identity": "Investigation continuity follows the scoped native Task identity; related execution/result/capture records retain their own identities.",
+      "mappingAliases": [
+        "Investigation",
+        "INVESTIGATION"
+      ],
+      "canonicalEntities": [
+        "Investigation",
+        "Execution",
+        "JournalRecord",
+        "Projection",
+        "Snapshot"
+      ],
+      "schemaPointers": [
+        "#/$defs/Investigation",
+        "#/$defs/TaskExecutionMembership",
+        "#/$defs/InvestigationResult",
+        "#/$defs/Snapshot"
+      ],
+      "profileIds": [
+        "aws.devops-agent.task/v1",
+        "console.investigation.result/v1"
+      ],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "The aggregate is represented by Investigation plus explicitly referenced executions, journal evidence, result projections and snapshots. It is not claimed to be a native AWS Investigation response.",
+      "gaps": [],
+      "benchmarkSymbols": [
+        "INVESTIGATION"
+      ]
+    },
+    {
+      "id": "devops-agent:ExternalReference",
+      "sourceService": "devops-agent",
+      "sourceName": "ExternalReference",
+      "aliases": [
+        "EXTERNAL_REFERENCE"
+      ],
+      "sourceSemanticKind": "OWNED_VALUE",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a class/ER model construct: EXTERNAL_REFERENCE.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "Diagram D01 — workspace, association and external reference",
+          "kind": "MODEL_DICTIONARY"
+        },
+        {
+          "path": "aws/devops-agent/analysis/diagrams/D01-workspace-associations.mmd",
+          "symbol": "EXTERNAL_REFERENCE",
+          "kind": "DIAGRAM"
+        }
+      ],
+      "previousUse": "A Task embeds an external ticket/incident reference with system, reference ID, URL and association ID; association resolution can remain absent historically.",
+      "identity": "An owner-local reference to external system + referenceId and association context.",
+      "mappingAliases": [
+        "ExternalReference",
+        "EXTERNAL_REFERENCE"
+      ],
+      "canonicalEntities": [
+        "Investigation"
+      ],
+      "schemaPointers": [
+        "#/$defs/Investigation/properties/externalReference",
+        "#/$defs/ExternalReference"
+      ],
+      "profileIds": [
+        "aws.devops-agent.task/v1"
+      ],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "ExternalReference is a typed owned value with the native linkage members and nullable resolvedAssociationId; loss of the current association does not erase the reference.",
+      "gaps": [],
+      "benchmarkSymbols": [
+        "EXTERNAL_REFERENCE"
+      ]
+    },
+    {
+      "id": "devops-agent:Execution",
+      "sourceService": "devops-agent",
+      "sourceName": "Execution",
+      "aliases": [
+        "EXECUTION"
+      ],
+      "sourceSemanticKind": "NATIVE_RESOURCE",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a class/ER model construct: EXECUTION.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "Identity and scope",
+          "kind": "MODEL_DICTIONARY"
+        },
+        {
+          "path": "aws/devops-agent/analysis/diagrams/D02-investigation-core.mmd",
+          "symbol": "EXECUTION",
+          "kind": "DIAGRAM"
+        },
+        {
+          "path": "aws/devops-agent/analysis/diagrams/U02-approval-lifecycle.mmd",
+          "symbol": "EXECUTION",
+          "kind": "DIAGRAM"
+        }
+      ],
+      "previousUse": "Native execution with explicit parent hierarchy, subtask and execution state; task membership is observed separately and STOPPED does not imply success.",
+      "identity": "Owning scope + AgentSpace + executionId.",
+      "mappingAliases": [
+        "Execution",
+        "EXECUTION"
+      ],
+      "canonicalEntities": [
+        "Execution",
+        "Source",
+        "Observation"
+      ],
+      "schemaPointers": [
+        "#/$defs/Execution",
+        "#/$defs/Execution/properties/parentExecutionIdentity",
+        "#/$defs/Execution/properties/rawExecutionStatus"
+      ],
+      "profileIds": [
+        "aws.devops-agent.execution/v1"
+      ],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "Execution preserves identity, parent identity, state, subtask and exact observation. Optional native agent/session metadata remains source-backed rather than guessed.",
+      "gaps": [],
+      "benchmarkSymbols": [
+        "EXECUTION"
+      ]
+    },
+    {
+      "id": "devops-agent:TaskExecutionMembership",
+      "sourceService": "devops-agent",
+      "sourceName": "TaskExecutionMembership",
+      "aliases": [
+        "TASK_EXECUTION"
+      ],
+      "sourceSemanticKind": "RELATIONSHIP",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a class/ER model construct: TASK_EXECUTION.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "Diagram D02 — native core with an explicit membership table",
+          "kind": "MODEL_DICTIONARY"
+        },
+        {
+          "path": "aws/devops-agent/analysis/diagrams/D02-investigation-core.mmd",
+          "symbol": "TASK_EXECUTION",
+          "kind": "DIAGRAM"
+        }
+      ],
+      "previousUse": "Records a task-scoped ListExecutions request/response association because Execution does not contain a taskId and global one-task ownership is not established.",
+      "identity": "Scoped task/investigation + execution pair, with retained observation of the association.",
+      "mappingAliases": [
+        "TaskExecutionMembership",
+        "TASK_EXECUTION"
+      ],
+      "canonicalEntities": [
+        "Investigation",
+        "Execution"
+      ],
+      "schemaPointers": [
+        "#/$defs/Investigation/properties/executionMemberships",
+        "#/$defs/TaskExecutionMembership"
+      ],
+      "profileIds": [],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "The owned membership value links canonical Investigation and Execution IDs to an exact Observation. An Execution has no mandatory single investigation parent.",
+      "gaps": [],
+      "benchmarkSymbols": [
+        "TASK_EXECUTION"
+      ]
+    },
+    {
+      "id": "devops-agent:JournalRecord",
+      "sourceService": "devops-agent",
+      "sourceName": "JournalRecord",
+      "aliases": [
+        "JOURNAL_RECORD"
+      ],
+      "sourceSemanticKind": "NATIVE_RESOURCE",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a class/ER model construct: JOURNAL_RECORD.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "The native envelope is the reliable base",
+          "kind": "MODEL_DICTIONARY"
+        },
+        {
+          "path": "aws/devops-agent/analysis/diagrams/D02-investigation-core.mmd",
+          "symbol": "JOURNAL_RECORD",
+          "kind": "DIAGRAM"
+        }
+      ],
+      "previousUse": "Published native envelope with space/execution/record ID, open recordType, createdAt and arbitrary JSON content, including unknown record types.",
+      "identity": "Owning scope + AgentSpace + executionId + recordId.",
+      "mappingAliases": [
+        "JournalRecord",
+        "JOURNAL_RECORD"
+      ],
+      "canonicalEntities": [
+        "JournalRecord",
+        "Source",
+        "Observation"
+      ],
+      "schemaPointers": [
+        "#/$defs/JournalRecord",
+        "#/$defs/JournalRecord/properties/selectedSource",
+        "#/$defs/JournalRecord/properties/selectedObservation"
+      ],
+      "profileIds": [
+        "aws.devops-agent.journal-record/v1"
+      ],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "JournalRecord normalizes the envelope identity/type and exact source/observation references. Keeping content as retained arbitrary JSON is faithful to the native contract, not a missing universal hypothesis schema.",
+      "gaps": [],
+      "benchmarkSymbols": [
+        "JOURNAL_RECORD"
+      ]
+    },
+    {
+      "id": "devops-agent:JournalRecordRevision",
+      "sourceService": "devops-agent",
+      "sourceName": "JournalRecordRevision",
+      "aliases": [
+        "RECORD_REVISION"
+      ],
+      "sourceSemanticKind": "HISTORY_REPRESENTATION",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a class/ER model construct: RECORD_REVISION.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "Diagram D02 — native core with an explicit membership table",
+          "kind": "MODEL_DICTIONARY"
+        },
+        {
+          "path": "aws/devops-agent/analysis/diagrams/D02-investigation-core.mmd",
+          "symbol": "RECORD_REVISION",
+          "kind": "DIAGRAM"
+        }
+      ],
+      "previousUse": "Retains a distinct observed journal payload/envelope rendition when content changes under the same native record ID; it does not assert a native journal revision API.",
+      "identity": "Source journal identity + retained rendition; old model used a local revision ID and payload hash.",
+      "mappingAliases": [
+        "JournalRecordRevision",
+        "RECORD_REVISION"
+      ],
+      "canonicalEntities": [
+        "Source",
+        "JournalRecord",
+        "Observation"
+      ],
+      "schemaPointers": [
+        "#/$defs/Source/properties/version",
+        "#/$defs/Source/properties/contentDigest",
+        "#/$defs/JournalRecord/properties/selectedSource",
+        "#/$defs/Observation/properties/source"
+      ],
+      "profileIds": [
+        "aws.devops-agent.journal-record/v1"
+      ],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "Journal history is represented by exact versions of stable Source and JournalRecord identities, with separate observation occurrences. No version-only entity is needed.",
+      "gaps": [],
+      "benchmarkSymbols": [
+        "RECORD_REVISION"
+      ]
+    },
+    {
+      "id": "devops-agent:SourceObject",
+      "sourceService": "devops-agent",
+      "sourceName": "SourceObject",
+      "aliases": [
+        "SOURCE_OBJECT"
+      ],
+      "sourceSemanticKind": "APPLICATION_ENTITY",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a class/ER model construct: SOURCE_OBJECT.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "Diagram D03 — every projection retains provenance",
+          "kind": "MODEL_DICTIONARY"
+        },
+        {
+          "path": "aws/devops-agent/analysis/diagrams/D03-projection-provenance.mmd",
+          "symbol": "SOURCE_OBJECT",
+          "kind": "DIAGRAM"
+        }
+      ],
+      "previousUse": "The stable logical object behind retained journal, task/execution, event, stream or asset representations.",
+      "identity": "Complete scoped source/channel/native key, independent of content digest and observing credentials.",
+      "mappingAliases": [
+        "SourceObject",
+        "SOURCE_OBJECT"
+      ],
+      "canonicalEntities": [
+        "Source"
+      ],
+      "schemaPointers": [
+        "#/$defs/Source/properties/identity",
+        "#/$defs/SourceIdentity",
+        "#/$defs/Source/properties/sourceOperation",
+        "#/$defs/Source/properties/representation"
+      ],
+      "profileIds": [],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "Source owns stable sourceId and a typed complete SourceIdentity; source operation and representation are part of its logical key. Observing credentials do not redefine native ownership.",
+      "gaps": [],
+      "benchmarkSymbols": [
+        "SOURCE_OBJECT"
+      ]
+    },
+    {
+      "id": "devops-agent:SourceRevision",
+      "sourceService": "devops-agent",
+      "sourceName": "SourceRevision",
+      "aliases": [
+        "SOURCE_REVISION"
+      ],
+      "sourceSemanticKind": "HISTORY_REPRESENTATION",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a class/ER model construct: SOURCE_REVISION.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "Collection observations are separate from source revisions",
+          "kind": "MODEL_DICTIONARY"
+        },
+        {
+          "path": "aws/devops-agent/analysis/diagrams/D03-projection-provenance.mmd",
+          "symbol": "SOURCE_REVISION",
+          "kind": "DIAGRAM"
+        },
+        {
+          "path": "aws/devops-agent/analysis/diagrams/D06-historical-snapshots.mmd",
+          "symbol": "SOURCE_REVISION",
+          "kind": "DIAGRAM"
+        },
+        {
+          "path": "aws/devops-agent/analysis/diagrams/D07-collection-observations.mmd",
+          "symbol": "SOURCE_REVISION",
+          "kind": "DIAGRAM"
+        }
+      ],
+      "previousUse": "Generic immutable retained rendition for a source object, distinct from occurrences of reading or receiving it.",
+      "identity": "Stable scoped Source identity + entity version; old model used revision_id and declared content hash.",
+      "mappingAliases": [
+        "SourceRevision",
+        "SOURCE_REVISION"
+      ],
+      "canonicalEntities": [
+        "Source",
+        "Observation"
+      ],
+      "schemaPointers": [
+        "#/$defs/Source/properties/version",
+        "#/$defs/Source/properties/contentDigest",
+        "#/$defs/Source/properties/digestProfile",
+        "#/$defs/Observation/properties/source"
+      ],
+      "profileIds": [],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "Source versions preserve the retained rendition and digest profile, while Observation records repeated receipts. A changed A→B→A sequence advances normal versions instead of reviving an old rendition ID.",
+      "gaps": [],
+      "benchmarkSymbols": [
+        "SOURCE_REVISION"
+      ]
+    },
+    {
+      "id": "devops-agent:ProjectionSource",
+      "sourceService": "devops-agent",
+      "sourceName": "ProjectionSource",
+      "aliases": [
+        "PROJECTION_SOURCE"
+      ],
+      "sourceSemanticKind": "RELATIONSHIP",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a class/ER model construct: PROJECTION_SOURCE.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "Diagram D03 — every projection retains provenance",
+          "kind": "MODEL_DICTIONARY"
+        },
+        {
+          "path": "aws/devops-agent/analysis/diagrams/D03-projection-provenance.mmd",
+          "symbol": "PROJECTION_SOURCE",
+          "kind": "DIAGRAM"
+        }
+      ],
+      "previousUse": "A citation connects one derived rendition to an exact retained source, optionally at one of several distinct fragments in that source.",
+      "identity": "Owning derived rendition + exact source version + locator; no independent lifecycle is required.",
+      "mappingAliases": [
+        "ProjectionSource",
+        "PROJECTION_SOURCE"
+      ],
+      "canonicalEntities": [
+        "Projection"
+      ],
+      "schemaPointers": [
+        "#/$defs/Projection/properties/inputRefs",
+        "#/$defs/EvidenceRef",
+        "#/$defs/EvidenceLocator"
+      ],
+      "profileIds": [],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "EvidenceRef pins kind/id/version and EvidenceLocator supplies JSON pointer, asset path or text-range attribution. Distinct locators remain distinct citations without another entity.",
+      "gaps": [],
+      "benchmarkSymbols": [
+        "PROJECTION_SOURCE"
+      ]
+    },
+    {
+      "id": "devops-agent:DerivedRevision",
+      "sourceService": "devops-agent",
+      "sourceName": "DerivedRevision",
+      "aliases": [
+        "DERIVED_REVISION"
+      ],
+      "sourceSemanticKind": "HISTORY_REPRESENTATION",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a class/ER model construct: DERIVED_REVISION.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "Diagram D03 — every projection retains provenance",
+          "kind": "MODEL_DICTIONARY"
+        },
+        {
+          "path": "aws/devops-agent/analysis/diagrams/D03-projection-provenance.mmd",
+          "symbol": "DERIVED_REVISION",
+          "kind": "DIAGRAM"
+        }
+      ],
+      "previousUse": "Immutable rendition of a logical timeline item, finding, result document or graph assertion, retaining item kind, assertion origin, payload and derivation identity.",
+      "identity": "Stable logical item + immutable rendition; old model used projectionRevisionId separately.",
+      "mappingAliases": [
+        "DerivedRevision",
+        "DERIVED_REVISION"
+      ],
+      "canonicalEntities": [
+        "Projection",
+        "Source"
+      ],
+      "schemaPointers": [
+        "#/$defs/Projection/properties/version",
+        "#/$defs/Projection/properties/profile",
+        "#/$defs/Projection/properties/ruleDigest",
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "console.investigation.timeline/v1",
+        "console.investigation.assertion/v1",
+        "console.investigation.action-observation/v1",
+        "console.investigation.result/v1"
+      ],
+      "coverageLevel": "PARTIAL",
+      "coverageReason": "Ordinary Projection versions normalize five result profiles. Other DevOps renditions are retained as application-origin Source documents; the generic prior item-kind/assertion-origin contract is not a normalized Projection variant.",
+      "gaps": [
+        "Projection.profile is closed to five variants; timeline/assertion/action-observation variants do not exist.",
+        "The normalized Projection envelope has no assertionOrigin field."
+      ],
+      "benchmarkSymbols": [
+        "DERIVED_REVISION"
+      ]
+    },
+    {
+      "id": "devops-agent:Derivation",
+      "sourceService": "devops-agent",
+      "sourceName": "Derivation",
+      "aliases": [
+        "DERIVATION"
+      ],
+      "sourceSemanticKind": "OWNED_VALUE",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a class/ER model construct: DERIVATION.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "Diagram D03 — every projection retains provenance",
+          "kind": "MODEL_DICTIONARY"
+        },
+        {
+          "path": "aws/devops-agent/analysis/diagrams/D03-projection-provenance.mmd",
+          "symbol": "DERIVATION",
+          "kind": "DIAGRAM"
+        }
+      ],
+      "previousUse": "The parser and rule/model version that produced a derived rendition, with explicit distinction between native fields, deterministic parsing, operator assertions and inference.",
+      "identity": "Owner-local immutable derivation identity/version; a new parser must not rewrite an old result.",
+      "mappingAliases": [
+        "Derivation",
+        "DERIVATION"
+      ],
+      "canonicalEntities": [
+        "Projection",
+        "Source"
+      ],
+      "schemaPointers": [
+        "#/$defs/Projection/properties/profileVersion",
+        "#/$defs/Projection/properties/ruleDigest",
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [],
+      "coverageLevel": "PARTIAL",
+      "coverageReason": "Projection retains profileVersion and ruleDigest, which identify the selected computation. The source contract’s explicit derivation kind/assertion origin and separate parser/model metadata are not a typed owned Derivation shape.",
+      "gaps": [
+        "No typed normalized assertion-origin/derivation-kind member distinguishes direct provider mapping, operator statement and application inference."
+      ],
+      "benchmarkSymbols": [
+        "DERIVATION"
+      ]
+    },
+    {
+      "id": "devops-agent:GraphSnapshot",
+      "sourceService": "devops-agent",
+      "sourceName": "GraphSnapshot",
+      "aliases": [
+        "GRAPH_SNAPSHOT"
+      ],
+      "sourceSemanticKind": "DERIVED_VIEW",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a class/ER model construct: GRAPH_SNAPSHOT.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "Diagram D04 — graph snapshot and typed edges",
+          "kind": "MODEL_DICTIONARY"
+        },
+        {
+          "path": "aws/devops-agent/analysis/diagrams/D04-graph-model.mmd",
+          "symbol": "GRAPH_SNAPSHOT",
+          "kind": "DIAGRAM"
+        }
+      ],
+      "previousUse": "A captured application graph with named graph meaning and immutable node/edge renditions. Execution, task-link, evidence, topology, causal and configuration graphs have different evidentiary semantics.",
+      "identity": "Graph/capture identity + immutable rendition; endpoints are owned by the same graph snapshot.",
+      "mappingAliases": [
+        "GraphSnapshot",
+        "GRAPH_SNAPSHOT"
+      ],
+      "canonicalEntities": [
+        "Snapshot"
+      ],
+      "schemaPointers": [
+        "#/$defs/Snapshot/properties/kind",
+        "#/$defs/Snapshot/allOf/0",
+        "#/$defs/GraphContents"
+      ],
+      "profileIds": [
+        "console.investigation.graph/v1"
+      ],
+      "coverageLevel": "PARTIAL",
+      "coverageReason": "Snapshot(kind=TOPOLOGY) binds GraphContents with typed nodes/edges. The foundation preserves capture identity, but the original graph contract’s explicit node kinds and richer provenance/unresolved-state semantics remain incomplete.",
+      "gaps": [
+        "GraphContents.graphKind offers four broad values; named execution, task-link and configuration view meanings are not explicit variants.",
+        "GraphNode/GraphEdge omit several source-required semantics; see their rows."
+      ],
+      "benchmarkSymbols": [
+        "GRAPH_SNAPSHOT"
+      ]
+    },
+    {
+      "id": "devops-agent:GraphNode",
+      "sourceService": "devops-agent",
+      "sourceName": "GraphNode",
+      "aliases": [
+        "GRAPH_NODE"
+      ],
+      "sourceSemanticKind": "OWNED_VALUE",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a class/ER model construct: GRAPH_NODE.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "Diagram D04 — graph snapshot and typed edges",
+          "kind": "MODEL_DICTIONARY"
+        },
+        {
+          "path": "aws/devops-agent/analysis/diagrams/D04-graph-model.mmd",
+          "symbol": "GRAPH_NODE",
+          "kind": "DIAGRAM"
+        }
+      ],
+      "previousUse": "Snapshot-owned graph node with kind, exact source/projection references, label, assertion origin, validity/observation context and explicit unresolved-placeholder state.",
+      "identity": "Graph snapshot + node ID; a placeholder is not a fabricated resource.",
+      "mappingAliases": [
+        "GraphNode",
+        "GRAPH_NODE"
+      ],
+      "canonicalEntities": [
+        "Snapshot"
+      ],
+      "schemaPointers": [
+        "#/$defs/GraphContents/properties/nodes",
+        "#/$defs/GraphNode"
+      ],
+      "profileIds": [
+        "console.investigation.graph/v1"
+      ],
+      "coverageLevel": "PARTIAL",
+      "coverageReason": "GraphNode normalizes nodeKey, optional exact entity/source identity, label and evidence. It does not explicitly model node kind, assertion origin or a marked unresolved-node state.",
+      "gaps": [
+        "No nodeKind, assertionOrigin or unresolved-state member exists on GraphNode; null references alone cannot distinguish all these meanings."
+      ],
+      "benchmarkSymbols": [
+        "GRAPH_NODE"
+      ]
+    },
+    {
+      "id": "devops-agent:GraphEdge",
+      "sourceService": "devops-agent",
+      "sourceName": "GraphEdge",
+      "aliases": [
+        "GRAPH_EDGE"
+      ],
+      "sourceSemanticKind": "RELATIONSHIP",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a class/ER model construct: GRAPH_EDGE.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "Diagram D04 — graph snapshot and typed edges",
+          "kind": "MODEL_DICTIONARY"
+        },
+        {
+          "path": "aws/devops-agent/analysis/diagrams/D04-graph-model.mmd",
+          "symbol": "GRAPH_EDGE",
+          "kind": "DIAGRAM"
+        }
+      ],
+      "previousUse": "Snapshot-owned typed relation with same-snapshot endpoints and evidence; parentage, support/contradiction, temporal order, dependency and asserted causality retain different meaning.",
+      "identity": "Graph snapshot + edge ID; source and target join nodes in that same snapshot.",
+      "mappingAliases": [
+        "GraphEdge",
+        "GRAPH_EDGE"
+      ],
+      "canonicalEntities": [
+        "Snapshot"
+      ],
+      "schemaPointers": [
+        "#/$defs/GraphContents/properties/edges",
+        "#/$defs/GraphEdge"
+      ],
+      "profileIds": [
+        "console.investigation.graph/v1"
+      ],
+      "coverageLevel": "PARTIAL",
+      "coverageReason": "GraphEdge preserves endpoint keys, relationKind, claimKind and exact evidence, but its PROVIDER/DERIVED/HYPOTHESIS claim vocabulary is narrower than the prior explicit assertion-origin/validity contract.",
+      "gaps": [
+        "Operator-confirmed versus independently observed versus application-inferred provenance and optional published confidence/disposition are not normalized edge fields."
+      ],
+      "benchmarkSymbols": [
+        "GRAPH_EDGE"
+      ]
+    },
+    {
+      "id": "devops-agent:ResourceReference",
+      "sourceService": "devops-agent",
+      "sourceName": "ResourceReference",
+      "aliases": [
+        "RESOURCE_REF"
+      ],
+      "sourceSemanticKind": "EXTERNAL_IDENTITY",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a class/ER model construct: RESOURCE_REF.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "Proposed semantic entities",
+          "kind": "MODEL_DICTIONARY"
+        },
+        {
+          "path": "aws/devops-agent/analysis/diagrams/D04-graph-model.mmd",
+          "symbol": "RESOURCE_REF",
+          "kind": "DIAGRAM"
+        }
+      ],
+      "previousUse": "An explicitly published resource identifier or URL with namespace/type provenance and resolution state; association access does not prove incident implication.",
+      "identity": "Qualified external provider/resource identity or an explicit provisional reference.",
+      "mappingAliases": [
+        "ResourceReference",
+        "RESOURCE_REF"
+      ],
+      "canonicalEntities": [
+        "Resource",
+        "Snapshot"
+      ],
+      "schemaPointers": [
+        "#/$defs/SourceIdentity",
+        "#/$defs/Resource/properties/identity",
+        "#/$defs/Resource/properties/matches",
+        "#/$defs/GraphNode/properties/sourceIdentity"
+      ],
+      "profileIds": [],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "SourceIdentity, canonical Resource identity/matches and optional graph sourceIdentity preserve qualified or provisional references. The normalized link remains evidence-backed rather than inferred from shared workspace location.",
+      "gaps": [],
+      "benchmarkSymbols": [
+        "RESOURCE_REF"
+      ]
+    },
+    {
+      "id": "devops-agent:ArtifactReference",
+      "sourceService": "devops-agent",
+      "sourceName": "ArtifactReference",
+      "aliases": [
+        "ARTIFACT_REF"
+      ],
+      "sourceSemanticKind": "APPLICATION_ENTITY",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a class/ER model construct: ARTIFACT_REF.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "Keep three artifact sources separate",
+          "kind": "MODEL_DICTIONARY"
+        },
+        {
+          "path": "aws/devops-agent/analysis/diagrams/D05-artifacts-assets.mmd",
+          "symbol": "ARTIFACT_REF",
+          "kind": "DIAGRAM"
+        }
+      ],
+      "previousUse": "Application discovery/presentation reference spanning native Asset files, journal/stream inline or external content and A2A artifacts without equating their IDs.",
+      "identity": "Source channel + exact record/block/locator + optional native artifact or Asset-version identity.",
+      "mappingAliases": [
+        "ArtifactReference",
+        "ARTIFACT_REF"
+      ],
+      "canonicalEntities": [
+        "Source",
+        "Asset",
+        "Snapshot",
+        "Projection"
+      ],
+      "schemaPointers": [
+        "#/$defs/ArtifactRef",
+        "#/$defs/AssetFile",
+        "#/$defs/EvidenceRef",
+        "#/$defs/EvidenceLocator"
+      ],
+      "profileIds": [],
+      "coverageLevel": "PARTIAL",
+      "coverageReason": "ArtifactRef supplies a managed durable locator, content version/digest and availability, while AssetFile and EvidenceRef supply related context. There is no one normalized value carrying the prior source-channel/record/block/native-ID/optional-asset-resolution contract.",
+      "gaps": [
+        "A2A versus journal versus native Asset identity and inline/external resolution are not explicit ArtifactRef members.",
+        "Availability values collapse several source distinctions such as not-yet-published, access-denied, unsupported and deleted."
+      ],
+      "benchmarkSymbols": [
+        "ARTIFACT_REF"
+      ]
+    },
+    {
+      "id": "devops-agent:Asset",
+      "sourceService": "devops-agent",
+      "sourceName": "Asset",
+      "aliases": [
+        "ASSET"
+      ],
+      "sourceSemanticKind": "NATIVE_RESOURCE",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a class/ER model construct: ASSET.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "Keep three artifact sources separate",
+          "kind": "MODEL_DICTIONARY"
+        },
+        {
+          "path": "aws/devops-agent/analysis/diagrams/D05-artifacts-assets.mmd",
+          "symbol": "ASSET",
+          "kind": "DIAGRAM"
+        }
+      ],
+      "previousUse": "Native AgentSpace asset with open type, metadata, versioned content and owned files; an asset in the same space is not automatically an investigation input or output.",
+      "identity": "Owning scope + AgentSpace + assetId.",
+      "mappingAliases": [
+        "Asset",
+        "ASSET"
+      ],
+      "canonicalEntities": [
+        "Asset",
+        "Source"
+      ],
+      "schemaPointers": [
+        "#/$defs/Asset",
+        "#/$defs/Asset/properties/nativeVersion",
+        "#/$defs/Asset/properties/source",
+        "#/$defs/Asset/properties/files"
+      ],
+      "profileIds": [
+        "aws.devops-agent.asset/v1"
+      ],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "Asset has stable identity and ordinary entity versions with separate nativeVersion, exact source and files. Provider metadata stays retained; no inferred investigation-to-asset relation is introduced.",
+      "gaps": [],
+      "benchmarkSymbols": [
+        "ASSET"
+      ]
+    },
+    {
+      "id": "devops-agent:AssetVersion",
+      "sourceService": "devops-agent",
+      "sourceName": "AssetVersion",
+      "aliases": [
+        "ASSET_VERSION"
+      ],
+      "sourceSemanticKind": "HISTORY_REPRESENTATION",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a class/ER model construct: ASSET_VERSION.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "Diagram D05 — investigation references and native asset history",
+          "kind": "MODEL_DICTIONARY"
+        },
+        {
+          "path": "aws/devops-agent/analysis/diagrams/D05-artifacts-assets.mmd",
+          "symbol": "ASSET_VERSION",
+          "kind": "DIAGRAM"
+        }
+      ],
+      "previousUse": "A specific native asset version used for reproducible metadata/content/file reads, distinct from an unversioned latest read.",
+      "identity": "Scoped native Asset + provider assetVersion.",
+      "mappingAliases": [
+        "AssetVersion",
+        "ASSET_VERSION"
+      ],
+      "canonicalEntities": [
+        "Asset",
+        "Source"
+      ],
+      "schemaPointers": [
+        "#/$defs/Asset/properties/version",
+        "#/$defs/Asset/properties/nativeVersion",
+        "#/$defs/Asset/properties/source",
+        "#/$defs/Asset/properties/files"
+      ],
+      "profileIds": [
+        "aws.devops-agent.asset/v1"
+      ],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "Each ordinary Asset representation selects the exact native version and its files/source. Native version remains domain metadata rather than a new Version entity; old Asset representations remain readable.",
+      "gaps": [],
+      "benchmarkSymbols": [
+        "ASSET_VERSION"
+      ]
+    },
+    {
+      "id": "devops-agent:AssetFile",
+      "sourceService": "devops-agent",
+      "sourceName": "AssetFile",
+      "aliases": [
+        "ASSET_FILE",
+        "AssetFileVersion"
+      ],
+      "sourceSemanticKind": "OWNED_VALUE",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a class/ER model construct: ASSET_FILE.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "Diagram D05 — investigation references and native asset history",
+          "kind": "MODEL_DICTIONARY"
+        },
+        {
+          "path": "aws/devops-agent/analysis/diagrams/D05-artifacts-assets.mmd",
+          "symbol": "ASSET_FILE",
+          "kind": "DIAGRAM"
+        }
+      ],
+      "previousUse": "A file belongs to an exact native Asset version and exact path, with text/bytes content, metadata and timestamps retained from the native response.",
+      "identity": "Scoped Asset + native Asset version + exact case-sensitive path; no independent file version counter.",
+      "mappingAliases": [
+        "AssetFile",
+        "ASSET_FILE",
+        "AssetFileVersion"
+      ],
+      "canonicalEntities": [
+        "Asset",
+        "Source"
+      ],
+      "schemaPointers": [
+        "#/$defs/Asset/properties/files",
+        "#/$defs/AssetFile",
+        "#/$defs/ArtifactRef"
+      ],
+      "profileIds": [
+        "aws.devops-agent.asset/v1"
+      ],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "AssetFile is a typed owned path/source/artifact value under the selected Asset representation. Raw body union and native file metadata remain source-backed, and the Asset nativeVersion supplies ownership.",
+      "gaps": [],
+      "benchmarkSymbols": [
+        "ASSET_FILE"
+      ]
+    },
+    {
+      "id": "devops-agent:InvestigationSnapshot",
+      "sourceService": "devops-agent",
+      "sourceName": "InvestigationSnapshot",
+      "aliases": [
+        "Snapshot",
+        "SNAPSHOT"
+      ],
+      "sourceSemanticKind": "APPLICATION_ENTITY",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a class/ER model construct: SNAPSHOT.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "Diagram D06 — immutable application snapshots",
+          "kind": "MODEL_DICTIONARY"
+        },
+        {
+          "path": "aws/devops-agent/analysis/diagrams/D06-historical-snapshots.mmd",
+          "symbol": "SNAPSHOT",
+          "kind": "DIAGRAM"
+        }
+      ],
+      "previousUse": "An explicit retained capture closes over task/version, membership, journal/source renditions, selected results, supporting read/coverage records and capture interval.",
+      "identity": "Application capture ID scoped to the investigation; later continuation does not alter an earlier capture.",
+      "mappingAliases": [
+        "InvestigationSnapshot",
+        "Snapshot",
+        "SNAPSHOT"
+      ],
+      "canonicalEntities": [
+        "Snapshot"
+      ],
+      "schemaPointers": [
+        "#/$defs/Snapshot",
+        "#/$defs/Snapshot/properties/members",
+        "#/$defs/Snapshot/properties/captureStartedAt",
+        "#/$defs/Snapshot/properties/captureFinishedAt"
+      ],
+      "profileIds": [],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "Snapshot is a deliberate business capture with immutable versions, exact closed members, coverage and capture bounds. Its purpose is not a substitute for versioning the captured entities.",
+      "gaps": [],
+      "benchmarkSymbols": [
+        "SNAPSHOT"
+      ]
+    },
+    {
+      "id": "devops-agent:SnapshotSource",
+      "sourceService": "devops-agent",
+      "sourceName": "SnapshotSource",
+      "aliases": [
+        "SNAPSHOT_SOURCE"
+      ],
+      "sourceSemanticKind": "RELATIONSHIP",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a class/ER model construct: SNAPSHOT_SOURCE.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "Diagram D06 — immutable application snapshots",
+          "kind": "MODEL_DICTIONARY"
+        },
+        {
+          "path": "aws/devops-agent/analysis/diagrams/D06-historical-snapshots.mmd",
+          "symbol": "SNAPSHOT_SOURCE",
+          "kind": "DIAGRAM"
+        }
+      ],
+      "previousUse": "Links the snapshot to the exact retained source and supporting collection/coverage versions used in the capture.",
+      "identity": "Owner Snapshot version + exact referenced entity kind/ID/version.",
+      "mappingAliases": [
+        "SnapshotSource",
+        "SNAPSHOT_SOURCE"
+      ],
+      "canonicalEntities": [
+        "Snapshot"
+      ],
+      "schemaPointers": [
+        "#/$defs/Snapshot/properties/members",
+        "#/$defs/EntityRef"
+      ],
+      "profileIds": [],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "Snapshot.members contains exact EntityRef values and the closure rule includes supporting ReadAttempts/evidence. Later successful collection cannot improve an older capture.",
+      "gaps": [],
+      "benchmarkSymbols": [
+        "SNAPSHOT_SOURCE"
+      ]
+    },
+    {
+      "id": "devops-agent:SnapshotProjection",
+      "sourceService": "devops-agent",
+      "sourceName": "SnapshotProjection",
+      "aliases": [
+        "SNAPSHOT_PROJECTION"
+      ],
+      "sourceSemanticKind": "RELATIONSHIP",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a class/ER model construct: SNAPSHOT_PROJECTION.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "Diagram D06 — immutable application snapshots",
+          "kind": "MODEL_DICTIONARY"
+        },
+        {
+          "path": "aws/devops-agent/analysis/diagrams/D06-historical-snapshots.mmd",
+          "symbol": "SNAPSHOT_PROJECTION",
+          "kind": "DIAGRAM"
+        }
+      ],
+      "previousUse": "Pins an exact derived rendition and hash within a snapshot so a parser upgrade cannot replace the result previously reviewed.",
+      "identity": "Owner Snapshot version + exact Projection representation, or exact retained Source for imported legacy renditions.",
+      "mappingAliases": [
+        "SnapshotProjection",
+        "SNAPSHOT_PROJECTION"
+      ],
+      "canonicalEntities": [
+        "Snapshot",
+        "Projection",
+        "Source"
+      ],
+      "schemaPointers": [
+        "#/$defs/Snapshot/properties/members",
+        "#/$defs/EntityRef",
+        "#/$defs/Projection/properties/version"
+      ],
+      "profileIds": [],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "Exact Snapshot members pin Projection versions; imported legacy rendition content is pinned as Source versions. This replaces the old projectionRevisionId without creating a separate rendition entity.",
+      "gaps": [],
+      "benchmarkSymbols": [
+        "SNAPSHOT_PROJECTION"
+      ],
+      "notes": "The registry preservation text still uses obsolete sourceRevisionIds/projectionRevisionId terms; the actual schema uses members containing EntityRef values."
+    },
+    {
+      "id": "devops-agent:CollectionPass",
+      "sourceService": "devops-agent",
+      "sourceName": "CollectionPass",
+      "aliases": [
+        "COLLECTION_PASS"
+      ],
+      "sourceSemanticKind": "APPLICATION_ENTITY",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a class/ER model construct: COLLECTION_PASS.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "Collection observations are separate from source revisions",
+          "kind": "MODEL_DICTIONARY"
+        },
+        {
+          "path": "aws/devops-agent/analysis/diagrams/D07-collection-observations.mmd",
+          "symbol": "COLLECTION_PASS",
+          "kind": "DIAGRAM"
+        }
+      ],
+      "previousUse": "One bounded investigation reconciliation attempt with start/end, fixed queries, collector version and selection policy; owns read attempts including empty/failed reads.",
+      "identity": "Workspace + pass identity with fixed investigation/query scope.",
+      "mappingAliases": [
+        "CollectionPass",
+        "COLLECTION_PASS"
+      ],
+      "canonicalEntities": [
+        "Collection",
+        "ReadAttempt"
+      ],
+      "schemaPointers": [
+        "#/$defs/Collection",
+        "#/$defs/CollectionQuery",
+        "#/$defs/ReadAttempt/properties/collectionId"
+      ],
+      "profileIds": [
+        "console.collection.request/v1"
+      ],
+      "coverageLevel": "PARTIAL",
+      "coverageReason": "Collection preserves stable identity, fixed query set, connection, lifecycle and time window. Its normalized record does not retain the prior explicitly required collector version or selection-policy identity.",
+      "gaps": [
+        "Collection and CollectionQuery have no collectorVersion or selectionPolicy/version field."
+      ],
+      "benchmarkSymbols": [
+        "COLLECTION_PASS"
+      ]
+    },
+    {
+      "id": "devops-agent:ReadAttempt",
+      "sourceService": "devops-agent",
+      "sourceName": "ReadAttempt",
+      "aliases": [
+        "READ_ATTEMPT"
+      ],
+      "sourceSemanticKind": "APPLICATION_ENTITY",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a class/ER model construct: READ_ATTEMPT.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "Collection observations are separate from source revisions",
+          "kind": "MODEL_DICTIONARY"
+        },
+        {
+          "path": "aws/devops-agent/analysis/diagrams/D07-collection-observations.mmd",
+          "symbol": "READ_ATTEMPT",
+          "kind": "DIAGRAM"
+        }
+      ],
+      "previousUse": "A scoped operation/page attempt exists even when no objects are returned or when the request fails; retains exact request/response/tokens, outcome and authorization context.",
+      "identity": "Collection + attempt identity; retries have their own attempt/order metadata.",
+      "mappingAliases": [
+        "ReadAttempt",
+        "READ_ATTEMPT"
+      ],
+      "canonicalEntities": [
+        "ReadAttempt",
+        "Source"
+      ],
+      "schemaPointers": [
+        "#/$defs/ReadAttempt",
+        "#/$defs/ReadAttempt/properties/requestSource",
+        "#/$defs/ReadAttempt/properties/responseSource"
+      ],
+      "profileIds": [
+        "console.collection.request/v1"
+      ],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "ReadAttempt has typed identity, lifecycle, timestamps, provider request ID, counts/errors and exact request/nullable response Source references. Empty success and lost response remain distinct.",
+      "gaps": [],
+      "benchmarkSymbols": [
+        "READ_ATTEMPT"
+      ]
+    },
+    {
+      "id": "devops-agent:SourceObservation",
+      "sourceService": "devops-agent",
+      "sourceName": "SourceObservation",
+      "aliases": [
+        "SOURCE_OBSERVATION"
+      ],
+      "sourceSemanticKind": "APPLICATION_ENTITY",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a class/ER model construct: SOURCE_OBSERVATION.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "Collection observations are separate from source revisions",
+          "kind": "MODEL_DICTIONARY"
+        },
+        {
+          "path": "aws/devops-agent/analysis/diagrams/D07-collection-observations.mmd",
+          "symbol": "SOURCE_OBSERVATION",
+          "kind": "DIAGRAM"
+        }
+      ],
+      "previousUse": "One occurrence of reading/receiving a retained source rendition, separated from the rendition so repeated unchanged polls remain observable.",
+      "identity": "Observation occurrence ID with exact Source version and optional native read-attempt context.",
+      "mappingAliases": [
+        "SourceObservation",
+        "SOURCE_OBSERVATION"
+      ],
+      "canonicalEntities": [
+        "Observation"
+      ],
+      "schemaPointers": [
+        "#/$defs/Observation",
+        "#/$defs/Observation/properties/source",
+        "#/$defs/Observation/properties/readAttempt"
+      ],
+      "profileIds": [],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "Observation is a separate typed entity carrying exact source, occurrence time, channel, connection and optional read attempt. Non-read channels do not manufacture native attempts.",
+      "gaps": [],
+      "benchmarkSymbols": [
+        "SOURCE_OBSERVATION"
+      ]
+    },
+    {
+      "id": "devops-agent:CoverageClaim",
+      "sourceService": "devops-agent",
+      "sourceName": "CoverageClaim",
+      "aliases": [
+        "COVERAGE_CLAIM",
+        "CollectionCoverage"
+      ],
+      "sourceSemanticKind": "OWNED_VALUE",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a class/ER model construct: COVERAGE_CLAIM.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "Collection observations are separate from source revisions",
+          "kind": "MODEL_DICTIONARY"
+        },
+        {
+          "path": "aws/devops-agent/analysis/diagrams/D07-collection-observations.mmd",
+          "symbol": "COVERAGE_CLAIM",
+          "kind": "DIAGRAM"
+        }
+      ],
+      "previousUse": "A bounded claim about what one pass established for a named query, based on page-chain/read-attempt evidence and evaluation policy; exhaustion is not global completeness.",
+      "identity": "Owning collection/projection/capture version + query/window/scope + policy and supporting attempts.",
+      "mappingAliases": [
+        "CoverageClaim",
+        "COVERAGE_CLAIM",
+        "CollectionCoverage"
+      ],
+      "canonicalEntities": [
+        "Collection",
+        "Projection",
+        "Snapshot"
+      ],
+      "schemaPointers": [
+        "#/$defs/Coverage",
+        "#/$defs/Collection/properties/coverage",
+        "#/$defs/Projection/properties/coverage",
+        "#/$defs/Snapshot/properties/coverage"
+      ],
+      "profileIds": [],
+      "coverageLevel": "PARTIAL",
+      "coverageReason": "Coverage normalizes independent pagination/detail/resolution/identity/claim dimensions, exact attempts, scope/window, evaluation time and rationale. It does not carry an explicit evaluation-policy identity/version, particularly when owned by Collection or Snapshot.",
+      "gaps": [
+        "Coverage has rationale but no typed policy/rule version; only Projection has ruleDigest at its owner level."
+      ],
+      "benchmarkSymbols": [
+        "COVERAGE_CLAIM"
+      ]
+    },
+    {
+      "id": "devops-agent:ApprovalRequest",
+      "sourceService": "devops-agent",
+      "sourceName": "ApprovalRequest",
+      "aliases": [
+        "APPROVAL_REQUEST"
+      ],
+      "sourceSemanticKind": "APPLICATION_ENTITY",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a class/ER model construct: APPROVAL_REQUEST.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_UI_Contract.md",
+          "heading": "5. Actions, approvals and operator decisions",
+          "kind": "MODEL_DICTIONARY"
+        },
+        {
+          "path": "aws/devops-agent/analysis/diagrams/U02-approval-lifecycle.mmd",
+          "symbol": "APPROVAL_REQUEST",
+          "kind": "DIAGRAM"
+        }
+      ],
+      "previousUse": "An observed paused-invocation request ties an approval ID to exact execution, interrupt/tool-use IDs and requested tool/argument scope; it is a validated open-content profile, not a universal native ApprovalRequest structure.",
+      "identity": "Scoped AgentSpace + approval ID and invocation context; request identity must not be guessed from prose or button labels.",
+      "mappingAliases": [
+        "ApprovalRequest",
+        "APPROVAL_REQUEST"
+      ],
+      "canonicalEntities": [
+        "ApprovalRequest",
+        "Source",
+        "Observation"
+      ],
+      "schemaPointers": [
+        "#/$defs/ApprovalRequest",
+        "#/$defs/ApprovalRequest/properties/requestSource",
+        "#/$defs/ApprovalRequest/properties/actionDigest"
+      ],
+      "profileIds": [
+        "aws.devops-agent.approval/v1"
+      ],
+      "coverageLevel": "PARTIAL",
+      "coverageReason": "ApprovalRequest normalizes execution, nativeApprovalId, state, exact request source, action digest and decision/resume command links. Invocation interrupt/tool-use IDs and the requested pattern remain inside Source.payload, with descriptor-level profile hints.",
+      "gaps": [
+        "No typed model fields for interruptId, toolUseId or requested ApprovalPattern; the application must validate the retained request profile before commands."
+      ],
+      "benchmarkSymbols": [
+        "APPROVAL_REQUEST"
+      ]
+    },
+    {
+      "id": "devops-agent:DecisionAttempt",
+      "sourceService": "devops-agent",
+      "sourceName": "DecisionAttempt",
+      "aliases": [
+        "DECISION_ATTEMPT"
+      ],
+      "sourceSemanticKind": "APPLICATION_ENTITY",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a class/ER model construct: DECISION_ATTEMPT.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_UI_Contract.md",
+          "heading": "5. Actions, approvals and operator decisions",
+          "kind": "MODEL_DICTIONARY"
+        },
+        {
+          "path": "aws/devops-agent/analysis/diagrams/U02-approval-lifecycle.mmd",
+          "symbol": "DECISION_ATTEMPT",
+          "kind": "DIAGRAM"
+        }
+      ],
+      "previousUse": "Records a distinct approval/rejection submission with requested action, finalized scope hash, actor and definitive or ambiguous outcome; decision is separate from resume.",
+      "identity": "Application decision intent/attempt identity scoped to the exact approval request.",
+      "mappingAliases": [
+        "DecisionAttempt",
+        "DECISION_ATTEMPT"
+      ],
+      "canonicalEntities": [
+        "Command",
+        "ApprovalRequest"
+      ],
+      "schemaPointers": [
+        "#/$defs/Command",
+        "#/$defs/CommandAttempt",
+        "#/$defs/ApprovalRequest/properties/decisionCommandIds"
+      ],
+      "profileIds": [],
+      "coverageLevel": "PARTIAL",
+      "coverageReason": "Command and CommandAttempt normalize durable identity, authenticated actor, request digest, dispatch/reconcile state and observed evidence. DecideApproval supplies typed decision input, but the readable Command representation lacks an exact retained request/decision field.",
+      "gaps": [
+        "A requestDigest identifies intent but does not reconstruct the original APPROVED/REJECTED action or finalized pattern; no Command.requestSource/request value is exposed."
+      ],
+      "benchmarkSymbols": [
+        "DECISION_ATTEMPT"
+      ]
+    },
+    {
+      "id": "devops-agent:ResumeAttempt",
+      "sourceService": "devops-agent",
+      "sourceName": "ResumeAttempt",
+      "aliases": [
+        "RESUME_ATTEMPT"
+      ],
+      "sourceSemanticKind": "APPLICATION_ENTITY",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a class/ER model construct: RESUME_ATTEMPT.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_UI_Contract.md",
+          "heading": "5. Actions, approvals and operator decisions",
+          "kind": "MODEL_DICTIONARY"
+        },
+        {
+          "path": "aws/devops-agent/analysis/diagrams/U02-approval-lifecycle.mmd",
+          "symbol": "RESUME_ATTEMPT",
+          "kind": "DIAGRAM"
+        }
+      ],
+      "previousUse": "A separately observed resume submission follows a definitive decision; opening a stream does not prove tool resumption or success.",
+      "identity": "Application resume intent/attempt identity plus the exact prior decision context.",
+      "mappingAliases": [
+        "ResumeAttempt",
+        "RESUME_ATTEMPT"
+      ],
+      "canonicalEntities": [
+        "Command",
+        "ApprovalRequest"
+      ],
+      "schemaPointers": [
+        "#/$defs/Command",
+        "#/$defs/CommandAttempt",
+        "#/$defs/ApprovalRequest/properties/resumeCommandIds"
+      ],
+      "profileIds": [],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "ResumeExecution binds exact ApprovalRequest and successful decision Command versions; Command owns its intent, lifecycle and observed effects separately from the decision. Contract semantics enforce the decision reference and ambiguous-outcome boundary.",
+      "gaps": [],
+      "benchmarkSymbols": [
+        "RESUME_ATTEMPT"
+      ],
+      "notes": "The exact decision input is present in ResumeExecutionRequest; the Command read model is a summarized receipt rather than the full input payload."
+    },
+    {
+      "id": "devops-agent:ActionObservation",
+      "sourceService": "devops-agent",
+      "sourceName": "ActionObservation",
+      "aliases": [
+        "ACTION_OBSERVATION"
+      ],
+      "sourceSemanticKind": "DERIVED_VIEW",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Declared as a class/ER model construct: ACTION_OBSERVATION.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "Proposed semantic entities",
+          "kind": "MODEL_DICTIONARY"
+        },
+        {
+          "path": "aws/devops-agent/analysis/diagrams/U02-approval-lifecycle.mmd",
+          "symbol": "ACTION_OBSERVATION",
+          "kind": "DIAGRAM"
+        }
+      ],
+      "previousUse": "An independently sourced observation of request, approval, resume, tool execution or effect; permission or credential redemption alone does not prove success.",
+      "identity": "Application observation/rendition ID with exact request/command/source context and stage.",
+      "mappingAliases": [
+        "ActionObservation",
+        "ACTION_OBSERVATION"
+      ],
+      "canonicalEntities": [
+        "Source",
+        "Observation"
+      ],
+      "schemaPointers": [
+        "#/$defs/Source/properties/payload",
+        "#/$defs/Observation/properties/source"
+      ],
+      "profileIds": [
+        "console.investigation.action-observation/v1"
+      ],
+      "coverageLevel": "RETAINED_ONLY",
+      "coverageReason": "The named LOCAL_EVIDENCE source profile retains an action-stage rendition. No normalized ActionObservation value or Projection profile exists; generic Observation denotes receipt occurrence, not this stage/outcome view.",
+      "gaps": [],
+      "benchmarkSymbols": [
+        "ACTION_OBSERVATION"
+      ]
+    },
+    {
+      "id": "devops-agent:OwningScope",
+      "sourceService": "devops-agent",
+      "sourceName": "OwningScope",
+      "aliases": [],
+      "sourceSemanticKind": "EXTERNAL_IDENTITY",
+      "originalEntityDeclaration": false,
+      "declarationReason": "Named model value, source channel, resource-family configuration or transport view; not an independently declared entity class.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "Identity and scope",
+          "kind": "MODEL_DICTIONARY"
+        }
+      ],
+      "previousUse": "Qualifies native ownership using partition, account and Region; a reading principal or connected resource account is not necessarily the native owner.",
+      "identity": "Partition + owning account ID + Region; service-specific parent keys qualify native IDs.",
+      "mappingAliases": [
+        "OwningScope"
+      ],
+      "canonicalEntities": [
+        "Source",
+        "Resource",
+        "Connection"
+      ],
+      "schemaPointers": [
+        "#/$defs/OwningScope",
+        "#/$defs/SourceIdentity/properties/scope",
+        "#/$defs/Connection/properties/allowedScopes"
+      ],
+      "profileIds": [],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "OwningScope is a typed owned identity value and SourceIdentity retains provider/service/resource type plus native or provisional identity. It is separate from credentials.",
+      "gaps": [],
+      "benchmarkSymbols": []
+    },
+    {
+      "id": "devops-agent:ConnectionContext",
+      "sourceService": "devops-agent",
+      "sourceName": "ConnectionContext",
+      "aliases": [],
+      "sourceSemanticKind": "OWNED_VALUE",
+      "originalEntityDeclaration": false,
+      "declarationReason": "Named model value, source channel, resource-family configuration or transport view; not an independently declared entity class.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "Identity and scope",
+          "kind": "MODEL_DICTIONARY"
+        }
+      ],
+      "previousUse": "Application access path plus authorization context qualifies collection, caching and historical exports without changing native identity.",
+      "identity": "Application connection ID + authorization-context identity.",
+      "mappingAliases": [
+        "ConnectionContext"
+      ],
+      "canonicalEntities": [
+        "Connection",
+        "ReadAttempt",
+        "Observation"
+      ],
+      "schemaPointers": [
+        "#/$defs/Connection",
+        "#/$defs/Connection/properties/authorizationContextKey",
+        "#/$defs/ReadAttempt/properties/authorizationContextKey",
+        "#/$defs/Observation/properties/authorizationContextKey"
+      ],
+      "profileIds": [],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "Connection and exact connection references preserve the access path, while attempts/observations retain the authorization-context key. Historical retrieval is checked against current authority.",
+      "gaps": [],
+      "benchmarkSymbols": []
+    },
+    {
+      "id": "devops-agent:Eventnotification",
+      "sourceService": "devops-agent",
+      "sourceName": "Event notification",
+      "aliases": [],
+      "sourceSemanticKind": "TRANSPORT_DTO",
+      "originalEntityDeclaration": false,
+      "declarationReason": "Named model value, source channel, resource-family configuration or transport view; not an independently declared entity class.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "Identity and scope",
+          "kind": "MODEL_DICTIONARY"
+        }
+      ],
+      "previousUse": "A separately sourced EventBridge lifecycle event supplies phase, event time, task/execution links and sometimes an exact summary pointer; it is not a journal entry.",
+      "identity": "Event channel + account/Region + native event ID.",
+      "mappingAliases": [],
+      "canonicalEntities": [
+        "Source",
+        "Observation",
+        "Projection"
+      ],
+      "schemaPointers": [
+        "#/$defs/Source/properties/payload",
+        "#/$defs/Observation/properties/channel",
+        "#/$defs/InvestigationResult/properties/completionObservation"
+      ],
+      "profileIds": [
+        "aws.devops-agent.lifecycle-event/v1"
+      ],
+      "coverageLevel": "RETAINED_ONLY",
+      "coverageReason": "The lifecycle-event profile retains the full envelope and Observation carries channel/time. InvestigationResult normalizes selected completion-pointer meaning, not the complete lifecycle-event DTO.",
+      "gaps": [],
+      "benchmarkSymbols": [],
+      "notes": "This named source identity-table concept has a registered profile but no direct mapping alias in the legacy 174-row crosswalk."
+    },
+    {
+      "id": "devops-agent:Streamresponseblock",
+      "sourceService": "devops-agent",
+      "sourceName": "Stream response/block",
+      "aliases": [
+        "stream response/block"
+      ],
+      "sourceSemanticKind": "TRANSPORT_DTO",
+      "originalEntityDeclaration": false,
+      "declarationReason": "Named model value, source channel, resource-family configuration or transport view; not an independently declared entity class.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "Identity and scope",
+          "kind": "MODEL_DICTIONARY"
+        }
+      ],
+      "previousUse": "A retained response or content block has request/session scope and supplied response ID, index, block ID, parent or sequence; unresolved IDs and interrupted fragments remain explicit.",
+      "identity": "Execution + local request/session + supplied response/block identifiers; not a JournalRecord key.",
+      "mappingAliases": [
+        "stream response/block"
+      ],
+      "canonicalEntities": [
+        "Source",
+        "Observation"
+      ],
+      "schemaPointers": [
+        "#/$defs/Source/properties/representation",
+        "#/$defs/Source/properties/payload",
+        "#/$defs/Observation/properties/channel"
+      ],
+      "profileIds": [
+        "aws.devops-agent.chat-stream/v1"
+      ],
+      "coverageLevel": "RETAINED_ONLY",
+      "coverageReason": "The STREAM Source profile and receipt Observation retain the original event/fragment. There is no normalized assembled response/block model or replay cursor.",
+      "gaps": [],
+      "benchmarkSymbols": []
+    },
+    {
+      "id": "devops-agent:TimelineItem",
+      "sourceService": "devops-agent",
+      "sourceName": "TimelineItem",
+      "aliases": [],
+      "sourceSemanticKind": "DERIVED_VIEW",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Explicitly named application/native entity or application record in the model dictionary.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "TimelineItem contract — application proposal",
+          "kind": "MODEL_DICTIONARY"
+        }
+      ],
+      "previousUse": "A versioned application timeline rendition with stable item identity, phase/category, evidence/record/observation clocks, provenance, availability, explicit grouping and supersession.",
+      "identity": "Investigation + stable logical item ID + immutable rendition.",
+      "mappingAliases": [
+        "TimelineItem"
+      ],
+      "canonicalEntities": [
+        "Source",
+        "Observation"
+      ],
+      "schemaPointers": [
+        "#/$defs/Source/properties/payload",
+        "#/$defs/Observation/properties/source"
+      ],
+      "profileIds": [
+        "console.investigation.timeline/v1"
+      ],
+      "coverageLevel": "RETAINED_ONLY",
+      "coverageReason": "The dedicated source profile retains an earlier TimelineItem document. Projection.profile has no timeline variant and there is no TimelineItem value definition; its time/phase/assertion fields are not normalized.",
+      "gaps": [],
+      "benchmarkSymbols": []
+    },
+    {
+      "id": "devops-agent:Finding",
+      "sourceService": "devops-agent",
+      "sourceName": "Finding",
+      "aliases": [],
+      "sourceSemanticKind": "DERIVED_VIEW",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Explicitly named application/native entity or application record in the model dictionary.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "Proposed semantic entities",
+          "kind": "MODEL_DICTIONARY"
+        }
+      ],
+      "previousUse": "A published incident-relevant observation or conclusion. An exact journal/summary fragment or validated structured field.",
+      "identity": "Application logical assertion/result item + retained rendition and source attribution.",
+      "mappingAliases": [
+        "Finding"
+      ],
+      "canonicalEntities": [
+        "Source",
+        "Observation"
+      ],
+      "schemaPointers": [
+        "#/$defs/Source/properties/payload",
+        "#/$defs/Observation/properties/source"
+      ],
+      "profileIds": [
+        "console.investigation.assertion/v1"
+      ],
+      "coverageLevel": "RETAINED_ONLY",
+      "coverageReason": "The assertion LOCAL_EVIDENCE profile retains the attributed source rendition. There is no normalized Finding value or Projection variant; the generic payload and descriptor text do not establish a typed result contract.",
+      "gaps": [],
+      "benchmarkSymbols": [],
+      "notes": "This DevOps concept is not an alias of the resilience module’s Finding, Recommendation or ResilienceAssessment entities."
+    },
+    {
+      "id": "devops-agent:EvidenceItem",
+      "sourceService": "devops-agent",
+      "sourceName": "EvidenceItem",
+      "aliases": [],
+      "sourceSemanticKind": "DERIVED_VIEW",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Explicitly named application/native entity or application record in the model dictionary.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "Proposed semantic entities",
+          "kind": "MODEL_DICTIONARY"
+        }
+      ],
+      "previousUse": "A measurement, log excerpt, query result, trace reference, change record or external document. Source record/path and original system/time range when explicitly provided.",
+      "identity": "Application logical assertion/result item + retained rendition and source attribution.",
+      "mappingAliases": [
+        "EvidenceItem"
+      ],
+      "canonicalEntities": [
+        "Source",
+        "Observation"
+      ],
+      "schemaPointers": [
+        "#/$defs/Source/properties/payload",
+        "#/$defs/Observation/properties/source"
+      ],
+      "profileIds": [
+        "console.investigation.assertion/v1"
+      ],
+      "coverageLevel": "RETAINED_ONLY",
+      "coverageReason": "The assertion LOCAL_EVIDENCE profile retains the attributed source rendition. There is no normalized EvidenceItem value or Projection variant; the generic payload and descriptor text do not establish a typed result contract.",
+      "gaps": [],
+      "benchmarkSymbols": [],
+      "notes": "This DevOps concept is not an alias of the resilience module’s Finding, Recommendation or ResilienceAssessment entities."
+    },
+    {
+      "id": "devops-agent:Hypothesis",
+      "sourceService": "devops-agent",
+      "sourceName": "Hypothesis",
+      "aliases": [],
+      "sourceSemanticKind": "DERIVED_VIEW",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Explicitly named application/native entity or application record in the model dictionary.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "Proposed semantic entities",
+          "kind": "MODEL_DICTIONARY"
+        }
+      ],
+      "previousUse": "An asserted possible explanation with its published disposition. A validated payload or attributed extraction; no reconstruction of private reasoning.",
+      "identity": "Application logical assertion/result item + retained rendition and source attribution.",
+      "mappingAliases": [
+        "Hypothesis"
+      ],
+      "canonicalEntities": [
+        "Source",
+        "Observation"
+      ],
+      "schemaPointers": [
+        "#/$defs/Source/properties/payload",
+        "#/$defs/Observation/properties/source"
+      ],
+      "profileIds": [
+        "console.investigation.assertion/v1"
+      ],
+      "coverageLevel": "RETAINED_ONLY",
+      "coverageReason": "The assertion LOCAL_EVIDENCE profile retains the attributed source rendition. There is no normalized Hypothesis value or Projection variant; the generic payload and descriptor text do not establish a typed result contract.",
+      "gaps": [],
+      "benchmarkSymbols": [],
+      "notes": "This DevOps concept is not an alias of the resilience module’s Finding, Recommendation or ResilienceAssessment entities."
+    },
+    {
+      "id": "devops-agent:RootCauseAssessment",
+      "sourceService": "devops-agent",
+      "sourceName": "RootCauseAssessment",
+      "aliases": [],
+      "sourceSemanticKind": "DERIVED_VIEW",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Explicitly named application/native entity or application record in the model dictionary.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "Proposed semantic entities",
+          "kind": "MODEL_DICTIONARY"
+        }
+      ],
+      "previousUse": "The agent or operator’s stated causal assessment. An exact cited conclusion kept separate from independent verification.",
+      "identity": "Application logical assertion/result item + retained rendition and source attribution.",
+      "mappingAliases": [
+        "RootCauseAssessment"
+      ],
+      "canonicalEntities": [
+        "Source",
+        "Observation"
+      ],
+      "schemaPointers": [
+        "#/$defs/Source/properties/payload",
+        "#/$defs/Observation/properties/source"
+      ],
+      "profileIds": [
+        "console.investigation.assertion/v1"
+      ],
+      "coverageLevel": "RETAINED_ONLY",
+      "coverageReason": "The assertion LOCAL_EVIDENCE profile retains the attributed source rendition. There is no normalized RootCauseAssessment value or Projection variant; the generic payload and descriptor text do not establish a typed result contract.",
+      "gaps": [],
+      "benchmarkSymbols": [],
+      "notes": "This DevOps concept is not an alias of the resilience module’s Finding, Recommendation or ResilienceAssessment entities."
+    },
+    {
+      "id": "devops-agent:MitigationProposal",
+      "sourceService": "devops-agent",
+      "sourceName": "MitigationProposal",
+      "aliases": [],
+      "sourceSemanticKind": "DERIVED_VIEW",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Explicitly named application/native entity or application record in the model dictionary.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "Proposed semantic entities",
+          "kind": "MODEL_DICTIONARY"
+        }
+      ],
+      "previousUse": "Proposed action steps, target scope and prerequisites. Published proposal content; approval or execution must not be inferred.",
+      "identity": "Application logical assertion/result item + retained rendition and source attribution.",
+      "mappingAliases": [
+        "MitigationProposal"
+      ],
+      "canonicalEntities": [
+        "Source",
+        "Observation"
+      ],
+      "schemaPointers": [
+        "#/$defs/Source/properties/payload",
+        "#/$defs/Observation/properties/source"
+      ],
+      "profileIds": [
+        "console.investigation.assertion/v1"
+      ],
+      "coverageLevel": "RETAINED_ONLY",
+      "coverageReason": "The assertion LOCAL_EVIDENCE profile retains the attributed source rendition. There is no normalized MitigationProposal value or Projection variant; the generic payload and descriptor text do not establish a typed result contract.",
+      "gaps": [],
+      "benchmarkSymbols": [],
+      "notes": "This DevOps concept is not an alias of the resilience module’s Finding, Recommendation or ResilienceAssessment entities."
+    },
+    {
+      "id": "devops-agent:ReviewResult",
+      "sourceService": "devops-agent",
+      "sourceName": "ReviewResult",
+      "aliases": [],
+      "sourceSemanticKind": "DERIVED_VIEW",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Explicitly named application/native entity or application record in the model dictionary.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "Proposed semantic entities",
+          "kind": "MODEL_DICTIONARY"
+        }
+      ],
+      "previousUse": "A quality review of the published investigation record. Explicit review content/source/scope; no assumed universal native ReviewResult schema.",
+      "identity": "Application logical assertion/result item + retained rendition and source attribution.",
+      "mappingAliases": [
+        "ReviewResult"
+      ],
+      "canonicalEntities": [
+        "Source",
+        "Observation"
+      ],
+      "schemaPointers": [
+        "#/$defs/Source/properties/payload",
+        "#/$defs/Observation/properties/source"
+      ],
+      "profileIds": [
+        "console.investigation.assertion/v1"
+      ],
+      "coverageLevel": "RETAINED_ONLY",
+      "coverageReason": "The assertion LOCAL_EVIDENCE profile retains the attributed source rendition. There is no normalized ReviewResult value or Projection variant; the generic payload and descriptor text do not establish a typed result contract.",
+      "gaps": [],
+      "benchmarkSymbols": [],
+      "notes": "This DevOps concept is not an alias of the resilience module’s Finding, Recommendation or ResilienceAssessment entities."
+    },
+    {
+      "id": "devops-agent:ResultDocument",
+      "sourceService": "devops-agent",
+      "sourceName": "ResultDocument",
+      "aliases": [],
+      "sourceSemanticKind": "DERIVED_VIEW",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Explicitly named application/native entity or application record in the model dictionary.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "Proposed semantic entities",
+          "kind": "MODEL_DICTIONARY"
+        }
+      ],
+      "previousUse": "A versioned selected rendering/summary with phase, exact source revision, parser version and selection reason; completion-pointer absence is distinct from a retrieval gap.",
+      "identity": "Investigation + result phase/logical view + immutable interpretation version.",
+      "mappingAliases": [
+        "ResultDocument"
+      ],
+      "canonicalEntities": [
+        "Projection",
+        "Source"
+      ],
+      "schemaPointers": [
+        "#/$defs/Projection/allOf/2",
+        "#/$defs/InvestigationResult",
+        "#/$defs/Projection/properties/ruleDigest"
+      ],
+      "profileIds": [
+        "console.investigation.result/v1"
+      ],
+      "coverageLevel": "NORMALIZED",
+      "coverageReason": "INVESTIGATION_RESULT binds InvestigationResult: selected/candidate sources, expected summary identity, phase, completion observation, availability and selection basis. Projection version/profileVersion/ruleDigest retain interpretation history.",
+      "gaps": [],
+      "benchmarkSymbols": []
+    },
+    {
+      "id": "devops-agent:UserReference",
+      "sourceService": "devops-agent",
+      "sourceName": "UserReference",
+      "aliases": [],
+      "sourceSemanticKind": "OWNED_VALUE",
+      "originalEntityDeclaration": false,
+      "declarationReason": "Named model value, source channel, resource-family configuration or transport view; not an independently declared entity class.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "Native field groups and meaning",
+          "kind": "MODEL_DICTIONARY"
+        }
+      ],
+      "previousUse": "Optional native journal attribution containing supplied userId and userType IAM/IDC/IDP; absent attribution does not identify an internal agent.",
+      "identity": "Owner JournalRecord source + supplied user identity/provider type.",
+      "mappingAliases": [
+        "UserReference"
+      ],
+      "canonicalEntities": [
+        "JournalRecord",
+        "Source"
+      ],
+      "schemaPointers": [
+        "#/$defs/JournalRecord/properties/selectedSource",
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.journal-record/v1"
+      ],
+      "coverageLevel": "RETAINED_ONLY",
+      "coverageReason": "Native userReference survives only in the retained journal Source. JournalRecord has no attribution field, and ActorRef describes a trusted acting principal with different fields and enum semantics.",
+      "gaps": [
+        "The registry’s ActorReference representation label has no normalized binding that preserves native userId/userType."
+      ],
+      "benchmarkSymbols": []
+    },
+    {
+      "id": "devops-agent:ChatExecution",
+      "sourceService": "devops-agent",
+      "sourceName": "ChatExecution",
+      "aliases": [],
+      "sourceSemanticKind": "TRANSPORT_DTO",
+      "originalEntityDeclaration": false,
+      "declarationReason": "Named model value, source channel, resource-family configuration or transport view; not an independently declared entity class.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "2. API-wide entity map",
+          "kind": "MODEL_DICTIONARY"
+        }
+      ],
+      "previousUse": "Native conversation-execution summary used for interactive chat history selection, with execution ID, created/updated time and optional summary.",
+      "identity": "Space/session collection context + executionId; no assumed identity equivalence to a task’s execution membership.",
+      "mappingAliases": [
+        "ChatExecution"
+      ],
+      "canonicalEntities": [
+        "Source"
+      ],
+      "schemaPointers": [
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.conversation/v1"
+      ],
+      "coverageLevel": "RETAINED_ONLY",
+      "coverageReason": "The conversation profile retains ChatExecution output; no normalized chat-execution view or conversation history model is defined.",
+      "gaps": [],
+      "benchmarkSymbols": []
+    },
+    {
+      "id": "devops-agent:PendingMessage",
+      "sourceService": "devops-agent",
+      "sourceName": "PendingMessage",
+      "aliases": [],
+      "sourceSemanticKind": "TRANSPORT_DTO",
+      "originalEntityDeclaration": false,
+      "declarationReason": "Named model value, source channel, resource-family configuration or transport view; not an independently declared entity class.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "2. API-wide entity map",
+          "kind": "MODEL_DICTIONARY"
+        }
+      ],
+      "previousUse": "A native pending-queue item with message ID and user/assistant message union, not a complete conversation archive.",
+      "identity": "Queue/session scope + native messageId.",
+      "mappingAliases": [
+        "PendingMessage"
+      ],
+      "canonicalEntities": [
+        "Source"
+      ],
+      "schemaPointers": [
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.conversation/v1"
+      ],
+      "coverageLevel": "RETAINED_ONLY",
+      "coverageReason": "Pending message data remains inside the conversation Source profile; queue membership is not converted into durable normalized conversation history.",
+      "gaps": [],
+      "benchmarkSymbols": []
+    },
+    {
+      "id": "devops-agent:SendMessageEvents",
+      "sourceService": "devops-agent",
+      "sourceName": "SendMessageEvents",
+      "aliases": [],
+      "sourceSemanticKind": "TRANSPORT_DTO",
+      "originalEntityDeclaration": false,
+      "declarationReason": "Named model value, source channel, resource-family configuration or transport view; not an independently declared entity class.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "2. API-wide entity map",
+          "kind": "MODEL_DICTIONARY"
+        }
+      ],
+      "previousUse": "The native response EventStream union covers response lifecycle, content block start/delta/stop, summaries and heartbeats with variant-specific optional IDs and sequence.",
+      "identity": "Native request/session plus the supplied event/response/block identifiers; not a global durable event ID.",
+      "mappingAliases": [
+        "SendMessageEvents"
+      ],
+      "canonicalEntities": [
+        "Source",
+        "Observation"
+      ],
+      "schemaPointers": [
+        "#/$defs/Source/properties/representation",
+        "#/$defs/Source/properties/payload",
+        "#/$defs/Observation/properties/channel"
+      ],
+      "profileIds": [
+        "aws.devops-agent.chat-stream/v1"
+      ],
+      "coverageLevel": "RETAINED_ONLY",
+      "coverageReason": "The registered stream capture profile retains union branches and unknown variants, but its observedFields are descriptors rather than an executable normalized union schema.",
+      "gaps": [],
+      "benchmarkSymbols": []
+    },
+    {
+      "id": "devops-agent:ApprovalPattern",
+      "sourceService": "devops-agent",
+      "sourceName": "ApprovalPattern",
+      "aliases": [],
+      "sourceSemanticKind": "OWNED_VALUE",
+      "originalEntityDeclaration": false,
+      "declarationReason": "Named model value, source channel, resource-family configuration or transport view; not an independently declared entity class.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "2. API-wide entity map",
+          "kind": "MODEL_DICTIONARY"
+        }
+      ],
+      "previousUse": "Native requested/finalized approval scope consists of a tool and pinned argument map; finalization may match or narrow the request, never widen it.",
+      "identity": "Owned scope value for the exact approval request/decision context.",
+      "mappingAliases": [
+        "ApprovalPattern"
+      ],
+      "canonicalEntities": [
+        "ApprovalRequest",
+        "Command",
+        "Source"
+      ],
+      "schemaPointers": [
+        "#/$defs/ApprovalRequest/properties/requestSource",
+        "#/$defs/ApprovalRequest/properties/actionDigest",
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.approval/v1"
+      ],
+      "coverageLevel": "RETAINED_ONLY",
+      "coverageReason": "Approval context and digest are modeled, but the tool/argumentPins shape has no model definition or direct typed member. It remains in retained source content for adapter validation.",
+      "gaps": [
+        "No ApprovalPattern or equivalent owned typed scope shape exists despite the legacy ownedValue/typed-pins label."
+      ],
+      "benchmarkSymbols": []
+    },
+    {
+      "id": "devops-agent:ApprovalAction",
+      "sourceService": "devops-agent",
+      "sourceName": "ApprovalAction",
+      "aliases": [],
+      "sourceSemanticKind": "OWNED_VALUE",
+      "originalEntityDeclaration": false,
+      "declarationReason": "Named model value, source channel, resource-family configuration or transport view; not an independently declared entity class.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "2. API-wide entity map",
+          "kind": "MODEL_DICTIONARY"
+        }
+      ],
+      "previousUse": "Native resume/context value contains optional toolUseId, interruptId, approvalId, buttonText and action; it correlates the precise paused invocation.",
+      "identity": "Owned invocation/decision value scoped by AgentSpace and exact request context.",
+      "mappingAliases": [
+        "ApprovalAction"
+      ],
+      "canonicalEntities": [
+        "ApprovalRequest",
+        "Command",
+        "Source"
+      ],
+      "schemaPointers": [
+        "#/$defs/ApprovalRequest/properties/requestSource",
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.approval/v1"
+      ],
+      "coverageLevel": "RETAINED_ONLY",
+      "coverageReason": "The console’s typed DecideApproval/ResumeExecution commands express narrower intent, but no equivalent normalized ApprovalAction model value preserves its native invocation members.",
+      "gaps": [
+        "No ApprovalAction model definition exists; the source-native IDs remain inside the request Source."
+      ],
+      "benchmarkSymbols": []
+    },
+    {
+      "id": "devops-agent:Goal",
+      "sourceService": "devops-agent",
+      "sourceName": "Goal",
+      "aliases": [],
+      "sourceSemanticKind": "NATIVE_RESOURCE",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Explicitly named application/native entity or application record in the model dictionary.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "Recommendations and goals",
+          "kind": "MODEL_DICTIONARY"
+        }
+      ],
+      "previousUse": "Native prevention work with its own identity, content/status/version/schedule and last-task pointers; it is not an executable Scenario or investigation completion.",
+      "identity": "AgentSpace ARN + native goalId.",
+      "mappingAliases": [
+        "Goal"
+      ],
+      "canonicalEntities": [
+        "Source"
+      ],
+      "schemaPointers": [
+        "#/$defs/Source/properties/identity",
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.goal/v1"
+      ],
+      "coverageLevel": "RETAINED_ONLY",
+      "coverageReason": "The named goal profile preserves native identity and content/lifecycle in Source; goal authoring/scheduling and a normalized goal entity/value are explicitly deferred.",
+      "gaps": [],
+      "benchmarkSymbols": []
+    },
+    {
+      "id": "devops-agent:Recommendation",
+      "sourceService": "devops-agent",
+      "sourceName": "Recommendation",
+      "aliases": [],
+      "sourceSemanticKind": "NATIVE_RESOURCE",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Explicitly named application/native entity or application record in the model dictionary.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "Recommendations and goals",
+          "kind": "MODEL_DICTIONARY"
+        }
+      ],
+      "previousUse": "Native DevOps prevention recommendation links a task and optional goal/version, and carries content, native status/priority/ranking/version. It is distinct from a captured Resilience suggestion.",
+      "identity": "AgentSpace ARN + native recommendationId.",
+      "mappingAliases": [
+        "Recommendation"
+      ],
+      "canonicalEntities": [
+        "Source"
+      ],
+      "schemaPointers": [
+        "#/$defs/Source/properties/identity",
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.recommendation/v1"
+      ],
+      "coverageLevel": "RETAINED_ONLY",
+      "coverageReason": "A separate source profile preserves the native recommendation. The consolidated Recommendation entity belongs to the Resilience finding model and must not be counted as normalizing this DevOps resource.",
+      "gaps": [],
+      "benchmarkSymbols": []
+    },
+    {
+      "id": "devops-agent:Trigger",
+      "sourceService": "devops-agent",
+      "sourceName": "Trigger",
+      "aliases": [],
+      "sourceSemanticKind": "NATIVE_RESOURCE",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Explicitly named application/native entity or application record in the model dictionary.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "Documented Asset profiles",
+          "kind": "MODEL_DICTIONARY"
+        }
+      ],
+      "previousUse": "Native automation resource with a condition union and open action document; documented actions can refer to custom-agent asset IDs. It is not an Asset or a console Scenario.",
+      "identity": "Scoped AgentSpace + triggerId.",
+      "mappingAliases": [
+        "Trigger"
+      ],
+      "canonicalEntities": [
+        "Source"
+      ],
+      "schemaPointers": [
+        "#/$defs/Source/properties/identity",
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.trigger/v1"
+      ],
+      "coverageLevel": "RETAINED_ONLY",
+      "coverageReason": "The trigger profile retains native identity, state, condition and action. There is no normalized automation trigger or scheduling contract.",
+      "gaps": [],
+      "benchmarkSymbols": []
+    },
+    {
+      "id": "devops-agent:OperatorApp",
+      "sourceService": "devops-agent",
+      "sourceName": "OperatorApp",
+      "aliases": [
+        "Operator application"
+      ],
+      "sourceSemanticKind": "CONTROL_VALUE",
+      "originalEntityDeclaration": false,
+      "declarationReason": "Named model value, source channel, resource-family configuration or transport view; not an independently declared entity class.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "2. API-wide entity map",
+          "kind": "MODEL_DICTIONARY"
+        }
+      ],
+      "previousUse": "Provider operator web-app enablement/access and identity-provider configuration, separate from the application Workspace’s own authentication.",
+      "identity": "Owning AgentSpace configuration.",
+      "mappingAliases": [
+        "OperatorApp",
+        "Operator application"
+      ],
+      "canonicalEntities": [
+        "Source"
+      ],
+      "schemaPointers": [
+        "#/$defs/Source/properties/identity",
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.operator-app/v1"
+      ],
+      "coverageLevel": "RETAINED_ONLY",
+      "coverageReason": "The operator-app profile retains access configuration without promoting it to console authentication or a new domain entity.",
+      "gaps": [],
+      "benchmarkSymbols": []
+    },
+    {
+      "id": "devops-agent:PrivateConnection",
+      "sourceService": "devops-agent",
+      "sourceName": "PrivateConnection",
+      "aliases": [],
+      "sourceSemanticKind": "NATIVE_RESOURCE",
+      "originalEntityDeclaration": true,
+      "declarationReason": "Explicitly named application/native entity or application record in the model dictionary.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "2. API-wide entity map",
+          "kind": "MODEL_DICTIONARY"
+        }
+      ],
+      "previousUse": "Provider private connectivity resource with name/ARN, network and certificate/state details; it is not the console Connection access-path record.",
+      "identity": "Owning provider scope + private connection name.",
+      "mappingAliases": [
+        "PrivateConnection"
+      ],
+      "canonicalEntities": [
+        "Source"
+      ],
+      "schemaPointers": [
+        "#/$defs/Source/properties/identity",
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.private-connection/v1"
+      ],
+      "coverageLevel": "RETAINED_ONLY",
+      "coverageReason": "The private-connection profile retains identity and lifecycle evidence; provisioning and certificate-management normalization remain deferred.",
+      "gaps": [],
+      "benchmarkSymbols": []
+    },
+    {
+      "id": "devops-agent:Webhook",
+      "sourceService": "devops-agent",
+      "sourceName": "Webhook",
+      "aliases": [],
+      "sourceSemanticKind": "OWNED_VALUE",
+      "originalEntityDeclaration": false,
+      "declarationReason": "Named model value, source channel, resource-family configuration or transport view; not an independently declared entity class.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "2. API-wide entity map",
+          "kind": "MODEL_DICTIONARY"
+        }
+      ],
+      "previousUse": "Association-scoped provider intake descriptor with webhook ID, URL and type; configuration does not prove event or incident receipt.",
+      "identity": "AgentSpace + association + webhookId.",
+      "mappingAliases": [
+        "Webhook"
+      ],
+      "canonicalEntities": [
+        "Source"
+      ],
+      "schemaPointers": [
+        "#/$defs/Source/properties/identity",
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.webhook/v1"
+      ],
+      "coverageLevel": "RETAINED_ONLY",
+      "coverageReason": "The webhook profile retains the native descriptor. No normalized webhook value or intake delivery entity is defined.",
+      "gaps": [],
+      "benchmarkSymbols": []
+    },
+    {
+      "id": "devops-agent:Accountusage",
+      "sourceService": "devops-agent",
+      "sourceName": "Account usage",
+      "aliases": [],
+      "sourceSemanticKind": "TRANSPORT_DTO",
+      "originalEntityDeclaration": false,
+      "declarationReason": "Named model value, source channel, resource-family configuration or transport view; not an independently declared entity class.",
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "2. API-wide entity map",
+          "kind": "MODEL_DICTIONARY"
+        }
+      ],
+      "previousUse": "Account-level usage-window counters and limits for investigation/evaluation/system learning/on-demand/grading; not per-incident telemetry or recovery evidence.",
+      "identity": "Owning account + usage-period start/end.",
+      "mappingAliases": [
+        "Account usage"
+      ],
+      "canonicalEntities": [
+        "Source"
+      ],
+      "schemaPointers": [
+        "#/$defs/Source/properties/identity",
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.account-usage/v1"
+      ],
+      "coverageLevel": "RETAINED_ONLY",
+      "coverageReason": "The account-usage profile retains typed native counter descriptions inside Source. The model has no normalized UsageMetric/account-usage value and does not conflate it with workload status.",
+      "gaps": [],
+      "benchmarkSymbols": []
+    }
+  ],
+  "nativeShapeCoverage": [
+    {
+      "name": "Task",
+      "sourceSemanticKind": "NATIVE_RESOURCE",
+      "shapeRole": "RESOURCE",
+      "coverageLevel": "PARTIAL",
+      "schemaPointers": [
+        "#/$defs/Investigation",
+        "#/$defs/Investigation/properties/nativeTaskVersion",
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.task/v1"
+      ],
+      "coverageReason": "The INVESTIGATION task facet has a typed entity with identity/status/version and scoped links. EVALUATION, RELEASE_READINESS_REVIEW and RELEASE_TESTING tasks remain retained Task documents; priority and other native header fields are read through the retained source.",
+      "mappedConstructIds": [
+        "devops-agent:Task"
+      ],
+      "evidence": {
+        "path": "aws/devops-agent/analysis/annexes/Investigation_API_Catalog.md",
+        "heading": "Task",
+        "kind": "NATIVE_SHAPE_CATALOG"
+      },
+      "nativeMemberCount": 17
+    },
+    {
+      "name": "TaskFilter",
+      "sourceSemanticKind": "OWNED_VALUE",
+      "shapeRole": "VALUE",
+      "coverageLevel": "RETAINED_ONLY",
+      "schemaPointers": [
+        "#/$defs/CollectionQuery/properties/filters",
+        "#/$defs/ReadAttempt/properties/requestSource",
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.task/v1",
+        "console.collection.request/v1"
+      ],
+      "coverageReason": "Exact filters/query and request envelopes are retained, but CollectionQuery.filters permits arbitrary JSON and does not normalize the native TaskFilter vocabulary/constraints.",
+      "mappedConstructIds": [
+        "devops-agent:CollectionPass",
+        "devops-agent:ReadAttempt"
+      ],
+      "evidence": {
+        "path": "aws/devops-agent/analysis/annexes/Investigation_API_Catalog.md",
+        "heading": "TaskFilter",
+        "kind": "NATIVE_SHAPE_CATALOG"
+      },
+      "nativeMemberCount": 6
+    },
+    {
+      "name": "ReferenceInput",
+      "sourceSemanticKind": "OWNED_VALUE",
+      "shapeRole": "VALUE",
+      "coverageLevel": "NORMALIZED",
+      "schemaPointers": [
+        "#/$defs/Investigation/properties/externalReference",
+        "#/$defs/ExternalReference"
+      ],
+      "profileIds": [
+        "aws.devops-agent.task/v1"
+      ],
+      "coverageReason": "The essential external-system/reference/URL/association linkage has a typed ExternalReference binding. Native input bounds and optional title remain source/adapter concerns; this is not full SDK-schema equivalence.",
+      "mappedConstructIds": [
+        "devops-agent:ExternalReference"
+      ],
+      "evidence": {
+        "path": "aws/devops-agent/analysis/annexes/Investigation_API_Catalog.md",
+        "heading": "ReferenceInput",
+        "kind": "NATIVE_SHAPE_CATALOG"
+      },
+      "nativeMemberCount": 5
+    },
+    {
+      "name": "ReferenceOutput",
+      "sourceSemanticKind": "OWNED_VALUE",
+      "shapeRole": "VALUE",
+      "coverageLevel": "NORMALIZED",
+      "schemaPointers": [
+        "#/$defs/Investigation/properties/externalReference",
+        "#/$defs/ExternalReference"
+      ],
+      "profileIds": [
+        "aws.devops-agent.task/v1"
+      ],
+      "coverageReason": "The essential external-system/reference/URL/association linkage has a typed ExternalReference binding. Native input bounds and optional title remain source/adapter concerns; this is not full SDK-schema equivalence.",
+      "mappedConstructIds": [
+        "devops-agent:ExternalReference"
+      ],
+      "evidence": {
+        "path": "aws/devops-agent/analysis/annexes/Investigation_API_Catalog.md",
+        "heading": "ReferenceOutput",
+        "kind": "NATIVE_SHAPE_CATALOG"
+      },
+      "nativeMemberCount": 5
+    },
+    {
+      "name": "Execution",
+      "sourceSemanticKind": "NATIVE_RESOURCE",
+      "shapeRole": "RESOURCE",
+      "coverageLevel": "NORMALIZED",
+      "schemaPointers": [
+        "#/$defs/Execution",
+        "#/$defs/Execution/properties/parentExecutionIdentity",
+        "#/$defs/Execution/properties/rawExecutionStatus"
+      ],
+      "profileIds": [
+        "aws.devops-agent.execution/v1"
+      ],
+      "coverageReason": "Execution preserves identity, parent identity, state, subtask and exact observation. Optional native agent/session metadata remains source-backed rather than guessed.",
+      "mappedConstructIds": [
+        "devops-agent:Execution"
+      ],
+      "evidence": {
+        "path": "aws/devops-agent/analysis/annexes/Investigation_API_Catalog.md",
+        "heading": "Execution",
+        "kind": "NATIVE_SHAPE_CATALOG"
+      },
+      "nativeMemberCount": 9
+    },
+    {
+      "name": "JournalRecord",
+      "sourceSemanticKind": "NATIVE_RESOURCE",
+      "shapeRole": "RESOURCE",
+      "coverageLevel": "NORMALIZED",
+      "schemaPointers": [
+        "#/$defs/JournalRecord",
+        "#/$defs/JournalRecord/properties/selectedSource",
+        "#/$defs/JournalRecord/properties/selectedObservation"
+      ],
+      "profileIds": [
+        "aws.devops-agent.journal-record/v1"
+      ],
+      "coverageReason": "JournalRecord normalizes the envelope identity/type and exact source/observation references. Keeping content as retained arbitrary JSON is faithful to the native contract, not a missing universal hypothesis schema.",
+      "mappedConstructIds": [
+        "devops-agent:JournalRecord"
+      ],
+      "evidence": {
+        "path": "aws/devops-agent/analysis/annexes/Investigation_API_Catalog.md",
+        "heading": "JournalRecord",
+        "kind": "NATIVE_SHAPE_CATALOG"
+      },
+      "nativeMemberCount": 7
+    },
+    {
+      "name": "UserReference",
+      "sourceSemanticKind": "OWNED_VALUE",
+      "shapeRole": "VALUE",
+      "coverageLevel": "RETAINED_ONLY",
+      "schemaPointers": [
+        "#/$defs/JournalRecord/properties/selectedSource",
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.journal-record/v1"
+      ],
+      "coverageReason": "Native userReference survives only in the retained journal Source. JournalRecord has no attribution field, and ActorRef describes a trusted acting principal with different fields and enum semantics.",
+      "mappedConstructIds": [
+        "devops-agent:UserReference"
+      ],
+      "evidence": {
+        "path": "aws/devops-agent/analysis/annexes/Investigation_API_Catalog.md",
+        "heading": "UserReference",
+        "kind": "NATIVE_SHAPE_CATALOG"
+      },
+      "nativeMemberCount": 2
+    },
+    {
+      "name": "ChatExecution",
+      "sourceSemanticKind": "TRANSPORT_DTO",
+      "shapeRole": "WRAPPER",
+      "coverageLevel": "RETAINED_ONLY",
+      "schemaPointers": [
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.conversation/v1"
+      ],
+      "coverageReason": "The conversation profile retains ChatExecution output; no normalized chat-execution view or conversation history model is defined.",
+      "mappedConstructIds": [
+        "devops-agent:ChatExecution"
+      ],
+      "evidence": {
+        "path": "aws/devops-agent/analysis/annexes/Investigation_API_Catalog.md",
+        "heading": "ChatExecution",
+        "kind": "NATIVE_SHAPE_CATALOG"
+      },
+      "nativeMemberCount": 4
+    },
+    {
+      "name": "PendingMessage",
+      "sourceSemanticKind": "TRANSPORT_DTO",
+      "shapeRole": "WRAPPER",
+      "coverageLevel": "RETAINED_ONLY",
+      "schemaPointers": [
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.conversation/v1"
+      ],
+      "coverageReason": "Pending message data remains inside the conversation Source profile; queue membership is not converted into durable normalized conversation history.",
+      "mappedConstructIds": [
+        "devops-agent:PendingMessage"
+      ],
+      "evidence": {
+        "path": "aws/devops-agent/analysis/annexes/Investigation_API_Catalog.md",
+        "heading": "PendingMessage",
+        "kind": "NATIVE_SHAPE_CATALOG"
+      },
+      "nativeMemberCount": 2
+    },
+    {
+      "name": "Message",
+      "sourceSemanticKind": "OWNED_VALUE",
+      "shapeRole": "VALUE",
+      "coverageLevel": "RETAINED_ONLY",
+      "schemaPointers": [
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.conversation/v1"
+      ],
+      "coverageReason": "The native message/content union remains in Source payload. No normalized conversation Message or block hierarchy is declared.",
+      "mappedConstructIds": [
+        "devops-agent:PendingMessage"
+      ],
+      "evidence": {
+        "path": "aws/devops-agent/analysis/annexes/Investigation_API_Catalog.md",
+        "heading": "Message",
+        "kind": "NATIVE_SHAPE_CATALOG"
+      },
+      "nativeMemberCount": 2
+    },
+    {
+      "name": "UserMessageBlock",
+      "sourceSemanticKind": "OWNED_VALUE",
+      "shapeRole": "VALUE",
+      "coverageLevel": "RETAINED_ONLY",
+      "schemaPointers": [
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.conversation/v1"
+      ],
+      "coverageReason": "The native message/content union remains in Source payload. No normalized conversation Message or block hierarchy is declared.",
+      "mappedConstructIds": [
+        "devops-agent:PendingMessage"
+      ],
+      "evidence": {
+        "path": "aws/devops-agent/analysis/annexes/Investigation_API_Catalog.md",
+        "heading": "UserMessageBlock",
+        "kind": "NATIVE_SHAPE_CATALOG"
+      },
+      "nativeMemberCount": 2
+    },
+    {
+      "name": "AssistantMessageBlock",
+      "sourceSemanticKind": "OWNED_VALUE",
+      "shapeRole": "VALUE",
+      "coverageLevel": "RETAINED_ONLY",
+      "schemaPointers": [
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.conversation/v1"
+      ],
+      "coverageReason": "The native message/content union remains in Source payload. No normalized conversation Message or block hierarchy is declared.",
+      "mappedConstructIds": [
+        "devops-agent:PendingMessage"
+      ],
+      "evidence": {
+        "path": "aws/devops-agent/analysis/annexes/Investigation_API_Catalog.md",
+        "heading": "AssistantMessageBlock",
+        "kind": "NATIVE_SHAPE_CATALOG"
+      },
+      "nativeMemberCount": 2
+    },
+    {
+      "name": "SendMessageContext",
+      "sourceSemanticKind": "OWNED_VALUE",
+      "shapeRole": "VALUE",
+      "coverageLevel": "RETAINED_ONLY",
+      "schemaPointers": [
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.conversation/v1"
+      ],
+      "coverageReason": "Native conversation/context or stream union value is retained verbatim by the named profile; there is no corresponding normalized message/block/event shape.",
+      "mappedConstructIds": [
+        "devops-agent:ChatExecution"
+      ],
+      "evidence": {
+        "path": "aws/devops-agent/analysis/annexes/Investigation_API_Catalog.md",
+        "heading": "SendMessageContext",
+        "kind": "NATIVE_SHAPE_CATALOG"
+      },
+      "nativeMemberCount": 4
+    },
+    {
+      "name": "ApprovalAction",
+      "sourceSemanticKind": "OWNED_VALUE",
+      "shapeRole": "VALUE",
+      "coverageLevel": "RETAINED_ONLY",
+      "schemaPointers": [
+        "#/$defs/ApprovalRequest/properties/requestSource",
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.approval/v1"
+      ],
+      "coverageReason": "The console’s typed DecideApproval/ResumeExecution commands express narrower intent, but no equivalent normalized ApprovalAction model value preserves its native invocation members.",
+      "mappedConstructIds": [
+        "devops-agent:ApprovalAction"
+      ],
+      "evidence": {
+        "path": "aws/devops-agent/analysis/annexes/Investigation_API_Catalog.md",
+        "heading": "ApprovalAction",
+        "kind": "NATIVE_SHAPE_CATALOG"
+      },
+      "nativeMemberCount": 5
+    },
+    {
+      "name": "ApprovalPattern",
+      "sourceSemanticKind": "OWNED_VALUE",
+      "shapeRole": "VALUE",
+      "coverageLevel": "RETAINED_ONLY",
+      "schemaPointers": [
+        "#/$defs/ApprovalRequest/properties/requestSource",
+        "#/$defs/ApprovalRequest/properties/actionDigest",
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.approval/v1"
+      ],
+      "coverageReason": "Approval context and digest are modeled, but the tool/argumentPins shape has no model definition or direct typed member. It remains in retained source content for adapter validation.",
+      "mappedConstructIds": [
+        "devops-agent:ApprovalPattern"
+      ],
+      "evidence": {
+        "path": "aws/devops-agent/analysis/annexes/Investigation_API_Catalog.md",
+        "heading": "ApprovalPattern",
+        "kind": "NATIVE_SHAPE_CATALOG"
+      },
+      "nativeMemberCount": 2
+    },
+    {
+      "name": "SendMessageEvents",
+      "sourceSemanticKind": "TRANSPORT_DTO",
+      "shapeRole": "WRAPPER",
+      "coverageLevel": "RETAINED_ONLY",
+      "schemaPointers": [
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.chat-stream/v1"
+      ],
+      "coverageReason": "Native conversation/context or stream union value is retained verbatim by the named profile; there is no corresponding normalized message/block/event shape.",
+      "mappedConstructIds": [
+        "devops-agent:SendMessageEvents"
+      ],
+      "evidence": {
+        "path": "aws/devops-agent/analysis/annexes/Investigation_API_Catalog.md",
+        "heading": "SendMessageEvents",
+        "kind": "NATIVE_SHAPE_CATALOG"
+      },
+      "nativeMemberCount": 9
+    },
+    {
+      "name": "SendMessageResponseCreatedEvent",
+      "sourceSemanticKind": "TRANSPORT_DTO",
+      "shapeRole": "WRAPPER",
+      "coverageLevel": "RETAINED_ONLY",
+      "schemaPointers": [
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.chat-stream/v1"
+      ],
+      "coverageReason": "Native conversation/context or stream union value is retained verbatim by the named profile; there is no corresponding normalized message/block/event shape.",
+      "mappedConstructIds": [
+        "devops-agent:SendMessageEvents"
+      ],
+      "evidence": {
+        "path": "aws/devops-agent/analysis/annexes/Investigation_API_Catalog.md",
+        "heading": "SendMessageResponseCreatedEvent",
+        "kind": "NATIVE_SHAPE_CATALOG"
+      },
+      "nativeMemberCount": 2
+    },
+    {
+      "name": "SendMessageResponseInProgressEvent",
+      "sourceSemanticKind": "TRANSPORT_DTO",
+      "shapeRole": "WRAPPER",
+      "coverageLevel": "RETAINED_ONLY",
+      "schemaPointers": [
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.chat-stream/v1"
+      ],
+      "coverageReason": "Native conversation/context or stream union value is retained verbatim by the named profile; there is no corresponding normalized message/block/event shape.",
+      "mappedConstructIds": [
+        "devops-agent:SendMessageEvents"
+      ],
+      "evidence": {
+        "path": "aws/devops-agent/analysis/annexes/Investigation_API_Catalog.md",
+        "heading": "SendMessageResponseInProgressEvent",
+        "kind": "NATIVE_SHAPE_CATALOG"
+      },
+      "nativeMemberCount": 2
+    },
+    {
+      "name": "SendMessageResponseCompletedEvent",
+      "sourceSemanticKind": "TRANSPORT_DTO",
+      "shapeRole": "WRAPPER",
+      "coverageLevel": "RETAINED_ONLY",
+      "schemaPointers": [
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.chat-stream/v1"
+      ],
+      "coverageReason": "Native conversation/context or stream union value is retained verbatim by the named profile; there is no corresponding normalized message/block/event shape.",
+      "mappedConstructIds": [
+        "devops-agent:SendMessageEvents"
+      ],
+      "evidence": {
+        "path": "aws/devops-agent/analysis/annexes/Investigation_API_Catalog.md",
+        "heading": "SendMessageResponseCompletedEvent",
+        "kind": "NATIVE_SHAPE_CATALOG"
+      },
+      "nativeMemberCount": 3
+    },
+    {
+      "name": "SendMessageResponseFailedEvent",
+      "sourceSemanticKind": "TRANSPORT_DTO",
+      "shapeRole": "WRAPPER",
+      "coverageLevel": "RETAINED_ONLY",
+      "schemaPointers": [
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.chat-stream/v1"
+      ],
+      "coverageReason": "Native conversation/context or stream union value is retained verbatim by the named profile; there is no corresponding normalized message/block/event shape.",
+      "mappedConstructIds": [
+        "devops-agent:SendMessageEvents"
+      ],
+      "evidence": {
+        "path": "aws/devops-agent/analysis/annexes/Investigation_API_Catalog.md",
+        "heading": "SendMessageResponseFailedEvent",
+        "kind": "NATIVE_SHAPE_CATALOG"
+      },
+      "nativeMemberCount": 4
+    },
+    {
+      "name": "SendMessageContentBlockStartEvent",
+      "sourceSemanticKind": "TRANSPORT_DTO",
+      "shapeRole": "WRAPPER",
+      "coverageLevel": "RETAINED_ONLY",
+      "schemaPointers": [
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.chat-stream/v1"
+      ],
+      "coverageReason": "Native conversation/context or stream union value is retained verbatim by the named profile; there is no corresponding normalized message/block/event shape.",
+      "mappedConstructIds": [
+        "devops-agent:SendMessageEvents"
+      ],
+      "evidence": {
+        "path": "aws/devops-agent/analysis/annexes/Investigation_API_Catalog.md",
+        "heading": "SendMessageContentBlockStartEvent",
+        "kind": "NATIVE_SHAPE_CATALOG"
+      },
+      "nativeMemberCount": 5
+    },
+    {
+      "name": "SendMessageContentBlockDeltaEvent",
+      "sourceSemanticKind": "TRANSPORT_DTO",
+      "shapeRole": "WRAPPER",
+      "coverageLevel": "RETAINED_ONLY",
+      "schemaPointers": [
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.chat-stream/v1"
+      ],
+      "coverageReason": "Native conversation/context or stream union value is retained verbatim by the named profile; there is no corresponding normalized message/block/event shape.",
+      "mappedConstructIds": [
+        "devops-agent:SendMessageEvents"
+      ],
+      "evidence": {
+        "path": "aws/devops-agent/analysis/annexes/Investigation_API_Catalog.md",
+        "heading": "SendMessageContentBlockDeltaEvent",
+        "kind": "NATIVE_SHAPE_CATALOG"
+      },
+      "nativeMemberCount": 3
+    },
+    {
+      "name": "SendMessageContentBlockDelta",
+      "sourceSemanticKind": "OWNED_VALUE",
+      "shapeRole": "VALUE",
+      "coverageLevel": "RETAINED_ONLY",
+      "schemaPointers": [
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.chat-stream/v1"
+      ],
+      "coverageReason": "Native conversation/context or stream union value is retained verbatim by the named profile; there is no corresponding normalized message/block/event shape.",
+      "mappedConstructIds": [
+        "devops-agent:SendMessageEvents"
+      ],
+      "evidence": {
+        "path": "aws/devops-agent/analysis/annexes/Investigation_API_Catalog.md",
+        "heading": "SendMessageContentBlockDelta",
+        "kind": "NATIVE_SHAPE_CATALOG"
+      },
+      "nativeMemberCount": 2
+    },
+    {
+      "name": "SendMessageTextDelta",
+      "sourceSemanticKind": "OWNED_VALUE",
+      "shapeRole": "VALUE",
+      "coverageLevel": "RETAINED_ONLY",
+      "schemaPointers": [
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.chat-stream/v1"
+      ],
+      "coverageReason": "Native conversation/context or stream union value is retained verbatim by the named profile; there is no corresponding normalized message/block/event shape.",
+      "mappedConstructIds": [
+        "devops-agent:SendMessageEvents"
+      ],
+      "evidence": {
+        "path": "aws/devops-agent/analysis/annexes/Investigation_API_Catalog.md",
+        "heading": "SendMessageTextDelta",
+        "kind": "NATIVE_SHAPE_CATALOG"
+      },
+      "nativeMemberCount": 1
+    },
+    {
+      "name": "SendMessageJsonDelta",
+      "sourceSemanticKind": "OWNED_VALUE",
+      "shapeRole": "VALUE",
+      "coverageLevel": "RETAINED_ONLY",
+      "schemaPointers": [
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.chat-stream/v1"
+      ],
+      "coverageReason": "Native conversation/context or stream union value is retained verbatim by the named profile; there is no corresponding normalized message/block/event shape.",
+      "mappedConstructIds": [
+        "devops-agent:SendMessageEvents"
+      ],
+      "evidence": {
+        "path": "aws/devops-agent/analysis/annexes/Investigation_API_Catalog.md",
+        "heading": "SendMessageJsonDelta",
+        "kind": "NATIVE_SHAPE_CATALOG"
+      },
+      "nativeMemberCount": 1
+    },
+    {
+      "name": "SendMessageContentBlockStopEvent",
+      "sourceSemanticKind": "TRANSPORT_DTO",
+      "shapeRole": "WRAPPER",
+      "coverageLevel": "RETAINED_ONLY",
+      "schemaPointers": [
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.chat-stream/v1"
+      ],
+      "coverageReason": "Native conversation/context or stream union value is retained verbatim by the named profile; there is no corresponding normalized message/block/event shape.",
+      "mappedConstructIds": [
+        "devops-agent:SendMessageEvents"
+      ],
+      "evidence": {
+        "path": "aws/devops-agent/analysis/annexes/Investigation_API_Catalog.md",
+        "heading": "SendMessageContentBlockStopEvent",
+        "kind": "NATIVE_SHAPE_CATALOG"
+      },
+      "nativeMemberCount": 5
+    },
+    {
+      "name": "SendMessageSummaryEvent",
+      "sourceSemanticKind": "TRANSPORT_DTO",
+      "shapeRole": "WRAPPER",
+      "coverageLevel": "RETAINED_ONLY",
+      "schemaPointers": [
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.chat-stream/v1"
+      ],
+      "coverageReason": "Native conversation/context or stream union value is retained verbatim by the named profile; there is no corresponding normalized message/block/event shape.",
+      "mappedConstructIds": [
+        "devops-agent:SendMessageEvents"
+      ],
+      "evidence": {
+        "path": "aws/devops-agent/analysis/annexes/Investigation_API_Catalog.md",
+        "heading": "SendMessageSummaryEvent",
+        "kind": "NATIVE_SHAPE_CATALOG"
+      },
+      "nativeMemberCount": 2
+    },
+    {
+      "name": "SendMessageHeartbeatEvent",
+      "sourceSemanticKind": "TRANSPORT_DTO",
+      "shapeRole": "WRAPPER",
+      "coverageLevel": "RETAINED_ONLY",
+      "schemaPointers": [
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.chat-stream/v1"
+      ],
+      "coverageReason": "Native conversation/context or stream union value is retained verbatim by the named profile; there is no corresponding normalized message/block/event shape.",
+      "mappedConstructIds": [
+        "devops-agent:SendMessageEvents"
+      ],
+      "evidence": {
+        "path": "aws/devops-agent/analysis/annexes/Investigation_API_Catalog.md",
+        "heading": "SendMessageHeartbeatEvent",
+        "kind": "NATIVE_SHAPE_CATALOG"
+      },
+      "nativeMemberCount": 0
+    },
+    {
+      "name": "SendMessageUsageInfo",
+      "sourceSemanticKind": "OWNED_VALUE",
+      "shapeRole": "VALUE",
+      "coverageLevel": "RETAINED_ONLY",
+      "schemaPointers": [
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.chat-stream/v1"
+      ],
+      "coverageReason": "Native conversation/context or stream union value is retained verbatim by the named profile; there is no corresponding normalized message/block/event shape.",
+      "mappedConstructIds": [
+        "devops-agent:SendMessageEvents"
+      ],
+      "evidence": {
+        "path": "aws/devops-agent/analysis/annexes/Investigation_API_Catalog.md",
+        "heading": "SendMessageUsageInfo",
+        "kind": "NATIVE_SHAPE_CATALOG"
+      },
+      "nativeMemberCount": 3
+    },
+    {
+      "name": "Asset",
+      "sourceSemanticKind": "NATIVE_RESOURCE",
+      "shapeRole": "RESOURCE",
+      "coverageLevel": "NORMALIZED",
+      "schemaPointers": [
+        "#/$defs/Asset",
+        "#/$defs/Asset/properties/nativeVersion",
+        "#/$defs/Asset/properties/source",
+        "#/$defs/Asset/properties/files"
+      ],
+      "profileIds": [
+        "aws.devops-agent.asset/v1"
+      ],
+      "coverageReason": "Asset has stable identity and ordinary entity versions with separate nativeVersion, exact source and files. Provider metadata stays retained; no inferred investigation-to-asset relation is introduced.",
+      "mappedConstructIds": [
+        "devops-agent:Asset"
+      ],
+      "evidence": {
+        "path": "aws/devops-agent/analysis/annexes/Investigation_API_Catalog.md",
+        "heading": "Asset",
+        "kind": "NATIVE_SHAPE_CATALOG"
+      },
+      "nativeMemberCount": 6
+    },
+    {
+      "name": "AssetVersionMetadata",
+      "sourceSemanticKind": "TRANSPORT_DTO",
+      "shapeRole": "WRAPPER",
+      "coverageLevel": "NORMALIZED",
+      "schemaPointers": [
+        "#/$defs/Asset/properties/version",
+        "#/$defs/Asset/properties/nativeVersion",
+        "#/$defs/Asset/properties/source",
+        "#/$defs/Asset/properties/files"
+      ],
+      "profileIds": [
+        "aws.devops-agent.asset/v1"
+      ],
+      "coverageReason": "Asset.nativeVersion plus an exact Source and ordinary Asset entity version represent the selected native content version. Provider created/updated metadata stays in Source; this is not a separate Version entity.",
+      "mappedConstructIds": [
+        "devops-agent:AssetVersion"
+      ],
+      "evidence": {
+        "path": "aws/devops-agent/analysis/annexes/Investigation_API_Catalog.md",
+        "heading": "AssetVersionMetadata",
+        "kind": "NATIVE_SHAPE_CATALOG"
+      },
+      "nativeMemberCount": 3
+    },
+    {
+      "name": "AssetTypeSummary",
+      "sourceSemanticKind": "TRANSPORT_DTO",
+      "shapeRole": "WRAPPER",
+      "coverageLevel": "RETAINED_ONLY",
+      "schemaPointers": [
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.asset/v1"
+      ],
+      "coverageReason": "The native asset transport/catalog/content shape is retained by the asset profile. Asset/AssetFile normalize identity and content references, not these provider-specific unions and catalog rows.",
+      "mappedConstructIds": [
+        "devops-agent:Asset"
+      ],
+      "evidence": {
+        "path": "aws/devops-agent/analysis/annexes/Investigation_API_Catalog.md",
+        "heading": "AssetTypeSummary",
+        "kind": "NATIVE_SHAPE_CATALOG"
+      },
+      "nativeMemberCount": 2
+    },
+    {
+      "name": "AssetContent",
+      "sourceSemanticKind": "TRANSPORT_DTO",
+      "shapeRole": "WRAPPER",
+      "coverageLevel": "RETAINED_ONLY",
+      "schemaPointers": [
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.asset/v1"
+      ],
+      "coverageReason": "The native asset transport/catalog/content shape is retained by the asset profile. Asset/AssetFile normalize identity and content references, not these provider-specific unions and catalog rows.",
+      "mappedConstructIds": [
+        "devops-agent:Asset"
+      ],
+      "evidence": {
+        "path": "aws/devops-agent/analysis/annexes/Investigation_API_Catalog.md",
+        "heading": "AssetContent",
+        "kind": "NATIVE_SHAPE_CATALOG"
+      },
+      "nativeMemberCount": 3
+    },
+    {
+      "name": "AssetFile",
+      "sourceSemanticKind": "OWNED_VALUE",
+      "shapeRole": "VALUE",
+      "coverageLevel": "NORMALIZED",
+      "schemaPointers": [
+        "#/$defs/Asset/properties/files",
+        "#/$defs/AssetFile",
+        "#/$defs/ArtifactRef"
+      ],
+      "profileIds": [
+        "aws.devops-agent.asset/v1"
+      ],
+      "coverageReason": "AssetFile is a typed owned path/source/artifact value under the selected Asset representation. Raw body union and native file metadata remain source-backed, and the Asset nativeVersion supplies ownership.",
+      "mappedConstructIds": [
+        "devops-agent:AssetFile"
+      ],
+      "evidence": {
+        "path": "aws/devops-agent/analysis/annexes/Investigation_API_Catalog.md",
+        "heading": "AssetFile",
+        "kind": "NATIVE_SHAPE_CATALOG"
+      },
+      "nativeMemberCount": 6
+    },
+    {
+      "name": "AssetFileBody",
+      "sourceSemanticKind": "OWNED_VALUE",
+      "shapeRole": "VALUE",
+      "coverageLevel": "RETAINED_ONLY",
+      "schemaPointers": [
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.asset/v1"
+      ],
+      "coverageReason": "The native asset transport/catalog/content shape is retained by the asset profile. Asset/AssetFile normalize identity and content references, not these provider-specific unions and catalog rows.",
+      "mappedConstructIds": [
+        "devops-agent:Asset"
+      ],
+      "evidence": {
+        "path": "aws/devops-agent/analysis/annexes/Investigation_API_Catalog.md",
+        "heading": "AssetFileBody",
+        "kind": "NATIVE_SHAPE_CATALOG"
+      },
+      "nativeMemberCount": 2
+    },
+    {
+      "name": "AssetFileContent",
+      "sourceSemanticKind": "OWNED_VALUE",
+      "shapeRole": "VALUE",
+      "coverageLevel": "RETAINED_ONLY",
+      "schemaPointers": [
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.asset/v1"
+      ],
+      "coverageReason": "The native asset transport/catalog/content shape is retained by the asset profile. Asset/AssetFile normalize identity and content references, not these provider-specific unions and catalog rows.",
+      "mappedConstructIds": [
+        "devops-agent:Asset"
+      ],
+      "evidence": {
+        "path": "aws/devops-agent/analysis/annexes/Investigation_API_Catalog.md",
+        "heading": "AssetFileContent",
+        "kind": "NATIVE_SHAPE_CATALOG"
+      },
+      "nativeMemberCount": 3
+    },
+    {
+      "name": "AssetFileSummary",
+      "sourceSemanticKind": "TRANSPORT_DTO",
+      "shapeRole": "WRAPPER",
+      "coverageLevel": "NORMALIZED",
+      "schemaPointers": [
+        "#/$defs/Asset/properties/files",
+        "#/$defs/AssetFile",
+        "#/$defs/ArtifactRef"
+      ],
+      "profileIds": [
+        "aws.devops-agent.asset/v1"
+      ],
+      "coverageReason": "AssetFile is a typed owned path/source/artifact value under the selected Asset representation. Raw body union and native file metadata remain source-backed, and the Asset nativeVersion supplies ownership.",
+      "mappedConstructIds": [
+        "devops-agent:AssetFile"
+      ],
+      "evidence": {
+        "path": "aws/devops-agent/analysis/annexes/Investigation_API_Catalog.md",
+        "heading": "AssetFileSummary",
+        "kind": "NATIVE_SHAPE_CATALOG"
+      },
+      "nativeMemberCount": 5
+    },
+    {
+      "name": "AssetSourceUrlContent",
+      "sourceSemanticKind": "OWNED_VALUE",
+      "shapeRole": "VALUE",
+      "coverageLevel": "RETAINED_ONLY",
+      "schemaPointers": [
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.asset/v1"
+      ],
+      "coverageReason": "The native asset transport/catalog/content shape is retained by the asset profile. Asset/AssetFile normalize identity and content references, not these provider-specific unions and catalog rows.",
+      "mappedConstructIds": [
+        "devops-agent:Asset"
+      ],
+      "evidence": {
+        "path": "aws/devops-agent/analysis/annexes/Investigation_API_Catalog.md",
+        "heading": "AssetSourceUrlContent",
+        "kind": "NATIVE_SHAPE_CATALOG"
+      },
+      "nativeMemberCount": 1
+    },
+    {
+      "name": "AssetZipContent",
+      "sourceSemanticKind": "OWNED_VALUE",
+      "shapeRole": "VALUE",
+      "coverageLevel": "RETAINED_ONLY",
+      "schemaPointers": [
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.asset/v1"
+      ],
+      "coverageReason": "The native asset transport/catalog/content shape is retained by the asset profile. Asset/AssetFile normalize identity and content references, not these provider-specific unions and catalog rows.",
+      "mappedConstructIds": [
+        "devops-agent:Asset"
+      ],
+      "evidence": {
+        "path": "aws/devops-agent/analysis/annexes/Investigation_API_Catalog.md",
+        "heading": "AssetZipContent",
+        "kind": "NATIVE_SHAPE_CATALOG"
+      },
+      "nativeMemberCount": 1
+    },
+    {
+      "name": "AgentSpace",
+      "sourceSemanticKind": "NATIVE_RESOURCE",
+      "shapeRole": "RESOURCE",
+      "coverageLevel": "NORMALIZED",
+      "schemaPointers": [
+        "#/$defs/AgentSpace",
+        "#/$defs/AgentSpace/properties/identity",
+        "#/$defs/AgentSpace/properties/associations"
+      ],
+      "profileIds": [
+        "aws.devops-agent.agent-space/v1"
+      ],
+      "coverageReason": "AgentSpace provides a typed scoped entity and association collection with exact selected observation. Peripheral provider configuration remains in its retained Source.",
+      "mappedConstructIds": [
+        "devops-agent:AgentSpace"
+      ],
+      "evidence": {
+        "path": "aws/devops-agent/analysis/annexes/Investigation_API_Catalog.md",
+        "heading": "AgentSpace",
+        "kind": "NATIVE_SHAPE_CATALOG"
+      },
+      "nativeMemberCount": 8
+    },
+    {
+      "name": "RegisteredService",
+      "sourceSemanticKind": "NATIVE_RESOURCE",
+      "shapeRole": "RESOURCE",
+      "coverageLevel": "RETAINED_ONLY",
+      "schemaPointers": [
+        "#/$defs/Source/properties/identity",
+        "#/$defs/Source/properties/profile",
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.registered-service/v1"
+      ],
+      "coverageReason": "A named registration profile retains the provider record; no normalized registration value/entity or management contract exists. It is correctly kept distinct from workload Service.",
+      "mappedConstructIds": [
+        "devops-agent:RegisteredService"
+      ],
+      "evidence": {
+        "path": "aws/devops-agent/analysis/annexes/Investigation_API_Catalog.md",
+        "heading": "RegisteredService",
+        "kind": "NATIVE_SHAPE_CATALOG"
+      },
+      "nativeMemberCount": 9
+    },
+    {
+      "name": "Association",
+      "sourceSemanticKind": "NATIVE_RESOURCE",
+      "shapeRole": "RESOURCE",
+      "coverageLevel": "NORMALIZED",
+      "schemaPointers": [
+        "#/$defs/AgentSpace/properties/associations",
+        "#/$defs/AgentAssociation"
+      ],
+      "profileIds": [
+        "aws.devops-agent.association/v1"
+      ],
+      "coverageReason": "AgentAssociation is a typed owned value in each AgentSpace version with associationId, serviceId, configurationKind, optional registration identity and exact source. Demotion to an owned value preserves its source identity; native configuration remains Source-backed.",
+      "mappedConstructIds": [
+        "devops-agent:Association"
+      ],
+      "evidence": {
+        "path": "aws/devops-agent/analysis/annexes/Investigation_API_Catalog.md",
+        "heading": "Association",
+        "kind": "NATIVE_SHAPE_CATALOG"
+      },
+      "nativeMemberCount": 8
+    },
+    {
+      "name": "ServiceConfiguration",
+      "sourceSemanticKind": "OWNED_VALUE",
+      "shapeRole": "VALUE",
+      "coverageLevel": "RETAINED_ONLY",
+      "schemaPointers": [
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.association/v1"
+      ],
+      "coverageReason": "AgentAssociation normalizes configurationKind, while the native tagged configuration union remains Source payload with descriptor-level source-shape hints.",
+      "mappedConstructIds": [
+        "devops-agent:Association"
+      ],
+      "evidence": {
+        "path": "aws/devops-agent/analysis/annexes/Investigation_API_Catalog.md",
+        "heading": "ServiceConfiguration",
+        "kind": "NATIVE_SHAPE_CATALOG"
+      },
+      "nativeMemberCount": 21
+    },
+    {
+      "name": "Recommendation",
+      "sourceSemanticKind": "NATIVE_RESOURCE",
+      "shapeRole": "RESOURCE",
+      "coverageLevel": "RETAINED_ONLY",
+      "schemaPointers": [
+        "#/$defs/Source/properties/identity",
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.recommendation/v1"
+      ],
+      "coverageReason": "A separate source profile preserves the native recommendation. The consolidated Recommendation entity belongs to the Resilience finding model and must not be counted as normalizing this DevOps resource.",
+      "mappedConstructIds": [
+        "devops-agent:Recommendation"
+      ],
+      "evidence": {
+        "path": "aws/devops-agent/analysis/annexes/Investigation_API_Catalog.md",
+        "heading": "Recommendation",
+        "kind": "NATIVE_SHAPE_CATALOG"
+      },
+      "nativeMemberCount": 15
+    },
+    {
+      "name": "RecommendationContent",
+      "sourceSemanticKind": "OWNED_VALUE",
+      "shapeRole": "VALUE",
+      "coverageLevel": "RETAINED_ONLY",
+      "schemaPointers": [
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.recommendation/v1"
+      ],
+      "coverageReason": "The native shape is retained under its source profile. Profile observedFields describe source vocabulary; they are not an executable normalized JSON Schema for this native payload.",
+      "mappedConstructIds": [
+        "devops-agent:Recommendation"
+      ],
+      "evidence": {
+        "path": "aws/devops-agent/analysis/annexes/Investigation_API_Catalog.md",
+        "heading": "RecommendationContent",
+        "kind": "NATIVE_SHAPE_CATALOG"
+      },
+      "nativeMemberCount": 2
+    },
+    {
+      "name": "Goal",
+      "sourceSemanticKind": "NATIVE_RESOURCE",
+      "shapeRole": "RESOURCE",
+      "coverageLevel": "RETAINED_ONLY",
+      "schemaPointers": [
+        "#/$defs/Source/properties/identity",
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.goal/v1"
+      ],
+      "coverageReason": "The named goal profile preserves native identity and content/lifecycle in Source; goal authoring/scheduling and a normalized goal entity/value are explicitly deferred.",
+      "mappedConstructIds": [
+        "devops-agent:Goal"
+      ],
+      "evidence": {
+        "path": "aws/devops-agent/analysis/annexes/Investigation_API_Catalog.md",
+        "heading": "Goal",
+        "kind": "NATIVE_SHAPE_CATALOG"
+      },
+      "nativeMemberCount": 13
+    },
+    {
+      "name": "GoalContent",
+      "sourceSemanticKind": "OWNED_VALUE",
+      "shapeRole": "VALUE",
+      "coverageLevel": "RETAINED_ONLY",
+      "schemaPointers": [
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.goal/v1"
+      ],
+      "coverageReason": "The native shape is retained under its source profile. Profile observedFields describe source vocabulary; they are not an executable normalized JSON Schema for this native payload.",
+      "mappedConstructIds": [
+        "devops-agent:Goal"
+      ],
+      "evidence": {
+        "path": "aws/devops-agent/analysis/annexes/Investigation_API_Catalog.md",
+        "heading": "GoalContent",
+        "kind": "NATIVE_SHAPE_CATALOG"
+      },
+      "nativeMemberCount": 2
+    },
+    {
+      "name": "Trigger",
+      "sourceSemanticKind": "NATIVE_RESOURCE",
+      "shapeRole": "RESOURCE",
+      "coverageLevel": "RETAINED_ONLY",
+      "schemaPointers": [
+        "#/$defs/Source/properties/identity",
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.trigger/v1"
+      ],
+      "coverageReason": "The trigger profile retains native identity, state, condition and action. There is no normalized automation trigger or scheduling contract.",
+      "mappedConstructIds": [
+        "devops-agent:Trigger"
+      ],
+      "evidence": {
+        "path": "aws/devops-agent/analysis/annexes/Investigation_API_Catalog.md",
+        "heading": "Trigger",
+        "kind": "NATIVE_SHAPE_CATALOG"
+      },
+      "nativeMemberCount": 8
+    },
+    {
+      "name": "TriggerCondition",
+      "sourceSemanticKind": "OWNED_VALUE",
+      "shapeRole": "VALUE",
+      "coverageLevel": "RETAINED_ONLY",
+      "schemaPointers": [
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.trigger/v1"
+      ],
+      "coverageReason": "The native shape is retained under its source profile. Profile observedFields describe source vocabulary; they are not an executable normalized JSON Schema for this native payload.",
+      "mappedConstructIds": [
+        "devops-agent:Trigger"
+      ],
+      "evidence": {
+        "path": "aws/devops-agent/analysis/annexes/Investigation_API_Catalog.md",
+        "heading": "TriggerCondition",
+        "kind": "NATIVE_SHAPE_CATALOG"
+      },
+      "nativeMemberCount": 1
+    },
+    {
+      "name": "Webhook",
+      "sourceSemanticKind": "OWNED_VALUE",
+      "shapeRole": "VALUE",
+      "coverageLevel": "RETAINED_ONLY",
+      "schemaPointers": [
+        "#/$defs/Source/properties/identity",
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.webhook/v1"
+      ],
+      "coverageReason": "The webhook profile retains the native descriptor. No normalized webhook value or intake delivery entity is defined.",
+      "mappedConstructIds": [
+        "devops-agent:Webhook"
+      ],
+      "evidence": {
+        "path": "aws/devops-agent/analysis/annexes/Investigation_API_Catalog.md",
+        "heading": "Webhook",
+        "kind": "NATIVE_SHAPE_CATALOG"
+      },
+      "nativeMemberCount": 3
+    },
+    {
+      "name": "PrivateConnectionSummary",
+      "sourceSemanticKind": "TRANSPORT_DTO",
+      "shapeRole": "WRAPPER",
+      "coverageLevel": "RETAINED_ONLY",
+      "schemaPointers": [
+        "#/$defs/Source/properties/identity",
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.private-connection/v1"
+      ],
+      "coverageReason": "The private-connection profile retains identity and lifecycle evidence; provisioning and certificate-management normalization remain deferred.",
+      "mappedConstructIds": [
+        "devops-agent:PrivateConnection"
+      ],
+      "evidence": {
+        "path": "aws/devops-agent/analysis/annexes/Investigation_API_Catalog.md",
+        "heading": "PrivateConnectionSummary",
+        "kind": "NATIVE_SHAPE_CATALOG"
+      },
+      "nativeMemberCount": 10
+    },
+    {
+      "name": "UsageMetric",
+      "sourceSemanticKind": "OWNED_VALUE",
+      "shapeRole": "VALUE",
+      "coverageLevel": "RETAINED_ONLY",
+      "schemaPointers": [
+        "#/$defs/Source/properties/identity",
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.account-usage/v1"
+      ],
+      "coverageReason": "The account-usage profile retains typed native counter descriptions inside Source. The model has no normalized UsageMetric/account-usage value and does not conflate it with workload status.",
+      "mappedConstructIds": [
+        "devops-agent:Accountusage"
+      ],
+      "evidence": {
+        "path": "aws/devops-agent/analysis/annexes/Investigation_API_Catalog.md",
+        "heading": "UsageMetric",
+        "kind": "NATIVE_SHAPE_CATALOG"
+      },
+      "nativeMemberCount": 2
+    }
+  ],
+  "findings": [
+    {
+      "id": "DEVOPS-COV-01",
+      "severity": "METHOD",
+      "title": "Registry rows and aliases do not count independent entities",
+      "constructIds": [
+        "devops-agent:Task",
+        "devops-agent:Investigation",
+        "devops-agent:SourceRevision",
+        "devops-agent:JournalRecordRevision"
+      ],
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "3. Investigation aggregate and keys"
+        },
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "Diagram D02 — native core with an explicit membership table"
+        },
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "Diagram D03 — every projection retains provenance"
+        }
+      ],
+      "finding": "The registry groups Task/Investigation and generic/journal-specific revisions as aliases, while the source assigns them different native/application or specialization roles. The 52 SDK shapes additionally contain many nested values and wrappers.",
+      "recommendation": "Count the 34 independently extracted class/ER symbols as a fixed declaration benchmark, retain a separate semantic concept catalog, and show native resources, values and wrappers in separate subtotals."
+    },
+    {
+      "id": "DEVOPS-COV-02",
+      "severity": "DEFERRED_NORMALIZATION",
+      "title": "Timeline and richer investigation assertions are retained, not normalized projections",
+      "constructIds": [
+        "devops-agent:TimelineItem",
+        "devops-agent:Finding",
+        "devops-agent:EvidenceItem",
+        "devops-agent:Hypothesis",
+        "devops-agent:RootCauseAssessment",
+        "devops-agent:MitigationProposal",
+        "devops-agent:ReviewResult",
+        "devops-agent:ActionObservation"
+      ],
+      "schemaPointers": [
+        "#/$defs/Projection/properties/profile",
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "console.investigation.timeline/v1",
+        "console.investigation.assertion/v1",
+        "console.investigation.action-observation/v1"
+      ],
+      "finding": "Named source profiles exist, but each has descriptive typedContent text, not a normalized result schema. Projection.profile is closed to five profiles and only INVESTIGATION_RESULT covers a dedicated DevOps result shape.",
+      "recommendation": "Keep retention explicit in the coverage total. Promote a concrete supported use case through an owned typed result and registered Projection profile with exact provenance; do not introduce one new entity or revision entity per assertion kind."
+    },
+    {
+      "id": "DEVOPS-COV-03",
+      "severity": "MAPPING_OVERCLAIM",
+      "title": "Native journal attribution is not an ActorRef binding",
+      "constructIds": [
+        "devops-agent:UserReference"
+      ],
+      "schemaPointers": [
+        "#/$defs/JournalRecord",
+        "#/$defs/ActorRef",
+        "#/$defs/Source/properties/payload"
+      ],
+      "finding": "The crosswalk labels UserReference as an owned ActorReference, but JournalRecord has no attribution member and ActorRef is the trusted command actor {issuer,subject,kind}. Native userId/userType survives only in raw journal payload.",
+      "recommendation": "Correct the crosswalk to retained-only until a distinct owned native-attribution value or explicit reviewed identity mapping is defined. Do not infer an actor when native attribution is absent."
+    },
+    {
+      "id": "DEVOPS-COV-04",
+      "severity": "PARTIAL_NORMALIZATION",
+      "title": "Graph structure exists but required graph meaning and provenance are incomplete",
+      "constructIds": [
+        "devops-agent:GraphSnapshot",
+        "devops-agent:GraphNode",
+        "devops-agent:GraphEdge"
+      ],
+      "schemaPointers": [
+        "#/$defs/GraphContents",
+        "#/$defs/GraphNode",
+        "#/$defs/GraphEdge"
+      ],
+      "finding": "The model preserves owned endpoint keys, relationKind and evidence, but lacks an explicit node kind, assertion origin and unresolved-placeholder state. The source also distinguishes more graph-view meanings and provenance/validity facts than the current closed graphKind/claimKind fields.",
+      "recommendation": "Add only the owned graph fields needed by supported graph views and retain exact evidence, rather than treating every graph node as a new canonical entity. Test an unresolved placeholder and an operator-asserted causal edge as semantic cases."
+    },
+    {
+      "id": "DEVOPS-COV-05",
+      "severity": "PARTIAL_NORMALIZATION",
+      "title": "Approval context is pinned but invocation and scope values remain raw",
+      "constructIds": [
+        "devops-agent:ApprovalRequest",
+        "devops-agent:ApprovalPattern",
+        "devops-agent:ApprovalAction"
+      ],
+      "schemaPointers": [
+        "#/$defs/ApprovalRequest",
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.approval/v1"
+      ],
+      "finding": "ApprovalRequest pins source/digest and nativeApprovalId, but interruptId, toolUseId, tool and argumentPins are only described by a source profile. No ApprovalPattern/ApprovalAction owned model value exists. The original source itself warns that approval request content is not a universal native typed entity.",
+      "recommendation": "Define and validate the particular observed request profile before dispatch. If typed normalized access is needed, add an owned invocation/scope value with field-presence semantics; preserve request source/digest and keep decision, resume and effect separate."
+    },
+    {
+      "id": "DEVOPS-COV-06",
+      "severity": "PARTIAL_NORMALIZATION",
+      "title": "Collector and coverage-policy identity are not retained as typed metadata",
+      "constructIds": [
+        "devops-agent:CollectionPass",
+        "devops-agent:CoverageClaim"
+      ],
+      "schemaPointers": [
+        "#/$defs/Collection",
+        "#/$defs/CollectionQuery",
+        "#/$defs/Coverage"
+      ],
+      "finding": "The source CollectionPass contract includes collector version/selection policy and CoverageClaim retains evaluation policy. Current Collection/CollectionQuery/Coverage capture query, window, attempts, dimensions and rationale but no explicit versioned collector/policy binding.",
+      "recommendation": "Represent collector/evaluation policy identity as a small owned binding on the appropriate collection/coverage owner, or explicitly defer it. Do not treat free-text rationale as an exact policy version or add policy-version entities."
+    },
+    {
+      "id": "DEVOPS-COV-07",
+      "severity": "PARTIAL_NORMALIZATION",
+      "title": "Generic artifact storage descriptors do not fully normalize cross-channel artifact references",
+      "constructIds": [
+        "devops-agent:ArtifactReference"
+      ],
+      "schemaPointers": [
+        "#/$defs/ArtifactRef",
+        "#/$defs/AssetFile",
+        "#/$defs/EvidenceLocator"
+      ],
+      "finding": "Managed artifact locators, asset files and exact evidence locators are typed, but the original ArtifactReference carries channel/record/block/native-ID/optional-asset-resolution semantics and finer unavailability reasons that are not a single current owned value.",
+      "recommendation": "Keep the source reference inspectable and state this as partial normalization. Add a channel-aware owned reference only when a concrete inline, A2A or native Asset use case requires it; never equate those identifiers."
+    },
+    {
+      "id": "DEVOPS-COV-08",
+      "severity": "PARTIAL_NORMALIZATION",
+      "title": "The decision Command receipt does not expose a reconstructable decision input",
+      "constructIds": [
+        "devops-agent:DecisionAttempt"
+      ],
+      "schemaPointers": [
+        "#/$defs/Command",
+        "#/$defs/ApprovalRequest/properties/decisionCommandIds"
+      ],
+      "finding": "The prior decision-attempt entity records action/finalized-pattern hash. The console has a typed DecideApproval request, but its readable Command record exposes only operation/requestDigest/subjects and lifecycle; it has no retained request source or typed decision value.",
+      "recommendation": "Specify how an authorized historical audit resolves the exact submitted decision input from the Command. A typed owned intent value or exact request-source reference is sufficient; a standalone version entity is not required."
+    },
+    {
+      "id": "DEVOPS-COV-09",
+      "severity": "INTENTIONAL_SCOPE",
+      "title": "Peripheral native resources are represented only by retained source profiles",
+      "constructIds": [
+        "devops-agent:RegisteredService",
+        "devops-agent:Goal",
+        "devops-agent:Recommendation",
+        "devops-agent:Trigger",
+        "devops-agent:PrivateConnection"
+      ],
+      "profileIds": [
+        "aws.devops-agent.registered-service/v1",
+        "aws.devops-agent.goal/v1",
+        "aws.devops-agent.recommendation/v1",
+        "aws.devops-agent.trigger/v1",
+        "aws.devops-agent.private-connection/v1"
+      ],
+      "finding": "Each native resource has an explicit source profile and preserves identity/lifecycle vocabulary, but none has a normalized dedicated model or complete product capability. Homonyms are correctly kept separate from workload Service, resilience Recommendation, console Scenario and Connection.",
+      "recommendation": "Count these as retained resource representations, not normalized entity coverage or implemented AWS integration. Promote a resource only after its domain use case and lifecycle authority justify that model/API surface."
+    },
+    {
+      "id": "DEVOPS-COV-10",
+      "severity": "DOCUMENTATION",
+      "title": "SnapshotProjection crosswalk wording uses obsolete target field names",
+      "constructIds": [
+        "devops-agent:SnapshotProjection"
+      ],
+      "schemaPointers": [
+        "#/$defs/Snapshot/properties/members",
+        "#/$defs/EntityRef"
+      ],
+      "finding": "The preservation note still says imported legacy renditions are pinned in sourceRevisionIds, although the current Snapshot contract uses members of exact EntityRef(kind,id,version).",
+      "recommendation": "Use sourceRevisionIds/projectionRevisionId only when naming old source vocabulary; describe current bindings as Snapshot.members with exact Source or Projection versions."
+    },
+    {
+      "id": "DEVOPS-COV-11",
+      "severity": "INTENTIONAL_SCOPE",
+      "title": "Native Task normalization selects one task discriminator",
+      "constructIds": [
+        "devops-agent:Task",
+        "devops-agent:Investigation"
+      ],
+      "schemaPointers": [
+        "#/$defs/Investigation",
+        "#/$defs/Source/properties/payload"
+      ],
+      "finding": "The pinned native Task catalog includes INVESTIGATION, EVALUATION, RELEASE_READINESS_REVIEW and RELEASE_TESTING. The normalized Investigation contract deliberately describes the INVESTIGATION facet only; other types are retained native task documents.",
+      "recommendation": "Keep the Investigation concept normalized and report the broader native Task family as partial. Add another domain facet only for a supported use case, rather than pretending all task types are Investigations."
+    }
+  ],
+  "validation": {
+    "exactDiagramSymbolCoverage": true,
+    "uniqueConstructIds": true,
+    "allEvidencePathsAndHeadingsExistAtSourceCommit": true,
+    "allModelPointersResolve": true,
+    "allProfilesExist": true,
+    "exact52NativeShapes": true,
+    "noSchemaOrRegistryChanges": true
+  }
+}

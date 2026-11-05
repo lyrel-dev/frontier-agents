@@ -23,7 +23,7 @@ ROOT = Path(__file__).resolve().parents[1]
 REPO = ROOT.parent
 PACKAGE = "consolidated-operations-console/"
 REPO_URL = "https://github.com/lyrel-dev/frontier-agents"
-BASELINE = "31980a1b7540b1ad74274b0edfc7fc1f08f6a396"
+BASELINE = "20650d3cf051ad457378704c15f48f77565a611c"
 SOURCE_COMMIT = "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3"
 V1_COMMIT = "db142c84bcfd691d5c71071681731cac81a52c7b"
 OUTPUT = ROOT / "reference.html"
@@ -51,6 +51,9 @@ MODEL_EXAMPLES = read_json("model/examples.json")
 API_EXAMPLES = read_json("api/examples.json")
 DIAGRAMS = read_json("diagrams/manifest.json")
 INVENTORY = read_json("inventory.json")
+COVERAGE = read_json("coverage/report.json")
+SOURCE_CATALOG = read_json("coverage/catalog.json")
+MAPPING_RULES = read_json("coverage/mapping-rules.json")
 ENTITY_NAMES = [name for name, schema in MODEL["$defs"].items() if schema.get("x-entity")]
 OPERATIONS = {op["name"]: op for op in CATALOG["operations"]}
 EXAMPLES = {example["operation"]: example for example in API_EXAMPLES["examples"]}
@@ -96,8 +99,12 @@ def disclosure(title, body, *, css="", opened=False, ident="") -> str:
     return f"<details{attrs}><summary>{esc(title)}</summary><div class=\"detail-body\">{body}</div></details>"
 
 
+def fragment_name(kind, name):
+    return re.sub(r"\s+", "-", str(name)) if kind == "coverage" else str(name)
+
+
 def anchor(kind, name, label=None) -> str:
-    return f'<a href="#{esc(kind)}-{esc(name)}">{esc(label or name)}</a>'
+    return f'<a href="#{esc(kind)}-{esc(fragment_name(kind, name))}">{esc(label or name)}</a>'
 
 
 def source_link(path, commit=BASELINE, label=None, heading=None, source_anchor=None, directory=False) -> str:
@@ -332,12 +339,19 @@ def mapping_table(mappings):
         profile = mapping.get("profileId")
         if profile:
             targets += "<br>" + anchor("profile", profile)
+        audit_rows = [row for row in SOURCE_CATALOG["constructs"]
+                      if row["sourceService"] == mapping["sourceService"]
+                      and set(mapping["sourceConcepts"]) & set(row.get("mappingAliases", []) + row.get("aliases", []) + [row["sourceName"]])]
+        if audit_rows:
+            targets += '<p class="source-note"><strong>Verified coverage:</strong><br>' + "<br>".join(
+                anchor("coverage", row["id"], row["sourceName"]) + " · " + code(row["coverageLevel"])
+                for row in audit_rows) + '</p>'
         rows.append([
             "<strong>" + esc(mapping["sourceService"]) + "</strong><br>" + "<br>".join(code(n) for n in mapping["sourceConcepts"]),
             code(mapping["disposition"]) + "<br>" + esc(mapping["representation"]) + "<br>" + targets,
             esc(mapping["preservedSemantics"]) + "<p>" + source + "</p>",
         ])
-    return table(["Earlier package / concept", "Consolidated representation", "Preserved meaning / source"], rows)
+    return table(["Earlier package / concept", "Declared representation / verified coverage", "Required source meaning / provenance"], rows)
 
 
 def historical_origins(notes):
@@ -419,6 +433,11 @@ def entity_card(name):
     if rels:
         body += "<h4>Relationships</h4><p class=\"source-note\">Multiplicity is shown at each class-diagram end. Exact references and live identities remain distinct in the field definitions.</p>" + rels
     body += "<h4>Where it was defined and how it was used</h4>" + historical_origins(notes)
+    audit_rows = [row for row in SOURCE_CATALOG["constructs"] if name in row["canonicalEntities"]]
+    if audit_rows:
+        body += disclosure(f"Verified source coverage · {len(audit_rows)} contributing constructs", '<p>These are source concepts contributing to this entity or its evidence. A target entity name does not establish complete normalization of every contributing concept.</p>' + table(
+            ["Source concept", "Coverage", "Assessment"],
+            [[esc(row["sourceService"]) + " · " + anchor("coverage", row["id"], row["sourceName"]), code(row["coverageLevel"]), esc(row["coverageReason"])] for row in audit_rows]))
     if mappings:
         body += disclosure(f"Source crosswalk · {len(mappings)} mapping rows", mapping_table(mappings))
     else:
@@ -542,6 +561,7 @@ def overview():
     body += '<div class="notice"><strong>Contract and examples, not a running service.</strong><p>All 108 operations are marked CONTRACT_ONLY. Examples are synthetic, independently valid situations with their own prior-head assumptions; they are not one chronological transaction log and no provider call was made to produce this document.</p></div>'
     body += '<p>Source-backed design guidance is recorded in ' + canonical_source("DESIGN_PRINCIPLES.md", "Design principles") + '. This document uses repository evidence and the user’s explicit correction; it does not claim knowledge of inaccessible past conversations.</p>'
     body += '<p><strong>Consolidation path.</strong> Review the unified model and exact contracts first; implement retained reads and trusted ingestion (P2), durable commands and replay (P3), then workflow execution and its effect-reconciliation gates (P4). The application shell composes those verified capabilities. ' + canonical_source("CONSOLIDATION_PLAN.md", "Implementation gates and acceptance evidence") + '.</p>'
+    body += '<div class="notice"><strong>Coverage has been audited separately from name matching.</strong><p>The earlier crosswalk records 174 rows and 340 aliases. Those are not entity counts or complete normalization proofs. The <a href="#coverage">coverage audit</a> distinguishes substantive source entities, diagram constructs, partial typed bindings and retained-only content. The <a href="#mapping-rules">mapping rules</a> define when each representation is appropriate.</p></div>'
     return chapter("context", "01 · Context", "A modular, consolidated model", body)
 
 
@@ -746,7 +766,7 @@ def error_chapter():
 
 
 def profile_chapter():
-    body = '<p>The 65 registered profiles preserve native identity, payload fields, read operations and unknown provider output. A profile is a typed adapter contract, not automatically a new CRUD entity. Its listed native operations describe provider coverage; only the operation catalog above defines the console facade.</p>'
+    body = '<p>The 65 registered profiles describe native identity, payload field hints, read operations and unknown-provider-output retention. A profile is not automatically a new CRUD entity. Its observedFields are descriptive hints, not executable native SDK schemas. A normalized binding is credited only where the <a href="#coverage">coverage audit</a> establishes a typed owner/profile representation. The listed native operations describe provider coverage; only the operation catalog above defines the console facade.</p>'
     for profile in ADAPTERS["profiles"]:
         ident = profile["profileId"]
         body += f'<section class="profile-card" id="profile-{esc(ident)}" data-profile-id="{esc(ident)}"><h3>{code(ident)}</h3>'
@@ -784,6 +804,7 @@ def lineage_chapter():
     body += table(["Earlier analysis", "Frozen inventory", "Contribution"], [[source_link(path, SOURCE_COMMIT, name), esc(count), esc(desc)] for name, path, count, desc in packages])
     body += '<p>The frozen inventory contains 226 active files across the four service directories, with generalized workflow and resilience RPC work nested inside them. ' + canonical_source("INVENTORY.md", "Complete previous-work inventory") + ' · ' + canonical_source("inventory.json", "Paths, sizes, hashes and history") + '.</p>'
     body += '<h3>Every source-concept mapping</h3><p>All 174 mapping rows and 340 recorded aliases are retained here, including owned values, projections and deferred native breadth.</p>'
+    body += '<p>Representation labels describe the earlier consolidation decision. The verified audit status alongside each reviewed source concept qualifies that claim; several owned-value labels currently resolve only to retained native content. <a href="#coverage">Coverage counts and gaps</a> · <a href="#mapping-rules">Representation decision rules</a>.</p>'
     body += disclosure("Complete concept crosswalk · 174 rows", mapping_table(ADAPTERS["mappings"]))
     body += '<h3>Every predecessor operation</h3><p>The 161 dispositions cover 44 earlier Resilience operations, 16 generalized workflow operations, and all 101 V1 consolidated operations. The source packages include both RPC and earlier HTTP bindings; those bindings are not silently treated as the current transport.</p>'
     body += disclosure("Complete operation predecessor crosswalk · 161 rows", predecessor_table(CATALOG["predecessorMappings"]))
@@ -806,6 +827,101 @@ def lineage_chapter():
     return chapter("lineage", "10 · Provenance", "Trace the model back to the earlier work", body)
 
 
+def coverage_status(value):
+    return '<span class="coverage-status status-' + esc(value.lower()) + '">' + esc(value.replace('_', ' ')) + '</span>'
+
+
+def coverage_chapter():
+    aws = COVERAGE["awsDiagramCoverage"]
+    entity_counts = COVERAGE["sourceEntityCoverage"]["aws"]
+    native = COVERAGE["sourceEntityCoverage"]["nativeAws"]
+    application = COVERAGE["sourceEntityCoverage"]["applicationAws"]
+    body = ('<p>The audit identifies <strong>' + str(entity_counts["total"]) + ' substantive source entity concepts</strong> in the four original AWS solution catalogs: '
+            + str(native["total"]) + ' provider-owned and ' + str(application["total"]) + ' application-defined. The consolidated model represents them through 36 versioned target entities, owned values and retained profiles. The mapping is many-to-many.</p>')
+    body += table(["Original solution", "Entity concepts", "Provider-owned", "Application-defined", "Normalized", "Partial", "Retained only", "Unmapped"], [
+        [esc(item["label"]), code(item["sourceEntityCoverage"]["total"]), code(item["nativeEntityConcepts"]), code(item["applicationEntityConcepts"]),
+         *[code(item["sourceEntityCoverage"][level]) for level in ["NORMALIZED", "PARTIAL", "RETAINED_ONLY", "UNMAPPED"]]]
+        for item in COVERAGE["byService"]
+    ], "coverage-counts")
+    body += '<p>These entity counts are semantic review classifications, not an inventory of every live AWS resource type. The source workflow explicitly defined six entities; ScenarioRevision is counted separately as history, leaving five substantive workflow identities. Values, relationships, external references, DTO wrappers and pure version representations are not counted as additional substantive entities.</p>'
+    body += '<h3>The independent diagram benchmark</h3><p>The four AWS solution models contain <strong>119 distinct class/ER declarations</strong>; shared workflow adds 11. This broader population includes owned values and relations, so it is kept separate from the source-entity count.</p>'
+    rows = []
+    for item in COVERAGE["byService"]:
+        count = item["diagramCoverage"]
+        rows.append([esc(item["label"]), code(count["total"]), *[code(count[level]) for level in ["NORMALIZED", "PARTIAL", "RETAINED_ONLY", "UNMAPPED"]]])
+    rows.append(["<strong>Four AWS solutions</strong>", code(aws["total"]), *[code(aws[level]) for level in ["NORMALIZED", "PARTIAL", "RETAINED_ONLY", "UNMAPPED"]]])
+    count = COVERAGE["allDiagramCoverage"]
+    rows.append(["<strong>Including shared workflow</strong>", code(count["total"]), *[code(count[level]) for level in ["NORMALIZED", "PARTIAL", "RETAINED_ONLY", "UNMAPPED"]]])
+    body += table(["Source model", "Constructs", "Normalized", "Partial", "Retained only", "Unmapped"], rows, "coverage-counts")
+    body += '<div class="notice"><strong>Name coverage is complete; semantic normalization is qualified.</strong><p>All 130 diagram symbols resolve to registry aliases. For the four AWS solutions, ' + str(aws["NORMALIZED"]) + ' of 119 (' + str(aws["normalizedPercent"]) + '%) have normalized core representations. The remaining statuses identify concrete limitations. ExperimentMetricBinding has no accountable experiment → exact binding/query/window relationship in the current target model.</p></div>'
+    body += table(["Coverage level", "Required evidence"], [
+        [coverage_status("NORMALIZED"), "The source construct's essential application meaning has a bound typed representation. Optional provider details may remain retained evidence; complete SDK validation is a separate question."],
+        [coverage_status("PARTIAL"), "A typed core exists but a required distinction, relationship, binding or invariant is missing or ambiguous."],
+        [coverage_status("RETAINED_ONLY"), "Concrete Source/profile retention preserves inspectable content without complete typed application normalization. This can be an intentional scope choice."],
+        [coverage_status("UNMAPPED"), "No concrete representation sufficient to preserve the construct's essential meaning was established. A name or generic JSON storage is insufficient."],
+    ])
+    body += '<h3>Other counts stay in their own populations</h3>' + table(["Count", "Population"], [
+        [code(36), "Current entities; all pass the common version metadata check."],
+        [code(COVERAGE["catalogCoverage"]["total"]), "Broader reviewed source concepts, including named dictionary and control supplements."],
+        [code(52), "Selected DevOps SDK returned/nested shapes, examined separately from entity counts."],
+        [code(174), "Registry mapping rows, some of which group semantically distinct source concepts."],
+        [code(340), "Recorded source spelling aliases; not 340 entities."],
+        [code(65), "Registered profiles; not 65 implemented adapters or executable native schemas."],
+    ])
+    model = COVERAGE["targetModel"]
+    body += '<p>The registry’s canonicalEntity rows contribute ' + str(len(model["declaredEntityTargetsFromAwsSolutions"])) + ' distinct target entities from the four AWS solutions and ' + str(len(model["declaredEntityTargetsIncludingWorkflow"])) + ' including shared workflow. Workspace is the added common application boundary. These lineage sets overlap across services and do not prove complete normalized coverage. EventDescription is a defined value type with no owner binding.</p>'
+    body += '<h3>Findings and next decisions</h3>'
+    finding_rows = []
+    for finding in COVERAGE["findings"]:
+        if not isinstance(finding, dict):
+            continue
+        affected = finding.get("affectedConstructIds", finding.get("constructIds", finding.get("affectedConstructs", [])))
+        description = finding.get("finding", finding.get("summary", finding.get("description", "")))
+        finding_rows.append([code(finding["id"]) + "<br><strong>" + esc(finding["title"]) + "</strong>",
+                             esc(description) + '<p>' + ', '.join(anchor("coverage", ident, ident) for ident in affected) + '</p>',
+                             esc(finding.get("recommendation", finding.get("remediation", "")))])
+    body += table(["Finding", "Evidence-backed issue", "Recommended decision"], finding_rows)
+    body += '<p>Correct the coverage claims first, then bind existing types or add narrow owner-local values for required use cases. Preserve intentional retained-only administration breadth. No finding requires a version-only entity; the audit does not change the model or API contracts.</p>'
+    body += '<h3>Every audited source construct</h3>'
+    for service in COVERAGE["byService"]:
+        cards = []
+        for row in SOURCE_CATALOG["constructs"]:
+            if row["sourceService"] != service["sourceService"]:
+                continue
+            text = '<h4>' + esc(row["sourceName"]) + '</h4>' + coverage_status(row["coverageLevel"])
+            text += '<p class="source-note">' + esc(row["sourceSemanticKind"]) + ' · ' + esc(row["population"]) + '</p>'
+            text += '<p><strong>Previous use.</strong> ' + esc(row["previousUse"]) + '</p><p><strong>Identity.</strong> ' + esc(row["identity"]) + '</p>'
+            text += '<p><strong>Coverage judgment.</strong> ' + esc(row["coverageReason"]) + '</p>'
+            text += '<p><strong>Target entities.</strong> ' + (', '.join(anchor("entity", entity) for entity in row["canonicalEntities"]) or 'No concrete target entity claimed') + '.</p>'
+            text += '<p><strong>Exact model paths.</strong> ' + ('; '.join(code(pointer) for pointer in row["schemaPointers"]) or 'No bound typed representation claimed') + '.</p>'
+            text += '<p><strong>Profiles.</strong> ' + ('; '.join(anchor("profile", profile) for profile in row.get("profileIds", [])) or 'None claimed') + '.</p>'
+            if row.get("gaps"):
+                text += '<h5>Gaps or qualifications</h5>' + bullet([gap if isinstance(gap, str) else json.dumps(gap, ensure_ascii=False) for gap in row["gaps"]])
+            text += '<p><strong>Applicable rules.</strong> ' + ', '.join(anchor("rule", rule) for rule in row["ruleIds"]) + '.</p>'
+            text += '<p><strong>Source evidence.</strong><br>' + '<br>'.join(source_link(evidence["path"], SOURCE_COMMIT, heading=evidence.get("heading")) + (" · " + code(evidence["symbol"]) if evidence.get("symbol") else "") for evidence in row["evidence"]) + '</p>'
+            cards.append('<section class="value-card" id="coverage-' + esc(fragment_name("coverage", row["id"])) + '" data-coverage-id="' + esc(row["id"]) + '">' + text + '</section>')
+        body += disclosure(service["label"] + ' · ' + str(service["catalogCoverage"]["total"]) + ' reviewed concepts', ''.join(cards))
+    shape_counts = COVERAGE["nativeShapeCoverageCounts"]
+    body += disclosure('Selected DevOps SDK types · 52 separate shapes', '<p>This population contains resource structures, nested values and wrappers and overlaps the source model. It must not be added to entity totals. ' + str(shape_counts["NORMALIZED"]) + ' have normalized essential bindings, ' + str(shape_counts["PARTIAL"]) + ' are partial and ' + str(shape_counts["RETAINED_ONLY"]) + ' are retained-only.</p>' + table(
+        ["Native type", "Role", "Coverage", "Judgment"],
+        [[code(row["name"]), esc(row["sourceSemanticKind"]), coverage_status(row["coverageLevel"]), esc(row["coverageReason"])] for row in SOURCE_CATALOG["nativeShapeCoverage"]]))
+    body += '<p class="source-note">The audit checks pinned source files/headings, exact schema pointers, profile IDs, unique declaration matches and entity version metadata. Classifications are source-to-target review judgments; these checks do not establish live AWS coverage or implemented runtime behavior.</p>'
+    return chapter("coverage", "11 · Verified coverage", "What is actually represented", body)
+
+
+def mapping_rule_chapter():
+    body = '<p>Use these rules to map a new AWS construct or revise an existing mapping. Establish identity and ownership first; preserve versions, evidence and state meaning; then record the exact representation and its coverage level. An entity is introduced for a substantive lifecycle, and every entity uses the common version contract.</p>'
+    body += '<div class="section-links">' + ''.join(anchor("rule", rule["id"], rule["id"] + ' · ' + rule["title"]) for rule in MAPPING_RULES["rules"]) + '</div>'
+    for rule in MAPPING_RULES["rules"]:
+        body += '<section class="value-card" id="rule-' + esc(rule["id"]) + '" data-rule-id="' + esc(rule["id"]) + '"><h3>' + esc(rule["id"] + ' · ' + rule["title"]) + '</h3>'
+        body += prose(rule["decision"]) + '<h4>Required evidence</h4>' + bullet(rule["requiredEvidence"])
+        body += '<p><strong>Example.</strong> ' + esc(rule["example"]) + '</p><p><strong>Failure to avoid.</strong> ' + esc(rule["failureMode"]) + '</p><p><strong>Acceptance.</strong> ' + esc(rule["acceptance"]) + '</p>'
+        if rule["schemaPointers"]:
+            body += '<p><strong>Current contract evidence.</strong> ' + '; '.join(code(pointer) for pointer in rule["schemaPointers"]) + '.</p>'
+        body += '<p><strong>Sources.</strong><br>' + '<br>'.join(source_link(path, BASELINE if path.startswith(PACKAGE) else SOURCE_COMMIT) for path in rule["sourcePaths"]) + '</p></section>'
+    return chapter("mapping-rules", "12 · Mapping rule catalog", "A consistent decision for each AWS construct", body)
+
+
 NAV = [
     ("context", "Context and scope"), ("protocol", "Shared model/API rules"),
     ("use-cases", "Cross-module use cases"), ("diagrams", "Draw.io diagrams"),
@@ -813,6 +929,7 @@ NAV = [
     ("operations", "All 108 operations"), ("values", "Shared value types"),
     ("errors", "Errors and recovery"), ("profiles", "Adapter profiles"),
     ("lineage", "Earlier work and sources"),
+    ("coverage", "Verified source coverage"), ("mapping-rules", "AWS mapping rules"),
 ]
 
 
@@ -847,11 +964,12 @@ def build_html():
             '<p class="lead">Every entity. Every operation. The use cases they serve and the earlier work they consolidate.</p>'
             '<div class="facts"><div><strong>36</strong><span>versioned entities</span></div><div><strong>108</strong><span>typed operations</span></div><div><strong>7</strong><span>modules</span></div><div><strong>8</strong><span>Draw.io pages</span></div></div>'
             '<p class="baseline">Prepared 5 November 2026 · Model/API baseline ' + source_link(PACKAGE + "README.md", BASELINE, BASELINE[:7]) + ' · Previous analysis baseline ' + source_link("aws", SOURCE_COMMIT, SOURCE_COMMIT[:7], directory=True) + '</p>'
-            '<div class="section-links"><a href="#entities">Explore entities</a><a href="#operations">Explore operations</a><a href="#use-cases">Follow a use case</a><a href="#lineage">Trace earlier definitions</a></div>'
+            '<div class="section-links"><a href="#entities">Explore entities</a><a href="#operations">Explore operations</a><a href="#use-cases">Follow a use case</a><a href="#coverage">Verify source coverage</a><a href="#mapping-rules">Review mapping rules</a></div>'
             '<button type="button" class="button screen-only" id="print-reference">Print reference</button>'
             '<p class="small muted">The document needs no network to read or search. Source links open the pinned repository evidence. Print includes narrative, field tables and examples; duplicate full-schema disclosures stay in the HTML.</p></header>')
     body = (overview() + protocol() + use_case_chapter() + diagrams() + filters() + catalog_chapter("entity")
-            + catalog_chapter("operation") + value_types() + error_chapter() + profile_chapter() + lineage_chapter())
+            + catalog_chapter("operation") + value_types() + error_chapter() + profile_chapter() + lineage_chapter()
+            + coverage_chapter() + mapping_rule_chapter())
     font_license = (ROOT / "reference/fonts/LICENSE.txt").read_text(encoding="utf-8")
     footer = ('<footer class="footer"><p>Generated from the reviewed model and API contracts. All examples are synthetic; no service, provider mutation or production runtime is represented as implemented.</p>'
               + disclosure("Embedded diagram fonts · license", "<pre>" + esc(font_license) + "</pre>", css="raw-schema")
@@ -874,6 +992,8 @@ class AuditParser(HTMLParser):
         self.assets = []
         self.value_names = []
         self.profile_ids = []
+        self.coverage_ids = []
+        self.rule_ids = []
 
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
@@ -889,6 +1009,10 @@ class AuditParser(HTMLParser):
             self.value_names.append((attrs["data-value-context"], attrs["data-value-name"]))
         if attrs.get("data-profile-id"):
             self.profile_ids.append(attrs["data-profile-id"])
+        if attrs.get("data-coverage-id"):
+            self.coverage_ids.append(attrs["data-coverage-id"])
+        if attrs.get("data-rule-id"):
+            self.rule_ids.append(attrs["data-rule-id"])
 
 
 def require(condition, message):
@@ -939,6 +1063,7 @@ def audit_document(document, historical_sources):
     audit.feed(document)
     duplicates = [ident for ident, count in Counter(audit.ids).items() if count > 1]
     require(not duplicates, f"Duplicate HTML IDs: {duplicates[:10]}")
+    require(not any(re.search(r"\s", ident) for ident in audit.ids), "HTML IDs must not contain whitespace")
     ids = set(audit.ids)
     missing_links = [link for link in audit.links if link.startswith("#") and link[1:] not in ids]
     require(not missing_links, f"Broken internal links: {missing_links[:10]}")
@@ -947,6 +1072,10 @@ def audit_document(document, historical_sources):
     expected_values = {("model", n) for n in MODEL_VALUES} | {("rpc", n) for n in RPC_VALUES}
     require(set(audit.value_names) == expected_values and len(audit.value_names) == len(expected_values), "Value type coverage mismatch")
     require(set(audit.profile_ids) == {p["profileId"] for p in ADAPTERS["profiles"]}, "Profile coverage mismatch")
+    require(set(audit.coverage_ids) == {row["id"] for row in SOURCE_CATALOG["constructs"]}
+            and len(audit.coverage_ids) == len(SOURCE_CATALOG["constructs"]), "Source audit catalog coverage mismatch")
+    require(set(audit.rule_ids) == {rule["id"] for rule in MAPPING_RULES["rules"]}
+            and len(audit.rule_ids) == len(MAPPING_RULES["rules"]), "Mapping rule coverage mismatch")
     require(not audit.assets, f"Offline document unexpectedly loads resources: {audit.assets}")
     require(not re.search(r'@import|url\(["\']?https?://|\bfetch\s*\(|XMLHttpRequest|WebSocket', document), "Unexpected network-loading behavior")
     require(document.count('<svg ') == 8, "Draw.io SVG count mismatch")
@@ -954,6 +1083,7 @@ def audit_document(document, historical_sources):
     require(len(MODEL["x-relationships"]) == 45, "Unexpected relationship count")
     files = ["model/schema.json", "model/adapter-profiles.json", "model/examples.json", "api/operations.json", "api/rpc.schema.json", "api/examples.json", "inventory.json", "diagrams/manifest.json", "reference/entity-notes.json", "reference/operation-notes.json", "reference/reference.css", "reference/reference.js", "tools/build_reference.py"]
     files += [d["svg"]["path"] for d in DIAGRAMS["diagrams"]]
+    files += ["coverage/report.json", "coverage/catalog.json", "coverage/mapping-rules.json"]
     files += [str(path.relative_to(ROOT)) for path in sorted((ROOT / "reference/fonts").iterdir())]
     return {
         "format": "consolidated-html-reference/1", "status": "PASS", "contractVersion": 2,
@@ -970,6 +1100,7 @@ def audit_document(document, historical_sources):
             "relationships": 45, "drawioPages": 8, "sourceMappingRows": 174,
             "sourceAliases": sum(len(m["sourceConcepts"]) for m in ADAPTERS["mappings"]),
             "sourceProfiles": 65, "operationPredecessorMappings": 161,
+            "auditedSourceConstructs": len(SOURCE_CATALOG["constructs"]), "coverageRules": len(MAPPING_RULES["rules"]),
             "rpcPayloadExamples": 216, "rpcErrorExamples": len(API_EXAMPLES["errors"]),
             "uniqueEntityHistoricalSources": len(historical_sources), "internalLinks": len([x for x in audit.links if x.startswith('#')]),
         },
@@ -978,6 +1109,7 @@ def audit_document(document, historical_sources):
             "pinnedEntitySourcePathsExist": True, "allInternalLinksResolve": True,
             "uniqueHtmlAndEmbeddedSvgIds": True, "noExternalRuntimeAssets": True,
             "canonicalSchemasAndExamplesRendered": True,
+            "sourceCoverageCatalogAndRulesExact": True,
         },
         "limits": ["These checks validate document coverage and generation, not production runtime behavior.", "Visual and interaction QA is recorded separately in reference/README.md."],
         "inputs": [{"path": path, "sha256": hashlib.sha256((ROOT/path).read_bytes()).hexdigest()} for path in files],

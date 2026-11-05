@@ -2,10 +2,10 @@
   "format": "consolidated-html-reference/1",
   "status": "PASS",
   "contractVersion": 2,
-  "modelApiBaselineCommit": "31980a1b7540b1ad74274b0edfc7fc1f08f6a396",
+  "modelApiBaselineCommit": "20650d3cf051ad457378704c15f48f77565a611c",
   "earlierAnalysisCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
   "output": "reference.html",
-  "outputSha256": "908609e18e52cb12a26813cc5eb9dbe4dfb401b9ccfa343ad3d7898206b613a1",
+  "outputSha256": "0d4a17de19e5a436411d48f4c35c6de4d7a61a86423b01aff5a6356dbb79b503",
   "coverage": {
     "entities": 36,
     "entityFields": 450,
@@ -24,10 +24,12 @@
     "sourceAliases": 340,
     "sourceProfiles": 65,
     "operationPredecessorMappings": 161,
+    "auditedSourceConstructs": 190,
+    "coverageRules": 20,
     "rpcPayloadExamples": 216,
     "rpcErrorExamples": 3,
     "uniqueEntityHistoricalSources": 6,
-    "internalLinks": 4916
+    "internalLinks": 7745
   },
   "checks": {
     "exactCatalogCoverage": true,
@@ -36,7 +38,8 @@
     "allInternalLinksResolve": true,
     "uniqueHtmlAndEmbeddedSvgIds": true,
     "noExternalRuntimeAssets": true,
-    "canonicalSchemasAndExamplesRendered": true
+    "canonicalSchemasAndExamplesRendered": true,
+    "sourceCoverageCatalogAndRulesExact": true
   },
   "limits": [
     "These checks validate document coverage and generation, not production runtime behavior.",
@@ -85,7 +88,7 @@
     },
     {
       "path": "reference/reference.css",
-      "sha256": "4f0ad2cd026b2b11d8dc2b35e4803b42308c5eeca7a368c2b162f73e1c13982b"
+      "sha256": "9bfccecf653e352a905a0687c435bfe589e7615f996c50ec3ae519a1cf9f42a4"
     },
     {
       "path": "reference/reference.js",
@@ -93,7 +96,7 @@
     },
     {
       "path": "tools/build_reference.py",
-      "sha256": "11bbca5b6a42e10f321ef88f15c3841f6333945eb6fce5454399138ed79c518a"
+      "sha256": "fb1b9ed2727ede83e02627df9eb0fd956182fda984b87b4b16f705f3cda041d9"
     },
     {
       "path": "diagrams/complete-model.svg",
@@ -126,6 +129,18 @@
     {
       "path": "diagrams/workflow.svg",
       "sha256": "caa78d53d46776329237aac7910b2ec58c2298de353ebc6a280f755815df6ca7"
+    },
+    {
+      "path": "coverage/report.json",
+      "sha256": "4354d2827f06e4b0c55b67d1dd67536538bbbbd6fa8b711eadb4122842411991"
+    },
+    {
+      "path": "coverage/catalog.json",
+      "sha256": "d82bbd88440e0a41fcf0db555bfefa90820a2cadeea3ce70abe7c1bc982bdbcd"
+    },
+    {
+      "path": "coverage/mapping-rules.json",
+      "sha256": "fc5a8562a128da65d1c3c9adbcd1c9eb26cb607ea186152bc61db4c0ec3a3f53"
     },
     {
       "path": "reference/fonts/DejaVuSans-Bold.woff",

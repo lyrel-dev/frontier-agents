@@ -18,6 +18,8 @@ Exact references carry `{kind,id,version}`. Navigation that deliberately follows
 
 The registry has 174 mapping rows, 340 service/concept aliases and 65 profiles. Current target names and semantics are updated; source aliases, source paths and provider vocabulary are preserved.
 
+**Verified coverage is a separate judgment.** These row and alias counts are not entity counts. The [coverage audit](COVERAGE.md) independently inventories the original model declarations and distinguishes normalized, partial, retained-only and unmapped constructs. Several `ownedValue` labels below currently have only raw Source retention or incomplete typed bindings; the “Required semantics” column describes the meaning that must be preserved, not proof that every binding already satisfies it. Use the [mapping rule catalog](MAPPING_RULES.md) and [per-construct evidence](coverage/CATALOG.md) when extending or assessing the model.
+
 ## Canonical entities
 
 | Module | Entities |

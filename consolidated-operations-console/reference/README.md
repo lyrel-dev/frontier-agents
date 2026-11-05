@@ -21,10 +21,15 @@
 | Source-concept mapping rows / aliases | 174 / 340 |
 | Native source profiles | 65 |
 | Predecessor operation dispositions | 161 |
+| Audited source concepts / substantive entity concepts from the four AWS solutions | 190 / 63 |
+| Fixed source diagram constructs: four AWS solutions / shared workflow | 119 / 11 |
+| Mapping decision rules | 20 |
 
 Every entity has purpose, identity, ownership, lifecycle, invariants, fields, use cases, relationships, historical definitions and uses, relevant source mappings, API links and a checked fixture example. Every operation has purpose, actor/scenario/steps, preconditions, wire target, permission and effect, request/response fields, semantics, errors, examples, predecessor mappings and related next operations.
 
-The current model/API source baseline is [`31980a1`](https://github.com/lyrel-dev/frontier-agents/commit/31980a1b7540b1ad74274b0edfc7fc1f08f6a396). Earlier AWS analysis sources remain pinned to [`d926a81`](https://github.com/lyrel-dev/frontier-agents/commit/d926a81c584b6b69f41bfb9641532c4f8f2d7cb3). The original consolidated V1 predecessor catalog is pinned to [`db142c8`](https://github.com/lyrel-dev/frontier-agents/commit/db142c84bcfd691d5c71071681731cac81a52c7b). The document distinguishes previously defined native resources and application aggregates from shared infrastructure introduced by consolidation.
+The current audit/model/API source baseline is [`20650d3`](https://github.com/lyrel-dev/frontier-agents/commit/20650d3cf051ad457378704c15f48f77565a611c), whose model and API contracts are unchanged from revision 2 at `31980a1`. Earlier AWS analysis sources remain pinned to [`d926a81`](https://github.com/lyrel-dev/frontier-agents/commit/d926a81c584b6b69f41bfb9641532c4f8f2d7cb3). The original consolidated V1 predecessor catalog is pinned to [`db142c8`](https://github.com/lyrel-dev/frontier-agents/commit/db142c84bcfd691d5c71071681731cac81a52c7b). The document distinguishes previously defined native resources and application aggregates from shared infrastructure introduced by consolidation.
+
+The [coverage audit](../COVERAGE.md) qualifies normalization separately from name mapping. Its 190-concept catalog is a broader source-review population; 63 counts substantive native/application entity concepts from the four AWS solutions, and 119 + 11 is the independent diagram-declaration benchmark. These populations are not additive. Entity and crosswalk sections link directly to the applicable coverage judgments.
 
 ## Inputs and ownership
 
@@ -39,6 +44,8 @@ The current model/API source baseline is [`31980a1`](https://github.com/lyrel-de
 | [entity-notes.json](entity-notes.json) | Editorial entity purpose, lifecycle, ownership, use cases and section-level historical provenance |
 | [operation-notes.json](operation-notes.json) | Editorial operation purpose, use cases, preconditions, pitfalls and related operations |
 | [reference.css](reference.css), [reference.js](reference.js) | Responsive/print layout and progressive navigation enhancements |
+| [coverage/catalog.json](../coverage/catalog.json), [coverage/report.json](../coverage/report.json) | Reviewed source concepts, independent declaration counts, concrete schema/profile bindings and qualified coverage levels |
+| [coverage/mapping-rules.json](../coverage/mapping-rules.json) | Twenty mapping decisions with source evidence and acceptance criteria |
 | [tools/build_reference.py](../tools/build_reference.py) | Deterministic HTML assembly, shared guide and seven cross-module journeys, completeness checks |
 
 The generator uses the contracts directly instead of copying schema fields into the narrative notes. All 36 preferred entity examples resolve to existing fixture representations. Request/response examples are copied unchanged from the checked API fixtures. Their displayed HTTP wrapper uses the catalog target and media type.
@@ -50,7 +57,9 @@ The embedded Draw.io SVGs only receive document-unique XML IDs and corresponding
 From the repository root:
 
 ```bash
+python consolidated-operations-console/tools/build_coverage.py
 python consolidated-operations-console/tools/build_reference.py
+python consolidated-operations-console/tools/build_coverage.py --check
 python consolidated-operations-console/tools/build_reference.py --check
 ```
 
@@ -68,7 +77,7 @@ JSDOM 26.1 executed the actual embedded script and checked:
 - Case-insensitive search, zero-result behavior, combined module/type filters and reset/focus behavior.
 - Deep links into filtered-out entries, all eight diagram zoom controls, and restoration of disclosure state after print.
 
-WeasyPrint 70 rendered the full print document. Text-bound checks found no horizontal overflow; representative cover, entity, API and diagram pages were visually inspected. The review corrected a diagram-heading orphan by keeping the toolbar with its image. Wide and narrow CSS-resolved screen probes were also inspected for introductory layout and wrapping. The complete print reference is intentionally long because it includes every operation's response example; duplicate raw JSON Schema disclosures remain available in the HTML and are omitted from print.
+WeasyPrint 70 rendered the full original HTML reference; the source-coverage extension received focused rendering of its added count tables, catalog and mapping rules. Text-bound checks found no horizontal overflow in the original full print; representative cover, entity, API and diagram pages were visually inspected. The review corrected a diagram-heading orphan by keeping the toolbar with its image. Wide and narrow CSS-resolved screen probes were also inspected for introductory layout and wrapping. The complete print reference is intentionally long because it includes every operation's response example; duplicate raw JSON Schema disclosures remain available in the HTML and are omitted from print.
 
 This is **not Chromium screenshot verification**: Chromium execution was unavailable in the executor, and the native browser blocked access to the local repository. JSDOM does not implement print layout and emits a known unsupported nested `@page` rule warning; it reported no script errors. WeasyPrint provides print and CSS-layout evidence, not full browser-engine conformance. These limits do not change the schema/source coverage checks.
 

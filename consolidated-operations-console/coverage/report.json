@@ -1,0 +1,1624 @@
+{
+  "format": "consolidated-model-coverage/1",
+  "status": "AUDIT_COMPLETE_WITH_QUALIFIED_COVERAGE",
+  "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+  "targetCommit": "20650d3cf051ad457378704c15f48f77565a611c",
+  "sourceFileInventoryCount": 226,
+  "countingPolicy": {
+    "diagramUnit": "One distinct (sourceService, class/ER symbol) declared in the pinned original model diagrams; occurrences across pages deduplicate.",
+    "semanticCatalogUnit": "One reviewed source concept; genuine spelling aliases collapse, semantically different constructs do not.",
+    "nativeShapeUnit": "One of the 52 selected DevOps returned/nested SDK types, reported separately and never added to entity counts.",
+    "canonicalEntityUnit": "One x-entity definition in the consolidated model.",
+    "sourceEntityUnit": "One reviewed substantive source concept classified NATIVE_RESOURCE or APPLICATION_ENTITY. Source-owned children count when they have identity/lifecycle; pure history representations, values, relationships, external references and DTO wrappers are separate.",
+    "normalizationDenominator": "Declared diagram symbols for the fixed benchmark; broader dictionary catalog and native DTO shapes have separate denominators.",
+    "normalizedMeaning": "The source construct's essential application meaning has a bound typed representation; optional provider breadth can remain retained evidence.",
+    "partialMeaning": "A typed core exists but a source-required distinction, binding, ownership detail or invariant is missing/ambiguous.",
+    "retainedMeaning": "Inspectable source/native content or a declared source profile preserves the construct, but its application meaning has no complete normalized typed binding.",
+    "unmappedMeaning": "The audit found no concrete representation sufficient to preserve the named construct's essential meaning."
+  },
+  "awsDiagramCoverage": {
+    "total": 119,
+    "NORMALIZED": 74,
+    "PARTIAL": 22,
+    "RETAINED_ONLY": 22,
+    "UNMAPPED": 1,
+    "normalizedPercent": 62.2,
+    "representedIncludingPartialAndRetained": 118
+  },
+  "workflowDiagramCoverage": {
+    "total": 11,
+    "NORMALIZED": 9,
+    "PARTIAL": 2,
+    "RETAINED_ONLY": 0,
+    "UNMAPPED": 0,
+    "normalizedPercent": 81.8,
+    "representedIncludingPartialAndRetained": 11
+  },
+  "allDiagramCoverage": {
+    "total": 130,
+    "NORMALIZED": 83,
+    "PARTIAL": 24,
+    "RETAINED_ONLY": 22,
+    "UNMAPPED": 1,
+    "normalizedPercent": 63.8,
+    "representedIncludingPartialAndRetained": 129
+  },
+  "catalogCoverage": {
+    "total": 190,
+    "NORMALIZED": 103,
+    "PARTIAL": 29,
+    "RETAINED_ONLY": 57,
+    "UNMAPPED": 1,
+    "normalizedPercent": 54.2,
+    "representedIncludingPartialAndRetained": 189
+  },
+  "sourceEntityCoverage": {
+    "aws": {
+      "total": 63,
+      "NORMALIZED": 38,
+      "PARTIAL": 10,
+      "RETAINED_ONLY": 15,
+      "UNMAPPED": 0,
+      "normalizedPercent": 60.3,
+      "representedIncludingPartialAndRetained": 63
+    },
+    "workflow": {
+      "total": 5,
+      "NORMALIZED": 3,
+      "PARTIAL": 2,
+      "RETAINED_ONLY": 0,
+      "UNMAPPED": 0,
+      "normalizedPercent": 60.0,
+      "representedIncludingPartialAndRetained": 5
+    },
+    "includingWorkflow": {
+      "total": 68,
+      "NORMALIZED": 41,
+      "PARTIAL": 12,
+      "RETAINED_ONLY": 15,
+      "UNMAPPED": 0,
+      "normalizedPercent": 60.3,
+      "representedIncludingPartialAndRetained": 68
+    },
+    "nativeAws": {
+      "total": 29,
+      "NORMALIZED": 15,
+      "PARTIAL": 1,
+      "RETAINED_ONLY": 13,
+      "UNMAPPED": 0,
+      "normalizedPercent": 51.7,
+      "representedIncludingPartialAndRetained": 29
+    },
+    "applicationAws": {
+      "total": 34,
+      "NORMALIZED": 23,
+      "PARTIAL": 9,
+      "RETAINED_ONLY": 2,
+      "UNMAPPED": 0,
+      "normalizedPercent": 67.6,
+      "representedIncludingPartialAndRetained": 34
+    }
+  },
+  "nativeShapeCoverageCounts": {
+    "total": 52,
+    "NORMALIZED": 10,
+    "PARTIAL": 1,
+    "RETAINED_ONLY": 41,
+    "UNMAPPED": 0,
+    "normalizedPercent": 19.2,
+    "representedIncludingPartialAndRetained": 52
+  },
+  "byService": [
+    {
+      "sourceService": "health",
+      "label": "AWS Health",
+      "diagramCoverage": {
+        "total": 23,
+        "NORMALIZED": 20,
+        "PARTIAL": 1,
+        "RETAINED_ONLY": 2,
+        "UNMAPPED": 0,
+        "normalizedPercent": 87.0,
+        "representedIncludingPartialAndRetained": 23
+      },
+      "diagramSemanticKinds": {
+        "EXTERNAL_IDENTITY": 3,
+        "APPLICATION_ENTITY": 7,
+        "OWNED_VALUE": 4,
+        "NATIVE_RESOURCE": 3,
+        "HISTORY_REPRESENTATION": 2,
+        "DERIVED_VIEW": 1,
+        "RELATIONSHIP": 2,
+        "CONTROL_VALUE": 1
+      },
+      "catalogCoverage": {
+        "total": 29,
+        "NORMALIZED": 23,
+        "PARTIAL": 3,
+        "RETAINED_ONLY": 3,
+        "UNMAPPED": 0,
+        "normalizedPercent": 79.3,
+        "representedIncludingPartialAndRetained": 29
+      },
+      "sourceEntityCoverage": {
+        "total": 12,
+        "NORMALIZED": 11,
+        "PARTIAL": 0,
+        "RETAINED_ONLY": 1,
+        "UNMAPPED": 0,
+        "normalizedPercent": 91.7,
+        "representedIncludingPartialAndRetained": 12
+      },
+      "nativeEntityConcepts": 3,
+      "applicationEntityConcepts": 9,
+      "supplementaryConstructs": 6,
+      "declaredTargetEntities": [
+        "Communication",
+        "ComponentDeployment",
+        "Connection",
+        "EntityImpact",
+        "EventContext",
+        "HealthEvent",
+        "LifecycleEntry",
+        "Observation",
+        "Projection",
+        "ReadAttempt",
+        "Resource",
+        "Snapshot",
+        "Source",
+        "WorkItem",
+        "Workspace"
+      ]
+    },
+    {
+      "sourceService": "resilience-hub",
+      "label": "AWS Resilience Hub",
+      "diagramCoverage": {
+        "total": 28,
+        "NORMALIZED": 19,
+        "PARTIAL": 7,
+        "RETAINED_ONLY": 2,
+        "UNMAPPED": 0,
+        "normalizedPercent": 67.9,
+        "representedIncludingPartialAndRetained": 28
+      },
+      "diagramSemanticKinds": {
+        "NATIVE_RESOURCE": 7,
+        "DERIVED_VIEW": 1,
+        "OWNED_VALUE": 8,
+        "APPLICATION_ENTITY": 8,
+        "EXTERNAL_IDENTITY": 1,
+        "RELATIONSHIP": 3
+      },
+      "catalogCoverage": {
+        "total": 36,
+        "NORMALIZED": 19,
+        "PARTIAL": 8,
+        "RETAINED_ONLY": 9,
+        "UNMAPPED": 0,
+        "normalizedPercent": 52.8,
+        "representedIncludingPartialAndRetained": 36
+      },
+      "sourceEntityCoverage": {
+        "total": 17,
+        "NORMALIZED": 12,
+        "PARTIAL": 3,
+        "RETAINED_ONLY": 2,
+        "UNMAPPED": 0,
+        "normalizedPercent": 70.6,
+        "representedIncludingPartialAndRetained": 17
+      },
+      "nativeEntityConcepts": 9,
+      "applicationEntityConcepts": 8,
+      "supplementaryConstructs": 8,
+      "declaredTargetEntities": [
+        "Collection",
+        "Dependency",
+        "Finding",
+        "Observation",
+        "Projection",
+        "ReadAttempt",
+        "Recommendation",
+        "ResilienceAssessment",
+        "ResiliencePolicy",
+        "Resource",
+        "Service",
+        "Snapshot",
+        "Source",
+        "System",
+        "UserJourney",
+        "WorkItem"
+      ]
+    },
+    {
+      "sourceService": "devops-agent",
+      "label": "AWS DevOps Agent",
+      "diagramCoverage": {
+        "total": 34,
+        "NORMALIZED": 21,
+        "PARTIAL": 11,
+        "RETAINED_ONLY": 2,
+        "UNMAPPED": 0,
+        "normalizedPercent": 61.8,
+        "representedIncludingPartialAndRetained": 34
+      },
+      "diagramSemanticKinds": {
+        "DERIVED_VIEW": 2,
+        "APPLICATION_ENTITY": 10,
+        "NATIVE_RESOURCE": 7,
+        "OWNED_VALUE": 5,
+        "HISTORY_REPRESENTATION": 4,
+        "RELATIONSHIP": 5,
+        "EXTERNAL_IDENTITY": 1
+      },
+      "catalogCoverage": {
+        "total": 59,
+        "NORMALIZED": 24,
+        "PARTIAL": 11,
+        "RETAINED_ONLY": 24,
+        "UNMAPPED": 0,
+        "normalizedPercent": 40.7,
+        "representedIncludingPartialAndRetained": 59
+      },
+      "sourceEntityCoverage": {
+        "total": 21,
+        "NORMALIZED": 11,
+        "PARTIAL": 5,
+        "RETAINED_ONLY": 5,
+        "UNMAPPED": 0,
+        "normalizedPercent": 52.4,
+        "representedIncludingPartialAndRetained": 21
+      },
+      "nativeEntityConcepts": 11,
+      "applicationEntityConcepts": 10,
+      "supplementaryConstructs": 25,
+      "declaredTargetEntities": [
+        "AgentSpace",
+        "ApprovalRequest",
+        "Asset",
+        "Collection",
+        "Command",
+        "Execution",
+        "Investigation",
+        "JournalRecord",
+        "Observation",
+        "Projection",
+        "ReadAttempt",
+        "Resource",
+        "Snapshot",
+        "Source"
+      ]
+    },
+    {
+      "sourceService": "fis",
+      "label": "AWS FIS",
+      "diagramCoverage": {
+        "total": 34,
+        "NORMALIZED": 14,
+        "PARTIAL": 3,
+        "RETAINED_ONLY": 16,
+        "UNMAPPED": 1,
+        "normalizedPercent": 41.2,
+        "representedIncludingPartialAndRetained": 33
+      },
+      "diagramSemanticKinds": {
+        "RELATIONSHIP": 7,
+        "OWNED_VALUE": 11,
+        "APPLICATION_ENTITY": 7,
+        "NATIVE_RESOURCE": 6,
+        "EXTERNAL_IDENTITY": 2,
+        "DERIVED_VIEW": 1
+      },
+      "catalogCoverage": {
+        "total": 40,
+        "NORMALIZED": 15,
+        "PARTIAL": 3,
+        "RETAINED_ONLY": 21,
+        "UNMAPPED": 1,
+        "normalizedPercent": 37.5,
+        "representedIncludingPartialAndRetained": 39
+      },
+      "sourceEntityCoverage": {
+        "total": 13,
+        "NORMALIZED": 4,
+        "PARTIAL": 2,
+        "RETAINED_ONLY": 7,
+        "UNMAPPED": 0,
+        "normalizedPercent": 30.8,
+        "representedIncludingPartialAndRetained": 13
+      },
+      "nativeEntityConcepts": 6,
+      "applicationEntityConcepts": 7,
+      "supplementaryConstructs": 6,
+      "declaredTargetEntities": [
+        "Collection",
+        "Experiment",
+        "Observation",
+        "Projection",
+        "ReadAttempt",
+        "Resource",
+        "Scenario",
+        "Snapshot",
+        "Source",
+        "StepAttempt"
+      ]
+    },
+    {
+      "sourceService": "workflow",
+      "label": "Shared assessment workflow",
+      "diagramCoverage": {
+        "total": 11,
+        "NORMALIZED": 9,
+        "PARTIAL": 2,
+        "RETAINED_ONLY": 0,
+        "UNMAPPED": 0,
+        "normalizedPercent": 81.8,
+        "representedIncludingPartialAndRetained": 11
+      },
+      "diagramSemanticKinds": {
+        "OWNED_VALUE": 5,
+        "APPLICATION_ENTITY": 5,
+        "HISTORY_REPRESENTATION": 1
+      },
+      "catalogCoverage": {
+        "total": 26,
+        "NORMALIZED": 22,
+        "PARTIAL": 4,
+        "RETAINED_ONLY": 0,
+        "UNMAPPED": 0,
+        "normalizedPercent": 84.6,
+        "representedIncludingPartialAndRetained": 26
+      },
+      "sourceEntityCoverage": {
+        "total": 5,
+        "NORMALIZED": 3,
+        "PARTIAL": 2,
+        "RETAINED_ONLY": 0,
+        "UNMAPPED": 0,
+        "normalizedPercent": 60.0,
+        "representedIncludingPartialAndRetained": 5
+      },
+      "nativeEntityConcepts": 0,
+      "applicationEntityConcepts": 5,
+      "supplementaryConstructs": 15,
+      "declaredTargetEntities": [
+        "Command",
+        "Observation",
+        "Projection",
+        "Run",
+        "Scenario",
+        "Snapshot",
+        "Source",
+        "StepAttempt",
+        "StepRun"
+      ]
+    }
+  ],
+  "diagramSemanticKinds": {
+    "DERIVED_VIEW": 5,
+    "APPLICATION_ENTITY": 37,
+    "NATIVE_RESOURCE": 23,
+    "OWNED_VALUE": 33,
+    "HISTORY_REPRESENTATION": 7,
+    "RELATIONSHIP": 17,
+    "EXTERNAL_IDENTITY": 7,
+    "CONTROL_VALUE": 1
+  },
+  "catalogSemanticKinds": {
+    "EXTERNAL_IDENTITY": 11,
+    "DERIVED_VIEW": 14,
+    "OWNED_VALUE": 57,
+    "APPLICATION_ENTITY": 39,
+    "NATIVE_RESOURCE": 29,
+    "RELATIONSHIP": 19,
+    "HISTORY_REPRESENTATION": 7,
+    "CONTROL_VALUE": 8,
+    "TRANSPORT_DTO": 6
+  },
+  "registry": {
+    "mappingRows": 174,
+    "aliases": 340,
+    "profiles": 65,
+    "byService": [
+      {
+        "sourceService": "health",
+        "mappingRows": 32,
+        "aliases": 74,
+        "dispositions": {
+          "canonicalEntity": 13,
+          "retainedAdapterDto": 4,
+          "ownedValue": 14,
+          "projectionProfile": 1
+        },
+        "declaredEntityTargets": [
+          "Collection",
+          "Communication",
+          "ComponentDeployment",
+          "Connection",
+          "EntityImpact",
+          "EventContext",
+          "HealthEvent",
+          "LifecycleEntry",
+          "Observation",
+          "ReadAttempt",
+          "Resource",
+          "Source",
+          "WorkItem"
+        ],
+        "declaredEntityTargetCount": 13
+      },
+      {
+        "sourceService": "resilience-hub",
+        "mappingRows": 40,
+        "aliases": 67,
+        "dispositions": {
+          "canonicalEntity": 15,
+          "ownedValue": 20,
+          "projectionProfile": 2,
+          "retainedAdapterDto": 3
+        },
+        "declaredEntityTargets": [
+          "Collection",
+          "Dependency",
+          "Finding",
+          "Observation",
+          "ReadAttempt",
+          "Recommendation",
+          "ResilienceAssessment",
+          "ResiliencePolicy",
+          "Service",
+          "Snapshot",
+          "Source",
+          "System",
+          "UserJourney"
+        ],
+        "declaredEntityTargetCount": 13
+      },
+      {
+        "sourceService": "devops-agent",
+        "mappingRows": 51,
+        "aliases": 139,
+        "dispositions": {
+          "ownedValue": 22,
+          "canonicalEntity": 15,
+          "retainedAdapterDto": 13,
+          "projectionProfile": 1
+        },
+        "declaredEntityTargets": [
+          "AgentSpace",
+          "ApprovalRequest",
+          "Asset",
+          "Collection",
+          "Command",
+          "Execution",
+          "Investigation",
+          "JournalRecord",
+          "Observation",
+          "Projection",
+          "ReadAttempt",
+          "Snapshot",
+          "Source"
+        ],
+        "declaredEntityTargetCount": 13
+      },
+      {
+        "sourceService": "fis",
+        "mappingRows": 34,
+        "aliases": 38,
+        "dispositions": {
+          "retainedAdapterDto": 4,
+          "ownedValue": 24,
+          "canonicalEntity": 5,
+          "projectionProfile": 1
+        },
+        "declaredEntityTargets": [
+          "Experiment",
+          "Observation",
+          "Source"
+        ],
+        "declaredEntityTargetCount": 3
+      },
+      {
+        "sourceService": "workflow",
+        "mappingRows": 17,
+        "aliases": 22,
+        "dispositions": {
+          "canonicalEntity": 6,
+          "ownedValue": 11
+        },
+        "declaredEntityTargets": [
+          "Observation",
+          "Run",
+          "Scenario",
+          "Source",
+          "StepAttempt",
+          "StepRun"
+        ],
+        "declaredEntityTargetCount": 6
+      }
+    ],
+    "diagramSymbolsWithAlias": 130
+  },
+  "targetModel": {
+    "entities": 36,
+    "uniformlyVersionedEntities": 36,
+    "entityNames": [
+      "AgentSpace",
+      "ApprovalRequest",
+      "Asset",
+      "Collection",
+      "Command",
+      "Communication",
+      "ComponentDeployment",
+      "Connection",
+      "Dependency",
+      "EntityImpact",
+      "EventContext",
+      "Execution",
+      "Experiment",
+      "Finding",
+      "HealthEvent",
+      "Investigation",
+      "JournalRecord",
+      "LifecycleEntry",
+      "Observation",
+      "Projection",
+      "ReadAttempt",
+      "Recommendation",
+      "ResilienceAssessment",
+      "ResiliencePolicy",
+      "Resource",
+      "Run",
+      "Scenario",
+      "Service",
+      "Snapshot",
+      "Source",
+      "StepAttempt",
+      "StepRun",
+      "System",
+      "UserJourney",
+      "WorkItem",
+      "Workspace"
+    ],
+    "projectionProfiles": 5,
+    "typedValueDefinitions": 64,
+    "unboundValueDefinitions": [
+      "EventDescription"
+    ],
+    "declaredEntityTargetsFromAwsSolutions": [
+      "AgentSpace",
+      "ApprovalRequest",
+      "Asset",
+      "Collection",
+      "Command",
+      "Communication",
+      "ComponentDeployment",
+      "Connection",
+      "Dependency",
+      "EntityImpact",
+      "EventContext",
+      "Execution",
+      "Experiment",
+      "Finding",
+      "HealthEvent",
+      "Investigation",
+      "JournalRecord",
+      "LifecycleEntry",
+      "Observation",
+      "Projection",
+      "ReadAttempt",
+      "Recommendation",
+      "ResilienceAssessment",
+      "ResiliencePolicy",
+      "Resource",
+      "Service",
+      "Snapshot",
+      "Source",
+      "System",
+      "UserJourney",
+      "WorkItem"
+    ],
+    "declaredEntityTargetsIncludingWorkflow": [
+      "AgentSpace",
+      "ApprovalRequest",
+      "Asset",
+      "Collection",
+      "Command",
+      "Communication",
+      "ComponentDeployment",
+      "Connection",
+      "Dependency",
+      "EntityImpact",
+      "EventContext",
+      "Execution",
+      "Experiment",
+      "Finding",
+      "HealthEvent",
+      "Investigation",
+      "JournalRecord",
+      "LifecycleEntry",
+      "Observation",
+      "Projection",
+      "ReadAttempt",
+      "Recommendation",
+      "ResilienceAssessment",
+      "ResiliencePolicy",
+      "Resource",
+      "Run",
+      "Scenario",
+      "Service",
+      "Snapshot",
+      "Source",
+      "StepAttempt",
+      "StepRun",
+      "System",
+      "UserJourney",
+      "WorkItem"
+    ],
+    "entitiesWithoutCanonicalEntityPredecessorRow": [
+      "Workspace"
+    ],
+    "targetCountCaveat": "Registry target counts describe declared lineage, not verified semantic completeness; per-service sets overlap."
+  },
+  "rules": 20,
+  "diagramSources": [
+    {
+      "path": "aws/devops-agent/analysis/diagrams/D01-workspace-associations.mmd",
+      "service": "devops-agent",
+      "symbols": [
+        "ASSOCIATION",
+        "EXTERNAL_REFERENCE",
+        "REGISTERED_SERVICE",
+        "SPACE",
+        "TASK"
+      ],
+      "sourceSha256": "0ed648e5f95db5a488cddcd352ac691a88eab6f5612947e3560d22520303bfdb"
+    },
+    {
+      "path": "aws/devops-agent/analysis/diagrams/D02-investigation-core.mmd",
+      "service": "devops-agent",
+      "symbols": [
+        "EXECUTION",
+        "JOURNAL_RECORD",
+        "RECORD_REVISION",
+        "TASK",
+        "TASK_EXECUTION"
+      ],
+      "sourceSha256": "035941f20928ddea424f8924fdc2da1f44081821dad07b13d2f87edbd1ae8dec"
+    },
+    {
+      "path": "aws/devops-agent/analysis/diagrams/D03-projection-provenance.mmd",
+      "service": "devops-agent",
+      "symbols": [
+        "DERIVATION",
+        "DERIVED_REVISION",
+        "PROJECTION_SOURCE",
+        "SOURCE_OBJECT",
+        "SOURCE_REVISION"
+      ],
+      "sourceSha256": "f747504b99a49165009f9c958c34bb800e90de498960d0b3fd70a6d6e3d44112"
+    },
+    {
+      "path": "aws/devops-agent/analysis/diagrams/D04-graph-model.mmd",
+      "service": "devops-agent",
+      "symbols": [
+        "GRAPH_EDGE",
+        "GRAPH_NODE",
+        "GRAPH_SNAPSHOT",
+        "RESOURCE_REF"
+      ],
+      "sourceSha256": "67d49cfd0962303d601b386db796b5df47323f2670639a1362ffcaa30f45f494"
+    },
+    {
+      "path": "aws/devops-agent/analysis/diagrams/D05-artifacts-assets.mmd",
+      "service": "devops-agent",
+      "symbols": [
+        "ARTIFACT_REF",
+        "ASSET",
+        "ASSET_FILE",
+        "ASSET_VERSION",
+        "INVESTIGATION"
+      ],
+      "sourceSha256": "5983f0280c34360d24ca1c4347aaa1eacf9ef62f966bfc91f7fd8d4efcba5cb3"
+    },
+    {
+      "path": "aws/devops-agent/analysis/diagrams/D06-historical-snapshots.mmd",
+      "service": "devops-agent",
+      "symbols": [
+        "INVESTIGATION",
+        "SNAPSHOT",
+        "SNAPSHOT_PROJECTION",
+        "SNAPSHOT_SOURCE",
+        "SOURCE_REVISION"
+      ],
+      "sourceSha256": "554260024f000fcca1d3ef40910b6f92db5fdd84f795a935be7d78678aebf329"
+    },
+    {
+      "path": "aws/devops-agent/analysis/diagrams/D07-collection-observations.mmd",
+      "service": "devops-agent",
+      "symbols": [
+        "COLLECTION_PASS",
+        "COVERAGE_CLAIM",
+        "READ_ATTEMPT",
+        "SOURCE_OBSERVATION",
+        "SOURCE_REVISION"
+      ],
+      "sourceSha256": "ab5e83e026984a779e4761bf5aa99de6acaa653b51c1b5e831afae4b80bbe4e5"
+    },
+    {
+      "path": "aws/devops-agent/analysis/diagrams/U02-approval-lifecycle.mmd",
+      "service": "devops-agent",
+      "symbols": [
+        "ACTION_OBSERVATION",
+        "APPROVAL_REQUEST",
+        "DECISION_ATTEMPT",
+        "EXECUTION",
+        "RESUME_ATTEMPT"
+      ],
+      "sourceSha256": "8135f2a15ed6d153cf1620f7ee14498d35cafd903b5c7c4794b66d43c5a6c2cb"
+    },
+    {
+      "path": "aws/fis/analysis/diagrams/01_execution.mmd",
+      "service": "fis",
+      "symbols": [
+        "ACTION_DEPENDENCY",
+        "ACTION_EXECUTION",
+        "CATALOG_ACTION",
+        "EXPERIMENT_RUN",
+        "EXPERIMENT_TEMPLATE"
+      ],
+      "sourceSha256": "4bf200418711e9ebde0fb23422a3950268f95a2f3dcaa50fd6e95b864ba8c7a2"
+    },
+    {
+      "path": "aws/fis/analysis/diagrams/02_catalog_templates.mmd",
+      "service": "fis",
+      "symbols": [
+        "ACTION_PARAMETER_DEFINITION",
+        "ACTION_TARGET_SLOT",
+        "CATALOG_ACTION",
+        "EXPERIMENT_TEMPLATE",
+        "RESOURCE_TYPE",
+        "TEMPLATE_ACTION",
+        "TEMPLATE_BINDING",
+        "TEMPLATE_DEPENDENCY",
+        "TEMPLATE_TARGET",
+        "TEMPLATE_TARGET_ACCOUNT"
+      ],
+      "sourceSha256": "d879b54afd169d5ebc9d26d2b6e29f21c73fa0d508de03dbd8e7760b45b0f868"
+    },
+    {
+      "path": "aws/fis/analysis/diagrams/03_targeting.mmd",
+      "service": "fis",
+      "symbols": [
+        "ACTION_EXECUTION",
+        "ACTION_TARGET_BINDING",
+        "EXPERIMENT_RUN",
+        "EXPERIMENT_TARGET_ACCOUNT",
+        "RESOLVED_TARGET_MEMBERSHIP",
+        "RESOURCE_IDENTITY",
+        "TARGET_RESOLUTION_OBSERVATION",
+        "TARGET_SELECTION"
+      ],
+      "sourceSha256": "380fbb8c085a1919a12fea021346af7519db4882a1b2bdfde701b1b8767bdef1"
+    },
+    {
+      "path": "aws/fis/analysis/diagrams/04_evidence_reports.mmd",
+      "service": "fis",
+      "symbols": [
+        "ACTION_EXECUTION",
+        "ALARM_OBSERVATION",
+        "AWS_SCOPE",
+        "CLOUDWATCH_ALARM",
+        "EXECUTION_EVIDENCE",
+        "EXPERIMENT_REPORT",
+        "EXPERIMENT_RUN",
+        "REPORT_ARTIFACT",
+        "SAFETY_LEVER",
+        "STATE_OBSERVATION",
+        "STOP_CONDITION"
+      ],
+      "sourceSha256": "e79b65a4720baf4316b2a28bc206175593d8def416daf19b720dda7f17dfaa70"
+    },
+    {
+      "path": "aws/fis/analysis/diagrams/05_assessments.mmd",
+      "service": "fis",
+      "symbols": [
+        "ASSESSMENT_CRITERION",
+        "ASSESSMENT_EVIDENCE",
+        "EXPERIMENT_METRIC_BINDING",
+        "EXPERIMENT_RUN",
+        "METRIC_BINDING",
+        "METRIC_OBSERVATION",
+        "RESILIENCE_ASSESSMENT"
+      ],
+      "sourceSha256": "7a2add98566b27d1d0f375e180f44247b4382debeb6baa8ec631fa04c5711dd3"
+    },
+    {
+      "path": "aws/fis/analysis/workflow/diagrams/01_entities.mmd",
+      "service": "workflow",
+      "symbols": [
+        "Evidence",
+        "Run",
+        "Scenario",
+        "ScenarioRevision",
+        "StepAttempt",
+        "StepRun"
+      ],
+      "sourceSha256": "83859382794c7e978bcad129945a185ec912d76cabd7150ea3149e3ce0eff476"
+    },
+    {
+      "path": "aws/fis/analysis/workflow/diagrams/02_owned_values.mmd",
+      "service": "workflow",
+      "symbols": [
+        "AdmissionSnapshot",
+        "CheckResult",
+        "Evidence",
+        "ExternalOperationRef",
+        "OperationLock",
+        "Run",
+        "ScenarioRevision",
+        "StepAttempt",
+        "StepDefinition"
+      ],
+      "sourceSha256": "4903d1df083bf24aa86c6cdccb6b915f5ed7e2d592298a65c28ada3457f87458"
+    },
+    {
+      "path": "aws/health/analysis/diagrams/01-core-model.mmd",
+      "service": "health",
+      "symbols": [
+        "ACCOUNT",
+        "ENTITY_IMPACT",
+        "EVENT_CONTEXT",
+        "EVENT_TYPE",
+        "HEALTH_EVENT",
+        "ORGANIZATION",
+        "ORGANIZATION_MEMBERSHIP",
+        "ORG_HEALTH_ACCESS"
+      ],
+      "sourceSha256": "480fd1f5b66654a0e1351ffcc0a386a9cf4bdedabcb06410b9dde586db30390c"
+    },
+    {
+      "path": "aws/health/analysis/diagrams/02-history-delivery.mmd",
+      "service": "health",
+      "symbols": [
+        "COMMUNICATION",
+        "COMMUNICATION_PAGE",
+        "ENTITY_IMPACT",
+        "ENTITY_REVISION",
+        "EVENT_CONTEXT",
+        "EVENT_DESCRIPTION",
+        "EVENT_REVISION",
+        "MESSAGE_DELIVERY",
+        "SOURCE_OBSERVATION"
+      ],
+      "sourceSha256": "5dad0d09206db7baa1e72883a4cef739be57f9c768b0f85b29f74e19d21497a2"
+    },
+    {
+      "path": "aws/health/analysis/diagrams/03-lifecycle-posture.mmd",
+      "service": "health",
+      "symbols": [
+        "COMPONENT_DEPLOYMENT",
+        "INVENTORY_RESOURCE",
+        "LIFECYCLE_EXPOSURE",
+        "LIFECYCLE_MILESTONE",
+        "SERVICE_LIFECYCLE_ENTRY"
+      ],
+      "sourceSha256": "7be7c39f7e54bc2f8f72a46760a2ed5902d867a0bfe091c097853ec6b2bbd11a"
+    },
+    {
+      "path": "aws/health/analysis/diagrams/04-operator-workflow.mmd",
+      "service": "health",
+      "symbols": [
+        "ENTITY_IMPACT",
+        "EVENT_CONTEXT",
+        "LIFECYCLE_EXPOSURE",
+        "OPERATOR_ACTION",
+        "WORK_ITEM",
+        "WORK_ITEM_TARGET"
+      ],
+      "sourceSha256": "f810994861905f094046f89e5200539d7e2f974057cadeb628ae8e1c700b4e22"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/diagrams/01-business-structure.md",
+      "service": "resilience-hub",
+      "symbols": [
+        "JOURNEY_SERVICE",
+        "SERVICE",
+        "SYSTEM",
+        "SYSTEM_SERVICE",
+        "USER_JOURNEY"
+      ],
+      "sourceSha256": "853c5211cabb68d03b44a37976b38328059b85c8fb90f8d6975097142cd00c05"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/diagrams/02-policy-context.md",
+      "service": "resilience-hub",
+      "symbols": [
+        "EFFECTIVE_TARGET",
+        "EFFECTIVE_TARGET_OBSERVATION",
+        "POLICY",
+        "POLICY_COMPONENT",
+        "POLICY_CONTEXT_CAPTURE",
+        "SERVICE",
+        "USER_JOURNEY"
+      ],
+      "sourceSha256": "14256ec4d86538c19de40b1f8fa1611d207305fb407706284b663b4640ed5afa"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/diagrams/03-assessments-findings.md",
+      "service": "resilience-hub",
+      "symbols": [
+        "ASSESSMENT",
+        "FINDING",
+        "FINDING_CAPTURE",
+        "FINDING_OBSERVATION",
+        "RECOMMENDATION",
+        "RECOMMENDATION_ENRICHMENT",
+        "SERVICE"
+      ],
+      "sourceSha256": "0f3a7787e33a5459e59cebcc6caf495abceb4c9bef520970b2789010debfd305"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/diagrams/04-dependencies-topology.md",
+      "service": "resilience-hub",
+      "symbols": [
+        "DEPENDENCY",
+        "DEPENDENCY_DISCOVERY_CONFIG",
+        "DEPENDENCY_GOVERNANCE",
+        "SERVICE",
+        "TOPOLOGY_EDGE",
+        "TOPOLOGY_NODE",
+        "TOPOLOGY_SNAPSHOT"
+      ],
+      "sourceSha256": "2deda4954af0f6213da2eccf1248e1f6cbdb35f85e1b200a165c41341de73227"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/diagrams/05-events-observations.md",
+      "service": "resilience-hub",
+      "symbols": [
+        "CURRENT_PROJECTION",
+        "ENTITY_REF",
+        "EVENT",
+        "EVENT_SUBJECT",
+        "HEALTH_OBSERVATION",
+        "POSTURE_OBSERVATION"
+      ],
+      "sourceSha256": "7c349cf904ff6b109525130520dfb0cd07ab71c7156cf3d279945c8c0981052a"
+    }
+  ],
+  "findings": [
+    {
+      "id": "COV-HR-01",
+      "title": "Localized EventDescription is declared but unbound",
+      "severity": "MEDIUM",
+      "affectedConstructIds": [
+        "health:EventDescription"
+      ],
+      "evidence": [
+        "#/$defs/EventDescription",
+        "#/$defs/Source/properties/payload",
+        "aws/health/analysis/report.md#3-core-entity-dictionary-and-keys"
+      ],
+      "recommendation": "Bind the existing value to the correct contextual owner/profile if normalized description access is required; otherwise classify it explicitly as retained-only. Do not add a description entity."
+    },
+    {
+      "id": "COV-HR-02",
+      "title": "Health failedSet item scope is absent from normalized errors",
+      "severity": "HIGH",
+      "affectedConstructIds": [
+        "health:CollectionItemError"
+      ],
+      "evidence": [
+        "#/$defs/ReadAttempt/properties/error",
+        "#/$defs/ReadError",
+        "aws/health/analysis/report.md#12-coverage-and-collection-model"
+      ],
+      "recommendation": "Represent per-item event/account failure and partial-success outcome through a typed owned collection or registered response shape; keep transport failures separate."
+    },
+    {
+      "id": "COV-HR-03",
+      "title": "OrganizationHealthAccess registry targets omit its actual owner",
+      "severity": "LOW",
+      "affectedConstructIds": [
+        "health:OrganizationHealthAccess"
+      ],
+      "evidence": [
+        "#/$defs/Workspace/properties/organizationAccess",
+        "#/$defs/OrganizationAccess",
+        "model/adapter-profiles.json mapping health/OrganizationHealthAccess"
+      ],
+      "recommendation": "Correct registry target metadata to include Workspace and the OrganizationAccess binding. The model already has the appropriate owned value."
+    },
+    {
+      "id": "COV-HR-04",
+      "title": "Match confidence and lifecycle candidate semantics need an explicit disposition",
+      "severity": "MEDIUM",
+      "affectedConstructIds": [
+        "health:EntityResourceMatch",
+        "health:LifecycleExposure"
+      ],
+      "evidence": [
+        "#/$defs/ResourceMatch",
+        "#/$defs/LifecycleExposure",
+        "aws/health/analysis/report.md#assessment-and-matching"
+      ],
+      "recommendation": "Decide and document whether candidate maps to UNKNOWN and whether confidence is resolved from the rule/evidence or exposed as a small owned value. Avoid claiming exact semantic parity until that rule is explicit."
+    },
+    {
+      "id": "COV-HR-05",
+      "title": "Effective target values remain retained rather than normalized",
+      "severity": "HIGH",
+      "affectedConstructIds": [
+        "resilience-hub:EffectiveTarget",
+        "resilience-hub:EffectivePolicyEvidence"
+      ],
+      "evidence": [
+        "#/$defs/PolicyContext",
+        "#/$defs/Source/properties/payload",
+        "model/adapter-profiles.json profile aws.resilience-hub.effective-targets/v1",
+        "aws/resilience-hub/analysis/report.md#reviewed-policy-observation-model"
+      ],
+      "recommendation": "Keep the already normalized service-scoped observation envelope and exact PolicyContext references. Add a typed owned eight-metric value contract, with units and source-policy provenance, bound through the existing Source/profile or capture where normalized target-value access is required. Reconcile policyType versus ownership-source naming; do not infer a policy ARN or inheritance from a label."
+    },
+    {
+      "id": "COV-HR-06",
+      "title": "Policy component read-shape validation can be tightened",
+      "severity": "MEDIUM",
+      "affectedConstructIds": [
+        "resilience-hub:PolicyComponent"
+      ],
+      "evidence": [
+        "#/$defs/PolicyComponent/properties/targets",
+        "#/$defs/PolicyComponent/properties/units",
+        "aws/resilience-hub/analysis/report.md#4-policy-structure-and-inheritance"
+      ],
+      "recommendation": "Retain the existing normalized PolicyComponent owner binding. Document or enforce allowed known metric keys, numeric/integer semantics and unit rules per component family; RPC ResiliencePolicyChanges and RecoveryTargetsInput already provide narrower native edit shapes. This is a validation-completeness finding, not a missing component representation or a reason to create another entity.",
+      "category": "VALIDATION_COMPLETENESS"
+    },
+    {
+      "id": "COV-HR-07",
+      "title": "Finding capture assessment correlation lacks a typed basis",
+      "severity": "MEDIUM",
+      "affectedConstructIds": [
+        "resilience-hub:FindingCapture"
+      ],
+      "evidence": [
+        "#/$defs/Collection",
+        "#/$defs/CollectionQuery",
+        "aws/resilience-hub/analysis/report.md#reviewed-capture-identity-and-detail-coverage"
+      ],
+      "recommendation": "Preserve optional same-service related-assessment reference and correlation basis as a small owned capture/query-context value, or explicitly defer this former facade capability."
+    },
+    {
+      "id": "COV-HR-08",
+      "title": "Recommendation identity is normalized but its content is arbitrary JSON",
+      "severity": "MEDIUM",
+      "affectedConstructIds": [
+        "resilience-hub:RecommendationEntity"
+      ],
+      "evidence": [
+        "#/$defs/Recommendation/properties/suggestion",
+        "aws/resilience-hub/analysis/report.md#recommendationentity-as-an-owned-value"
+      ],
+      "recommendation": "Bind ordered suggestedChanges/category content to a typed value when normalized comparison/rendering is required. Retain raw provider evidence for extension and do not create native recommendation IDs."
+    },
+    {
+      "id": "COV-HR-09",
+      "title": "Native topology edge property collections are not normalized",
+      "severity": "MEDIUM",
+      "affectedConstructIds": [
+        "resilience-hub:TopologyEdge",
+        "resilience-hub:EdgeProperty"
+      ],
+      "evidence": [
+        "#/$defs/GraphEdge",
+        "aws/resilience-hub/analysis/report.md#10-topology-snapshots-and-graph-meaning"
+      ],
+      "recommendation": "Define lossless property expansion/grouping or an owned properties collection carrying native type and optional inferred label. Preserve source grouping and same-snapshot endpoints."
+    },
+    {
+      "id": "COV-HR-10",
+      "title": "Operational event subject linkage remains untyped",
+      "severity": "HIGH",
+      "affectedConstructIds": [
+        "resilience-hub:EventSubject"
+      ],
+      "evidence": [
+        "#/$defs/Source",
+        "#/$defs/Observation",
+        "aws/resilience-hub/analysis/report.md#12-temporal-model-for-the-operator-view"
+      ],
+      "recommendation": "Bind typed event subjects with role, scoped identity and linkage evidence if the timeline/subject use case is in scope. Native envelope resources alone do not establish those application relationships."
+    },
+    {
+      "id": "COV-HR-11",
+      "title": "Source reference tombstone semantics have no explicit target field",
+      "severity": "MEDIUM",
+      "affectedConstructIds": [
+        "resilience-hub:EntityRef"
+      ],
+      "evidence": [
+        "#/$defs/EntityRef",
+        "#/$defs/EntityIdentity",
+        "#/$defs/SourceIdentity",
+        "aws/resilience-hub/analysis/report.md#typed-subjects-observation-kinds-and-projection-times"
+      ],
+      "recommendation": "Define the minimal deletion/visibility observation and how historical references resolve it; do not add a version-only or tombstone-only entity by default."
+    },
+    {
+      "id": "COV-HR-12",
+      "title": "Runtime-health and component-posture evidence are retained profiles",
+      "severity": "MEDIUM",
+      "affectedConstructIds": [
+        "resilience-hub:HealthObservation",
+        "resilience-hub:PostureObservation"
+      ],
+      "evidence": [
+        "#/$defs/Source/properties/payload",
+        "#/$defs/StateDimension",
+        "model/adapter-profiles.json profiles console.monitoring.health/v1 and aws.resilience-hub.posture/v1"
+      ],
+      "recommendation": "Keep retained evidence coverage separate from typed measurement/component-outcome coverage. Select concrete owned observation schemas from product use cases before claiming normalized signal or component parity."
+    },
+    {
+      "id": "COV-HR-13",
+      "title": "Native administration and auxiliary configuration are intentional retention boundaries",
+      "severity": "INFO",
+      "affectedConstructIds": [
+        "health:EventType",
+        "health:AggregateSnapshot",
+        "resilience-hub:DependencyDiscoveryConfig",
+        "resilience-hub:PermissionModel",
+        "resilience-hub:InputSourceEntity",
+        "resilience-hub:ServiceResource",
+        "resilience-hub:ServiceFunction",
+        "resilience-hub:ResourceDiscovery",
+        "resilience-hub:DNS queryRange"
+      ],
+      "evidence": [
+        "model/adapter-profiles.json",
+        "consolidated-operations-console/CONTEXT_AND_SCOPE.md"
+      ],
+      "recommendation": "Retain these registered native profiles and declare their product normalization/command deferrals explicitly. They do not each justify a new first-class entity."
+    },
+    {
+      "id": "DEVOPS-COV-01",
+      "severity": "METHOD",
+      "title": "Registry rows and aliases do not count independent entities",
+      "constructIds": [
+        "devops-agent:Task",
+        "devops-agent:Investigation",
+        "devops-agent:SourceRevision",
+        "devops-agent:JournalRecordRevision"
+      ],
+      "evidence": [
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "3. Investigation aggregate and keys"
+        },
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "Diagram D02 — native core with an explicit membership table"
+        },
+        {
+          "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "heading": "Diagram D03 — every projection retains provenance"
+        }
+      ],
+      "finding": "The registry groups Task/Investigation and generic/journal-specific revisions as aliases, while the source assigns them different native/application or specialization roles. The 52 SDK shapes additionally contain many nested values and wrappers.",
+      "recommendation": "Count the 34 independently extracted class/ER symbols as a fixed declaration benchmark, retain a separate semantic concept catalog, and show native resources, values and wrappers in separate subtotals."
+    },
+    {
+      "id": "DEVOPS-COV-02",
+      "severity": "DEFERRED_NORMALIZATION",
+      "title": "Timeline and richer investigation assertions are retained, not normalized projections",
+      "constructIds": [
+        "devops-agent:TimelineItem",
+        "devops-agent:Finding",
+        "devops-agent:EvidenceItem",
+        "devops-agent:Hypothesis",
+        "devops-agent:RootCauseAssessment",
+        "devops-agent:MitigationProposal",
+        "devops-agent:ReviewResult",
+        "devops-agent:ActionObservation"
+      ],
+      "schemaPointers": [
+        "#/$defs/Projection/properties/profile",
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "console.investigation.timeline/v1",
+        "console.investigation.assertion/v1",
+        "console.investigation.action-observation/v1"
+      ],
+      "finding": "Named source profiles exist, but each has descriptive typedContent text, not a normalized result schema. Projection.profile is closed to five profiles and only INVESTIGATION_RESULT covers a dedicated DevOps result shape.",
+      "recommendation": "Keep retention explicit in the coverage total. Promote a concrete supported use case through an owned typed result and registered Projection profile with exact provenance; do not introduce one new entity or revision entity per assertion kind."
+    },
+    {
+      "id": "DEVOPS-COV-03",
+      "severity": "MAPPING_OVERCLAIM",
+      "title": "Native journal attribution is not an ActorRef binding",
+      "constructIds": [
+        "devops-agent:UserReference"
+      ],
+      "schemaPointers": [
+        "#/$defs/JournalRecord",
+        "#/$defs/ActorRef",
+        "#/$defs/Source/properties/payload"
+      ],
+      "finding": "The crosswalk labels UserReference as an owned ActorReference, but JournalRecord has no attribution member and ActorRef is the trusted command actor {issuer,subject,kind}. Native userId/userType survives only in raw journal payload.",
+      "recommendation": "Correct the crosswalk to retained-only until a distinct owned native-attribution value or explicit reviewed identity mapping is defined. Do not infer an actor when native attribution is absent."
+    },
+    {
+      "id": "DEVOPS-COV-04",
+      "severity": "PARTIAL_NORMALIZATION",
+      "title": "Graph structure exists but required graph meaning and provenance are incomplete",
+      "constructIds": [
+        "devops-agent:GraphSnapshot",
+        "devops-agent:GraphNode",
+        "devops-agent:GraphEdge"
+      ],
+      "schemaPointers": [
+        "#/$defs/GraphContents",
+        "#/$defs/GraphNode",
+        "#/$defs/GraphEdge"
+      ],
+      "finding": "The model preserves owned endpoint keys, relationKind and evidence, but lacks an explicit node kind, assertion origin and unresolved-placeholder state. The source also distinguishes more graph-view meanings and provenance/validity facts than the current closed graphKind/claimKind fields.",
+      "recommendation": "Add only the owned graph fields needed by supported graph views and retain exact evidence, rather than treating every graph node as a new canonical entity. Test an unresolved placeholder and an operator-asserted causal edge as semantic cases."
+    },
+    {
+      "id": "DEVOPS-COV-05",
+      "severity": "PARTIAL_NORMALIZATION",
+      "title": "Approval context is pinned but invocation and scope values remain raw",
+      "constructIds": [
+        "devops-agent:ApprovalRequest",
+        "devops-agent:ApprovalPattern",
+        "devops-agent:ApprovalAction"
+      ],
+      "schemaPointers": [
+        "#/$defs/ApprovalRequest",
+        "#/$defs/Source/properties/payload"
+      ],
+      "profileIds": [
+        "aws.devops-agent.approval/v1"
+      ],
+      "finding": "ApprovalRequest pins source/digest and nativeApprovalId, but interruptId, toolUseId, tool and argumentPins are only described by a source profile. No ApprovalPattern/ApprovalAction owned model value exists. The original source itself warns that approval request content is not a universal native typed entity.",
+      "recommendation": "Define and validate the particular observed request profile before dispatch. If typed normalized access is needed, add an owned invocation/scope value with field-presence semantics; preserve request source/digest and keep decision, resume and effect separate."
+    },
+    {
+      "id": "DEVOPS-COV-06",
+      "severity": "PARTIAL_NORMALIZATION",
+      "title": "Collector and coverage-policy identity are not retained as typed metadata",
+      "constructIds": [
+        "devops-agent:CollectionPass",
+        "devops-agent:CoverageClaim"
+      ],
+      "schemaPointers": [
+        "#/$defs/Collection",
+        "#/$defs/CollectionQuery",
+        "#/$defs/Coverage"
+      ],
+      "finding": "The source CollectionPass contract includes collector version/selection policy and CoverageClaim retains evaluation policy. Current Collection/CollectionQuery/Coverage capture query, window, attempts, dimensions and rationale but no explicit versioned collector/policy binding.",
+      "recommendation": "Represent collector/evaluation policy identity as a small owned binding on the appropriate collection/coverage owner, or explicitly defer it. Do not treat free-text rationale as an exact policy version or add policy-version entities."
+    },
+    {
+      "id": "DEVOPS-COV-07",
+      "severity": "PARTIAL_NORMALIZATION",
+      "title": "Generic artifact storage descriptors do not fully normalize cross-channel artifact references",
+      "constructIds": [
+        "devops-agent:ArtifactReference"
+      ],
+      "schemaPointers": [
+        "#/$defs/ArtifactRef",
+        "#/$defs/AssetFile",
+        "#/$defs/EvidenceLocator"
+      ],
+      "finding": "Managed artifact locators, asset files and exact evidence locators are typed, but the original ArtifactReference carries channel/record/block/native-ID/optional-asset-resolution semantics and finer unavailability reasons that are not a single current owned value.",
+      "recommendation": "Keep the source reference inspectable and state this as partial normalization. Add a channel-aware owned reference only when a concrete inline, A2A or native Asset use case requires it; never equate those identifiers."
+    },
+    {
+      "id": "DEVOPS-COV-08",
+      "severity": "PARTIAL_NORMALIZATION",
+      "title": "The decision Command receipt does not expose a reconstructable decision input",
+      "constructIds": [
+        "devops-agent:DecisionAttempt"
+      ],
+      "schemaPointers": [
+        "#/$defs/Command",
+        "#/$defs/ApprovalRequest/properties/decisionCommandIds"
+      ],
+      "finding": "The prior decision-attempt entity records action/finalized-pattern hash. The console has a typed DecideApproval request, but its readable Command record exposes only operation/requestDigest/subjects and lifecycle; it has no retained request source or typed decision value.",
+      "recommendation": "Specify how an authorized historical audit resolves the exact submitted decision input from the Command. A typed owned intent value or exact request-source reference is sufficient; a standalone version entity is not required."
+    },
+    {
+      "id": "DEVOPS-COV-09",
+      "severity": "INTENTIONAL_SCOPE",
+      "title": "Peripheral native resources are represented only by retained source profiles",
+      "constructIds": [
+        "devops-agent:RegisteredService",
+        "devops-agent:Goal",
+        "devops-agent:Recommendation",
+        "devops-agent:Trigger",
+        "devops-agent:PrivateConnection"
+      ],
+      "profileIds": [
+        "aws.devops-agent.registered-service/v1",
+        "aws.devops-agent.goal/v1",
+        "aws.devops-agent.recommendation/v1",
+        "aws.devops-agent.trigger/v1",
+        "aws.devops-agent.private-connection/v1"
+      ],
+      "finding": "Each native resource has an explicit source profile and preserves identity/lifecycle vocabulary, but none has a normalized dedicated model or complete product capability. Homonyms are correctly kept separate from workload Service, resilience Recommendation, console Scenario and Connection.",
+      "recommendation": "Count these as retained resource representations, not normalized entity coverage or implemented AWS integration. Promote a resource only after its domain use case and lifecycle authority justify that model/API surface."
+    },
+    {
+      "id": "DEVOPS-COV-10",
+      "severity": "DOCUMENTATION",
+      "title": "SnapshotProjection crosswalk wording uses obsolete target field names",
+      "constructIds": [
+        "devops-agent:SnapshotProjection"
+      ],
+      "schemaPointers": [
+        "#/$defs/Snapshot/properties/members",
+        "#/$defs/EntityRef"
+      ],
+      "finding": "The preservation note still says imported legacy renditions are pinned in sourceRevisionIds, although the current Snapshot contract uses members of exact EntityRef(kind,id,version).",
+      "recommendation": "Use sourceRevisionIds/projectionRevisionId only when naming old source vocabulary; describe current bindings as Snapshot.members with exact Source or Projection versions."
+    },
+    {
+      "id": "DEVOPS-COV-11",
+      "severity": "INTENTIONAL_SCOPE",
+      "title": "Native Task normalization selects one task discriminator",
+      "constructIds": [
+        "devops-agent:Task",
+        "devops-agent:Investigation"
+      ],
+      "schemaPointers": [
+        "#/$defs/Investigation",
+        "#/$defs/Source/properties/payload"
+      ],
+      "finding": "The pinned native Task catalog includes INVESTIGATION, EVALUATION, RELEASE_READINESS_REVIEW and RELEASE_TESTING. The normalized Investigation contract deliberately describes the INVESTIGATION facet only; other types are retained native task documents.",
+      "recommendation": "Keep the Investigation concept normalized and report the broader native Task family as partial. Add another domain facet only for a supported use case, rather than pretending all task types are Investigations."
+    },
+    {
+      "id": "COV-FIS-01",
+      "title": "Retained provider configuration is mislabeled as normalized owned values",
+      "severity": "MEDIUM",
+      "category": "RETENTION_BOUNDARY_CLARIFICATION",
+      "affectedConstructIds": [
+        "fis:TargetSelection",
+        "fis:ExperimentTargetAccount",
+        "fis:StopCondition",
+        "fis:ActionParameterDefinition",
+        "fis:ActionTargetSlot",
+        "fis:TemplateAction",
+        "fis:TemplateTarget",
+        "fis:TemplateBinding",
+        "fis:TemplateDependency",
+        "fis:TemplateTargetAccount"
+      ],
+      "evidence": [
+        {
+          "path": "consolidated-operations-console/model/schema.json",
+          "symbol": "$defs/Experiment"
+        },
+        {
+          "path": "consolidated-operations-console/model/adapter-profiles.json",
+          "symbol": "mappings[sourceService=fis]"
+        }
+      ],
+      "finding": "The mapping calls these ownedValue representations, but their named typed classes/properties do not exist. Complete payloads have deliberate Source retention paths. This is not data loss, but it is not normalized contract coverage.",
+      "recommendation": "Mark retention-only explicitly with exact profile and JSON member paths. Promote only the small owned values required by current queries; native template/account/lever management can remain deferred."
+    },
+    {
+      "id": "COV-FIS-02",
+      "title": "Resolved memberships lack a typed selector join",
+      "severity": "HIGH",
+      "category": "MODEL_RELATIONSHIP_GAP",
+      "affectedConstructIds": [
+        "fis:ResolvedTargetMembership",
+        "fis:TargetSelection",
+        "fis:ActionTargetBinding"
+      ],
+      "evidence": [
+        {
+          "path": "consolidated-operations-console/model/schema.json",
+          "symbol": "$defs/TargetMembership"
+        },
+        {
+          "path": "consolidated-operations-console/model/schema.json",
+          "symbol": "$defs/FISAction/properties/targetBindings"
+        },
+        {
+          "path": "consolidated-operations-console/model/examples.json",
+          "symbol": "Experiment.targetMemberships.selectionKey=workers:instance-1"
+        }
+      ],
+      "finding": "Action bindings name selectors, but memberships provide only selectionKey, whose fixture value combines selector and resource. No documented typed selector field or canonical encoding makes that relation safely queryable. Empty selectors also have no normalized record.",
+      "recommendation": "Use a small Experiment-owned selector value/key and an explicit selector reference/key on TargetMembership. Keep opaque membership identity separate; retain the complete raw selector and targetInformation in Source. No new entity is needed."
+    },
+    {
+      "id": "COV-FIS-03",
+      "title": "Telemetry binding and experiment-assessment linkage are not concretely mapped",
+      "severity": "HIGH",
+      "category": "MODEL_MAPPING_GAP",
+      "affectedConstructIds": [
+        "fis:MetricBinding",
+        "fis:ExperimentMetricBinding",
+        "fis:MetricObservation",
+        "fis:AssessmentCriterion"
+      ],
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/report.md",
+          "heading": "9. Workload assessment model"
+        },
+        {
+          "path": "consolidated-operations-console/model/schema.json",
+          "symbol": "$defs/StepDefinition/properties/inputBindings"
+        },
+        {
+          "path": "consolidated-operations-console/model/adapter-profiles.json",
+          "symbol": "aws.cloudwatch.metric/v1"
+        }
+      ],
+      "finding": "MetricBinding/MetricBindingReference/CheckDefinition names in the crosswalk do not resolve to concrete value shapes or bound input schemas. ExperimentMetricBinding has no property/relation at all. The metric profile documents fields but does not bind typed samples or query/window/unit semantics. Evaluation can target an Experiment without a Run, so a Run-only generic input is insufficient.",
+      "recommendation": "Define narrow versioned profile/input schemas for telemetry queries, samples and criterion parameters; bind them to Source/Scenario or captured evaluation contents. Represent the experiment-to-exact-binding/window association as an owned reference value in captured evaluation context, preserving no-Run assessments."
+    },
+    {
+      "id": "COV-FW-01",
+      "title": "Attempt recovery facts have no declared value contract",
+      "severity": "HIGH",
+      "category": "MODEL_LIFECYCLE_GAP",
+      "affectedConstructIds": [
+        "workflow:StepAttempt",
+        "workflow:ExecutionError"
+      ],
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/workflow/adapters.md",
+          "heading": "1. Common adapter contract"
+        },
+        {
+          "path": "aws/fis/analysis/workflow/model.md",
+          "heading": "5. Retries, cancellation and finalization"
+        },
+        {
+          "path": "consolidated-operations-console/model/schema.json",
+          "symbol": "$defs/StepAttempt"
+        }
+      ],
+      "finding": "The source specifies once-evaluated/sealed inputs, typed durable checkpoints and structured technical errors. The current attempt tracks identity, status, evidence and external effects but has no checkpoint/resolved-input contract or workflow error value. ReadError belongs to collection and is not a substitute.",
+      "recommendation": "Add only the durable owned facts required for exact resume/input/error interpretation, or explicitly defer their normalization and identify their retained typed profile. Keep transient lease/queue implementation details outside the domain model."
+    },
+    {
+      "id": "COV-FW-02",
+      "title": "Evidence ownership and production/import roles need an explicit consolidation rule",
+      "severity": "MEDIUM",
+      "category": "PROVENANCE_MAPPING_GAP",
+      "affectedConstructIds": [
+        "workflow:Evidence",
+        "workflow:Observation"
+      ],
+      "evidence": [
+        {
+          "path": "aws/fis/analysis/workflow/model.md",
+          "heading": "1. Entities, ownership and identity"
+        },
+        {
+          "path": "aws/fis/analysis/workflow/adapters.md",
+          "heading": "1. Common adapter contract"
+        },
+        {
+          "path": "consolidated-operations-console/model/schema.json",
+          "symbol": "$defs/StepAttempt/properties/evidenceRefs"
+        },
+        {
+          "path": "consolidated-operations-console/MAPPING.md",
+          "symbol": "Evidence / Observation workflow rows"
+        }
+      ],
+      "finding": "Shared Source/Observation and exact references are appropriate, but they do not explicitly preserve the earlier run-owned evidence manifest, producer/import role, or the complete typed adapter Observation result. The mapping prose currently claims those roles remain explicit.",
+      "recommendation": "State how run evidence closure is selected and represent producer/consumer/import provenance as an owned citation value where required. Define registered adapter-result schemas for value/collection/coverage/scope/window. Do not add a duplicate Evidence or Version entity."
+    },
+    {
+      "id": "COV-FW-03",
+      "title": "A normalized profile advertises fields absent from its bound value",
+      "severity": "LOW",
+      "category": "PROFILE_PRECISION",
+      "affectedConstructIds": [
+        "workflow:CheckResult"
+      ],
+      "evidence": [
+        {
+          "path": "consolidated-operations-console/model/adapter-profiles.json",
+          "symbol": "console.workflow.check-result/v1.observedFields.typedContent"
+        },
+        {
+          "path": "consolidated-operations-console/model/schema.json",
+          "symbol": "$defs/CheckResult"
+        }
+      ],
+      "finding": "The profile and predecessor describe actual/expected summaries, but the bound CheckResult schema has neither. Core check outcome, evidence and cutoff are normalized, so this does not remove CheckResult concept coverage.",
+      "recommendation": "Say which details remain in retained Source and which are normalized, or add a narrow optional explanatory value if a reviewed use case requires it."
+    },
+    {
+      "id": "COV-FW-04",
+      "title": "Evaluation profile identity wording retains removed revision-resource names",
+      "severity": "LOW",
+      "category": "STALE_MAPPING_TEXT",
+      "affectedConstructIds": [
+        "fis:ResilienceAssessment"
+      ],
+      "evidence": [
+        {
+          "path": "consolidated-operations-console/model/adapter-profiles.json",
+          "symbol": "console.workflow.evaluation/v1.identityBasis"
+        }
+      ],
+      "finding": "identityBasis still says projectionRevisionId and inputSnapshotId even though V2 uses a stable Projection identity/version and exact Snapshot reference.",
+      "recommendation": "Update the profile wording to the current common entity/version/reference contract; do not reintroduce revision entities."
+    }
+  ],
+  "checks": {
+    "independentDiagramPopulation": true,
+    "allDiagramSymbolsResolveExactlyOnce": true,
+    "targetContractsMatchPinnedReviewBaseline": true,
+    "allSchemaPointersResolve": true,
+    "allProfileIdsExist": true,
+    "pinnedSourceEvidenceExists": true,
+    "nativeShapePopulationExact": true,
+    "uniformEntityVersionContract": true,
+    "sameVersionAndTimestampTypesOnAllEntities": true,
+    "noFormerRevisionEntities": true,
+    "semanticReviewIsNotAliasExistenceCheck": true
+  },
+  "limitations": [
+    "This is model/contract coverage of the pinned repository solutions, not complete current AWS product/SDK coverage.",
+    "Source profile hints and retained payloads are not executable native SDK validation or implemented adapters.",
+    "The audit preserves the existing 36-entity model. Proposed gap remedies are recommendations, not implemented schema/API changes.",
+    "Schema-pointer checks prove structure; source-to-target classifications and essential-semantics judgments are documented review conclusions."
+  ],
+  "inputs": [
+    {
+      "path": "coverage/health-resilience.json",
+      "sha256": "b5727fe760f5c96437bc38c1bfcb364812bd61421ff6c7ab4df431e6aa3249fb"
+    },
+    {
+      "path": "coverage/devops-agent.json",
+      "sha256": "829dba750cb5fa72db2e322223dd61d94c8296de3c249e2bcbd55af86d3364f6"
+    },
+    {
+      "path": "coverage/fis-workflow.json",
+      "sha256": "0ebb6462e25c096b83238ead19f9ab828ccd927ee679622da695e18f3667bec9"
+    },
+    {
+      "path": "coverage/mapping-rules.json",
+      "sha256": "fc5a8562a128da65d1c3c9adbcd1c9eb26cb607ea186152bc61db4c0ec3a3f53"
+    },
+    {
+      "path": "model/schema.json",
+      "sha256": "5ed58f736388fffa7fd5d816be4797aa6ff419c86d00647022b2f75f2ef67011"
+    },
+    {
+      "path": "model/adapter-profiles.json",
+      "sha256": "2695ee87bde5009db469534bea84e7b26bb6b1ebacc4b2c194f67c422e683c3c"
+    },
+    {
+      "path": "api/rpc.schema.json",
+      "sha256": "2b71668c5662cb20b44366a7dc67f3d8096f9511b85cd2ec51e1d0481891bd91"
+    },
+    {
+      "path": "api/operations.json",
+      "sha256": "397b67d82aa4f85c065e5ed32d1524e51235044a52b2cfb565c3d9670dc89ba3"
+    },
+    {
+      "path": "inventory.json",
+      "sha256": "631a00b5d72d5417b5f81db44022158a7b0ced9a49df4778c1289766ac7f53a4"
+    },
+    {
+      "path": "tools/build_coverage.py",
+      "sha256": "baddedee82d8383ca9261339521689aa3567785035311a29b43532ba2ceccc46"
+    }
+  ]
+}

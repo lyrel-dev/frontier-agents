@@ -136,6 +136,13 @@ input[type="search"], select { display: block; margin-top: .3rem; width: 100%; m
 .provenance h5 { margin-bottom: .4rem; }
 .source-link { font-size: .79rem; overflow-wrap: anywhere; }
 .source-note { font-size: .83rem; color: var(--muted); }
+.coverage-counts { min-width: 760px; }
+.coverage-status { display: inline-block; font-size: .73rem; font-weight: 700; letter-spacing: .02em; white-space: nowrap;
+  padding: .2rem .45rem; border: 1px solid #c3d0d9; border-radius: 3px; color: #294e65; background: #edf3f7; }
+.status-normalized { color: #225c48; background: #edf6f0; border-color: #b7d1c2; }
+.status-partial { color: #7c571a; background: #fff6e7; border-color: #dfc795; }
+.status-retained_only { color: #4c5770; background: #f0f1f7; border-color: #c7ccdc; }
+.status-unmapped { color: #8b3a31; background: #fff0ed; border-color: #e3b4ad; }
 details { border: 1px solid var(--line); border-radius: 5px; margin: 1rem 0; background: white; }
 summary { cursor: pointer; padding: .7rem 1rem; color: #274f67; font-weight: 650; font-size: .88rem; }
 details > .detail-body { padding: 0 1rem 1rem; }
@@ -209,6 +216,8 @@ details[open] > summary { border-bottom: 1px solid #e6ebef; margin-bottom: .7rem
   .reference-card, .module-group, .value-card, .profile-card, .chapter, details, .detail-body { break-inside: auto; }
   .reference-card[hidden], .module-group[hidden], .chapter[hidden], .module-heading[hidden] { display: block !important; }
   .fields { min-width: 0; }
+  .coverage-counts { min-width: 0; }
+  .notice { break-inside: avoid; }
   .table-wrap { overflow: visible; }
   table { table-layout: fixed; font-size: 8pt; }
   th, td { padding: .45rem .5rem; word-break: normal; overflow-wrap: anywhere; }
