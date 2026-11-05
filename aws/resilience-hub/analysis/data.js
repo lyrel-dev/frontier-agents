@@ -79,7 +79,7 @@
       service.updatedAt = before(3 + index);
       service.observedAt = before(2);
       service.environment = 'Production';
-      service.permissionModel = { invokerRoleName: 'NorthstarResilienceHubInvoker', crossAccountRoles: service.accountId === ACCOUNT ? [] : [{ arn: 'arn:aws:iam::' + ACCOUNT + ':role/NorthstarResilienceReadOnly' }] };
+      service.permissionModel = { invokerRoleName: 'NorthstarResilienceHubInvoker', crossAccountRoles: service.accountId === ACCOUNT ? [] : [{ crossAccountRoleArn: 'arn:aws:iam::' + ACCOUNT + ':role/NorthstarResilienceReadOnly' }] };
       service.tags = { Environment: 'production', Team: service.owner, Application: service.id };
       service.policyArn = service.policyId ? policies.find(function (policy) { return policy.id === service.policyId; }).arn : null;
       service.inputSources = [

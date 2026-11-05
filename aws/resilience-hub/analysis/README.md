@@ -1,8 +1,32 @@
+---
+id: "aws-resilience-hub-analysis-index"
+title: "AWS Resilience Hub — reviewed model and operator prototype"
+type: "index"
+service: "aws-resilience-hub"
+status: "reviewed"
+created: "2026-11-05"
+updated: "2026-11-05"
+tags:
+  - "aws"
+  - "resilience-hub"
+  - "operator-ui"
+  - "api-design"
+aliases:
+  - "Resilience Hub workspace"
+related:
+  - "report.md"
+  - "review.md"
+  - "validation.md"
+  - "api/index.md"
+---
+
 # AWS Resilience Hub — reviewed model and operator prototype
 
 An interactive, single-page operator workspace demonstrating the reviewed **next-generation AWS Resilience Hub** entity model. The fictional **Northstar Commerce** portfolio makes shared service ownership, resilience posture, runtime health, discovery coverage and event-driven updates visible together.
 
-The application is a static HTML/CSS/JavaScript page. It has no build step, external runtime dependency, CDN, AWS SDK, credentials or backend. All records, events, telemetry, cost estimates and operator actions are synthetic. State changes persist in the current browser through `localStorage` when available.
+The browser application is a static HTML/CSS/JavaScript page with no build step, external runtime dependency, CDN, AWS SDK or credentials. It runs without a backend, and its state changes persist in the current browser through `localStorage` when available. A separate runnable [mock RPC API](api/index.md) implements the proposed operator contract. All records, events, telemetry, cost estimates and operator actions are synthetic.
+
+All documentation is maintained as Obsidian-compatible Markdown with YAML properties. Each of the five diagram notes includes editable fenced Mermaid source; SVG assets provide the stable layout used by the browser.
 
 ![Northstar Resilience workspace overview](assets/overview.jpg)
 
@@ -24,6 +48,29 @@ The entry point is [index.html](index.html). Direct file opening also renders th
 
 The **Simulate event** button advances a fixed demo clock. There is no background timer or connection to live AWS data. **Export snapshot** downloads the full synthetic state and its provenance as JSON. The reset control in the top bar restores the initial portfolio after confirmation.
 
+## Run the mock RPC API
+
+From this analysis directory, start the separate Node.js process:
+
+```sh
+node api/server.cjs
+```
+
+The default endpoint is `http://127.0.0.1:8787/`. Requests use `POST /`, `Content-Type: application/x-amz-json-1.1` and an operation-specific `X-Amz-Target` header:
+
+```sh
+curl http://127.0.0.1:8787/ \
+  -H 'Content-Type: application/x-amz-json-1.1' \
+  -H 'X-Amz-Target: ResilienceWorkspace_20261105.ListServices' \
+  --data '{"maxResults":2}'
+```
+
+Use `node api/server.cjs --port 8788` to select another loopback port. The `--role reader|operator|admin|ingestor|demo` option fixes the mock principal on the server; the default `demo` role permits all mock operations. Clients cannot assert their role or tenant in request bodies. See the [API reference](api/index.md) for request and response shapes, operation behavior, pagination, version checks, idempotency and native AWS mappings.
+
+The API process maintains its own in-memory state, which resets on restart. **The browser UI is not yet connected to this HTTP API:** browser actions modify its local mock state, and RPC actions modify only the server's state. Both begin with the Northstar portfolio, so either interface can demonstrate the model independently.
+
+The RPC namespace is a proposed product facade. It resembles AWS JSON RPC conventions but is not the native Resilience Hub v2 wire protocol or an AWS endpoint; the [native mapping](api/aws-mapping.md) records that distinction.
+
 ## What to explore
 
 | Workspace | Working behavior |
@@ -34,7 +81,7 @@ The **Simulate event** button advances a fixed demo clock. There is no backgroun
 | Findings | Status/severity filters, all three recommendation categories, local estimates and editable operator disposition/comments. |
 | Dependencies | Consumer-scoped DNS relationships, criticality editing, local governance labels, query-window observations and discovery gaps. |
 | Event stream | EventBridge, entity-timeline, telemetry and local-action provenance; occurrence/receipt timestamps; refresh outcomes; normalized event inspection. |
-| Data model | The ten requested concepts, the five reviewed ER diagrams, editable Mermaid downloads, the report PDF and review record. |
+| Data model | The ten requested concepts, the five reviewed ER diagrams, editable Markdown/Mermaid notes, the reviewed report, review record and RPC API reference. |
 
 Each service has six detail tabs: overview, findings, policy and posture, dependencies, topology, and assessments. Topology nodes can be inspected, and typed edges can be filtered. Arrow direction represents the captured source/destination relationship; it does not assert failure propagation.
 
@@ -79,12 +126,12 @@ The fixture generator chooses effective targets from fictional policy inputs to 
 | [data.js](data.js) | Deterministic Northstar fixtures and mock clock. |
 | [model.js](model.js) | Scoped selectors, evidence projections, event ingestion and local mutation scenarios. |
 | [report.md](report.md) | Reviewed analysis, logical model, operation mapping and 48 official AWS references. |
-| [reviewed-report.pdf](reviewed-report.pdf) | Rendered 22-page report containing all five diagrams. |
 | [review.md](review.md) | Review findings, applied corrections and integration boundaries. |
 | [validation.md](validation.md) | Automated and browser verification record. |
-| [diagrams/](diagrams/) | Five Mermaid sources and SVGs, plus deterministic presentation layouts. |
-| [tests/](tests/) | Dependency-free Node domain and UI contract tests. |
-| [scripts/](scripts/) | Optional report/diagram rebuild tools; not required by the application. |
+| [api/index.md](api/index.md) | Proposed AWS-style RPC operation reference and runnable local mock server. |
+| [diagrams/](diagrams/) | Five Obsidian Markdown notes with Mermaid blocks, matching SVGs and deterministic presentation layouts. |
+| [tests/](tests/) | Dependency-free Node domain, UI contract, RPC runtime and HTTP integration tests. |
+| [scripts/render_diagrams.py](scripts/render_diagrams.py) | Optional SVG renderer for the Mermaid blocks; not required by the application. |
 
 ## Verify
 
@@ -95,22 +142,24 @@ node --check app.js
 node --check data.js
 node --check model.js
 node --test tests/*.test.cjs
+node scripts/generate_api_docs.cjs --check
+python3 scripts/check_notes.py
 ```
 
-The tests cover scoped keys, shared-service counts, policy provenance, independent health/posture, failed-run preservation, triage, selected-service assessment completion, immutable recommendation history, omitted/empty detail, expiry, duplicate/delayed events, discovery/governance separation, partial summary hydration, rendering and safe comment escaping. In-memory UI contract checks complement the actual browser checks documented in [validation.md](validation.md).
+The complete suite contains 39 passing tests. Browser-model checks cover scoped keys, shared-service counts, policy provenance, independent health/posture, failed-run preservation, triage, selected-service assessment completion, immutable recommendation history, omitted/empty detail, expiry, duplicate/delayed events, discovery/governance separation, partial summary hydration, rendering, safe comment escaping and Markdown diagram assets. The RPC tests exercise all 44 operations, including through the HTTP server, along with scope validation, concurrency, idempotency, signed pagination and trusted-role enforcement. In-memory UI contract checks complement the earlier browser checks documented in [validation.md](validation.md). The [API reference](api/index.md) documents its runtime and generation commands.
 
-## Rebuild the documentation
+## Maintain the documentation
 
-The Markdown and Mermaid files are the maintained analysis sources. The renderer uses `diagrams/diagram-layouts.json` for stable presentation geometry; it checks entity declarations, relationships, routes and field bounds. The PDF is built from the reviewed Markdown and those rendered diagrams.
+Open this directory in an Obsidian vault, or add it to an existing vault. Standard relative Markdown links work in both Obsidian and repository viewers. YAML properties describe each note, and fenced Mermaid blocks render directly in Obsidian. The Markdown notes are the canonical documents.
+
+To regenerate the portable SVGs from the five diagram notes:
 
 ```sh
-python3 -m pip install -r scripts/requirements.txt
 python3 scripts/render_diagrams.py
-python3 scripts/build_report.py
 ```
 
-The optional documentation tools use ReportLab and PyMuPDF and require DejaVu Sans fonts; see the scripts for font discovery. They are not browser/runtime dependencies.
+The renderer uses only the Python standard library. It extracts each note's Mermaid block and uses `diagrams/diagram-layouts.json` for stable presentation geometry, checking entity declarations, relationships, routes and field bounds. SVG generation requires no external renderer or CDN.
 
 ## Integration scope
 
-This prototype demonstrates the model and operator interactions. It does not connect to an AWS account, implement authentication, synchronize multiple operators, run real telemetry subscriptions or validate production IAM permissions. Before enabling live writes, verify association replacement/removal, clearing semantics, authorization, pagination and concurrent edits against the selected SDK and controlled account responses, as detailed in the report.
+This prototype demonstrates the model, operator interactions and a corresponding mock RPC contract. It does not connect to an AWS account, authenticate real users, synchronize browser and server state, run real telemetry subscriptions or validate production IAM permissions. Before enabling live writes, verify association replacement/removal, clearing semantics, authorization, pagination and concurrent edits against the selected SDK and controlled account responses, as detailed in the report.

@@ -150,14 +150,34 @@ test('finding triage persists an escaped comment while retaining health and post
   assert.doesNotMatch(ui.html('inspector-dialog'), /<img src=x/);
 });
 
-test('all local entrypoint and diagram assets exist', () => {
-  const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
-  for (const [, value] of html.matchAll(/(?:src|href)="([^"]+)"/g)) {
-    if (!value.startsWith('#') && !value.includes('://')) assert.ok(fs.existsSync(path.join(root, value)), value);
+test('local entrypoint links and Obsidian diagram notes resolve with YAML properties', () => {
+  function assertLocalReferences(html) {
+    for (const [, value] of html.matchAll(/(?:src|href)="([^"]+)"/g)) {
+      if (!value.startsWith('#') && !value.includes('://')) assert.ok(fs.existsSync(path.join(root, value)), value);
+    }
   }
+  function assertNote(relativePath) {
+    const note = fs.readFileSync(path.join(root, relativePath), 'utf8');
+    const frontMatter = note.match(/^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/);
+    assert.ok(frontMatter, relativePath + ': YAML header');
+    for (const property of ['id', 'title', 'type', 'service', 'status', 'created', 'updated', 'tags', 'aliases', 'related']) {
+      assert.match(frontMatter[1], new RegExp('^' + property + ':', 'm'), relativePath + ': ' + property);
+    }
+    assert.match(note.slice(frontMatter[0].length), /^# /m, relativePath + ': note title');
+    return note;
+  }
+  assertLocalReferences(fs.readFileSync(path.join(root, 'index.html'), 'utf8'));
+  const ui = app();
+  ui.click('navigate', {view: 'model'});
+  for (let index = 0; index < 5; index++) {
+    ui.click('diagram', {index: String(index)});
+    assertLocalReferences(ui.html());
+  }
+  for (const note of ['README.md', 'report.md', 'review.md', 'validation.md', 'api/index.md']) assertNote(note);
   for (const name of ['01-business-structure', '02-policy-context', '03-assessments-findings', '04-dependencies-topology', '05-events-observations']) {
     assert.ok(fs.existsSync(path.join(root, 'diagrams', name + '.svg')));
-    assert.ok(fs.existsSync(path.join(root, 'diagrams', name + '.mmd')));
+    const note = assertNote('diagrams/' + name + '.md');
+    assert.equal([...note.matchAll(/^```mermaid[ \t]*$/gm)].length, 1, name + ': exactly one Mermaid block');
+    assert.match(note, /```mermaid\n[\s\S]*?\n```/, name + ': closed Mermaid block');
   }
-  assert.ok(fs.statSync(path.join(root, 'reviewed-report.pdf')).size > 10000);
 });

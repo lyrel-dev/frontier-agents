@@ -1,12 +1,49 @@
+---
+id: "aws-resilience-hub-model-review"
+title: "Model review and implementation decisions"
+type: "review"
+service: "aws-resilience-hub"
+status: "reviewed"
+created: "2026-11-05"
+updated: "2026-11-05"
+tags:
+  - "aws"
+  - "resilience-hub"
+  - "review"
+  - "data-model"
+aliases:
+  - "Resilience Hub model review"
+related:
+  - "report.md"
+  - "api/index.md"
+---
+
 # Model review and implementation decisions
 
 **Reviewed:** 2026-11-05
 
-**Scope:** the previous 17-page AWS Resilience Hub operator UI data-model report, all five diagrams, and the mapping to the detailed `resiliencehubv2` contracts.
+**Scope:** the original AWS Resilience Hub operator UI data-model report, all five ER diagrams, the 44-operation workspace RPC extension, and the mapping to the detailed `resiliencehubv2` contracts.
 
 **Disposition:** approved for the fictional UI prototype with the corrections below. Account-specific integration behavior remains to be verified before connecting a production UI.
 
-The reviewed source is [report.md](report.md); the rendered version is [reviewed-report.pdf](reviewed-report.pdf). The original report's detailed API analysis and all 48 official source URLs have been retained. This review does not claim live-account validation.
+The reviewed analysis is [report.md](report.md), with [API operations](api/index.md) and five linked diagram notes. The original report's detailed API analysis and all 48 official source URLs have been retained. This review does not claim live-account validation.
+
+## RPC extension review
+
+The implemented extension contains 44 operations: 30 native-backed adapters, nine composed reads, three local commands and two ingestion operations. Each operation has an Obsidian Markdown note with YAML properties, exact schemas, executable examples, roles, errors and lifecycle effects. The [AWS mapping](api/aws-mapping.md) records 34 official sources for the adapter review. The [protocol](api/protocol.md) explicitly owns the RPC namespace, local revisions, replay window, signed snapshot pagination and guarded deletion rules.
+
+| Review finding | Correction or explicit boundary |
+| --- | --- |
+| The requested AWS RPC presentation differs from native Resilience Hub v2 transport. | Use the product namespace `ResilienceWorkspace_20261105`, root POST and `X-Amz-Target`; document the native operation-specific routes separately. |
+| Native input shapes had several easy-to-confuse names and unions. | Use `crossAccountRoleArn`, four exact achievability keys, `errorMessage`, resource-tag arrays, structured EKS selectors and `reportOutputs[].s3`. Review all native input bounds against the source mapping. |
+| A first contract draft included sample ARN strings where schema objects were required. | Replace those properties with schemas; independently validate the shared definitions and all 88 operation request/response schemas. |
+| Some composed operations were initially labelled with nonexistent native names. | Map topology acquisition to `ListResources` and `ListServiceTopologyEdges`; map event acquisition to the native entity-event collections. Keep composed get operations visibly application-owned. |
+| A seeded event-key collision could previously append new health evidence under an already retained event identity. | Reject the collision before mutation; regression tests verify that existing health and audit evidence remain unchanged. |
+| Recommendation list defaults could mix current and historical evidence. | Document the `findingObservationId` filter for current detail recommendations; preserve all historical instances and their observation identities. |
+| Current detail DTOs do not represent every partial native summary. | Identify the required-ARN System DTO as the complete mock case. A production adapter needs a partial reference/coverage representation for limited-visibility native system summaries. |
+| HTTP errors, default role and diagram messages needed exact implementation alignment. | Document the HTTP 405 transport variant, default `demo` role, and response routing through the API. |
+
+All 44 generated examples execute on isolated runtimes, and the HTTP suite exercises every operation through the real local server. The complete package has 39 passing tests. The [validation record](validation.md) contains the commands, documentation checks and limits. The browser and RPC server remain separate mock states; no live AWS integration, background reconciliation worker or production authentication is implied.
 
 ## Corrections made before implementation
 
@@ -21,7 +58,7 @@ The reviewed source is [report.md](report.md); the rendered version is [reviewed
 | P2 | Generic snapshot terminology could conflate effective targets, observed policy content and the exact context evaluated by an assessment. | The effective-target observation has a named identity. A policy-context capture is a separate local evidence bundle. No observed hash or local revision is presented as an AWS evaluated policy revision. |
 | P2 | Shared-service aggregation was stated at a high level but lacked an implementable denominator and deduplication rule. | System and journey service sets use distinct service ARNs. Finding counts use `(serviceArn, findingId)`. A system includes associated services without journeys. Overlapping attention reasons are combined by service-set union. |
 | P2 | “Category” could ambiguously mean a finding failure category or a recommendation group. | API mapping retains the actual `Finding.failureCategory` field. Recommendation category identifies its source array and has separate local enum values. |
-| P2 | The five diagrams were not all available as editable standalone sources and SVGs. | Each diagram now has a Mermaid source and SVG, with a deterministic local renderer. The report PDF is generated from the reviewed Markdown. |
+| P2 | The five diagrams were not all available as editable standalone sources and SVGs. | Each diagram now has an Obsidian Markdown note with YAML front matter, fenced Mermaid source and an SVG asset generated by the deterministic local renderer. |
 
 ## API conclusions retained after review
 
@@ -52,8 +89,8 @@ The prototype should label all data as fictional. It may simulate event arrival,
 
 - Reviewed entity identities, relation scopes and ownership against the detailed source mappings.
 - Preserved all 48 official URLs and verified that every report citation has a definition.
-- Generated all five SVGs from their Mermaid entity/relationship declarations and local presentation layouts. The renderer checks unknown entities, missing routes and field overflow.
-- Generated the PDF from the reviewed Markdown so the prose and published document share one source.
+- Generated all five SVGs from the Mermaid blocks in the Markdown diagram notes and their local presentation layouts. The renderer checks unknown entities, missing routes and field overflow.
+- Converted prose and diagram sources to Markdown notes with YAML properties. The prior PDF export and its PDF-only build dependencies have been removed from the current package.
 - Checked that native `failureCategory`, policy component names, observation identity and `computedAt` terminology remain consistent across the package.
 
 These checks establish internal consistency of the documentation package. They are not live AWS integration tests. Exact association-array replacement, detachment, clearing, authorization, pagination and concurrent-edit behavior must be verified with the chosen SDK and controlled account responses before production editing is enabled.

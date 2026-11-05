@@ -1,8 +1,34 @@
+---
+id: "aws-resilience-hub-data-model"
+title: "AWS Resilience Hub — Data model for an operator UI"
+type: "analysis"
+service: "aws-resilience-hub"
+status: "reviewed"
+created: "2026-11-05"
+updated: "2026-11-05"
+tags:
+  - "aws"
+  - "resilience-hub"
+  - "data-model"
+  - "api-design"
+aliases:
+  - "AWS Resilience Hub data model"
+  - "Resilience Hub operator model"
+related:
+  - "review.md"
+  - "api/index.md"
+  - "diagrams/01-business-structure.md"
+  - "diagrams/02-policy-context.md"
+  - "diagrams/03-assessments-findings.md"
+  - "diagrams/04-dependencies-topology.md"
+  - "diagrams/05-events-observations.md"
+---
+
 # AWS Resilience Hub — Data model for an operator UI
 
 Official API analysis and logical entity relationship model — Reviewed 5 November 2026
 
-**Review status:** reviewed against the detailed v2 operation contracts and corrected before the UI prototype. This revision repairs observation identity, makes service and snapshot foreign-key scopes explicit, separates summary collection from detail hydration, and defines aggregate evidence rules. See [review.md](review.md) for the decision log. The five diagrams are supplied as editable Mermaid and portable SVG; [reviewed-report.pdf](reviewed-report.pdf) is the rendered report.
+**Review status:** reviewed against the detailed v2 operation contracts and corrected before the UI prototype. This revision repairs observation identity, makes service and snapshot foreign-key scopes explicit, separates summary collection from detail hydration, and defines aggregate evidence rules. See [review.md](review.md) for the decision log. The five diagrams are maintained as Obsidian Markdown notes with fenced Mermaid source and portable SVG assets. The [API operation reference](api/index.md) applies this model to the proposed operator API.
 
 
 > **Recommended design:** use the next-generation Resilience Hub API as the source for architecture, assessment, findings and dependency information. Add a temporal application layer for history and event processing, and use monitoring evidence for live operational health.
@@ -53,7 +79,7 @@ Preserve separate states for an omitted property, an explicit null, an empty col
 
 ![Systems, services and user journeys](diagrams/01-business-structure.svg)
 
-[Editable Mermaid source](diagrams/01-business-structure.mmd) · [SVG](diagrams/01-business-structure.svg)
+[Editable diagram note](diagrams/01-business-structure.md) · [SVG](diagrams/01-business-structure.svg)
 
 **Figure 1.** Normalized relationships derived from Service.associatedSystems. Endpoint labels show cardinalities. Join records are local relational representations of API arrays; they are not standalone AWS resources. [S05] [S06]
 
@@ -107,7 +133,7 @@ Any assessment-to-context association is a **local temporal correlation**. Neith
 
 ![Policies and effective target observations](diagrams/02-policy-context.svg)
 
-[Editable Mermaid source](diagrams/02-policy-context.mmd) · [SVG](diagrams/02-policy-context.svg)
+[Editable diagram note](diagrams/02-policy-context.md) · [SVG](diagrams/02-policy-context.svg)
 
 **Figure 2.** Native policy assignment is separate from locally retained EffectiveTargetObservation records. Each consumer has at most one direct policy; inherited applicability follows journey membership. Effective target policy names are retained without an unverified foreign key. [S08] [S11] [S12] [S13]
 
@@ -148,7 +174,7 @@ Finding disposition and evidence of remediation are different facts. AWS explain
 
 ![Assessments, finding captures and recommendations](diagrams/03-assessments-findings.svg)
 
-[Editable Mermaid source](diagrams/03-assessments-findings.mmd) · [SVG](diagrams/03-assessments-findings.svg)
+[Editable diagram note](diagrams/03-assessments-findings.md) · [SVG](diagrams/03-assessments-findings.svg)
 
 **Figure 3.** A finding capture is a local collection interval. Its optional association with an assessment records when and why the collection occurred; it does not assert that AWS supplied an immutable finding set for that assessment.
 
@@ -210,7 +236,7 @@ The UI should display discovery readiness, observed dependency inventory and evi
 
 ![Dependencies and captured topology](diagrams/04-dependencies-topology.svg)
 
-[Editable Mermaid source](diagrams/04-dependencies-topology.mmd) · [SVG](diagrams/04-dependencies-topology.svg)
+[Editable diagram note](diagrams/04-dependencies-topology.md) · [SVG](diagrams/04-dependencies-topology.svg)
 
 **Figure 4.** Discovery and dependency records are AWS-backed. TopologySnapshot, TopologyNode and TopologyEdge are locally captured representations. There is no required relationship from a DNS dependency to a topology node or another managed service.
 
@@ -275,7 +301,7 @@ Keep these channels distinct in storage. The same logical change can appear in m
 
 ![Events, observations and current projections](diagrams/05-events-observations.svg)
 
-[Editable Mermaid source](diagrams/05-events-observations.mmd) · [SVG](diagrams/05-events-observations.svg)
+[Editable diagram note](diagrams/05-events-observations.md) · [SVG](diagrams/05-events-observations.svg)
 
 **Figure 5.** Proposed local model for history, evidence and current UI state. EventEntity provides a many-to-many connection between events and typed subjects. Posture and health remain independently sourced.
 
@@ -457,7 +483,7 @@ This is a documentation-based design analysis, not a validation of a particular 
 
 ### Diagram maintenance
 
-The `.mmd` files are the editable semantic sources. `diagrams/diagram-layouts.json` supplies SVG presentation coordinates and labels. Run `python scripts/render_diagrams.py` after changing a diagram, then `python scripts/build_report.py` to rebuild the PDF from this Markdown source. No remote diagram renderer or CDN is used.
+The five diagram `.md` notes are the editable semantic sources. Each has YAML front matter and one fenced `mermaid` block that Obsidian can render directly. `diagrams/diagram-layouts.json` supplies SVG presentation coordinates and labels. Run `python3 scripts/render_diagrams.py` after changing a diagram to regenerate the SVG assets; the renderer reads the Mermaid block from the note and needs only the Python standard library. All prose documentation is maintained as Markdown with YAML properties. No remote diagram renderer or CDN is used.
 
 [S01]: https://docs.aws.amazon.com/resilience-hub/latest/userguide/next-gen-api-data-types.html "User guide conceptual data types"
 [S02]: https://docs.aws.amazon.com/aws-sdk-php/v3/api/api-resiliencehubv2-2026-02-17.html "Official SDK operation and shape inventory for resiliencehubv2"

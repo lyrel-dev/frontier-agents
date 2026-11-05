@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Render the five editable Mermaid ER models with deterministic SVG layouts.
+"""Render the five Obsidian Markdown ER notes with deterministic SVG layouts.
 
-The .mmd files hold entity fields and relationships. diagram-layouts.json only
-holds presentation coordinates, labels, and explanatory notes. This renderer
-supports the small erDiagram subset used here; it does not require Mermaid,
-a browser, a CDN, or network access. Run from any working directory.
+Each note has YAML front matter and one fenced Mermaid block containing its
+entity fields and relationships. diagram-layouts.json only holds presentation
+coordinates, labels, and explanatory notes. This renderer supports the small
+erDiagram subset used here; it needs only Python's standard library, with no
+Mermaid package, browser, CDN, or network access. Run from any working directory.
 """
 from pathlib import Path
 import html
@@ -17,10 +18,22 @@ INK, MUTED, BORDER = "#16304a", "#53677c", "#cbd8e3"
 AWS, LOCAL = "#183750", "#087f83"
 
 
+def mermaid_source(path):
+    """Extract the single maintained Mermaid block from an Obsidian note."""
+    text = path.read_text(encoding="utf-8")
+    if not re.match(r"\A---\r?\n.*?\r?\n---(?:\r?\n|\Z)", text, re.DOTALL):
+        raise ValueError(f"{path}: Markdown note must have YAML front matter")
+    blocks = re.findall(r"^```mermaid[ \t]*\r?\n(.*?)^```[ \t]*$", text,
+                        re.MULTILINE | re.DOTALL)
+    if len(blocks) != 1:
+        raise ValueError(f"{path}: expected exactly one fenced Mermaid block")
+    return blocks[0]
+
+
 def parse_mermaid(path):
     entities, relations = {}, []
     current = None
-    for raw in path.read_text().splitlines():
+    for raw in mermaid_source(path).splitlines():
         line = raw.strip()
         if not line or line.startswith("%%") or line in ("erDiagram", "direction TB"):
             continue
@@ -52,7 +65,7 @@ def esc(value):
 
 
 def render(name, spec):
-    entities, relations = parse_mermaid(DIR / f"{name}.mmd")
+    entities, relations = parse_mermaid(DIR / f"{name}.md")
     width, height = spec["size"]
     output = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width} {height}" role="img" aria-labelledby="title desc">',
               f'<title id="title">{esc(spec["title"])}</title>',
