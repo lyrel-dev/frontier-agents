@@ -1,0 +1,34 @@
+erDiagram
+    direction TB
+    SOURCE_OBJECT ||--|{ SOURCE_REVISION : observed_as
+    SOURCE_REVISION ||--o{ PROJECTION_SOURCE : supports
+    DERIVED_REVISION ||--|{ PROJECTION_SOURCE : cites
+    DERIVATION ||--o{ DERIVED_REVISION : produces
+    SOURCE_OBJECT {
+        string source_key PK
+        string source_channel
+        string native_id
+    }
+    SOURCE_REVISION {
+        string revision_id PK
+        string payload_hash
+        datetime observed_at
+    }
+    PROJECTION_SOURCE {
+        string source_ref_id PK
+        string projection_revision_id FK
+        string revision_id FK
+        string locator
+    }
+    DERIVED_REVISION {
+        string projection_revision_id PK
+        string item_id
+        string payload_hash
+        string item_kind
+        string assertion_origin
+    }
+    DERIVATION {
+        string derivation_id PK
+        string parser_version
+        string rule_or_model_version
+    }

@@ -1,0 +1,31 @@
+erDiagram
+    direction TB
+    SPACE ||--o{ ASSOCIATION : contains
+    SPACE ||--o{ TASK : contains
+    TASK ||--o| EXTERNAL_REFERENCE : embeds
+    ASSOCIATION o|--o{ EXTERNAL_REFERENCE : resolves
+    REGISTERED_SERVICE o|--o{ ASSOCIATION : optionally_resolves
+    SPACE {
+        string scope_key PK
+        string agent_space_id PK
+    }
+    ASSOCIATION {
+        string association_id PK
+        string service_id
+        string configuration_kind
+    }
+    TASK {
+        string task_id PK
+        string task_type
+    }
+    EXTERNAL_REFERENCE {
+        string system
+        string reference_id
+        string association_id
+        string resolved_association_key FK
+        string reference_url
+    }
+    REGISTERED_SERVICE {
+        string service_id PK
+        string service_type
+    }

@@ -1,0 +1,8 @@
+flowchart TB
+    L["Live view"] -->|Terminal observation| R["Reconcile sources"]
+    R --> Q{"Sources retrieved?"}
+    Q -->|Yes| S["Retain historical snapshot"]
+    Q -->|No| P["Show partial results and gaps"]
+    P -->|Retry| R
+    P -->|Accept partial capture| S
+    S -->|New activity in current view| L

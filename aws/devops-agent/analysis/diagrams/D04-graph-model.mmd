@@ -1,0 +1,31 @@
+erDiagram
+    direction TB
+    GRAPH_SNAPSHOT ||--o{ GRAPH_NODE : contains
+    GRAPH_SNAPSHOT ||--o{ GRAPH_EDGE : contains
+    GRAPH_NODE ||--o{ GRAPH_EDGE : source
+    GRAPH_NODE ||--o{ GRAPH_EDGE : target
+    RESOURCE_REF o|--o{ GRAPH_NODE : represented_by
+    GRAPH_SNAPSHOT {
+        string graph_id PK
+        string graph_kind
+        string projection_version
+    }
+    GRAPH_NODE {
+        string graph_id PK,FK
+        string node_id PK
+        string node_kind
+        string resource_ref_id FK
+    }
+    GRAPH_EDGE {
+        string graph_id PK,FK
+        string edge_id PK
+        string source_node_id FK
+        string target_node_id FK
+        string relation_kind
+        string assertion_origin
+    }
+    RESOURCE_REF {
+        string resource_ref_id PK
+        string namespace
+        string external_id
+    }

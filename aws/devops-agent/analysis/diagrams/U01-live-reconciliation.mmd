@@ -1,0 +1,24 @@
+sequenceDiagram
+    participant UI as Operator UI
+    participant B as UI backend
+    participant AWS as AWS API
+    participant S as Source store
+    UI->>B: Open investigation
+    B->>AWS: GetBacklogTask
+    AWS-->>B: Task and version
+    B->>S: Retain task observation
+    B->>AWS: ListExecutions across all pages
+    AWS-->>B: Executions and memberships
+    loop Each discovered execution and page
+        B->>AWS: ListJournalRecords
+        AWS-->>B: Records and token
+        B->>S: Upsert source revisions
+    end
+    B->>S: Build projections and coverage
+    B-->>UI: View with freshness and gaps
+    loop Poll or lifecycle notification
+        B->>AWS: Reconcile affected sources
+        AWS-->>B: Current observations
+        B->>S: Retain and reproject
+        B-->>UI: Revisioned view update
+    end

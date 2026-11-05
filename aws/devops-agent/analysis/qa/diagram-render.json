@@ -1,0 +1,96 @@
+{
+  "renderer": "pele",
+  "version": "1.6.0",
+  "diagrams": [
+    {
+      "id": "D01",
+      "source": "diagrams/D01-workspace-associations.mmd",
+      "rendered": "diagrams/D01-workspace-associations.svg",
+      "type": "er",
+      "width": 571,
+      "height": 641,
+      "sourceSha256": "0ed648e5f95db5a488cddcd352ac691a88eab6f5612947e3560d22520303bfdb",
+      "svgSha256": "b6afb30848044ede87497a85b691cf249bf4c7c8120f2a9fc250bc17e5828e15"
+    },
+    {
+      "id": "D02",
+      "source": "diagrams/D02-investigation-core.mmd",
+      "rendered": "diagrams/D02-investigation-core.svg",
+      "type": "er",
+      "width": 710,
+      "height": 728,
+      "sourceSha256": "72bedb3f7e9cd22b185a002a4c7ae6e8896f7766a7b2f34ba56077ad7ae86410",
+      "svgSha256": "2adf792f4adaa1693a34b64670000759d59e9caa6d6dbf623f9e9c1deca6242f"
+    },
+    {
+      "id": "D03",
+      "source": "diagrams/D03-projection-provenance.mmd",
+      "rendered": "diagrams/D03-projection-provenance.svg",
+      "type": "er",
+      "width": 533,
+      "height": 699,
+      "sourceSha256": "383ea0741a3bcbcfe2247a06f9f1a2fe9dbd1d5b887a7a1537413d1b4ab737d5",
+      "svgSha256": "cc75d1792c8ee2bc2c95c35421c5957a499838a476cc1bfd294165c9476a625c"
+    },
+    {
+      "id": "D04",
+      "source": "diagrams/D04-graph-model.mmd",
+      "rendered": "diagrams/D04-graph-model.svg",
+      "type": "er",
+      "width": 513,
+      "height": 728,
+      "sourceSha256": "67d49cfd0962303d601b386db796b5df47323f2670639a1362ffcaa30f45f494",
+      "svgSha256": "06e896c96a27af183a06dfcb7639cfd51365a0253c884ed53218d274e151304a"
+    },
+    {
+      "id": "D05",
+      "source": "diagrams/D05-artifacts-assets.mmd",
+      "rendered": "diagrams/D05-artifacts-assets.svg",
+      "type": "er",
+      "width": 626,
+      "height": 670,
+      "sourceSha256": "5983f0280c34360d24ca1c4347aaa1eacf9ef62f966bfc91f7fd8d4efcba5cb3",
+      "svgSha256": "31513f688d1fe500a1935028a81549c101d2c90441f5de69841b05d980e6cc91"
+    },
+    {
+      "id": "D06",
+      "source": "diagrams/D06-historical-snapshots.mmd",
+      "rendered": "diagrams/D06-historical-snapshots.svg",
+      "type": "er",
+      "width": 613,
+      "height": 612,
+      "sourceSha256": "554260024f000fcca1d3ef40910b6f92db5fdd84f795a935be7d78678aebf329",
+      "svgSha256": "503124aad6de91cb5c7256aaa0f5e7f5e0e8aab74bc2ae7b2ffdac1ff37a3274"
+    },
+    {
+      "id": "U01",
+      "source": "diagrams/U01-live-reconciliation.mmd",
+      "rendered": "diagrams/U01-live-reconciliation.svg",
+      "type": "sequence",
+      "width": 733,
+      "height": 796,
+      "sourceSha256": "f9a0a599707ac9c4d83ab81051fc10262172ba9565fe696dd67fa1017f2d82fd",
+      "svgSha256": "e762d58b058725bce42ec43fb040977c68fd374c66e9f2c5eac5f75e379cf556"
+    },
+    {
+      "id": "U02",
+      "source": "diagrams/U02-approval-lifecycle.mmd",
+      "rendered": "diagrams/U02-approval-lifecycle.svg",
+      "type": "er",
+      "width": 547,
+      "height": 828,
+      "sourceSha256": "8135f2a15ed6d153cf1620f7ee14498d35cafd903b5c7c4794b66d43c5a6c2cb",
+      "svgSha256": "1de12ca4181d47f9006779de2aaf416d2ada3174fb718a7cdae757c5e60b451a"
+    },
+    {
+      "id": "U03",
+      "source": "diagrams/U03-snapshot-workflow.mmd",
+      "rendered": "diagrams/U03-snapshot-workflow.svg",
+      "type": "flowchart",
+      "width": 523,
+      "height": 624,
+      "sourceSha256": "115c05cde7face13075bb15f198aca9a2de82a0f24166f08e47037d57c3571e3",
+      "svgSha256": "2bdc37157740671594da3fe2baba0774d2e565b0cd49c950bb1944d3a78fb142"
+    }
+  ]
+}

@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-11-05",
+  "diagrams": [
+    {
+      "id": "D01",
+      "title": "Workspace, association and external reference",
+      "type": "erDiagram",
+      "source": "report.md",
+      "filename": "diagrams/D01-workspace-associations.mmd",
+      "rendered": "diagrams/D01-workspace-associations.svg",
+      "origin_document": "Investigation_Data_Model.md"
+    },
+    {
+      "id": "D02",
+      "title": "Native core with an explicit membership table",
+      "type": "erDiagram",
+      "source": "report.md",
+      "filename": "diagrams/D02-investigation-core.mmd",
+      "rendered": "diagrams/D02-investigation-core.svg",
+      "origin_document": "Investigation_Data_Model.md"
+    },
+    {
+      "id": "D03",
+      "title": "Every projection retains provenance",
+      "type": "erDiagram",
+      "source": "report.md",
+      "filename": "diagrams/D03-projection-provenance.mmd",
+      "rendered": "diagrams/D03-projection-provenance.svg",
+      "origin_document": "Investigation_Data_Model.md"
+    },
+    {
+      "id": "D04",
+      "title": "Graph snapshot and typed edges",
+      "type": "erDiagram",
+      "source": "report.md",
+      "filename": "diagrams/D04-graph-model.mmd",
+      "rendered": "diagrams/D04-graph-model.svg",
+      "origin_document": "Investigation_Data_Model.md"
+    },
+    {
+      "id": "D05",
+      "title": "Investigation references and native asset history",
+      "type": "erDiagram",
+      "source": "report.md",
+      "filename": "diagrams/D05-artifacts-assets.mmd",
+      "rendered": "diagrams/D05-artifacts-assets.svg",
+      "origin_document": "Investigation_Data_Model.md"
+    },
+    {
+      "id": "D06",
+      "title": "Immutable application snapshots",
+      "type": "erDiagram",
+      "source": "report.md",
+      "filename": "diagrams/D06-historical-snapshots.mmd",
+      "rendered": "diagrams/D06-historical-snapshots.svg",
+      "origin_document": "Investigation_Data_Model.md"
+    },
+    {
+      "id": "U01",
+      "title": "Reconcile snapshots and journals",
+      "type": "sequenceDiagram",
+      "source": "report.md",
+      "filename": "diagrams/U01-live-reconciliation.mmd",
+      "rendered": "diagrams/U01-live-reconciliation.svg",
+      "origin_document": "Investigation_UI_Contract.md"
+    },
+    {
+      "id": "U02",
+      "title": "Decision, resume and observed outcome",
+      "type": "erDiagram",
+      "source": "report.md",
+      "filename": "diagrams/U02-approval-lifecycle.mmd",
+      "rendered": "diagrams/U02-approval-lifecycle.svg",
+      "origin_document": "Investigation_UI_Contract.md"
+    },
+    {
+      "id": "U03",
+      "title": "Application snapshot workflow",
+      "type": "flowchart TB",
+      "source": "report.md",
+      "filename": "diagrams/U03-snapshot-workflow.mmd",
+      "rendered": "diagrams/U03-snapshot-workflow.svg",
+      "origin_document": "Investigation_UI_Contract.md"
+    }
+  ]
+}

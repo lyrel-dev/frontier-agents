@@ -1,0 +1,38 @@
+erDiagram
+    direction TB
+    TASK ||--o{ TASK_EXECUTION : enumerates
+    EXECUTION ||--o{ TASK_EXECUTION : observed_in
+    EXECUTION o|--o{ EXECUTION : parent_of
+    EXECUTION ||--o{ JOURNAL_RECORD : publishes
+    JOURNAL_RECORD ||--|{ RECORD_REVISION : observed_as
+    TASK {
+        string task_id PK
+        string task_type
+        string execution_id
+        string status
+        int version
+    }
+    TASK_EXECUTION {
+        string task_id PK,FK
+        string execution_id PK,FK
+        datetime observed_at
+    }
+    EXECUTION {
+        string execution_id PK
+        string parent_execution_id FK
+        string execution_status
+        string agent_type
+        string agent_subtask
+    }
+    JOURNAL_RECORD {
+        string execution_id PK,FK
+        string record_id PK
+        string record_type
+        datetime created_at
+    }
+    RECORD_REVISION {
+        string revision_id PK
+        string record_key FK
+        string payload_hash
+        datetime observed_at
+    }

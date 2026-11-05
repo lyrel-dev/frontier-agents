@@ -1,0 +1,11 @@
+{
+  "name": "frontier-devops-agent-analysis-tools",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "diagrams": "node render-diagrams.mjs"
+  },
+  "devDependencies": {
+    "pele": "1.6.0"
+  }
+}

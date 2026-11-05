@@ -1,0 +1,30 @@
+erDiagram
+    direction TB
+    INVESTIGATION ||--o{ SNAPSHOT : captured_as
+    SNAPSHOT ||--|{ SNAPSHOT_SOURCE : freezes
+    SOURCE_REVISION ||--o{ SNAPSHOT_SOURCE : included_in
+    SNAPSHOT ||--o{ SNAPSHOT_PROJECTION : includes
+    INVESTIGATION {
+        string investigation_key PK
+    }
+    SNAPSHOT {
+        string snapshot_id PK
+        datetime capture_started_at
+        datetime capture_finished_at
+        string completion_basis
+        string coverage_state
+    }
+    SNAPSHOT_SOURCE {
+        string snapshot_id PK,FK
+        string revision_id PK,FK
+    }
+    SOURCE_REVISION {
+        string revision_id PK
+        string source_key
+        string payload_hash
+    }
+    SNAPSHOT_PROJECTION {
+        string snapshot_id PK,FK
+        string projection_revision_id PK,FK
+        string payload_hash
+    }

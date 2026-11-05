@@ -1,0 +1,32 @@
+erDiagram
+    direction TB
+    EXECUTION ||--o{ APPROVAL_REQUEST : pauses_for
+    APPROVAL_REQUEST ||--o{ DECISION_ATTEMPT : resolved_by
+    DECISION_ATTEMPT ||--o{ RESUME_ATTEMPT : followed_by
+    EXECUTION ||--o{ ACTION_OBSERVATION : publishes
+    APPROVAL_REQUEST o|--o{ ACTION_OBSERVATION : may_correlate
+    EXECUTION {
+        string execution_key PK
+    }
+    APPROVAL_REQUEST {
+        string approval_key PK
+        string approval_id
+        string interrupt_id
+        string tool_use_id
+    }
+    DECISION_ATTEMPT {
+        string attempt_id PK
+        string action
+        string finalized_pattern_hash
+        string submission_state
+    }
+    RESUME_ATTEMPT {
+        string attempt_id PK
+        string decision_attempt_id FK
+        string submission_state
+    }
+    ACTION_OBSERVATION {
+        string observation_id PK
+        string outcome_kind
+        string source_revision_id
+    }

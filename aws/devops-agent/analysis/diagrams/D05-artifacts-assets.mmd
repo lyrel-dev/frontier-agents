@@ -1,0 +1,32 @@
+erDiagram
+    direction TB
+    INVESTIGATION ||--o{ ARTIFACT_REF : references
+    ASSET_VERSION o|--o{ ARTIFACT_REF : may_resolve
+    ASSET ||--|{ ASSET_VERSION : observed_versions
+    ASSET_VERSION ||--o{ ASSET_FILE : contains
+    INVESTIGATION {
+        string investigation_key PK
+    }
+    ARTIFACT_REF {
+        string artifact_ref_id PK
+        string source_kind
+        string source_locator
+        string resolution_state
+        string asset_version_key FK
+    }
+    ASSET {
+        string space_key PK
+        string asset_id PK
+        string asset_type
+    }
+    ASSET_VERSION {
+        string asset_version_key PK
+        int version
+        string metadata_hash
+    }
+    ASSET_FILE {
+        string asset_version_key PK,FK
+        string path PK
+        string content_kind
+        string content_hash
+    }
