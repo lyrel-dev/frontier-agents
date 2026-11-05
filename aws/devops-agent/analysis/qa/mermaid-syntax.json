@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "mermaidVersion": "11.12.2",
+  "jsdomVersion": "26.1.0",
+  "scope": "Mermaid syntax parsing with strict sanitization; no browser layout or installed Obsidian test",
+  "negativeControl": {
+    "case": "incomplete ER relationship",
+    "result": "rejected"
+  },
+  "diagrams": [
+    {
+      "id": "D01",
+      "source": "diagrams/D01-workspace-associations.mmd",
+      "sha256": "0ed648e5f95db5a488cddcd352ac691a88eab6f5612947e3560d22520303bfdb",
+      "diagramType": "er",
+      "syntax": "passed"
+    },
+    {
+      "id": "D02",
+      "source": "diagrams/D02-investigation-core.mmd",
+      "sha256": "035941f20928ddea424f8924fdc2da1f44081821dad07b13d2f87edbd1ae8dec",
+      "diagramType": "er",
+      "syntax": "passed"
+    },
+    {
+      "id": "D03",
+      "source": "diagrams/D03-projection-provenance.mmd",
+      "sha256": "f747504b99a49165009f9c958c34bb800e90de498960d0b3fd70a6d6e3d44112",
+      "diagramType": "er",
+      "syntax": "passed"
+    },
+    {
+      "id": "D04",
+      "source": "diagrams/D04-graph-model.mmd",
+      "sha256": "67d49cfd0962303d601b386db796b5df47323f2670639a1362ffcaa30f45f494",
+      "diagramType": "er",
+      "syntax": "passed"
+    },
+    {
+      "id": "D05",
+      "source": "diagrams/D05-artifacts-assets.mmd",
+      "sha256": "5983f0280c34360d24ca1c4347aaa1eacf9ef62f966bfc91f7fd8d4efcba5cb3",
+      "diagramType": "er",
+      "syntax": "passed"
+    },
+    {
+      "id": "D06",
+      "source": "diagrams/D06-historical-snapshots.mmd",
+      "sha256": "554260024f000fcca1d3ef40910b6f92db5fdd84f795a935be7d78678aebf329",
+      "diagramType": "er",
+      "syntax": "passed"
+    },
+    {
+      "id": "D07",
+      "source": "diagrams/D07-collection-observations.mmd",
+      "sha256": "ab5e83e026984a779e4761bf5aa99de6acaa653b51c1b5e831afae4b80bbe4e5",
+      "diagramType": "er",
+      "syntax": "passed"
+    },
+    {
+      "id": "U01",
+      "source": "diagrams/U01-live-reconciliation.mmd",
+      "sha256": "f9a0a599707ac9c4d83ab81051fc10262172ba9565fe696dd67fa1017f2d82fd",
+      "diagramType": "sequence",
+      "syntax": "passed"
+    },
+    {
+      "id": "U02",
+      "source": "diagrams/U02-approval-lifecycle.mmd",
+      "sha256": "8135f2a15ed6d153cf1620f7ee14498d35cafd903b5c7c4794b66d43c5a6c2cb",
+      "diagramType": "er",
+      "syntax": "passed"
+    },
+    {
+      "id": "U03",
+      "source": "diagrams/U03-snapshot-workflow.mmd",
+      "sha256": "04fbdaea5f6ffd0ce320e49484156185d097c5d779c832d39c96ade1a143e2dd",
+      "diagramType": "flowchart-v2",
+      "syntax": "passed"
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+erDiagram
+    direction TB
+    COLLECTION_PASS ||--o{ READ_ATTEMPT : issues
+    READ_ATTEMPT ||--o{ SOURCE_OBSERVATION : returns
+    SOURCE_REVISION ||--o{ SOURCE_OBSERVATION : seen_as
+    COLLECTION_PASS ||--o{ COVERAGE_CLAIM : evaluates
+    COLLECTION_PASS {
+        string collection_pass_id PK
+        string investigation_key FK
+        datetime started_at
+        datetime finished_at
+    }
+    READ_ATTEMPT {
+        string read_attempt_id PK
+        string collection_pass_id FK
+        string operation
+        string query_fingerprint
+        string outcome
+    }
+    SOURCE_OBSERVATION {
+        string observation_id PK
+        string read_attempt_id FK
+        string revision_id FK
+        datetime observed_at
+    }
+    SOURCE_REVISION {
+        string revision_id PK
+        string source_key
+        string payload_hash
+    }
+    COVERAGE_CLAIM {
+        string coverage_claim_id PK
+        string collection_pass_id FK
+        string query_fingerprint
+        string state
+        datetime as_of
+    }

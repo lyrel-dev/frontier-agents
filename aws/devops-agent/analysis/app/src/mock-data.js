@@ -18,7 +18,8 @@
   ];
   const scopeFor = taskId => taskId === supplier ? scopes[1] : scopes[0];
   const scenario = {
-    id: 'northstar-checkout-2026-11-05', version: '1.0.0', primaryTaskId: primary,
+    id: 'northstar-checkout-2026-11-05', version: '1.1.0', primaryTaskId: primary,
+    primaryInvestigationKey: scopes[0].key + '|task|' + encodeURIComponent(primary),
     organization: 'Northstar Commerce', timezone: 'Europe/Zurich',
     disclaimer: 'Fictional demonstration data. All incidents, accounts, people, resources and observations are synthetic. No AWS connection.',
     stages: [
@@ -31,9 +32,9 @@
     ]
   };
   const taskMetadata = [
-    { taskId: primary, scopeKey: scopes[0].key, code: 'INC-4721', service: 'Checkout API', owner: 'Maya Chen · Commerce SRE', region: 'eu-central-1', accountId: scopes[0].accountId, spaceName: scopes[0].name, description: 'Increased checkout latency after the afternoon application release. Correlate the change, logs and database observations.' },
-    { taskId: ledger, scopeKey: scopes[0].key, code: 'INC-4718', service: 'Ledger workers', owner: 'Jonas Weber · Data platform', region: 'eu-central-1', accountId: scopes[0].accountId, spaceName: scopes[0].name, description: 'A completed investigation into worker retries following an Aurora failover. Collection is complete as of the retained observation.' },
-    { taskId: supplier, scopeKey: scopes[1].key, code: 'INC-4720', service: 'Supplier gateway', owner: 'Amira Patel · Partner SRE', region: 'eu-west-1', accountId: scopes[1].accountId, spaceName: scopes[1].name, description: 'A timed-out investigation with an inaccessible external log source. The available evidence does not establish a root cause.' }
+    { taskId: primary, scopeKey: scopes[0].key, profile: 'checkout', code: 'INC-4721', service: 'Checkout API', owner: 'Maya Chen · Commerce SRE', region: 'eu-central-1', accountId: scopes[0].accountId, spaceName: scopes[0].name, description: 'Increased checkout latency after the afternoon application release. Correlate the change, logs and database observations.' },
+    { taskId: ledger, scopeKey: scopes[0].key, profile: 'ledger', code: 'INC-4718', service: 'Ledger workers', owner: 'Jonas Weber · Data platform', region: 'eu-central-1', accountId: scopes[0].accountId, spaceName: scopes[0].name, description: 'A completed investigation into worker retries following an Aurora failover. No known collection gaps remain for the observed execution journal queries.' },
+    { taskId: supplier, scopeKey: scopes[1].key, profile: 'supplier', code: 'INC-4720', service: 'Supplier gateway', owner: 'Amira Patel · Partner SRE', region: 'eu-west-1', accountId: scopes[1].accountId, spaceName: scopes[1].name, description: 'A timed-out investigation with an inaccessible external log source. The available evidence does not establish a root cause.' }
   ];
   const taskBase = {
     [primary]: { agentSpaceId: scopes[0].agentSpaceId, taskId: primary, executionId: 'run-checkout-root', title: 'Checkout latency after release v2.18.4', description: taskMetadata[0].description, taskType: 'INVESTIGATION', priority: 'CRITICAL', createdAt: iso('14:08:10'), reference: { system: 'PagerDuty', referenceId: 'INC-4721', referenceUrl: 'https://northstar.example.invalid/incidents/INC-4721', associationId: 'assoc-pagerduty-demo', title: 'Checkout p95 above 1.5 s' }, metadata: { demoProfile: 'northstar.incident.v1', environment: 'production' } },
@@ -170,7 +171,7 @@
     { id: 'finding-ledger', from: 0, taskId: ledger, title: 'Retry burst reported during writer failover', summary: 'The agent links the failover with a short worker reconnect interval. The observed retry rate returned to 0.2%.', disposition: 'Agent-reported cause', origin: 'Agent-reported assertion', sourceRefs: ['jr-ledger-summary', 'jr-ledger-failover'] },
     { id: 'finding-supplier', from: 0, taskId: supplier, title: 'Cause remains undetermined', summary: 'TLS failures are observed, but the inaccessible gateway log source prevents evaluating the server-side explanation.', disposition: 'Insufficient evidence', origin: 'Application coverage assessment', sourceRefs: ['jr-supplier-alarm', 'jr-supplier-denied'] }
   ];
-  const node = (id, from, taskId, label, subtitle, kind, origin, refs) => ({ id, from, taskId, label, subtitle, kind, origin, sourceRefs: refs });
+  const node = (id, from, taskId, label, subtitle, kind, origin, refs) => ({ id, from, taskId, scopeKey: scopeFor(taskId).key, label, subtitle, kind, origin, sourceRefs: refs });
   const graphNodes = [
     node('change-release', 0, primary, 'Release v2.18.4', 'Deployment at 14:02 UTC', 'change', 'Observed change', ['jr-checkout-deploy']),
     node('resource-checkout', 0, primary, 'Checkout API', 'Observed p95: 2,320 ms', 'resource', 'Observed telemetry', ['jr-checkout-latency']),
@@ -186,7 +187,7 @@
     node('supplier-gateway', 0, supplier, 'Supplier gateway', '38 TLS failures observed', 'resource', 'Observed telemetry', ['jr-supplier-alarm']),
     node('supplier-gap', 0, supplier, 'Gateway log source', 'Access denied · evidence gap', 'unresolved', 'Collection observation', ['jr-supplier-denied'])
   ];
-  const edge = (id, from, taskId, source, target, label, kind, origin, refs) => ({ id, from, taskId, source, target, label, kind, origin, sourceRefs: refs });
+  const edge = (id, from, taskId, source, target, label, kind, origin, refs) => ({ id, from, taskId, scopeKey: scopeFor(taskId).key, source, target, label, kind, origin, sourceRefs: refs });
   const graphEdges = [
     edge('edge-release-checkout', 0, primary, 'change-release', 'resource-checkout', 'changes configuration', 'references', 'Observed change', ['jr-checkout-deploy']),
     edge('edge-wait-checkout', 0, primary, 'observation-wait', 'resource-checkout', 'observed in', 'references', 'Observed log', ['jr-checkout-wait']),
@@ -205,6 +206,7 @@
     { id: 'artifact-traces', from: 1, taskId: primary, name: 'Detailed trace bundle', filename: 'trace-bundle.json', kind: 'Referenced object', mediaType: 'application/json', status: 'access_denied', sourceKind: 'Published journal reference', description: 'The simulated collector could not read the referenced S3 object. No file content is available.', body: null, sourceRefs: ['jr-checkout-trace-ref'] },
     { id: 'artifact-supplier-logs', from: 0, taskId: supplier, name: 'Gateway-side diagnostics', filename: 'gateway-diagnostics.json', kind: 'External evidence', mediaType: 'application/json', status: 'access_denied', sourceKind: 'Collection error', description: 'Access to the partner log source is denied. Repair access and collect new evidence before interpreting this gap.', body: null, sourceRefs: ['jr-supplier-denied'] }
   ];
+  for (const row of [...findingDefinitions, ...artifactDefinitions]) row.scopeKey = scopeFor(row.taskId).key;
   const data = { scenario, scopes, taskMetadata, taskObservations, executionLabels, executionObservations, memberships, journalRecords, lifecycleEvents, assetObservations, assetFiles, timelineDefinitions, findingDefinitions, graphNodes, graphEdges, artifactDefinitions };
   const freeze = obj => { if (obj && typeof obj === 'object' && !Object.isFrozen(obj)) { Object.values(obj).forEach(freeze); Object.freeze(obj); } return obj; };
   return freeze(data);

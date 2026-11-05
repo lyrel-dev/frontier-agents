@@ -57,6 +57,15 @@
       "origin_document": "Investigation_Data_Model.md"
     },
     {
+      "id": "D07",
+      "title": "Collection evidence and bounded coverage",
+      "type": "erDiagram",
+      "source": "report.md",
+      "filename": "diagrams/D07-collection-observations.mmd",
+      "rendered": "diagrams/D07-collection-observations.svg",
+      "origin_document": "Investigation_Data_Model.md"
+    },
+    {
       "id": "U01",
       "title": "Reconcile snapshots and journals",
       "type": "sequenceDiagram",

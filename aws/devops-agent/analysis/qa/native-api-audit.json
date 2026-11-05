@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "native-api-audit/v1",
+  "reviewDate": "2026-11-05",
+  "modelSha256": "c9650e8c0aa3546f3f45ecb829f96223156bfc07f720b580bed23a7407aaad59",
+  "catalogSha256": "91dfbf962884c4e3318da20cc7d3e7e986759033c2b061c93dc3c933ff70b7fa",
+  "operationRoutesAndTopLevelResponseFieldsChecked": 63,
+  "transportAndErrorSetsChecked": 63,
+  "requestTablesChecked": 19,
+  "selectedTypeTablesChecked": 52,
+  "expandedMemberRowsChecked": 339,
+  "checks": [
+    "names/order",
+    "requiredness",
+    "type references",
+    "enum/min/max/pattern/timestamp constraints",
+    "request locations",
+    "idempotency-token/deprecation markers",
+    "union/eventstream declarations",
+    "endpoint host prefixes",
+    "success HTTP codes",
+    "modeled error sets/statuses/member names"
+  ],
+  "negativeControlsDetected": [
+    "route",
+    "required field",
+    "document type",
+    "enum",
+    "page limit",
+    "endpoint prefix",
+    "success status",
+    "error group",
+    "union"
+  ],
+  "errors": [],
+  "scope": "Static public-model/catalog verification. No AWS account or application HTTP service was exercised."
+}

@@ -67,14 +67,19 @@ The following is synthetic **application JSON**, not an AWS response. Names and 
 ```json
 {
   "schemaVersion": "investigation-view/v1",
-  "investigationKey": "connection-a/space-a/task-a",
+  "investigationKey": "inv-example-a",
   "source": {
     "service": "devops-agent",
     "apiVersion": "2026-01-01",
+    "partition": "aws",
     "accountId": "000000000000",
     "region": "us-east-1",
     "agentSpaceId": "space-a",
     "taskId": "task-a"
+  },
+  "connectionContext": {
+    "connectionId": "connection-a",
+    "authorizationContextId": "authorization-a"
   },
   "task": {
     "rawStatus": "COMPLETED",
@@ -125,7 +130,9 @@ The following is synthetic **application JSON**, not an AWS response. Names and 
 }
 ```
 
-Application responses should expose source and collection status for each section rather than hiding partial failure behind an HTTP 200. A summary panel can be ready while an artifact panel is unauthorized. Distinguish native absent fields from locally introduced nulls.
+`inv-example-a` is an illustrative opaque application locator for the owning partition/account/Region/Agent Space/task tuple, not an AWS identifier. A different connection to that same resource does not create another investigation. Connection and authorization context constrain access, caching and exports; they do not replace resource identity. URI encoding and the public locator format remain backend contract decisions.
+
+Application responses should expose source and collection status for each section rather than hiding partial failure behind an HTTP 200. A summary panel can be ready while an artifact panel is unauthorized. Distinguish native absent fields from locally introduced nulls. This proposed response is separate from the prototype's implemented `DemoModel.view` shape; see the [model contract](../app/MODEL_CONTRACT.md) for the latter.
 
 ### Suggested application routes
 
@@ -142,6 +149,8 @@ These are optional application endpoint names, **not AWS endpoints**:
 | `GET /api/investigations/{key}/updates` | Application-owned SSE/WebSocket updates, if chosen |
 
 A local record lookup can be efficient even though AWS has no native single-journal-record Get operation. Label the source and capture age. An application stream cursor is backed by the application's own update log; it must not be presented as an AWS journal replay token.
+
+These route names are design candidates. The prototype exposes a local `DemoModel` JavaScript interface, not an HTTP implementation of this table. The proposed UI API still needs explicit request/response schemas, scope resolution, authorization, pagination ordering/cursors, errors and compatibility rules. Use an opaque or correctly encoded investigation locator rather than inserting the slash-separated illustrative key directly into a single path segment. Native AWS SDK types do not supply these application contracts.
 
 <!-- block: obsidian-devops-investigation-ui-contract-sync -->
 ## 3. Read pipeline and live synchronization
@@ -191,6 +200,10 @@ sequenceDiagram
 8. Publish an atomic application projection revision with section-specific coverage/freshness.
 
 Additional executions may be discovered later. Repeat execution enumeration while the investigation can change. A missing parent can be retained as an unresolved relation; the public API has no separate GetExecution operation to invent as a fallback. [Actions](https://docs.aws.amazon.com/devopsagent/latest/APIReference/API_Operations.html) · [ListExecutions](https://docs.aws.amazon.com/devopsagent/latest/APIReference/API_ListExecutions.html)
+
+Use the native SDK's endpoint resolution and per-operation host-prefix behavior. The reviewed model assigns operations to `cp.` or `dp.`; the separately documented MCP/A2A `connect.aidevops` endpoint is another transport. The [API catalog](Investigation_API_Catalog.md#6-transport-failures-and-the-application-boundary) records all 63 endpoint prefixes, success codes and modeled error sets. A successful read response proves that request succeeded, not that the combined view represents a service-wide atomic snapshot.
+
+For versioned artifact collection, `GetAssetContent` returns a JSON structure whose SDK-decoded ZIP bytes are at `content.zipFile`; `GetAssetFile` returns the `file.content` text-or-bytes union. Retain the returned asset version and byte hash. Neither a raw `content` object nor the whole HTTP response is the downloadable ZIP. [GetAssetContent](https://docs.aws.amazon.com/devopsagent/latest/APIReference/API_GetAssetContent.html) · [GetAssetFile](https://docs.aws.amazon.com/devopsagent/latest/APIReference/API_GetAssetFile.html)
 
 ### Pagination and safe incremental behavior
 
@@ -244,15 +257,19 @@ The meaning of the second row comes from the [EventBridge summary contract](http
 
 | Condition | Application behavior |
 | --- | --- |
+| 400/validation or invalid parameter | Preserve the native code and every `fieldList` violation when supplied; correct the request instead of retrying unchanged input. Multiple violations can refer to one field. |
+| 402/service quota exceeded | Record a quota condition separately from throttling, suspend repeated failing work, and retain unfinished coverage. Do not interpret this service error as a payment instruction. |
 | 403/access denied | Retain prior authorized view only under current access policy; show an access error, not “no data” |
 | 404/not found | Show unavailable/not found; do not assume user cancellation or deletion without evidence |
 | 409/conflict on a mutation | Refresh affected state; present the conflict instead of fabricating a successful action |
+| 413/content size exceeded | Preserve the failure and adjust the supported request or collection plan; do not silently truncate retained evidence or repeat an oversized command unchanged |
 | 429/throttling | Back off, keep freshness age visible, prioritize selected/live work |
 | 5xx/network failure | Retry eligible reads, preserve last successful observation and partial sections |
+| Response-stream failure after HTTP success | Retain the native `responseFailed` event and partial blocks; distinguish response failure from the accepted/opened HTTP stream |
 | Unknown enum/record type | Preserve and display an unknown value/raw payload; no crash or silent coercion |
 | Parse failure | Mark that renderer unsupported/failed; leave raw record and provenance accessible |
 
-These are proposed client behaviors informed by the operation error contracts; a particular error is not proof of a business-state transition.
+These are proposed client behaviors informed by the [native error contracts](Investigation_API_Catalog.md#modeled-exceptions); a particular error is not proof of a business-state transition. `ValidationException` HTTP 400 is documented in the API reference but lacks an explicit HTTP-status trait in this Botocore snapshot. Operator-app enable/disable operations also model `IdentityCenterServiceException` with an optional underlying error code. Preserve native exception names, HTTP codes and request IDs in diagnostics; an application error envelope must not imply these are interchangeable. Authentication, protocol, network and proxy failures can occur outside the modeled exception list. A2A uses its own error envelope and must be decoded by that adapter.
 
 <!-- block: obsidian-devops-investigation-ui-contract-stream -->
 ## 4. Conversation streams and A2A
@@ -384,8 +401,8 @@ These are **application presentation states**, not AWS Task transitions. A histo
 
 ```mermaid
 flowchart TB
-    L["Live view"] -->|Terminal observation| R["Reconcile sources"]
-    R --> Q{"Sources retrieved?"}
+    L["Live view"] -->|Manual capture or terminal observation| R["Reconcile sources"]
+    R --> Q{"Capture query set reconciled?"}
     Q -->|Yes| S["Retain historical snapshot"]
     Q -->|No| P["Show partial results and gaps"]
     P -->|Retry| R

@@ -3,9 +3,12 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "diagrams": "node render-diagrams.mjs"
+    "diagrams": "node render-diagrams.mjs",
+    "mermaid": "node check-mermaid.mjs"
   },
   "devDependencies": {
+    "jsdom": "26.1.0",
+    "mermaid": "11.12.2",
     "pele": "1.6.0"
   }
 }

@@ -1,6 +1,6 @@
 flowchart TB
-    L["Live view"] -->|Terminal observation| R["Reconcile sources"]
-    R --> Q{"Sources retrieved?"}
+    L["Live view"] -->|Manual capture or terminal observation| R["Reconcile sources"]
+    R --> Q{"Capture query set reconciled?"}
     Q -->|Yes| S["Retain historical snapshot"]
     Q -->|No| P["Show partial results and gaps"]
     P -->|Retry| R

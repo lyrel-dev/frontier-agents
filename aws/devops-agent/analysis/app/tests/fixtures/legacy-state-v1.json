@@ -1,0 +1,2858 @@
+{
+  "schemaVersion": 1,
+  "step": 3,
+  "snapshots": [
+    {
+      "snapshotId": "snapshot-001",
+      "taskId": "inv-checkout-1105",
+      "title": "INC-4721 · Result retrieved",
+      "capturedAt": "2026-11-05T14:21:12Z",
+      "taskStatus": "COMPLETED",
+      "coverageStatus": "complete",
+      "recordCount": 14,
+      "stage": 3,
+      "manifest": {
+        "snapshotId": "snapshot-001",
+        "investigationKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|task|inv-checkout-1105",
+        "captureStartedAt": "2026-11-05T14:21:12Z",
+        "captureFinishedAt": "2026-11-05T14:21:12Z",
+        "collectionAsOf": "2026-11-05T14:21:10Z",
+        "taskVersion": 9,
+        "taskStatus": "COMPLETED",
+        "summarySelectionBasis": "Exact completion-event execution_id + summary_record_id",
+        "summaryPointer": {
+          "executionId": "run-checkout-root",
+          "recordId": "summary-final-02"
+        },
+        "coverage": {
+          "status": "complete",
+          "label": "4 of 4 evidence scopes complete",
+          "paginationStatus": "complete",
+          "completeJournalQueries": 4,
+          "asOf": "2026-11-05T14:21:10Z",
+          "freshness": "current",
+          "executions": [
+            {
+              "executionId": "run-checkout-root",
+              "key": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|execution|run-checkout-root",
+              "label": "Incident coordinator",
+              "status": "complete",
+              "paginationStatus": "complete",
+              "pagesRead": 1,
+              "hasMore": false,
+              "recordCount": 8,
+              "observedAt": "2026-11-05T14:21:10Z",
+              "reason": "The available journal query is exhausted as of this observation.",
+              "query": {
+                "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+                "executionId": "run-checkout-root",
+                "limit": 100,
+                "order": "DESC"
+              }
+            },
+            {
+              "executionId": "run-checkout-change",
+              "key": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|execution|run-checkout-change",
+              "label": "Deployment analysis",
+              "status": "complete",
+              "paginationStatus": "complete",
+              "pagesRead": 1,
+              "hasMore": false,
+              "recordCount": 1,
+              "observedAt": "2026-11-05T14:21:10Z",
+              "reason": "The available journal query is exhausted as of this observation.",
+              "query": {
+                "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+                "executionId": "run-checkout-change",
+                "limit": 100,
+                "order": "DESC"
+              }
+            },
+            {
+              "executionId": "run-checkout-logs",
+              "key": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|execution|run-checkout-logs",
+              "label": "Application logs",
+              "status": "complete",
+              "paginationStatus": "complete",
+              "pagesRead": 2,
+              "hasMore": false,
+              "recordCount": 4,
+              "observedAt": "2026-11-05T14:21:10Z",
+              "reason": "The available journal query is exhausted as of this observation.",
+              "query": {
+                "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+                "executionId": "run-checkout-logs",
+                "limit": 100,
+                "order": "DESC"
+              }
+            },
+            {
+              "executionId": "run-checkout-db",
+              "key": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|execution|run-checkout-db",
+              "label": "Database signals",
+              "status": "complete",
+              "paginationStatus": "complete",
+              "pagesRead": 1,
+              "hasMore": false,
+              "recordCount": 1,
+              "observedAt": "2026-11-05T14:21:10Z",
+              "reason": "The available journal query is exhausted as of this observation.",
+              "query": {
+                "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+                "executionId": "run-checkout-db",
+                "limit": 100,
+                "order": "DESC"
+              }
+            }
+          ],
+          "gaps": [],
+          "note": "Coverage describes these observed journal queries and known evidence gaps. Exhausted pagination does not prevent future records. Artifact access is reported separately. The demo uses deliberately reduced page sizes."
+        },
+        "executionMemberships": [
+          {
+            "taskId": "inv-checkout-1105",
+            "executionId": "run-checkout-root",
+            "scopeKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1",
+            "from": 0,
+            "observedAt": "2026-11-05T14:08:12Z",
+            "operation": "ListExecutions",
+            "query": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "taskId": "inv-checkout-1105"
+            }
+          },
+          {
+            "taskId": "inv-checkout-1105",
+            "executionId": "run-checkout-change",
+            "scopeKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1",
+            "from": 0,
+            "observedAt": "2026-11-05T14:09:02Z",
+            "operation": "ListExecutions",
+            "query": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "taskId": "inv-checkout-1105"
+            }
+          },
+          {
+            "taskId": "inv-checkout-1105",
+            "executionId": "run-checkout-logs",
+            "scopeKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1",
+            "from": 0,
+            "observedAt": "2026-11-05T14:09:07Z",
+            "operation": "ListExecutions",
+            "query": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "taskId": "inv-checkout-1105"
+            }
+          },
+          {
+            "taskId": "inv-checkout-1105",
+            "executionId": "run-checkout-db",
+            "scopeKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1",
+            "from": 1,
+            "observedAt": "2026-11-05T14:12:41Z",
+            "operation": "ListExecutions",
+            "query": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "taskId": "inv-checkout-1105"
+            }
+          }
+        ],
+        "sources": [
+          {
+            "sourceKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|asset-file|asset-checkout-runbook|3|checkout-recovery.md",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|asset-file|asset-checkout-runbook|3|checkout-recovery.md@c9a66f25d436553bc37a",
+            "payloadHash": "sha256:c9a66f25d436553bc37ab51b470f13eae98d615491d0603b33020cc511879dcc",
+            "observedAt": "2026-11-05T14:11:09Z"
+          },
+          {
+            "sourceKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|asset|asset-checkout-runbook|3",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|asset|asset-checkout-runbook|3@8ad42b8d42df8e7341f5",
+            "payloadHash": "sha256:8ad42b8d42df8e7341f5787b5ad029d5ecaca4e25c902e5da39860ba3d700e28",
+            "observedAt": "2026-11-05T14:11:08Z"
+          },
+          {
+            "sourceKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|eventbridge|10000000-0000-4000-8000-000000000001",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|eventbridge|10000000-0000-4000-8000-000000000001@2c07a5be2a0f7c524998",
+            "payloadHash": "sha256:2c07a5be2a0f7c5249986608c5776b975cdd5d93c5063406db2d870a0fba4b05",
+            "observedAt": "2026-11-05T14:20:59Z"
+          },
+          {
+            "sourceKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|execution|run-checkout-change",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|execution|run-checkout-change@8b943d01c979e81150e4",
+            "payloadHash": "sha256:8b943d01c979e81150e414711c3505e75366ce2d29ea1d52eeb320aa03bc0653",
+            "observedAt": "2026-11-05T14:12:21Z"
+          },
+          {
+            "sourceKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|execution|run-checkout-db",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|execution|run-checkout-db@d6690c5bb385909a7420",
+            "payloadHash": "sha256:d6690c5bb385909a7420019b97a3c63cfb7baeee42ebc4c0e5d201f8d8f2fbc8",
+            "observedAt": "2026-11-05T14:17:10Z"
+          },
+          {
+            "sourceKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|execution|run-checkout-logs",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|execution|run-checkout-logs@6ab064f880f5e775c14b",
+            "payloadHash": "sha256:6ab064f880f5e775c14b0200345237387bb8582526fddf505ea18a2e85d9471f",
+            "observedAt": "2026-11-05T14:20:59Z"
+          },
+          {
+            "sourceKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|execution|run-checkout-logs",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|execution|run-checkout-logs@cd148b4c14b31cac8f20",
+            "payloadHash": "sha256:cd148b4c14b31cac8f200bd6123d787d905e2b54ec4fa181b75099ffe23d7650",
+            "observedAt": "2026-11-05T14:12:21Z"
+          },
+          {
+            "sourceKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|execution|run-checkout-root",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|execution|run-checkout-root@0a9cd44fc55dc085d166",
+            "payloadHash": "sha256:0a9cd44fc55dc085d166ee0c24245903b06c2c3d8f6778bf9aaa9fd28d7232fe",
+            "observedAt": "2026-11-05T14:12:21Z"
+          },
+          {
+            "sourceKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|execution|run-checkout-root",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|execution|run-checkout-root@f124e45ae0b7923d4a8f",
+            "payloadHash": "sha256:f124e45ae0b7923d4a8f1c44e9cf9a8babf72949cc0f54f42332adb18075edc8",
+            "observedAt": "2026-11-05T14:20:59Z"
+          },
+          {
+            "sourceKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-change|rec-001",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-change|rec-001@2bdec846f3cdf2fd5ea7",
+            "payloadHash": "sha256:2bdec846f3cdf2fd5ea75943bf49609438faa687dc5dc5785f9d086921429f7d",
+            "observedAt": "2026-11-05T14:10:14Z"
+          },
+          {
+            "sourceKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-db|rec-001",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-db|rec-001@fe57b09c96ae78112c63",
+            "payloadHash": "sha256:fe57b09c96ae78112c6355a0d1b8460bff0580ce5d8dfbeb1b4003322fe99d42",
+            "observedAt": "2026-11-05T14:17:05Z"
+          },
+          {
+            "sourceKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-logs|rec-001",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-logs|rec-001@f47a66003483f08b01a0",
+            "payloadHash": "sha256:f47a66003483f08b01a0c9312c8df0af51f22d607d28a9acf72e7003af3166f2",
+            "observedAt": "2026-11-05T14:12:24Z"
+          },
+          {
+            "sourceKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-logs|rec-002",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-logs|rec-002@f93f060935940a354734",
+            "payloadHash": "sha256:f93f060935940a35473466b9fa66f56dda39e98479c976550f20b3c09ba247f1",
+            "observedAt": "2026-11-05T14:12:25Z"
+          },
+          {
+            "sourceKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-logs|rec-003",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-logs|rec-003@4c55f09418ec571eb5d2",
+            "payloadHash": "sha256:4c55f09418ec571eb5d20271bc2c09a3430cc2f04bcf362ef835218b09707319",
+            "observedAt": "2026-11-05T14:17:06Z"
+          },
+          {
+            "sourceKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-logs|rec-future",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-logs|rec-future@ce030cc84010485b9631",
+            "payloadHash": "sha256:ce030cc84010485b963176bd79aeb1d66afcfb07e18b4529d925944cd6556c0f",
+            "observedAt": "2026-11-05T14:21:05Z"
+          },
+          {
+            "sourceKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-root|rec-001",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-root|rec-001@84fb16d88495395426bf",
+            "payloadHash": "sha256:84fb16d88495395426bf92afdb7b222c974b71bf2b66b1e16de5a9ef48dfea66",
+            "observedAt": "2026-11-05T14:08:18Z"
+          },
+          {
+            "sourceKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-root|rec-002",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-root|rec-002@37cf1a8287eb6d75997a",
+            "payloadHash": "sha256:37cf1a8287eb6d75997a52ea7408130d702192ffaf44030965c3602af450ba6b",
+            "observedAt": "2026-11-05T14:09:03Z"
+          },
+          {
+            "sourceKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-root|rec-003",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-root|rec-003@1e73172e9f8497c7e699",
+            "payloadHash": "sha256:1e73172e9f8497c7e6993df94d1a3810bd274a8dadb56bc1094a9062b69da8c7",
+            "observedAt": "2026-11-05T14:11:05Z"
+          },
+          {
+            "sourceKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-root|rec-004",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-root|rec-004@ff3b4f0797d27ade6849",
+            "payloadHash": "sha256:ff3b4f0797d27ade684995c1c2eb7f1a07490c94f6c4546b88300ffc27d47c51",
+            "observedAt": "2026-11-05T14:17:09Z"
+          },
+          {
+            "sourceKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-root|rec-005",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-root|rec-005@36d02b01cd982e5864ce",
+            "payloadHash": "sha256:36d02b01cd982e5864ce3e4184ee97f6e81871528e9b59e7fbb4fd9f31347901",
+            "observedAt": "2026-11-05T14:17:10Z"
+          },
+          {
+            "sourceKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-root|summary-draft-01",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-root|summary-draft-01@66f583b2ced776ce1a42",
+            "payloadHash": "sha256:66f583b2ced776ce1a422605c9361d50a77ed3ef3c562a9dd83f7ae6ee89c35e",
+            "observedAt": "2026-11-05T14:17:12Z"
+          },
+          {
+            "sourceKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-root|summary-final-02",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-root|summary-final-02@bb2d63ddb33306bd679e",
+            "payloadHash": "sha256:bb2d63ddb33306bd679e66aaef38a11a6ba6246bda311282d5f29824f6d90efb",
+            "observedAt": "2026-11-05T14:21:08Z"
+          },
+          {
+            "sourceKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-root|summary-note-03",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-root|summary-note-03@a24fd969ec94744bb16d",
+            "payloadHash": "sha256:a24fd969ec94744bb16d19c02e82626149c16a0ff9d35b7ea8cf9f221e46dbca",
+            "observedAt": "2026-11-05T14:21:08Z"
+          },
+          {
+            "sourceKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|task|inv-checkout-1105",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|task|inv-checkout-1105@2ae0adb4050baadf4666",
+            "payloadHash": "sha256:2ae0adb4050baadf46661b9ef908da69a6747e8f410c399da998dd565925daaf",
+            "observedAt": "2026-11-05T14:20:59Z"
+          },
+          {
+            "sourceKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|task|inv-checkout-1105",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|task|inv-checkout-1105@9d5c9322e671d2ed77b3",
+            "payloadHash": "sha256:9d5c9322e671d2ed77b32384652ba88a9f7ca6c8147349be822d188b43f87427",
+            "observedAt": "2026-11-05T14:17:18Z"
+          },
+          {
+            "sourceKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|task|inv-checkout-1105",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|task|inv-checkout-1105@fcd25520b5b8d3c75d45",
+            "payloadHash": "sha256:fcd25520b5b8d3c75d4506780c475022abcadcff79aec49d0de70e0fc6750e7b",
+            "observedAt": "2026-11-05T14:12:28Z"
+          }
+        ],
+        "projectionRevisionIds": [
+          "projection:timeline:tl-checkout-deploy:e0f16dd342bf4e0af57f",
+          "projection:timeline:tl-checkout-alarm:c5c83f211487b7e7a93a",
+          "projection:timeline:tl-checkout-start:eb0b358cf71d5c2f78f9",
+          "projection:timeline:tl-checkout-plan:dfdd18bc8d7e98844063",
+          "projection:timeline:tl-checkout-wait:11926787e4b4e53077b2",
+          "projection:timeline:tl-checkout-db:e3ae5b82eb1b68a8b24a",
+          "projection:timeline:tl-checkout-finding:138aa2103e0d9ca49ce8",
+          "projection:timeline:tl-checkout-completed:647eeb601ea201c1a593",
+          "projection:timeline:tl-checkout-retrieved:9347fa381f7daa170a73",
+          "projection:finding:finding-checkout-waits:fd8612734e45bfaf595e",
+          "projection:finding:finding-checkout-pool:04d37c3a8a8925552c61",
+          "projection:graph-node:change-release:720991e0224332031d87",
+          "projection:graph-node:resource-checkout:2f40cac4a22e353028cb",
+          "projection:graph-node:observation-wait:524dd876cfa6310f7331",
+          "projection:graph-node:observation-pool:0a1c8f8bf0377df7c6a2",
+          "projection:graph-node:resource-orders:0d76c162ac9a6425b8c1",
+          "projection:graph-node:hypothesis-contention:b20306aece697853fd5a",
+          "projection:graph-node:hypothesis-db-saturation:63e7eec62fc9c3f9ae65",
+          "projection:graph-edge:edge-release-checkout:aac4ba48ce5a423aac3b",
+          "projection:graph-edge:edge-wait-checkout:2e986890478b449093c5",
+          "projection:graph-edge:edge-release-pool:a12badc3d2cbff44a5e9",
+          "projection:graph-edge:edge-pool-contention:463983c7fe99046b6511",
+          "projection:graph-edge:edge-wait-contention:280994505c7f8fd92a18",
+          "projection:graph-edge:edge-db-saturation:c0e6d328ce430a419c97",
+          "projection:graph-edge:edge-contention-checkout:13373d9cb56c261c5ae0"
+        ],
+        "assetVersions": [
+          {
+            "assetId": "asset-checkout-runbook",
+            "version": 3,
+            "hash": "sha256:4cd8ce77653b39aae87e272e33c98e09376df69b5220e12c373f1bb7d7d3d587"
+          }
+        ],
+        "projectionVersion": "investigation-demo-projection/1.0.0",
+        "fixtureVersion": "1.0.0",
+        "note": "Application snapshot of a non-transactional collection. Known gaps are retained; completion does not imply incident recovery."
+      },
+      "view": {
+        "id": "inv-checkout-1105",
+        "key": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|task|inv-checkout-1105",
+        "task": {
+          "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+          "taskId": "inv-checkout-1105",
+          "executionId": "run-checkout-root",
+          "title": "Checkout latency after release v2.18.4",
+          "description": "Increased checkout latency after the afternoon application release. Correlate the change, logs and database observations.",
+          "taskType": "INVESTIGATION",
+          "priority": "CRITICAL",
+          "createdAt": "2026-11-05T14:08:10Z",
+          "reference": {
+            "system": "PagerDuty",
+            "referenceId": "INC-4721",
+            "referenceUrl": "https://northstar.example.invalid/incidents/INC-4721",
+            "associationId": "assoc-pagerduty-demo",
+            "title": "Checkout p95 above 1.5 s"
+          },
+          "metadata": {
+            "demoProfile": "northstar.incident.v1",
+            "environment": "production"
+          },
+          "status": "COMPLETED",
+          "version": 9,
+          "updatedAt": "2026-11-05T14:20:58Z"
+        },
+        "meta": {
+          "taskId": "inv-checkout-1105",
+          "scopeKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1",
+          "code": "INC-4721",
+          "service": "Checkout API",
+          "owner": "Maya Chen · Commerce SRE",
+          "region": "eu-central-1",
+          "accountId": "111122223333",
+          "spaceName": "Commerce production",
+          "description": "Increased checkout latency after the afternoon application release. Correlate the change, logs and database observations."
+        },
+        "scope": {
+          "key": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1",
+          "partition": "aws",
+          "accountId": "111122223333",
+          "region": "eu-central-1",
+          "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+          "name": "Commerce production"
+        },
+        "now": "2026-11-05T14:21:12Z",
+        "phase": {
+          "id": "result-retrieved",
+          "title": "Result retrieved",
+          "description": "The exact referenced summary and remaining journal page are collected. A historical checkpoint is retained.",
+          "at": "2026-11-05T14:21:12Z",
+          "number": 4,
+          "total": 6
+        },
+        "replay": {
+          "step": 3,
+          "totalSteps": 6,
+          "canAdvance": true,
+          "stageLabels": [
+            "Investigating",
+            "Evidence correlated",
+            "Completed · result pending",
+            "Result retrieved",
+            "Investigation resumed",
+            "Follow-up complete"
+          ],
+          "nextLabel": "Investigation resumed"
+        },
+        "executions": [
+          {
+            "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+            "executionId": "run-checkout-root",
+            "agentSubTask": "Investigate checkout latency and publish supported findings.",
+            "agentType": "demo.investigator",
+            "executionStatus": "STOPPED",
+            "createdAt": 1793887692,
+            "updatedAt": 1793888458,
+            "key": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|execution|run-checkout-root",
+            "label": "Incident coordinator",
+            "createdAtIso": "2026-11-05T14:08:12.000Z",
+            "updatedAtIso": "2026-11-05T14:20:58.000Z",
+            "recordCount": 8,
+            "recordIds": [
+              "rec-001",
+              "rec-002",
+              "rec-003",
+              "rec-004",
+              "rec-005",
+              "summary-draft-01",
+              "summary-final-02",
+              "summary-note-03"
+            ],
+            "sourceRefs": [
+              "exec-checkout-root-2"
+            ],
+            "membership": {
+              "taskId": "inv-checkout-1105",
+              "executionId": "run-checkout-root",
+              "scopeKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "from": 0,
+              "observedAt": "2026-11-05T14:08:12Z",
+              "operation": "ListExecutions",
+              "query": {
+                "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+                "taskId": "inv-checkout-1105"
+              }
+            },
+            "raw": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "executionId": "run-checkout-root",
+              "agentSubTask": "Investigate checkout latency and publish supported findings.",
+              "agentType": "demo.investigator",
+              "executionStatus": "STOPPED",
+              "createdAt": 1793887692,
+              "updatedAt": 1793888458
+            }
+          },
+          {
+            "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+            "executionId": "run-checkout-change",
+            "agentSubTask": "Inspect the release and configuration changes.",
+            "agentType": "demo.change-analysis",
+            "executionStatus": "STOPPED",
+            "createdAt": 1793887740,
+            "updatedAt": 1793887890,
+            "parentExecutionId": "run-checkout-root",
+            "key": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|execution|run-checkout-change",
+            "label": "Deployment analysis",
+            "createdAtIso": "2026-11-05T14:09:00.000Z",
+            "updatedAtIso": "2026-11-05T14:11:30.000Z",
+            "recordCount": 1,
+            "recordIds": [
+              "rec-001"
+            ],
+            "sourceRefs": [
+              "exec-checkout-change-1"
+            ],
+            "membership": {
+              "taskId": "inv-checkout-1105",
+              "executionId": "run-checkout-change",
+              "scopeKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "from": 0,
+              "observedAt": "2026-11-05T14:09:02Z",
+              "operation": "ListExecutions",
+              "query": {
+                "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+                "taskId": "inv-checkout-1105"
+              }
+            },
+            "raw": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "executionId": "run-checkout-change",
+              "agentSubTask": "Inspect the release and configuration changes.",
+              "agentType": "demo.change-analysis",
+              "executionStatus": "STOPPED",
+              "createdAt": 1793887740,
+              "updatedAt": 1793887890,
+              "parentExecutionId": "run-checkout-root"
+            }
+          },
+          {
+            "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+            "executionId": "run-checkout-logs",
+            "agentSubTask": "Correlate application errors and connection waits.",
+            "agentType": "demo.log-analysis",
+            "executionStatus": "STOPPED",
+            "createdAt": 1793887745,
+            "updatedAt": 1793888390,
+            "parentExecutionId": "run-checkout-root",
+            "key": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|execution|run-checkout-logs",
+            "label": "Application logs",
+            "createdAtIso": "2026-11-05T14:09:05.000Z",
+            "updatedAtIso": "2026-11-05T14:19:50.000Z",
+            "recordCount": 4,
+            "recordIds": [
+              "rec-future",
+              "rec-001",
+              "rec-002",
+              "rec-003"
+            ],
+            "sourceRefs": [
+              "exec-checkout-logs-2"
+            ],
+            "membership": {
+              "taskId": "inv-checkout-1105",
+              "executionId": "run-checkout-logs",
+              "scopeKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "from": 0,
+              "observedAt": "2026-11-05T14:09:07Z",
+              "operation": "ListExecutions",
+              "query": {
+                "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+                "taskId": "inv-checkout-1105"
+              }
+            },
+            "raw": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "executionId": "run-checkout-logs",
+              "agentSubTask": "Correlate application errors and connection waits.",
+              "agentType": "demo.log-analysis",
+              "executionStatus": "STOPPED",
+              "createdAt": 1793887745,
+              "updatedAt": 1793888390,
+              "parentExecutionId": "run-checkout-root"
+            }
+          },
+          {
+            "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+            "executionId": "run-checkout-db",
+            "agentSubTask": "Compare database saturation with connection-pool behavior.",
+            "agentType": "demo.metric-analysis",
+            "executionStatus": "STOPPED",
+            "createdAt": 1793887960,
+            "updatedAt": 1793888205,
+            "parentExecutionId": "run-checkout-root",
+            "key": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|execution|run-checkout-db",
+            "label": "Database signals",
+            "createdAtIso": "2026-11-05T14:12:40.000Z",
+            "updatedAtIso": "2026-11-05T14:16:45.000Z",
+            "recordCount": 1,
+            "recordIds": [
+              "rec-001"
+            ],
+            "sourceRefs": [
+              "exec-checkout-db-1"
+            ],
+            "membership": {
+              "taskId": "inv-checkout-1105",
+              "executionId": "run-checkout-db",
+              "scopeKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "from": 1,
+              "observedAt": "2026-11-05T14:12:41Z",
+              "operation": "ListExecutions",
+              "query": {
+                "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+                "taskId": "inv-checkout-1105"
+              }
+            },
+            "raw": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "executionId": "run-checkout-db",
+              "agentSubTask": "Compare database saturation with connection-pool behavior.",
+              "agentType": "demo.metric-analysis",
+              "executionStatus": "STOPPED",
+              "createdAt": 1793887960,
+              "updatedAt": 1793888205,
+              "parentExecutionId": "run-checkout-root"
+            }
+          }
+        ],
+        "records": [
+          {
+            "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+            "executionId": "run-checkout-root",
+            "recordId": "rec-001",
+            "recordType": "demo.alarm.v1",
+            "createdAt": 1793887695,
+            "content": {
+              "alarmName": "checkout-p95-above-1500ms",
+              "state": "ALARM",
+              "occurredAt": "2026-11-05T14:08:00Z",
+              "resource": "checkout-api",
+              "threshold": 1500,
+              "unit": "ms",
+              "statistic": "p95"
+            },
+            "key": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-root|rec-001",
+            "timestamp": "2026-11-05T14:08:15.000Z",
+            "preview": "{\"alarmName\":\"checkout-p95-above-1500ms\",\"state\":\"ALARM\",\"occurredAt\":\"2026-11-05T14:08:00Z\",\"resource\":\"checkout-api\",\"threshold\":1500,\"unit\":\"ms\",\"statistic\":\"p95\"}",
+            "sourceRefId": "jr-checkout-alarm",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-root|rec-001@84fb16d88495395426bf",
+            "observedAt": "2026-11-05T14:08:18Z",
+            "raw": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "executionId": "run-checkout-root",
+              "recordId": "rec-001",
+              "recordType": "demo.alarm.v1",
+              "createdAt": 1793887695,
+              "content": {
+                "alarmName": "checkout-p95-above-1500ms",
+                "state": "ALARM",
+                "occurredAt": "2026-11-05T14:08:00Z",
+                "resource": "checkout-api",
+                "threshold": 1500,
+                "unit": "ms",
+                "statistic": "p95"
+              }
+            }
+          },
+          {
+            "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+            "executionId": "run-checkout-root",
+            "recordId": "rec-002",
+            "recordType": "demo.plan.v1",
+            "createdAt": 1793887740,
+            "content": {
+              "steps": [
+                "Inspect recent deployments",
+                "Correlate application waits",
+                "Check database signals"
+              ],
+              "note": "Published plan in a fictional payload profile; no private reasoning is modeled."
+            },
+            "key": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-root|rec-002",
+            "timestamp": "2026-11-05T14:09:00.000Z",
+            "preview": "{\"steps\":[\"Inspect recent deployments\",\"Correlate application waits\",\"Check database signals\"],\"note\":\"Published plan in a fictional payload profile; no private reasoning is modele",
+            "sourceRefId": "jr-checkout-plan",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-root|rec-002@37cf1a8287eb6d75997a",
+            "observedAt": "2026-11-05T14:09:03Z",
+            "raw": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "executionId": "run-checkout-root",
+              "recordId": "rec-002",
+              "recordType": "demo.plan.v1",
+              "createdAt": 1793887740,
+              "content": {
+                "steps": [
+                  "Inspect recent deployments",
+                  "Correlate application waits",
+                  "Check database signals"
+                ],
+                "note": "Published plan in a fictional payload profile; no private reasoning is modeled."
+              }
+            }
+          },
+          {
+            "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+            "executionId": "run-checkout-logs",
+            "recordId": "rec-future",
+            "recordType": "demo.future_profile.v9",
+            "createdAt": 1793887755,
+            "content": [
+              "opaque-vendor-content",
+              3,
+              {
+                "futureField": true
+              }
+            ],
+            "key": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-logs|rec-future",
+            "timestamp": "2026-11-05T14:09:15.000Z",
+            "preview": "[\"opaque-vendor-content\",3,{\"futureField\":true}]",
+            "sourceRefId": "jr-checkout-unknown",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-logs|rec-future@ce030cc84010485b9631",
+            "observedAt": "2026-11-05T14:21:05Z",
+            "raw": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "executionId": "run-checkout-logs",
+              "recordId": "rec-future",
+              "recordType": "demo.future_profile.v9",
+              "createdAt": 1793887755,
+              "content": [
+                "opaque-vendor-content",
+                3,
+                {
+                  "futureField": true
+                }
+              ]
+            }
+          },
+          {
+            "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+            "executionId": "run-checkout-change",
+            "recordId": "rec-001",
+            "recordType": "demo.change.v1",
+            "createdAt": 1793887810,
+            "content": {
+              "resource": "checkout-api",
+              "deploymentId": "deploy-8e61-demo",
+              "version": "2.18.4",
+              "occurredAt": "2026-11-05T14:02:00Z",
+              "change": {
+                "setting": "DB_POOL_MAX",
+                "before": 96,
+                "after": 24
+              },
+              "repository": "northstar/checkout-demo",
+              "commit": "e42a91d-demo"
+            },
+            "key": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-change|rec-001",
+            "timestamp": "2026-11-05T14:10:10.000Z",
+            "preview": "{\"resource\":\"checkout-api\",\"deploymentId\":\"deploy-8e61-demo\",\"version\":\"2.18.4\",\"occurredAt\":\"2026-11-05T14:02:00Z\",\"change\":{\"setting\":\"DB_POOL_MAX\",\"before\":96,\"after\":24},\"repos",
+            "sourceRefId": "jr-checkout-deploy",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-change|rec-001@2bdec846f3cdf2fd5ea7",
+            "observedAt": "2026-11-05T14:10:14Z",
+            "raw": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "executionId": "run-checkout-change",
+              "recordId": "rec-001",
+              "recordType": "demo.change.v1",
+              "createdAt": 1793887810,
+              "content": {
+                "resource": "checkout-api",
+                "deploymentId": "deploy-8e61-demo",
+                "version": "2.18.4",
+                "occurredAt": "2026-11-05T14:02:00Z",
+                "change": {
+                  "setting": "DB_POOL_MAX",
+                  "before": 96,
+                  "after": 24
+                },
+                "repository": "northstar/checkout-demo",
+                "commit": "e42a91d-demo"
+              }
+            }
+          },
+          {
+            "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+            "executionId": "run-checkout-root",
+            "recordId": "rec-003",
+            "recordType": "demo.artifact_ref.v1",
+            "createdAt": 1793887860,
+            "content": {
+              "assetId": "asset-checkout-runbook",
+              "path": "checkout-recovery.md",
+              "relationship": "Referenced attachment; the application separately retrieved version 3. This does not prove a consumed version."
+            },
+            "key": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-root|rec-003",
+            "timestamp": "2026-11-05T14:11:00.000Z",
+            "preview": "{\"assetId\":\"asset-checkout-runbook\",\"path\":\"checkout-recovery.md\",\"relationship\":\"Referenced attachment; the application separately retrieved version 3. This does not prove a consu",
+            "sourceRefId": "jr-checkout-attachment",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-root|rec-003@1e73172e9f8497c7e699",
+            "observedAt": "2026-11-05T14:11:05Z",
+            "raw": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "executionId": "run-checkout-root",
+              "recordId": "rec-003",
+              "recordType": "demo.artifact_ref.v1",
+              "createdAt": 1793887860,
+              "content": {
+                "assetId": "asset-checkout-runbook",
+                "path": "checkout-recovery.md",
+                "relationship": "Referenced attachment; the application separately retrieved version 3. This does not prove a consumed version."
+              }
+            }
+          },
+          {
+            "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+            "executionId": "run-checkout-logs",
+            "recordId": "rec-001",
+            "recordType": "demo.metric.v1",
+            "createdAt": 1793887925,
+            "content": {
+              "resource": "checkout-api",
+              "metric": "request_duration",
+              "statistic": "p95",
+              "unit": "ms",
+              "query": "Demo CloudWatch request_duration, service=checkout-api, p95, 120s buckets",
+              "window": {
+                "from": "2026-11-05T13:58:00Z",
+                "to": "2026-11-05T14:12:00Z"
+              },
+              "points": [
+                {
+                  "at": "2026-11-05T13:58:00Z",
+                  "value": 182
+                },
+                {
+                  "at": "2026-11-05T14:00:00Z",
+                  "value": 190
+                },
+                {
+                  "at": "2026-11-05T14:02:00Z",
+                  "value": 206
+                },
+                {
+                  "at": "2026-11-05T14:04:00Z",
+                  "value": 740
+                },
+                {
+                  "at": "2026-11-05T14:06:00Z",
+                  "value": 1510
+                },
+                {
+                  "at": "2026-11-05T14:08:00Z",
+                  "value": 1840
+                },
+                {
+                  "at": "2026-11-05T14:10:00Z",
+                  "value": 2190
+                },
+                {
+                  "at": "2026-11-05T14:12:00Z",
+                  "value": 2320
+                }
+              ]
+            },
+            "key": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-logs|rec-001",
+            "timestamp": "2026-11-05T14:12:05.000Z",
+            "preview": "{\"resource\":\"checkout-api\",\"metric\":\"request_duration\",\"statistic\":\"p95\",\"unit\":\"ms\",\"query\":\"Demo CloudWatch request_duration, service=checkout-api, p95, 120s buckets\",\"window\":{\"",
+            "sourceRefId": "jr-checkout-latency",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-logs|rec-001@f47a66003483f08b01a0",
+            "observedAt": "2026-11-05T14:12:24Z",
+            "raw": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "executionId": "run-checkout-logs",
+              "recordId": "rec-001",
+              "recordType": "demo.metric.v1",
+              "createdAt": 1793887925,
+              "content": {
+                "resource": "checkout-api",
+                "metric": "request_duration",
+                "statistic": "p95",
+                "unit": "ms",
+                "query": "Demo CloudWatch request_duration, service=checkout-api, p95, 120s buckets",
+                "window": {
+                  "from": "2026-11-05T13:58:00Z",
+                  "to": "2026-11-05T14:12:00Z"
+                },
+                "points": [
+                  {
+                    "at": "2026-11-05T13:58:00Z",
+                    "value": 182
+                  },
+                  {
+                    "at": "2026-11-05T14:00:00Z",
+                    "value": 190
+                  },
+                  {
+                    "at": "2026-11-05T14:02:00Z",
+                    "value": 206
+                  },
+                  {
+                    "at": "2026-11-05T14:04:00Z",
+                    "value": 740
+                  },
+                  {
+                    "at": "2026-11-05T14:06:00Z",
+                    "value": 1510
+                  },
+                  {
+                    "at": "2026-11-05T14:08:00Z",
+                    "value": 1840
+                  },
+                  {
+                    "at": "2026-11-05T14:10:00Z",
+                    "value": 2190
+                  },
+                  {
+                    "at": "2026-11-05T14:12:00Z",
+                    "value": 2320
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+            "executionId": "run-checkout-logs",
+            "recordId": "rec-002",
+            "recordType": "demo.log.v1",
+            "createdAt": 1793887930,
+            "content": {
+              "occurredAt": "2026-11-05T14:11:48Z",
+              "resource": "checkout-api",
+              "message": "Connection acquire exceeded 1000 ms",
+              "poolMax": 24,
+              "waitMs": 1240,
+              "requestId": "req-7c98-demo",
+              "traceId": "trace-df14-demo"
+            },
+            "key": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-logs|rec-002",
+            "timestamp": "2026-11-05T14:12:10.000Z",
+            "preview": "Connection acquire exceeded 1000 ms",
+            "sourceRefId": "jr-checkout-wait",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-logs|rec-002@f93f060935940a354734",
+            "observedAt": "2026-11-05T14:12:25Z",
+            "raw": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "executionId": "run-checkout-logs",
+              "recordId": "rec-002",
+              "recordType": "demo.log.v1",
+              "createdAt": 1793887930,
+              "content": {
+                "occurredAt": "2026-11-05T14:11:48Z",
+                "resource": "checkout-api",
+                "message": "Connection acquire exceeded 1000 ms",
+                "poolMax": 24,
+                "waitMs": 1240,
+                "requestId": "req-7c98-demo",
+                "traceId": "trace-df14-demo"
+              }
+            }
+          },
+          {
+            "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+            "executionId": "run-checkout-db",
+            "recordId": "rec-001",
+            "recordType": "demo.database_observation.v1",
+            "createdAt": 1793888190,
+            "content": {
+              "occurredAt": "2026-11-05T14:16:00Z",
+              "resource": "orders-primary",
+              "cpuPercent": 31,
+              "freeableMemoryGiB": 21.6,
+              "databaseConnections": 124,
+              "maxConnections": 2000,
+              "conclusion": "No database CPU or connection-limit saturation in the observed sample."
+            },
+            "key": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-db|rec-001",
+            "timestamp": "2026-11-05T14:16:30.000Z",
+            "preview": "No database CPU or connection-limit saturation in the observed sample.",
+            "sourceRefId": "jr-checkout-db",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-db|rec-001@fe57b09c96ae78112c63",
+            "observedAt": "2026-11-05T14:17:05Z",
+            "raw": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "executionId": "run-checkout-db",
+              "recordId": "rec-001",
+              "recordType": "demo.database_observation.v1",
+              "createdAt": 1793888190,
+              "content": {
+                "occurredAt": "2026-11-05T14:16:00Z",
+                "resource": "orders-primary",
+                "cpuPercent": 31,
+                "freeableMemoryGiB": 21.6,
+                "databaseConnections": 124,
+                "maxConnections": 2000,
+                "conclusion": "No database CPU or connection-limit saturation in the observed sample."
+              }
+            }
+          },
+          {
+            "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+            "executionId": "run-checkout-logs",
+            "recordId": "rec-003",
+            "recordType": "demo.metric.v1",
+            "createdAt": 1793888200,
+            "content": {
+              "resource": "checkout-api",
+              "metric": "request_duration",
+              "statistic": "p95",
+              "unit": "ms",
+              "query": "Demo CloudWatch request_duration, service=checkout-api, p95, 120s buckets",
+              "window": {
+                "from": "2026-11-05T14:14:00Z",
+                "to": "2026-11-05T14:16:00Z"
+              },
+              "points": [
+                {
+                  "at": "2026-11-05T14:14:00Z",
+                  "value": 2280
+                },
+                {
+                  "at": "2026-11-05T14:16:00Z",
+                  "value": 2180
+                }
+              ]
+            },
+            "key": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-logs|rec-003",
+            "timestamp": "2026-11-05T14:16:40.000Z",
+            "preview": "{\"resource\":\"checkout-api\",\"metric\":\"request_duration\",\"statistic\":\"p95\",\"unit\":\"ms\",\"query\":\"Demo CloudWatch request_duration, service=checkout-api, p95, 120s buckets\",\"window\":{\"",
+            "sourceRefId": "jr-checkout-latency-2",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-logs|rec-003@4c55f09418ec571eb5d2",
+            "observedAt": "2026-11-05T14:17:06Z",
+            "raw": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "executionId": "run-checkout-logs",
+              "recordId": "rec-003",
+              "recordType": "demo.metric.v1",
+              "createdAt": 1793888200,
+              "content": {
+                "resource": "checkout-api",
+                "metric": "request_duration",
+                "statistic": "p95",
+                "unit": "ms",
+                "query": "Demo CloudWatch request_duration, service=checkout-api, p95, 120s buckets",
+                "window": {
+                  "from": "2026-11-05T14:14:00Z",
+                  "to": "2026-11-05T14:16:00Z"
+                },
+                "points": [
+                  {
+                    "at": "2026-11-05T14:14:00Z",
+                    "value": 2280
+                  },
+                  {
+                    "at": "2026-11-05T14:16:00Z",
+                    "value": 2180
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+            "executionId": "run-checkout-root",
+            "recordId": "rec-004",
+            "recordType": "demo.finding.v1",
+            "createdAt": 1793888220,
+            "content": {
+              "title": "Reduced application pool limit is the leading explanation",
+              "assertionOrigin": "agent-reported",
+              "disposition": "supported",
+              "statement": "The smaller pool is reported to cause application connection waits. Database saturation is not supported by the observed CPU and connection sample.",
+              "evidence": [
+                {
+                  "executionId": "run-checkout-change",
+                  "recordId": "rec-001",
+                  "locator": "/content/change"
+                },
+                {
+                  "executionId": "run-checkout-logs",
+                  "recordId": "rec-002",
+                  "locator": "/content/waitMs"
+                },
+                {
+                  "executionId": "run-checkout-db",
+                  "recordId": "rec-001",
+                  "locator": "/content/cpuPercent"
+                }
+              ]
+            },
+            "key": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-root|rec-004",
+            "timestamp": "2026-11-05T14:17:00.000Z",
+            "preview": "The smaller pool is reported to cause application connection waits. Database saturation is not supported by the observed CPU and connection sample.",
+            "sourceRefId": "jr-checkout-finding",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-root|rec-004@ff3b4f0797d27ade6849",
+            "observedAt": "2026-11-05T14:17:09Z",
+            "raw": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "executionId": "run-checkout-root",
+              "recordId": "rec-004",
+              "recordType": "demo.finding.v1",
+              "createdAt": 1793888220,
+              "content": {
+                "title": "Reduced application pool limit is the leading explanation",
+                "assertionOrigin": "agent-reported",
+                "disposition": "supported",
+                "statement": "The smaller pool is reported to cause application connection waits. Database saturation is not supported by the observed CPU and connection sample.",
+                "evidence": [
+                  {
+                    "executionId": "run-checkout-change",
+                    "recordId": "rec-001",
+                    "locator": "/content/change"
+                  },
+                  {
+                    "executionId": "run-checkout-logs",
+                    "recordId": "rec-002",
+                    "locator": "/content/waitMs"
+                  },
+                  {
+                    "executionId": "run-checkout-db",
+                    "recordId": "rec-001",
+                    "locator": "/content/cpuPercent"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+            "executionId": "run-checkout-root",
+            "recordId": "rec-005",
+            "recordType": "demo.artifact_ref.v1",
+            "createdAt": 1793888222,
+            "content": {
+              "uri": "s3://northstar-demo-observability/checkout/2026-11-05/trace-bundle.json",
+              "mediaType": "application/json",
+              "title": "Detailed trace bundle"
+            },
+            "key": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-root|rec-005",
+            "timestamp": "2026-11-05T14:17:02.000Z",
+            "preview": "Detailed trace bundle",
+            "sourceRefId": "jr-checkout-trace-ref",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-root|rec-005@36d02b01cd982e5864ce",
+            "observedAt": "2026-11-05T14:17:10Z",
+            "raw": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "executionId": "run-checkout-root",
+              "recordId": "rec-005",
+              "recordType": "demo.artifact_ref.v1",
+              "createdAt": 1793888222,
+              "content": {
+                "uri": "s3://northstar-demo-observability/checkout/2026-11-05/trace-bundle.json",
+                "mediaType": "application/json",
+                "title": "Detailed trace bundle"
+              }
+            }
+          },
+          {
+            "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+            "executionId": "run-checkout-root",
+            "recordId": "summary-draft-01",
+            "recordType": "investigation_summary_md",
+            "createdAt": 1793888225,
+            "content": "# Preliminary investigation summary\n\nConnection pool contention is the leading explanation. This is an observed candidate summary; no completion pointer selects it.",
+            "key": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-root|summary-draft-01",
+            "timestamp": "2026-11-05T14:17:05.000Z",
+            "preview": "Preliminary investigation summary Connection pool contention is the leading explanation. This is an observed candidate summary; no completion pointer selects it.",
+            "sourceRefId": "jr-checkout-draft",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-root|summary-draft-01@66f583b2ced776ce1a42",
+            "observedAt": "2026-11-05T14:17:12Z",
+            "raw": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "executionId": "run-checkout-root",
+              "recordId": "summary-draft-01",
+              "recordType": "investigation_summary_md",
+              "createdAt": 1793888225,
+              "content": "# Preliminary investigation summary\n\nConnection pool contention is the leading explanation. This is an observed candidate summary; no completion pointer selects it."
+            }
+          },
+          {
+            "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+            "executionId": "run-checkout-root",
+            "recordId": "summary-final-02",
+            "recordType": "investigation_summary_md",
+            "createdAt": 1793888455,
+            "content": "# Checkout latency investigation\n\n## Published finding\nThe agent reports that release v2.18.4 reduced the checkout service connection-pool cap from 96 to 24. Requests waited for a database connection while database CPU and freeable memory stayed within the observed baseline.\n\n## Supporting observations\n- Checkout p95 increased from approximately 190 ms to 2,320 ms after the 14:02 UTC deployment.\n- Application logs show a 1,240 ms connection-acquisition wait.\n- The deployment configuration diff supplies the changed pool limit.\n- Database CPU was 31%; this observation does not support CPU saturation as the explanation.\n\n## Recommended next step\nHave the operator evaluate restoring the previous pool limit through the deployment workflow, then collect a fresh recovery window.\n\nThis result records an agent-reported cause. It does not itself establish that remediation ran or that the incident recovered.",
+            "key": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-root|summary-final-02",
+            "timestamp": "2026-11-05T14:20:55.000Z",
+            "preview": "Checkout latency investigation Published finding The agent reports that release v2.18.4 reduced the checkout service connection-pool cap from 96 to 24. Requests waited for a databa",
+            "sourceRefId": "jr-checkout-final",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-root|summary-final-02@bb2d63ddb33306bd679e",
+            "observedAt": "2026-11-05T14:21:08Z",
+            "raw": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "executionId": "run-checkout-root",
+              "recordId": "summary-final-02",
+              "recordType": "investigation_summary_md",
+              "createdAt": 1793888455,
+              "content": "# Checkout latency investigation\n\n## Published finding\nThe agent reports that release v2.18.4 reduced the checkout service connection-pool cap from 96 to 24. Requests waited for a database connection while database CPU and freeable memory stayed within the observed baseline.\n\n## Supporting observations\n- Checkout p95 increased from approximately 190 ms to 2,320 ms after the 14:02 UTC deployment.\n- Application logs show a 1,240 ms connection-acquisition wait.\n- The deployment configuration diff supplies the changed pool limit.\n- Database CPU was 31%; this observation does not support CPU saturation as the explanation.\n\n## Recommended next step\nHave the operator evaluate restoring the previous pool limit through the deployment workflow, then collect a fresh recovery window.\n\nThis result records an agent-reported cause. It does not itself establish that remediation ran or that the incident recovered."
+            }
+          },
+          {
+            "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+            "executionId": "run-checkout-root",
+            "recordId": "summary-note-03",
+            "recordType": "investigation_summary_md",
+            "createdAt": 1793888457,
+            "content": "# Supplemental summary note\n\nThis later record is a candidate of the same type. The completion event selects summary-final-02, so timestamp order does not make this the authoritative result.",
+            "key": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-root|summary-note-03",
+            "timestamp": "2026-11-05T14:20:57.000Z",
+            "preview": "Supplemental summary note This later record is a candidate of the same type. The completion event selects summary-final-02, so timestamp order does not make this the authoritative ",
+            "sourceRefId": "jr-checkout-newer-candidate",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-root|summary-note-03@a24fd969ec94744bb16d",
+            "observedAt": "2026-11-05T14:21:08Z",
+            "raw": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "executionId": "run-checkout-root",
+              "recordId": "summary-note-03",
+              "recordType": "investigation_summary_md",
+              "createdAt": 1793888457,
+              "content": "# Supplemental summary note\n\nThis later record is a candidate of the same type. The completion event selects summary-final-02, so timestamp order does not make this the authoritative result."
+            }
+          }
+        ],
+        "timeline": [
+          {
+            "id": "tl-checkout-deploy",
+            "title": "Release v2.18.4 deployed",
+            "body": "The captured configuration diff changes DB_POOL_MAX from 96 to 24.",
+            "category": "evidence",
+            "phase": "Investigation",
+            "occurredAt": "2026-11-05T14:02:00Z",
+            "occurredAtBasis": "Published payload timestamp",
+            "recordedAt": "2026-11-05T14:10:10.000Z",
+            "observedAt": "2026-11-05T14:10:14Z",
+            "origin": "Observed change",
+            "sourceRefs": [
+              "jr-checkout-deploy"
+            ],
+            "executionId": "run-checkout-change",
+            "projectionRevisionId": "projection:timeline:tl-checkout-deploy:e0f16dd342bf4e0af57f",
+            "derivationId": "investigation-demo-projection/1.0.0",
+            "payloadHash": "sha256:e3953e3f6898d8575d0d00ada28fb8a1b234798f90404c8df6586df64c80e6b7"
+          },
+          {
+            "id": "tl-checkout-alarm",
+            "title": "Checkout latency alarm opened",
+            "body": "The p95 threshold of 1,500 ms was breached.",
+            "category": "evidence",
+            "phase": "Investigation",
+            "occurredAt": "2026-11-05T14:08:00Z",
+            "occurredAtBasis": "Published payload timestamp",
+            "recordedAt": "2026-11-05T14:08:15.000Z",
+            "observedAt": "2026-11-05T14:08:18Z",
+            "origin": "Observed telemetry",
+            "sourceRefs": [
+              "jr-checkout-alarm"
+            ],
+            "executionId": "run-checkout-root",
+            "projectionRevisionId": "projection:timeline:tl-checkout-alarm:c5c83f211487b7e7a93a",
+            "derivationId": "investigation-demo-projection/1.0.0",
+            "payloadHash": "sha256:480f81699e5b88187acee2149a2db4f9e5abbc8313887375a25bac0e6b1e4e10"
+          },
+          {
+            "id": "tl-checkout-start",
+            "title": "Investigation created",
+            "body": "The work item starts gathering deployment, log and database evidence.",
+            "category": "lifecycle",
+            "phase": "Investigation",
+            "occurredAt": "2026-11-05T14:08:10Z",
+            "occurredAtBasis": "Native task/event timestamp",
+            "recordedAt": "2026-11-05T14:12:10Z",
+            "observedAt": "2026-11-05T14:12:28Z",
+            "origin": "Native task field",
+            "sourceRefs": [
+              "task-checkout-v4"
+            ],
+            "executionId": null,
+            "projectionRevisionId": "projection:timeline:tl-checkout-start:eb0b358cf71d5c2f78f9",
+            "derivationId": "investigation-demo-projection/1.0.0",
+            "payloadHash": "sha256:07dd3151c55b4c3530d422e6098141e436de781393bd51062b3508e181882251"
+          },
+          {
+            "id": "tl-checkout-plan",
+            "title": "Investigation plan published",
+            "body": "Inspect the release, correlate connection waits, then check database signals.",
+            "category": "agent",
+            "phase": "Investigation",
+            "occurredAt": "2026-11-05T14:09:00Z",
+            "occurredAtBasis": "Published payload timestamp",
+            "recordedAt": "2026-11-05T14:09:00.000Z",
+            "observedAt": "2026-11-05T14:09:03Z",
+            "origin": "Agent-published content",
+            "sourceRefs": [
+              "jr-checkout-plan"
+            ],
+            "executionId": "run-checkout-root",
+            "projectionRevisionId": "projection:timeline:tl-checkout-plan:dfdd18bc8d7e98844063",
+            "derivationId": "investigation-demo-projection/1.0.0",
+            "payloadHash": "sha256:f30afb64484d46232c547c67c24b623b6da839b54e9cd339468e7f23a8acbbc5"
+          },
+          {
+            "id": "tl-checkout-wait",
+            "title": "Connection acquisition waited 1.24 s",
+            "body": "An application log reports a pool maximum of 24.",
+            "category": "evidence",
+            "phase": "Investigation",
+            "occurredAt": "2026-11-05T14:11:48Z",
+            "occurredAtBasis": "Published payload timestamp",
+            "recordedAt": "2026-11-05T14:12:10.000Z",
+            "observedAt": "2026-11-05T14:12:25Z",
+            "origin": "Observed log",
+            "sourceRefs": [
+              "jr-checkout-wait"
+            ],
+            "executionId": "run-checkout-logs",
+            "projectionRevisionId": "projection:timeline:tl-checkout-wait:11926787e4b4e53077b2",
+            "derivationId": "investigation-demo-projection/1.0.0",
+            "payloadHash": "sha256:ed5d9ee0c201495451c2337fe5277ae300085086cab75fb0945d3b1213ec263c"
+          },
+          {
+            "id": "tl-checkout-db",
+            "title": "Database saturation not supported",
+            "body": "Observed database CPU is 31%, with 124 of 2,000 connections in use.",
+            "category": "evidence",
+            "phase": "Investigation",
+            "occurredAt": "2026-11-05T14:16:00Z",
+            "occurredAtBasis": "Published payload timestamp",
+            "recordedAt": "2026-11-05T14:16:30.000Z",
+            "observedAt": "2026-11-05T14:17:05Z",
+            "origin": "Observed telemetry",
+            "sourceRefs": [
+              "jr-checkout-db"
+            ],
+            "executionId": "run-checkout-db",
+            "projectionRevisionId": "projection:timeline:tl-checkout-db:e3ae5b82eb1b68a8b24a",
+            "derivationId": "investigation-demo-projection/1.0.0",
+            "payloadHash": "sha256:3f90187617e13d43b6269393159ddfa214f2596fc1a49986f54817954de99c52"
+          },
+          {
+            "id": "tl-checkout-finding",
+            "title": "Pool contention reported as leading cause",
+            "body": "The published finding links the configuration reduction with request waits.",
+            "category": "agent",
+            "phase": "Investigation",
+            "occurredAt": "2026-11-05T14:17:00Z",
+            "occurredAtBasis": "Published payload timestamp",
+            "recordedAt": "2026-11-05T14:17:00.000Z",
+            "observedAt": "2026-11-05T14:17:09Z",
+            "origin": "Agent-reported assertion",
+            "sourceRefs": [
+              "jr-checkout-finding"
+            ],
+            "executionId": "run-checkout-root",
+            "projectionRevisionId": "projection:timeline:tl-checkout-finding:138aa2103e0d9ca49ce8",
+            "derivationId": "investigation-demo-projection/1.0.0",
+            "payloadHash": "sha256:e37b1e5ec2bbdcfc0227ba153ed395c9cc6ffed722eda335c177e3724d18b28a"
+          },
+          {
+            "id": "tl-checkout-completed",
+            "title": "Task completed; summary reference received",
+            "body": "The event selects summary-final-02. Its content is not yet in the collected records.",
+            "category": "lifecycle",
+            "phase": "Investigation",
+            "occurredAt": "2026-11-05T14:20:58Z",
+            "occurredAtBasis": "Native task/event timestamp",
+            "recordedAt": "2026-11-05T14:20:58Z",
+            "observedAt": "2026-11-05T14:20:59Z",
+            "origin": "Native lifecycle notification",
+            "sourceRefs": [
+              "event-checkout-completed"
+            ],
+            "executionId": null,
+            "projectionRevisionId": "projection:timeline:tl-checkout-completed:647eeb601ea201c1a593",
+            "derivationId": "investigation-demo-projection/1.0.0",
+            "payloadHash": "sha256:b0a4d1958c097ab4efe1103516b4b0339dd09d85735c89500c3e459410c7e920"
+          },
+          {
+            "id": "tl-checkout-retrieved",
+            "title": "Exact summary and remaining page retrieved",
+            "body": "The selected summary is now available; a newer candidate remains unselected.",
+            "category": "collection",
+            "phase": "Investigation",
+            "occurredAt": "2026-11-05T14:21:08Z",
+            "occurredAtBasis": "Application collection observation",
+            "recordedAt": "2026-11-05T14:20:55.000Z",
+            "observedAt": "2026-11-05T14:21:08Z",
+            "origin": "Application collection observation",
+            "sourceRefs": [
+              "jr-checkout-final",
+              "jr-checkout-unknown"
+            ],
+            "executionId": null,
+            "projectionRevisionId": "projection:timeline:tl-checkout-retrieved:9347fa381f7daa170a73",
+            "derivationId": "investigation-demo-projection/1.0.0",
+            "payloadHash": "sha256:a58a68302c3e2a205fe5570c06eedbb711c4fb6cf736a5e827d672ca2531736c"
+          }
+        ],
+        "findings": [
+          {
+            "id": "finding-checkout-waits",
+            "title": "Connection waits coincide with latency",
+            "summary": "A 1,240 ms acquisition wait was observed after the release. The causal explanation is still being investigated.",
+            "disposition": "Under investigation",
+            "origin": "Observed evidence",
+            "sourceRefs": [
+              "jr-checkout-wait",
+              "jr-checkout-latency"
+            ],
+            "projectionRevisionId": "projection:finding:finding-checkout-waits:fd8612734e45bfaf595e",
+            "derivationId": "investigation-demo-projection/1.0.0",
+            "payloadHash": "sha256:0eeab9826e343f3c1b6792b05b122942e9c9a88b69877a9639f4e006143d385b"
+          },
+          {
+            "id": "finding-checkout-pool",
+            "title": "Pool limit reduction is the leading explanation",
+            "summary": "The agent reports that lowering DB_POOL_MAX from 96 to 24 produced application-side contention. Database saturation is not supported by the collected sample.",
+            "disposition": "Agent-reported cause",
+            "origin": "Agent-reported assertion",
+            "sourceRefs": [
+              "jr-checkout-finding",
+              "jr-checkout-deploy",
+              "jr-checkout-wait",
+              "jr-checkout-db"
+            ],
+            "projectionRevisionId": "projection:finding:finding-checkout-pool:04d37c3a8a8925552c61",
+            "derivationId": "investigation-demo-projection/1.0.0",
+            "payloadHash": "sha256:da7155097ed00c52b4ee055bac1f90a1fa7840cfd7b1d6b4d2e9d7fd52754c9c"
+          }
+        ],
+        "graph": {
+          "id": "graph:inv-checkout-1105:fc81e5729671235f",
+          "kind": "evidence",
+          "title": "Published evidence relationships",
+          "note": "Relationships retain source attribution. An execution hierarchy is a separate graph; time order alone does not establish causality.",
+          "nodes": [
+            {
+              "id": "change-release",
+              "label": "Release v2.18.4",
+              "subtitle": "Deployment at 14:02 UTC",
+              "kind": "change",
+              "origin": "Observed change",
+              "sourceRefs": [
+                "jr-checkout-deploy"
+              ],
+              "projectionRevisionId": "projection:graph-node:change-release:720991e0224332031d87",
+              "derivationId": "investigation-demo-projection/1.0.0",
+              "payloadHash": "sha256:6747b79b34ab9de79221ed293be61aee7f6df8556cc0490dc0b3a75bb97b55bb"
+            },
+            {
+              "id": "resource-checkout",
+              "label": "Checkout API",
+              "subtitle": "Observed p95: 2,320 ms",
+              "kind": "resource",
+              "origin": "Observed telemetry",
+              "sourceRefs": [
+                "jr-checkout-latency"
+              ],
+              "projectionRevisionId": "projection:graph-node:resource-checkout:2f40cac4a22e353028cb",
+              "derivationId": "investigation-demo-projection/1.0.0",
+              "payloadHash": "sha256:bae55159d945a86350900b0f69d405290f6eefbf935046fa20cd645434bbcc81"
+            },
+            {
+              "id": "observation-wait",
+              "label": "Connection waits",
+              "subtitle": "1,240 ms acquisition wait",
+              "kind": "observation",
+              "origin": "Observed log",
+              "sourceRefs": [
+                "jr-checkout-wait"
+              ],
+              "projectionRevisionId": "projection:graph-node:observation-wait:524dd876cfa6310f7331",
+              "derivationId": "investigation-demo-projection/1.0.0",
+              "payloadHash": "sha256:e8b31e157374bfc98128c2ef422c9aa7c646a50564f0ec637fd77a7e230132ab"
+            },
+            {
+              "id": "observation-pool",
+              "label": "Pool limit: 24",
+              "subtitle": "Previous limit: 96",
+              "kind": "observation",
+              "origin": "Observed change",
+              "sourceRefs": [
+                "jr-checkout-deploy"
+              ],
+              "projectionRevisionId": "projection:graph-node:observation-pool:0a1c8f8bf0377df7c6a2",
+              "derivationId": "investigation-demo-projection/1.0.0",
+              "payloadHash": "sha256:8f79b914d48b30b6dc7ff77915fff652a85152bb2959d1a411bcc6b779839b09"
+            },
+            {
+              "id": "resource-orders",
+              "label": "Orders database",
+              "subtitle": "31% CPU · 124 connections",
+              "kind": "resource",
+              "origin": "Observed telemetry",
+              "sourceRefs": [
+                "jr-checkout-db"
+              ],
+              "projectionRevisionId": "projection:graph-node:resource-orders:0d76c162ac9a6425b8c1",
+              "derivationId": "investigation-demo-projection/1.0.0",
+              "payloadHash": "sha256:130c6123796c0fda7196f0698aad8f0f144e49f709053bac298293f8c80dfebb"
+            },
+            {
+              "id": "hypothesis-contention",
+              "label": "Application pool contention",
+              "subtitle": "Agent-reported cause",
+              "kind": "hypothesis",
+              "origin": "Agent-reported assertion",
+              "sourceRefs": [
+                "jr-checkout-finding"
+              ],
+              "projectionRevisionId": "projection:graph-node:hypothesis-contention:b20306aece697853fd5a",
+              "derivationId": "investigation-demo-projection/1.0.0",
+              "payloadHash": "sha256:d4d03ec47d6ef3d2495cb36c8f7705ab0353f6393434ad4e3767a03121f7daca"
+            },
+            {
+              "id": "hypothesis-db-saturation",
+              "label": "Database saturation",
+              "subtitle": "Not supported by this sample",
+              "kind": "hypothesis",
+              "origin": "Agent-reported assertion",
+              "sourceRefs": [
+                "jr-checkout-finding",
+                "jr-checkout-db"
+              ],
+              "projectionRevisionId": "projection:graph-node:hypothesis-db-saturation:63e7eec62fc9c3f9ae65",
+              "derivationId": "investigation-demo-projection/1.0.0",
+              "payloadHash": "sha256:be5551f297365b069c8580fcf29461f9f4b20be84f740e13a0144f6e32a32949"
+            }
+          ],
+          "edges": [
+            {
+              "id": "edge-release-checkout",
+              "source": "change-release",
+              "target": "resource-checkout",
+              "label": "changes configuration",
+              "kind": "references",
+              "origin": "Observed change",
+              "sourceRefs": [
+                "jr-checkout-deploy"
+              ],
+              "projectionRevisionId": "projection:graph-edge:edge-release-checkout:aac4ba48ce5a423aac3b",
+              "derivationId": "investigation-demo-projection/1.0.0",
+              "payloadHash": "sha256:9afa07ca255824c1b5432af691fe906ca9bf6e38cf28aca1d5e30f0d6fc84f61"
+            },
+            {
+              "id": "edge-wait-checkout",
+              "source": "observation-wait",
+              "target": "resource-checkout",
+              "label": "observed in",
+              "kind": "references",
+              "origin": "Observed log",
+              "sourceRefs": [
+                "jr-checkout-wait"
+              ],
+              "projectionRevisionId": "projection:graph-edge:edge-wait-checkout:2e986890478b449093c5",
+              "derivationId": "investigation-demo-projection/1.0.0",
+              "payloadHash": "sha256:c1f450f7bb6dbcb9e944ee6a0254b659b300902f5d37dcf8bcfd7cf2f89444bb"
+            },
+            {
+              "id": "edge-release-pool",
+              "source": "change-release",
+              "target": "observation-pool",
+              "label": "reduces limit",
+              "kind": "references",
+              "origin": "Observed change",
+              "sourceRefs": [
+                "jr-checkout-deploy"
+              ],
+              "projectionRevisionId": "projection:graph-edge:edge-release-pool:a12badc3d2cbff44a5e9",
+              "derivationId": "investigation-demo-projection/1.0.0",
+              "payloadHash": "sha256:7cc4fdd50a168b7661d95ec53c5b7dd9bf7a81793ac651741d9e5d36809b16fc"
+            },
+            {
+              "id": "edge-pool-contention",
+              "source": "observation-pool",
+              "target": "hypothesis-contention",
+              "label": "supports",
+              "kind": "supports",
+              "origin": "Agent-reported assertion",
+              "sourceRefs": [
+                "jr-checkout-finding"
+              ],
+              "projectionRevisionId": "projection:graph-edge:edge-pool-contention:463983c7fe99046b6511",
+              "derivationId": "investigation-demo-projection/1.0.0",
+              "payloadHash": "sha256:e5e4516be93ffa1c20a46728417c8a59c2120b3429ae3c653a83c8a9977d8f91"
+            },
+            {
+              "id": "edge-wait-contention",
+              "source": "observation-wait",
+              "target": "hypothesis-contention",
+              "label": "supports",
+              "kind": "supports",
+              "origin": "Agent-reported assertion",
+              "sourceRefs": [
+                "jr-checkout-finding"
+              ],
+              "projectionRevisionId": "projection:graph-edge:edge-wait-contention:280994505c7f8fd92a18",
+              "derivationId": "investigation-demo-projection/1.0.0",
+              "payloadHash": "sha256:82c144ad839d7c9ee58f177767d2736a6bf8b8f7150e58f441f74699325f428f"
+            },
+            {
+              "id": "edge-db-saturation",
+              "source": "resource-orders",
+              "target": "hypothesis-db-saturation",
+              "label": "does not support",
+              "kind": "contradicts",
+              "origin": "Agent-reported assertion",
+              "sourceRefs": [
+                "jr-checkout-finding",
+                "jr-checkout-db"
+              ],
+              "projectionRevisionId": "projection:graph-edge:edge-db-saturation:c0e6d328ce430a419c97",
+              "derivationId": "investigation-demo-projection/1.0.0",
+              "payloadHash": "sha256:60c84fbf7a240b24b0ad5bcb64d71fe52e429600b79f90703d15758494b437b4"
+            },
+            {
+              "id": "edge-contention-checkout",
+              "source": "hypothesis-contention",
+              "target": "resource-checkout",
+              "label": "reported cause of latency",
+              "kind": "asserted_cause_of",
+              "origin": "Agent-reported assertion",
+              "sourceRefs": [
+                "jr-checkout-finding"
+              ],
+              "projectionRevisionId": "projection:graph-edge:edge-contention-checkout:13373d9cb56c261c5ae0",
+              "derivationId": "investigation-demo-projection/1.0.0",
+              "payloadHash": "sha256:21d5a2f8d88a29836fa37802dee494f8ca4f80450f3b6085095722fd02a5a9ee"
+            }
+          ]
+        },
+        "metrics": [
+          {
+            "id": "checkout-p95",
+            "label": "Checkout request latency",
+            "unit": "ms",
+            "aggregation": "p95 · 120-second buckets",
+            "query": "Demo CloudWatch request_duration · service=checkout-api · p95 · 120s buckets",
+            "points": [
+              {
+                "at": "2026-11-05T13:58:00Z",
+                "value": 182
+              },
+              {
+                "at": "2026-11-05T14:00:00Z",
+                "value": 190
+              },
+              {
+                "at": "2026-11-05T14:02:00Z",
+                "value": 206
+              },
+              {
+                "at": "2026-11-05T14:04:00Z",
+                "value": 740
+              },
+              {
+                "at": "2026-11-05T14:06:00Z",
+                "value": 1510
+              },
+              {
+                "at": "2026-11-05T14:08:00Z",
+                "value": 1840
+              },
+              {
+                "at": "2026-11-05T14:10:00Z",
+                "value": 2190
+              },
+              {
+                "at": "2026-11-05T14:12:00Z",
+                "value": 2320
+              },
+              {
+                "at": "2026-11-05T14:14:00Z",
+                "value": 2280
+              },
+              {
+                "at": "2026-11-05T14:16:00Z",
+                "value": 2180
+              }
+            ],
+            "threshold": 1500,
+            "baseline": 190,
+            "sourceRefs": [
+              "jr-checkout-latency",
+              "jr-checkout-latency-2",
+              "jr-checkout-alarm"
+            ],
+            "note": "Only published sample points are plotted. Baseline is the last pre-deployment sample at 14:00 UTC. Unobserved intervals are not additional measurements."
+          }
+        ],
+        "summary": {
+          "status": "available",
+          "title": "Referenced investigation result",
+          "body": "# Checkout latency investigation\n\n## Published finding\nThe agent reports that release v2.18.4 reduced the checkout service connection-pool cap from 96 to 24. Requests waited for a database connection while database CPU and freeable memory stayed within the observed baseline.\n\n## Supporting observations\n- Checkout p95 increased from approximately 190 ms to 2,320 ms after the 14:02 UTC deployment.\n- Application logs show a 1,240 ms connection-acquisition wait.\n- The deployment configuration diff supplies the changed pool limit.\n- Database CPU was 31%; this observation does not support CPU saturation as the explanation.\n\n## Recommended next step\nHave the operator evaluate restoring the previous pool limit through the deployment workflow, then collect a fresh recovery window.\n\nThis result records an agent-reported cause. It does not itself establish that remediation ran or that the incident recovered.",
+          "recordId": "summary-final-02",
+          "executionId": "run-checkout-root",
+          "sourceRefId": "jr-checkout-final",
+          "isPriorCompletion": false,
+          "selectionBasis": "Exact completion-event execution_id + summary_record_id",
+          "reason": "The exact event-referenced record is retrieved. Other records of the same type remain candidates.",
+          "sourceRefs": [
+            "event-checkout-completed",
+            "jr-checkout-final"
+          ],
+          "candidates": [
+            {
+              "recordId": "summary-draft-01",
+              "executionId": "run-checkout-root",
+              "title": "Preliminary summary candidate",
+              "timestamp": "2026-11-05T14:17:05.000Z",
+              "selected": false,
+              "sourceRefId": "jr-checkout-draft"
+            },
+            {
+              "recordId": "summary-final-02",
+              "executionId": "run-checkout-root",
+              "title": "Referenced investigation summary",
+              "timestamp": "2026-11-05T14:20:55.000Z",
+              "selected": true,
+              "sourceRefId": "jr-checkout-final"
+            },
+            {
+              "recordId": "summary-note-03",
+              "executionId": "run-checkout-root",
+              "title": "Later unselected summary candidate",
+              "timestamp": "2026-11-05T14:20:57.000Z",
+              "selected": false,
+              "sourceRefId": "jr-checkout-newer-candidate"
+            }
+          ]
+        },
+        "artifacts": [
+          {
+            "id": "artifact-runbook",
+            "name": "Checkout recovery checklist",
+            "filename": "checkout-recovery.md",
+            "kind": "Attachment",
+            "mediaType": "text/markdown",
+            "status": "available",
+            "sourceKind": "Native asset version",
+            "description": "Retrieved version 3. The attachment reference alone does not establish which version the agent consumed.",
+            "body": "# Checkout recovery checklist\n\n1. Confirm the release and configuration diff against the approved deployment.\n2. Have the operator evaluate restoring the previous connection-pool configuration.\n3. Use the deployment pipeline and its change controls.\n4. Collect fresh request latency and connection-wait observations.\n5. Record the validation window and remaining gaps.\n\nDemo attachment, retrieved at version 3. Its reference does not prove the agent consumed this version.",
+            "assetId": "asset-checkout-runbook",
+            "version": 3,
+            "sourceRefs": [
+              "jr-checkout-attachment",
+              "asset-checkout-runbook-v3",
+              "file-checkout-runbook-v3"
+            ],
+            "hash": "sha256:4cd8ce77653b39aae87e272e33c98e09376df69b5220e12c373f1bb7d7d3d587",
+            "hashEncoding": "utf8-content-bytes"
+          },
+          {
+            "id": "artifact-traces",
+            "name": "Detailed trace bundle",
+            "filename": "trace-bundle.json",
+            "kind": "Referenced object",
+            "mediaType": "application/json",
+            "status": "access_denied",
+            "sourceKind": "Published journal reference",
+            "description": "The simulated collector could not read the referenced S3 object. No file content is available.",
+            "body": null,
+            "sourceRefs": [
+              "jr-checkout-trace-ref"
+            ],
+            "hash": null,
+            "hashEncoding": null
+          },
+          {
+            "id": "artifact-observed-metrics",
+            "name": "Observed metric samples",
+            "filename": "inv-checkout-1105-observed-metrics.csv",
+            "kind": "Derived export",
+            "mediaType": "text/csv",
+            "status": "available",
+            "sourceKind": "Application projection",
+            "description": "CSV generated only from the published mock observations shown in the chart.",
+            "body": "timestamp,p95_ms\n2026-11-05T13:58:00Z,182\n2026-11-05T14:00:00Z,190\n2026-11-05T14:02:00Z,206\n2026-11-05T14:04:00Z,740\n2026-11-05T14:06:00Z,1510\n2026-11-05T14:08:00Z,1840\n2026-11-05T14:10:00Z,2190\n2026-11-05T14:12:00Z,2320\n2026-11-05T14:14:00Z,2280\n2026-11-05T14:16:00Z,2180\n",
+            "hash": "sha256:86f22e8b1f60e27e901a84e799378ee5e2a46bd7ac4def674aa5a608a127f715",
+            "hashEncoding": "utf8-content-bytes",
+            "sourceRefs": [
+              "jr-checkout-latency",
+              "jr-checkout-latency-2",
+              "jr-checkout-alarm"
+            ]
+          },
+          {
+            "id": "artifact-summary-summary-final-02",
+            "name": "Referenced investigation summary",
+            "filename": "summary-final-02.md",
+            "kind": "Referenced summary",
+            "mediaType": "text/markdown",
+            "status": "available",
+            "sourceKind": "Journal record",
+            "description": "The exact event-referenced record is retrieved. Other records of the same type remain candidates.",
+            "body": "# Checkout latency investigation\n\n## Published finding\nThe agent reports that release v2.18.4 reduced the checkout service connection-pool cap from 96 to 24. Requests waited for a database connection while database CPU and freeable memory stayed within the observed baseline.\n\n## Supporting observations\n- Checkout p95 increased from approximately 190 ms to 2,320 ms after the 14:02 UTC deployment.\n- Application logs show a 1,240 ms connection-acquisition wait.\n- The deployment configuration diff supplies the changed pool limit.\n- Database CPU was 31%; this observation does not support CPU saturation as the explanation.\n\n## Recommended next step\nHave the operator evaluate restoring the previous pool limit through the deployment workflow, then collect a fresh recovery window.\n\nThis result records an agent-reported cause. It does not itself establish that remediation ran or that the incident recovered.",
+            "hash": "sha256:5d51b585917e1455860d344d8c0b35cb29ddf1ba6ebde41060df38b41092a618",
+            "hashEncoding": "utf8-content-bytes",
+            "sourceRefs": [
+              "event-checkout-completed",
+              "jr-checkout-final"
+            ]
+          }
+        ],
+        "coverage": {
+          "status": "complete",
+          "label": "4 of 4 evidence scopes complete",
+          "paginationStatus": "complete",
+          "completeJournalQueries": 4,
+          "asOf": "2026-11-05T14:21:10Z",
+          "freshness": "current",
+          "executions": [
+            {
+              "executionId": "run-checkout-root",
+              "key": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|execution|run-checkout-root",
+              "label": "Incident coordinator",
+              "status": "complete",
+              "paginationStatus": "complete",
+              "pagesRead": 1,
+              "hasMore": false,
+              "recordCount": 8,
+              "observedAt": "2026-11-05T14:21:10Z",
+              "reason": "The available journal query is exhausted as of this observation.",
+              "query": {
+                "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+                "executionId": "run-checkout-root",
+                "limit": 100,
+                "order": "DESC"
+              }
+            },
+            {
+              "executionId": "run-checkout-change",
+              "key": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|execution|run-checkout-change",
+              "label": "Deployment analysis",
+              "status": "complete",
+              "paginationStatus": "complete",
+              "pagesRead": 1,
+              "hasMore": false,
+              "recordCount": 1,
+              "observedAt": "2026-11-05T14:21:10Z",
+              "reason": "The available journal query is exhausted as of this observation.",
+              "query": {
+                "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+                "executionId": "run-checkout-change",
+                "limit": 100,
+                "order": "DESC"
+              }
+            },
+            {
+              "executionId": "run-checkout-logs",
+              "key": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|execution|run-checkout-logs",
+              "label": "Application logs",
+              "status": "complete",
+              "paginationStatus": "complete",
+              "pagesRead": 2,
+              "hasMore": false,
+              "recordCount": 4,
+              "observedAt": "2026-11-05T14:21:10Z",
+              "reason": "The available journal query is exhausted as of this observation.",
+              "query": {
+                "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+                "executionId": "run-checkout-logs",
+                "limit": 100,
+                "order": "DESC"
+              }
+            },
+            {
+              "executionId": "run-checkout-db",
+              "key": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|execution|run-checkout-db",
+              "label": "Database signals",
+              "status": "complete",
+              "paginationStatus": "complete",
+              "pagesRead": 1,
+              "hasMore": false,
+              "recordCount": 1,
+              "observedAt": "2026-11-05T14:21:10Z",
+              "reason": "The available journal query is exhausted as of this observation.",
+              "query": {
+                "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+                "executionId": "run-checkout-db",
+                "limit": 100,
+                "order": "DESC"
+              }
+            }
+          ],
+          "gaps": [],
+          "note": "Coverage describes these observed journal queries and known evidence gaps. Exhausted pagination does not prevent future records. Artifact access is reported separately. The demo uses deliberately reduced page sizes."
+        },
+        "sources": {
+          "task-checkout-v4": {
+            "id": "task-checkout-v4",
+            "kind": "Native Task",
+            "title": "Task version 4",
+            "nativeId": "inv-checkout-1105",
+            "sourceKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|task|inv-checkout-1105",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|task|inv-checkout-1105@fcd25520b5b8d3c75d45",
+            "observedAt": "2026-11-05T14:12:28Z",
+            "locator": "",
+            "payloadHash": "sha256:fcd25520b5b8d3c75d4506780c475022abcadcff79aec49d0de70e0fc6750e7b",
+            "payload": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "taskId": "inv-checkout-1105",
+              "executionId": "run-checkout-root",
+              "title": "Checkout latency after release v2.18.4",
+              "description": "Increased checkout latency after the afternoon application release. Correlate the change, logs and database observations.",
+              "taskType": "INVESTIGATION",
+              "priority": "CRITICAL",
+              "createdAt": "2026-11-05T14:08:10Z",
+              "reference": {
+                "system": "PagerDuty",
+                "referenceId": "INC-4721",
+                "referenceUrl": "https://northstar.example.invalid/incidents/INC-4721",
+                "associationId": "assoc-pagerduty-demo",
+                "title": "Checkout p95 above 1.5 s"
+              },
+              "metadata": {
+                "demoProfile": "northstar.incident.v1",
+                "environment": "production"
+              },
+              "status": "IN_PROGRESS",
+              "version": 4,
+              "updatedAt": "2026-11-05T14:12:10Z"
+            },
+            "hashEncoding": "canonical-json-utf8",
+            "scopeKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1",
+            "operation": "GetBacklogTask",
+            "query": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "taskId": "inv-checkout-1105"
+            },
+            "synthetic": true,
+            "timestampEncoding": "REST-JSON wire timestamps for executions/journals/assets; ISO 8601 for backlog/event timestamps"
+          },
+          "task-checkout-v7": {
+            "id": "task-checkout-v7",
+            "kind": "Native Task",
+            "title": "Task version 7",
+            "nativeId": "inv-checkout-1105",
+            "sourceKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|task|inv-checkout-1105",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|task|inv-checkout-1105@9d5c9322e671d2ed77b3",
+            "observedAt": "2026-11-05T14:17:18Z",
+            "locator": "",
+            "payloadHash": "sha256:9d5c9322e671d2ed77b32384652ba88a9f7ca6c8147349be822d188b43f87427",
+            "payload": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "taskId": "inv-checkout-1105",
+              "executionId": "run-checkout-root",
+              "title": "Checkout latency after release v2.18.4",
+              "description": "Increased checkout latency after the afternoon application release. Correlate the change, logs and database observations.",
+              "taskType": "INVESTIGATION",
+              "priority": "CRITICAL",
+              "createdAt": "2026-11-05T14:08:10Z",
+              "reference": {
+                "system": "PagerDuty",
+                "referenceId": "INC-4721",
+                "referenceUrl": "https://northstar.example.invalid/incidents/INC-4721",
+                "associationId": "assoc-pagerduty-demo",
+                "title": "Checkout p95 above 1.5 s"
+              },
+              "metadata": {
+                "demoProfile": "northstar.incident.v1",
+                "environment": "production"
+              },
+              "status": "IN_PROGRESS",
+              "version": 7,
+              "updatedAt": "2026-11-05T14:17:00Z"
+            },
+            "hashEncoding": "canonical-json-utf8",
+            "scopeKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1",
+            "operation": "GetBacklogTask",
+            "query": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "taskId": "inv-checkout-1105"
+            },
+            "synthetic": true,
+            "timestampEncoding": "REST-JSON wire timestamps for executions/journals/assets; ISO 8601 for backlog/event timestamps"
+          },
+          "task-checkout-v9": {
+            "id": "task-checkout-v9",
+            "kind": "Native Task",
+            "title": "Task version 9",
+            "nativeId": "inv-checkout-1105",
+            "sourceKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|task|inv-checkout-1105",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|task|inv-checkout-1105@2ae0adb4050baadf4666",
+            "observedAt": "2026-11-05T14:20:59Z",
+            "locator": "",
+            "payloadHash": "sha256:2ae0adb4050baadf46661b9ef908da69a6747e8f410c399da998dd565925daaf",
+            "payload": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "taskId": "inv-checkout-1105",
+              "executionId": "run-checkout-root",
+              "title": "Checkout latency after release v2.18.4",
+              "description": "Increased checkout latency after the afternoon application release. Correlate the change, logs and database observations.",
+              "taskType": "INVESTIGATION",
+              "priority": "CRITICAL",
+              "createdAt": "2026-11-05T14:08:10Z",
+              "reference": {
+                "system": "PagerDuty",
+                "referenceId": "INC-4721",
+                "referenceUrl": "https://northstar.example.invalid/incidents/INC-4721",
+                "associationId": "assoc-pagerduty-demo",
+                "title": "Checkout p95 above 1.5 s"
+              },
+              "metadata": {
+                "demoProfile": "northstar.incident.v1",
+                "environment": "production"
+              },
+              "status": "COMPLETED",
+              "version": 9,
+              "updatedAt": "2026-11-05T14:20:58Z"
+            },
+            "hashEncoding": "canonical-json-utf8",
+            "scopeKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1",
+            "operation": "GetBacklogTask",
+            "query": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "taskId": "inv-checkout-1105"
+            },
+            "synthetic": true,
+            "timestampEncoding": "REST-JSON wire timestamps for executions/journals/assets; ISO 8601 for backlog/event timestamps"
+          },
+          "exec-checkout-root-1": {
+            "id": "exec-checkout-root-1",
+            "kind": "Native Execution",
+            "title": "Incident coordinator",
+            "nativeId": "run-checkout-root",
+            "sourceKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|execution|run-checkout-root",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|execution|run-checkout-root@0a9cd44fc55dc085d166",
+            "observedAt": "2026-11-05T14:12:21Z",
+            "locator": "",
+            "payloadHash": "sha256:0a9cd44fc55dc085d166ee0c24245903b06c2c3d8f6778bf9aaa9fd28d7232fe",
+            "payload": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "executionId": "run-checkout-root",
+              "agentSubTask": "Investigate checkout latency and publish supported findings.",
+              "agentType": "demo.investigator",
+              "executionStatus": "RUNNING",
+              "createdAt": 1793887692,
+              "updatedAt": 1793887940
+            },
+            "hashEncoding": "canonical-json-utf8",
+            "scopeKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1",
+            "operation": "ListExecutions",
+            "query": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "taskId": "inv-checkout-1105"
+            },
+            "synthetic": true,
+            "timestampEncoding": "REST-JSON wire timestamps for executions/journals/assets; ISO 8601 for backlog/event timestamps"
+          },
+          "exec-checkout-change-1": {
+            "id": "exec-checkout-change-1",
+            "kind": "Native Execution",
+            "title": "Deployment analysis",
+            "nativeId": "run-checkout-change",
+            "sourceKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|execution|run-checkout-change",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|execution|run-checkout-change@8b943d01c979e81150e4",
+            "observedAt": "2026-11-05T14:12:21Z",
+            "locator": "",
+            "payloadHash": "sha256:8b943d01c979e81150e414711c3505e75366ce2d29ea1d52eeb320aa03bc0653",
+            "payload": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "executionId": "run-checkout-change",
+              "agentSubTask": "Inspect the release and configuration changes.",
+              "agentType": "demo.change-analysis",
+              "executionStatus": "STOPPED",
+              "createdAt": 1793887740,
+              "updatedAt": 1793887890,
+              "parentExecutionId": "run-checkout-root"
+            },
+            "hashEncoding": "canonical-json-utf8",
+            "scopeKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1",
+            "operation": "ListExecutions",
+            "query": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "taskId": "inv-checkout-1105"
+            },
+            "synthetic": true,
+            "timestampEncoding": "REST-JSON wire timestamps for executions/journals/assets; ISO 8601 for backlog/event timestamps"
+          },
+          "exec-checkout-logs-1": {
+            "id": "exec-checkout-logs-1",
+            "kind": "Native Execution",
+            "title": "Application logs",
+            "nativeId": "run-checkout-logs",
+            "sourceKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|execution|run-checkout-logs",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|execution|run-checkout-logs@cd148b4c14b31cac8f20",
+            "observedAt": "2026-11-05T14:12:21Z",
+            "locator": "",
+            "payloadHash": "sha256:cd148b4c14b31cac8f200bd6123d787d905e2b54ec4fa181b75099ffe23d7650",
+            "payload": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "executionId": "run-checkout-logs",
+              "agentSubTask": "Correlate application errors and connection waits.",
+              "agentType": "demo.log-analysis",
+              "executionStatus": "RUNNING",
+              "createdAt": 1793887745,
+              "updatedAt": 1793887935,
+              "parentExecutionId": "run-checkout-root"
+            },
+            "hashEncoding": "canonical-json-utf8",
+            "scopeKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1",
+            "operation": "ListExecutions",
+            "query": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "taskId": "inv-checkout-1105"
+            },
+            "synthetic": true,
+            "timestampEncoding": "REST-JSON wire timestamps for executions/journals/assets; ISO 8601 for backlog/event timestamps"
+          },
+          "exec-checkout-db-1": {
+            "id": "exec-checkout-db-1",
+            "kind": "Native Execution",
+            "title": "Database signals",
+            "nativeId": "run-checkout-db",
+            "sourceKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|execution|run-checkout-db",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|execution|run-checkout-db@d6690c5bb385909a7420",
+            "observedAt": "2026-11-05T14:17:10Z",
+            "locator": "",
+            "payloadHash": "sha256:d6690c5bb385909a7420019b97a3c63cfb7baeee42ebc4c0e5d201f8d8f2fbc8",
+            "payload": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "executionId": "run-checkout-db",
+              "agentSubTask": "Compare database saturation with connection-pool behavior.",
+              "agentType": "demo.metric-analysis",
+              "executionStatus": "STOPPED",
+              "createdAt": 1793887960,
+              "updatedAt": 1793888205,
+              "parentExecutionId": "run-checkout-root"
+            },
+            "hashEncoding": "canonical-json-utf8",
+            "scopeKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1",
+            "operation": "ListExecutions",
+            "query": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "taskId": "inv-checkout-1105"
+            },
+            "synthetic": true,
+            "timestampEncoding": "REST-JSON wire timestamps for executions/journals/assets; ISO 8601 for backlog/event timestamps"
+          },
+          "exec-checkout-root-2": {
+            "id": "exec-checkout-root-2",
+            "kind": "Native Execution",
+            "title": "Incident coordinator",
+            "nativeId": "run-checkout-root",
+            "sourceKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|execution|run-checkout-root",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|execution|run-checkout-root@f124e45ae0b7923d4a8f",
+            "observedAt": "2026-11-05T14:20:59Z",
+            "locator": "",
+            "payloadHash": "sha256:f124e45ae0b7923d4a8f1c44e9cf9a8babf72949cc0f54f42332adb18075edc8",
+            "payload": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "executionId": "run-checkout-root",
+              "agentSubTask": "Investigate checkout latency and publish supported findings.",
+              "agentType": "demo.investigator",
+              "executionStatus": "STOPPED",
+              "createdAt": 1793887692,
+              "updatedAt": 1793888458
+            },
+            "hashEncoding": "canonical-json-utf8",
+            "scopeKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1",
+            "operation": "ListExecutions",
+            "query": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "taskId": "inv-checkout-1105"
+            },
+            "synthetic": true,
+            "timestampEncoding": "REST-JSON wire timestamps for executions/journals/assets; ISO 8601 for backlog/event timestamps"
+          },
+          "exec-checkout-logs-2": {
+            "id": "exec-checkout-logs-2",
+            "kind": "Native Execution",
+            "title": "Application logs",
+            "nativeId": "run-checkout-logs",
+            "sourceKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|execution|run-checkout-logs",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|execution|run-checkout-logs@6ab064f880f5e775c14b",
+            "observedAt": "2026-11-05T14:20:59Z",
+            "locator": "",
+            "payloadHash": "sha256:6ab064f880f5e775c14b0200345237387bb8582526fddf505ea18a2e85d9471f",
+            "payload": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "executionId": "run-checkout-logs",
+              "agentSubTask": "Correlate application errors and connection waits.",
+              "agentType": "demo.log-analysis",
+              "executionStatus": "STOPPED",
+              "createdAt": 1793887745,
+              "updatedAt": 1793888390,
+              "parentExecutionId": "run-checkout-root"
+            },
+            "hashEncoding": "canonical-json-utf8",
+            "scopeKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1",
+            "operation": "ListExecutions",
+            "query": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "taskId": "inv-checkout-1105"
+            },
+            "synthetic": true,
+            "timestampEncoding": "REST-JSON wire timestamps for executions/journals/assets; ISO 8601 for backlog/event timestamps"
+          },
+          "jr-checkout-alarm": {
+            "id": "jr-checkout-alarm",
+            "kind": "Native JournalRecord envelope",
+            "title": "Checkout latency alarm",
+            "nativeId": "rec-001",
+            "sourceKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-root|rec-001",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-root|rec-001@84fb16d88495395426bf",
+            "observedAt": "2026-11-05T14:08:18Z",
+            "locator": "/content",
+            "payloadHash": "sha256:84fb16d88495395426bf92afdb7b222c974b71bf2b66b1e16de5a9ef48dfea66",
+            "payload": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "executionId": "run-checkout-root",
+              "recordId": "rec-001",
+              "recordType": "demo.alarm.v1",
+              "createdAt": 1793887695,
+              "content": {
+                "alarmName": "checkout-p95-above-1500ms",
+                "state": "ALARM",
+                "occurredAt": "2026-11-05T14:08:00Z",
+                "resource": "checkout-api",
+                "threshold": 1500,
+                "unit": "ms",
+                "statistic": "p95"
+              }
+            },
+            "hashEncoding": "canonical-json-utf8",
+            "scopeKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1",
+            "operation": "ListJournalRecords",
+            "query": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "executionId": "run-checkout-root"
+            },
+            "synthetic": true,
+            "timestampEncoding": "REST-JSON wire timestamps for executions/journals/assets; ISO 8601 for backlog/event timestamps"
+          },
+          "jr-checkout-plan": {
+            "id": "jr-checkout-plan",
+            "kind": "Native JournalRecord envelope",
+            "title": "Published investigation plan",
+            "nativeId": "rec-002",
+            "sourceKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-root|rec-002",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-root|rec-002@37cf1a8287eb6d75997a",
+            "observedAt": "2026-11-05T14:09:03Z",
+            "locator": "/content",
+            "payloadHash": "sha256:37cf1a8287eb6d75997a52ea7408130d702192ffaf44030965c3602af450ba6b",
+            "payload": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "executionId": "run-checkout-root",
+              "recordId": "rec-002",
+              "recordType": "demo.plan.v1",
+              "createdAt": 1793887740,
+              "content": {
+                "steps": [
+                  "Inspect recent deployments",
+                  "Correlate application waits",
+                  "Check database signals"
+                ],
+                "note": "Published plan in a fictional payload profile; no private reasoning is modeled."
+              }
+            },
+            "hashEncoding": "canonical-json-utf8",
+            "scopeKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1",
+            "operation": "ListJournalRecords",
+            "query": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "executionId": "run-checkout-root"
+            },
+            "synthetic": true,
+            "timestampEncoding": "REST-JSON wire timestamps for executions/journals/assets; ISO 8601 for backlog/event timestamps"
+          },
+          "jr-checkout-deploy": {
+            "id": "jr-checkout-deploy",
+            "kind": "Native JournalRecord envelope",
+            "title": "Deployment configuration diff",
+            "nativeId": "rec-001",
+            "sourceKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-change|rec-001",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-change|rec-001@2bdec846f3cdf2fd5ea7",
+            "observedAt": "2026-11-05T14:10:14Z",
+            "locator": "/content",
+            "payloadHash": "sha256:2bdec846f3cdf2fd5ea75943bf49609438faa687dc5dc5785f9d086921429f7d",
+            "payload": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "executionId": "run-checkout-change",
+              "recordId": "rec-001",
+              "recordType": "demo.change.v1",
+              "createdAt": 1793887810,
+              "content": {
+                "resource": "checkout-api",
+                "deploymentId": "deploy-8e61-demo",
+                "version": "2.18.4",
+                "occurredAt": "2026-11-05T14:02:00Z",
+                "change": {
+                  "setting": "DB_POOL_MAX",
+                  "before": 96,
+                  "after": 24
+                },
+                "repository": "northstar/checkout-demo",
+                "commit": "e42a91d-demo"
+              }
+            },
+            "hashEncoding": "canonical-json-utf8",
+            "scopeKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1",
+            "operation": "ListJournalRecords",
+            "query": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "executionId": "run-checkout-change"
+            },
+            "synthetic": true,
+            "timestampEncoding": "REST-JSON wire timestamps for executions/journals/assets; ISO 8601 for backlog/event timestamps"
+          },
+          "jr-checkout-latency": {
+            "id": "jr-checkout-latency",
+            "kind": "Native JournalRecord envelope",
+            "title": "Checkout p95 latency samples",
+            "nativeId": "rec-001",
+            "sourceKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-logs|rec-001",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-logs|rec-001@f47a66003483f08b01a0",
+            "observedAt": "2026-11-05T14:12:24Z",
+            "locator": "/content",
+            "payloadHash": "sha256:f47a66003483f08b01a0c9312c8df0af51f22d607d28a9acf72e7003af3166f2",
+            "payload": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "executionId": "run-checkout-logs",
+              "recordId": "rec-001",
+              "recordType": "demo.metric.v1",
+              "createdAt": 1793887925,
+              "content": {
+                "resource": "checkout-api",
+                "metric": "request_duration",
+                "statistic": "p95",
+                "unit": "ms",
+                "query": "Demo CloudWatch request_duration, service=checkout-api, p95, 120s buckets",
+                "window": {
+                  "from": "2026-11-05T13:58:00Z",
+                  "to": "2026-11-05T14:12:00Z"
+                },
+                "points": [
+                  {
+                    "at": "2026-11-05T13:58:00Z",
+                    "value": 182
+                  },
+                  {
+                    "at": "2026-11-05T14:00:00Z",
+                    "value": 190
+                  },
+                  {
+                    "at": "2026-11-05T14:02:00Z",
+                    "value": 206
+                  },
+                  {
+                    "at": "2026-11-05T14:04:00Z",
+                    "value": 740
+                  },
+                  {
+                    "at": "2026-11-05T14:06:00Z",
+                    "value": 1510
+                  },
+                  {
+                    "at": "2026-11-05T14:08:00Z",
+                    "value": 1840
+                  },
+                  {
+                    "at": "2026-11-05T14:10:00Z",
+                    "value": 2190
+                  },
+                  {
+                    "at": "2026-11-05T14:12:00Z",
+                    "value": 2320
+                  }
+                ]
+              }
+            },
+            "hashEncoding": "canonical-json-utf8",
+            "scopeKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1",
+            "operation": "ListJournalRecords",
+            "query": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "executionId": "run-checkout-logs"
+            },
+            "synthetic": true,
+            "timestampEncoding": "REST-JSON wire timestamps for executions/journals/assets; ISO 8601 for backlog/event timestamps"
+          },
+          "jr-checkout-wait": {
+            "id": "jr-checkout-wait",
+            "kind": "Native JournalRecord envelope",
+            "title": "Connection acquisition wait",
+            "nativeId": "rec-002",
+            "sourceKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-logs|rec-002",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-logs|rec-002@f93f060935940a354734",
+            "observedAt": "2026-11-05T14:12:25Z",
+            "locator": "/content",
+            "payloadHash": "sha256:f93f060935940a35473466b9fa66f56dda39e98479c976550f20b3c09ba247f1",
+            "payload": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "executionId": "run-checkout-logs",
+              "recordId": "rec-002",
+              "recordType": "demo.log.v1",
+              "createdAt": 1793887930,
+              "content": {
+                "occurredAt": "2026-11-05T14:11:48Z",
+                "resource": "checkout-api",
+                "message": "Connection acquire exceeded 1000 ms",
+                "poolMax": 24,
+                "waitMs": 1240,
+                "requestId": "req-7c98-demo",
+                "traceId": "trace-df14-demo"
+              }
+            },
+            "hashEncoding": "canonical-json-utf8",
+            "scopeKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1",
+            "operation": "ListJournalRecords",
+            "query": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "executionId": "run-checkout-logs"
+            },
+            "synthetic": true,
+            "timestampEncoding": "REST-JSON wire timestamps for executions/journals/assets; ISO 8601 for backlog/event timestamps"
+          },
+          "jr-checkout-attachment": {
+            "id": "jr-checkout-attachment",
+            "kind": "Native JournalRecord envelope",
+            "title": "Runbook attachment reference",
+            "nativeId": "rec-003",
+            "sourceKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-root|rec-003",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-root|rec-003@1e73172e9f8497c7e699",
+            "observedAt": "2026-11-05T14:11:05Z",
+            "locator": "/content",
+            "payloadHash": "sha256:1e73172e9f8497c7e6993df94d1a3810bd274a8dadb56bc1094a9062b69da8c7",
+            "payload": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "executionId": "run-checkout-root",
+              "recordId": "rec-003",
+              "recordType": "demo.artifact_ref.v1",
+              "createdAt": 1793887860,
+              "content": {
+                "assetId": "asset-checkout-runbook",
+                "path": "checkout-recovery.md",
+                "relationship": "Referenced attachment; the application separately retrieved version 3. This does not prove a consumed version."
+              }
+            },
+            "hashEncoding": "canonical-json-utf8",
+            "scopeKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1",
+            "operation": "ListJournalRecords",
+            "query": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "executionId": "run-checkout-root"
+            },
+            "synthetic": true,
+            "timestampEncoding": "REST-JSON wire timestamps for executions/journals/assets; ISO 8601 for backlog/event timestamps"
+          },
+          "jr-checkout-db": {
+            "id": "jr-checkout-db",
+            "kind": "Native JournalRecord envelope",
+            "title": "Database capacity observation",
+            "nativeId": "rec-001",
+            "sourceKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-db|rec-001",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-db|rec-001@fe57b09c96ae78112c63",
+            "observedAt": "2026-11-05T14:17:05Z",
+            "locator": "/content",
+            "payloadHash": "sha256:fe57b09c96ae78112c6355a0d1b8460bff0580ce5d8dfbeb1b4003322fe99d42",
+            "payload": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "executionId": "run-checkout-db",
+              "recordId": "rec-001",
+              "recordType": "demo.database_observation.v1",
+              "createdAt": 1793888190,
+              "content": {
+                "occurredAt": "2026-11-05T14:16:00Z",
+                "resource": "orders-primary",
+                "cpuPercent": 31,
+                "freeableMemoryGiB": 21.6,
+                "databaseConnections": 124,
+                "maxConnections": 2000,
+                "conclusion": "No database CPU or connection-limit saturation in the observed sample."
+              }
+            },
+            "hashEncoding": "canonical-json-utf8",
+            "scopeKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1",
+            "operation": "ListJournalRecords",
+            "query": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "executionId": "run-checkout-db"
+            },
+            "synthetic": true,
+            "timestampEncoding": "REST-JSON wire timestamps for executions/journals/assets; ISO 8601 for backlog/event timestamps"
+          },
+          "jr-checkout-latency-2": {
+            "id": "jr-checkout-latency-2",
+            "kind": "Native JournalRecord envelope",
+            "title": "Later checkout latency samples",
+            "nativeId": "rec-003",
+            "sourceKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-logs|rec-003",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-logs|rec-003@4c55f09418ec571eb5d2",
+            "observedAt": "2026-11-05T14:17:06Z",
+            "locator": "/content",
+            "payloadHash": "sha256:4c55f09418ec571eb5d20271bc2c09a3430cc2f04bcf362ef835218b09707319",
+            "payload": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "executionId": "run-checkout-logs",
+              "recordId": "rec-003",
+              "recordType": "demo.metric.v1",
+              "createdAt": 1793888200,
+              "content": {
+                "resource": "checkout-api",
+                "metric": "request_duration",
+                "statistic": "p95",
+                "unit": "ms",
+                "query": "Demo CloudWatch request_duration, service=checkout-api, p95, 120s buckets",
+                "window": {
+                  "from": "2026-11-05T14:14:00Z",
+                  "to": "2026-11-05T14:16:00Z"
+                },
+                "points": [
+                  {
+                    "at": "2026-11-05T14:14:00Z",
+                    "value": 2280
+                  },
+                  {
+                    "at": "2026-11-05T14:16:00Z",
+                    "value": 2180
+                  }
+                ]
+              }
+            },
+            "hashEncoding": "canonical-json-utf8",
+            "scopeKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1",
+            "operation": "ListJournalRecords",
+            "query": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "executionId": "run-checkout-logs"
+            },
+            "synthetic": true,
+            "timestampEncoding": "REST-JSON wire timestamps for executions/journals/assets; ISO 8601 for backlog/event timestamps"
+          },
+          "jr-checkout-finding": {
+            "id": "jr-checkout-finding",
+            "kind": "Native JournalRecord envelope",
+            "title": "Agent-reported pool contention finding",
+            "nativeId": "rec-004",
+            "sourceKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-root|rec-004",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-root|rec-004@ff3b4f0797d27ade6849",
+            "observedAt": "2026-11-05T14:17:09Z",
+            "locator": "/content",
+            "payloadHash": "sha256:ff3b4f0797d27ade684995c1c2eb7f1a07490c94f6c4546b88300ffc27d47c51",
+            "payload": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "executionId": "run-checkout-root",
+              "recordId": "rec-004",
+              "recordType": "demo.finding.v1",
+              "createdAt": 1793888220,
+              "content": {
+                "title": "Reduced application pool limit is the leading explanation",
+                "assertionOrigin": "agent-reported",
+                "disposition": "supported",
+                "statement": "The smaller pool is reported to cause application connection waits. Database saturation is not supported by the observed CPU and connection sample.",
+                "evidence": [
+                  {
+                    "executionId": "run-checkout-change",
+                    "recordId": "rec-001",
+                    "locator": "/content/change"
+                  },
+                  {
+                    "executionId": "run-checkout-logs",
+                    "recordId": "rec-002",
+                    "locator": "/content/waitMs"
+                  },
+                  {
+                    "executionId": "run-checkout-db",
+                    "recordId": "rec-001",
+                    "locator": "/content/cpuPercent"
+                  }
+                ]
+              }
+            },
+            "hashEncoding": "canonical-json-utf8",
+            "scopeKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1",
+            "operation": "ListJournalRecords",
+            "query": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "executionId": "run-checkout-root"
+            },
+            "synthetic": true,
+            "timestampEncoding": "REST-JSON wire timestamps for executions/journals/assets; ISO 8601 for backlog/event timestamps"
+          },
+          "jr-checkout-trace-ref": {
+            "id": "jr-checkout-trace-ref",
+            "kind": "Native JournalRecord envelope",
+            "title": "Trace bundle reference",
+            "nativeId": "rec-005",
+            "sourceKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-root|rec-005",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-root|rec-005@36d02b01cd982e5864ce",
+            "observedAt": "2026-11-05T14:17:10Z",
+            "locator": "/content",
+            "payloadHash": "sha256:36d02b01cd982e5864ce3e4184ee97f6e81871528e9b59e7fbb4fd9f31347901",
+            "payload": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "executionId": "run-checkout-root",
+              "recordId": "rec-005",
+              "recordType": "demo.artifact_ref.v1",
+              "createdAt": 1793888222,
+              "content": {
+                "uri": "s3://northstar-demo-observability/checkout/2026-11-05/trace-bundle.json",
+                "mediaType": "application/json",
+                "title": "Detailed trace bundle"
+              }
+            },
+            "hashEncoding": "canonical-json-utf8",
+            "scopeKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1",
+            "operation": "ListJournalRecords",
+            "query": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "executionId": "run-checkout-root"
+            },
+            "synthetic": true,
+            "timestampEncoding": "REST-JSON wire timestamps for executions/journals/assets; ISO 8601 for backlog/event timestamps"
+          },
+          "jr-checkout-draft": {
+            "id": "jr-checkout-draft",
+            "kind": "Native JournalRecord envelope",
+            "title": "Preliminary summary candidate",
+            "nativeId": "summary-draft-01",
+            "sourceKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-root|summary-draft-01",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-root|summary-draft-01@66f583b2ced776ce1a42",
+            "observedAt": "2026-11-05T14:17:12Z",
+            "locator": "/content",
+            "payloadHash": "sha256:66f583b2ced776ce1a422605c9361d50a77ed3ef3c562a9dd83f7ae6ee89c35e",
+            "payload": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "executionId": "run-checkout-root",
+              "recordId": "summary-draft-01",
+              "recordType": "investigation_summary_md",
+              "createdAt": 1793888225,
+              "content": "# Preliminary investigation summary\n\nConnection pool contention is the leading explanation. This is an observed candidate summary; no completion pointer selects it."
+            },
+            "hashEncoding": "canonical-json-utf8",
+            "scopeKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1",
+            "operation": "ListJournalRecords",
+            "query": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "executionId": "run-checkout-root"
+            },
+            "synthetic": true,
+            "timestampEncoding": "REST-JSON wire timestamps for executions/journals/assets; ISO 8601 for backlog/event timestamps"
+          },
+          "jr-checkout-final": {
+            "id": "jr-checkout-final",
+            "kind": "Native JournalRecord envelope",
+            "title": "Referenced investigation summary",
+            "nativeId": "summary-final-02",
+            "sourceKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-root|summary-final-02",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-root|summary-final-02@bb2d63ddb33306bd679e",
+            "observedAt": "2026-11-05T14:21:08Z",
+            "locator": "/content",
+            "payloadHash": "sha256:bb2d63ddb33306bd679e66aaef38a11a6ba6246bda311282d5f29824f6d90efb",
+            "payload": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "executionId": "run-checkout-root",
+              "recordId": "summary-final-02",
+              "recordType": "investigation_summary_md",
+              "createdAt": 1793888455,
+              "content": "# Checkout latency investigation\n\n## Published finding\nThe agent reports that release v2.18.4 reduced the checkout service connection-pool cap from 96 to 24. Requests waited for a database connection while database CPU and freeable memory stayed within the observed baseline.\n\n## Supporting observations\n- Checkout p95 increased from approximately 190 ms to 2,320 ms after the 14:02 UTC deployment.\n- Application logs show a 1,240 ms connection-acquisition wait.\n- The deployment configuration diff supplies the changed pool limit.\n- Database CPU was 31%; this observation does not support CPU saturation as the explanation.\n\n## Recommended next step\nHave the operator evaluate restoring the previous pool limit through the deployment workflow, then collect a fresh recovery window.\n\nThis result records an agent-reported cause. It does not itself establish that remediation ran or that the incident recovered."
+            },
+            "hashEncoding": "canonical-json-utf8",
+            "scopeKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1",
+            "operation": "ListJournalRecords",
+            "query": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "executionId": "run-checkout-root"
+            },
+            "synthetic": true,
+            "timestampEncoding": "REST-JSON wire timestamps for executions/journals/assets; ISO 8601 for backlog/event timestamps"
+          },
+          "jr-checkout-newer-candidate": {
+            "id": "jr-checkout-newer-candidate",
+            "kind": "Native JournalRecord envelope",
+            "title": "Later unselected summary candidate",
+            "nativeId": "summary-note-03",
+            "sourceKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-root|summary-note-03",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-root|summary-note-03@a24fd969ec94744bb16d",
+            "observedAt": "2026-11-05T14:21:08Z",
+            "locator": "/content",
+            "payloadHash": "sha256:a24fd969ec94744bb16d19c02e82626149c16a0ff9d35b7ea8cf9f221e46dbca",
+            "payload": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "executionId": "run-checkout-root",
+              "recordId": "summary-note-03",
+              "recordType": "investigation_summary_md",
+              "createdAt": 1793888457,
+              "content": "# Supplemental summary note\n\nThis later record is a candidate of the same type. The completion event selects summary-final-02, so timestamp order does not make this the authoritative result."
+            },
+            "hashEncoding": "canonical-json-utf8",
+            "scopeKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1",
+            "operation": "ListJournalRecords",
+            "query": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "executionId": "run-checkout-root"
+            },
+            "synthetic": true,
+            "timestampEncoding": "REST-JSON wire timestamps for executions/journals/assets; ISO 8601 for backlog/event timestamps"
+          },
+          "jr-checkout-unknown": {
+            "id": "jr-checkout-unknown",
+            "kind": "Native JournalRecord envelope",
+            "title": "Unrecognized record retained from the final page",
+            "nativeId": "rec-future",
+            "sourceKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-logs|rec-future",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|journal|run-checkout-logs|rec-future@ce030cc84010485b9631",
+            "observedAt": "2026-11-05T14:21:05Z",
+            "locator": "/content",
+            "payloadHash": "sha256:ce030cc84010485b963176bd79aeb1d66afcfb07e18b4529d925944cd6556c0f",
+            "payload": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "executionId": "run-checkout-logs",
+              "recordId": "rec-future",
+              "recordType": "demo.future_profile.v9",
+              "createdAt": 1793887755,
+              "content": [
+                "opaque-vendor-content",
+                3,
+                {
+                  "futureField": true
+                }
+              ]
+            },
+            "hashEncoding": "canonical-json-utf8",
+            "scopeKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1",
+            "operation": "ListJournalRecords",
+            "query": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "executionId": "run-checkout-logs"
+            },
+            "synthetic": true,
+            "timestampEncoding": "REST-JSON wire timestamps for executions/journals/assets; ISO 8601 for backlog/event timestamps"
+          },
+          "event-checkout-completed": {
+            "id": "event-checkout-completed",
+            "kind": "EventBridge notification",
+            "title": "Investigation Completed",
+            "nativeId": "10000000-0000-4000-8000-000000000001",
+            "sourceKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|eventbridge|10000000-0000-4000-8000-000000000001",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|eventbridge|10000000-0000-4000-8000-000000000001@2c07a5be2a0f7c524998",
+            "observedAt": "2026-11-05T14:20:59Z",
+            "locator": "/detail",
+            "payloadHash": "sha256:2c07a5be2a0f7c5249986608c5776b975cdd5d93c5063406db2d870a0fba4b05",
+            "payload": {
+              "version": "0",
+              "id": "10000000-0000-4000-8000-000000000001",
+              "detail-type": "Investigation Completed",
+              "source": "aws.aidevops",
+              "account": "111122223333",
+              "time": "2026-11-05T14:20:58Z",
+              "region": "eu-central-1",
+              "resources": [
+                "arn:aws:aidevops:eu-central-1:111122223333:agentspace/a19085e2-1925-4c2a-bbee-30c3d54831d1"
+              ],
+              "detail": {
+                "version": "1.0.0",
+                "metadata": {
+                  "agent_space_id": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+                  "task_id": "inv-checkout-1105",
+                  "execution_id": "run-checkout-root"
+                },
+                "data": {
+                  "task_type": "INVESTIGATION",
+                  "priority": "CRITICAL",
+                  "status": "COMPLETED",
+                  "created_at": "2026-11-05T14:08:10Z",
+                  "updated_at": "2026-11-05T14:20:58Z",
+                  "summary_record_id": "summary-final-02"
+                }
+              }
+            },
+            "hashEncoding": "canonical-json-utf8",
+            "scopeKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1",
+            "operation": "EventBridge delivery",
+            "query": null,
+            "synthetic": true,
+            "timestampEncoding": "REST-JSON wire timestamps for executions/journals/assets; ISO 8601 for backlog/event timestamps"
+          },
+          "asset-checkout-runbook-v3": {
+            "id": "asset-checkout-runbook-v3",
+            "kind": "Native Asset",
+            "title": "Retrieved attachment version 3",
+            "nativeId": "asset-checkout-runbook",
+            "sourceKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|asset|asset-checkout-runbook|3",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|asset|asset-checkout-runbook|3@8ad42b8d42df8e7341f5",
+            "observedAt": "2026-11-05T14:11:08Z",
+            "locator": "",
+            "payloadHash": "sha256:8ad42b8d42df8e7341f5787b5ad029d5ecaca4e25c902e5da39860ba3d700e28",
+            "payload": {
+              "assetId": "asset-checkout-runbook",
+              "assetType": "attachment",
+              "metadata": {
+                "title": "Checkout recovery checklist",
+                "filename": "checkout-recovery.md",
+                "extension": "md",
+                "size": 472
+              },
+              "version": 3,
+              "createdAt": 1793869200,
+              "updatedAt": 1793878200
+            },
+            "hashEncoding": "canonical-json-utf8",
+            "scopeKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1",
+            "operation": "GetAsset",
+            "query": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "assetId": "asset-checkout-runbook",
+              "assetVersion": 3
+            },
+            "synthetic": true,
+            "timestampEncoding": "REST-JSON wire timestamps for executions/journals/assets; ISO 8601 for backlog/event timestamps"
+          },
+          "file-checkout-runbook-v3": {
+            "id": "file-checkout-runbook-v3",
+            "kind": "Native AssetFile",
+            "title": "checkout-recovery.md · version 3",
+            "nativeId": "checkout-recovery.md",
+            "sourceKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|asset-file|asset-checkout-runbook|3|checkout-recovery.md",
+            "revisionId": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1|asset-file|asset-checkout-runbook|3|checkout-recovery.md@c9a66f25d436553bc37a",
+            "observedAt": "2026-11-05T14:11:09Z",
+            "locator": "/content/text",
+            "payloadHash": "sha256:c9a66f25d436553bc37ab51b470f13eae98d615491d0603b33020cc511879dcc",
+            "payload": {
+              "path": "checkout-recovery.md",
+              "content": {
+                "text": "# Checkout recovery checklist\n\n1. Confirm the release and configuration diff against the approved deployment.\n2. Have the operator evaluate restoring the previous connection-pool configuration.\n3. Use the deployment pipeline and its change controls.\n4. Collect fresh request latency and connection-wait observations.\n5. Record the validation window and remaining gaps.\n\nDemo attachment, retrieved at version 3. Its reference does not prove the agent consumed this version."
+              },
+              "version": 3,
+              "createdAt": 1793869200,
+              "updatedAt": 1793878200
+            },
+            "hashEncoding": "canonical-json-utf8",
+            "scopeKey": "aws|111122223333|eu-central-1|a19085e2-1925-4c2a-bbee-30c3d54831d1",
+            "operation": "GetAssetFile",
+            "query": {
+              "agentSpaceId": "a19085e2-1925-4c2a-bbee-30c3d54831d1",
+              "assetId": "asset-checkout-runbook",
+              "assetVersion": 3,
+              "path": "checkout-recovery.md"
+            },
+            "synthetic": true,
+            "timestampEncoding": "REST-JSON wire timestamps for executions/journals/assets; ISO 8601 for backlog/event timestamps"
+          }
+        },
+        "counts": {
+          "executions": 4,
+          "running": 0,
+          "records": 14,
+          "artifacts": 4,
+          "availableArtifacts": 3,
+          "timeline": 9,
+          "findings": 2,
+          "completeExecutions": 4
+        },
+        "snapshots": [],
+        "isSnapshot": true,
+        "snapshot": {
+          "snapshotId": "snapshot-001",
+          "taskId": "inv-checkout-1105",
+          "title": "INC-4721 · Result retrieved",
+          "capturedAt": "2026-11-05T14:21:12Z",
+          "taskStatus": "COMPLETED",
+          "coverageStatus": "complete",
+          "recordCount": 14,
+          "stage": 3
+        },
+        "newActivity": false,
+        "provenance": {
+          "fixtureVersion": "1.0.0",
+          "projectionVersion": "investigation-demo-projection/1.0.0",
+          "timestampEncoding": "View clocks are ISO 8601; raw native envelopes preserve their modeled timestamp representation.",
+          "disclaimer": "Fictional demonstration data. All incidents, accounts, people, resources and observations are synthetic. No AWS connection."
+        }
+      }
+    }
+  ],
+  "nextSnapshotNumber": 2
+}

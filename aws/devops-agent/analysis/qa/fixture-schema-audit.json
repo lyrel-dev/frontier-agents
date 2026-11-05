@@ -1,0 +1,100 @@
+{
+  "schemaVersion": "fixture-schema-audit/v1",
+  "modelSource": "https://raw.githubusercontent.com/boto/botocore/27fc40eff0e85422e62858ee3d2e9a133bdb1038/botocore/data/devops-agent/2026-01-01/service-2.json",
+  "modelSha256": "c9650e8c0aa3546f3f45ecb829f96223156bfc07f720b580bed23a7407aaad59",
+  "constraintSemanticsSources": [
+    "https://smithy.io/2.0/spec/simple-types.html",
+    "https://smithy.io/2.0/spec/constraint-traits.html"
+  ],
+  "fixture": "app/src/mock-data.js",
+  "fixtureSha256": "b7c6a21c194c699ff5352add1dcfc444d72b19845dc5af8768d3474eda4f14fa",
+  "normalizedRawObjectsSha256": "b59412cae8c525ed69b34dd361fe2f2f546731b5cfebd222bde62a94895e284f",
+  "validatorSha256": "a2af1fb819f534bb503e15dd93c82027fea524a995c3b983b33422d2a89da518",
+  "nativeObjectsChecked": 46,
+  "objectsByShape": {
+    "Task": 7,
+    "Execution": 12,
+    "JournalRecord": 24,
+    "Asset": 2,
+    "AssetFile": 1
+  },
+  "modeledShapesReached": [
+    "Asset",
+    "AssetFile",
+    "AssetFileBody",
+    "AssetFilePath",
+    "AssetFileText",
+    "AssetType",
+    "BackLogTimestamp",
+    "Document",
+    "Execution",
+    "ExecutionStatus",
+    "Integer",
+    "JournalRecord",
+    "JournalTimestamp",
+    "Priority",
+    "ReferenceOutput",
+    "ResourceId",
+    "String",
+    "Task",
+    "TaskStatus",
+    "TaskType",
+    "Timestamp",
+    "UserReference",
+    "UserType"
+  ],
+  "modeledTypesReached": {
+    "integer": 1,
+    "string": 10,
+    "structure": 9,
+    "timestamp": 3
+  },
+  "checks": [
+    "required-member presence",
+    "modeled structure members",
+    "recursive types",
+    "enums",
+    "applicable min/max and patterns",
+    "union cardinality",
+    "explicit timestamp normalization",
+    "JSON document representability"
+  ],
+  "normalization": [
+    "Node executes the trusted local fixture and exports only the five declared collections' raw payloads.",
+    "The loader rejects non-JSON values, non-finite numbers, sparse arrays, custom objects and cycles before JSON serialization.",
+    "BackLogTimestamp is timezone-qualified ISO 8601 text; other fixture timestamps are finite epoch seconds, not SDK datetime objects.",
+    "String lengths use Unicode code points; this does not establish accepted UTF-8/upload byte limits.",
+    "Patterns use Python re.search; only the pinned selected patterns are claimed, not general Smithy regex-dialect conformance.",
+    "Document values remain arbitrary JSON; a required Document member may contain JSON null.",
+    "Numbers originate as JavaScript Number values; this fixture does not test arbitrary-precision document numbers or 64-bit round trips.",
+    "Blob payloads are unsupported in this normalized fixture format and fail if encountered; only AssetFile.content.text is exercised."
+  ],
+  "limits": [
+    "No AWS calls, wire serialization, SDK deserialization, authorization or live behavior is tested.",
+    "Only modeled members of the five selected raw collections are checked; wrapper fields and EventBridge notifications are excluded.",
+    "Requiredness, types, enums and applicable modeled constraints are checked only for values reached in this fixture.",
+    "Open Document payloads have no inferred profile: journal contents, asset metadata and nested references are not semantically validated.",
+    "No scope/identity relationships, timestamp ordering, graph references, snapshot persistence or application HTTP contract is validated here.",
+    "No service-guide content profiles, encoded-request limits, binary assets or unexercised optional branches are validated.",
+    "Strict pinned enums, members and constraints are fixture-authoring checks, not a live response rejection policy; unknown enum values must be preserved by production clients."
+  ],
+  "negativeControlsDetected": [
+    "missing required field",
+    "invalid enum",
+    "wrong payload type",
+    "integer overflow",
+    "invalid pattern",
+    "overlong path",
+    "multiple union members",
+    "unsupported model type"
+  ],
+  "openJsonPositiveControlsAccepted": [
+    "null",
+    "boolean",
+    "number",
+    "string",
+    "array",
+    "object"
+  ],
+  "errors": []
+}

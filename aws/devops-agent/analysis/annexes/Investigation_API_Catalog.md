@@ -1040,6 +1040,134 @@ BackLogTimestamp explicitly uses ISO 8601. Under REST-JSON, body timestamps with
 <!-- block: obsidian-devops-investigation-api-catalog-validation -->
 ## 5. Extraction verification
 
-Generation checks that all 63 operations appear exactly once, resolves every field type, and carries requiredness, unions, enum values and modeled constraints from the pinned source. The selected dictionary expands 52 structures/value types. Provider-specific nested configurations remain linked to their official references.
+The committed [native-model audit](../tools/check_native_api.py) compares all 63 operation routes and response-field lists, the 19 request tables, the 52 selected type tables, and the transport/error matrix below against an explicitly supplied pinned model. It checks member order, requiredness, type references, enums, minimum/maximum/pattern/timestamp constraints, request locations, token/deprecation markers, and union/event-stream declarations. The 560-shape figure is an inventory count; it is not a claim that every shape or service behavior received equal semantic review. Provider-specific nested configurations remain linked to their official references.
 
 This verifies a schema snapshot. It does not verify service deployment, caller authorization, undocumented payload schemas, timing or per-region runtime behavior. See the capture and acceptance plan in [production UI contract](Investigation_UI_Contract.md).
+
+
+## 6. Transport, failures and the application boundary
+
+### Three separate contracts
+
+| Contract | Ownership | What this package establishes |
+| --- | --- | --- |
+| AWS native API | AWS SDK/service model | Operation, request, response and modeled failure contracts, with pinned schema evidence |
+| Proposed UI service | This application design | Suggested read-model routes in the UI annex; no deployed HTTP API, pagination implementation, IAM enforcement or SSE transport is supplied by the prototype |
+| Prototype model interface | `DemoModel` JavaScript module | Local functions over fictional observations; its method names, errors and state are application-owned |
+
+The native catalog is not an OpenAPI specification for the proposed UI service. A production adapter still needs an explicit application request/response schema, authorized scope resolution, opaque cursor design, error envelope and version-negotiation policy. These cannot be inferred from the native SDK field tables.
+
+### Endpoint prefixes and successful responses
+
+The pinned model assigns **28 operations to `cp.`** and **35 to `dp.`** through each operation's `endpoint.hostPrefix`. REST-JSON/SigV4 uses signing name `aidevops`, while the SDK/CLI client name is `devops-agent`. The paths in section 1 are relative paths, not complete endpoints. Use the SDK endpoint resolver and host-prefix behavior for the selected Region/partition; do not send every route to one guessed host or append a prefix twice to a custom endpoint. The separate `connect.aidevops` MCP/A2A interface is not the native API endpoint. [Pinned native model](https://raw.githubusercontent.com/boto/botocore/27fc40eff0e85422e62858ee3d2e9a133bdb1038/botocore/data/devops-agent/2026-01-01/service-2.json) · [Remote-server boundary](https://docs.aws.amazon.com/devopsagent/latest/userguide/accessing-devops-agent-connecting-to-devops-agent-remote-servers-index.html)
+
+Every native operation is mapped below. **E** means the nine shared modeled exceptions in the following error table. **E+IDC** adds `IdentityCenterServiceException` for the two operator-app operations. A successful HTTP response is the success of that request; it does not establish task completion, artifact availability or an infrastructure outcome.
+
+| Operation | Endpoint prefix | Success HTTP | Error set |
+| --- | --- | --- | --- |
+| `AssociateService` | `cp.` | 201 | E |
+| `CreateAgentSpace` | `cp.` | 201 | E |
+| `CreateAsset` | `dp.` | 201 | E |
+| `CreateAssetFile` | `dp.` | 201 | E |
+| `CreateBacklogTask` | `dp.` | 201 | E |
+| `CreateChat` | `dp.` | 200 | E |
+| `CreatePrivateConnection` | `cp.` | 200 | E |
+| `CreateTrigger` | `dp.` | 201 | E |
+| `DeleteAgentSpace` | `cp.` | 204 | E |
+| `DeleteAsset` | `dp.` | 200 | E |
+| `DeleteAssetFile` | `dp.` | 200 | E |
+| `DeletePrivateConnection` | `cp.` | 200 | E |
+| `DeleteTrigger` | `dp.` | 200 | E |
+| `DeregisterService` | `cp.` | 200 | E |
+| `DescribePrivateConnection` | `cp.` | 200 | E |
+| `DisableOperatorApp` | `cp.` | 200 | E+IDC |
+| `DisassociateService` | `cp.` | 204 | E |
+| `EnableOperatorApp` | `cp.` | 200 | E+IDC |
+| `GetAccountUsage` | `dp.` | 200 | E |
+| `GetAgentSpace` | `cp.` | 200 | E |
+| `GetAsset` | `dp.` | 200 | E |
+| `GetAssetContent` | `dp.` | 200 | E |
+| `GetAssetFile` | `dp.` | 200 | E |
+| `GetAssociation` | `cp.` | 200 | E |
+| `GetBacklogTask` | `dp.` | 200 | E |
+| `GetOperatorApp` | `cp.` | 200 | E |
+| `GetRecommendation` | `dp.` | 200 | E |
+| `GetService` | `cp.` | 200 | E |
+| `GetTrigger` | `dp.` | 200 | E |
+| `ListAgentSpaces` | `cp.` | 200 | E |
+| `ListAssetFiles` | `dp.` | 200 | E |
+| `ListAssetTypes` | `dp.` | 200 | E |
+| `ListAssetVersions` | `dp.` | 200 | E |
+| `ListAssets` | `dp.` | 200 | E |
+| `ListAssociations` | `cp.` | 200 | E |
+| `ListBacklogTasks` | `dp.` | 200 | E |
+| `ListChats` | `dp.` | 200 | E |
+| `ListExecutions` | `dp.` | 200 | E |
+| `ListGoals` | `dp.` | 200 | E |
+| `ListJournalRecords` | `dp.` | 200 | E |
+| `ListPendingMessages` | `dp.` | 200 | E |
+| `ListPrivateConnections` | `cp.` | 200 | E |
+| `ListRecommendations` | `dp.` | 200 | E |
+| `ListServices` | `cp.` | 200 | E |
+| `ListTagsForResource` | `cp.` | 200 | E |
+| `ListTriggers` | `dp.` | 200 | E |
+| `ListWebhooks` | `cp.` | 200 | E |
+| `RegisterService` | `cp.` | 201 | E |
+| `SendMessage` | `dp.` | 200 | E |
+| `TagResource` | `cp.` | 204 | E |
+| `UntagResource` | `cp.` | 204 | E |
+| `UpdateAgentSpace` | `cp.` | 200 | E |
+| `UpdateApprovalAction` | `dp.` | 200 | E |
+| `UpdateAsset` | `dp.` | 200 | E |
+| `UpdateAssetFile` | `dp.` | 200 | E |
+| `UpdateAssociation` | `cp.` | 200 | E |
+| `UpdateBacklogTask` | `dp.` | 200 | E |
+| `UpdateGoal` | `dp.` | 200 | E |
+| `UpdateOperatorAppIdpConfig` | `cp.` | 200 | E |
+| `UpdatePrivateConnectionCertificate` | `cp.` | 200 | E |
+| `UpdateRecommendation` | `dp.` | 200 | E |
+| `UpdateTrigger` | `dp.` | 200 | E |
+| `ValidateAwsAssociations` | `cp.` | 204 | E |
+
+### Modeled exceptions
+
+The table preserves exception names separately from HTTP codes. The schema snapshot does not enumerate every authentication, protocol, network or upstream-proxy failure. Preserve request IDs and native error codes in diagnostic observations, then map them to application errors without discarding the original classification.
+
+| Exception | HTTP status in the pinned model | Returned members | Collector/operator treatment |
+| --- | --- | --- | --- |
+| `AccessDeniedException` | 403 | `message` | Reauthorize; retain an explicit permission gap, not an empty result set |
+| `ConflictException` | 409 | `message` | Reconcile source state and command outcome; retries depend on the operation and idempotency contract |
+| `ContentSizeExceededException` | 413 | `message` | Preserve the failed request and size limit; adjust a supported payload or collection plan instead of repeating unchanged input |
+| `IdentityCenterServiceException` | 400 | `message`, `underlyingErrorCode` | Operator-app configuration failure; retain the underlying Identity Center code; E+IDC only |
+| `InternalServerException` | 500 | `message` | Bounded retries for eligible reads; a lost/failed mutating response can leave an ambiguous outcome |
+| `InvalidParameterException` | 400 | `message` | Correct the request; do not treat deterministic invalid input as a transient failure |
+| `ResourceNotFoundException` | 404 | `message` | Unavailable in the requested scope; no unsupported inference of cancellation or deletion |
+| `ServiceQuotaExceededException` | 402 | `message` | Quota state distinct from throttling; surface the quota condition and suspend repeated failing work until addressed |
+| `ThrottlingException` | 429 | `message` | SDK retry policy and bounded backoff/jitter; preserve freshness and unfinished query coverage |
+| `ValidationException` | Not modeled; documented 400 | `message`, `fieldList` | Preserve all field violations, including multiple violations for the same member; correct input |
+
+`message` is required on these error shapes; `fieldList` and `underlyingErrorCode` are optional. Botocore does not carry `error.httpStatusCode` on this `ValidationException` shape. The official operation reference documents HTTP 400, so the table explicitly distinguishes that documented value from a modeled trait. Service quota exhaustion is documented as **402**, which must not be normalized to 429 or interpreted as a payment instruction. [ListBacklogTasks errors](https://docs.aws.amazon.com/devopsagent/latest/APIReference/API_ListBacklogTasks.html) · [EnableOperatorApp errors](https://docs.aws.amazon.com/devopsagent/latest/APIReference/API_EnableOperatorApp.html) · [Common error types](https://docs.aws.amazon.com/devopsagent/latest/APIReference/CommonErrors.html)
+
+Idempotency is operation-specific. The [compact inventory](../qa/native-api-inventory.json) records modeled operation traits and token member names for all 63 operations. A missing token or trait is not evidence that repeating a command is safe. Reuse the same token for retries of one unchanged logical request where supported; a caller retry cannot manufacture compare-and-swap, a documented token lifetime, or approval readback. `SendMessage` can also report failure inside an already opened response stream; preserve that response failure separately from the HTTP request outcome.
+
+### Binary paths and documented profile limits
+
+`GetAssetContent` returns a JSON structure with a version and a nested `content.zipFile` blob. With an SDK, read the SDK-decoded bytes at **`response.content.zipFile`**; do not treat the whole response or `response.content` as a raw ZIP body. A file read instead returns **`response.file.content`**, a text-or-bytes union; the upload shape uses `content.file.body`. Preserve the returned asset version and distinguish downloaded byte hashes from JSON object hashes. [GetAssetContent](https://docs.aws.amazon.com/devopsagent/latest/APIReference/API_GetAssetContent.html) · [Boto3 decoded response](https://docs.aws.amazon.com/boto3/latest/reference/services/devops-agent/client/get_asset_content.html) · [GetAssetFile](https://docs.aws.amazon.com/devopsagent/latest/APIReference/API_GetAssetFile.html)
+
+**Different constraint layers:** the pinned model sets `AssetFileText.max = 6291456`, while the current managing-assets guide describes single-file text as up to **1.5 MB of UTF-8 text** and specifies a lower **25 KB** limit for AGENTS.md. These bounds use different measurements and scopes; they are not proof of an AWS contradiction. Keep the modeled bound in the extracted tables and apply documented profile limits separately. A string-length trait, UTF-8 byte length and encoded JSON/base64 request size are different measurements. Do not promise 6,291,456 supported text bytes from the generic trait; verify effective boundary behavior before publishing a production upload-capacity guarantee. [Managing assets](https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-managing-assets.html)
+
+### Reproduce the audit
+
+Run from the `analysis` directory with a local copy of the exact pinned model:
+
+```bash
+python3 tools/check_native_api.py --model /path/to/service-2.json --self-test
+```
+
+The checker verifies the model's SHA-256 before parsing it. An explicit read-only download is available when network access is intended:
+
+```bash
+python3 tools/check_native_api.py --fetch --self-test
+```
+
+The committed [audit evidence](../qa/native-api-audit.json) records the checked member-row count, catalog hash and nine negative controls. Those controls intentionally change a route, required field, JSON type, enum, page limit, endpoint prefix, success status, error group and union declaration; the checker must reject each altered catalog. `--write-evidence` regenerates the compact inventory and evidence only after positive checks and negative controls pass. It does not rewrite the authored tables or accept a changed upstream checksum automatically.

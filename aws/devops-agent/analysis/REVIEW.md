@@ -1,5 +1,5 @@
 ---
-title: "AWS DevOps Agent investigation model: independent review"
+title: "AWS DevOps Agent investigation model: initial review record"
 id: aws-devops-analysis-review
 kind: obsidian-note
 product: devops
@@ -10,7 +10,7 @@ reviewed: '2026-11-05'
 source_cutoff: '2026-11-05'
 api_version: '2026-01-01'
 initial_model_commit: 1d10b2de6616ff3d94e97a579c6291cc3696c03a
-status: contract-reviewed
+status: historical-review-with-follow-up
 tags:
   - aws/devops-agent
   - investigation
@@ -23,13 +23,19 @@ related:
   - "annexes/Investigation_API_Sources.md"
 ---
 
-# Independent model and documentation review
+# Initial model and documentation review
 
-## Outcome and scope
+## Follow-up assessment
 
-**The initial model is suitable as the starting contract for the operator prototype.** The review preserves its central architecture: a scoped native `Task` of type `INVESTIGATION`, discovered executions, published journal records, explicit result references, and separately versioned application projections. It also preserves the limits of that conclusion: a schema review does not establish live account permissions, journal-content profiles, service timing or full AWS Operator Web App parity.
+This record preserves the first source/schema and prototype review, completed for package commit `302128e5628acb4d832c20db79da2ab878c95e48`. **Its architecture assessment remains useful, but its nominal-fixture checks did not establish all claimed implementation invariants.** The subsequent [adversarial quality review](QUALITY_REVIEW.md) found and corrected cross-scope selection, duplicate counting, result-phase mixing, stale source inspection, damaged-state handling and a live dependency in historical rendering, along with documentation and verification gaps.
 
-The review recovered the four source notes from [commit `1d10b2d`](https://github.com/lyrel-dev/frontier-agents/commit/1d10b2de6616ff3d94e97a579c6291cc3696c03a), independently compared official models and current AWS references, and consolidated the result in [report.md](report.md). That report includes all nine diagrams. The complete source-level notes remain available as the [data model](annexes/Investigation_Data_Model.md), [API catalog](annexes/Investigation_API_Catalog.md), [UI contract](annexes/Investigation_UI_Contract.md), and [source register](annexes/Investigation_API_Sources.md).
+The current package has ten diagrams, including D07's collection-observation model; the initial nine-diagram statements below describe the earlier edition. The current [validation record](VALIDATION.md) reports 33 model and 9 UI regression tests, repeatable native-schema audits, independent Mermaid syntax checks and focused browser review. Use that record and [QUALITY_REVIEW.md](QUALITY_REVIEW.md) for the current disposition. Earlier review results are retained here so the additional corrections are visible rather than being presented as checks that had already passed.
+
+## Initial outcome and scope
+
+**The initial review considered the model suitable as a starting design for the operator prototype.** It retained the central architecture: a scoped native `Task` of type `INVESTIGATION`, discovered executions, published journal records, explicit result references, and separately versioned application projections. The limits of that conclusion remain: a schema review does not establish live account permissions, journal-content profiles, service timing or full AWS Operator Web App parity.
+
+The review recovered the four source notes from [commit `1d10b2d`](https://github.com/lyrel-dev/frontier-agents/commit/1d10b2de6616ff3d94e97a579c6291cc3696c03a), independently compared official models and current AWS references, and consolidated the result in [report.md](report.md). That edition included nine diagrams. The source-level notes remain available and have since been updated as the [data model](annexes/Investigation_Data_Model.md), [API catalog](annexes/Investigation_API_Catalog.md), [UI contract](annexes/Investigation_UI_Contract.md), and [source register](annexes/Investigation_API_Sources.md).
 
 The review date is **5 November 2026**. No AWS customer account, production investigation, live AWS API response or service mutation was used. All prototype incident data are fictional. Application checks are recorded in [VALIDATION.md](VALIDATION.md) and [README.md](README.md); they are not inferred from the earlier source-branch CI.
 

@@ -25,7 +25,7 @@ related:
 <!-- block: obsidian-devops-investigation-data-model-decision -->
 # Investigation-centered data model
 
-This annex retains the complete initial logical model with review clarifications. The consolidated [reviewed report](../report.md) contains this model together with all nine diagrams, the collection/action/snapshot workflows, and the prototype boundary. The [review record](../REVIEW.md) identifies what was independently checked.
+This annex retains the complete initial logical model with review clarifications. The consolidated [reviewed report](../report.md) contains this model together with all ten diagrams, the collection/action/snapshot workflows, and the prototype boundary. The [review record](../REVIEW.md) identifies what was independently checked.
 
 ## 1. Architecture decision
 
@@ -57,7 +57,7 @@ Scope is schema/documentation review as of **5 November 2026**. The API model re
 <!-- block: obsidian-devops-investigation-data-model-platform -->
 ## 2. API-wide entity map
 
-The complete operation catalog is in [complete API catalog](Investigation_API_Catalog.md). These resource families provide the surrounding model without forcing every configuration object into an investigation record.
+The complete operation catalog is in [operation inventory and selected schemas](Investigation_API_Catalog.md). These resource families provide the surrounding model without forcing every configuration object into an investigation record.
 
 | Family | Returned/manipulated entities | Relation to an investigation |
 | --- | --- | --- |
@@ -80,7 +80,7 @@ These names and operations come from the [API action/type indexes](https://docs.
 
 [Rendered SVG](../diagrams/D01-workspace-associations.svg) · [Editable Mermaid](../diagrams/D01-workspace-associations.mmd)
 
-`SPACE` and `REGISTERED_SERVICE` below live inside an application connection scope: partition, account and Region. `EXTERNAL_REFERENCE` is a normalized copy of the optional value object embedded in a Task.
+`SPACE` and `REGISTERED_SERVICE` below live inside the owning resource scope: partition, account and Region. The connection and authorization context used to read them is recorded separately. `EXTERNAL_REFERENCE` is a normalized copy of the optional value object embedded in a Task.
 
 ```mermaid
 erDiagram
@@ -140,11 +140,12 @@ This is a composition rule, not an AWS response payload.
 
 ### Identity and scope
 
-Use compound keys. Do not assume opaque IDs are globally unique across accounts, Regions, Agent Spaces or API channels.
+Use compound keys. Do not assume opaque IDs are globally unique across accounts, Regions, Agent Spaces or API channels. Encode the key tuple unambiguously; concatenating opaque components with an unescaped delimiter can create collisions.
 
 | Application record | Recommended identity | Source of relationship |
 | --- | --- | --- |
-| ConnectionScope | `partition + accountId + region`, plus internal connection identity | Authenticated connection/endpoint context |
+| OwningScope | `partition + owningAccountId + region` | Resource-owning ARN or authenticated account/endpoint context |
+| ConnectionContext | Application connection ID plus authorization-context identity | Access path, collection policy and principal-sensitive cache boundary; separate from native entity identity |
 | AgentSpace | `scopeKey + agentSpaceId` | Returned space or request context |
 | Task / Investigation | `spaceKey + taskId` | Native Task |
 | Execution | `spaceKey + executionId` | Native Execution |
@@ -158,7 +159,7 @@ Use compound keys. Do not assume opaque IDs are globally unique across accounts,
 | Derived item/revision | Stable logical item ID; separate immutable projectionRevisionId for each rendition | Application projection and retained payload/hash |
 | InvestigationSnapshot | Investigation key + immutable snapshot ID | Application archival policy |
 
-Keep Agent Space ARNs as aliases where APIs such as Goal and Recommendation return them. Use caller/endpoint context to scope bodies that omit account, Region, or Agent Space ID. A connected resource's account ID is not necessarily the service-owning account ID.
+The entity `scopeKey` identifies the owning partition/account/Region; a role change or a second connection to the same owning scope does not create a different native resource. Authorization context still belongs in read attempts, cache access and export checks. Keep Agent Space ARNs as aliases where APIs such as Goal and Recommendation return them. Use caller/endpoint context to scope bodies that omit account, Region, or Agent Space ID. A connected resource's account ID is not necessarily the service-owning account ID.
 
 ### Diagram D02 — native core with an explicit membership table
 
@@ -203,7 +204,7 @@ erDiagram
         string revision_id PK
         string record_key FK
         string payload_hash
-        datetime observed_at
+        datetime first_observed_at
     }
 ```
 
@@ -211,7 +212,7 @@ erDiagram
 
 `Task.executionId` is optional and describes an associated execution. It is a useful pointer, not a documented substitute for enumerating all executions, nor proof of “latest execution,” “root execution” or “only execution.” `Execution.parentExecutionId` supplies an explicit hierarchy edge; if the parent has not been fetched, create an unresolved reference rather than dropping the child. [Task](https://docs.aws.amazon.com/devopsagent/latest/APIReference/API_Task.html) · [Execution](https://docs.aws.amazon.com/devopsagent/latest/APIReference/API_Execution.html)
 
-`RECORD_REVISION` is application-owned. The public JournalRecord shape provides a record ID and creation time, but no update-version or finalization marker. Store a new observed revision when a record with the same ID has different content. This preserves evidence without claiming that AWS mutates records or exposes a revision API.
+`RECORD_REVISION` is application-owned. Its `first_observed_at` is the first retained observation of that payload revision, not a mutable freshness timestamp; later observations belong to D07. The public JournalRecord shape provides a record ID and creation time, but no update-version or finalization marker. Store a new observed revision when a record with the same ID has different content. This preserves evidence without claiming that AWS mutates records or exposes a revision API.
 
 ### Native field groups and meaning
 
@@ -222,10 +223,10 @@ erDiagram
 | Task linking | Optional primaryTaskId, hasLinkedTasks, statusReason | Linked incident relationship; not execution parentage or fork ancestry |
 | Execution | Required space/execution IDs, agentSubTask, executionStatus, created/updated timestamps | Execution row/tree node and observed activity; agentSubTask is open text |
 | Execution context | Optional parentExecutionId, agentType, uid | Parent relation and display context; uid is session identity, not a full user profile |
-| JournalRecord | Required space/execution/record IDs, recordType, createdAt, content | Durable published record envelope; content is any JSON value |
+| JournalRecord | Required space/execution/record IDs, recordType, createdAt, content | Published record envelope; content is any JSON value; application retention is separate |
 | Journal attribution | Optional userReference with userId/userType | Attribution when supplied; absence does not identify an internal agent by itself |
 
-Exact requiredness and type constraints are in [complete API catalog](Investigation_API_Catalog.md). Fields such as `rootCause`, `confidence`, `progressPercent`, `endedAt`, `duration` and `artifactIds` are not native Task fields.
+Exact requiredness and type constraints are in [operation inventory and selected schemas](Investigation_API_Catalog.md). Fields such as `rootCause`, `confidence`, `progressPercent`, `endedAt`, `duration` and `artifactIds` are not native Task fields.
 
 ### Linked tasks and forks
 
@@ -334,7 +335,7 @@ erDiagram
     SOURCE_REVISION {
         string revision_id PK
         string payload_hash
-        datetime observed_at
+        datetime first_observed_at
     }
     PROJECTION_SOURCE {
         string source_ref_id PK
@@ -363,6 +364,78 @@ A locator is a JSON Pointer, source text range or asset path tied to an exact so
 Every projection declares whether it is a direct field mapping, a deterministic parse, an operator annotation or an application inference. Application-generated confidence scores must never be displayed as AWS-provided confidence.
 
 <!-- block: obsidian-devops-investigation-data-model-timeline -->
+### Collection observations are separate from source revisions
+
+D07 describes **read-based collection observations**. EventBridge deliveries, chat-stream receipts and operator annotations retain their own channel receipts; they do not manufacture native ReadAttempt rows. Those receipts can cite the same D03 SourceRevision abstraction.
+
+A retained payload revision answers **what data was observed**. A read attempt answers **when and how collection tried to obtain data**, including attempts that returned no objects or failed. Repeated reads of unchanged content must not create additional logical records or erase the evidence that the source was checked again. This is a proposed application contract, not an additional AWS entity family.
+
+| Application entity | Required meaning | Identity and retained evidence |
+| --- | --- | --- |
+| CollectionPass | One bounded reconciliation attempt for an investigation | Scoped investigation key, pass ID, start/end, collector version and selection policy |
+| ReadAttempt | One operation/page attempt, including empty success or failure | Attempt ID, pass ID, native operation, effective query fingerprint, start/receipt time, outcome, modeled error/status and request ID when available |
+| SourceObservation | One observed occurrence of a retained source revision | Observation ID, read-attempt ID, source-revision ID and receipt time; repeated identical payloads may cite the same revision |
+| SourceRevision | One distinct retained payload for a logical source | Scoped source key, declared hash/canonicalization scheme and payload hash; native version remains an observed value |
+| CoverageClaim | What a particular pass established for a particular query | Pass ID, query fingerprint, chosen traversal bounds, exhausted/partial/error/unknown state, as-of time and unresolved-reference reasons |
+
+A query fingerprint identifies a traversal: owning entity scope, operation, filter/order/page-size configuration and relevant connection/authorization context. It excludes the changing `nextToken`. Retain exact page-request parameters, input/output tokens, retries and attempt order separately. A CoverageClaim cites the supporting read-attempt IDs/page chain and the evaluation policy. Keep native pagination tokens opaque; a token from one query must not continue another. A failed or empty read still has a ReadAttempt even though it has no SourceObservation rows. Polling an unchanged record creates another observation, while the distinct-record and distinct-revision counts stay unchanged.
+
+### Diagram D07 — collection evidence and bounded coverage
+
+[Rendered SVG](../diagrams/D07-collection-observations.svg) · [Editable Mermaid](../diagrams/D07-collection-observations.mmd)
+
+`SOURCE_REVISION` is the same retained-payload entity as D03. The diagram shows selected attributes; authorization context, exact query parameters, timing, pagination and error details remain part of the read-attempt record.
+
+```mermaid
+erDiagram
+    direction TB
+    COLLECTION_PASS ||--o{ READ_ATTEMPT : issues
+    READ_ATTEMPT ||--o{ SOURCE_OBSERVATION : returns
+    SOURCE_REVISION ||--o{ SOURCE_OBSERVATION : seen_as
+    COLLECTION_PASS ||--o{ COVERAGE_CLAIM : evaluates
+    COLLECTION_PASS {
+        string collection_pass_id PK
+        string investigation_key FK
+        datetime started_at
+        datetime finished_at
+    }
+    READ_ATTEMPT {
+        string read_attempt_id PK
+        string collection_pass_id FK
+        string operation
+        string query_fingerprint
+        string outcome
+    }
+    SOURCE_OBSERVATION {
+        string observation_id PK
+        string read_attempt_id FK
+        string revision_id FK
+        datetime observed_at
+    }
+    SOURCE_REVISION {
+        string revision_id PK
+        string source_key
+        string payload_hash
+    }
+    COVERAGE_CLAIM {
+        string coverage_claim_id PK
+        string collection_pass_id FK
+        string query_fingerprint
+        string state
+        datetime as_of
+    }
+```
+
+Keep these rules explicit when translating the logical model into storage and APIs:
+
+1. **Identity, revision and observation have different counting units.** Count journal records by the full space/execution/record key. Count executions by the scoped execution key. Deduplicate repeated memberships. Preserve every distinct payload revision and its observations separately.
+2. **Latest observed is a selection policy.** A delayed response does not automatically establish the latest service state. Retain native version/timestamps and the observation order, flag conflicting payloads, and publish the policy used by the current view. Equal timestamps need a deterministic local tie-break, not a claim of service ordering.
+3. **Coverage is bounded.** Exhausted pages describe the queried scope at the recorded time. They do not establish all future records, every relevant external data source, successful artifact retrieval, or a transactionally consistent AWS snapshot. The UI should say “No known collection gaps” with its scope, not imply universal evidence completeness.
+4. **Projection publication is atomic within the application.** A header, its source inspector, counters and selected result must reference the same published view revision. Retaining old revisions is useful only if current controls resolve the intended revision exactly.
+5. **Snapshot readability is independent of a current refresh, subject to current authorization and retention policy.** Render authorized retained sources and projections first. A technical current-refresh failure makes comparison unavailable; it must not prevent viewing an already retained capture. Revoked access must not be bypassed through a historical cache. A comparison result needs its own freshness and error state.
+
+The offline prototype applies identity, deduplication, source selection and retained-history rules to its fixture. It does not implement a backend CollectionPass/ReadAttempt store. The future collector must produce those observations before it can claim measured synchronization coverage.
+
 ## 6. Timeline model
 
 The operator needs several related timelines, not one indiscriminate timestamp sort:
@@ -389,7 +462,7 @@ The operator needs several related timelines, not one indiscriminate timestamp s
 | `relatedResourceRefs[]`, `artifactRefs[]` | Optional validated links |
 | `supersedesItemId?` | Corrected/replaced projection, preserving earlier state |
 
-The fields are proposed API/view-model fields for your backend, not AWS request fields.
+The fields are proposed API/view-model fields for your backend, not AWS request fields. The local prototype implements a documented subset; the optional application HTTP routes in the UI annex remain design examples, not deployed endpoints.
 
 **Time semantics matter.** Journal `createdAt` is record creation time. Task/execution `updatedAt` is the last update, not necessarily a finish timestamp. EventBridge `time` represents the investigation/mitigation update time, not receipt by EventBridge. An evidence timestamp inside content may describe a much earlier system event. Preserve all clocks instead of rewriting them into one inferred incident time. [JournalRecord](https://docs.aws.amazon.com/devopsagent/latest/APIReference/API_JournalRecord.html) · [Event detail reference](https://docs.aws.amazon.com/devopsagent/latest/userguide/integrating-devops-agent-into-event-driven-applications-using-amazon-eventbridge-devops-agent-events-detail-reference.html)
 
@@ -488,7 +561,7 @@ Charts have the same boundary: there is no universal native time-series schema i
 
 An application `ArtifactReference` unifies discovery and presentation while preserving the source channel. It does not assert that an A2A artifact ID or a journal reference is a native `assetId`.
 
-The Asset API exposes metadata and version separately from content. `GetAssetContent` returns a zip blob and its version. File retrieval returns path/content/version/timestamps, with content expressed as a text-or-bytes union. Use a specific `assetVersion` for reproducible historical reads; an unversioned read returns the latest. [Asset](https://docs.aws.amazon.com/devopsagent/latest/APIReference/API_Asset.html) · [GetAssetContent](https://docs.aws.amazon.com/devopsagent/latest/APIReference/API_GetAssetContent.html) · [GetAssetFile](https://docs.aws.amazon.com/devopsagent/latest/APIReference/API_GetAssetFile.html)
+The Asset API exposes metadata and version separately from content. `GetAssetContent` returns a JSON response whose `content.zipFile` member contains the ZIP blob, alongside `version`; it is not a raw HTTP ZIP response. An SDK decodes the blob according to its language-specific representation. File retrieval returns path/content/version/timestamps, with content expressed as a text-or-bytes union. Use a specific `assetVersion` for reproducible historical reads; an unversioned read returns the latest. [Asset](https://docs.aws.amazon.com/devopsagent/latest/APIReference/API_Asset.html) · [GetAssetContent](https://docs.aws.amazon.com/devopsagent/latest/APIReference/API_GetAssetContent.html) · [GetAssetFile](https://docs.aws.amazon.com/devopsagent/latest/APIReference/API_GetAssetFile.html)
 
 ### Diagram D05 — investigation references and native asset history
 
@@ -620,7 +693,7 @@ erDiagram
     }
 ```
 
-Capture task version, execution membership, all fetched journal revisions, completion events and exact summary pointers. Include per-execution pagination coverage, unresolved references, inaccessible content and parser versions. Because the API does not provide a transactionally consistent cross-endpoint snapshot, record **capture start/end** and any source changes observed during collection.
+Capture task version, execution membership, all fetched journal revisions, completion events and exact summary pointers. Pin or copy the CollectionPass, supporting read-attempt/page-chain evidence and CoverageClaim revisions used by the capture; a later successful refresh must not rewrite earlier coverage. Include per-execution pagination coverage, unresolved references, inaccessible content and parser versions. Because the API does not provide a transactionally consistent cross-endpoint snapshot, record **capture start/end** and any source changes observed during collection.
 
 A reasonable application policy is to perform terminal reconciliation, retrieve referenced results, compare a follow-up task/execution observation, and create a snapshot with the known coverage. Repeated identical reads increase confidence in stability; they do not prove a service-guaranteed finalization barrier. The UI should say “Snapshot captured at …” or “Available results as of …”.
 
@@ -688,4 +761,4 @@ Promote richer evidence, tool-call, graph, review and approval-resumption experi
 9. Historical snapshots remain immutable in the application when the current investigation continues.
 10. An AWS web-app feature or IAM action does not by itself establish a public SDK operation.
 
-See [complete API catalog](Investigation_API_Catalog.md) for exact fields, [production UI contract](Investigation_UI_Contract.md) for synchronization and view contracts, and [source and model provenance](Investigation_API_Sources.md) for the evidence and validation record.
+See [operation inventory and selected schemas](Investigation_API_Catalog.md) for exact fields, [production UI contract](Investigation_UI_Contract.md) for synchronization and view contracts, and [source and model provenance](Investigation_API_Sources.md) for the evidence and validation record.

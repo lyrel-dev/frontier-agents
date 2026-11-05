@@ -14,7 +14,8 @@ ANALYSIS = APP.parent
 SRC = APP / "src"
 
 
-def main():
+def render_page():
+    """Return the deterministic page and diagram count without changing files."""
     content = (SRC / "shell.html").read_text(encoding="utf-8")
     for token, filename in [("STYLES", "styles.css"), ("DATA", "mock-data.js"),
                             ("MODEL", "model.js"), ("APP", "app.js")]:
@@ -46,12 +47,20 @@ def main():
                          "svgPath": "diagrams/" + svg_path.name,
                          "source": source_path.read_text(encoding="utf-8"), "svg": svg})
     diagram_js = "globalThis.LensDiagrams = " + json.dumps(diagrams, ensure_ascii=False).replace("</", "<\\/") + ";"
+    if content.count("/*__DIAGRAMS__*/") != 1:
+        raise SystemExit("Expected exactly one diagram bundle marker")
     content = content.replace("/*__DIAGRAMS__*/", diagram_js)
     if "/*__" in content:
         raise SystemExit("Unfilled bundle marker")
+    return content, len(diagrams)
+
+
+def main():
+    content, diagram_count = render_page()
     output = ANALYSIS / "index.html"
-    output.write_text(content, encoding="utf-8")
-    print(f"Built {output.name}: {len(content.encode('utf-8')):,} bytes; {len(diagrams)} embedded diagrams; offline runtime.")
+    with output.open("w", encoding="utf-8", newline="\n") as handle:
+        handle.write(content)
+    print(f"Built {output.name}: {len(content.encode('utf-8')):,} bytes; {diagram_count} embedded diagrams; offline runtime.")
 
 
 if __name__ == "__main__":

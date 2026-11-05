@@ -19,18 +19,18 @@
       "type": "er",
       "width": 710,
       "height": 728,
-      "sourceSha256": "72bedb3f7e9cd22b185a002a4c7ae6e8896f7766a7b2f34ba56077ad7ae86410",
-      "svgSha256": "2adf792f4adaa1693a34b64670000759d59e9caa6d6dbf623f9e9c1deca6242f"
+      "sourceSha256": "035941f20928ddea424f8924fdc2da1f44081821dad07b13d2f87edbd1ae8dec",
+      "svgSha256": "98807a814f8a4ca0248bc8036c16bd9a2524ca69442cf441fa11d7b36be7a31a"
     },
     {
       "id": "D03",
       "source": "diagrams/D03-projection-provenance.mmd",
       "rendered": "diagrams/D03-projection-provenance.svg",
       "type": "er",
-      "width": 533,
+      "width": 552,
       "height": 699,
-      "sourceSha256": "383ea0741a3bcbcfe2247a06f9f1a2fe9dbd1d5b887a7a1537413d1b4ab737d5",
-      "svgSha256": "cc75d1792c8ee2bc2c95c35421c5957a499838a476cc1bfd294165c9476a625c"
+      "sourceSha256": "f747504b99a49165009f9c958c34bb800e90de498960d0b3fd70a6d6e3d44112",
+      "svgSha256": "5b40297fc0c981848bc680545730c65fbf451df4c8314982884474d8b7b8ac8d"
     },
     {
       "id": "D04",
@@ -63,6 +63,16 @@
       "svgSha256": "503124aad6de91cb5c7256aaa0f5e7f5e0e8aab74bc2ae7b2ffdac1ff37a3274"
     },
     {
+      "id": "D07",
+      "source": "diagrams/D07-collection-observations.mmd",
+      "rendered": "diagrams/D07-collection-observations.svg",
+      "type": "er",
+      "width": 769,
+      "height": 729,
+      "sourceSha256": "ab5e83e026984a779e4761bf5aa99de6acaa653b51c1b5e831afae4b80bbe4e5",
+      "svgSha256": "e98c1d943dcf317d4ce82d6d62f8bbb8a57d4b40652f4d59b0ae3707bfacb55c"
+    },
+    {
       "id": "U01",
       "source": "diagrams/U01-live-reconciliation.mmd",
       "rendered": "diagrams/U01-live-reconciliation.svg",
@@ -87,10 +97,10 @@
       "source": "diagrams/U03-snapshot-workflow.mmd",
       "rendered": "diagrams/U03-snapshot-workflow.svg",
       "type": "flowchart",
-      "width": 523,
-      "height": 624,
-      "sourceSha256": "115c05cde7face13075bb15f198aca9a2de82a0f24166f08e47037d57c3571e3",
-      "svgSha256": "2bdc37157740671594da3fe2baba0774d2e565b0cd49c950bb1944d3a78fb142"
+      "width": 545,
+      "height": 663,
+      "sourceSha256": "04fbdaea5f6ffd0ce320e49484156185d097c5d779c832d39c96ade1a143e2dd",
+      "svgSha256": "18681e86c76a2b697d8cc2656022dd55ac211a42c560f767ba1d9f5ccef643b4"
     }
   ]
 }

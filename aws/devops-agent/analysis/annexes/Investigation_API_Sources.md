@@ -31,12 +31,12 @@ This addendum was reviewed on **5 November 2026** to prepare an investigation-fo
 The analysis covers:
 
 - All **63 native operations**, grouped by entity family.
-- The official model's **560 shapes**, with explicit examination of investigation-relevant contracts.
+- The official model's **560 shape names counted and inventoried**, with **19 request** and **52 selected returned/nested** tables expanded and compared; this is not a semantic audit of all 560 shapes.
 - **19 request structures** and **52 selected returned/nested structures** expanded into the field catalog.
 - Native task/execution/journal/message/asset identifiers, states, timestamps, pagination and mutations.
 - Documented EventBridge, native chat-stream and A2A boundaries.
 - Proposed logical entities for timelines, evidence, graphs, artifacts, provenance and immutable historical snapshots.
-- **Nine Mermaid diagrams:** seven ER diagrams, one sequence diagram and one flowchart.
+- The initial edition's **nine Mermaid diagrams:** seven ER diagrams, one sequence diagram and one flowchart. The current package's expanded figure set is listed in the [diagram manifest](../diagrams/manifest.json).
 - A future implementation capture/acceptance matrix; no account-level test has been performed.
 
 No live AWS API calls, production payloads, credentials, deployments or service mutations were used. The study establishes a public-contract-based design and identifies where representative service captures or an AWS clarification are still required.
@@ -168,6 +168,8 @@ Every operation and selected type in [complete API catalog](Investigation_API_Ca
 | API HTML route for approval may redirect | Use current official SDK model and directed-actions/Boto3 docs |
 | IAM/app capability names absent from 63-operation public model | Do not manufacture SDK calls or reverse-engineer private console endpoints |
 | All-chats UI filter newer than modeled ListChats parameters | Record a capability gap; do not silently invent an All parameter |
+| `GetAssetContent` described as a ZIP download | Preserve the actual JSON envelope: SDK-decoded ZIP bytes are at `content.zipFile`, beside the returned version |
+| SDK `AssetFileText.max` is 6291456; managing-assets guide says 1.5 MB text and lower profile limits | Preserve different measurement/profile layers; a generic string trait does not establish supported upload bytes |
 
 Where a guide describes broader product behavior, the notes preserve that fact without fabricating the missing wire recipe. A negative inventory finding means “not present in the reviewed public model,” not “AWS cannot implement this internally.”
 
@@ -222,3 +224,17 @@ Any future implementation should publish its actual runtime validation results s
 The package review on 5 November 2026 fetched the pinned Botocore, Go and JavaScript models again and verified the byte counts and SHA-256 values above. The Botocore current `develop` path was byte-identical to the pinned file at this review. The independent comparison found 63 matching operation routes/response-field lists, 19 matching request tables, and 52 matching selected type tables. No customer AWS account was queried.
 
 The refresh preserves the six logical-model ERDs and the three UI-contract diagrams as editable Mermaid under `../diagrams/`. All nine appear together in the [reviewed report](../report.md). Its substantive clarification distinguishes an uncaptured completion notification, a captured completion that omits a summary pointer, and a pointer whose record is not yet retrieved. Prototype fixture schemas are explicitly application-owned.
+
+## 8. Adversarial API audit and reproducibility
+
+The subsequent quality review on 5 November 2026 independently downloaded the current Botocore `develop` model. It remained byte-identical to the immutable pin above: **357,369 bytes**, **63 operations**, **560 shapes**. Inventory size is distinct from review depth: this package expands **19 request tables**, **52 selected type tables** and **339 member rows**. It does not claim a complete nested business schema for every provider configuration or arbitrary JSON payload.
+
+The committed [native API audit tool](../tools/check_native_api.py) now verifies the operation/field catalog mechanically. It accepts an explicitly supplied local model and performs no network access by default; `--fetch` explicitly retrieves the pinned official source. It rejects a mismatched checksum. The [compact inventory](../qa/native-api-inventory.json) retains all operation routes, endpoint prefixes, success codes, modeled error sets, token traits, the enumerated shape names and selected-table fingerprints. It omits upstream explanatory prose and is not a vendored replacement SDK.
+
+The [audit evidence](../qa/native-api-audit.json) records exact source/catalog hashes, positive checks and nine negative controls. Changes to a route, required field, document type, enum, page limit, endpoint prefix, success code, error group or union declaration were each detected. Reproduction commands are in the [catalog](Investigation_API_Catalog.md#reproduce-the-audit).
+
+The audit corrected omissions in the transport/failure contract: **28 `cp.` and 35 `dp.` operations**, operation-specific successful HTTP codes, nine common exceptions and the additional Identity Center exception on operator-app enable/disable. The native error policy now distinguishes HTTP **400**, **402**, **413** and stream-level failure. The official API documents `ValidationException` as 400 although this Botocore shape does not carry an explicit `error.httpStatusCode`; that exception is labeled as documented, not model-derived. [ListBacklogTasks error reference](https://docs.aws.amazon.com/devopsagent/latest/APIReference/API_ListBacklogTasks.html) · [EnableOperatorApp](https://docs.aws.amazon.com/devopsagent/latest/APIReference/API_EnableOperatorApp.html)
+
+Two asset details remain separate: `GetAssetContent` returns JSON with decoded SDK bytes at `content.zipFile`, and effective content capacity is not settled by one modeled string-length maximum. The current managing-assets guide describes 1.5 MB text and a lower AGENTS.md profile limit, while the pinned `AssetFileText` maximum is 6291456. These measurements and scopes can coexist; they are not evidence of an AWS contradiction. Preserve both layers and verify runtime boundaries before promising an upload capacity. [GetAssetContent](https://docs.aws.amazon.com/devopsagent/latest/APIReference/API_GetAssetContent.html) · [Managing assets](https://docs.aws.amazon.com/devopsagent/latest/userguide/about-aws-devops-agent-managing-assets.html)
+
+This audit verifies authored tables against a pinned public schema. It does not validate live pagination behavior, account permissions, supported state transitions, journal profiles, event delivery, retention, A2A wire captures or a production application HTTP contract. The historical nine-diagram records above describe that earlier edition; consult the current [diagram manifest](../diagrams/manifest.json) and [validation record](../VALIDATION.md) for the expanded package's current figures and executed tests.
