@@ -1,0 +1,40 @@
+digraph Model {
+graph [rankdir=TB, bgcolor="white", pad=0.25, nodesep=0.9, ranksep=1.0, newrank=true, splines=polyline, fontname="DejaVu Sans", fontsize=20, labelloc=t, label="Consolidated Operations Console — Investigations"];
+node [shape=plain, fontname="DejaVu Sans"];
+edge [fontname="DejaVu Sans", fontsize=9, labelfontsize=9, labeldistance=2.5, labelangle=25, color="#718096", arrowsize=0.65];
+subgraph cluster_4 {
+label="Investigations"; color="#CCD5DF"; fontcolor="#334155"; fontsize=15; style="rounded";
+anchor_4_top [shape=point,width=0,height=0,label="",style=invis];
+anchor_4_bottom [shape=point,width=0,height=0,label="",style=invis];
+AgentSpace [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" COLOR="#8492A6"><TR><TD BGCOLOR="#E2F2F3"><B>AgentSpace</B></TD></TR><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="10">agentSpaceId: Id</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="10">identity: SourceIdentity</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="10">selectedObservationId: Id</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="10">name: string</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="10">associations: List[AgentAssociation]</FONT></TD></TR></TABLE>>];
+Investigation [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" COLOR="#8492A6"><TR><TD BGCOLOR="#E2F2F3"><B>Investigation</B></TD></TR><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="10">investigationId: Id</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="10">agentSpaceId: Id</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="10">identity: SourceIdentity</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="10">selectedTaskObservationId: Id</FONT></TD></TR></TABLE>>];
+Execution [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" COLOR="#8492A6"><TR><TD BGCOLOR="#E2F2F3"><B>Execution</B></TD></TR><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="10">executionId: Id</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="10">agentSpaceId: Id</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="10">identity: SourceIdentity</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="10">selectedObservationId: Id</FONT></TD></TR></TABLE>>];
+JournalRecord [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" COLOR="#8492A6"><TR><TD BGCOLOR="#E2F2F3"><B>JournalRecord</B></TD></TR><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="10">journalRecordId: Id</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="10">agentSpaceId: Id</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="10">executionId: Id</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="10">identity: SourceIdentity</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="10">selectedSourceRevisionId: Id</FONT></TD></TR></TABLE>>];
+ApprovalRequest [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" COLOR="#8492A6"><TR><TD BGCOLOR="#E2F2F3"><B>ApprovalRequest</B></TD></TR><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="10">approvalRequestId: Id</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="10">agentSpaceId: Id</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="10">executionId: Id</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="10">nativeApprovalId: string</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="10">requestSourceRevisionId: Id</FONT></TD></TR></TABLE>>];
+Asset [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" COLOR="#8492A6"><TR><TD BGCOLOR="#E2F2F3"><B>Asset</B></TD></TR><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="10">assetId: Id</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="10">agentSpaceId: Id</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="10">identity: SourceIdentity</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="10">assetType: string</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="10">name: string</FONT></TD></TR></TABLE>>];
+{rank=same; AgentSpace;}
+anchor_4_top -> AgentSpace [style=invis,weight=100];
+{rank=same; Investigation; Execution;}
+Investigation -> Execution [style=invis,weight=100];
+AgentSpace -> Investigation [style=invis,weight=100];
+AgentSpace -> Execution [style=invis,weight=100];
+{rank=same; Asset; ApprovalRequest; JournalRecord;}
+Asset -> ApprovalRequest [style=invis,weight=100];
+ApprovalRequest -> JournalRecord [style=invis,weight=100];
+Investigation -> Asset [style=invis,weight=100];
+Investigation -> ApprovalRequest [style=invis,weight=100];
+Investigation -> JournalRecord [style=invis,weight=100];
+Execution -> Asset [style=invis,weight=100];
+Execution -> ApprovalRequest [style=invis,weight=100];
+Execution -> JournalRecord [style=invis,weight=100];
+Asset -> anchor_4_bottom [style=invis,weight=100];
+ApprovalRequest -> anchor_4_bottom [style=invis,weight=100];
+JournalRecord -> anchor_4_bottom [style=invis,weight=100];
+}
+AgentSpace -> Investigation [constraint=false,xlabel="scopes",taillabel="1",headlabel="0..*"];
+AgentSpace -> Execution [constraint=false,xlabel="scopes",taillabel="1",headlabel="0..*"];
+Investigation -> Execution [constraint=false,xlabel="observed memberships",taillabel="0..*",headlabel="0..*"];
+Execution -> JournalRecord [constraint=false,xlabel="publishes",taillabel="1",headlabel="0..*"];
+Execution -> ApprovalRequest [constraint=false,xlabel="requests",taillabel="1",headlabel="0..*"];
+AgentSpace -> Asset [constraint=false,xlabel="owns",taillabel="1",headlabel="0..*"];
+}

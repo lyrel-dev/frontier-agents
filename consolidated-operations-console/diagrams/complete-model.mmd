@@ -1,0 +1,344 @@
+%% Generated from model/schema.json; edit the schema and rerun tools/render_model.py.
+%% Complete model — all 37 entities
+classDiagram
+direction TB
+class Workspace {
+  <<foundation>>
+  +Id workspaceId
+  +Version version
+  +Timestamp localUpdatedAt
+  +string name
+  +List~enum~ enabledModules
+}
+class Connection {
+  <<foundation>>
+  +Id connectionId
+  +Version version
+  +Timestamp localUpdatedAt
+  +string name
+  +string provider
+}
+class Resource {
+  <<foundation>>
+  +Id resourceId
+  +SourceIdentity identity
+  +Id? selectedObservationId
+  +enum identityStability
+  +string? incarnationKey
+}
+class Collection {
+  <<foundation>>
+  +Id collectionId
+  +Id connectionId
+  +enum state
+  +Version projectionVersion
+}
+class ReadAttempt {
+  <<foundation>>
+  +Id readAttemptId
+  +Id collectionId
+  +enum state
+  +string? providerRequestId
+  +Id requestSourceRevisionId
+}
+class SourceRevision {
+  <<foundation>>
+  +Id sourceRevisionId
+  +SourceIdentity identity
+  +string profile
+  +enum representation
+  +string profileVersion
+}
+class Observation {
+  <<foundation>>
+  +Id observationId
+  +Id sourceRevisionId
+  +Id? readAttemptId
+  +Id? connectionId
+}
+class ProjectionRevision {
+  <<foundation>>
+  +Id projectionRevisionId
+  +enum profile
+  +string projectionKey
+  +string profileVersion
+  +List~EntityRef~ subjectRefs
+}
+class Snapshot {
+  <<foundation>>
+  +Id snapshotId
+  +enum kind
+  +List~EntityRef~ subjectRefs
+  +Timestamp capturedAt
+  +Digest manifestDigest
+}
+class WorkItem {
+  <<foundation>>
+  +Id workItemId
+  +Version version
+  +enum state
+  +Timestamp localUpdatedAt
+  +string title
+}
+class Command {
+  <<foundation>>
+  +Id commandId
+  +enum state
+  +string operation
+  +List~EntityRef~ subjectRefs
+  +ActorRef actor
+}
+class System {
+  <<workload>>
+  +Id systemId
+  +Version version
+  +Timestamp localUpdatedAt
+  +string name
+  +string description
+}
+class UserJourney {
+  <<workload>>
+  +Id userJourneyId
+  +Version version
+  +Id systemId
+  +Timestamp localUpdatedAt
+  +string name
+}
+class Service {
+  <<workload>>
+  +Id serviceId
+  +Version version
+  +Timestamp localUpdatedAt
+  +string name
+  +string description
+}
+class Dependency {
+  <<workload>>
+  +Id dependencyId
+  +Id serviceId
+  +SourceIdentity identity
+  +Id? targetResourceId
+  +Id? targetServiceId
+}
+class HealthEvent {
+  <<health>>
+  +Id healthEventId
+  +Id selectedSourceRevisionId
+  +string eventArn
+  +string eventTypeCode
+  +string serviceCode
+}
+class EventContext {
+  <<health>>
+  +Id eventContextId
+  +Id healthEventId
+  +enum kind
+  +string? accountId
+  +string? organizationId
+}
+class EntityImpact {
+  <<health>>
+  +Id entityImpactId
+  +Id eventContextId
+  +Id selectedObservationId
+  +string? rawProviderStatus
+}
+class Communication {
+  <<health>>
+  +Id communicationId
+  +Id eventContextId
+  +string? validatedBaseId
+  +string? notificationAccountContext
+  +Digest groupingRuleDigest
+}
+class LifecycleEntry {
+  <<health>>
+  +Id lifecycleEntryId
+  +Id catalogSnapshotId
+  +Id sourceRevisionId
+  +string serviceCode
+  +string title
+}
+class ComponentDeployment {
+  <<health>>
+  +Id componentDeploymentId
+  +Id resourceId
+  +Id observationId
+  +string componentKind
+  +string versionLabel
+}
+class ResiliencePolicy {
+  <<resilience>>
+  +Id resiliencePolicyId
+  +SourceIdentity identity
+  +Id selectedObservationId
+  +string name
+  +List~PolicyComponent~ components
+}
+class ResilienceAssessment {
+  <<resilience>>
+  +Id resilienceAssessmentId
+  +Id serviceId
+  +SourceIdentity identity
+  +Id? selectedObservationId
+  +Id? policyContextSnapshotId
+}
+class Finding {
+  <<resilience>>
+  +Id findingId
+  +Id serviceId
+  +SourceIdentity identity
+  +Id? selectedSummaryObservationId
+  +Id? selectedDetailObservationId
+}
+class Recommendation {
+  <<resilience>>
+  +Id recommendationId
+  +Id serviceId
+  +Id findingId
+  +Id findingDetailObservationId
+  +Id sourceRevisionId
+}
+class AgentSpace {
+  <<investigation>>
+  +Id agentSpaceId
+  +SourceIdentity identity
+  +Id selectedObservationId
+  +string name
+  +List~AgentAssociation~ associations
+}
+class Investigation {
+  <<investigation>>
+  +Id investigationId
+  +Id agentSpaceId
+  +SourceIdentity identity
+  +Id selectedTaskObservationId
+}
+class Execution {
+  <<investigation>>
+  +Id executionId
+  +Id agentSpaceId
+  +SourceIdentity identity
+  +Id selectedObservationId
+}
+class JournalRecord {
+  <<investigation>>
+  +Id journalRecordId
+  +Id agentSpaceId
+  +Id executionId
+  +SourceIdentity identity
+  +Id selectedSourceRevisionId
+}
+class ApprovalRequest {
+  <<investigation>>
+  +Id approvalRequestId
+  +Id agentSpaceId
+  +Id executionId
+  +string nativeApprovalId
+  +Id requestSourceRevisionId
+}
+class Asset {
+  <<investigation>>
+  +Id assetId
+  +Id agentSpaceId
+  +SourceIdentity identity
+  +string assetType
+  +string name
+}
+class Scenario {
+  <<workflow>>
+  +Id scenarioId
+  +Version version
+  +Id? defaultRevisionId
+  +Timestamp localUpdatedAt
+  +string name
+}
+class ScenarioRevision {
+  <<workflow>>
+  +Id scenarioRevisionId
+  +Id scenarioId
+  +Version revisionNumber
+  +Timestamp publishedAt
+  +Digest digest
+}
+class Run {
+  <<workflow>>
+  +Id runId
+  +Id scenarioRevisionId
+  +Id inputSnapshotId
+  +enum phase
+  +enum executionOutcome
+}
+class StepRun {
+  <<workflow>>
+  +Id stepRunId
+  +Id runId
+  +enum phase
+  +Id stepKey
+  +Version? selectedAttemptNo
+}
+class StepAttempt {
+  <<workflow>>
+  +Id stepAttemptId
+  +Id runId
+  +Id stepRunId
+  +Version attemptNo
+  +Id dispatchKey
+}
+class Experiment {
+  <<fis>>
+  +Id experimentId
+  +SourceIdentity identity
+  +Id? templateSourceRevisionId
+  +Id selectedObservationId
+  +string rawExperimentState
+}
+Workspace "1" --> "0..*" Connection : scopes
+Workspace "1" --> "0..*" System : catalogues
+Workspace "1" --> "0..*" WorkItem : tracks
+Connection "1" --> "0..*" Collection : access path
+Collection "1" --> "0..*" ReadAttempt : owns
+ReadAttempt "0..1" --> "0..*" Observation : records
+SourceRevision "1" --> "0..*" Observation : observed as
+Observation "0..*" --> "0..*" ProjectionRevision : immutable inputs
+SourceRevision "0..*" --> "0..*" ProjectionRevision : immutable inputs
+ProjectionRevision "0..*" --> "0..*" Snapshot : pins
+SourceRevision "0..*" --> "0..*" Snapshot : pins
+Command "0..*" --> "0..*" Observation : reconciled by
+Resource "1" --> "0..*" ComponentDeployment : hosts
+System "1" --> "0..*" UserJourney : contains
+System "0..*" --> "0..*" Service : membership value
+UserJourney "0..*" --> "0..*" Service : membership value
+Service "0..*" --> "0..*" Resource : catalogue link
+Service "1" --> "0..*" Dependency : scopes
+HealthEvent "1" --> "0..*" EventContext : contextualized as
+EventContext "1" --> "0..*" EntityImpact : qualified impacts
+EventContext "1" --> "0..*" Communication : receives
+EntityImpact "0..*" --> "0..*" Resource : explicit match
+Snapshot "1" --> "0..*" LifecycleEntry : catalogue capture
+LifecycleEntry "0..*" --> "0..*" ProjectionRevision : exposure input
+ComponentDeployment "0..*" --> "0..*" ProjectionRevision : exposure input
+Service "1" --> "0..*" ResilienceAssessment : assessed by
+Service "1" --> "0..*" Finding : scopes
+Finding "1" --> "0..*" Recommendation : detail suggestions
+ResiliencePolicy "0..*" --> "0..*" Snapshot : captured context
+Snapshot "0..1" --> "0..*" ResilienceAssessment : context evidence
+AgentSpace "1" --> "0..*" Investigation : scopes
+AgentSpace "1" --> "0..*" Execution : scopes
+Investigation "0..*" --> "0..*" Execution : observed memberships
+Execution "1" --> "0..*" JournalRecord : publishes
+Execution "1" --> "0..*" ApprovalRequest : requests
+ApprovalRequest "0..1" --> "0..*" Command : decision or resume
+AgentSpace "1" --> "0..*" Asset : owns
+Investigation "0..*" --> "0..*" Snapshot : historical subjects
+Scenario "1" --> "0..*" ScenarioRevision : publishes
+ScenarioRevision "1" --> "0..*" Run : executed as
+Snapshot "1" --> "0..*" Run : pinned admission
+Run "1" --> "1..*" StepRun : owns
+StepRun "1" --> "0..*" StepAttempt : attempts
+StepAttempt "0..*" --> "0..*" Experiment : external effect reference
+StepAttempt "0..*" --> "0..*" ResilienceAssessment : external effect reference
+WorkItem "0..*" --> "0..*" Command : related intents
+%% All entities are workspace-scoped; all foreign references require same-workspace validation.
+%% EventContext impacts exclude ORG_SUMMARY; Investigation-Execution is observed membership.
+%% Cross-module references remain typed fields when a focused panel omits their target.

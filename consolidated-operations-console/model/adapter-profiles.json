@@ -1,0 +1,4976 @@
+{
+  "schemaVersion": "1.0",
+  "sourceRepository": "lyrel-dev/frontier-agents",
+  "sourceBranch": "main",
+  "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+  "status": "PHASE_1_DESIGN_CONTRACT",
+  "contractBoundary": {
+    "role": "Logical mapping and typed profile registry; not a replacement for native SDK schemas or an implemented adapter.",
+    "fieldHintSemantics": "observedFields are conservative type hints for known native members or explicitly noted normalized envelopes. Absence remains absent; these hints do not invent native requiredness or coerce unknown values.",
+    "rawPayloadPolicy": "Retain exact source JSON/envelope, including unknown members, enums, unions, scalars and null. Projection failure records a diagnostic and preserves source evidence.",
+    "unknownProfilePolicy": "Retain raw SourceRevision with unsupported-profile state; do not invent a normalized result or silently drop it.",
+    "sourceIdentityPolicy": "Native identity uses owning provider tuple and parent scope, never Connection credentials or display names. Canonical-to-provider bindings require evidence.",
+    "writePolicy": "Profile descriptors do not authorize native writes. Phase 1 includes specifications only; commands that reach AWS need a separately implemented, authorized, idempotency-aware adapter.",
+    "projectionPolicy": "Only normalizedBinding.projectionProfile names are ProjectionRevision enum values. Other console profiles bind SourceRevision.profile as LOCAL_EVIDENCE captures or declared owned values; they do not invent unmodeled normalized projection variants.",
+    "entityCount": 37
+  },
+  "canonicalEntitiesByModule": {
+    "foundation": [
+      "Workspace",
+      "Connection",
+      "Resource",
+      "Collection",
+      "ReadAttempt",
+      "SourceRevision",
+      "Observation",
+      "ProjectionRevision",
+      "Snapshot",
+      "WorkItem",
+      "Command"
+    ],
+    "workload": [
+      "System",
+      "UserJourney",
+      "Service",
+      "Dependency"
+    ],
+    "health": [
+      "HealthEvent",
+      "EventContext",
+      "EntityImpact",
+      "Communication",
+      "LifecycleEntry",
+      "ComponentDeployment"
+    ],
+    "resilience": [
+      "ResiliencePolicy",
+      "ResilienceAssessment",
+      "Finding",
+      "Recommendation"
+    ],
+    "investigation": [
+      "AgentSpace",
+      "Investigation",
+      "Execution",
+      "JournalRecord",
+      "ApprovalRequest",
+      "Asset"
+    ],
+    "workflow": [
+      "Scenario",
+      "ScenarioRevision",
+      "Run",
+      "StepRun",
+      "StepAttempt"
+    ],
+    "fis": [
+      "Experiment"
+    ]
+  },
+  "mappings": [
+    {
+      "sourceService": "health",
+      "sourceConcepts": [
+        "HealthEvent",
+        "HEALTH_EVENT"
+      ],
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "HealthEvent"
+      ],
+      "representation": "HealthEvent",
+      "preservedSemantics": "Keep the full provider event ARN. Event counts do not multiply by context, receipt, or delivery.",
+      "sourcePath": "aws/health/analysis/report.md",
+      "profileId": "aws.health.event/v1"
+    },
+    {
+      "sourceService": "health",
+      "sourceConcepts": [
+        "EventType",
+        "EVENT_TYPE"
+      ],
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "SourceRevision"
+      ],
+      "representation": "HealthEventType",
+      "preservedSemantics": "Catalog classification is observed evidence; it cannot overwrite the classification actually reported on an event.",
+      "sourcePath": "aws/health/analysis/report.md",
+      "profileId": "aws.health.event-type/v1"
+    },
+    {
+      "sourceService": "health",
+      "sourceConcepts": [
+        "EventContext",
+        "EVENT_CONTEXT"
+      ],
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "EventContext"
+      ],
+      "representation": "EventContext",
+      "preservedSemantics": "Unique workspace/event/kind/non-null contextKey. PUBLIC has no affected-account or organization link; ACCOUNT has exactly one account; ORG_SUMMARY has exactly one organization and owns no impacts.",
+      "sourcePath": "aws/health/analysis/report.md"
+    },
+    {
+      "sourceService": "health",
+      "sourceConcepts": [
+        "EventRevision",
+        "EVENT_REVISION"
+      ],
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "SourceRevision",
+        "Observation"
+      ],
+      "representation": "Retained contextual event revision",
+      "preservedSemantics": "Pin contextual source evidence and field presence. Summary absence does not erase hydrated detail. Event status, provider time and local observation time remain separate.",
+      "sourcePath": "aws/health/analysis/report.md",
+      "profileId": "aws.health.event/v1"
+    },
+    {
+      "sourceService": "health",
+      "sourceConcepts": [
+        "EventDescription",
+        "EVENT_DESCRIPTION"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "SourceRevision"
+      ],
+      "representation": "LocalizedDescription",
+      "preservedSemantics": "Locale and text belong to the exact event-context revision. The latest-description API does not provide an independent provider history entity.",
+      "sourcePath": "aws/health/analysis/report.md"
+    },
+    {
+      "sourceService": "health",
+      "sourceConcepts": [
+        "EntityImpact",
+        "ENTITY_IMPACT"
+      ],
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "EntityImpact"
+      ],
+      "representation": "EntityImpact",
+      "preservedSemantics": "An event-relative construct may be a resource, group or broader marker. Preserve provisional local ID and optional Health entity ARN. Supplied account must agree with ACCOUNT context.",
+      "sourcePath": "aws/health/analysis/report.md",
+      "profileId": "aws.health.entity-impact/v1"
+    },
+    {
+      "sourceService": "health",
+      "sourceConcepts": [
+        "EntityRevision",
+        "ENTITY_REVISION"
+      ],
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "SourceRevision",
+        "Observation"
+      ],
+      "representation": "Retained impact revision",
+      "preservedSemantics": "Entity provider-update time is independent of parent event time; repeat reads do not create another impact.",
+      "sourcePath": "aws/health/analysis/report.md",
+      "profileId": "aws.health.entity-impact/v1"
+    },
+    {
+      "sourceService": "health",
+      "sourceConcepts": [
+        "Account",
+        "ACCOUNT"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "Workspace",
+        "Connection",
+        "Resource"
+      ],
+      "representation": "AccountReference",
+      "preservedSemantics": "Preserve partition and string account ID. Names and ownership are external enrichment; receipt is not impact or membership evidence.",
+      "sourcePath": "aws/health/analysis/report.md"
+    },
+    {
+      "sourceService": "health",
+      "sourceConcepts": [
+        "Organization",
+        "ORGANIZATION"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "Workspace",
+        "Connection"
+      ],
+      "representation": "OrganizationReference",
+      "preservedSemantics": "Preserve external organization identity and scope; Health does not return a complete organization directory.",
+      "sourcePath": "aws/health/analysis/report.md"
+    },
+    {
+      "sourceService": "health",
+      "sourceConcepts": [
+        "OrganizationMembership",
+        "ORGANIZATION_MEMBERSHIP"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "Workspace",
+        "SourceRevision"
+      ],
+      "representation": "OrganizationMembership",
+      "preservedSemantics": "Time-bounded account/organization relation with source evidence. Historical visibility can outlast current membership.",
+      "sourcePath": "aws/health/analysis/report.md"
+    },
+    {
+      "sourceService": "health",
+      "sourceConcepts": [
+        "OrganizationHealthAccess",
+        "ORG_HEALTH_ACCESS"
+      ],
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "Connection",
+        "SourceRevision"
+      ],
+      "representation": "OrganizationHealthAccessObservation",
+      "preservedSemantics": "Observed integration state differs from requested state and backfill completeness; an empty enable/disable acknowledgement proves neither readiness nor coverage.",
+      "sourcePath": "aws/health/analysis/report.md",
+      "profileId": "aws.health.organization-access/v1"
+    },
+    {
+      "sourceService": "health",
+      "sourceConcepts": [
+        "EntityResourceMatch"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "EntityImpact",
+        "Resource"
+      ],
+      "representation": "ResourceMatch",
+      "preservedSemantics": "Zero, one or several verified resource matches, each with method, confidence and exact evidence. Unresolved values and groups remain valid.",
+      "sourcePath": "aws/health/analysis/report.md"
+    },
+    {
+      "sourceService": "health",
+      "sourceConcepts": [
+        "Communication",
+        "COMMUNICATION"
+      ],
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "Communication"
+      ],
+      "representation": "Communication",
+      "preservedSemantics": "Local communication identity differs from raw AWS communicationId. Preserve notification-account context, grouping method, expected pages, conflicts and assembly state.",
+      "sourcePath": "aws/health/analysis/report.md",
+      "profileId": "aws.health.communication/v1"
+    },
+    {
+      "sourceService": "health",
+      "sourceConcepts": [
+        "CommunicationPage",
+        "COMMUNICATION_PAGE"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "Communication"
+      ],
+      "representation": "CommunicationPage",
+      "preservedSemantics": "Preserve exact raw communicationId and page number. Group a page suffix only when validated; require expected pages before claiming complete membership.",
+      "sourcePath": "aws/health/analysis/report.md"
+    },
+    {
+      "sourceService": "health",
+      "sourceConcepts": [
+        "MessageDelivery",
+        "MESSAGE_DELIVERY"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "Communication",
+        "Observation",
+        "SourceRevision"
+      ],
+      "representation": "DeliveryReference",
+      "preservedSemantics": "Raw envelope is an exact SourceRevision; Observation records receipt. Logical page dedupe excludes backup delivery region/envelope ID; receipt metadata never becomes affected-account attribution.",
+      "sourcePath": "aws/health/analysis/report.md"
+    },
+    {
+      "sourceService": "health",
+      "sourceConcepts": [
+        "SourceConnection"
+      ],
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "Connection"
+      ],
+      "representation": "Connection",
+      "preservedSemantics": "A collection/access path with capabilities, authorization context and monitored scope. Changing role/connection does not change native identity.",
+      "sourcePath": "aws/health/analysis/report.md"
+    },
+    {
+      "sourceService": "health",
+      "sourceConcepts": [
+        "CollectionRun"
+      ],
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "Collection",
+        "ReadAttempt"
+      ],
+      "representation": "Collection and ReadAttempt",
+      "preservedSemantics": "A bounded collection owns attempts for each operation/page, including empty successes and failures; pagination completion applies only to that query.",
+      "sourcePath": "aws/health/analysis/report.md"
+    },
+    {
+      "sourceService": "health",
+      "sourceConcepts": [
+        "CollectionItemError"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "ReadAttempt"
+      ],
+      "representation": "CollectionItemError",
+      "preservedSemantics": "Retain event/account-specific failedSet errors even when transport status is 200. Batch success is not inferred from HTTP status.",
+      "sourcePath": "aws/health/analysis/report.md"
+    },
+    {
+      "sourceService": "health",
+      "sourceConcepts": [
+        "CoverageAssessment"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "Collection",
+        "Snapshot",
+        "ProjectionRevision"
+      ],
+      "representation": "Coverage",
+      "preservedSemantics": "Pin query scope, page chain, errors, unavailable capabilities, freshness and policy. A snapshot freezes these values; later collection cannot improve old coverage.",
+      "sourcePath": "aws/health/analysis/report.md"
+    },
+    {
+      "sourceService": "health",
+      "sourceConcepts": [
+        "SourceObservation",
+        "SOURCE_OBSERVATION"
+      ],
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "SourceRevision",
+        "Observation"
+      ],
+      "representation": "Retained payload and receipt",
+      "preservedSemantics": "SourceRevision preserves exact payload; Observation records seeing it. API, EventBridge and operator channels retain their own receipt kinds.",
+      "sourcePath": "aws/health/analysis/report.md"
+    },
+    {
+      "sourceService": "health",
+      "sourceConcepts": [
+        "AggregateSnapshot",
+        "EventAggregate",
+        "EntityAggregate",
+        "AccountEntityAggregate",
+        "OrganizationEntityAggregate"
+      ],
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "SourceRevision"
+      ],
+      "representation": "Typed captured aggregate/query DTO",
+      "preservedSemantics": "Retain query, requested breakdown, counting unit, time and completeness. An omitted account breakdown is not zero affected accounts.",
+      "sourcePath": "aws/health/analysis/report.md",
+      "profileId": "console.health.aggregate/v1"
+    },
+    {
+      "sourceService": "health",
+      "sourceConcepts": [
+        "ServiceLifecycleEntry",
+        "ServiceLifecycle",
+        "SERVICE_LIFECYCLE_ENTRY"
+      ],
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "LifecycleEntry"
+      ],
+      "representation": "LifecycleEntry",
+      "preservedSemantics": "Use stable local identity and retained source revisions; service/version is not a provider-guaranteed unique key. Preserve unresolved recommendedVersion.",
+      "sourcePath": "aws/health/analysis/report.md",
+      "profileId": "aws.health.lifecycle-entry/v1"
+    },
+    {
+      "sourceService": "health",
+      "sourceConcepts": [
+        "LifecycleMilestone",
+        "LifecycleEvent",
+        "LIFECYCLE_MILESTONE"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "LifecycleEntry"
+      ],
+      "representation": "LifecycleMilestone",
+      "preservedSemantics": "Owner-local milestone identity/order, explicit date/type/risks/regions and exact entry revision. A new date does not erase prior history; missing regions is not all regions.",
+      "sourcePath": "aws/health/analysis/report.md"
+    },
+    {
+      "sourceService": "health",
+      "sourceConcepts": [
+        "InventoryResource",
+        "INVENTORY_RESOURCE"
+      ],
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "Resource"
+      ],
+      "representation": "Resource",
+      "preservedSemantics": "Inventory identity is external and independent of Health entity identity. Resolve by qualified evidence, never name alone.",
+      "sourcePath": "aws/health/analysis/report.md"
+    },
+    {
+      "sourceService": "health",
+      "sourceConcepts": [
+        "ComponentDeployment",
+        "COMPONENT_DEPLOYMENT"
+      ],
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "ComponentDeployment"
+      ],
+      "representation": "ComponentDeployment",
+      "preservedSemantics": "One observed resource component/version and its exact source/time. A resource can host multiple components; current inventory is not historical inventory.",
+      "sourcePath": "aws/health/analysis/report.md"
+    },
+    {
+      "sourceService": "health",
+      "sourceConcepts": [
+        "LifecycleExposure",
+        "LIFECYCLE_EXPOSURE"
+      ],
+      "disposition": "projectionProfile",
+      "canonicalEntities": [
+        "ProjectionRevision",
+        "ComponentDeployment",
+        "LifecycleEntry"
+      ],
+      "representation": "LifecycleExposure",
+      "preservedSemantics": "Pin deployment evidence and milestone revision. Record applicability, method, confidence, rule version and cutoff; ambiguous/no match remains unknown.",
+      "sourcePath": "aws/health/analysis/report.md",
+      "profileId": "console.health.lifecycle-exposure/v1"
+    },
+    {
+      "sourceService": "health",
+      "sourceConcepts": [
+        "WorkItem",
+        "WORK_ITEM"
+      ],
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "WorkItem"
+      ],
+      "representation": "WorkItem",
+      "preservedSemantics": "Local owner/priority/due/workflow, independent verification state/evidence and concurrency version; completing work never changes provider entity state or independently observed deployment.",
+      "sourcePath": "aws/health/analysis/report.md"
+    },
+    {
+      "sourceService": "health",
+      "sourceConcepts": [
+        "WorkItemTarget",
+        "WORK_ITEM_TARGET"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "WorkItem"
+      ],
+      "representation": "TargetReference",
+      "preservedSemantics": "Each target is exactly one typed context, impact or exposure reference. Several targets can coordinate one item without inventing a provider incident-group ID.",
+      "sourcePath": "aws/health/analysis/report.md"
+    },
+    {
+      "sourceService": "health",
+      "sourceConcepts": [
+        "OperatorAction",
+        "OPERATOR_ACTION"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "WorkItem",
+        "Command",
+        "SourceRevision"
+      ],
+      "representation": "WorkItemAction",
+      "preservedSemantics": "Append actor/time/action/evidence and local version under the work aggregate; retain source statements for provenance. An action audit is not provider success.",
+      "sourcePath": "aws/health/analysis/report.md"
+    },
+    {
+      "sourceService": "health",
+      "sourceConcepts": [
+        "Event",
+        "OrganizationEvent",
+        "EventDetails",
+        "OrganizationEventDetails"
+      ],
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "SourceRevision"
+      ],
+      "representation": "Health response representations",
+      "preservedSemantics": "Summary/detail wrappers represent existing event/context identities; representation and present fields remain explicit.",
+      "sourcePath": "aws/health/analysis/report.md",
+      "profileId": "aws.health.event/v1"
+    },
+    {
+      "sourceService": "health",
+      "sourceConcepts": [
+        "EventDetailsErrorItem",
+        "OrganizationEventDetailsErrorItem",
+        "OrganizationAffectedEntitiesErrorItem"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "ReadAttempt"
+      ],
+      "representation": "CollectionItemError",
+      "preservedSemantics": "Provider batch errors retain exact shape/code and scoped item references. Do not fabricate missing successful items.",
+      "sourcePath": "aws/health/analysis/report.md"
+    },
+    {
+      "sourceService": "health",
+      "sourceConcepts": [
+        "EventFilter",
+        "OrganizationEventFilter",
+        "EntityFilter",
+        "OrganizationEntityFilter",
+        "OrganizationEntityAccountFilter",
+        "EventTypeFilter",
+        "DateTimeRange",
+        "ServiceLifecycleFilter",
+        "pagination token"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "ReadAttempt",
+        "Collection"
+      ],
+      "representation": "QueryScope",
+      "preservedSemantics": "These are request/cursor values, not operational identities. Save exact effective query; keep native tokens opaque and separate from application cursors.",
+      "sourcePath": "aws/health/analysis/report.md"
+    },
+    {
+      "sourceService": "devops-agent",
+      "sourceConcepts": [
+        "OwningScope"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "SourceRevision",
+        "Resource"
+      ],
+      "representation": "SourceIdentity owning scope",
+      "preservedSemantics": "Partition/owning account/Region plus service-specific parent scope. Unambiguously encode opaque IDs; connection role is not native identity.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md"
+    },
+    {
+      "sourceService": "devops-agent",
+      "sourceConcepts": [
+        "ConnectionContext"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "Connection",
+        "ReadAttempt"
+      ],
+      "representation": "AuthorizationContext",
+      "preservedSemantics": "Separate access/caching/export scope from source ownership. Current authorization still applies to historical data.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md"
+    },
+    {
+      "sourceService": "devops-agent",
+      "sourceConcepts": [
+        "AgentSpace",
+        "SPACE"
+      ],
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "AgentSpace"
+      ],
+      "representation": "AgentSpace",
+      "preservedSemantics": "Scoped native Agent Space; it is not the console Workspace. Retain ARN aliases when supplied.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+      "profileId": "aws.devops-agent.agent-space/v1"
+    },
+    {
+      "sourceService": "devops-agent",
+      "sourceConcepts": [
+        "RegisteredService",
+        "REGISTERED_SERVICE"
+      ],
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "SourceRevision"
+      ],
+      "representation": "RegisteredService",
+      "preservedSemantics": "An integration registration is not a workload Service. Built-in serviceId aws need not resolve to one; preserve independent native identity.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+      "profileId": "aws.devops-agent.registered-service/v1"
+    },
+    {
+      "sourceService": "devops-agent",
+      "sourceConcepts": [
+        "Association",
+        "ASSOCIATION"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "AgentSpace",
+        "SourceRevision"
+      ],
+      "representation": "AgentAssociation",
+      "preservedSemantics": "Own association ID/configuration discriminator and optional registration resolution. Do not require serviceId uniqueness within a space.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+      "profileId": "aws.devops-agent.association/v1"
+    },
+    {
+      "sourceService": "devops-agent",
+      "sourceConcepts": [
+        "ExternalReference",
+        "EXTERNAL_REFERENCE",
+        "ReferenceInput",
+        "ReferenceOutput"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "Investigation"
+      ],
+      "representation": "ExternalReference",
+      "preservedSemantics": "Keep system/referenceId/URL/associationId and unresolved historical association; an external alert/ticket is not replaced by task linking.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md"
+    },
+    {
+      "sourceService": "devops-agent",
+      "sourceConcepts": [
+        "Task",
+        "TASK",
+        "Investigation",
+        "INVESTIGATION"
+      ],
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "Investigation"
+      ],
+      "representation": "Native Task facet",
+      "preservedSemantics": "INVESTIGATION task type projects to Investigation. Preserve task priority/type/status/version and scoped task ID. Other native task types remain typed task DTOs.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+      "profileId": "aws.devops-agent.task/v1"
+    },
+    {
+      "sourceService": "devops-agent",
+      "sourceConcepts": [
+        "TaskExecutionMembership",
+        "TASK_EXECUTION"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "Investigation",
+        "Execution"
+      ],
+      "representation": "TaskExecutionMembership",
+      "preservedSemantics": "Explicit link observed from task-scoped ListExecutions request. Execution has no native taskId; allow multiple observed memberships and deduplicate repeated membership evidence.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md"
+    },
+    {
+      "sourceService": "devops-agent",
+      "sourceConcepts": [
+        "Execution",
+        "EXECUTION"
+      ],
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "Execution"
+      ],
+      "representation": "Execution",
+      "preservedSemantics": "Scoped execution identity; explicit parent can remain unresolved. Task.executionId is a pointer, not proof of latest/root/only run. STOPPED is preserved.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+      "profileId": "aws.devops-agent.execution/v1"
+    },
+    {
+      "sourceService": "devops-agent",
+      "sourceConcepts": [
+        "JournalRecord",
+        "JOURNAL_RECORD"
+      ],
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "JournalRecord"
+      ],
+      "representation": "JournalRecord",
+      "preservedSemantics": "Scoped space/execution/record ID, open recordType, createdAt and arbitrary JSON content. Preserve unknown types/scalars/null.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+      "profileId": "aws.devops-agent.journal-record/v1"
+    },
+    {
+      "sourceService": "devops-agent",
+      "sourceConcepts": [
+        "JournalRecordRevision",
+        "RECORD_REVISION",
+        "SourceRevision",
+        "SOURCE_REVISION"
+      ],
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "SourceRevision"
+      ],
+      "representation": "SourceRevision",
+      "preservedSemantics": "Logical source identity plus exact payload hash under declared canonicalization. A revision is locally retained, not a claimed native Journal revision API.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md"
+    },
+    {
+      "sourceService": "devops-agent",
+      "sourceConcepts": [
+        "SourceObject",
+        "SOURCE_OBJECT"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "SourceRevision"
+      ],
+      "representation": "SourceIdentity",
+      "preservedSemantics": "Stable, collision-free owning tuple/channel/native key is carried by revisions. It does not require a new mutable aggregate or generic entity database.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md"
+    },
+    {
+      "sourceService": "devops-agent",
+      "sourceConcepts": [
+        "ProjectionSource",
+        "PROJECTION_SOURCE"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "ProjectionRevision",
+        "SourceRevision"
+      ],
+      "representation": "EvidenceRef with EvidenceLocator",
+      "preservedSemantics": "Exact revision plus typed locator and citation identity. Multiple locators into one revision are distinct citations; preserve JSON pointer, source/path and content-range meaning without replacing the pinned revision.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md"
+    },
+    {
+      "sourceService": "devops-agent",
+      "sourceConcepts": [
+        "DerivedRevision",
+        "DERIVED_REVISION"
+      ],
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "ProjectionRevision",
+        "SourceRevision"
+      ],
+      "representation": "ProjectionRevision",
+      "preservedSemantics": "Stable logical item identity and separate immutable rendition ID/hash. Preserve payload kind, assertion origin and exact derivation. The five normalized profiles use ProjectionRevision; other previous typed renditions retain original logical/revision IDs, payload and derivation as application-origin SourceRevision evidence.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md"
+    },
+    {
+      "sourceService": "devops-agent",
+      "sourceConcepts": [
+        "Derivation",
+        "DERIVATION"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "ProjectionRevision",
+        "SourceRevision"
+      ],
+      "representation": "Derivation",
+      "preservedSemantics": "Parser/rule/model versions and deterministic policy are retained with the result; a parser upgrade cannot rewrite an old snapshot.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md"
+    },
+    {
+      "sourceService": "devops-agent",
+      "sourceConcepts": [
+        "CollectionPass",
+        "COLLECTION_PASS"
+      ],
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "Collection"
+      ],
+      "representation": "Collection",
+      "preservedSemantics": "One bounded query-set reconciliation with target, collector/version, selection policy and capture window.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md"
+    },
+    {
+      "sourceService": "devops-agent",
+      "sourceConcepts": [
+        "ReadAttempt",
+        "READ_ATTEMPT"
+      ],
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "ReadAttempt"
+      ],
+      "representation": "ReadAttempt",
+      "preservedSemantics": "Every operation/page attempt has identity, exact query, pagination, times, outcome and native diagnostics, including empty successes and failures. requestSourceRevisionId pins the retained request; responseSourceRevisionId pins its envelope when available, including empty successful responses. A lost response remains null, not an invented empty success.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md"
+    },
+    {
+      "sourceService": "devops-agent",
+      "sourceConcepts": [
+        "SourceObservation",
+        "SOURCE_OBSERVATION"
+      ],
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "Observation"
+      ],
+      "representation": "Observation",
+      "preservedSemantics": "Repeat receipt of unchanged content adds observation history without creating new logical records or revisions. Non-read channels do not invent ReadAttempts.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md"
+    },
+    {
+      "sourceService": "devops-agent",
+      "sourceConcepts": [
+        "CoverageClaim",
+        "COVERAGE_CLAIM",
+        "CollectionCoverage"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "Collection",
+        "ProjectionRevision",
+        "Snapshot"
+      ],
+      "representation": "Coverage",
+      "preservedSemantics": "Named query-set/pass, scope, as-of, page/attempt evidence, bounds, outcome and rule version; exhaustion is not an AWS finalization barrier.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md"
+    },
+    {
+      "sourceService": "devops-agent",
+      "sourceConcepts": [
+        "TimelineItem"
+      ],
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "SourceRevision",
+        "Observation"
+      ],
+      "representation": "InvestigationTimelineItem retained as LOCAL_EVIDENCE",
+      "preservedSemantics": "Independent evidence/record/receipt clocks with basis, phase, provenance, availability and stable local ordering. No invented agent progress percentage. Retain the previous typed analysis rendition as application-origin evidence; a dedicated normalized projection variant is a future schema extension.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+      "profileId": "console.investigation.timeline/v1"
+    },
+    {
+      "sourceService": "devops-agent",
+      "sourceConcepts": [
+        "Finding",
+        "EvidenceItem",
+        "Hypothesis",
+        "RootCauseAssessment",
+        "MitigationProposal",
+        "ReviewResult"
+      ],
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "SourceRevision",
+        "Observation"
+      ],
+      "representation": "InvestigationAssertion retained as LOCAL_EVIDENCE",
+      "preservedSemantics": "Typed attributed findings/evidence/hypotheses/causal claims/proposals/reviews, each with exact source and derivation. These are not native Resilience Finding identities or recovered private reasoning. Retain the previous typed analysis rendition as application-origin evidence; a dedicated normalized projection variant is a future schema extension.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+      "profileId": "console.investigation.assertion/v1"
+    },
+    {
+      "sourceService": "devops-agent",
+      "sourceConcepts": [
+        "ActionObservation",
+        "ACTION_OBSERVATION"
+      ],
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "SourceRevision",
+        "Observation"
+      ],
+      "representation": "ActionObservation retained as LOCAL_EVIDENCE",
+      "preservedSemantics": "Request, decision, resume, execution and effect are independently sourced stages. Approval or credential redemption never proves success. Retain the previous typed analysis rendition as application-origin evidence; a dedicated normalized projection variant is a future schema extension.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+      "profileId": "console.investigation.action-observation/v1"
+    },
+    {
+      "sourceService": "devops-agent",
+      "sourceConcepts": [
+        "ResultDocument"
+      ],
+      "disposition": "projectionProfile",
+      "canonicalEntities": [
+        "ProjectionRevision"
+      ],
+      "representation": "InvestigationResult",
+      "preservedSemantics": "Select per investigation/mitigation phase by exact completion pointer when present; preserve missing-pointer, no-summary-reported and unavailable-reference states.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+      "profileId": "console.investigation.result/v1"
+    },
+    {
+      "sourceService": "devops-agent",
+      "sourceConcepts": [
+        "ResourceReference",
+        "RESOURCE_REF"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "Resource",
+        "ProjectionRevision"
+      ],
+      "representation": "ResourceReference",
+      "preservedSemantics": "Explicit namespace/ID/URL and resolution provenance. A connection, same-space location or temporal adjacency is not implication or consumption evidence.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md"
+    },
+    {
+      "sourceService": "devops-agent",
+      "sourceConcepts": [
+        "ArtifactReference",
+        "ARTIFACT_REF"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "ProjectionRevision",
+        "Snapshot",
+        "Asset"
+      ],
+      "representation": "ArtifactReference",
+      "preservedSemantics": "Preserve channel, exact locator, optional asset/version, availability, type, digest and authorization. A2A and journal IDs never become native asset IDs.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md"
+    },
+    {
+      "sourceService": "devops-agent",
+      "sourceConcepts": [
+        "GraphSnapshot",
+        "GRAPH_SNAPSHOT"
+      ],
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "Snapshot"
+      ],
+      "representation": "Snapshot with GraphContents",
+      "preservedSemantics": "Named graph kind and immutable rendition; snapshots pin nodes/edges and source revisions, not an unversioned graph.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+      "profileId": "console.investigation.graph/v1"
+    },
+    {
+      "sourceService": "devops-agent",
+      "sourceConcepts": [
+        "GraphNode",
+        "GRAPH_NODE"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "Snapshot"
+      ],
+      "representation": "GraphNode",
+      "preservedSemantics": "Unique within graph rendition, with node kind/exact source and optional resolved resource; explicit stub for unresolved endpoints.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md"
+    },
+    {
+      "sourceService": "devops-agent",
+      "sourceConcepts": [
+        "GraphEdge",
+        "GRAPH_EDGE"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "Snapshot"
+      ],
+      "representation": "GraphEdge",
+      "preservedSemantics": "Both endpoints belong to the same graph snapshot. Keep relation type/assertion origin; execution parentage or temporal precedence is not causality.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md"
+    },
+    {
+      "sourceService": "devops-agent",
+      "sourceConcepts": [
+        "Asset",
+        "ASSET"
+      ],
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "Asset"
+      ],
+      "representation": "Asset",
+      "preservedSemantics": "Space-scoped native asset and open type. Same Agent Space does not imply that a task used or produced it.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+      "profileId": "aws.devops-agent.asset/v1"
+    },
+    {
+      "sourceService": "devops-agent",
+      "sourceConcepts": [
+        "AssetVersion",
+        "ASSET_VERSION",
+        "AssetVersionMetadata"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "Asset",
+        "SourceRevision"
+      ],
+      "representation": "AssetVersion",
+      "preservedSemantics": "Exact asset ID/native version + observed metadata/content revisions. Requested attachment IDs do not establish consumed version.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md"
+    },
+    {
+      "sourceService": "devops-agent",
+      "sourceConcepts": [
+        "AssetFileVersion",
+        "AssetFile",
+        "ASSET_FILE",
+        "AssetFileSummary"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "Asset",
+        "SourceRevision"
+      ],
+      "representation": "AssetFileVersion",
+      "preservedSemantics": "Exact asset version and path; preserve bytes/text representation and content digest. A file version is an asset version, not a separate invented native counter.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md"
+    },
+    {
+      "sourceService": "devops-agent",
+      "sourceConcepts": [
+        "InvestigationSnapshot",
+        "Snapshot",
+        "SNAPSHOT"
+      ],
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "Snapshot"
+      ],
+      "representation": "Snapshot",
+      "preservedSemantics": "Immutable capture manifest with task/membership/results/sources/projections, frozen coverage and explicit captureStartedAt/captureFinishedAt. capturedAt does not replace these boundaries or provider times. A later continued investigation creates new evidence.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md"
+    },
+    {
+      "sourceService": "devops-agent",
+      "sourceConcepts": [
+        "SnapshotSource",
+        "SNAPSHOT_SOURCE"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "Snapshot"
+      ],
+      "representation": "SnapshotSourceReference",
+      "preservedSemantics": "Exact source revisions plus captured attempt/page/coverage evidence. A later successful refresh cannot improve captured coverage.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md"
+    },
+    {
+      "sourceService": "devops-agent",
+      "sourceConcepts": [
+        "SnapshotProjection",
+        "SNAPSHOT_PROJECTION"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "Snapshot"
+      ],
+      "representation": "SnapshotProjectionReference",
+      "preservedSemantics": "Exact projectionRevisionId/hash. Authorized retained content opens independently of live refresh; comparison has its own availability. Imported legacy renditions outside the five normalized profiles are pinned in sourceRevisionIds with their original revision identity and derivation retained.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md"
+    },
+    {
+      "sourceService": "devops-agent",
+      "sourceConcepts": [
+        "ChatExecution",
+        "PendingMessage",
+        "Message",
+        "UserMessageBlock",
+        "AssistantMessageBlock",
+        "SendMessageContext"
+      ],
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "SourceRevision"
+      ],
+      "representation": "Conversation DTOs",
+      "preservedSemantics": "Preserve native content unions, session scope, queue versus history distinction and attribution. Chat response completion is not task completion.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+      "profileId": "aws.devops-agent.conversation/v1"
+    },
+    {
+      "sourceService": "devops-agent",
+      "sourceConcepts": [
+        "UserReference"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "JournalRecord",
+        "SourceRevision"
+      ],
+      "representation": "ActorReference",
+      "preservedSemantics": "Only supplied userId/userType are facts; absent user data is unknown and uid alone is session identity.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md"
+    },
+    {
+      "sourceService": "devops-agent",
+      "sourceConcepts": [
+        "SendMessageEvents",
+        "SendMessageResponseCreatedEvent",
+        "SendMessageResponseInProgressEvent",
+        "SendMessageResponseCompletedEvent",
+        "SendMessageResponseFailedEvent",
+        "SendMessageContentBlockStartEvent",
+        "SendMessageContentBlockDeltaEvent",
+        "SendMessageContentBlockDelta",
+        "SendMessageTextDelta",
+        "SendMessageJsonDelta",
+        "SendMessageContentBlockStopEvent",
+        "SendMessageSummaryEvent",
+        "SendMessageHeartbeatEvent",
+        "SendMessageUsageInfo",
+        "stream response/block"
+      ],
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "SourceRevision",
+        "Observation"
+      ],
+      "representation": "Conversation stream events",
+      "preservedSemantics": "Own response/session/block identities and sequence when supplied; preserve partial JSON, gaps and unknown branches. Stream cursor/parentage is not durable Journal identity.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+      "profileId": "aws.devops-agent.chat-stream/v1"
+    },
+    {
+      "sourceService": "devops-agent",
+      "sourceConcepts": [
+        "ApprovalRequest",
+        "APPROVAL_REQUEST"
+      ],
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "ApprovalRequest"
+      ],
+      "representation": "ApprovalRequest",
+      "preservedSemantics": "Observed chat request with space-scoped approvalId, execution/interrupt/toolUse IDs and exact requested pattern. Do not synthesize from waiting status or prose.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+      "profileId": "aws.devops-agent.approval/v1"
+    },
+    {
+      "sourceService": "devops-agent",
+      "sourceConcepts": [
+        "ApprovalPattern",
+        "ApprovalAction"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "ApprovalRequest",
+        "Command"
+      ],
+      "representation": "ApprovalPattern and ApprovalAction",
+      "preservedSemantics": "Keep typed pins and exact IDs. Finalized scope may match or narrow requested scope, never widen it; decision and resume are separate.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md"
+    },
+    {
+      "sourceService": "devops-agent",
+      "sourceConcepts": [
+        "DecisionAttempt",
+        "DECISION_ATTEMPT"
+      ],
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "Command"
+      ],
+      "representation": "Approval decision command",
+      "preservedSemantics": "Distinct decision command/audit with payload hash, actor and definitive/ambiguous outcome. Native UpdateApprovalAction has no modeled token/readback operation.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md"
+    },
+    {
+      "sourceService": "devops-agent",
+      "sourceConcepts": [
+        "ResumeAttempt",
+        "RESUME_ATTEMPT"
+      ],
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "Command"
+      ],
+      "representation": "Resume command",
+      "preservedSemantics": "Separate command related to accepted decision. Stream-open does not prove resumed effect; lost-response uncertainty never triggers a blind mutating retry.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md"
+    },
+    {
+      "sourceService": "devops-agent",
+      "sourceConcepts": [
+        "Goal",
+        "GoalContent",
+        "GoalSchedule"
+      ],
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "SourceRevision"
+      ],
+      "representation": "PreventionGoal",
+      "preservedSemantics": "Keep genuine space-scoped goal identity, lifecycle/version, typed content and scheduling/last-task relations. It is not a Scenario or an investigation completion.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+      "profileId": "aws.devops-agent.goal/v1"
+    },
+    {
+      "sourceService": "devops-agent",
+      "sourceConcepts": [
+        "Recommendation",
+        "RecommendationContent"
+      ],
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "SourceRevision"
+      ],
+      "representation": "AgentRecommendation",
+      "preservedSemantics": "Keep native recommendationId/taskId and optional goal/version with its own lifecycle and priority. Native identity is distinct from observation-scoped Resilience suggested changes.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+      "profileId": "aws.devops-agent.recommendation/v1"
+    },
+    {
+      "sourceService": "devops-agent",
+      "sourceConcepts": [
+        "Trigger",
+        "TriggerCondition"
+      ],
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "SourceRevision"
+      ],
+      "representation": "AgentTrigger",
+      "preservedSemantics": "Separate native automation resource with schedule union/open action; not an Asset or executable console ScenarioRevision. Current custom-agent links are not historical consumption.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+      "profileId": "aws.devops-agent.trigger/v1"
+    },
+    {
+      "sourceService": "devops-agent",
+      "sourceConcepts": [
+        "OperatorApp",
+        "Operator application",
+        "identity-provider configuration"
+      ],
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "SourceRevision"
+      ],
+      "representation": "OperatorAppConfiguration",
+      "preservedSemantics": "Provider access configuration belongs to its Agent Space; it is not console authentication or investigation fact.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+      "profileId": "aws.devops-agent.operator-app/v1"
+    },
+    {
+      "sourceService": "devops-agent",
+      "sourceConcepts": [
+        "PrivateConnection",
+        "PrivateConnectionSummary",
+        "private network configuration"
+      ],
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "SourceRevision"
+      ],
+      "representation": "ProviderPrivateConnection",
+      "preservedSemantics": "Keep provider name/ARN/network/certificate/state; it is not the console Connection access path.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+      "profileId": "aws.devops-agent.private-connection/v1"
+    },
+    {
+      "sourceService": "devops-agent",
+      "sourceConcepts": [
+        "Webhook"
+      ],
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "SourceRevision"
+      ],
+      "representation": "AssociationWebhook",
+      "preservedSemantics": "Provider intake descriptor scoped to its association; configuration does not prove receipt of any incident/event.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+      "profileId": "aws.devops-agent.webhook/v1"
+    },
+    {
+      "sourceService": "devops-agent",
+      "sourceConcepts": [
+        "Account usage",
+        "UsageMetric"
+      ],
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "SourceRevision"
+      ],
+      "representation": "AccountUsage",
+      "preservedSemantics": "Scoped usage-window metrics and limits; not incident telemetry, runtime success, or task recovery.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+      "profileId": "aws.devops-agent.account-usage/v1"
+    },
+    {
+      "sourceService": "devops-agent",
+      "sourceConcepts": [
+        "TaskFilter",
+        "TaskSortField",
+        "TaskSortOrder"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "Collection",
+        "ReadAttempt"
+      ],
+      "representation": "TaskQuery",
+      "preservedSemantics": "Keep provider filter combinations and exact order; a task leaving a filtered page is not deletion. No generic updated-since feed is implied.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md"
+    },
+    {
+      "sourceService": "devops-agent",
+      "sourceConcepts": [
+        "AssetTypeSummary",
+        "AssetContent",
+        "AssetFileBody",
+        "AssetFileContent",
+        "AssetSourceUrlContent",
+        "AssetZipContent"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "Asset",
+        "SourceRevision"
+      ],
+      "representation": "Asset content DTOs",
+      "preservedSemantics": "Preserve type catalog, source URL and text/bytes/ZIP members. GetAssetContent carries ZIP bytes in JSON content.zipFile; native/upload limits remain adapter-specific.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md"
+    },
+    {
+      "sourceService": "devops-agent",
+      "sourceConcepts": [
+        "ServiceConfiguration",
+        "preferences",
+        "tags",
+        "encryption settings",
+        "AdditionalServiceDetails"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "AgentSpace",
+        "SourceRevision"
+      ],
+      "representation": "Provider configuration values",
+      "preservedSemantics": "Known typed provider unions with raw unknown variants retained. Strict native write validation is separate from tolerant output ingestion.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+      "profileId": "aws.devops-agent.association/v1"
+    },
+    {
+      "sourceService": "fis",
+      "sourceConcepts": [
+        "EXPERIMENT_TEMPLATE",
+        "ExperimentTemplate"
+      ],
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "SourceRevision"
+      ],
+      "representation": "FisExperimentTemplate",
+      "preservedSemantics": "Scoped native mutable template; pin observed configuration. It is not a ScenarioRevision; no provider revision guarantee is invented.",
+      "sourcePath": "aws/fis/analysis/report.md",
+      "profileId": "aws.fis.template/v1"
+    },
+    {
+      "sourceService": "fis",
+      "sourceConcepts": [
+        "CATALOG_ACTION",
+        "Action"
+      ],
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "SourceRevision"
+      ],
+      "representation": "FisActionCatalogEntry",
+      "preservedSemantics": "Native catalog identity and retrieval revision. A catalog action ID does not identify each named runtime use.",
+      "sourcePath": "aws/fis/analysis/report.md",
+      "profileId": "aws.fis.action-catalog/v1"
+    },
+    {
+      "sourceService": "fis",
+      "sourceConcepts": [
+        "ACTION_PARAMETER_DEFINITION"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "SourceRevision"
+      ],
+      "representation": "FisParameterDefinition",
+      "preservedSemantics": "Catalog-action parameter map key with supplied description/requiredness. Units/types/defaults require separately sourced adapter metadata.",
+      "sourcePath": "aws/fis/analysis/report.md"
+    },
+    {
+      "sourceService": "fis",
+      "sourceConcepts": [
+        "ACTION_TARGET_SLOT"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "SourceRevision"
+      ],
+      "representation": "FisTargetSlot",
+      "preservedSemantics": "Catalog action plus slot name and supported resource type. Preserve slot identity through template/runtime bindings.",
+      "sourcePath": "aws/fis/analysis/report.md"
+    },
+    {
+      "sourceService": "fis",
+      "sourceConcepts": [
+        "RESOURCE_TYPE",
+        "TargetResourceType"
+      ],
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "SourceRevision"
+      ],
+      "representation": "FisTargetResourceType",
+      "preservedSemantics": "Open provider resource-type identity and typed metadata; resolve actual resources only through a type-specific adapter.",
+      "sourcePath": "aws/fis/analysis/report.md",
+      "profileId": "aws.fis.resource-type/v1"
+    },
+    {
+      "sourceService": "fis",
+      "sourceConcepts": [
+        "TEMPLATE_ACTION"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "SourceRevision"
+      ],
+      "representation": "FisTemplateAction",
+      "preservedSemantics": "Template-scoped action name, actionId and parameters. Two names using one actionId remain two definitions.",
+      "sourcePath": "aws/fis/analysis/report.md"
+    },
+    {
+      "sourceService": "fis",
+      "sourceConcepts": [
+        "TEMPLATE_TARGET"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "SourceRevision"
+      ],
+      "representation": "FisTemplateTarget",
+      "preservedSemantics": "Template-scoped selector definition; retain selection mode, parameters, filters and tags as supplied.",
+      "sourcePath": "aws/fis/analysis/report.md"
+    },
+    {
+      "sourceService": "fis",
+      "sourceConcepts": [
+        "TEMPLATE_BINDING"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "SourceRevision"
+      ],
+      "representation": "FisTemplateBinding",
+      "preservedSemantics": "Action/slot references a named selector within the same template.",
+      "sourcePath": "aws/fis/analysis/report.md"
+    },
+    {
+      "sourceService": "fis",
+      "sourceConcepts": [
+        "TEMPLATE_DEPENDENCY"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "SourceRevision"
+      ],
+      "representation": "FisTemplateDependency",
+      "preservedSemantics": "Named predecessor/successor edge within one template DAG; keep separate from console workflow dependencies.",
+      "sourcePath": "aws/fis/analysis/report.md"
+    },
+    {
+      "sourceService": "fis",
+      "sourceConcepts": [
+        "TEMPLATE_TARGET_ACCOUNT"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "SourceRevision"
+      ],
+      "representation": "FisTemplateTargetAccount",
+      "preservedSemantics": "Template/account identity with role/reference metadata. Current template configuration cannot rewrite prior experiments.",
+      "sourcePath": "aws/fis/analysis/report.md",
+      "profileId": "aws.fis.target-account/v1"
+    },
+    {
+      "sourceService": "fis",
+      "sourceConcepts": [
+        "EXPERIMENT_RUN",
+        "Experiment"
+      ],
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "Experiment"
+      ],
+      "representation": "Experiment",
+      "preservedSemantics": "Scoped native experiment identity with frozen run configuration. May exist without a console Run; a StepAttempt can explicitly refer to it.",
+      "sourcePath": "aws/fis/analysis/report.md",
+      "profileId": "aws.fis.experiment/v1"
+    },
+    {
+      "sourceService": "fis",
+      "sourceConcepts": [
+        "ACTION_EXECUTION"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "Experiment"
+      ],
+      "representation": "ExperimentAction",
+      "preservedSemantics": "Experiment/action-name identity, raw state/reason/times and parameters. No independent stop/retry/pause operation is implied.",
+      "sourcePath": "aws/fis/analysis/report.md"
+    },
+    {
+      "sourceService": "fis",
+      "sourceConcepts": [
+        "ACTION_DEPENDENCY"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "Experiment"
+      ],
+      "representation": "ExperimentActionDependency",
+      "preservedSemantics": "Same-experiment named-action DAG from runtime evidence, independent of product StepRuns.",
+      "sourcePath": "aws/fis/analysis/report.md"
+    },
+    {
+      "sourceService": "fis",
+      "sourceConcepts": [
+        "TARGET_SELECTION"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "Experiment"
+      ],
+      "representation": "ExperimentTargetSelector",
+      "preservedSemantics": "Exact runtime selector snapshot; never read current template to reconstruct historical target intent.",
+      "sourcePath": "aws/fis/analysis/report.md"
+    },
+    {
+      "sourceService": "fis",
+      "sourceConcepts": [
+        "ACTION_TARGET_BINDING"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "Experiment"
+      ],
+      "representation": "ExperimentTargetBinding",
+      "preservedSemantics": "Action-name/slot-to-selector link with owning experiment scope.",
+      "sourcePath": "aws/fis/analysis/report.md"
+    },
+    {
+      "sourceService": "fis",
+      "sourceConcepts": [
+        "EXPERIMENT_TARGET_ACCOUNT"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "Experiment",
+        "SourceRevision"
+      ],
+      "representation": "ExperimentTargetAccount",
+      "preservedSemantics": "Run-scoped account configuration observation. Account inclusion alone creates neither child experiment nor per-account success.",
+      "sourcePath": "aws/fis/analysis/report.md",
+      "profileId": "aws.fis.target-account/v1"
+    },
+    {
+      "sourceService": "fis",
+      "sourceConcepts": [
+        "RESOLVED_TARGET_MEMBERSHIP"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "Experiment",
+        "SourceRevision"
+      ],
+      "representation": "ResolvedTargetMembership",
+      "preservedSemantics": "Keep every selector membership and complete targetInformation. Deduplicate established Resource identity separately from membership.",
+      "sourcePath": "aws/fis/analysis/report.md"
+    },
+    {
+      "sourceService": "fis",
+      "sourceConcepts": [
+        "RESOURCE_IDENTITY"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "Resource",
+        "Experiment"
+      ],
+      "representation": "ResourceReference",
+      "preservedSemantics": "Qualified type/account/Region/native key and match provenance. EKS pod scope includes cluster/namespace/name; container selection remains membership detail.",
+      "sourcePath": "aws/fis/analysis/report.md"
+    },
+    {
+      "sourceService": "fis",
+      "sourceConcepts": [
+        "TARGET_RESOLUTION_OBSERVATION"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "Collection",
+        "Experiment",
+        "SourceRevision",
+        "Observation"
+      ],
+      "representation": "Bounded target-resolution evidence and coverage",
+      "preservedSemantics": "Resolution-ended evidence and exhausted page traversal are independent. A complete empty page does not by itself establish empty resolved scope.",
+      "sourcePath": "aws/fis/analysis/report.md",
+      "profileId": "console.fis.target-resolution/v1"
+    },
+    {
+      "sourceService": "fis",
+      "sourceConcepts": [
+        "EXECUTION_EVIDENCE"
+      ],
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "SourceRevision",
+        "Observation"
+      ],
+      "representation": "Retained execution evidence",
+      "preservedSemantics": "Exact source record/location with action/selector/account associations; top-level FIS log id is experiment ID, not an event ID.",
+      "sourcePath": "aws/fis/analysis/report.md",
+      "profileId": "aws.fis.execution-evidence/v1"
+    },
+    {
+      "sourceService": "fis",
+      "sourceConcepts": [
+        "STATE_OBSERVATION"
+      ],
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "SourceRevision",
+        "Observation"
+      ],
+      "representation": "Experiment/action state evidence",
+      "preservedSemantics": "Preserve raw provider status, source timestamp and observation/capture interval; receipt order does not establish lifecycle order.",
+      "sourcePath": "aws/fis/analysis/report.md"
+    },
+    {
+      "sourceService": "fis",
+      "sourceConcepts": [
+        "EXPERIMENT_REPORT"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "Experiment",
+        "SourceRevision"
+      ],
+      "representation": "ExperimentReport",
+      "preservedSemantics": "Report generation/readiness is independent of experiment execution and assessment. Eligibility/configuration presence and retrieval errors remain explicit.",
+      "sourcePath": "aws/fis/analysis/report.md",
+      "profileId": "aws.fis.report/v1"
+    },
+    {
+      "sourceService": "fis",
+      "sourceConcepts": [
+        "REPORT_ARTIFACT"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "Experiment",
+        "Snapshot"
+      ],
+      "representation": "ArtifactReference",
+      "preservedSemantics": "Exact artifact descriptor/ARN/type and version/digest when known; access is authorized separately, and presence does not imply evaluation success.",
+      "sourcePath": "aws/fis/analysis/report.md"
+    },
+    {
+      "sourceService": "fis",
+      "sourceConcepts": [
+        "STOP_CONDITION"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "Experiment",
+        "SourceRevision"
+      ],
+      "representation": "FisStopCondition",
+      "preservedSemantics": "Source/value retained; source=none is an explicit marker and creates no alarm reference.",
+      "sourcePath": "aws/fis/analysis/report.md"
+    },
+    {
+      "sourceService": "fis",
+      "sourceConcepts": [
+        "CLOUDWATCH_ALARM"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "Resource"
+      ],
+      "representation": "AlarmReference",
+      "preservedSemantics": "Qualified external alarm identity. Alarm state/history is separately observed evidence, not an experiment aggregate.",
+      "sourcePath": "aws/fis/analysis/report.md"
+    },
+    {
+      "sourceService": "fis",
+      "sourceConcepts": [
+        "ALARM_OBSERVATION"
+      ],
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "SourceRevision",
+        "Observation"
+      ],
+      "representation": "Alarm evidence",
+      "preservedSemantics": "Exact state/transition with source/time/coverage; experiment termination cannot fabricate an alarm transition.",
+      "sourcePath": "aws/fis/analysis/report.md",
+      "profileId": "aws.cloudwatch.alarm/v1"
+    },
+    {
+      "sourceService": "fis",
+      "sourceConcepts": [
+        "AWS_SCOPE"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "SourceRevision",
+        "Resource"
+      ],
+      "representation": "SourceIdentity scope",
+      "preservedSemantics": "Partition/account/Region is a provider ownership value, not tenant identity or a credential grant.",
+      "sourcePath": "aws/fis/analysis/report.md"
+    },
+    {
+      "sourceService": "fis",
+      "sourceConcepts": [
+        "SAFETY_LEVER"
+      ],
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "SourceRevision"
+      ],
+      "representation": "FisSafetyLever",
+      "preservedSemantics": "Scoped native safety control; unknown hydration does not remove the native one-per-supported-scope relation. Writes remain explicit future adapter commands.",
+      "sourcePath": "aws/fis/analysis/report.md",
+      "profileId": "aws.fis.safety-lever/v1"
+    },
+    {
+      "sourceService": "fis",
+      "sourceConcepts": [
+        "METRIC_BINDING"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "ScenarioRevision"
+      ],
+      "representation": "MetricBinding",
+      "preservedSemantics": "Versioned metric/query definition with dimensions, units, aggregation, period/windows/normalizer and source.",
+      "sourcePath": "aws/fis/analysis/report.md"
+    },
+    {
+      "sourceService": "fis",
+      "sourceConcepts": [
+        "EXPERIMENT_METRIC_BINDING"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "Run",
+        "Experiment"
+      ],
+      "representation": "MetricBindingReference",
+      "preservedSemantics": "Exact binding revision and experiment/window use. It does not duplicate the metric definition or invent native linkage.",
+      "sourcePath": "aws/fis/analysis/report.md"
+    },
+    {
+      "sourceService": "fis",
+      "sourceConcepts": [
+        "METRIC_OBSERVATION"
+      ],
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "SourceRevision",
+        "Observation"
+      ],
+      "representation": "Metric evidence",
+      "preservedSemantics": "Typed samples with query/unit/window/coverage. Missing sample is not zero and prose is not a numeric series.",
+      "sourcePath": "aws/fis/analysis/report.md",
+      "profileId": "aws.cloudwatch.metric/v1"
+    },
+    {
+      "sourceService": "fis",
+      "sourceConcepts": [
+        "ASSESSMENT_CRITERION"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "ScenarioRevision"
+      ],
+      "representation": "CheckDefinition",
+      "preservedSemantics": "Immutable evaluator/predicate/threshold/unit/denominator semantics pinned with the revision or read-only reassessment specification.",
+      "sourcePath": "aws/fis/analysis/report.md"
+    },
+    {
+      "sourceService": "fis",
+      "sourceConcepts": [
+        "RESILIENCE_ASSESSMENT"
+      ],
+      "disposition": "projectionProfile",
+      "canonicalEntities": [
+        "ProjectionRevision",
+        "Snapshot"
+      ],
+      "representation": "EVALUATION projection",
+      "preservedSemantics": "Local immutable evaluation, not native ResilienceAssessment. New evidence/rule/cutoff creates another EVALUATION revision over a frozen input Snapshot; an orchestration Run is optional. Preserve every historical assessment of an experiment.",
+      "sourcePath": "aws/fis/analysis/report.md",
+      "profileId": "console.workflow.evaluation/v1"
+    },
+    {
+      "sourceService": "fis",
+      "sourceConcepts": [
+        "ASSESSMENT_EVIDENCE"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "StepAttempt",
+        "ProjectionRevision"
+      ],
+      "representation": "EvidenceReference",
+      "preservedSemantics": "Exact accepted source revisions/observations and evaluation cutoff, scoped to the Run through retained/imported references.",
+      "sourcePath": "aws/fis/analysis/report.md"
+    },
+    {
+      "sourceService": "workflow",
+      "sourceConcepts": [
+        "Scenario"
+      ],
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "Scenario"
+      ],
+      "representation": "Scenario",
+      "preservedSemantics": "Mutable catalog metadata/default revision/archive under an explicit version; names and digests are not identity.",
+      "sourcePath": "aws/fis/analysis/workflow/model.md"
+    },
+    {
+      "sourceService": "workflow",
+      "sourceConcepts": [
+        "ScenarioRevision"
+      ],
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "ScenarioRevision"
+      ],
+      "representation": "ScenarioRevision",
+      "preservedSemantics": "Immutable program with locked operation/schema/implementation/runtime/time/reducer versions. Mutable authoring aliases cannot change a published revision.",
+      "sourcePath": "aws/fis/analysis/workflow/model.md"
+    },
+    {
+      "sourceService": "workflow",
+      "sourceConcepts": [
+        "Run"
+      ],
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "Run"
+      ],
+      "representation": "Run",
+      "preservedSemantics": "Exactly one published revision/admission snapshot. Separate execution phase/outcome, check verdict, and finalization/unresolved effects.",
+      "sourcePath": "aws/fis/analysis/workflow/model.md"
+    },
+    {
+      "sourceService": "workflow",
+      "sourceConcepts": [
+        "StepRun"
+      ],
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "StepRun"
+      ],
+      "representation": "StepRun",
+      "preservedSemantics": "One per compiled main or finalizer step, including zero-attempt skipped steps. Canonical ID adds convenience; unique (runId,stepKey) remains.",
+      "sourcePath": "aws/fis/analysis/workflow/model.md"
+    },
+    {
+      "sourceService": "workflow",
+      "sourceConcepts": [
+        "StepAttempt"
+      ],
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "StepAttempt"
+      ],
+      "representation": "StepAttempt",
+      "preservedSemantics": "Unique (stepRunId,attemptNo), durable dispatch/effect intent, evidence and checkpoints. Poll/resume does not create a new attempt; ambiguous effects fence retries.",
+      "sourcePath": "aws/fis/analysis/workflow/model.md"
+    },
+    {
+      "sourceService": "workflow",
+      "sourceConcepts": [
+        "Evidence"
+      ],
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "SourceRevision",
+        "Observation"
+      ],
+      "representation": "Shared evidence spine",
+      "preservedSemantics": "Replace run-only Evidence root with immutable payload revision + receipt/import occurrence. Run owns an immutable evidence-reference manifest; producer/import origin and same-run citation authorization remain explicit.",
+      "sourcePath": "aws/fis/analysis/workflow/model.md"
+    },
+    {
+      "sourceService": "workflow",
+      "sourceConcepts": [
+        "StepDefinition"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "ScenarioRevision"
+      ],
+      "representation": "StepDefinition",
+      "preservedSemantics": "Revision-local stepKey with operation binding, inputs, dependencies, timeout/retry/check role and main/finalizer graph phase.",
+      "sourcePath": "aws/fis/analysis/workflow/model.md"
+    },
+    {
+      "sourceService": "workflow",
+      "sourceConcepts": [
+        "OperationLock"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "ScenarioRevision"
+      ],
+      "representation": "OperationLock",
+      "preservedSemantics": "Exact implementation/input/output schema digests and contract version; unavailable/revoked pin rejects execution without silent substitution.",
+      "sourcePath": "aws/fis/analysis/workflow/model.md"
+    },
+    {
+      "sourceService": "workflow",
+      "sourceConcepts": [
+        "AdmissionSnapshot"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "Run"
+      ],
+      "representation": "AdmissionSnapshot",
+      "preservedSemantics": "Exact revision, validated inputs, authorized resource/connection bindings and observed versions, enabled steps, required-criterion denominator and effective policy.",
+      "sourcePath": "aws/fis/analysis/workflow/model.md"
+    },
+    {
+      "sourceService": "workflow",
+      "sourceConcepts": [
+        "DeploymentRef",
+        "ConnectionRef",
+        "ResourceRef"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "Run",
+        "ScenarioRevision"
+      ],
+      "representation": "BindingReference",
+      "preservedSemantics": "Qualified external references; inventory and credentials remain separate. Resolving a reference never grants permission.",
+      "sourcePath": "aws/fis/analysis/workflow/model.md"
+    },
+    {
+      "sourceService": "workflow",
+      "sourceConcepts": [
+        "CheckResult"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "StepAttempt",
+        "ProjectionRevision"
+      ],
+      "representation": "CheckResult",
+      "preservedSemantics": "Sealed verdict/reason, evaluator digest, actual/expected values, evidence refs and evaluation cutoff. False predicate is not technical failure.",
+      "sourcePath": "aws/fis/analysis/workflow/model.md",
+      "profileId": "console.workflow.check-result/v1"
+    },
+    {
+      "sourceService": "workflow",
+      "sourceConcepts": [
+        "Observation"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "SourceRevision",
+        "Observation"
+      ],
+      "representation": "Typed evidence payload",
+      "preservedSemantics": "The source workflow uses Observation for evidence content. Consolidated Observation names receipt identity; payload kind/coverage remains typed on the retained evidence profile.",
+      "sourcePath": "aws/fis/analysis/workflow/model.md"
+    },
+    {
+      "sourceService": "workflow",
+      "sourceConcepts": [
+        "ExternalOperationRef"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "StepAttempt",
+        "Command"
+      ],
+      "representation": "ExternalOperationReference",
+      "preservedSemantics": "Qualified provider handle plus stable originEffectKey even before remote ID is known. Native Experiment and logs query IDs are references, not a new generic Run.",
+      "sourcePath": "aws/fis/analysis/workflow/model.md"
+    },
+    {
+      "sourceService": "workflow",
+      "sourceConcepts": [
+        "CancellationIntent"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "Run",
+        "Command"
+      ],
+      "representation": "CancellationIntent",
+      "preservedSemantics": "First accepted principal/time/reason is monotonic, fences new main dispatch, and is independent of confirmed remote stop or cleanup.",
+      "sourcePath": "aws/fis/analysis/workflow/model.md"
+    },
+    {
+      "sourceService": "workflow",
+      "sourceConcepts": [
+        "ArtifactRef"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "SourceRevision",
+        "Snapshot"
+      ],
+      "representation": "ArtifactReference",
+      "preservedSemantics": "Store locator/version/media/length/digest; temporary download URL and access rights resolve separately.",
+      "sourcePath": "aws/fis/analysis/workflow/model.md"
+    },
+    {
+      "sourceService": "workflow",
+      "sourceConcepts": [
+        "ExecutionError"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "StepAttempt",
+        "Command"
+      ],
+      "representation": "ExecutionError",
+      "preservedSemantics": "Typed technical failure with safe diagnostics. Assessment false, transport failure and unresolved side effect have different meanings.",
+      "sourcePath": "aws/fis/analysis/workflow/model.md"
+    },
+    {
+      "sourceService": "workflow",
+      "sourceConcepts": [
+        "capture-session handle",
+        "operation registry",
+        "criterion denominator",
+        "finalization result"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "StepAttempt",
+        "ScenarioRevision",
+        "Run"
+      ],
+      "representation": "Workflow control values",
+      "preservedSemantics": "Capture handle is an external-operation reference; registry locks and reducer/denominator/finalization values belong to revision/run ownership, not extra CRUD roots.",
+      "sourcePath": "aws/fis/analysis/workflow/model.md"
+    },
+    {
+      "sourceService": "resilience-hub",
+      "sourceConcepts": [
+        "SystemEntity",
+        "SYSTEM"
+      ],
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "System"
+      ],
+      "representation": "System with provider binding",
+      "preservedSemantics": "Console System owns local catalog metadata; verified native ARN/ID is an alias/import fact. ARN-less summaries retain unresolved partial identity, not a fabricated ARN.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md",
+      "profileId": "aws.resilience-hub.system/v1"
+    },
+    {
+      "sourceService": "resilience-hub",
+      "sourceConcepts": [
+        "SYSTEM_SERVICE"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "Service"
+      ],
+      "representation": "SystemServiceMembership",
+      "preservedSemantics": "One local Service membership authority, with provenance for imported native associatedSystems. Shared services deduplicate by canonical/provider identity, not path count.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md"
+    },
+    {
+      "sourceService": "resilience-hub",
+      "sourceConcepts": [
+        "UserJourneyEntity",
+        "USER_JOURNEY"
+      ],
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "UserJourney"
+      ],
+      "representation": "UserJourney with provider binding",
+      "preservedSemantics": "Belongs to one System; provider identity includes parent system scope. Local catalog changes never silently update native journey configuration.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md",
+      "profileId": "aws.resilience-hub.user-journey/v1"
+    },
+    {
+      "sourceService": "resilience-hub",
+      "sourceConcepts": [
+        "JOURNEY_SERVICE"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "Service"
+      ],
+      "representation": "JourneyServiceMembership",
+      "preservedSemantics": "Selected journey belongs to the same associated System; derive journey service list from Service membership rather than two writable authorities.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md"
+    },
+    {
+      "sourceService": "resilience-hub",
+      "sourceConcepts": [
+        "ServiceEntity",
+        "SERVICE"
+      ],
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "Service"
+      ],
+      "representation": "Service with provider binding",
+      "preservedSemantics": "Console business service has opaque canonical identity and local configuration. Native ARN/configuration is an imported facet, not the universal service primary key.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md",
+      "profileId": "aws.resilience-hub.service/v1"
+    },
+    {
+      "sourceService": "resilience-hub",
+      "sourceConcepts": [
+        "ResiliencePolicyEntity",
+        "POLICY"
+      ],
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "ResiliencePolicy"
+      ],
+      "representation": "ResiliencePolicy",
+      "preservedSemantics": "Qualified policy identity with immutable source revisions; direct service/journey assignment stays explicit and no native system policy is invented.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md",
+      "profileId": "aws.resilience-hub.policy/v1"
+    },
+    {
+      "sourceService": "resilience-hub",
+      "sourceConcepts": [
+        "POLICY_COMPONENT"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "ResiliencePolicy"
+      ],
+      "representation": "PolicyComponent",
+      "preservedSemantics": "Four typed native components: availabilitySlo, dataRecovery, multiAz, multiRegion. Local performance objectives require a separate namespace and units.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md"
+    },
+    {
+      "sourceService": "resilience-hub",
+      "sourceConcepts": [
+        "EFFECTIVE_TARGET_OBSERVATION"
+      ],
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "SourceRevision",
+        "Observation"
+      ],
+      "representation": "Effective-target evidence",
+      "preservedSemantics": "Exact observed target bundle with original source/time; do not independently select latest values when displaying an older posture context.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md",
+      "profileId": "aws.resilience-hub.effective-targets/v1"
+    },
+    {
+      "sourceService": "resilience-hub",
+      "sourceConcepts": [
+        "EFFECTIVE_TARGET"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "SourceRevision"
+      ],
+      "representation": "EffectiveTarget",
+      "preservedSemantics": "Typed value/unit plus optional policy name and ownership. Name is not policy identity; SELF/CROSS_ACCOUNT is not DIRECT/INHERITED.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md"
+    },
+    {
+      "sourceService": "resilience-hub",
+      "sourceConcepts": [
+        "POLICY_CONTEXT_CAPTURE",
+        "CapturedAssociation",
+        "PolicyAssignmentEvidence"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "Snapshot",
+        "ResilienceAssessment"
+      ],
+      "representation": "PolicyContextCapture",
+      "preservedSemantics": "Immutable assignment/membership/policy hashes and exact effective-target source revision; observed context does not prove which policy revision AWS evaluated.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md"
+    },
+    {
+      "sourceService": "resilience-hub",
+      "sourceConcepts": [
+        "AssessmentEntity",
+        "ASSESSMENT"
+      ],
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "ResilienceAssessment"
+      ],
+      "representation": "ResilienceAssessment",
+      "preservedSemantics": "Native service/assessment identity. Execution SUCCESS is distinct from policy achievability, runtime health, finding count or verified remediation.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md",
+      "profileId": "aws.resilience-hub.assessment/v1"
+    },
+    {
+      "sourceService": "resilience-hub",
+      "sourceConcepts": [
+        "FindingEntity",
+        "FINDING"
+      ],
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "Finding"
+      ],
+      "representation": "Finding",
+      "preservedSemantics": "Native service/finding identity and observed summary/detail. Do not require assessment FK; optional same-service capture correlation has an explicit basis.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md",
+      "profileId": "aws.resilience-hub.finding/v1"
+    },
+    {
+      "sourceService": "resilience-hub",
+      "sourceConcepts": [
+        "FINDING_CAPTURE"
+      ],
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "Collection",
+        "ReadAttempt"
+      ],
+      "representation": "Finding collection",
+      "preservedSemantics": "Capture list/page/detail scope/outcomes and optional qualified assessment correlation. New incomplete capture cannot claim old complete coverage is current.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md"
+    },
+    {
+      "sourceService": "resilience-hub",
+      "sourceConcepts": [
+        "FINDING_OBSERVATION"
+      ],
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "SourceRevision",
+        "Observation"
+      ],
+      "representation": "Finding evidence",
+      "preservedSemantics": "Capture/service/finding/representation plus exact field presence; preserve summary versus detail and incomplete hydration.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md"
+    },
+    {
+      "sourceService": "resilience-hub",
+      "sourceConcepts": [
+        "RecommendationEntity",
+        "RECOMMENDATION"
+      ],
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "Recommendation"
+      ],
+      "representation": "Recommendation",
+      "preservedSemantics": "Locally identified suggested change anchored to exact finding-detail observation/category/ordinal, with its payload revision retained. Same content in another observation is not a native stable identity.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md",
+      "profileId": "aws.resilience-hub.recommendation/v1"
+    },
+    {
+      "sourceService": "resilience-hub",
+      "sourceConcepts": [
+        "RECOMMENDATION_ENRICHMENT",
+        "RecommendationEstimate"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "Recommendation"
+      ],
+      "representation": "RecommendationEnrichment with RecommendationEstimate and AssigneeRef",
+      "preservedSemantics": "Separately versioned local title/estimate/complexity/planning overlay. Owner resolves a human, group or service assignee independently of the authenticated audit actor. Unknown cost stays unknown; enrichment cannot mutate original suggested changes.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md"
+    },
+    {
+      "sourceService": "resilience-hub",
+      "sourceConcepts": [
+        "DependencyDiscoveryConfig",
+        "DEPENDENCY_DISCOVERY_CONFIG"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "Service",
+        "SourceRevision"
+      ],
+      "representation": "DependencyDiscoveryObservation",
+      "preservedSemantics": "Provider-managed status/count/time/message separate from strict ENABLED/DISABLED desired write. Missing output is unknown, not disabled.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md"
+    },
+    {
+      "sourceService": "resilience-hub",
+      "sourceConcepts": [
+        "DependencyEntity",
+        "DEPENDENCY"
+      ],
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "Dependency"
+      ],
+      "representation": "Dependency with provider evidence",
+      "preservedSemantics": "Qualified service/dependency identity and DNS evidence; canonical relation/matches remain optional and sourced. No invented dependency-to-topology FK.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md",
+      "profileId": "aws.resilience-hub.dependency/v1"
+    },
+    {
+      "sourceService": "resilience-hub",
+      "sourceConcepts": [
+        "DEPENDENCY_GOVERNANCE"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "Dependency"
+      ],
+      "representation": "DependencyGovernance",
+      "preservedSemantics": "Independent local version, decision/rationale/actor/validity. It changes governance, not observed traffic, provider criticality or network permissions.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md"
+    },
+    {
+      "sourceService": "resilience-hub",
+      "sourceConcepts": [
+        "TopologyEntity",
+        "TOPOLOGY_SNAPSHOT"
+      ],
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "Snapshot"
+      ],
+      "representation": "Snapshot with GraphContents",
+      "preservedSemantics": "Immutable typed graph capture with filters/window/coverage. Resource/edge pages are not an atomic AWS snapshot.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md",
+      "profileId": "console.resilience.topology/v1"
+    },
+    {
+      "sourceService": "resilience-hub",
+      "sourceConcepts": [
+        "TOPOLOGY_NODE"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "Snapshot"
+      ],
+      "representation": "GraphNode",
+      "preservedSemantics": "Snapshot-local node identity and optional qualified Resource reference; unresolved endpoint is an explicit stub.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md"
+    },
+    {
+      "sourceService": "resilience-hub",
+      "sourceConcepts": [
+        "TOPOLOGY_EDGE",
+        "EdgeProperty"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "Snapshot"
+      ],
+      "representation": "GraphEdge",
+      "preservedSemantics": "Both endpoints share snapshot; retain every supplied relation/label/type property and provenance. Missing type does not default to data flow.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md"
+    },
+    {
+      "sourceService": "resilience-hub",
+      "sourceConcepts": [
+        "ENTITY_REF"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "SourceRevision",
+        "ProjectionRevision",
+        "WorkItem"
+      ],
+      "representation": "EntityReference",
+      "preservedSemantics": "Typed/scoped provider/canonical key with resolved/unresolved/tombstone state. This is a reference contract, not a universal untyped entity table.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md"
+    },
+    {
+      "sourceService": "resilience-hub",
+      "sourceConcepts": [
+        "EVENT",
+        "Event envelope"
+      ],
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "SourceRevision",
+        "Observation"
+      ],
+      "representation": "Operational event evidence",
+      "preservedSemantics": "Channel/stream scope/source event ID dedupe, raw envelope and independent source/receipt times. It is not an AWS HealthEvent.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md",
+      "profileId": "aws.resilience-hub.event/v1"
+    },
+    {
+      "sourceService": "resilience-hub",
+      "sourceConcepts": [
+        "EVENT_SUBJECT",
+        "Event subjects"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "SourceRevision",
+        "Observation"
+      ],
+      "representation": "EventSubject",
+      "preservedSemantics": "Typed scoped subject/role/link evidence and parent scope; event arrival is refresh evidence, not a completed detail reconciliation.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md"
+    },
+    {
+      "sourceService": "resilience-hub",
+      "sourceConcepts": [
+        "POSTURE_OBSERVATION"
+      ],
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "SourceRevision",
+        "Observation"
+      ],
+      "representation": "Posture evidence",
+      "preservedSemantics": "Retain achievability and captured target context with explicit optional assessment correlation. Local finding disposition cannot rewrite posture.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md",
+      "profileId": "aws.resilience-hub.posture/v1"
+    },
+    {
+      "sourceService": "resilience-hub",
+      "sourceConcepts": [
+        "HEALTH_OBSERVATION",
+        "Health observation"
+      ],
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "SourceRevision",
+        "Observation"
+      ],
+      "representation": "Runtime health evidence",
+      "preservedSemantics": "Monitoring signal identity, measuredAt, expiry and source; independent of AWS HealthEvent and policy posture. Ties/older observations do not win by arrival.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md",
+      "profileId": "console.monitoring.health/v1"
+    },
+    {
+      "sourceService": "resilience-hub",
+      "sourceConcepts": [
+        "CURRENT_PROJECTION",
+        "Service status projection"
+      ],
+      "disposition": "projectionProfile",
+      "canonicalEntities": [
+        "ProjectionRevision"
+      ],
+      "representation": "ServiceStatus and WorkspaceSummary",
+      "preservedSemantics": "Separate execution/posture/runtime health/discovery/coverage/attention; retain exact contributor IDs and rule version. Recompute does not renew source freshness.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md",
+      "profileId": "console.resilience.status/v1"
+    },
+    {
+      "sourceService": "resilience-hub",
+      "sourceConcepts": [
+        "InputSourceEntity",
+        "Input source"
+      ],
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "SourceRevision"
+      ],
+      "representation": "ServiceInputSource",
+      "preservedSemantics": "Service-scoped source ID and exact typed configuration. Writes accept one supported union member; read-only MONITORING and unknown branches are not automatically creatable.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md",
+      "profileId": "aws.resilience-hub.input-source/v1"
+    },
+    {
+      "sourceService": "resilience-hub",
+      "sourceConcepts": [
+        "ServiceResource"
+      ],
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "SourceRevision",
+        "Resource"
+      ],
+      "representation": "ServiceResourceObservation",
+      "preservedSemantics": "Service-local resourceIdentifier/full descriptor/input-source ref plus optional established canonical Resource identity. Unqualified ID is not a global resource.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md",
+      "profileId": "aws.resilience-hub.resource/v1"
+    },
+    {
+      "sourceService": "resilience-hub",
+      "sourceConcepts": [
+        "ServiceFunction"
+      ],
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "SourceRevision"
+      ],
+      "representation": "ServiceFunction",
+      "preservedSemantics": "Preserve service-scoped function references from findings and explicitly qualified resolution; no invented direct resource ARN.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md",
+      "profileId": "aws.resilience-hub.service-function/v1"
+    },
+    {
+      "sourceService": "resilience-hub",
+      "sourceConcepts": [
+        "PermissionModel",
+        "ResourceDiscovery",
+        "ReportConfiguration",
+        "DevOpsAgentConfiguration"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "Service",
+        "SourceRevision"
+      ],
+      "representation": "Provider service configuration values",
+      "preservedSemantics": "Keep strict native write DTO separate from nullable observed configuration. Report destination is not artifact readiness; agentSpaceArn is a link, not identity equivalence.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md",
+      "profileId": "aws.resilience-hub.service/v1"
+    },
+    {
+      "sourceService": "resilience-hub",
+      "sourceConcepts": [
+        "AssessmentCost"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "ResilienceAssessment"
+      ],
+      "representation": "AssessmentCost",
+      "preservedSemantics": "Provider execution cost/billable units; never the local cost estimate of a proposed remediation.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md"
+    },
+    {
+      "sourceService": "resilience-hub",
+      "sourceConcepts": [
+        "DNS queryRange",
+        "buckets"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "Dependency",
+        "SourceRevision"
+      ],
+      "representation": "DnsQueryObservation",
+      "preservedSemantics": "Exact start/end/granularity and timestamped counts. DNS activity cannot become latency, request success or availability.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md"
+    },
+    {
+      "sourceService": "resilience-hub",
+      "sourceConcepts": [
+        "EffectivePolicyEvidence"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "ProjectionRevision",
+        "Snapshot"
+      ],
+      "representation": "EffectivePolicyEvidence",
+      "preservedSemantics": "Bundle references the exact effective-target observation used by its context, not an independently selected current target set.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md"
+    },
+    {
+      "sourceService": "resilience-hub",
+      "sourceConcepts": [
+        "FindingCoverage",
+        "AssessmentCoverage",
+        "AttentionReason"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "ProjectionRevision"
+      ],
+      "representation": "Coverage and AttentionReason",
+      "preservedSemantics": "Explicit populations/counts, scope, freshness, reason codes and reducer version. Empty scope has no fabricated percentage or journey compliance.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md"
+    },
+    {
+      "sourceService": "resilience-hub",
+      "sourceConcepts": [
+        "PageSnapshot"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "Collection"
+      ],
+      "representation": "PaginationSnapshot",
+      "preservedSemantics": "Traversal infrastructure with principal/query/revision binding and expiry, not a business entity or native snapshot guarantee.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md"
+    },
+    {
+      "sourceService": "resilience-hub",
+      "sourceConcepts": [
+        "Local revision",
+        "DeletionReceipt",
+        "tombstone"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "Command",
+        "SourceRevision",
+        "ProjectionRevision"
+      ],
+      "representation": "Revision and tombstone receipt",
+      "preservedSemantics": "Concurrency/audit/history values preserve original identity; deleting local metadata does not cascade into retained snapshots or claim native deletion.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md"
+    },
+    {
+      "sourceService": "resilience-hub",
+      "sourceConcepts": [
+        "NormalizationDiagnostic"
+      ],
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "SourceRevision",
+        "ProjectionRevision"
+      ],
+      "representation": "NormalizationDiagnostic",
+      "preservedSemantics": "Field path/raw value/presence/reason preserve unknown output vocabulary and invalid/partial data without relaxing command inputs.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md"
+    },
+    {
+      "sourceService": "resilience-hub",
+      "sourceConcepts": [
+        "Workspace summary"
+      ],
+      "disposition": "projectionProfile",
+      "canonicalEntities": [
+        "ProjectionRevision"
+      ],
+      "representation": "WORKSPACE_SUMMARY projection",
+      "preservedSemantics": "Deduplicate service contributors and keep separate runtime-health, policy-posture and assessment-coverage counts with scope, as-of time and reducer version.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md",
+      "profileId": "console.resilience.workspace-summary/v1"
+    }
+  ],
+  "profiles": [
+    {
+      "profileId": "aws.health.event/v1",
+      "sourceService": "health",
+      "family": "Event summaries and contextual details",
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "HealthEvent",
+        "EventContext"
+      ],
+      "sourceShapes": [
+        "Event",
+        "OrganizationEvent",
+        "EventDetails",
+        "OrganizationEventDetails"
+      ],
+      "identityBasis": "Full event ARN; contextual account/org/public key retained separately.",
+      "observedFields": {
+        "arn": "string",
+        "service": "string",
+        "eventTypeCode": "string",
+        "eventTypeCategory": "open string",
+        "eventScopeCode": "open string",
+        "region": "string",
+        "statusCode": "open string",
+        "startTime": "provider timestamp",
+        "endTime": "provider timestamp",
+        "lastUpdatedTime": "provider timestamp",
+        "actionability": "open string",
+        "personas": "array of open strings"
+      },
+      "readOperations": [
+        "DescribeEvents",
+        "DescribeEventsForOrganization",
+        "DescribeEventDetails",
+        "DescribeEventDetailsForOrganization",
+        "DescribeAffectedAccountsForOrganization"
+      ],
+      "deferredNativeMutations": [],
+      "mutationDeferralReason": "Phase 1 specifies the model and console contracts; native dispatch requires a separately validated adapter.",
+      "sourcePath": "aws/health/analysis/report.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "notes": "Summary/detail wrappers and field presence are retained. No native create/acknowledge/close event mutation exists in this source inventory.",
+      "sourceRevisionBinding": {
+        "profile": "aws.health.event/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "aws.health.entity-impact/v1",
+      "sourceService": "health",
+      "family": "Event-relative affected construct",
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "EntityImpact"
+      ],
+      "sourceShapes": [
+        "AffectedEntity"
+      ],
+      "identityBasis": "Event context plus Health entityArn when present; provisional local identity otherwise.",
+      "observedFields": {
+        "entityArn": "string",
+        "eventArn": "string",
+        "entityValue": "string",
+        "awsAccountId": "string",
+        "statusCode": "open string",
+        "lastUpdatedTime": "provider timestamp",
+        "entityMetadata": "object",
+        "entityUrl": "string"
+      },
+      "readOperations": [
+        "DescribeAffectedEntities",
+        "DescribeAffectedEntitiesForOrganization"
+      ],
+      "deferredNativeMutations": [],
+      "mutationDeferralReason": "Phase 1 specifies the model and console contracts; native dispatch requires a separately validated adapter.",
+      "sourcePath": "aws/health/analysis/report.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "sourceRevisionBinding": {
+        "profile": "aws.health.entity-impact/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "aws.health.event-type/v1",
+      "sourceService": "health",
+      "family": "Event classification catalog",
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "SourceRevision"
+      ],
+      "sourceShapes": [
+        "EventType"
+      ],
+      "identityBasis": "Provider type code plus supplied catalog scope.",
+      "observedFields": {
+        "code": "string",
+        "service": "string",
+        "category": "open string",
+        "actionability": "open string",
+        "personas": "array of open strings"
+      },
+      "readOperations": [
+        "DescribeEventTypes"
+      ],
+      "deferredNativeMutations": [],
+      "mutationDeferralReason": "Phase 1 specifies the model and console contracts; native dispatch requires a separately validated adapter.",
+      "sourcePath": "aws/health/analysis/report.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "sourceRevisionBinding": {
+        "profile": "aws.health.event-type/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "aws.health.lifecycle-entry/v1",
+      "sourceService": "health",
+      "family": "Service-version lifecycle catalog",
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "LifecycleEntry"
+      ],
+      "sourceShapes": [
+        "ServiceLifecycle",
+        "LifecycleEvent"
+      ],
+      "identityBasis": "Locally reconciled entry and milestone IDs; no provider-stable ID is assumed.",
+      "observedFields": {
+        "service": "string",
+        "title": "string",
+        "version": "string",
+        "recommendedVersion": "string",
+        "lifecycleEvents": "array of LifecycleEvent values"
+      },
+      "readOperations": [
+        "DescribeServiceLifecycle"
+      ],
+      "deferredNativeMutations": [],
+      "mutationDeferralReason": "Phase 1 specifies the model and console contracts; native dispatch requires a separately validated adapter.",
+      "sourcePath": "aws/health/analysis/report.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "notes": "Dates/types/risks/regions belong to exact milestone values; service/version alone is not unique.",
+      "sourceRevisionBinding": {
+        "profile": "aws.health.lifecycle-entry/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "aws.health.communication/v1",
+      "sourceService": "health",
+      "family": "EventBridge communication and delivery",
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "Communication"
+      ],
+      "sourceShapes": [
+        "AWS Health EventBridge envelope"
+      ],
+      "identityBasis": "Logical page = event ARN + notification-account context + raw communication ID + page; raw delivery identity remains separate.",
+      "observedFields": {
+        "id": "envelope string",
+        "account": "envelope string",
+        "region": "envelope string",
+        "time": "transport timestamp",
+        "detail": "open object with eventArn, communicationId, page, totalPages and eventRegion"
+      },
+      "readOperations": [],
+      "deferredNativeMutations": [],
+      "mutationDeferralReason": "Phase 1 specifies the model and console contracts; native dispatch requires a separately validated adapter.",
+      "sourcePath": "aws/health/analysis/report.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "notes": "Field hints name the raw envelope. Logical grouping is local and validates suffix/page consistency. Receipt does not establish impacted account.",
+      "sourceRevisionBinding": {
+        "profile": "aws.health.communication/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "aws.health.organization-access/v1",
+      "sourceService": "health",
+      "family": "Organization aggregation configuration",
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "Connection",
+        "SourceRevision"
+      ],
+      "sourceShapes": [
+        "OrganizationHealthAccess observation"
+      ],
+      "identityBasis": "Organization/integration context.",
+      "observedFields": {
+        "healthServiceAccessStatusForOrganization": "open string"
+      },
+      "readOperations": [
+        "DescribeHealthServiceStatusForOrganization"
+      ],
+      "deferredNativeMutations": [
+        "EnableHealthServiceAccessForOrganization",
+        "DisableHealthServiceAccessForOrganization"
+      ],
+      "mutationDeferralReason": "Integration enable/disable changes provider configuration and requires capability checks plus readiness/backfill reconciliation.",
+      "sourcePath": "aws/health/analysis/report.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "sourceRevisionBinding": {
+        "profile": "aws.health.organization-access/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "aws.devops-agent.agent-space/v1",
+      "sourceService": "devops-agent",
+      "family": "Agent Space configuration",
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "AgentSpace"
+      ],
+      "sourceShapes": [
+        "AgentSpace"
+      ],
+      "identityBasis": "Owning partition/account/Region plus agentSpaceId.",
+      "observedFields": {
+        "agentSpaceId": "string",
+        "name": "string",
+        "description": "string",
+        "locale": "string",
+        "createdAt": "provider timestamp",
+        "updatedAt": "provider timestamp",
+        "kmsKeyArn": "string",
+        "preferences": "map of booleans"
+      },
+      "readOperations": [
+        "GetAgentSpace",
+        "ListAgentSpaces"
+      ],
+      "deferredNativeMutations": [
+        "CreateAgentSpace",
+        "UpdateAgentSpace",
+        "DeleteAgentSpace"
+      ],
+      "mutationDeferralReason": "Phase 1 specifies the model and console contracts; native dispatch requires a separately validated adapter.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "sourceRevisionBinding": {
+        "profile": "aws.devops-agent.agent-space/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "aws.devops-agent.registered-service/v1",
+      "sourceService": "devops-agent",
+      "family": "Integration registration",
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "SourceRevision"
+      ],
+      "sourceShapes": [
+        "RegisteredService"
+      ],
+      "identityBasis": "Owning scope plus serviceId.",
+      "observedFields": {
+        "serviceId": "string",
+        "serviceType": "open string",
+        "name": "string",
+        "accessibleResources": "array of JSON values",
+        "additionalServiceDetails": "open union",
+        "privateConnectionName": "string",
+        "kmsKeyArn": "string",
+        "createdAt": "provider timestamp",
+        "updatedAt": "provider timestamp"
+      },
+      "readOperations": [
+        "GetService",
+        "ListServices"
+      ],
+      "deferredNativeMutations": [
+        "RegisterService",
+        "DeregisterService"
+      ],
+      "mutationDeferralReason": "Provider integration lifecycle is peripheral to the initial console domain; retain typed configuration and defer credential-bearing onboarding commands.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "sourceRevisionBinding": {
+        "profile": "aws.devops-agent.registered-service/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "aws.devops-agent.association/v1",
+      "sourceService": "devops-agent",
+      "family": "Agent Space association",
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "AgentSpace",
+        "SourceRevision"
+      ],
+      "sourceShapes": [
+        "Association",
+        "ServiceConfiguration"
+      ],
+      "identityBasis": "Space-scoped associationId; serviceId is not unique and aws may be built-in.",
+      "observedFields": {
+        "agentSpaceId": "string",
+        "associationId": "string",
+        "serviceId": "string",
+        "configuration": "open tagged union",
+        "capabilities": "map of configuration values",
+        "status": "open string",
+        "createdAt": "provider timestamp",
+        "updatedAt": "provider timestamp"
+      },
+      "readOperations": [
+        "GetAssociation",
+        "ListAssociations"
+      ],
+      "deferredNativeMutations": [
+        "AssociateService",
+        "UpdateAssociation",
+        "DisassociateService",
+        "ValidateAwsAssociations"
+      ],
+      "mutationDeferralReason": "Association values are observed under AgentSpace; live association/validation writes require provider-specific onboarding and permissions.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "sourceRevisionBinding": {
+        "profile": "aws.devops-agent.association/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "aws.devops-agent.task/v1",
+      "sourceService": "devops-agent",
+      "family": "Backlog task",
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "Investigation"
+      ],
+      "sourceShapes": [
+        "Task",
+        "TaskFilter",
+        "ReferenceOutput"
+      ],
+      "identityBasis": "Owning scope + Agent Space + taskId; taskType selects the Investigation facet.",
+      "observedFields": {
+        "agentSpaceId": "string",
+        "taskId": "string",
+        "taskType": "open string",
+        "title": "string",
+        "priority": "open string",
+        "status": "open string",
+        "version": "integer",
+        "executionId": "string",
+        "primaryTaskId": "string",
+        "reference": "ReferenceOutput object",
+        "metadata": "any JSON",
+        "supportMetadata": "any JSON",
+        "createdAt": "provider timestamp",
+        "updatedAt": "provider timestamp"
+      },
+      "readOperations": [
+        "GetBacklogTask",
+        "ListBacklogTasks"
+      ],
+      "deferredNativeMutations": [
+        "CreateBacklogTask",
+        "UpdateBacklogTask"
+      ],
+      "mutationDeferralReason": "Phase 1 specifies the model and console contracts; native dispatch requires a separately validated adapter.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "notes": "Returned version is not a native expectedVersion write precondition. Other task types remain retained typed tasks without being relabeled investigations.",
+      "sourceRevisionBinding": {
+        "profile": "aws.devops-agent.task/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "aws.devops-agent.execution/v1",
+      "sourceService": "devops-agent",
+      "family": "Agent execution",
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "Execution"
+      ],
+      "sourceShapes": [
+        "Execution"
+      ],
+      "identityBasis": "Owning scope + Agent Space + executionId; task membership comes from request context.",
+      "observedFields": {
+        "agentSpaceId": "string",
+        "executionId": "string",
+        "parentExecutionId": "string",
+        "executionStatus": "open string",
+        "agentType": "open string",
+        "agentSubTask": "open string",
+        "uid": "string",
+        "createdAt": "provider timestamp",
+        "updatedAt": "provider timestamp"
+      },
+      "readOperations": [
+        "ListExecutions"
+      ],
+      "deferredNativeMutations": [],
+      "mutationDeferralReason": "Phase 1 specifies the model and console contracts; native dispatch requires a separately validated adapter.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "sourceRevisionBinding": {
+        "profile": "aws.devops-agent.execution/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "aws.devops-agent.journal-record/v1",
+      "sourceService": "devops-agent",
+      "family": "Published journal record",
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "JournalRecord"
+      ],
+      "sourceShapes": [
+        "JournalRecord",
+        "UserReference"
+      ],
+      "identityBasis": "Owning scope + Agent Space + executionId + recordId.",
+      "observedFields": {
+        "agentSpaceId": "string",
+        "executionId": "string",
+        "recordId": "string",
+        "recordType": "open string",
+        "createdAt": "provider timestamp",
+        "content": "any JSON including null",
+        "userReference": "UserReference object"
+      },
+      "readOperations": [
+        "ListJournalRecords"
+      ],
+      "deferredNativeMutations": [],
+      "mutationDeferralReason": "Phase 1 specifies the model and console contracts; native dispatch requires a separately validated adapter.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "notes": "No native single-record get or universal typed finding/root-cause graph payload is assumed.",
+      "sourceRevisionBinding": {
+        "profile": "aws.devops-agent.journal-record/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "aws.devops-agent.asset/v1",
+      "sourceService": "devops-agent",
+      "family": "Versioned native asset and files",
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "Asset"
+      ],
+      "sourceShapes": [
+        "Asset",
+        "AssetVersionMetadata",
+        "AssetFile",
+        "AssetFileBody",
+        "AssetTypeSummary",
+        "AssetContent"
+      ],
+      "identityBasis": "Owning scope + Agent Space + assetId; native version; exact file path within version.",
+      "observedFields": {
+        "assetId": "string",
+        "assetType": "open string",
+        "metadata": "any JSON",
+        "version": "integer",
+        "createdAt": "provider timestamp",
+        "updatedAt": "provider timestamp",
+        "path": "file string",
+        "content": "text/bytes union or content.zipFile output wrapper"
+      },
+      "readOperations": [
+        "GetAsset",
+        "ListAssets",
+        "ListAssetTypes",
+        "ListAssetVersions",
+        "GetAssetContent",
+        "GetAssetFile",
+        "ListAssetFiles"
+      ],
+      "deferredNativeMutations": [
+        "CreateAsset",
+        "UpdateAsset",
+        "DeleteAsset",
+        "CreateAssetFile",
+        "UpdateAssetFile",
+        "DeleteAssetFile"
+      ],
+      "mutationDeferralReason": "Read/version models are consolidated; content uploads, profile validation and native mutations require a dedicated authorized adapter.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "notes": "Documented profiles skill/agents_md/attachment/custom_agent/memory_store/memory/test_profile/feedback remain assetType-specific content, not new roots. Explicit execution links must be sourced.",
+      "sourceRevisionBinding": {
+        "profile": "aws.devops-agent.asset/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "aws.devops-agent.conversation/v1",
+      "sourceService": "devops-agent",
+      "family": "Conversation and pending queue",
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "SourceRevision"
+      ],
+      "sourceShapes": [
+        "ChatExecution",
+        "PendingMessage",
+        "Message",
+        "UserMessageBlock",
+        "AssistantMessageBlock",
+        "SendMessageContext"
+      ],
+      "identityBasis": "Space/execution plus native message or local session/request identity where supplied.",
+      "observedFields": {
+        "message": "open tagged content union",
+        "executionId": "string",
+        "agentSpaceId": "string",
+        "context": "open object with validated conversation/approval context"
+      },
+      "readOperations": [
+        "ListChats",
+        "ListPendingMessages"
+      ],
+      "deferredNativeMutations": [
+        "CreateChat",
+        "SendMessage"
+      ],
+      "mutationDeferralReason": "Conversation is retained for provenance; interactive streaming, user-scoped authorization and ambiguous mutation recovery are outside the phase-1 model implementation.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "sourceRevisionBinding": {
+        "profile": "aws.devops-agent.conversation/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "aws.devops-agent.chat-stream/v1",
+      "sourceService": "devops-agent",
+      "family": "Native SendMessage event stream",
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "SourceRevision",
+        "Observation"
+      ],
+      "sourceShapes": [
+        "SendMessageEvents",
+        "SendMessageResponseCreatedEvent",
+        "SendMessageResponseInProgressEvent",
+        "SendMessageResponseCompletedEvent",
+        "SendMessageResponseFailedEvent",
+        "SendMessageContentBlockStartEvent",
+        "SendMessageContentBlockDeltaEvent",
+        "SendMessageContentBlockStopEvent",
+        "SendMessageSummaryEvent",
+        "SendMessageHeartbeatEvent",
+        "SendMessageUsageInfo"
+      ],
+      "identityBasis": "Execution + local request/session + supplied response ID, block index/ID and sequence.",
+      "observedFields": {
+        "eventType": "union member name retained",
+        "responseId": "optional string",
+        "sequenceNumber": "optional integer",
+        "index": "optional integer",
+        "id": "optional string",
+        "parentId": "optional string",
+        "delta": "textDelta/jsonDelta union",
+        "usage": "token count object"
+      },
+      "readOperations": [],
+      "deferredNativeMutations": [
+        "SendMessage"
+      ],
+      "mutationDeferralReason": "The typed union is a capture profile, not an application replay log; streaming dispatch/resume and recovery require a future adapter.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "notes": "Hints describe members of the relevant event variants, not one flat native structure.",
+      "sourceRevisionBinding": {
+        "profile": "aws.devops-agent.chat-stream/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "aws.devops-agent.approval/v1",
+      "sourceService": "devops-agent",
+      "family": "Directed action approval context",
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "ApprovalRequest"
+      ],
+      "sourceShapes": [
+        "ApprovalPattern",
+        "ApprovalAction",
+        "observed approval request profile"
+      ],
+      "identityBasis": "Space-scoped approvalId and exact execution/interruptId/toolUseId context; reusable approval identity remains distinct from an invocation.",
+      "observedFields": {
+        "approvalId": "string",
+        "interruptId": "string",
+        "toolUseId": "string",
+        "tool": "string",
+        "argumentPins": "map of pinned argument values",
+        "status": "open string"
+      },
+      "readOperations": [],
+      "deferredNativeMutations": [
+        "UpdateApprovalAction",
+        "SendMessage"
+      ],
+      "mutationDeferralReason": "Decision and resume are distinct commands; observed request payload profiles and ambiguous-outcome reconciliation require verification. No native Get/List/RevokeApproval operation is invented.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "notes": "Request context arrives in documented chat flow carried by open content; this profile does not claim a universal native ApprovalRequest schema.",
+      "sourceRevisionBinding": {
+        "profile": "aws.devops-agent.approval/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "aws.devops-agent.goal/v1",
+      "sourceService": "devops-agent",
+      "family": "Prevention goal",
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "SourceRevision"
+      ],
+      "sourceShapes": [
+        "Goal",
+        "GoalContent",
+        "GoalSchedule"
+      ],
+      "identityBasis": "Agent Space ARN + goalId.",
+      "observedFields": {
+        "agentSpaceArn": "string",
+        "goalId": "string",
+        "title": "string",
+        "content": "object with description/objectives",
+        "status": "open string",
+        "goalType": "open string",
+        "version": "integer",
+        "lastTaskId": "string",
+        "lastSuccessfulTaskId": "string",
+        "evaluationSchedule": "GoalSchedule object",
+        "createdAt": "provider timestamp",
+        "updatedAt": "provider timestamp"
+      },
+      "readOperations": [
+        "ListGoals"
+      ],
+      "deferredNativeMutations": [
+        "UpdateGoal"
+      ],
+      "mutationDeferralReason": "Prevention-goal authoring and scheduling is a later module. Typed identity/content/task relations remain retained and inspectable without conflating Goal with Scenario.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "sourceRevisionBinding": {
+        "profile": "aws.devops-agent.goal/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "aws.devops-agent.recommendation/v1",
+      "sourceService": "devops-agent",
+      "family": "Native prevention recommendation",
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "SourceRevision"
+      ],
+      "sourceShapes": [
+        "Recommendation",
+        "RecommendationContent"
+      ],
+      "identityBasis": "Agent Space ARN + native recommendationId; taskId and optional goalId/goalVersion retained.",
+      "observedFields": {
+        "agentSpaceArn": "string",
+        "recommendationId": "string",
+        "taskId": "string",
+        "goalId": "string",
+        "goalVersion": "integer",
+        "title": "string",
+        "content": "object with summary and optional spec",
+        "status": "open string",
+        "priority": "open string",
+        "version": "integer",
+        "rankPosition": "integer",
+        "rankedAt": "provider timestamp"
+      },
+      "readOperations": [
+        "GetRecommendation",
+        "ListRecommendations"
+      ],
+      "deferredNativeMutations": [
+        "UpdateRecommendation"
+      ],
+      "mutationDeferralReason": "Provider prevention lifecycle is retained as a distinct typed DTO; do not merge its stable native identity/lifecycle with Resilience observation-scoped suggested changes.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "sourceRevisionBinding": {
+        "profile": "aws.devops-agent.recommendation/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "aws.devops-agent.trigger/v1",
+      "sourceService": "devops-agent",
+      "family": "Native automation trigger",
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "SourceRevision"
+      ],
+      "sourceShapes": [
+        "Trigger",
+        "TriggerCondition"
+      ],
+      "identityBasis": "Space-scoped triggerId.",
+      "observedFields": {
+        "triggerId": "string",
+        "agentSpaceId": "string",
+        "type": "open string",
+        "condition": "open tagged union",
+        "action": "any JSON",
+        "status": "open string",
+        "createdAt": "provider timestamp",
+        "updatedAt": "provider timestamp"
+      },
+      "readOperations": [
+        "GetTrigger",
+        "ListTriggers"
+      ],
+      "deferredNativeMutations": [
+        "CreateTrigger",
+        "UpdateTrigger",
+        "DeleteTrigger"
+      ],
+      "mutationDeferralReason": "Native automation configuration is not a console program lock; live scheduling and custom-agent dispatch are a later provider module.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "sourceRevisionBinding": {
+        "profile": "aws.devops-agent.trigger/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "aws.devops-agent.operator-app/v1",
+      "sourceService": "devops-agent",
+      "family": "Provider operator-app access",
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "SourceRevision"
+      ],
+      "sourceShapes": [
+        "Operator-app response and IdP configuration"
+      ],
+      "identityBasis": "Owning Agent Space.",
+      "observedFields": {
+        "agentSpaceId": "string",
+        "operatorAppUrl": "string",
+        "iam": "configuration object",
+        "idc": "configuration object",
+        "idp": "configuration object"
+      },
+      "readOperations": [
+        "GetOperatorApp"
+      ],
+      "deferredNativeMutations": [
+        "EnableOperatorApp",
+        "DisableOperatorApp",
+        "UpdateOperatorAppIdpConfig"
+      ],
+      "mutationDeferralReason": "External operator-app access is peripheral provider configuration, separate from console workspace authorization.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "sourceRevisionBinding": {
+        "profile": "aws.devops-agent.operator-app/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "aws.devops-agent.private-connection/v1",
+      "sourceService": "devops-agent",
+      "family": "Provider private connectivity",
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "SourceRevision"
+      ],
+      "sourceShapes": [
+        "PrivateConnectionSummary",
+        "private connection response"
+      ],
+      "identityBasis": "Owning provider scope + private connection name.",
+      "observedFields": {
+        "name": "string",
+        "type": "open string",
+        "resourceGatewayId": "string",
+        "hostAddress": "string",
+        "vpcId": "string",
+        "resourceConfigurationId": "string",
+        "status": "open string",
+        "certificateExpiryTime": "provider timestamp",
+        "dnsResolution": "open string",
+        "failureMessage": "string"
+      },
+      "readOperations": [
+        "DescribePrivateConnection",
+        "ListPrivateConnections"
+      ],
+      "deferredNativeMutations": [
+        "CreatePrivateConnection",
+        "UpdatePrivateConnectionCertificate",
+        "DeletePrivateConnection"
+      ],
+      "mutationDeferralReason": "Network provisioning and certificate lifecycle require a separate authorized integration; console Connection remains an access-path record.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "sourceRevisionBinding": {
+        "profile": "aws.devops-agent.private-connection/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "aws.devops-agent.webhook/v1",
+      "sourceService": "devops-agent",
+      "family": "Association webhook descriptor",
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "SourceRevision"
+      ],
+      "sourceShapes": [
+        "Webhook"
+      ],
+      "identityBasis": "Space + association + webhookId.",
+      "observedFields": {
+        "webhookId": "string",
+        "webhookUrl": "string",
+        "webhookType": "open string"
+      },
+      "readOperations": [
+        "ListWebhooks"
+      ],
+      "deferredNativeMutations": [],
+      "mutationDeferralReason": "Phase 1 specifies the model and console contracts; native dispatch requires a separately validated adapter.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "notes": "Provisioning occurs through association workflows; preserving descriptor evidence does not imply webhook server deployment.",
+      "sourceRevisionBinding": {
+        "profile": "aws.devops-agent.webhook/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "aws.devops-agent.account-usage/v1",
+      "sourceService": "devops-agent",
+      "family": "Account usage window",
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "SourceRevision"
+      ],
+      "sourceShapes": [
+        "UsageMetric",
+        "GetAccountUsage response"
+      ],
+      "identityBasis": "Owning account and usagePeriodStartTime/usagePeriodEndTime.",
+      "observedFields": {
+        "usagePeriodStartTime": "provider timestamp",
+        "usagePeriodEndTime": "provider timestamp",
+        "monthlyAccountInvestigationHours": "UsageMetric object",
+        "monthlyAccountEvaluationHours": "UsageMetric object",
+        "monthlyAccountSystemLearningHours": "UsageMetric object",
+        "monthlyAccountOnDemandHours": "UsageMetric object",
+        "monthlyAccountGraderHours": "UsageMetric object"
+      },
+      "readOperations": [
+        "GetAccountUsage"
+      ],
+      "deferredNativeMutations": [],
+      "mutationDeferralReason": "Phase 1 specifies the model and console contracts; native dispatch requires a separately validated adapter.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "notes": "UsageMetric has numeric usage and integer limit; these are scoped usage counters, not per-incident outcomes.",
+      "sourceRevisionBinding": {
+        "profile": "aws.devops-agent.account-usage/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "aws.fis.template/v1",
+      "sourceService": "fis",
+      "family": "Reusable provider experiment template",
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "SourceRevision"
+      ],
+      "sourceShapes": [
+        "ExperimentTemplate"
+      ],
+      "identityBasis": "Owning scope + template ARN or ID.",
+      "observedFields": {
+        "id": "string",
+        "arn": "string",
+        "creationTime": "provider timestamp",
+        "lastUpdateTime": "provider timestamp",
+        "description": "string",
+        "actions": "map of named actions",
+        "targets": "map of named selectors",
+        "stopConditions": "array of source/value objects",
+        "roleArn": "string",
+        "experimentOptions": "object",
+        "experimentReportConfiguration": "object"
+      },
+      "readOperations": [
+        "GetExperimentTemplate",
+        "ListExperimentTemplates"
+      ],
+      "deferredNativeMutations": [
+        "CreateExperimentTemplate",
+        "UpdateExperimentTemplate",
+        "DeleteExperimentTemplate"
+      ],
+      "mutationDeferralReason": "Provider template editing is a later adapter capability. A console ScenarioRevision pins a captured template/configuration reference; it never claims a provider revision ID.",
+      "sourcePath": "aws/fis/analysis/report.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "sourceRevisionBinding": {
+        "profile": "aws.fis.template/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "aws.fis.action-catalog/v1",
+      "sourceService": "fis",
+      "family": "Fault-action catalog",
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "SourceRevision"
+      ],
+      "sourceShapes": [
+        "Action"
+      ],
+      "identityBasis": "Native catalog id/ARN in observed provider scope.",
+      "observedFields": {
+        "id": "string",
+        "arn": "string",
+        "description": "string",
+        "parameters": "map of described parameters",
+        "targets": "map of target slots"
+      },
+      "readOperations": [
+        "GetAction",
+        "ListActions"
+      ],
+      "deferredNativeMutations": [],
+      "mutationDeferralReason": "Phase 1 specifies the model and console contracts; native dispatch requires a separately validated adapter.",
+      "sourcePath": "aws/fis/analysis/report.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "sourceRevisionBinding": {
+        "profile": "aws.fis.action-catalog/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "aws.fis.resource-type/v1",
+      "sourceService": "fis",
+      "family": "Target resource-type catalog",
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "SourceRevision"
+      ],
+      "sourceShapes": [
+        "TargetResourceType"
+      ],
+      "identityBasis": "Native resourceType in observed scope.",
+      "observedFields": {
+        "resourceType": "string",
+        "description": "string",
+        "parameters": "map of described parameters"
+      },
+      "readOperations": [
+        "GetTargetResourceType",
+        "ListTargetResourceTypes"
+      ],
+      "deferredNativeMutations": [],
+      "mutationDeferralReason": "Phase 1 specifies the model and console contracts; native dispatch requires a separately validated adapter.",
+      "sourcePath": "aws/fis/analysis/report.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "sourceRevisionBinding": {
+        "profile": "aws.fis.resource-type/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "aws.fis.experiment/v1",
+      "sourceService": "fis",
+      "family": "Provider experiment execution",
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "Experiment"
+      ],
+      "sourceShapes": [
+        "Experiment",
+        "ExperimentAction",
+        "ExperimentTarget",
+        "ExperimentResolvedTarget"
+      ],
+      "identityBasis": "Owning scope + experiment ARN/ID; owned actions/targets use map key.",
+      "observedFields": {
+        "id": "string",
+        "arn": "string",
+        "experimentTemplateId": "string",
+        "creationTime": "provider timestamp",
+        "startTime": "provider timestamp",
+        "endTime": "provider timestamp",
+        "state": "raw state/reason object",
+        "actions": "map of named runtime actions",
+        "targets": "map of named runtime selectors",
+        "stopConditions": "array",
+        "experimentOptions": "object",
+        "experimentReport": "object"
+      },
+      "readOperations": [
+        "GetExperiment",
+        "ListExperiments",
+        "ListExperimentResolvedTargets"
+      ],
+      "deferredNativeMutations": [
+        "StartExperiment",
+        "StopExperiment"
+      ],
+      "mutationDeferralReason": "Fault dispatch/stopping is deferred to a durable authorized adapter with uncertain-start reconciliation. Stop acknowledgement does not prove effects ended.",
+      "sourcePath": "aws/fis/analysis/report.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "sourceRevisionBinding": {
+        "profile": "aws.fis.experiment/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "aws.fis.target-account/v1",
+      "sourceService": "fis",
+      "family": "Template and experiment target accounts",
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "Experiment",
+        "SourceRevision"
+      ],
+      "sourceShapes": [
+        "TargetAccountConfiguration",
+        "ExperimentTargetAccountConfiguration"
+      ],
+      "identityBasis": "Template/account or experiment/account tuple.",
+      "observedFields": {
+        "accountId": "string",
+        "roleArn": "string",
+        "description": "string"
+      },
+      "readOperations": [
+        "GetTargetAccountConfiguration",
+        "ListTargetAccountConfigurations",
+        "GetExperimentTargetAccountConfiguration",
+        "ListExperimentTargetAccountConfigurations"
+      ],
+      "deferredNativeMutations": [
+        "CreateTargetAccountConfiguration",
+        "UpdateTargetAccountConfiguration",
+        "DeleteTargetAccountConfiguration"
+      ],
+      "mutationDeferralReason": "Cross-account role configuration is captured as evidence; live permissions/configuration edits require a validated provider command.",
+      "sourcePath": "aws/fis/analysis/report.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "sourceRevisionBinding": {
+        "profile": "aws.fis.target-account/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "aws.fis.safety-lever/v1",
+      "sourceService": "fis",
+      "family": "Scoped safety control",
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "SourceRevision"
+      ],
+      "sourceShapes": [
+        "SafetyLever"
+      ],
+      "identityBasis": "Provider partition/account/Region + native lever ID.",
+      "observedFields": {
+        "id": "string",
+        "arn": "string",
+        "state": "state/reason object"
+      },
+      "readOperations": [
+        "GetSafetyLever"
+      ],
+      "deferredNativeMutations": [
+        "UpdateSafetyLeverState"
+      ],
+      "mutationDeferralReason": "Safety-control mutation changes provider execution admission and is outside phase-1 data modeling.",
+      "sourcePath": "aws/fis/analysis/report.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "sourceRevisionBinding": {
+        "profile": "aws.fis.safety-lever/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "aws.fis.execution-evidence/v1",
+      "sourceService": "fis",
+      "family": "Experiment logs and state events",
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "SourceRevision",
+        "Observation"
+      ],
+      "sourceShapes": [
+        "FIS log record",
+        "FIS EventBridge event"
+      ],
+      "identityBasis": "Channel/source event locator plus experiment and optional action/target scope; log id alone is not unique.",
+      "observedFields": {
+        "id": "source-dependent string",
+        "event_type": "source-dependent string",
+        "event_timestamp": "source-dependent timestamp",
+        "details": "open source payload"
+      },
+      "readOperations": [],
+      "deferredNativeMutations": [],
+      "mutationDeferralReason": "Phase 1 specifies the model and console contracts; native dispatch requires a separately validated adapter.",
+      "sourcePath": "aws/fis/analysis/report.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "notes": "Preserve the entire raw channel envelope. Field hints vary by channel and are not a fabricated universal event shape.",
+      "sourceRevisionBinding": {
+        "profile": "aws.fis.execution-evidence/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "aws.fis.report/v1",
+      "sourceService": "fis",
+      "family": "Experiment report and artifacts",
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "Experiment",
+        "SourceRevision"
+      ],
+      "sourceShapes": [
+        "ExperimentReport",
+        "report artifact descriptor"
+      ],
+      "identityBasis": "Owning experiment and exact observed report/artifact source.",
+      "observedFields": {
+        "state": "provider report state",
+        "experimentReportConfiguration": "configuration observation",
+        "reports": "artifact descriptor collection when supplied"
+      },
+      "readOperations": [],
+      "deferredNativeMutations": [],
+      "mutationDeferralReason": "Phase 1 specifies the model and console contracts; native dispatch requires a separately validated adapter.",
+      "sourcePath": "aws/fis/analysis/report.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "notes": "Read through the experiment/report sources documented in the analysis; no standalone native report CRUD is introduced.",
+      "sourceRevisionBinding": {
+        "profile": "aws.fis.report/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "aws.cloudwatch.alarm/v1",
+      "sourceService": "fis",
+      "family": "Alarm state/history evidence",
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "SourceRevision",
+        "Observation"
+      ],
+      "sourceShapes": [
+        "CloudWatch alarm and alarm-history observations"
+      ],
+      "identityBasis": "Qualified alarm reference + observation/window.",
+      "observedFields": {
+        "alarmArn": "qualified reference",
+        "state": "source state value",
+        "stateUpdatedAt": "source timestamp",
+        "history": "raw history when supplied"
+      },
+      "readOperations": [],
+      "deferredNativeMutations": [],
+      "mutationDeferralReason": "Phase 1 specifies the model and console contracts; native dispatch requires a separately validated adapter.",
+      "sourcePath": "aws/fis/analysis/workflow/adapters.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "notes": "Typed adapter evidence envelope, not a claim that these are one native CloudWatch response structure. Evaluation requires source-specific completeness.",
+      "sourceRevisionBinding": {
+        "profile": "aws.cloudwatch.alarm/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "aws.cloudwatch.metric/v1",
+      "sourceService": "fis",
+      "family": "Metric query/sample evidence",
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "SourceRevision",
+        "Observation"
+      ],
+      "sourceShapes": [
+        "CloudWatch metric observation"
+      ],
+      "identityBasis": "Qualified query/binding revision + series and observation/window.",
+      "observedFields": {
+        "query": "typed query specification",
+        "unit": "string",
+        "period": "number",
+        "window": "start/end values",
+        "samples": "timestamp/value array",
+        "coverage": "bounded collection values"
+      },
+      "readOperations": [],
+      "deferredNativeMutations": [],
+      "mutationDeferralReason": "Phase 1 specifies the model and console contracts; native dispatch requires a separately validated adapter.",
+      "sourcePath": "aws/fis/analysis/workflow/adapters.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "notes": "Normalized evidence profile preserves original native payload and source precision. Missing samples are not zero.",
+      "sourceRevisionBinding": {
+        "profile": "aws.cloudwatch.metric/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "aws.logs.query/v1",
+      "sourceService": "workflow",
+      "family": "Logs Insights query and results",
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "SourceRevision",
+        "Observation"
+      ],
+      "sourceShapes": [
+        "Logs Insights query operation observations"
+      ],
+      "identityBasis": "Owning provider scope + query ID once known; originEffectKey before it exists.",
+      "observedFields": {
+        "queryId": "string",
+        "queryStatus": "open string",
+        "rows": "typed cells/values",
+        "statistics": "raw statistics",
+        "window": "start/end",
+        "coverage": "bounded collection values"
+      },
+      "readOperations": [],
+      "deferredNativeMutations": [],
+      "mutationDeferralReason": "Phase 1 specifies the model and console contracts; native dispatch requires a separately validated adapter.",
+      "sourcePath": "aws/fis/analysis/workflow/adapters.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "notes": "Collector technical completion, closed window and proof sufficiency are separate; fixed-cutoff check results pin exact evidence.",
+      "sourceRevisionBinding": {
+        "profile": "aws.logs.query/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "aws.resilience-hub.system/v1",
+      "sourceService": "resilience-hub",
+      "family": "Native system catalog",
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "System"
+      ],
+      "sourceShapes": [
+        "System",
+        "SystemSummary"
+      ],
+      "identityBasis": "Full system ARN when available; scope + native systemId for partial summaries.",
+      "observedFields": {
+        "systemArn": "optional string",
+        "systemId": "string",
+        "name": "string",
+        "description": "string",
+        "sharingEnabled": "boolean"
+      },
+      "readOperations": [
+        "GetSystem",
+        "ListSystems"
+      ],
+      "deferredNativeMutations": [
+        "CreateSystem",
+        "UpdateSystem",
+        "DeleteSystem"
+      ],
+      "mutationDeferralReason": "Console System commands manage local catalog metadata. Native system provisioning, sharing and deletion require separately named future adapter commands.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "sourceRevisionBinding": {
+        "profile": "aws.resilience-hub.system/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "aws.resilience-hub.user-journey/v1",
+      "sourceService": "resilience-hub",
+      "family": "Native user journey",
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "UserJourney"
+      ],
+      "sourceShapes": [
+        "UserJourney",
+        "UserJourneySummary"
+      ],
+      "identityBasis": "Native system scope + userJourneyId.",
+      "observedFields": {
+        "userJourneyId": "string",
+        "name": "string",
+        "description": "string",
+        "policyArn": "string"
+      },
+      "readOperations": [
+        "GetUserJourney",
+        "ListUserJourneys"
+      ],
+      "deferredNativeMutations": [
+        "CreateUserJourney",
+        "UpdateUserJourney",
+        "DeleteUserJourney"
+      ],
+      "mutationDeferralReason": "Local journey catalog ownership differs from provider mutation; native request parent scope must be retained.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "sourceRevisionBinding": {
+        "profile": "aws.resilience-hub.user-journey/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "aws.resilience-hub.service/v1",
+      "sourceService": "resilience-hub",
+      "family": "Native service configuration",
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "Service"
+      ],
+      "sourceShapes": [
+        "Service",
+        "ServiceSummary",
+        "PermissionModel",
+        "DependencyDiscoveryConfig",
+        "ResourceDiscovery",
+        "ReportConfiguration",
+        "DevOpsAgentConfiguration"
+      ],
+      "identityBasis": "Full native service ARN; explicit canonical Service binding.",
+      "observedFields": {
+        "serviceArn": "string",
+        "name": "string",
+        "description": "string",
+        "associatedSystems": "array of scoped associations",
+        "policyArn": "string",
+        "regions": "array of strings",
+        "permissionModel": "typed nullable observation",
+        "dependencyDiscovery": "observed status/count/time object",
+        "resourceDiscovery": "observed status/error object",
+        "effectivePolicyValues": "typed target object",
+        "rerunAssessment": "optional boolean",
+        "reportConfiguration": "typed configuration",
+        "devOpsAgentConfiguration": "Agent Space reference"
+      },
+      "readOperations": [
+        "GetService",
+        "ListServices"
+      ],
+      "deferredNativeMutations": [
+        "CreateService",
+        "UpdateService",
+        "DeleteService"
+      ],
+      "mutationDeferralReason": "Console Service mutation only manages local metadata and membership. Live provider discovery/permissions/reporting/association edits require explicit separate adapter commands.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "notes": "Read/write configuration shapes intentionally differ; provider name is not editable via a local display label.",
+      "sourceRevisionBinding": {
+        "profile": "aws.resilience-hub.service/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "aws.resilience-hub.policy/v1",
+      "sourceService": "resilience-hub",
+      "family": "Native resilience policy",
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "ResiliencePolicy"
+      ],
+      "sourceShapes": [
+        "Policy",
+        "PolicySummary"
+      ],
+      "identityBasis": "Native policy ARN; exact retained source revision for historical use.",
+      "observedFields": {
+        "policyArn": "string",
+        "name": "string",
+        "availabilitySlo": "typed component",
+        "multiAz": "typed component",
+        "multiRegion": "typed component",
+        "dataRecovery": "typed component",
+        "sharingEnabled": "boolean"
+      },
+      "readOperations": [
+        "GetPolicy",
+        "ListPolicies"
+      ],
+      "deferredNativeMutations": [
+        "CreatePolicy",
+        "UpdatePolicy",
+        "DeletePolicy"
+      ],
+      "mutationDeferralReason": "Policy modeling and observed revisions are included; provider writes and supported clear/sharing semantics require the validated native adapter.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "sourceRevisionBinding": {
+        "profile": "aws.resilience-hub.policy/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "aws.resilience-hub.effective-targets/v1",
+      "sourceService": "resilience-hub",
+      "family": "Observed effective target values",
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "SourceRevision",
+        "Observation"
+      ],
+      "sourceShapes": [
+        "EffectivePolicyValues and target entries"
+      ],
+      "identityBasis": "Service + exact observed source revision/context.",
+      "observedFields": {
+        "value": "typed numeric value with declared unit",
+        "policyName": "optional string",
+        "policyType": "optional ownership value",
+        "effectivePolicyValues": "up to eight target members"
+      },
+      "readOperations": [
+        "GetService"
+      ],
+      "deferredNativeMutations": [],
+      "mutationDeferralReason": "Phase 1 specifies the model and console contracts; native dispatch requires a separately validated adapter.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "notes": "Field hints describe target entries and containing value; policy name/ownership cannot be promoted to a verified policy identity/inheritance relation.",
+      "sourceRevisionBinding": {
+        "profile": "aws.resilience-hub.effective-targets/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "aws.resilience-hub.assessment/v1",
+      "sourceService": "resilience-hub",
+      "family": "Failure-mode assessment execution",
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "ResilienceAssessment"
+      ],
+      "sourceShapes": [
+        "FailureModeAssessment summary"
+      ],
+      "identityBasis": "Service ARN + native assessmentId.",
+      "observedFields": {
+        "assessmentId": "string",
+        "status": "open string",
+        "startTime": "provider timestamp",
+        "endTime": "provider timestamp",
+        "achievability": "typed optional provider observation",
+        "cost": "execution cost observation"
+      },
+      "readOperations": [
+        "ListFailureModeAssessments"
+      ],
+      "deferredNativeMutations": [
+        "StartFailureModeAssessment"
+      ],
+      "mutationDeferralReason": "A future durable command starts native execution; no native GetFailureModeAssessment operation is fabricated and acceptance never proves policy pass.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "sourceRevisionBinding": {
+        "profile": "aws.resilience-hub.assessment/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "aws.resilience-hub.finding/v1",
+      "sourceService": "resilience-hub",
+      "family": "Service-scoped failure-mode finding",
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "Finding"
+      ],
+      "sourceShapes": [
+        "FailureModeFinding",
+        "finding summary/detail"
+      ],
+      "identityBasis": "Service ARN + findingId, with exact summary/detail source revision.",
+      "observedFields": {
+        "findingId": "string",
+        "status": "open string",
+        "severity": "open string",
+        "comment": "string",
+        "recommendations": "three typed nested recommendation groups when supplied"
+      },
+      "readOperations": [
+        "GetFailureModeFinding",
+        "ListFailureModeFindings"
+      ],
+      "deferredNativeMutations": [
+        "UpdateFailureModeFinding"
+      ],
+      "mutationDeferralReason": "Provider disposition requires explicit native command and reconciliation. Local WorkItem completion cannot set finding status, erase evidence or verify remediation.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "sourceRevisionBinding": {
+        "profile": "aws.resilience-hub.finding/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "aws.resilience-hub.recommendation/v1",
+      "sourceService": "resilience-hub",
+      "family": "Finding suggested change",
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "Recommendation"
+      ],
+      "sourceShapes": [
+        "Nested recommendation group and suggestedChanges"
+      ],
+      "identityBasis": "Exact finding-detail observation + group/category + ordinal, with source revision pinned; locally assigned recommendationId.",
+      "observedFields": {
+        "suggestedChanges": "native recommendation content",
+        "group": "observed group discriminator",
+        "ordinal": "source order"
+      },
+      "readOperations": [
+        "GetFailureModeFinding"
+      ],
+      "deferredNativeMutations": [],
+      "mutationDeferralReason": "Phase 1 specifies the model and console contracts; native dispatch requires a separately validated adapter.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "notes": "Group/ordinal are normalization coordinates, not native recommendation fields or stable native recommendation ID. Local estimates/workflow stay separate.",
+      "sourceRevisionBinding": {
+        "profile": "aws.resilience-hub.recommendation/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "aws.resilience-hub.dependency/v1",
+      "sourceService": "resilience-hub",
+      "family": "Observed service dependency",
+      "disposition": "canonicalEntity",
+      "canonicalEntities": [
+        "Dependency"
+      ],
+      "sourceShapes": [
+        "Dependency",
+        "dependency insight"
+      ],
+      "identityBasis": "Service ARN + native dependencyId.",
+      "observedFields": {
+        "dependencyId": "string",
+        "criticality": "open string",
+        "comment": "string",
+        "queryRange": "time range",
+        "queryBuckets": "timestamp/count values"
+      },
+      "readOperations": [
+        "ListDependencies",
+        "GetDependencyInsights"
+      ],
+      "deferredNativeMutations": [
+        "UpdateDependency"
+      ],
+      "mutationDeferralReason": "Provider criticality/comment updates differ from local dependency governance; the latter does not alter traffic or permissions.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "sourceRevisionBinding": {
+        "profile": "aws.resilience-hub.dependency/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "aws.resilience-hub.input-source/v1",
+      "sourceService": "resilience-hub",
+      "family": "Native discovery input source",
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "SourceRevision"
+      ],
+      "sourceShapes": [
+        "InputSourceSummary",
+        "ResourceConfiguration"
+      ],
+      "identityBasis": "Service ARN + inputSourceId.",
+      "observedFields": {
+        "inputSourceId": "string",
+        "type": "open string",
+        "resourceConfiguration": "one known tagged variant or retained unknown output",
+        "createdAt": "provider timestamp"
+      },
+      "readOperations": [
+        "ListInputSources"
+      ],
+      "deferredNativeMutations": [
+        "CreateInputSource",
+        "DeleteInputSource"
+      ],
+      "mutationDeferralReason": "Provider discovery configuration is retained as a typed Service facet; creation/replacement/deletion require separate adapter validation. No native update operation is invented.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "sourceRevisionBinding": {
+        "profile": "aws.resilience-hub.input-source/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "aws.resilience-hub.resource/v1",
+      "sourceService": "resilience-hub",
+      "family": "Service resource inventory",
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "SourceRevision",
+        "Resource"
+      ],
+      "sourceShapes": [
+        "ServiceResource"
+      ],
+      "identityBasis": "Service scope + resourceIdentifier; optional verified canonical Resource binding.",
+      "observedFields": {
+        "resourceIdentifier": "qualified source identifier",
+        "resource": "full native descriptor",
+        "inputSourceId": "optional string"
+      },
+      "readOperations": [
+        "ListResources"
+      ],
+      "deferredNativeMutations": [],
+      "mutationDeferralReason": "Phase 1 specifies the model and console contracts; native dispatch requires a separately validated adapter.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "notes": "Preserve effective billable-resource/filter scope. Partial or service-local identifiers do not establish global identity.",
+      "sourceRevisionBinding": {
+        "profile": "aws.resilience-hub.resource/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "aws.resilience-hub.service-function/v1",
+      "sourceService": "resilience-hub",
+      "family": "Service-function context",
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "SourceRevision"
+      ],
+      "sourceShapes": [
+        "ServiceFunction"
+      ],
+      "identityBasis": "Service scope + supplied function identifier.",
+      "observedFields": {
+        "functionIdentifier": "source identifier",
+        "definition": "retained typed provider function payload"
+      },
+      "readOperations": [],
+      "deferredNativeMutations": [],
+      "mutationDeferralReason": "The source analysis preserves function references but does not finalize their full authoring contract. Retain identity/payload and defer management rather than inventing finding-to-resource links.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "notes": "Field hints are normalized context descriptors; exact provider payload and operation must be pinned by the future adapter.",
+      "sourceRevisionBinding": {
+        "profile": "aws.resilience-hub.service-function/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "aws.resilience-hub.event/v1",
+      "sourceService": "resilience-hub",
+      "family": "Operational service/system/policy event",
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "SourceRevision",
+        "Observation"
+      ],
+      "sourceShapes": [
+        "EventBridge/native event envelope"
+      ],
+      "identityBasis": "Channel + stream scope + source event ID.",
+      "observedFields": {
+        "id": "source event string",
+        "source": "source namespace",
+        "detailType": "original event type",
+        "time": "provider timestamp",
+        "account": "string",
+        "region": "string",
+        "resources": "array of raw references",
+        "detail": "open native payload"
+      },
+      "readOperations": [],
+      "deferredNativeMutations": [],
+      "mutationDeferralReason": "Phase 1 specifies the model and console contracts; native dispatch requires a separately validated adapter.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "notes": "Keep original envelope field spelling including detail-type. Received assessment/finding/dependency events are refresh inputs, not a complete journal.",
+      "sourceRevisionBinding": {
+        "profile": "aws.resilience-hub.event/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "aws.resilience-hub.posture/v1",
+      "sourceService": "resilience-hub",
+      "family": "Policy achievability evidence",
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "SourceRevision",
+        "Observation"
+      ],
+      "sourceShapes": [
+        "Service/assessment achievability"
+      ],
+      "identityBasis": "Service + exact source revision + optional qualified assessment correlation.",
+      "observedFields": {
+        "availabilitySlo": "open achievability value",
+        "dataRecoveryTimeBetweenBackups": "open achievability value",
+        "multiAzRtoRpo": "open achievability value",
+        "multiRegionRtoRpo": "open achievability value"
+      },
+      "readOperations": [
+        "GetService",
+        "ListServices",
+        "ListFailureModeAssessments"
+      ],
+      "deferredNativeMutations": [],
+      "mutationDeferralReason": "Phase 1 specifies the model and console contracts; native dispatch requires a separately validated adapter.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "notes": "Exact captured target context is retained independently; observed current policy version is not proof of provider evaluation revision.",
+      "sourceRevisionBinding": {
+        "profile": "aws.resilience-hub.posture/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "console.health.aggregate/v1",
+      "sourceService": "health",
+      "family": "Health aggregate",
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "SourceRevision",
+        "Observation"
+      ],
+      "sourceShapes": [
+        "Health aggregate"
+      ],
+      "identityBasis": "Workspace + exact scoped target + immutable source/projection revision.",
+      "observedFields": {
+        "typedContent": "query scope, unit, count/status map, requested breakdown, coverage"
+      },
+      "readOperations": [],
+      "deferredNativeMutations": [],
+      "mutationDeferralReason": "This is an application-owned observation/projection profile; it has no corresponding native AWS mutation.",
+      "sourcePath": "aws/health/analysis/report.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "notes": "A query result, not a provider health verdict. Captured as an application-origin LOCAL_EVIDENCE SourceRevision. This descriptor does not add a ProjectionRevision profile enum; future normalized support must explicitly extend the schema.",
+      "sourceRevisionBinding": {
+        "profile": "console.health.aggregate/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "console.health.lifecycle-exposure/v1",
+      "sourceService": "health",
+      "family": "Lifecycle exposure",
+      "disposition": "projectionProfile",
+      "canonicalEntities": [
+        "ProjectionRevision"
+      ],
+      "sourceShapes": [
+        "Lifecycle exposure"
+      ],
+      "identityBasis": "Workspace + exact scoped target + immutable source/projection revision.",
+      "observedFields": {
+        "typedContent": "deployment revision, milestone revision, applicability, match evidence, rule version, cutoff"
+      },
+      "readOperations": [],
+      "deferredNativeMutations": [],
+      "mutationDeferralReason": "This is an application-owned observation/projection profile; it has no corresponding native AWS mutation.",
+      "sourcePath": "aws/health/analysis/report.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "notes": "An unknown match cannot become no risk; local completion changes no inventory fact.",
+      "sourceRevisionBinding": {
+        "profile": "console.health.lifecycle-exposure/v1",
+        "profileVersion": "1"
+      },
+      "normalizedBinding": {
+        "projectionProfile": "LIFECYCLE_EXPOSURE",
+        "schemaRef": "schema.json#/$defs/LifecycleExposure"
+      }
+    },
+    {
+      "profileId": "console.investigation.timeline/v1",
+      "sourceService": "devops-agent",
+      "family": "Investigation timeline",
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "SourceRevision",
+        "Observation"
+      ],
+      "sourceShapes": [
+        "Investigation timeline"
+      ],
+      "identityBasis": "Workspace + exact scoped target + immutable source/projection revision.",
+      "observedFields": {
+        "typedContent": "logical item, phase, source/evidence/receipt times, provenance, availability"
+      },
+      "readOperations": [],
+      "deferredNativeMutations": [],
+      "mutationDeferralReason": "This is an application-owned observation/projection profile; it has no corresponding native AWS mutation.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "notes": "Stable local ordering is not provider causal order. Captured as an application-origin LOCAL_EVIDENCE SourceRevision. This descriptor does not add a ProjectionRevision profile enum; future normalized support must explicitly extend the schema.",
+      "sourceRevisionBinding": {
+        "profile": "console.investigation.timeline/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "console.investigation.assertion/v1",
+      "sourceService": "devops-agent",
+      "family": "Published investigation assertion",
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "SourceRevision",
+        "Observation"
+      ],
+      "sourceShapes": [
+        "Published investigation assertion"
+      ],
+      "identityBasis": "Workspace + exact scoped target + immutable source/projection revision.",
+      "observedFields": {
+        "typedContent": "assertion kind, text/value, disposition, assertion origin, exact sources, derivation"
+      },
+      "readOperations": [],
+      "deferredNativeMutations": [],
+      "mutationDeferralReason": "This is an application-owned observation/projection profile; it has no corresponding native AWS mutation.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "notes": "Finding/hypothesis/root-cause/proposal/review are distinct typed kinds; no private reasoning reconstruction. Captured as an application-origin LOCAL_EVIDENCE SourceRevision. This descriptor does not add a ProjectionRevision profile enum; future normalized support must explicitly extend the schema.",
+      "sourceRevisionBinding": {
+        "profile": "console.investigation.assertion/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "console.investigation.action-observation/v1",
+      "sourceService": "devops-agent",
+      "family": "Action stage observation",
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "SourceRevision",
+        "Observation"
+      ],
+      "sourceShapes": [
+        "Action stage observation"
+      ],
+      "identityBasis": "Workspace + exact scoped target + immutable source/projection revision.",
+      "observedFields": {
+        "typedContent": "stage, scoped request/command references, observed outcome, exact source"
+      },
+      "readOperations": [],
+      "deferredNativeMutations": [],
+      "mutationDeferralReason": "This is an application-owned observation/projection profile; it has no corresponding native AWS mutation.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "notes": "Decision/resume/action/effect remain independent. Captured as an application-origin LOCAL_EVIDENCE SourceRevision. This descriptor does not add a ProjectionRevision profile enum; future normalized support must explicitly extend the schema.",
+      "sourceRevisionBinding": {
+        "profile": "console.investigation.action-observation/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "console.investigation.result/v1",
+      "sourceService": "devops-agent",
+      "family": "Phase-specific investigation result",
+      "disposition": "projectionProfile",
+      "canonicalEntities": [
+        "ProjectionRevision"
+      ],
+      "sourceShapes": [
+        "Phase-specific investigation result"
+      ],
+      "identityBasis": "Workspace + exact scoped target + immutable source/projection revision.",
+      "observedFields": {
+        "typedContent": "phase, completion pointer, selection basis, candidate IDs, availability, content revision"
+      },
+      "readOperations": [],
+      "deferredNativeMutations": [],
+      "mutationDeferralReason": "This is an application-owned observation/projection profile; it has no corresponding native AWS mutation.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "notes": "Exact pointer overrides candidate policy; absent pointer differs from no completion evidence.",
+      "sourceRevisionBinding": {
+        "profile": "console.investigation.result/v1",
+        "profileVersion": "1"
+      },
+      "normalizedBinding": {
+        "projectionProfile": "INVESTIGATION_RESULT",
+        "schemaRef": "schema.json#/$defs/InvestigationResult"
+      }
+    },
+    {
+      "profileId": "console.investigation.graph/v1",
+      "sourceService": "devops-agent",
+      "family": "Typed investigation graph",
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "Snapshot"
+      ],
+      "sourceShapes": [
+        "Typed investigation graph"
+      ],
+      "identityBasis": "Workspace + exact scoped target + immutable source/projection revision.",
+      "observedFields": {
+        "typedContent": "graph kind, owned nodes/edges, exact projection/source revisions, unresolved refs"
+      },
+      "readOperations": [],
+      "deferredNativeMutations": [],
+      "mutationDeferralReason": "This is an application-owned observation/projection profile; it has no corresponding native AWS mutation.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "notes": "Same-snapshot endpoint integrity and attributed relation kinds.",
+      "sourceRevisionBinding": {
+        "profile": "console.investigation.graph/v1",
+        "profileVersion": "1"
+      },
+      "normalizedBinding": {
+        "snapshotKind": "TOPOLOGY",
+        "schemaRef": "schema.json#/$defs/GraphContents"
+      }
+    },
+    {
+      "profileId": "console.fis.target-resolution/v1",
+      "sourceService": "fis",
+      "family": "FIS target resolution",
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "Experiment",
+        "Collection",
+        "SourceRevision",
+        "Observation"
+      ],
+      "sourceShapes": [
+        "FIS target resolution"
+      ],
+      "identityBasis": "Workspace + exact scoped target + immutable source/projection revision.",
+      "observedFields": {
+        "typedContent": "experiment/selector, resolution-ended evidence, page-chain/collection coverage, memberships"
+      },
+      "readOperations": [],
+      "deferredNativeMutations": [],
+      "mutationDeferralReason": "This is an application-owned observation/projection profile; it has no corresponding native AWS mutation.",
+      "sourcePath": "aws/fis/analysis/report.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "notes": "No empty-scope assertion without both resolution and complete collection. Normalize resolution/collection dimensions through Coverage and retain exact memberships on Experiment.",
+      "sourceRevisionBinding": {
+        "profile": "console.fis.target-resolution/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "console.workflow.check-result/v1",
+      "sourceService": "workflow",
+      "family": "Sealed check result",
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "StepAttempt"
+      ],
+      "sourceShapes": [
+        "Sealed check result"
+      ],
+      "identityBasis": "Workspace + exact scoped target + immutable source/projection revision.",
+      "observedFields": {
+        "typedContent": "verdict, reason, evaluator digest, actual/expected, evidence refs, evaluatedThrough"
+      },
+      "readOperations": [],
+      "deferredNativeMutations": [],
+      "mutationDeferralReason": "This is an application-owned observation/projection profile; it has no corresponding native AWS mutation.",
+      "sourcePath": "aws/fis/analysis/workflow/model.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "notes": "Claim scope/window/proof mode and admission denominator govern result; missing evidence cannot pass.",
+      "sourceRevisionBinding": {
+        "profile": "console.workflow.check-result/v1",
+        "profileVersion": "1"
+      },
+      "normalizedBinding": {
+        "ownedValue": "StepAttempt.checkResult",
+        "schemaRef": "schema.json#/$defs/CheckResult"
+      }
+    },
+    {
+      "profileId": "console.resilience.topology/v1",
+      "sourceService": "resilience-hub",
+      "family": "Captured topology",
+      "disposition": "ownedValue",
+      "canonicalEntities": [
+        "Snapshot"
+      ],
+      "sourceShapes": [
+        "Captured topology"
+      ],
+      "identityBasis": "Workspace + exact scoped target + immutable source/projection revision.",
+      "observedFields": {
+        "typedContent": "service scope, owned nodes/edges, capture window, source filters, coverage"
+      },
+      "readOperations": [],
+      "deferredNativeMutations": [],
+      "mutationDeferralReason": "This is an application-owned observation/projection profile; it has no corresponding native AWS mutation.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "notes": "Snapshot-local endpoints; native relation labels/uncertainty are preserved.",
+      "sourceRevisionBinding": {
+        "profile": "console.resilience.topology/v1",
+        "profileVersion": "1"
+      },
+      "normalizedBinding": {
+        "snapshotKind": "TOPOLOGY",
+        "schemaRef": "schema.json#/$defs/GraphContents"
+      }
+    },
+    {
+      "profileId": "console.resilience.status/v1",
+      "sourceService": "resilience-hub",
+      "family": "Service/portfolio status",
+      "disposition": "projectionProfile",
+      "canonicalEntities": [
+        "ProjectionRevision"
+      ],
+      "sourceShapes": [
+        "Service/portfolio status"
+      ],
+      "identityBasis": "Workspace + exact scoped target + immutable source/projection revision.",
+      "observedFields": {
+        "typedContent": "separate execution/posture/health/discovery/coverage dimensions, reasons, contributors, rule version"
+      },
+      "readOperations": [],
+      "deferredNativeMutations": [],
+      "mutationDeferralReason": "This is an application-owned observation/projection profile; it has no corresponding native AWS mutation.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "notes": "Count distinct services, preserve current versus retained evidence, and never renew evidence time through recomputation.",
+      "sourceRevisionBinding": {
+        "profile": "console.resilience.status/v1",
+        "profileVersion": "1"
+      },
+      "normalizedBinding": {
+        "projectionProfile": "SERVICE_STATUS",
+        "schemaRef": "schema.json#/$defs/ServiceStatus"
+      }
+    },
+    {
+      "profileId": "console.monitoring.health/v1",
+      "sourceService": "resilience-hub",
+      "family": "External runtime-health evidence",
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "SourceRevision",
+        "Observation"
+      ],
+      "sourceShapes": [
+        "External runtime-health evidence"
+      ],
+      "identityBasis": "Workspace + exact scoped target + immutable source/projection revision.",
+      "observedFields": {
+        "typedContent": "signal identity, subject, measuredAt, observedAt, expiresAt, typed measurements"
+      },
+      "readOperations": [],
+      "deferredNativeMutations": [],
+      "mutationDeferralReason": "This is an application-owned observation/projection profile; it has no corresponding native AWS mutation.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "notes": "Runtime signal is independent of Health event, resilience posture and local workflow.",
+      "sourceRevisionBinding": {
+        "profile": "console.monitoring.health/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "console.workflow.evaluation/v1",
+      "sourceService": "workflow",
+      "family": "Immutable reevaluation",
+      "disposition": "projectionProfile",
+      "canonicalEntities": [
+        "ProjectionRevision",
+        "Snapshot"
+      ],
+      "sourceShapes": [
+        "Evaluation"
+      ],
+      "identityBasis": "Projection key + immutable projectionRevisionId over exact inputSnapshotId/rule/cutoff.",
+      "observedFields": {
+        "typedContent": "subject, inputSnapshotId, evidenceCutoffAt, verdict/finality, required criterion keys, exact criterion results"
+      },
+      "readOperations": [],
+      "deferredNativeMutations": [],
+      "mutationDeferralReason": "Application-owned derived evaluation; no native provider execution is implied.",
+      "sourcePath": "aws/fis/analysis/workflow/model.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "notes": "This deliberate consolidation extension evaluates retained evidence without requiring a new Run. A read-only Run may orchestrate evaluation if later needed.",
+      "sourceRevisionBinding": {
+        "profile": "console.workflow.evaluation/v1",
+        "profileVersion": "1"
+      },
+      "normalizedBinding": {
+        "projectionProfile": "EVALUATION",
+        "schemaRef": "schema.json#/$defs/Evaluation"
+      }
+    },
+    {
+      "profileId": "console.resilience.workspace-summary/v1",
+      "sourceService": "resilience-hub",
+      "family": "Workspace summary",
+      "disposition": "projectionProfile",
+      "canonicalEntities": [
+        "ProjectionRevision"
+      ],
+      "sourceShapes": [
+        "WorkspaceSummary"
+      ],
+      "identityBasis": "Workspace + immutable scope/rule/input revision.",
+      "observedFields": {
+        "typedContent": "distinct service counts by separately evidenced dimensions, scope and rule version"
+      },
+      "readOperations": [],
+      "deferredNativeMutations": [],
+      "mutationDeferralReason": "Application read projection; no corresponding native mutation.",
+      "sourcePath": "aws/resilience-hub/analysis/report.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "sourceRevisionBinding": {
+        "profile": "console.resilience.workspace-summary/v1",
+        "profileVersion": "1"
+      },
+      "normalizedBinding": {
+        "projectionProfile": "WORKSPACE_SUMMARY",
+        "schemaRef": "schema.json#/$defs/WorkspaceSummary"
+      }
+    },
+    {
+      "profileId": "console.inventory.resource/v1",
+      "sourceService": "health",
+      "family": "Independent inventory and deployment observation",
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "Resource",
+        "ComponentDeployment",
+        "SourceRevision",
+        "Observation"
+      ],
+      "sourceShapes": [
+        "Resource inventory capture",
+        "component deployment capture"
+      ],
+      "identityBasis": "Owning provider scope + qualified resource identity and exact component/observation revision.",
+      "observedFields": {
+        "resourceIdentity": "qualified native identity",
+        "resourceKind": "string",
+        "componentKind": "string",
+        "versionLabel": "observed string",
+        "observedAt": "collection time",
+        "nativePayload": "original response retained"
+      },
+      "readOperations": [
+        "DescribeInstances",
+        "DescribeDBInstances"
+      ],
+      "deferredNativeMutations": [],
+      "mutationDeferralReason": "Inventory collection is a future authorized integration; these normalized captures do not authorize resource mutation.",
+      "sourcePath": "aws/health/analysis/report.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "notes": "Explicit application capture profile over EC2/RDS or another qualified inventory source, not one native response structure. Native service namespace remains in SourceIdentity/sourceOperation.",
+      "sourceRevisionBinding": {
+        "profile": "console.inventory.resource/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "aws.devops-agent.lifecycle-event/v1",
+      "sourceService": "devops-agent",
+      "family": "Investigation and mitigation lifecycle notification",
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "Investigation",
+        "Execution",
+        "SourceRevision",
+        "Observation"
+      ],
+      "sourceShapes": [
+        "DevOps Agent EventBridge envelope"
+      ],
+      "identityBasis": "Channel + account/Region + source event ID, with task/execution references preserved in detail.",
+      "observedFields": {
+        "id": "envelope string",
+        "source": "namespace",
+        "detail-type": "exact event type",
+        "time": "source event time",
+        "account": "string",
+        "region": "string",
+        "detail": "open documented lifecycle payload including optional summary_record_id"
+      },
+      "readOperations": [],
+      "deferredNativeMutations": [],
+      "mutationDeferralReason": "Event receipt is read evidence; native lifecycle changes remain separate commands.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "notes": "Investigation and mitigation phases remain distinct even when data.task_type is INVESTIGATION. Captured completion without a summary pointer differs from an unresolved exact pointer or no completion event.",
+      "sourceRevisionBinding": {
+        "profile": "aws.devops-agent.lifecycle-event/v1",
+        "profileVersion": "1"
+      }
+    },
+    {
+      "profileId": "console.collection.request/v1",
+      "sourceService": "devops-agent",
+      "family": "Retained collection request envelope",
+      "disposition": "retainedAdapterDto",
+      "canonicalEntities": [
+        "SourceRevision",
+        "ReadAttempt"
+      ],
+      "sourceShapes": [
+        "Collection request capture"
+      ],
+      "identityBasis": "Workspace + exact collection/query/attempt identity and canonical retained request digest.",
+      "observedFields": {
+        "operation": "registered intended native/read operation",
+        "scope": "qualified owning and authorization scope",
+        "queryKey": "stable query identifier",
+        "parameters": "exact structured request values",
+        "pagination": "input token/order/page-size when supplied"
+      },
+      "readOperations": [],
+      "deferredNativeMutations": [],
+      "mutationDeferralReason": "This application-owned capture records an intended/read request; it does not authorize or dispatch a provider call.",
+      "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+      "preserveUnknownFields": true,
+      "preserveUnknownProviderValues": true,
+      "notes": "SourceRevision.sourceOperation is console:CaptureRequest. Synthetic examples use normalized capture envelopes and are not claimed complete native wire requests. Live adapters retain exact sent parameters/cursors and omit credential bytes; requestDigest covers the declared retained encoding.",
+      "sourceRevisionBinding": {
+        "profile": "console.collection.request/v1",
+        "profileVersion": "1"
+      }
+    }
+  ]
+}

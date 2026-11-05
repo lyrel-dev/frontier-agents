@@ -1,0 +1,2164 @@
+{
+  "schemaVersion": "1.0",
+  "repository": "lyrel-dev/frontier-agents",
+  "repositoryUrl": "https://github.com/lyrel-dev/frontier-agents",
+  "branch": "main",
+  "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+  "inspectedOn": "2026-11-05",
+  "scope": "aws/<service-name>/analysis/**",
+  "fileCount": 226,
+  "services": {
+    "devops-agent": 58,
+    "fis": 55,
+    "health": 26,
+    "resilience-hub": 87
+  },
+  "excludedPaths": [
+    "aws/health/analysis/assessment-workflows/",
+    "applications/"
+  ],
+  "historyScope": "Commits reachable from sourceCommit that changed requested analysis paths. Historical-only paths are listed separately and are not active model inputs.",
+  "history": [
+    {
+      "commitSha": "31a575907c5367653dbfd56fcbda4634870d9e04",
+      "authoredAt": "2026-11-05T04:41:07+01:00",
+      "subject": "feat(aws-fis): add reviewed model and operator UI showcase"
+    },
+    {
+      "commitSha": "1964d201116915063d6774579a8477072d624596",
+      "authoredAt": "2026-11-05T04:53:47+01:00",
+      "subject": "feat(aws-resilience-hub): add reviewed model and operator prototype"
+    },
+    {
+      "commitSha": "0156b78758a2f35047d985b1a9fc645f30491525",
+      "authoredAt": "2026-11-05T04:57:14+01:00",
+      "subject": "feat(aws-health): add reviewed model and operator UI prototype"
+    },
+    {
+      "commitSha": "973685d8f45e0321f5bf87912f6693e217f2a26b",
+      "authoredAt": "2026-11-05T08:59:57+01:00",
+      "subject": "feat(resilience-hub): add RPC facade and Obsidian API reference"
+    },
+    {
+      "commitSha": "302128e5628acb4d832c20db79da2ab878c95e48",
+      "authoredAt": "2026-11-05T09:10:51+01:00",
+      "subject": "feat(aws-devops-agent): add reviewed investigation model and operator prototype"
+    },
+    {
+      "commitSha": "1b5ae1bd11fc61a2701d74ea89ccce2721889ef0",
+      "authoredAt": "2026-11-05T11:03:08+01:00",
+      "subject": "fix(aws-fis): correct evidence semantics and review workflow contracts"
+    },
+    {
+      "commitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "authoredAt": "2026-11-05T11:07:57+01:00",
+      "subject": "fix(resilience-hub): preserve evidence semantics across model and RPC"
+    },
+    {
+      "commitSha": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+      "authoredAt": "2026-11-05T11:10:05+01:00",
+      "subject": "fix(devops-agent): harden investigation model and review contracts"
+    }
+  ],
+  "historicalOnlyFiles": [
+    {
+      "path": "aws/resilience-hub/analysis/assets/overview.jpg",
+      "lastChangeCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "lastContentBlobSha": "b1452fb42fda64dd019f687cad3ba72d7a6e9d12",
+      "reason": "Obsolete overview screenshot removed after semantic corrections; fresh visual acceptance remained open.",
+      "successorPath": null
+    },
+    {
+      "path": "aws/resilience-hub/analysis/diagrams/01-business-structure.mmd",
+      "lastChangeCommitSha": "973685d8f45e0321f5bf87912f6693e217f2a26b",
+      "lastContentBlobSha": "029e0f7597ade2942a7fbfbf22837526a0a2a6f1",
+      "reason": "Superseded by the same-named Markdown diagram note with a Mermaid fence and SVG.",
+      "successorPath": "aws/resilience-hub/analysis/diagrams/01-business-structure.md"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/diagrams/02-policy-context.mmd",
+      "lastChangeCommitSha": "973685d8f45e0321f5bf87912f6693e217f2a26b",
+      "lastContentBlobSha": "f5925a2b4c5089a2e4333f26bf2eb04b827b5b92",
+      "reason": "Superseded by the same-named Markdown diagram note with a Mermaid fence and SVG.",
+      "successorPath": "aws/resilience-hub/analysis/diagrams/02-policy-context.md"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/diagrams/03-assessments-findings.mmd",
+      "lastChangeCommitSha": "973685d8f45e0321f5bf87912f6693e217f2a26b",
+      "lastContentBlobSha": "0931d2b08c238e49aad1175baba6c45715fc3cf8",
+      "reason": "Superseded by the same-named Markdown diagram note with a Mermaid fence and SVG.",
+      "successorPath": "aws/resilience-hub/analysis/diagrams/03-assessments-findings.md"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/diagrams/04-dependencies-topology.mmd",
+      "lastChangeCommitSha": "973685d8f45e0321f5bf87912f6693e217f2a26b",
+      "lastContentBlobSha": "54b81da95a0683aa6cc72c083c32a2c227878366",
+      "reason": "Superseded by the same-named Markdown diagram note with a Mermaid fence and SVG.",
+      "successorPath": "aws/resilience-hub/analysis/diagrams/04-dependencies-topology.md"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/diagrams/05-events-observations.mmd",
+      "lastChangeCommitSha": "973685d8f45e0321f5bf87912f6693e217f2a26b",
+      "lastContentBlobSha": "3a574fcd004f1bcb84b4814e48abe106672a857b",
+      "reason": "Superseded by the same-named Markdown diagram note with a Mermaid fence and SVG.",
+      "successorPath": "aws/resilience-hub/analysis/diagrams/05-events-observations.md"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/reviewed-report.pdf",
+      "lastChangeCommitSha": "973685d8f45e0321f5bf87912f6693e217f2a26b",
+      "lastContentBlobSha": "f7d025ecb54bd82799d2ffcb46fa48b23be795b9",
+      "reason": "PDF-only delivery/build files removed when the package adopted Markdown/Obsidian notes.",
+      "successorPath": "aws/resilience-hub/analysis/report.md"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/scripts/build_report.py",
+      "lastChangeCommitSha": "973685d8f45e0321f5bf87912f6693e217f2a26b",
+      "lastContentBlobSha": "b06f78a5b532a08e7650622879a49805f880f5a3",
+      "reason": "PDF-only delivery/build files removed when the package adopted Markdown/Obsidian notes.",
+      "successorPath": null
+    },
+    {
+      "path": "aws/resilience-hub/analysis/scripts/requirements.txt",
+      "lastChangeCommitSha": "973685d8f45e0321f5bf87912f6693e217f2a26b",
+      "lastContentBlobSha": "9a2e8b4e79d13088fd1836d0577883bce5d959a5",
+      "reason": "PDF-only delivery/build files removed when the package adopted Markdown/Obsidian notes.",
+      "successorPath": null
+    }
+  ],
+  "files": [
+    {
+      "path": "aws/devops-agent/analysis/.gitignore",
+      "service": "devops-agent",
+      "blobSha": "21faebc1ba5d11fc064e5996bf096b369eb4c91b",
+      "sizeBytes": 42,
+      "category": "repository build policy",
+      "lastCommitSha": "302128e5628acb4d832c20db79da2ab878c95e48",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/QUALITY_REVIEW.md",
+      "service": "devops-agent",
+      "blobSha": "12217c5a1c93c70412829a838fe529d8cb4ac944",
+      "sizeBytes": 12578,
+      "category": "design/quality review",
+      "lastCommitSha": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/README.md",
+      "service": "devops-agent",
+      "blobSha": "7da9e5c8cee7a3feba433604e6375300a1eb1765",
+      "sizeBytes": 15618,
+      "category": "analysis/report/source register",
+      "lastCommitSha": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/REVIEW.md",
+      "service": "devops-agent",
+      "blobSha": "1b8868503e2d8700a14053487edbfd613363aef5",
+      "sizeBytes": 18702,
+      "category": "design/quality review",
+      "lastCommitSha": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/VALIDATION.md",
+      "service": "devops-agent",
+      "blobSha": "f052bd64075a71a64fbcc56fc1cf279feb10fac2",
+      "sizeBytes": 17928,
+      "category": "validation evidence",
+      "lastCommitSha": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/annexes/Investigation_API_Catalog.md",
+      "service": "devops-agent",
+      "blobSha": "83b5efba4f55fb3e8411170cbbab6528ce41291b",
+      "sizeBytes": 74400,
+      "category": "detailed source/model/API annex",
+      "lastCommitSha": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/annexes/Investigation_API_Sources.md",
+      "service": "devops-agent",
+      "blobSha": "1f0f0472f2b199ef6ceb8c9cbf030088db222f67",
+      "sizeBytes": 24382,
+      "category": "detailed source/model/API annex",
+      "lastCommitSha": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+      "service": "devops-agent",
+      "blobSha": "ceb8d649160d070985bd5451a5051afb9e87bda7",
+      "sizeBytes": 61682,
+      "category": "detailed source/model/API annex",
+      "lastCommitSha": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/annexes/Investigation_UI_Contract.md",
+      "service": "devops-agent",
+      "blobSha": "77277c65bbd367204d3a711a0d7894071c8ccc73",
+      "sizeBytes": 45550,
+      "category": "detailed source/model/API annex",
+      "lastCommitSha": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/app/MODEL_CONTRACT.md",
+      "service": "devops-agent",
+      "blobSha": "f3d05c42ff20e7dca7a7bf5a2a947221151f701c",
+      "sizeBytes": 16322,
+      "category": "operator prototype/source",
+      "lastCommitSha": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/app/build.py",
+      "service": "devops-agent",
+      "blobSha": "98db3adaaa6b41345a2e346ad105b477b1699eff",
+      "sizeBytes": 3080,
+      "category": "operator prototype/source",
+      "lastCommitSha": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/app/src/app.js",
+      "service": "devops-agent",
+      "blobSha": "9e482ced4f401f0b046695589ce524cea9fc9984",
+      "sizeBytes": 82097,
+      "category": "operator prototype/source",
+      "lastCommitSha": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/app/src/mock-data.js",
+      "service": "devops-agent",
+      "blobSha": "638d05711ef626dc9d97a00d319da5ed9a1d13d6",
+      "sizeBytes": 37882,
+      "category": "operator prototype/source",
+      "lastCommitSha": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/app/src/model.js",
+      "service": "devops-agent",
+      "blobSha": "41296719669191c7fe11e37cb0bfdf8a27bcb869",
+      "sizeBytes": 47879,
+      "category": "operator prototype/source",
+      "lastCommitSha": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/app/src/shell.html",
+      "service": "devops-agent",
+      "blobSha": "88273459b8e172d195d0b200149ee1e34883be1c",
+      "sizeBytes": 1529,
+      "category": "operator prototype/source",
+      "lastCommitSha": "302128e5628acb4d832c20db79da2ab878c95e48",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/app/src/styles.css",
+      "service": "devops-agent",
+      "blobSha": "6fc3e80871388f099ba2258e5236af69479cd7c0",
+      "sizeBytes": 45105,
+      "category": "operator prototype/source",
+      "lastCommitSha": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/app/tests/fixtures/legacy-state-v1.json",
+      "service": "devops-agent",
+      "blobSha": "16cde510cae763d0f8cc2e0efd7285c9e02a4bfc",
+      "sizeBytes": 146196,
+      "category": "contract/behavior tests",
+      "lastCommitSha": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/app/tests/model.test.cjs",
+      "service": "devops-agent",
+      "blobSha": "e5ea926d47d228e5cc08b50c57046d19e2c27aa9",
+      "sizeBytes": 33803,
+      "category": "contract/behavior tests",
+      "lastCommitSha": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/app/tests/ui.test.cjs",
+      "service": "devops-agent",
+      "blobSha": "d30a3bdcdd08d20c4dc33962e134392eb893075a",
+      "sizeBytes": 10394,
+      "category": "contract/behavior tests",
+      "lastCommitSha": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/diagrams/D01-workspace-associations.mmd",
+      "service": "devops-agent",
+      "blobSha": "138da2175cff717eb65667ea0c9701f02a1f6e3e",
+      "sizeBytes": 796,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "302128e5628acb4d832c20db79da2ab878c95e48",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/diagrams/D01-workspace-associations.svg",
+      "service": "devops-agent",
+      "blobSha": "04fec828c9ffdf6a8986509374c16e7f11a63f66",
+      "sizeBytes": 10788,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "302128e5628acb4d832c20db79da2ab878c95e48",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/diagrams/D02-investigation-core.mmd",
+      "service": "devops-agent",
+      "blobSha": "8da3cb462dc2519c2a916f3d0ab3f169ad3eb058",
+      "sizeBytes": 997,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/diagrams/D02-investigation-core.svg",
+      "service": "devops-agent",
+      "blobSha": "c61e22159e88ad413766c98bf6ba900d3d41116e",
+      "sizeBytes": 12167,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/diagrams/D03-projection-provenance.mmd",
+      "service": "devops-agent",
+      "blobSha": "2ffe3c8263e16ca86635ab16de766eee0c6011a3",
+      "sizeBytes": 929,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/diagrams/D03-projection-provenance.svg",
+      "service": "devops-agent",
+      "blobSha": "5a916825956add14d8a2ae51bb47389ecf469c54",
+      "sizeBytes": 10795,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/diagrams/D04-graph-model.mmd",
+      "service": "devops-agent",
+      "blobSha": "da132aff66b6022175d8ef8da67a265cb3b91941",
+      "sizeBytes": 828,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "302128e5628acb4d832c20db79da2ab878c95e48",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/diagrams/D04-graph-model.svg",
+      "service": "devops-agent",
+      "blobSha": "30bb986febef69c06cc10b289d552f1daf6c9f80",
+      "sizeBytes": 10889,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "302128e5628acb4d832c20db79da2ab878c95e48",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/diagrams/D05-artifacts-assets.mmd",
+      "service": "devops-agent",
+      "blobSha": "ea2d57282da71fb3e2058ddfea2aabc0a16722a8",
+      "sizeBytes": 825,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "302128e5628acb4d832c20db79da2ab878c95e48",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/diagrams/D05-artifacts-assets.svg",
+      "service": "devops-agent",
+      "blobSha": "04e82fa9e41336cd60309920e6d14d194c7bf7d5",
+      "sizeBytes": 10688,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "302128e5628acb4d832c20db79da2ab878c95e48",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/diagrams/D06-historical-snapshots.mmd",
+      "service": "devops-agent",
+      "blobSha": "259fd3337d47af5325adb0de4db4e641481deded",
+      "sizeBytes": 820,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "302128e5628acb4d832c20db79da2ab878c95e48",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/diagrams/D06-historical-snapshots.svg",
+      "service": "devops-agent",
+      "blobSha": "40bb269c28d76156a94480b6ea7914e36d1d3bae",
+      "sizeBytes": 10251,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "302128e5628acb4d832c20db79da2ab878c95e48",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/diagrams/D07-collection-observations.mmd",
+      "service": "devops-agent",
+      "blobSha": "9405da2c1f1a0911d0afd6200219853d42055070",
+      "sizeBytes": 1020,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/diagrams/D07-collection-observations.svg",
+      "service": "devops-agent",
+      "blobSha": "b536db24faf20d70e4c83b3d37039db0f68c5e57",
+      "sizeBytes": 11751,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/diagrams/U01-live-reconciliation.mmd",
+      "service": "devops-agent",
+      "blobSha": "940b61c9c6464f575153ea2d457d1ed976f0a2da",
+      "sizeBytes": 812,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "302128e5628acb4d832c20db79da2ab878c95e48",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/diagrams/U01-live-reconciliation.svg",
+      "service": "devops-agent",
+      "blobSha": "ec220bea17c26bdaf7d4c068c205f2f6d1eb8d35",
+      "sizeBytes": 10153,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "302128e5628acb4d832c20db79da2ab878c95e48",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/diagrams/U02-approval-lifecycle.mmd",
+      "service": "devops-agent",
+      "blobSha": "ec5a0965218cd2ff54e741fc808081bfabb3b5a6",
+      "sizeBytes": 907,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "302128e5628acb4d832c20db79da2ab878c95e48",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/diagrams/U02-approval-lifecycle.svg",
+      "service": "devops-agent",
+      "blobSha": "fefc3d26f6169eb49ac5e10081fc1faf0073f67a",
+      "sizeBytes": 11117,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "302128e5628acb4d832c20db79da2ab878c95e48",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/diagrams/U03-snapshot-workflow.mmd",
+      "service": "devops-agent",
+      "blobSha": "2254ee26711de13532a47f7ce53dc248ad95e7a3",
+      "sizeBytes": 337,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/diagrams/U03-snapshot-workflow.svg",
+      "service": "devops-agent",
+      "blobSha": "b555b5b392c8fdbcbb04666e4637fa423f160c8d",
+      "sizeBytes": 5733,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/diagrams/manifest.json",
+      "service": "devops-agent",
+      "blobSha": "6ea451357dc9065252d911252292d76e7cac367f",
+      "sizeBytes": 3230,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/index.html",
+      "service": "devops-agent",
+      "blobSha": "5d997f90be8ab169d1c5b29d8a5d9c45087174fa",
+      "sizeBytes": 340607,
+      "category": "operator prototype/source",
+      "lastCommitSha": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/qa/diagram-render.json",
+      "service": "devops-agent",
+      "blobSha": "c8d9648b61fa635acd6b72da18fb89e2555db430",
+      "sizeBytes": 3900,
+      "category": "validation evidence",
+      "lastCommitSha": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/qa/fixture-schema-audit.json",
+      "service": "devops-agent",
+      "blobSha": "53009d19a1cd86703d2a5bc5b3bc35b1376ec78d",
+      "sizeBytes": 4107,
+      "category": "validation evidence",
+      "lastCommitSha": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/qa/investigation-workspace.png",
+      "service": "devops-agent",
+      "blobSha": "33653140d3433e5b7b48873a468bdcac76fb3a14",
+      "sizeBytes": 115646,
+      "category": "validation evidence",
+      "lastCommitSha": "302128e5628acb4d832c20db79da2ab878c95e48",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/qa/mermaid-syntax.json",
+      "service": "devops-agent",
+      "blobSha": "9b8a525d70570c605ec817234908e87b320f22ff",
+      "sizeBytes": 2558,
+      "category": "validation evidence",
+      "lastCommitSha": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/qa/native-api-audit.json",
+      "service": "devops-agent",
+      "blobSha": "0045c8043343638ff8e3f9936f202cc7e210b1e2",
+      "sizeBytes": 1114,
+      "category": "validation evidence",
+      "lastCommitSha": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/qa/native-api-inventory.json",
+      "service": "devops-agent",
+      "blobSha": "aa253e5d76466fce0d8df9f3766e4a7ca52e1810",
+      "sizeBytes": 77106,
+      "category": "validation evidence",
+      "lastCommitSha": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/qa/quality-review-storage-mobile.png",
+      "service": "devops-agent",
+      "blobSha": "bc7df0bee3bfda33d46b3300005cd16cbc09bb14",
+      "sizeBytes": 56762,
+      "category": "validation evidence",
+      "lastCommitSha": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/qa/quality-review-workspace.png",
+      "service": "devops-agent",
+      "blobSha": "f88a9dd4715294ce6671090b703e584d4ff70a2e",
+      "sizeBytes": 162757,
+      "category": "validation evidence",
+      "lastCommitSha": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/report.md",
+      "service": "devops-agent",
+      "blobSha": "6fd30a103bcf12069a69cbaec40a96b36dcc30a8",
+      "sizeBytes": 82444,
+      "category": "analysis/report/source register",
+      "lastCommitSha": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/tools/check-mermaid.mjs",
+      "service": "devops-agent",
+      "blobSha": "74b3328b7ef947ef49157bfa456c4a523c85ee4e",
+      "sizeBytes": 2354,
+      "category": "build/validation tooling",
+      "lastCommitSha": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/tools/check.py",
+      "service": "devops-agent",
+      "blobSha": "b04e50fcc9c7b3e987aef30e9c80cc0e6c8d53dc",
+      "sizeBytes": 8675,
+      "category": "build/validation tooling",
+      "lastCommitSha": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/tools/check_fixture_schema.py",
+      "service": "devops-agent",
+      "blobSha": "277724d28214388732ff3e419d329ea8de510add",
+      "sizeBytes": 17378,
+      "category": "build/validation tooling",
+      "lastCommitSha": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/tools/check_native_api.py",
+      "service": "devops-agent",
+      "blobSha": "d895d3f420c6105ec3361247d69859927442e881",
+      "sizeBytes": 19060,
+      "category": "build/validation tooling",
+      "lastCommitSha": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/tools/package-lock.json",
+      "service": "devops-agent",
+      "blobSha": "28e7de3bc9e89a29e07d943d30cdf98cf0d03072",
+      "sizeBytes": 69081,
+      "category": "build/validation tooling",
+      "lastCommitSha": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/tools/package.json",
+      "service": "devops-agent",
+      "blobSha": "f03235370d39ddedb19a083df26ba1d6cb405848",
+      "sizeBytes": 293,
+      "category": "build/validation tooling",
+      "lastCommitSha": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/tools/render-diagrams.mjs",
+      "service": "devops-agent",
+      "blobSha": "edc163bda67bad45a582ba2ab624d8d11b102b28",
+      "sizeBytes": 2771,
+      "category": "build/validation tooling",
+      "lastCommitSha": "302128e5628acb4d832c20db79da2ab878c95e48",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/devops-agent/analysis/tools/requirements.txt",
+      "service": "devops-agent",
+      "blobSha": "f62ce0c56db2b5d134cff98f7fb1625023cd2874",
+      "sizeBytes": 14,
+      "category": "build/validation tooling",
+      "lastCommitSha": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+      "workPackage": "devops-investigation"
+    },
+    {
+      "path": "aws/fis/analysis/.gitattributes",
+      "service": "fis",
+      "blobSha": "6ee92d768646698ade6f77b362a17c791d8441d2",
+      "sizeBytes": 26,
+      "category": "repository build policy",
+      "lastCommitSha": "31a575907c5367653dbfd56fcbda4634870d9e04",
+      "workPackage": "fis-provider"
+    },
+    {
+      "path": "aws/fis/analysis/QUALITY_REVIEW.md",
+      "service": "fis",
+      "blobSha": "e1cfa185142f11795095a90bcf8d9b28c584be2d",
+      "sizeBytes": 14808,
+      "category": "design/quality review",
+      "lastCommitSha": "1b5ae1bd11fc61a2701d74ea89ccce2721889ef0",
+      "workPackage": "fis-provider"
+    },
+    {
+      "path": "aws/fis/analysis/README.md",
+      "service": "fis",
+      "blobSha": "dee26eede884ba420c332b73ce81597f3f8bffa9",
+      "sizeBytes": 13308,
+      "category": "analysis/report/source register",
+      "lastCommitSha": "1b5ae1bd11fc61a2701d74ea89ccce2721889ef0",
+      "workPackage": "fis-provider"
+    },
+    {
+      "path": "aws/fis/analysis/REVIEW.md",
+      "service": "fis",
+      "blobSha": "5044122dd381e462601df7a7497c15241560984c",
+      "sizeBytes": 8925,
+      "category": "design/quality review",
+      "lastCommitSha": "1b5ae1bd11fc61a2701d74ea89ccce2721889ef0",
+      "workPackage": "fis-provider"
+    },
+    {
+      "path": "aws/fis/analysis/VALIDATION.md",
+      "service": "fis",
+      "blobSha": "130a52e1bb536b15fde106115443e6c03c259ab8",
+      "sizeBytes": 11413,
+      "category": "validation evidence",
+      "lastCommitSha": "1b5ae1bd11fc61a2701d74ea89ccce2721889ef0",
+      "workPackage": "fis-provider"
+    },
+    {
+      "path": "aws/fis/analysis/app/app.js",
+      "service": "fis",
+      "blobSha": "b17998ab5a373fbec2a74044e4668652ce186e48",
+      "sizeBytes": 50481,
+      "category": "operator prototype/source",
+      "lastCommitSha": "1b5ae1bd11fc61a2701d74ea89ccce2721889ef0",
+      "workPackage": "fis-provider"
+    },
+    {
+      "path": "aws/fis/analysis/app/fixtures.js",
+      "service": "fis",
+      "blobSha": "e089b4ce341d77d7bc0e451b4f8cde850f8dc96a",
+      "sizeBytes": 29160,
+      "category": "operator prototype/source",
+      "lastCommitSha": "31a575907c5367653dbfd56fcbda4634870d9e04",
+      "workPackage": "fis-provider"
+    },
+    {
+      "path": "aws/fis/analysis/app/model.js",
+      "service": "fis",
+      "blobSha": "5299eb7e7aa124a465e8d9b0daf212d4fc6953ef",
+      "sizeBytes": 31930,
+      "category": "operator prototype/source",
+      "lastCommitSha": "1b5ae1bd11fc61a2701d74ea89ccce2721889ef0",
+      "workPackage": "fis-provider"
+    },
+    {
+      "path": "aws/fis/analysis/app/styles.css",
+      "service": "fis",
+      "blobSha": "9fa746d9eed03e28cc0d45aa81583cb00fb048d0",
+      "sizeBytes": 32111,
+      "category": "operator prototype/source",
+      "lastCommitSha": "31a575907c5367653dbfd56fcbda4634870d9e04",
+      "workPackage": "fis-provider"
+    },
+    {
+      "path": "aws/fis/analysis/app/tests/model.test.cjs",
+      "service": "fis",
+      "blobSha": "b44a6e0802148d22808a80667a5d7c6dee237025",
+      "sizeBytes": 21110,
+      "category": "contract/behavior tests",
+      "lastCommitSha": "1b5ae1bd11fc61a2701d74ea89ccce2721889ef0",
+      "workPackage": "fis-provider"
+    },
+    {
+      "path": "aws/fis/analysis/aws_fis_experiment_action_model.pdf",
+      "service": "fis",
+      "blobSha": "23973c7573f7736f1bed87d902aa784f8c683ee2",
+      "sizeBytes": 185463,
+      "category": "rendered report/preview",
+      "lastCommitSha": "1b5ae1bd11fc61a2701d74ea89ccce2721889ef0",
+      "workPackage": "fis-provider"
+    },
+    {
+      "path": "aws/fis/analysis/diagrams/01_execution.mmd",
+      "service": "fis",
+      "blobSha": "e46a2ef442e7b33d944e986e7664129f83c776b3",
+      "sizeBytes": 945,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "31a575907c5367653dbfd56fcbda4634870d9e04",
+      "workPackage": "fis-provider"
+    },
+    {
+      "path": "aws/fis/analysis/diagrams/01_execution.svg",
+      "service": "fis",
+      "blobSha": "cb9d0817671a259b0a8c0dfdd1712ffd0c72c2a3",
+      "sizeBytes": 15087,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "31a575907c5367653dbfd56fcbda4634870d9e04",
+      "workPackage": "fis-provider"
+    },
+    {
+      "path": "aws/fis/analysis/diagrams/02_catalog_templates.mmd",
+      "service": "fis",
+      "blobSha": "1a9c9ae68f7ea22a54b6f6742e433965e2251fdb",
+      "sizeBytes": 728,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "31a575907c5367653dbfd56fcbda4634870d9e04",
+      "workPackage": "fis-provider"
+    },
+    {
+      "path": "aws/fis/analysis/diagrams/02_catalog_templates.svg",
+      "service": "fis",
+      "blobSha": "7dcad59d70eed367df942da78e901f9d43eb89b7",
+      "sizeBytes": 18099,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "31a575907c5367653dbfd56fcbda4634870d9e04",
+      "workPackage": "fis-provider"
+    },
+    {
+      "path": "aws/fis/analysis/diagrams/03_targeting.mmd",
+      "service": "fis",
+      "blobSha": "05ecdd12fdaecdbc15815c8bb61c8630102cc76d",
+      "sizeBytes": 1020,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "31a575907c5367653dbfd56fcbda4634870d9e04",
+      "workPackage": "fis-provider"
+    },
+    {
+      "path": "aws/fis/analysis/diagrams/03_targeting.svg",
+      "service": "fis",
+      "blobSha": "af7dde722e8000b9a100945825f989f361123876",
+      "sizeBytes": 17564,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "31a575907c5367653dbfd56fcbda4634870d9e04",
+      "workPackage": "fis-provider"
+    },
+    {
+      "path": "aws/fis/analysis/diagrams/04_evidence_reports.mmd",
+      "service": "fis",
+      "blobSha": "931f6fd17d2a23034ea0c00f310514e7268e4500",
+      "sizeBytes": 940,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "31a575907c5367653dbfd56fcbda4634870d9e04",
+      "workPackage": "fis-provider"
+    },
+    {
+      "path": "aws/fis/analysis/diagrams/04_evidence_reports.svg",
+      "service": "fis",
+      "blobSha": "b8e70f949fea84b1341ed44d9b9557c5b5c38c66",
+      "sizeBytes": 20940,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "31a575907c5367653dbfd56fcbda4634870d9e04",
+      "workPackage": "fis-provider"
+    },
+    {
+      "path": "aws/fis/analysis/diagrams/05_assessments.mmd",
+      "service": "fis",
+      "blobSha": "40c7a64e47aebac9041ec236e80ae4efcf32af6b",
+      "sizeBytes": 763,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "1b5ae1bd11fc61a2701d74ea89ccce2721889ef0",
+      "workPackage": "fis-provider"
+    },
+    {
+      "path": "aws/fis/analysis/diagrams/05_assessments.svg",
+      "service": "fis",
+      "blobSha": "30f6c6064342cd0dd4a433e7ddf65a96818f321e",
+      "sizeBytes": 14985,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "1b5ae1bd11fc61a2701d74ea89ccce2721889ef0",
+      "workPackage": "fis-provider"
+    },
+    {
+      "path": "aws/fis/analysis/index.html",
+      "service": "fis",
+      "blobSha": "dd48174e0e71e17aec66b0377b2799e16464c6cc",
+      "sizeBytes": 6353,
+      "category": "operator prototype/source",
+      "lastCommitSha": "31a575907c5367653dbfd56fcbda4634870d9e04",
+      "workPackage": "fis-provider"
+    },
+    {
+      "path": "aws/fis/analysis/preview.jpg",
+      "service": "fis",
+      "blobSha": "01cb99a14087fe1e263f5fa7d699f16ac166f489",
+      "sizeBytes": 106640,
+      "category": "rendered report/preview",
+      "lastCommitSha": "1b5ae1bd11fc61a2701d74ea89ccce2721889ef0",
+      "workPackage": "fis-provider"
+    },
+    {
+      "path": "aws/fis/analysis/qa/stop-intervention.jpg",
+      "service": "fis",
+      "blobSha": "c9cf4d56e506a8b9f738fc3a1b7d99d75418678e",
+      "sizeBytes": 55300,
+      "category": "validation evidence",
+      "lastCommitSha": "1b5ae1bd11fc61a2701d74ea89ccce2721889ef0",
+      "workPackage": "fis-provider"
+    },
+    {
+      "path": "aws/fis/analysis/report.md",
+      "service": "fis",
+      "blobSha": "098d4613d26384145800dc871e248cc76b6a6fd1",
+      "sizeBytes": 48624,
+      "category": "analysis/report/source register",
+      "lastCommitSha": "1b5ae1bd11fc61a2701d74ea89ccce2721889ef0",
+      "workPackage": "fis-provider"
+    },
+    {
+      "path": "aws/fis/analysis/sources.json",
+      "service": "fis",
+      "blobSha": "48a4d7c51e691b8efdc9c9c870b5e0ba0d90f87f",
+      "sizeBytes": 15040,
+      "category": "analysis/report/source register",
+      "lastCommitSha": "31a575907c5367653dbfd56fcbda4634870d9e04",
+      "workPackage": "fis-provider"
+    },
+    {
+      "path": "aws/fis/analysis/tools/README.md",
+      "service": "fis",
+      "blobSha": "adb8b5e0beed5c4bfe002c3c0ba4286af85fc5ec",
+      "sizeBytes": 5278,
+      "category": "build/validation tooling",
+      "lastCommitSha": "1b5ae1bd11fc61a2701d74ea89ccce2721889ef0",
+      "workPackage": "fis-provider"
+    },
+    {
+      "path": "aws/fis/analysis/tools/render-manifest.json",
+      "service": "fis",
+      "blobSha": "e1643a614876439037546ba604f8218ef17a947d",
+      "sizeBytes": 5010,
+      "category": "build/validation tooling",
+      "lastCommitSha": "1b5ae1bd11fc61a2701d74ea89ccce2721889ef0",
+      "workPackage": "fis-provider"
+    },
+    {
+      "path": "aws/fis/analysis/tools/render_report.py",
+      "service": "fis",
+      "blobSha": "a3629af8de528fa8d135625d80b38762bb751bc9",
+      "sizeBytes": 41456,
+      "category": "build/validation tooling",
+      "lastCommitSha": "1b5ae1bd11fc61a2701d74ea89ccce2721889ef0",
+      "workPackage": "fis-provider"
+    },
+    {
+      "path": "aws/fis/analysis/tools/test_render_report.py",
+      "service": "fis",
+      "blobSha": "0452ff6a0610f6d67d975aa9af4a64714296e996",
+      "sizeBytes": 5644,
+      "category": "contract/behavior tests",
+      "lastCommitSha": "1b5ae1bd11fc61a2701d74ea89ccce2721889ef0",
+      "workPackage": "fis-provider"
+    },
+    {
+      "path": "aws/fis/analysis/workflow/.gitignore",
+      "service": "fis",
+      "blobSha": "e63eea18cbcda3cd1d0f18d603c3d3d8ea188bcf",
+      "sizeBytes": 27,
+      "category": "general assessment workflow proposal",
+      "lastCommitSha": "1b5ae1bd11fc61a2701d74ea89ccce2721889ef0",
+      "workPackage": "fis-assessment-workflow"
+    },
+    {
+      "path": "aws/fis/analysis/workflow/README.md",
+      "service": "fis",
+      "blobSha": "56b7fddfef1b634c735041aa192a1989b60b8e4b",
+      "sizeBytes": 4353,
+      "category": "general assessment workflow proposal",
+      "lastCommitSha": "1b5ae1bd11fc61a2701d74ea89ccce2721889ef0",
+      "workPackage": "fis-assessment-workflow"
+    },
+    {
+      "path": "aws/fis/analysis/workflow/adapters.md",
+      "service": "fis",
+      "blobSha": "55a6a34904ddeab8326dbdad828669fa8a592240",
+      "sizeBytes": 14435,
+      "category": "general assessment workflow proposal",
+      "lastCommitSha": "1b5ae1bd11fc61a2701d74ea89ccce2721889ef0",
+      "workPackage": "fis-assessment-workflow"
+    },
+    {
+      "path": "aws/fis/analysis/workflow/api.md",
+      "service": "fis",
+      "blobSha": "0a9832e6a4585963883c47db033a5865b4f123cc",
+      "sizeBytes": 16225,
+      "category": "general assessment workflow proposal",
+      "lastCommitSha": "1b5ae1bd11fc61a2701d74ea89ccce2721889ef0",
+      "workPackage": "fis-assessment-workflow"
+    },
+    {
+      "path": "aws/fis/analysis/workflow/contract.py",
+      "service": "fis",
+      "blobSha": "dfe749337f4cc96e2945661ad3303e2a4dfaa661",
+      "sizeBytes": 21358,
+      "category": "general assessment workflow proposal",
+      "lastCommitSha": "1b5ae1bd11fc61a2701d74ea89ccce2721889ef0",
+      "workPackage": "fis-assessment-workflow"
+    },
+    {
+      "path": "aws/fis/analysis/workflow/diagrams/01_entities.mmd",
+      "service": "fis",
+      "blobSha": "f6284c7dfdc182da279dec4851cf7b35289007c5",
+      "sizeBytes": 1031,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "1b5ae1bd11fc61a2701d74ea89ccce2721889ef0",
+      "workPackage": "fis-assessment-workflow"
+    },
+    {
+      "path": "aws/fis/analysis/workflow/diagrams/01_entities.svg",
+      "service": "fis",
+      "blobSha": "15b8145d4fbd165695839afbc39a9c09395036c3",
+      "sizeBytes": 10609,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "1b5ae1bd11fc61a2701d74ea89ccce2721889ef0",
+      "workPackage": "fis-assessment-workflow"
+    },
+    {
+      "path": "aws/fis/analysis/workflow/diagrams/02_owned_values.mmd",
+      "service": "fis",
+      "blobSha": "7353a2df4ebae1cd71c0fec1c09b1b091f4839fa",
+      "sizeBytes": 1058,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "1b5ae1bd11fc61a2701d74ea89ccce2721889ef0",
+      "workPackage": "fis-assessment-workflow"
+    },
+    {
+      "path": "aws/fis/analysis/workflow/diagrams/02_owned_values.svg",
+      "service": "fis",
+      "blobSha": "9e1eecdd576e61c9c055508cde18b370835c660a",
+      "sizeBytes": 11874,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "1b5ae1bd11fc61a2701d74ea89ccce2721889ef0",
+      "workPackage": "fis-assessment-workflow"
+    },
+    {
+      "path": "aws/fis/analysis/workflow/diagrams/03_lifecycle.mmd",
+      "service": "fis",
+      "blobSha": "7681fad28169141acf8b2a3eae0623a859a5bb47",
+      "sizeBytes": 368,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "1b5ae1bd11fc61a2701d74ea89ccce2721889ef0",
+      "workPackage": "fis-assessment-workflow"
+    },
+    {
+      "path": "aws/fis/analysis/workflow/diagrams/03_lifecycle.svg",
+      "service": "fis",
+      "blobSha": "5f7a1640a881a8c1d33b7253899e3b63ad6c89f2",
+      "sizeBytes": 5162,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "1b5ae1bd11fc61a2701d74ea89ccce2721889ef0",
+      "workPackage": "fis-assessment-workflow"
+    },
+    {
+      "path": "aws/fis/analysis/workflow/diagrams/manifest.json",
+      "service": "fis",
+      "blobSha": "34c6601965ffd53c9c986b6d38f9e1e4b1016970",
+      "sizeBytes": 1278,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "1b5ae1bd11fc61a2701d74ea89ccce2721889ef0",
+      "workPackage": "fis-assessment-workflow"
+    },
+    {
+      "path": "aws/fis/analysis/workflow/examples/alarm-delivery.lock.json",
+      "service": "fis",
+      "blobSha": "6604fa4298d99c45725fcd9e91ae1437c70d90e3",
+      "sizeBytes": 3503,
+      "category": "general assessment workflow proposal",
+      "lastCommitSha": "1b5ae1bd11fc61a2701d74ea89ccce2721889ef0",
+      "workPackage": "fis-assessment-workflow"
+    },
+    {
+      "path": "aws/fis/analysis/workflow/examples/alarm-delivery.yaml",
+      "service": "fis",
+      "blobSha": "114dca388eaf985ff7f0eaf9e578ec34f7e24e10",
+      "sizeBytes": 2865,
+      "category": "general assessment workflow proposal",
+      "lastCommitSha": "1b5ae1bd11fc61a2701d74ea89ccce2721889ef0",
+      "workPackage": "fis-assessment-workflow"
+    },
+    {
+      "path": "aws/fis/analysis/workflow/examples/logs-error-budget.lock.json",
+      "service": "fis",
+      "blobSha": "a3ff26f67bd055e03f70679e230d42b778f2a9a9",
+      "sizeBytes": 1719,
+      "category": "general assessment workflow proposal",
+      "lastCommitSha": "1b5ae1bd11fc61a2701d74ea89ccce2721889ef0",
+      "workPackage": "fis-assessment-workflow"
+    },
+    {
+      "path": "aws/fis/analysis/workflow/examples/logs-error-budget.yaml",
+      "service": "fis",
+      "blobSha": "da5ac66a52e4e7792c77dc9116398eaf02f4a786",
+      "sizeBytes": 1682,
+      "category": "general assessment workflow proposal",
+      "lastCommitSha": "1b5ae1bd11fc61a2701d74ea89ccce2721889ef0",
+      "workPackage": "fis-assessment-workflow"
+    },
+    {
+      "path": "aws/fis/analysis/workflow/model.md",
+      "service": "fis",
+      "blobSha": "9d048ce6d17e8400873d4bcae6a632654c193af9",
+      "sizeBytes": 28893,
+      "category": "general assessment workflow proposal",
+      "lastCommitSha": "1b5ae1bd11fc61a2701d74ea89ccce2721889ef0",
+      "workPackage": "fis-assessment-workflow"
+    },
+    {
+      "path": "aws/fis/analysis/workflow/operation-catalog.json",
+      "service": "fis",
+      "blobSha": "0976a7c642252f24cb30b995671c9e82b80a24b5",
+      "sizeBytes": 50009,
+      "category": "general assessment workflow proposal",
+      "lastCommitSha": "1b5ae1bd11fc61a2701d74ea89ccce2721889ef0",
+      "workPackage": "fis-assessment-workflow"
+    },
+    {
+      "path": "aws/fis/analysis/workflow/review-cases.json",
+      "service": "fis",
+      "blobSha": "37a6e3a980aa2813f856e2d159d3a8561b9f0501",
+      "sizeBytes": 26053,
+      "category": "general assessment workflow proposal",
+      "lastCommitSha": "1b5ae1bd11fc61a2701d74ea89ccce2721889ef0",
+      "workPackage": "fis-assessment-workflow"
+    },
+    {
+      "path": "aws/fis/analysis/workflow/scenario.schema.json",
+      "service": "fis",
+      "blobSha": "fbfdee0acb365f1a5712bb2d9259c25a8595a8d2",
+      "sizeBytes": 3719,
+      "category": "general assessment workflow proposal",
+      "lastCommitSha": "1b5ae1bd11fc61a2701d74ea89ccce2721889ef0",
+      "workPackage": "fis-assessment-workflow"
+    },
+    {
+      "path": "aws/fis/analysis/workflow/tests/test_contract.py",
+      "service": "fis",
+      "blobSha": "2a33a7a10f6417279c6b46a14f311a02e079ec71",
+      "sizeBytes": 9977,
+      "category": "contract/behavior tests",
+      "lastCommitSha": "1b5ae1bd11fc61a2701d74ea89ccce2721889ef0",
+      "workPackage": "fis-assessment-workflow"
+    },
+    {
+      "path": "aws/fis/analysis/workflow/tools/README.md",
+      "service": "fis",
+      "blobSha": "49e6748b5628e116cf8aa136c27db716ccd97f09",
+      "sizeBytes": 848,
+      "category": "build/validation tooling",
+      "lastCommitSha": "1b5ae1bd11fc61a2701d74ea89ccce2721889ef0",
+      "workPackage": "fis-assessment-workflow"
+    },
+    {
+      "path": "aws/fis/analysis/workflow/tools/package-lock.json",
+      "service": "fis",
+      "blobSha": "5a81256975708a69bd067b8e5e68de102d25cc1b",
+      "sizeBytes": 590,
+      "category": "build/validation tooling",
+      "lastCommitSha": "1b5ae1bd11fc61a2701d74ea89ccce2721889ef0",
+      "workPackage": "fis-assessment-workflow"
+    },
+    {
+      "path": "aws/fis/analysis/workflow/tools/package.json",
+      "service": "fis",
+      "blobSha": "4bf257ebb125941a8f073f5843535f26dfc9cba6",
+      "sizeBytes": 188,
+      "category": "build/validation tooling",
+      "lastCommitSha": "1b5ae1bd11fc61a2701d74ea89ccce2721889ef0",
+      "workPackage": "fis-assessment-workflow"
+    },
+    {
+      "path": "aws/fis/analysis/workflow/tools/render-diagrams.mjs",
+      "service": "fis",
+      "blobSha": "b13969d498ab2ed32f9c4357d5b613932dd68566",
+      "sizeBytes": 3763,
+      "category": "build/validation tooling",
+      "lastCommitSha": "1b5ae1bd11fc61a2701d74ea89ccce2721889ef0",
+      "workPackage": "fis-assessment-workflow"
+    },
+    {
+      "path": "aws/health/analysis/.gitattributes",
+      "service": "health",
+      "blobSha": "d72fd520b1c12f276273f6d5b6cbc0c7f3bbf884",
+      "sizeBytes": 13,
+      "category": "repository build policy",
+      "lastCommitSha": "0156b78758a2f35047d985b1a9fc645f30491525",
+      "workPackage": "health-events-lifecycle"
+    },
+    {
+      "path": "aws/health/analysis/README.md",
+      "service": "health",
+      "blobSha": "a7719d1d5ad1e37700c92662022d86119f1101b5",
+      "sizeBytes": 17307,
+      "category": "analysis/report/source register",
+      "lastCommitSha": "0156b78758a2f35047d985b1a9fc645f30491525",
+      "workPackage": "health-events-lifecycle"
+    },
+    {
+      "path": "aws/health/analysis/REVIEW.md",
+      "service": "health",
+      "blobSha": "7a101810c572651583c3a84f800f4cd17509972f",
+      "sizeBytes": 6863,
+      "category": "design/quality review",
+      "lastCommitSha": "0156b78758a2f35047d985b1a9fc645f30491525",
+      "workPackage": "health-events-lifecycle"
+    },
+    {
+      "path": "aws/health/analysis/app/build.py",
+      "service": "health",
+      "blobSha": "9af47f26c74e7b5da34db1e17ed5eb561aa9894f",
+      "sizeBytes": 1568,
+      "category": "operator prototype/source",
+      "lastCommitSha": "0156b78758a2f35047d985b1a9fc645f30491525",
+      "workPackage": "health-events-lifecycle"
+    },
+    {
+      "path": "aws/health/analysis/app/src/app.js",
+      "service": "health",
+      "blobSha": "af2046203eae4df70067b879e9802469f4ec1af2",
+      "sizeBytes": 58318,
+      "category": "operator prototype/source",
+      "lastCommitSha": "0156b78758a2f35047d985b1a9fc645f30491525",
+      "workPackage": "health-events-lifecycle"
+    },
+    {
+      "path": "aws/health/analysis/app/src/mock-data.js",
+      "service": "health",
+      "blobSha": "cacc1d3ed98cec5e3dc5b8b4b7f6824aff25446f",
+      "sizeBytes": 42492,
+      "category": "operator prototype/source",
+      "lastCommitSha": "0156b78758a2f35047d985b1a9fc645f30491525",
+      "workPackage": "health-events-lifecycle"
+    },
+    {
+      "path": "aws/health/analysis/app/src/model.js",
+      "service": "health",
+      "blobSha": "f61a8f803a9e118c4064bd08fdb6035bf89193f7",
+      "sizeBytes": 27994,
+      "category": "operator prototype/source",
+      "lastCommitSha": "0156b78758a2f35047d985b1a9fc645f30491525",
+      "workPackage": "health-events-lifecycle"
+    },
+    {
+      "path": "aws/health/analysis/app/src/shell.html",
+      "service": "health",
+      "blobSha": "6e24a0f226f5b8a5186af91b82f6d7da758f04b6",
+      "sizeBytes": 4805,
+      "category": "operator prototype/source",
+      "lastCommitSha": "0156b78758a2f35047d985b1a9fc645f30491525",
+      "workPackage": "health-events-lifecycle"
+    },
+    {
+      "path": "aws/health/analysis/app/src/styles.css",
+      "service": "health",
+      "blobSha": "2c7120c5d43b7f1942c103f8224512c90b8c817e",
+      "sizeBytes": 38908,
+      "category": "operator prototype/source",
+      "lastCommitSha": "0156b78758a2f35047d985b1a9fc645f30491525",
+      "workPackage": "health-events-lifecycle"
+    },
+    {
+      "path": "aws/health/analysis/app/tests/model.test.cjs",
+      "service": "health",
+      "blobSha": "213f3348bccfc4a070afd462271780ba00f3e8cb",
+      "sizeBytes": 9679,
+      "category": "contract/behavior tests",
+      "lastCommitSha": "0156b78758a2f35047d985b1a9fc645f30491525",
+      "workPackage": "health-events-lifecycle"
+    },
+    {
+      "path": "aws/health/analysis/diagrams/01-core-model.mmd",
+      "service": "health",
+      "blobSha": "fc14bc47f4fd317a3f0eb805758e2c3dfd53a8e5",
+      "sizeBytes": 2169,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "0156b78758a2f35047d985b1a9fc645f30491525",
+      "workPackage": "health-events-lifecycle"
+    },
+    {
+      "path": "aws/health/analysis/diagrams/01-core-model.svg",
+      "service": "health",
+      "blobSha": "7d61824576d6155ca828f040bf2f100959b5c723",
+      "sizeBytes": 14424,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "0156b78758a2f35047d985b1a9fc645f30491525",
+      "workPackage": "health-events-lifecycle"
+    },
+    {
+      "path": "aws/health/analysis/diagrams/02-history-delivery.mmd",
+      "service": "health",
+      "blobSha": "2d599aa2d9cc3aa826a31f1527ebe3aeb599a350",
+      "sizeBytes": 2674,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "0156b78758a2f35047d985b1a9fc645f30491525",
+      "workPackage": "health-events-lifecycle"
+    },
+    {
+      "path": "aws/health/analysis/diagrams/02-history-delivery.svg",
+      "service": "health",
+      "blobSha": "c5b5a37968534ac4d4108df7c15716179260305f",
+      "sizeBytes": 16771,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "0156b78758a2f35047d985b1a9fc645f30491525",
+      "workPackage": "health-events-lifecycle"
+    },
+    {
+      "path": "aws/health/analysis/diagrams/03-lifecycle-posture.mmd",
+      "service": "health",
+      "blobSha": "5ed689825d7bc48b04622d23be5bc4923697be13",
+      "sizeBytes": 1867,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "0156b78758a2f35047d985b1a9fc645f30491525",
+      "workPackage": "health-events-lifecycle"
+    },
+    {
+      "path": "aws/health/analysis/diagrams/03-lifecycle-posture.svg",
+      "service": "health",
+      "blobSha": "5bccd8019efe9f121f70f5a8cda16ed2cb0d211c",
+      "sizeBytes": 10646,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "0156b78758a2f35047d985b1a9fc645f30491525",
+      "workPackage": "health-events-lifecycle"
+    },
+    {
+      "path": "aws/health/analysis/diagrams/04-operator-workflow.mmd",
+      "service": "health",
+      "blobSha": "67e12f454c2513224d9969e87a0e74fc1a1fb77c",
+      "sizeBytes": 1504,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "0156b78758a2f35047d985b1a9fc645f30491525",
+      "workPackage": "health-events-lifecycle"
+    },
+    {
+      "path": "aws/health/analysis/diagrams/04-operator-workflow.svg",
+      "service": "health",
+      "blobSha": "3dcfd6875ffd8825df383b949e9ae3ef746b142f",
+      "sizeBytes": 10345,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "0156b78758a2f35047d985b1a9fc645f30491525",
+      "workPackage": "health-events-lifecycle"
+    },
+    {
+      "path": "aws/health/analysis/index.html",
+      "service": "health",
+      "blobSha": "a8c9b4be119468502f9f23c23cc341bb06f4cb55",
+      "sizeBytes": 230024,
+      "category": "operator prototype/source",
+      "lastCommitSha": "0156b78758a2f35047d985b1a9fc645f30491525",
+      "workPackage": "health-events-lifecycle"
+    },
+    {
+      "path": "aws/health/analysis/report.md",
+      "service": "health",
+      "blobSha": "bc534689d86484f3a44fe9917bf18ed06f4cf9e5",
+      "sizeBytes": 44991,
+      "category": "analysis/report/source register",
+      "lastCommitSha": "0156b78758a2f35047d985b1a9fc645f30491525",
+      "workPackage": "health-events-lifecycle"
+    },
+    {
+      "path": "aws/health/analysis/report.pdf",
+      "service": "health",
+      "blobSha": "d5af837b2a8168012f9c0c146635cee3c17e67b0",
+      "sizeBytes": 167907,
+      "category": "rendered report/preview",
+      "lastCommitSha": "0156b78758a2f35047d985b1a9fc645f30491525",
+      "workPackage": "health-events-lifecycle"
+    },
+    {
+      "path": "aws/health/analysis/tools/.gitignore",
+      "service": "health",
+      "blobSha": "43ae0e2a6c6d8fca34872506ca0f2e64194fec7c",
+      "sizeBytes": 23,
+      "category": "build/validation tooling",
+      "lastCommitSha": "0156b78758a2f35047d985b1a9fc645f30491525",
+      "workPackage": "health-events-lifecycle"
+    },
+    {
+      "path": "aws/health/analysis/tools/README.md",
+      "service": "health",
+      "blobSha": "060914197616c6c2812dc531bca99c8d2bb309ab",
+      "sizeBytes": 2703,
+      "category": "build/validation tooling",
+      "lastCommitSha": "0156b78758a2f35047d985b1a9fc645f30491525",
+      "workPackage": "health-events-lifecycle"
+    },
+    {
+      "path": "aws/health/analysis/tools/build_report.py",
+      "service": "health",
+      "blobSha": "108a72c7a3cb24b7eb65a6f4a23489475c3de301",
+      "sizeBytes": 13546,
+      "category": "build/validation tooling",
+      "lastCommitSha": "0156b78758a2f35047d985b1a9fc645f30491525",
+      "workPackage": "health-events-lifecycle"
+    },
+    {
+      "path": "aws/health/analysis/tools/render_diagrams.py",
+      "service": "health",
+      "blobSha": "aaaca6dc07b0d691ca7e04f2e5b43adc52ad1d2a",
+      "sizeBytes": 12873,
+      "category": "build/validation tooling",
+      "lastCommitSha": "0156b78758a2f35047d985b1a9fc645f30491525",
+      "workPackage": "health-events-lifecycle"
+    },
+    {
+      "path": "aws/health/analysis/tools/requirements.txt",
+      "service": "health",
+      "blobSha": "9df4305778bced506b433d1e9ca0e0e56770f99f",
+      "sizeBytes": 17,
+      "category": "build/validation tooling",
+      "lastCommitSha": "0156b78758a2f35047d985b1a9fc645f30491525",
+      "workPackage": "health-events-lifecycle"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/.gitattributes",
+      "service": "resilience-hub",
+      "blobSha": "6ee92d768646698ade6f77b362a17c791d8441d2",
+      "sizeBytes": 26,
+      "category": "repository build policy",
+      "lastCommitSha": "1964d201116915063d6774579a8477072d624596",
+      "workPackage": "resilience-model"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/README.md",
+      "service": "resilience-hub",
+      "blobSha": "720f7c2e639cf4a91bd705b30311c5ef5c03caf2",
+      "sizeBytes": 14728,
+      "category": "analysis/report/source register",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-model"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/aws-mapping.md",
+      "service": "resilience-hub",
+      "blobSha": "7da45a5378429548868841ac131bc23841f1b035",
+      "sizeBytes": 40378,
+      "category": "RPC facade contract/runtime/reference",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/client.cjs",
+      "service": "resilience-hub",
+      "blobSha": "33786acbf5f15a4d7ba9c3104d18eb8f01ef8e9c",
+      "sizeBytes": 1524,
+      "category": "RPC facade contract/runtime/reference",
+      "lastCommitSha": "973685d8f45e0321f5bf87912f6693e217f2a26b",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/contract.cjs",
+      "service": "resilience-hub",
+      "blobSha": "6543f615907718513c5ba1a0e41e268228569e72",
+      "sizeBytes": 47128,
+      "category": "RPC facade contract/runtime/reference",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/entities.md",
+      "service": "resilience-hub",
+      "blobSha": "56e026eb75e499b174d57d6209ae9775023f12ba",
+      "sizeBytes": 12320,
+      "category": "RPC facade contract/runtime/reference",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/errors.md",
+      "service": "resilience-hub",
+      "blobSha": "ea7699769088281a44ae04dc46914d4113be2c0f",
+      "sizeBytes": 3646,
+      "category": "RPC facade contract/runtime/reference",
+      "lastCommitSha": "973685d8f45e0321f5bf87912f6693e217f2a26b",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/index.md",
+      "service": "resilience-hub",
+      "blobSha": "1241c61718a4cbed33e4102c5942722c73644dcd",
+      "sizeBytes": 13144,
+      "category": "RPC facade contract/runtime/reference",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/operations/CaptureTopologySnapshot.md",
+      "service": "resilience-hub",
+      "blobSha": "4acd0c0d832eef3253512880986dd157245f8158",
+      "sizeBytes": 9382,
+      "category": "RPC operation specification",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/operations/CreateInputSource.md",
+      "service": "resilience-hub",
+      "blobSha": "6bfbffc1a801c69f3ab48644cc9ad6a5f6a81736",
+      "sizeBytes": 6258,
+      "category": "RPC operation specification",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/operations/CreatePolicy.md",
+      "service": "resilience-hub",
+      "blobSha": "f5eceb1c1881f6d01225085e4ec1e59d112c4a83",
+      "sizeBytes": 6987,
+      "category": "RPC operation specification",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/operations/CreateService.md",
+      "service": "resilience-hub",
+      "blobSha": "c3eeb85e6f8739a30eacd93b951501d82e6329fc",
+      "sizeBytes": 9538,
+      "category": "RPC operation specification",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/operations/CreateSystem.md",
+      "service": "resilience-hub",
+      "blobSha": "e1f229a8844ed27d88d4d035afe2f2061ef26b18",
+      "sizeBytes": 5928,
+      "category": "RPC operation specification",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/operations/CreateUserJourney.md",
+      "service": "resilience-hub",
+      "blobSha": "755b7c9e78411deaa8fdb32f6f62e6f88d8f772a",
+      "sizeBytes": 6489,
+      "category": "RPC operation specification",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/operations/DeleteInputSource.md",
+      "service": "resilience-hub",
+      "blobSha": "9092390c8c88b2b7f9dddf8886d78b87647e3886",
+      "sizeBytes": 6364,
+      "category": "RPC operation specification",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/operations/DeletePolicy.md",
+      "service": "resilience-hub",
+      "blobSha": "34e6185944638bbefd127d1e355b6dc7e414bc0b",
+      "sizeBytes": 5945,
+      "category": "RPC operation specification",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/operations/DeleteService.md",
+      "service": "resilience-hub",
+      "blobSha": "8b5ab8174210590f843f4d2f8bb3ce4ab66c327c",
+      "sizeBytes": 6261,
+      "category": "RPC operation specification",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/operations/DeleteSystem.md",
+      "service": "resilience-hub",
+      "blobSha": "ea422fe02d993cea8d25ef612fde27d54c36068a",
+      "sizeBytes": 5806,
+      "category": "RPC operation specification",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/operations/DeleteUserJourney.md",
+      "service": "resilience-hub",
+      "blobSha": "d6370f2e0349ecb96b86fe38323e3fffcb8269bd",
+      "sizeBytes": 6204,
+      "category": "RPC operation specification",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/operations/GetDependency.md",
+      "service": "resilience-hub",
+      "blobSha": "2e5527adaccb8fc7c59ffbd28850636875bf6d62",
+      "sizeBytes": 5763,
+      "category": "RPC operation specification",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/operations/GetFailureModeAssessment.md",
+      "service": "resilience-hub",
+      "blobSha": "d0f8b5a05c05522f2cc2ec3841c77ac159617c4f",
+      "sizeBytes": 5709,
+      "category": "RPC operation specification",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/operations/GetFailureModeFinding.md",
+      "service": "resilience-hub",
+      "blobSha": "c52892f44c6660682a4b0a6dd6f0a613e0f8b7e8",
+      "sizeBytes": 7966,
+      "category": "RPC operation specification",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/operations/GetPolicy.md",
+      "service": "resilience-hub",
+      "blobSha": "5fba156c56c4ed19ba2b2df19b5b25dd9b400948",
+      "sizeBytes": 5384,
+      "category": "RPC operation specification",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/operations/GetRecommendation.md",
+      "service": "resilience-hub",
+      "blobSha": "f25e616d3038fb890b638cac76f4f131e15ed640",
+      "sizeBytes": 6358,
+      "category": "RPC operation specification",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/operations/GetService.md",
+      "service": "resilience-hub",
+      "blobSha": "2eba04789b92f4861ebf1f66a4a8a929e632a151",
+      "sizeBytes": 14193,
+      "category": "RPC operation specification",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/operations/GetServiceStatus.md",
+      "service": "resilience-hub",
+      "blobSha": "aa70974818f9f4c2ba461edfced7fc0b3fea2797",
+      "sizeBytes": 18811,
+      "category": "RPC operation specification",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/operations/GetSystem.md",
+      "service": "resilience-hub",
+      "blobSha": "4ed2600590e174240aa1a3c67812942ed19400dc",
+      "sizeBytes": 4954,
+      "category": "RPC operation specification",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/operations/GetTopologySnapshot.md",
+      "service": "resilience-hub",
+      "blobSha": "80d018108de90cdb51fabdd14a1ed652191cd9fd",
+      "sizeBytes": 9138,
+      "category": "RPC operation specification",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/operations/GetUserJourney.md",
+      "service": "resilience-hub",
+      "blobSha": "468d204c09b80d5b4eec8da6d25f876fc1aa058c",
+      "sizeBytes": 6112,
+      "category": "RPC operation specification",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/operations/GetWorkspaceSummary.md",
+      "service": "resilience-hub",
+      "blobSha": "fe54c2ed37e42358033f9839032970017456c8f3",
+      "sizeBytes": 11437,
+      "category": "RPC operation specification",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/operations/IngestEvent.md",
+      "service": "resilience-hub",
+      "blobSha": "bcc99b17ec069bc1949b3e9fc5f2798128aaff6f",
+      "sizeBytes": 11666,
+      "category": "RPC operation specification",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/operations/ListDependencies.md",
+      "service": "resilience-hub",
+      "blobSha": "c89ba1a97a2c2483a54b2c4d5eeea0fb3aabc25b",
+      "sizeBytes": 7827,
+      "category": "RPC operation specification",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/operations/ListEvents.md",
+      "service": "resilience-hub",
+      "blobSha": "844981f5fc5c78b147f89d9d2ba6150d64f58647",
+      "sizeBytes": 10095,
+      "category": "RPC operation specification",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/operations/ListFailureModeAssessments.md",
+      "service": "resilience-hub",
+      "blobSha": "4c03f680ebc3baa3827e53eabf42f38ea1fffeb0",
+      "sizeBytes": 6825,
+      "category": "RPC operation specification",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/operations/ListFailureModeFindings.md",
+      "service": "resilience-hub",
+      "blobSha": "1749aa3fdf319fe869d0748bca902d747b7c30d1",
+      "sizeBytes": 12757,
+      "category": "RPC operation specification",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/operations/ListInputSources.md",
+      "service": "resilience-hub",
+      "blobSha": "ad4e383f28cb3d67933f08748216d42c0dde60bb",
+      "sizeBytes": 7217,
+      "category": "RPC operation specification",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/operations/ListPolicies.md",
+      "service": "resilience-hub",
+      "blobSha": "ba8148bb15ff6022130c5ef6c96e76e6616a99aa",
+      "sizeBytes": 7384,
+      "category": "RPC operation specification",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/operations/ListRecommendations.md",
+      "service": "resilience-hub",
+      "blobSha": "b14c455edbaaa7dad90effc377bf82edd9348307",
+      "sizeBytes": 10119,
+      "category": "RPC operation specification",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/operations/ListServices.md",
+      "service": "resilience-hub",
+      "blobSha": "654cc98db548c530c3dd6dd8b2e87a059d91af51",
+      "sizeBytes": 29618,
+      "category": "RPC operation specification",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/operations/ListSystems.md",
+      "service": "resilience-hub",
+      "blobSha": "eb7fd25d44a4a39ff696d7493095e97e28fb8e41",
+      "sizeBytes": 6471,
+      "category": "RPC operation specification",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/operations/ListTopologySnapshots.md",
+      "service": "resilience-hub",
+      "blobSha": "059b992aaa184b458b53b49c3e7477f4cf48aa67",
+      "sizeBytes": 10042,
+      "category": "RPC operation specification",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/operations/ListUserJourneys.md",
+      "service": "resilience-hub",
+      "blobSha": "74a95e33efeff1f448d46f3d351d1af7c60f6611",
+      "sizeBytes": 8107,
+      "category": "RPC operation specification",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/operations/PutHealthObservation.md",
+      "service": "resilience-hub",
+      "blobSha": "26803998461034e241b794f7d7ec2e7bd4f8215d",
+      "sizeBytes": 20460,
+      "category": "RPC operation specification",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/operations/StartFailureModeAssessment.md",
+      "service": "resilience-hub",
+      "blobSha": "41a1dc3164b4c18232763ff411a2f863b24436e4",
+      "sizeBytes": 5631,
+      "category": "RPC operation specification",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/operations/UpdateDependency.md",
+      "service": "resilience-hub",
+      "blobSha": "9bfe995e4287f5d4ab28fed9487fb8ecd774a998",
+      "sizeBytes": 6978,
+      "category": "RPC operation specification",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/operations/UpdateDependencyGovernance.md",
+      "service": "resilience-hub",
+      "blobSha": "89a17fd10de96be0ae0f32ff162fe03c79f64c33",
+      "sizeBytes": 7006,
+      "category": "RPC operation specification",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/operations/UpdateFailureModeFinding.md",
+      "service": "resilience-hub",
+      "blobSha": "89126a219edc1b896e0d7a980368e3ee1e41cedf",
+      "sizeBytes": 9325,
+      "category": "RPC operation specification",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/operations/UpdatePolicy.md",
+      "service": "resilience-hub",
+      "blobSha": "7941e82491e8f0185427b518f41d6595679519b0",
+      "sizeBytes": 7339,
+      "category": "RPC operation specification",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/operations/UpdateRecommendationEnrichment.md",
+      "service": "resilience-hub",
+      "blobSha": "c4ada7a7fb86d9378a9251ff6292d52ec7a5c2fb",
+      "sizeBytes": 7819,
+      "category": "RPC operation specification",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/operations/UpdateService.md",
+      "service": "resilience-hub",
+      "blobSha": "c46d24cb80d529d658aeb2635fddabb629b32d9a",
+      "sizeBytes": 17489,
+      "category": "RPC operation specification",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/operations/UpdateSystem.md",
+      "service": "resilience-hub",
+      "blobSha": "8ebd72c24887958e04290a2a04402a28719b9c31",
+      "sizeBytes": 6126,
+      "category": "RPC operation specification",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/operations/UpdateUserJourney.md",
+      "service": "resilience-hub",
+      "blobSha": "346c8c271d00a89203004fa6ae066a81ea0f00d4",
+      "sizeBytes": 7846,
+      "category": "RPC operation specification",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/protocol.md",
+      "service": "resilience-hub",
+      "blobSha": "24a303325a51e78d3dcaf65b64756449b66d4890",
+      "sizeBytes": 20860,
+      "category": "RPC facade contract/runtime/reference",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/runtime.cjs",
+      "service": "resilience-hub",
+      "blobSha": "4dd3f4e63c342beb53570331dae4b0c644974eb8",
+      "sizeBytes": 76906,
+      "category": "RPC facade contract/runtime/reference",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/server.cjs",
+      "service": "resilience-hub",
+      "blobSha": "35acb08645d361740d162750ccb94868b699d872",
+      "sizeBytes": 5628,
+      "category": "RPC facade contract/runtime/reference",
+      "lastCommitSha": "973685d8f45e0321f5bf87912f6693e217f2a26b",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/shapes.md",
+      "service": "resilience-hub",
+      "blobSha": "247c0d933705444eebb2f68cb6594131ab36f475",
+      "sizeBytes": 164072,
+      "category": "RPC facade contract/runtime/reference",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/api/workflows.md",
+      "service": "resilience-hub",
+      "blobSha": "a7947d1dd8328c4aa86324caf9c31e6d287d6845",
+      "sizeBytes": 12444,
+      "category": "RPC facade contract/runtime/reference",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-rpc"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/app.css",
+      "service": "resilience-hub",
+      "blobSha": "9b1090ca7178c0917bd786f76cbe522d5fcd9503",
+      "sizeBytes": 29178,
+      "category": "operator prototype/source",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-model"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/app.js",
+      "service": "resilience-hub",
+      "blobSha": "eb9ca6485939ee532bdb5aef5e97510bb4ff43c3",
+      "sizeBytes": 70078,
+      "category": "operator prototype/source",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-model"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/data.js",
+      "service": "resilience-hub",
+      "blobSha": "3421f7513b7291e3e990a4ead07581b814a29ccd",
+      "sizeBytes": 46849,
+      "category": "operator prototype/source",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-model"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/diagrams/01-business-structure.md",
+      "service": "resilience-hub",
+      "blobSha": "51a3a755981d44185d0b612c76a6ecd6310aa415",
+      "sizeBytes": 3964,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-model"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/diagrams/01-business-structure.svg",
+      "service": "resilience-hub",
+      "blobSha": "0603753f49d1527f9fb3895725fd3a8870b76ce4",
+      "sizeBytes": 7665,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "1964d201116915063d6774579a8477072d624596",
+      "workPackage": "resilience-model"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/diagrams/02-policy-context.md",
+      "service": "resilience-hub",
+      "blobSha": "c14b7736fd26ece263dbf4ba79a38fb8f83624da",
+      "sizeBytes": 5207,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-model"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/diagrams/02-policy-context.svg",
+      "service": "resilience-hub",
+      "blobSha": "b1765a80201a559ffb0813304f67562cf5bb8395",
+      "sizeBytes": 11835,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-model"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/diagrams/03-assessments-findings.md",
+      "service": "resilience-hub",
+      "blobSha": "f4076c48299002543af30078a749237342160ac1",
+      "sizeBytes": 5785,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-model"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/diagrams/03-assessments-findings.svg",
+      "service": "resilience-hub",
+      "blobSha": "2e0eff9eaceece70dea1e40ca3b6b754a345f159",
+      "sizeBytes": 13093,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-model"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/diagrams/04-dependencies-topology.md",
+      "service": "resilience-hub",
+      "blobSha": "b3090304e33b4307bef45d8469a4eaec94b86b84",
+      "sizeBytes": 5391,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-model"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/diagrams/04-dependencies-topology.svg",
+      "service": "resilience-hub",
+      "blobSha": "0e132a63283d06e2c16198601204671d7778451c",
+      "sizeBytes": 12089,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-model"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/diagrams/05-events-observations.md",
+      "service": "resilience-hub",
+      "blobSha": "28340076d3edfadd9ecbfaee4f2f40db43c1e5b8",
+      "sizeBytes": 6664,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-model"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/diagrams/05-events-observations.svg",
+      "service": "resilience-hub",
+      "blobSha": "f0b7242467fe856d844f6c5dd0e019af6667d4b6",
+      "sizeBytes": 12091,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-model"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/diagrams/diagram-layouts.json",
+      "service": "resilience-hub",
+      "blobSha": "dc50f786293bf18b6e07464acceea06f845984d4",
+      "sizeBytes": 20872,
+      "category": "diagram source/render/build metadata",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-model"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/index.html",
+      "service": "resilience-hub",
+      "blobSha": "1e9b77ec6a1841031e7fefdb69677ea2ab7122f2",
+      "sizeBytes": 1160,
+      "category": "operator prototype/source",
+      "lastCommitSha": "973685d8f45e0321f5bf87912f6693e217f2a26b",
+      "workPackage": "resilience-model"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/model.js",
+      "service": "resilience-hub",
+      "blobSha": "aaf71c765557e5875f537f3b339c633cbcb7f4e1",
+      "sizeBytes": 46728,
+      "category": "operator prototype/source",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-model"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/quality-review.md",
+      "service": "resilience-hub",
+      "blobSha": "4fa96d64025aa7a71eadaa3a0b8958b483e0dccd",
+      "sizeBytes": 21650,
+      "category": "design/quality review",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-model"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/report.md",
+      "service": "resilience-hub",
+      "blobSha": "819cfec448068a4bb73ca04755f6906fc45a8d3a",
+      "sizeBytes": 71724,
+      "category": "analysis/report/source register",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-model"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/review.md",
+      "service": "resilience-hub",
+      "blobSha": "df630442ac1fee7a5608ebb22ddfe0175958eb91",
+      "sizeBytes": 13931,
+      "category": "design/quality review",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-model"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/scripts/check_api_schemas.py",
+      "service": "resilience-hub",
+      "blobSha": "461e854fbe52aff4eab88f2242d2e51f07087716",
+      "sizeBytes": 2627,
+      "category": "build/validation tooling",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-model"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/scripts/check_notes.py",
+      "service": "resilience-hub",
+      "blobSha": "5c14c838172d90b83be714f1738a05e2a801c76c",
+      "sizeBytes": 5503,
+      "category": "build/validation tooling",
+      "lastCommitSha": "973685d8f45e0321f5bf87912f6693e217f2a26b",
+      "workPackage": "resilience-model"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/scripts/generate_api_docs.cjs",
+      "service": "resilience-hub",
+      "blobSha": "cbacad73e7c6b316af169a3d45c4c5a016875d1b",
+      "sizeBytes": 22578,
+      "category": "build/validation tooling",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-model"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/scripts/render_diagrams.py",
+      "service": "resilience-hub",
+      "blobSha": "97063ed2176fa048ebbfe33a6483a99d5f4ce4cc",
+      "sizeBytes": 6682,
+      "category": "build/validation tooling",
+      "lastCommitSha": "973685d8f45e0321f5bf87912f6693e217f2a26b",
+      "workPackage": "resilience-model"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/tests/evidence-contract.test.cjs",
+      "service": "resilience-hub",
+      "blobSha": "5c94c5df7427acc35b887ab3a5afbc0258ebeeca",
+      "sizeBytes": 5581,
+      "category": "contract/behavior tests",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-model"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/tests/model.test.cjs",
+      "service": "resilience-hub",
+      "blobSha": "faedcb5c4182f2d254f21588fa5ac1680a68ec67",
+      "sizeBytes": 27940,
+      "category": "contract/behavior tests",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-model"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/tests/rpc-http.test.cjs",
+      "service": "resilience-hub",
+      "blobSha": "6fdfcb93af6b7f1c17f8e4b30047776cbc44040b",
+      "sizeBytes": 6230,
+      "category": "contract/behavior tests",
+      "lastCommitSha": "973685d8f45e0321f5bf87912f6693e217f2a26b",
+      "workPackage": "resilience-model"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/tests/rpc-quality.test.cjs",
+      "service": "resilience-hub",
+      "blobSha": "2890594e5e1fe8cd011d9734e383722a30e973b5",
+      "sizeBytes": 14805,
+      "category": "contract/behavior tests",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-model"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/tests/rpc.test.cjs",
+      "service": "resilience-hub",
+      "blobSha": "20f1f3caf5abb3e2fe63e746743ef5d91935966d",
+      "sizeBytes": 21471,
+      "category": "contract/behavior tests",
+      "lastCommitSha": "973685d8f45e0321f5bf87912f6693e217f2a26b",
+      "workPackage": "resilience-model"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/tests/ui-contract.test.cjs",
+      "service": "resilience-hub",
+      "blobSha": "2683aa1d569a30e6f476df09b1891a47e5b3f692",
+      "sizeBytes": 13785,
+      "category": "contract/behavior tests",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-model"
+    },
+    {
+      "path": "aws/resilience-hub/analysis/validation.md",
+      "service": "resilience-hub",
+      "blobSha": "3502735de559b9962ccac30c4453ad039dfb8d15",
+      "sizeBytes": 10886,
+      "category": "validation evidence",
+      "lastCommitSha": "6b867f8e80191f75eabd88c876d40c9ec0f30080",
+      "workPackage": "resilience-model"
+    }
+  ]
+}

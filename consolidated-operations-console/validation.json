@@ -1,0 +1,26 @@
+{
+  "status": "PASS",
+  "scope": "OFFLINE_CONTRACTS_ONLY",
+  "checks": {
+    "entities": 37,
+    "modelRecords": 173,
+    "semanticCases": 45,
+    "inventoryFiles": 226,
+    "mappings": 174,
+    "sourceAliases": 340,
+    "sourceConceptsChecked": 182,
+    "adapterProfiles": 65,
+    "classDiagrams": 7,
+    "operations": 101,
+    "requestResponseExamples": 202,
+    "errorExamples": 3,
+    "relativeLinks": 117
+  },
+  "limitations": [
+    "No API server, authentication, persistence, scheduler, provider call, expression evaluation or adapter is executed.",
+    "Semantic checks cover declared invariants and adversarial examples, not all possible domain behavior.",
+    "Fixture digest checking is a restricted subset, not a complete RFC 8785 conformance implementation.",
+    "Source/profile coverage checks verify named inventories and mappings, not full native SDK payload conformance.",
+    "Diagram checks establish entity coverage, XML validity and provenance; visual review and Mermaid syntax are separate gates."
+  ]
+}

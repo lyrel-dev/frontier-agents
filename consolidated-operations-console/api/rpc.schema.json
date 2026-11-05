@@ -1,0 +1,5569 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/rpc.json",
+  "title": "Consolidated operations console RPC contracts",
+  "description": "Design-only operation input/output and error schemas; all model references resolve offline to ../model/schema.json.",
+  "$defs": {
+    "Page": {
+      "type": "object",
+      "properties": {
+        "traversalId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "asOfSequence": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Timestamp"
+        },
+        "expiresAt": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Timestamp"
+        }
+      },
+      "required": [
+        "traversalId",
+        "asOfSequence",
+        "createdAt",
+        "expiresAt"
+      ],
+      "additionalProperties": false
+    },
+    "FieldViolation": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024
+        },
+        "code": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2048
+        }
+      },
+      "required": [
+        "path",
+        "code",
+        "message"
+      ],
+      "additionalProperties": false
+    },
+    "RpcError": {
+      "type": "object",
+      "properties": {
+        "__type": {
+          "type": "string",
+          "enum": [
+            "ValidationException",
+            "UnauthenticatedException",
+            "AccessDeniedException",
+            "ResourceNotFoundException",
+            "VersionConflictException",
+            "IdempotencyConflictException",
+            "CommandInProgressException",
+            "InvalidStateException",
+            "PaginationTokenExpiredException",
+            "EvidenceUnavailableException",
+            "RequestTooLargeException",
+            "UnsupportedMediaTypeException",
+            "ThrottlingException",
+            "InternalServerException",
+            "ServiceUnavailableException"
+          ]
+        },
+        "code": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "requestId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "retryable": {
+          "type": "boolean"
+        },
+        "fieldViolations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/FieldViolation"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "commandId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "retryAfterSeconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 300
+        }
+      },
+      "required": [
+        "__type",
+        "code",
+        "message",
+        "requestId",
+        "retryable"
+      ],
+      "additionalProperties": false
+    },
+    "GetWorkspaceRequest": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    },
+    "GetWorkspaceResponse": {
+      "type": "object",
+      "properties": {
+        "workspace": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Workspace"
+        }
+      },
+      "required": [
+        "workspace"
+      ],
+      "additionalProperties": false
+    },
+    "GetConnectionRequest": {
+      "type": "object",
+      "properties": {
+        "connectionId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        }
+      },
+      "required": [
+        "connectionId"
+      ],
+      "additionalProperties": false
+    },
+    "GetConnectionResponse": {
+      "type": "object",
+      "properties": {
+        "connection": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Connection"
+        }
+      },
+      "required": [
+        "connection"
+      ],
+      "additionalProperties": false
+    },
+    "ListConnectionsRequest": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "maxResults": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "ListConnectionsResponse": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Connection"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "page": {
+          "$ref": "#/$defs/Page"
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "items",
+        "page"
+      ],
+      "additionalProperties": false
+    },
+    "CreateConnectionRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "provider": {
+          "type": "string",
+          "enum": [
+            "aws"
+          ]
+        },
+        "credentialBindingId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "allowedScopes": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/OwningScope"
+          },
+          "minItems": 1,
+          "maxItems": 100
+        },
+        "clientToken": {
+          "type": "string",
+          "minLength": 16,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9._~-]+$"
+        }
+      },
+      "required": [
+        "name",
+        "provider",
+        "credentialBindingId",
+        "allowedScopes",
+        "clientToken"
+      ],
+      "additionalProperties": false
+    },
+    "CreateConnectionResponse": {
+      "type": "object",
+      "properties": {
+        "command": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Command"
+        },
+        "connection": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Connection"
+        }
+      },
+      "required": [
+        "command",
+        "connection"
+      ],
+      "additionalProperties": false
+    },
+    "UpdateConnectionRequest": {
+      "type": "object",
+      "properties": {
+        "connectionId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "credentialBindingId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "allowedScopes": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/OwningScope"
+          },
+          "minItems": 1,
+          "maxItems": 100
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "clientToken": {
+          "type": "string",
+          "minLength": 16,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9._~-]+$"
+        },
+        "expectedVersion": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Version"
+        }
+      },
+      "required": [
+        "connectionId",
+        "expectedVersion",
+        "clientToken"
+      ],
+      "additionalProperties": false,
+      "anyOf": [
+        {
+          "required": [
+            "name"
+          ]
+        },
+        {
+          "required": [
+            "credentialBindingId"
+          ]
+        },
+        {
+          "required": [
+            "allowedScopes"
+          ]
+        },
+        {
+          "required": [
+            "enabled"
+          ]
+        }
+      ]
+    },
+    "UpdateConnectionResponse": {
+      "type": "object",
+      "properties": {
+        "command": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Command"
+        },
+        "connection": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Connection"
+        }
+      },
+      "required": [
+        "command",
+        "connection"
+      ],
+      "additionalProperties": false
+    },
+    "GetResourceRequest": {
+      "type": "object",
+      "properties": {
+        "resourceId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        }
+      },
+      "required": [
+        "resourceId"
+      ],
+      "additionalProperties": false
+    },
+    "GetResourceResponse": {
+      "type": "object",
+      "properties": {
+        "resource": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Resource"
+        }
+      },
+      "required": [
+        "resource"
+      ],
+      "additionalProperties": false
+    },
+    "ListResourcesRequest": {
+      "type": "object",
+      "properties": {
+        "serviceId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "resourceType": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "maxResults": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "ListResourcesResponse": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Resource"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "page": {
+          "$ref": "#/$defs/Page"
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "items",
+        "page"
+      ],
+      "additionalProperties": false
+    },
+    "GetCollectionRequest": {
+      "type": "object",
+      "properties": {
+        "collectionId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        }
+      },
+      "required": [
+        "collectionId"
+      ],
+      "additionalProperties": false
+    },
+    "GetCollectionResponse": {
+      "type": "object",
+      "properties": {
+        "collection": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Collection"
+        }
+      },
+      "required": [
+        "collection"
+      ],
+      "additionalProperties": false
+    },
+    "ListCollectionsRequest": {
+      "type": "object",
+      "properties": {
+        "connectionId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "subject": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/EntityRef"
+        },
+        "maxResults": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "ListCollectionsResponse": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Collection"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "page": {
+          "$ref": "#/$defs/Page"
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "items",
+        "page"
+      ],
+      "additionalProperties": false
+    },
+    "ListReadAttemptsRequest": {
+      "type": "object",
+      "properties": {
+        "collectionId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "maxResults": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "collectionId"
+      ],
+      "additionalProperties": false
+    },
+    "ListReadAttemptsResponse": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/ReadAttempt"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "page": {
+          "$ref": "#/$defs/Page"
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "items",
+        "page"
+      ],
+      "additionalProperties": false
+    },
+    "GetSourceRevisionRequest": {
+      "type": "object",
+      "properties": {
+        "sourceRevisionId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        }
+      },
+      "required": [
+        "sourceRevisionId"
+      ],
+      "additionalProperties": false
+    },
+    "GetSourceRevisionResponse": {
+      "type": "object",
+      "properties": {
+        "sourceRevision": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/SourceRevision"
+        }
+      },
+      "required": [
+        "sourceRevision"
+      ],
+      "additionalProperties": false
+    },
+    "GetObservationRequest": {
+      "type": "object",
+      "properties": {
+        "observationId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        }
+      },
+      "required": [
+        "observationId"
+      ],
+      "additionalProperties": false
+    },
+    "GetObservationResponse": {
+      "type": "object",
+      "properties": {
+        "observation": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Observation"
+        }
+      },
+      "required": [
+        "observation"
+      ],
+      "additionalProperties": false
+    },
+    "GetProjectionRevisionRequest": {
+      "type": "object",
+      "properties": {
+        "projectionRevisionId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        }
+      },
+      "required": [
+        "projectionRevisionId"
+      ],
+      "additionalProperties": false
+    },
+    "GetProjectionRevisionResponse": {
+      "type": "object",
+      "properties": {
+        "projectionRevision": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/ProjectionRevision"
+        }
+      },
+      "required": [
+        "projectionRevision"
+      ],
+      "additionalProperties": false
+    },
+    "GetSnapshotRequest": {
+      "type": "object",
+      "properties": {
+        "snapshotId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        }
+      },
+      "required": [
+        "snapshotId"
+      ],
+      "additionalProperties": false
+    },
+    "GetSnapshotResponse": {
+      "type": "object",
+      "properties": {
+        "snapshot": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Snapshot"
+        }
+      },
+      "required": [
+        "snapshot"
+      ],
+      "additionalProperties": false
+    },
+    "GetWorkItemRequest": {
+      "type": "object",
+      "properties": {
+        "workItemId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        }
+      },
+      "required": [
+        "workItemId"
+      ],
+      "additionalProperties": false
+    },
+    "GetWorkItemResponse": {
+      "type": "object",
+      "properties": {
+        "workItem": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/WorkItem"
+        }
+      },
+      "required": [
+        "workItem"
+      ],
+      "additionalProperties": false
+    },
+    "GetCommandRequest": {
+      "type": "object",
+      "properties": {
+        "commandId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        }
+      },
+      "required": [
+        "commandId"
+      ],
+      "additionalProperties": false
+    },
+    "GetCommandResponse": {
+      "type": "object",
+      "properties": {
+        "command": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Command"
+        }
+      },
+      "required": [
+        "command"
+      ],
+      "additionalProperties": false
+    },
+    "ListSourceRevisionsRequest": {
+      "type": "object",
+      "properties": {
+        "identity": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/SourceIdentity"
+        },
+        "profile": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "representation": {
+          "type": "string",
+          "enum": [
+            "SUMMARY",
+            "DETAIL",
+            "EVENT",
+            "STREAM",
+            "ARTIFACT",
+            "CONFIGURATION",
+            "LOCAL_EVIDENCE"
+          ]
+        },
+        "maxResults": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "ListSourceRevisionsResponse": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/SourceRevision"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "page": {
+          "$ref": "#/$defs/Page"
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "items",
+        "page"
+      ],
+      "additionalProperties": false
+    },
+    "ListObservationsRequest": {
+      "type": "object",
+      "properties": {
+        "sourceRevisionId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "collectionId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "subject": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/EntityRef"
+        },
+        "maxResults": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "ListObservationsResponse": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Observation"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "page": {
+          "$ref": "#/$defs/Page"
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "items",
+        "page"
+      ],
+      "additionalProperties": false
+    },
+    "ListProjectionRevisionsRequest": {
+      "type": "object",
+      "properties": {
+        "subject": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/EntityRef"
+        },
+        "profile": {
+          "type": "string",
+          "enum": [
+            "EVALUATION",
+            "LIFECYCLE_EXPOSURE",
+            "INVESTIGATION_RESULT",
+            "SERVICE_STATUS",
+            "WORKSPACE_SUMMARY"
+          ]
+        },
+        "maxResults": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "ListProjectionRevisionsResponse": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/ProjectionRevision"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "page": {
+          "$ref": "#/$defs/Page"
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "items",
+        "page"
+      ],
+      "additionalProperties": false
+    },
+    "ListSnapshotsRequest": {
+      "type": "object",
+      "properties": {
+        "subject": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/EntityRef"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "INVESTIGATION",
+            "TOPOLOGY",
+            "POLICY_CONTEXT",
+            "LIFECYCLE_CATALOG",
+            "RUN_INPUT",
+            "EVALUATION_INPUT"
+          ]
+        },
+        "maxResults": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "ListSnapshotsResponse": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Snapshot"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "page": {
+          "$ref": "#/$defs/Page"
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "items",
+        "page"
+      ],
+      "additionalProperties": false
+    },
+    "ListWorkItemsRequest": {
+      "type": "object",
+      "properties": {
+        "target": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/EntityRef"
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "OPEN",
+            "ACKNOWLEDGED",
+            "IN_PROGRESS",
+            "RESOLVED",
+            "DISMISSED"
+          ]
+        },
+        "maxResults": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "ListWorkItemsResponse": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/WorkItem"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "page": {
+          "$ref": "#/$defs/Page"
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "items",
+        "page"
+      ],
+      "additionalProperties": false
+    },
+    "ListCommandsRequest": {
+      "type": "object",
+      "properties": {
+        "subject": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/EntityRef"
+        },
+        "operation": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "ACCEPTED",
+            "DISPATCHING",
+            "RECONCILING",
+            "SUCCEEDED",
+            "FAILED",
+            "CANCELED",
+            "OUTCOME_UNKNOWN"
+          ]
+        },
+        "maxResults": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "ListCommandsResponse": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Command"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "page": {
+          "$ref": "#/$defs/Page"
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "items",
+        "page"
+      ],
+      "additionalProperties": false
+    },
+    "StartCollectionRequest": {
+      "type": "object",
+      "properties": {
+        "connectionId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "queries": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/CollectionQuery"
+          },
+          "minItems": 1,
+          "maxItems": 100
+        },
+        "clientToken": {
+          "type": "string",
+          "minLength": 16,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9._~-]+$"
+        }
+      },
+      "required": [
+        "connectionId",
+        "queries",
+        "clientToken"
+      ],
+      "additionalProperties": false
+    },
+    "StartCollectionResponse": {
+      "type": "object",
+      "properties": {
+        "command": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Command"
+        },
+        "collection": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Collection"
+        }
+      },
+      "required": [
+        "command",
+        "collection"
+      ],
+      "additionalProperties": false
+    },
+    "RecordReadAttemptRequest": {
+      "type": "object",
+      "properties": {
+        "collectionId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "readAttemptId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "SUCCEEDED",
+            "FAILED"
+          ]
+        },
+        "endedAt": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Timestamp"
+        },
+        "providerRequestId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "returnedCount": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "nextTokenPresent": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "error": {
+          "anyOf": [
+            {
+              "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/ReadError"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "requestSourceRevisionId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "responseSourceRevisionId": {
+          "anyOf": [
+            {
+              "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "clientToken": {
+          "type": "string",
+          "minLength": 16,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9._~-]+$"
+        }
+      },
+      "required": [
+        "collectionId",
+        "readAttemptId",
+        "state",
+        "endedAt",
+        "providerRequestId",
+        "returnedCount",
+        "nextTokenPresent",
+        "error",
+        "requestSourceRevisionId",
+        "responseSourceRevisionId",
+        "clientToken"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "const": "SUCCEEDED"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "error": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "const": "FAILED"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "error": {
+                "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/ReadError"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "RecordReadAttemptResponse": {
+      "type": "object",
+      "properties": {
+        "command": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Command"
+        },
+        "readAttempt": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/ReadAttempt"
+        }
+      },
+      "required": [
+        "command",
+        "readAttempt"
+      ],
+      "additionalProperties": false
+    },
+    "SourceRevisionInput": {
+      "type": "object",
+      "properties": {
+        "identity": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/SourceIdentity"
+        },
+        "representation": {
+          "type": "string",
+          "enum": [
+            "SUMMARY",
+            "DETAIL",
+            "EVENT",
+            "STREAM",
+            "ARTIFACT",
+            "CONFIGURATION",
+            "LOCAL_EVIDENCE"
+          ]
+        },
+        "profile": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "profileVersion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "sourceOperation": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "contentDigest": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Digest"
+        },
+        "digestProfile": {
+          "type": "string",
+          "enum": [
+            "RAW_BYTES_SHA256",
+            "RFC8785_SHA256"
+          ]
+        },
+        "providerUpdatedAt": {
+          "anyOf": [
+            {
+              "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "providerVersion": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "fieldPresence": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/FieldPresence"
+          },
+          "maxItems": 1000
+        },
+        "payloadStorage": {
+          "type": "string",
+          "enum": [
+            "INLINE",
+            "ARTIFACT"
+          ]
+        },
+        "payload": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/JsonValue"
+        },
+        "artifact": {
+          "anyOf": [
+            {
+              "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/ArtifactRef"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "identity",
+        "representation",
+        "profile",
+        "profileVersion",
+        "sourceOperation",
+        "contentDigest",
+        "digestProfile",
+        "providerUpdatedAt",
+        "providerVersion",
+        "fieldPresence",
+        "payloadStorage",
+        "payload",
+        "artifact"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "payloadStorage": {
+                "const": "ARTIFACT"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "payload": {
+                "type": "null"
+              },
+              "artifact": {
+                "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/ArtifactRef"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "IngestObservationRequest": {
+      "type": "object",
+      "properties": {
+        "channel": {
+          "type": "string",
+          "enum": [
+            "API",
+            "EVENTBRIDGE",
+            "STREAM",
+            "LOCAL"
+          ]
+        },
+        "readAttemptId": {
+          "anyOf": [
+            {
+              "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "connectionId": {
+          "anyOf": [
+            {
+              "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "observedAt": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Timestamp"
+        },
+        "sourceTime": {
+          "anyOf": [
+            {
+              "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "transportTime": {
+          "anyOf": [
+            {
+              "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "expiresAt": {
+          "anyOf": [
+            {
+              "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "receiptKey": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "source": {
+          "$ref": "#/$defs/SourceRevisionInput"
+        },
+        "clientToken": {
+          "type": "string",
+          "minLength": 16,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9._~-]+$"
+        }
+      },
+      "required": [
+        "channel",
+        "readAttemptId",
+        "connectionId",
+        "observedAt",
+        "sourceTime",
+        "transportTime",
+        "expiresAt",
+        "receiptKey",
+        "source",
+        "clientToken"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "channel": {
+                "const": "API"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "readAttemptId": {
+                "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+              },
+              "connectionId": {
+                "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "channel": {
+                "enum": [
+                  "EVENTBRIDGE",
+                  "STREAM"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "connectionId": {
+                "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "IngestObservationResponse": {
+      "type": "object",
+      "properties": {
+        "sourceRevision": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/SourceRevision"
+        },
+        "observation": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Observation"
+        },
+        "command": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Command"
+        }
+      },
+      "required": [
+        "sourceRevision",
+        "observation",
+        "command"
+      ],
+      "additionalProperties": false
+    },
+    "CompleteCollectionRequest": {
+      "type": "object",
+      "properties": {
+        "collectionId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "expectedProjectionVersion": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Version"
+        },
+        "coverage": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Coverage"
+          },
+          "minItems": 1,
+          "maxItems": 100
+        },
+        "clientToken": {
+          "type": "string",
+          "minLength": 16,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9._~-]+$"
+        }
+      },
+      "required": [
+        "collectionId",
+        "expectedProjectionVersion",
+        "coverage",
+        "clientToken"
+      ],
+      "additionalProperties": false
+    },
+    "CompleteCollectionResponse": {
+      "type": "object",
+      "properties": {
+        "command": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Command"
+        },
+        "collection": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Collection"
+        }
+      },
+      "required": [
+        "command",
+        "collection"
+      ],
+      "additionalProperties": false
+    },
+    "PublishProjectionRequest": {
+      "type": "object",
+      "properties": {
+        "projectionKey": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "profile": {
+          "type": "string",
+          "enum": [
+            "EVALUATION",
+            "LIFECYCLE_EXPOSURE",
+            "INVESTIGATION_RESULT",
+            "SERVICE_STATUS",
+            "WORKSPACE_SUMMARY"
+          ]
+        },
+        "profileVersion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "subjectRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/EntityRef"
+          },
+          "maxItems": 1000
+        },
+        "inputRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/EvidenceRef"
+          },
+          "maxItems": 10000
+        },
+        "ruleDigest": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Digest"
+        },
+        "asOf": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Timestamp"
+        },
+        "clientToken": {
+          "type": "string",
+          "minLength": 16,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9._~-]+$"
+        }
+      },
+      "required": [
+        "projectionKey",
+        "profile",
+        "profileVersion",
+        "subjectRefs",
+        "inputRefs",
+        "ruleDigest",
+        "asOf",
+        "clientToken"
+      ],
+      "additionalProperties": false
+    },
+    "PublishProjectionResponse": {
+      "type": "object",
+      "properties": {
+        "command": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Command"
+        },
+        "projectionRevision": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/ProjectionRevision"
+        }
+      },
+      "required": [
+        "command",
+        "projectionRevision"
+      ],
+      "additionalProperties": false
+    },
+    "CaptureSnapshotRequest": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "INVESTIGATION",
+            "TOPOLOGY",
+            "POLICY_CONTEXT",
+            "LIFECYCLE_CATALOG",
+            "EVALUATION_INPUT"
+          ]
+        },
+        "subjectRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/EntityRef"
+          },
+          "minItems": 1,
+          "maxItems": 100
+        },
+        "sourceRevisionIds": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+          },
+          "minItems": 0,
+          "maxItems": 1000,
+          "uniqueItems": true
+        },
+        "observationIds": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+          },
+          "minItems": 0,
+          "maxItems": 1000,
+          "uniqueItems": true
+        },
+        "projectionRevisionIds": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+          },
+          "minItems": 0,
+          "maxItems": 1000,
+          "uniqueItems": true
+        },
+        "collectionIds": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+          },
+          "minItems": 0,
+          "maxItems": 100,
+          "uniqueItems": true
+        },
+        "clientToken": {
+          "type": "string",
+          "minLength": 16,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9._~-]+$"
+        }
+      },
+      "required": [
+        "kind",
+        "subjectRefs",
+        "sourceRevisionIds",
+        "observationIds",
+        "projectionRevisionIds",
+        "collectionIds",
+        "clientToken"
+      ],
+      "additionalProperties": false
+    },
+    "CaptureSnapshotResponse": {
+      "type": "object",
+      "properties": {
+        "command": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Command"
+        },
+        "snapshot": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Snapshot"
+        }
+      },
+      "required": [
+        "command",
+        "snapshot"
+      ],
+      "additionalProperties": false
+    },
+    "CreateWorkItemRequest": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "targets": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/EntityRef"
+          },
+          "minItems": 1,
+          "maxItems": 100
+        },
+        "priority": {
+          "type": "string",
+          "enum": [
+            "CRITICAL",
+            "HIGH",
+            "MEDIUM",
+            "LOW"
+          ]
+        },
+        "dueAt": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Timestamp"
+        },
+        "assigneeSubjectId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "clientToken": {
+          "type": "string",
+          "minLength": 16,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9._~-]+$"
+        }
+      },
+      "required": [
+        "title",
+        "targets",
+        "clientToken"
+      ],
+      "additionalProperties": false
+    },
+    "CreateWorkItemResponse": {
+      "type": "object",
+      "properties": {
+        "command": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Command"
+        },
+        "workItem": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/WorkItem"
+        }
+      },
+      "required": [
+        "command",
+        "workItem"
+      ],
+      "additionalProperties": false
+    },
+    "UpdateWorkItemRequest": {
+      "type": "object",
+      "properties": {
+        "workItemId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "OPEN",
+            "ACKNOWLEDGED",
+            "IN_PROGRESS",
+            "RESOLVED",
+            "DISMISSED"
+          ]
+        },
+        "priority": {
+          "type": "string",
+          "enum": [
+            "CRITICAL",
+            "HIGH",
+            "MEDIUM",
+            "LOW"
+          ]
+        },
+        "dueAt": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Timestamp"
+        },
+        "assigneeSubjectId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "snoozedUntil": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Timestamp"
+        },
+        "resolutionEvidence": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/EvidenceRef"
+          },
+          "minItems": 0,
+          "maxItems": 100,
+          "uniqueItems": true
+        },
+        "note": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 16384
+        },
+        "clearFields": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "snoozedUntil",
+              "dueAt",
+              "owner"
+            ]
+          },
+          "minItems": 1,
+          "maxItems": 3,
+          "uniqueItems": true
+        },
+        "clientToken": {
+          "type": "string",
+          "minLength": 16,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9._~-]+$"
+        },
+        "expectedVersion": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Version"
+        }
+      },
+      "required": [
+        "workItemId",
+        "expectedVersion",
+        "clientToken"
+      ],
+      "additionalProperties": false,
+      "anyOf": [
+        {
+          "required": [
+            "title"
+          ]
+        },
+        {
+          "required": [
+            "state"
+          ]
+        },
+        {
+          "required": [
+            "priority"
+          ]
+        },
+        {
+          "required": [
+            "dueAt"
+          ]
+        },
+        {
+          "required": [
+            "assigneeSubjectId"
+          ]
+        },
+        {
+          "required": [
+            "snoozedUntil"
+          ]
+        },
+        {
+          "required": [
+            "resolutionEvidence"
+          ]
+        },
+        {
+          "required": [
+            "note"
+          ]
+        },
+        {
+          "required": [
+            "clearFields"
+          ]
+        }
+      ],
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "clearFields"
+            ],
+            "properties": {
+              "clearFields": {
+                "contains": {
+                  "const": "snoozedUntil"
+                }
+              }
+            }
+          },
+          "then": {
+            "not": {
+              "required": [
+                "snoozedUntil"
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "clearFields"
+            ],
+            "properties": {
+              "clearFields": {
+                "contains": {
+                  "const": "dueAt"
+                }
+              }
+            }
+          },
+          "then": {
+            "not": {
+              "required": [
+                "dueAt"
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "clearFields"
+            ],
+            "properties": {
+              "clearFields": {
+                "contains": {
+                  "const": "owner"
+                }
+              }
+            }
+          },
+          "then": {
+            "not": {
+              "required": [
+                "assigneeSubjectId"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "UpdateWorkItemResponse": {
+      "type": "object",
+      "properties": {
+        "command": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Command"
+        },
+        "workItem": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/WorkItem"
+        }
+      },
+      "required": [
+        "command",
+        "workItem"
+      ],
+      "additionalProperties": false
+    },
+    "RecordWorkItemVerificationRequest": {
+      "type": "object",
+      "properties": {
+        "workItemId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "result": {
+          "type": "string",
+          "enum": [
+            "VERIFIED",
+            "FAILED",
+            "UNKNOWN"
+          ]
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/EvidenceRef"
+          },
+          "minItems": 1,
+          "maxItems": 100,
+          "uniqueItems": true
+        },
+        "clientToken": {
+          "type": "string",
+          "minLength": 16,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9._~-]+$"
+        },
+        "expectedVersion": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Version"
+        }
+      },
+      "required": [
+        "workItemId",
+        "result",
+        "rationale",
+        "evidenceRefs",
+        "clientToken",
+        "expectedVersion"
+      ],
+      "additionalProperties": false
+    },
+    "RecordWorkItemVerificationResponse": {
+      "type": "object",
+      "properties": {
+        "command": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Command"
+        },
+        "workItem": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/WorkItem"
+        }
+      },
+      "required": [
+        "command",
+        "workItem"
+      ],
+      "additionalProperties": false
+    },
+    "MembershipInput": {
+      "type": "object",
+      "properties": {
+        "systemId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "userJourneyIds": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+          },
+          "minItems": 0,
+          "maxItems": 100,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "systemId",
+        "userJourneyIds"
+      ],
+      "additionalProperties": false
+    },
+    "CreateSystemRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "description": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 16384
+        },
+        "clientToken": {
+          "type": "string",
+          "minLength": 16,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9._~-]+$"
+        }
+      },
+      "required": [
+        "name",
+        "clientToken"
+      ],
+      "additionalProperties": false
+    },
+    "CreateSystemResponse": {
+      "type": "object",
+      "properties": {
+        "command": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Command"
+        },
+        "system": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/System"
+        }
+      },
+      "required": [
+        "command",
+        "system"
+      ],
+      "additionalProperties": false
+    },
+    "GetSystemRequest": {
+      "type": "object",
+      "properties": {
+        "systemId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        }
+      },
+      "required": [
+        "systemId"
+      ],
+      "additionalProperties": false
+    },
+    "GetSystemResponse": {
+      "type": "object",
+      "properties": {
+        "system": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/System"
+        }
+      },
+      "required": [
+        "system"
+      ],
+      "additionalProperties": false
+    },
+    "ListSystemsRequest": {
+      "type": "object",
+      "properties": {
+        "maxResults": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "ListSystemsResponse": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/System"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "page": {
+          "$ref": "#/$defs/Page"
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "items",
+        "page"
+      ],
+      "additionalProperties": false
+    },
+    "UpdateSystemRequest": {
+      "type": "object",
+      "properties": {
+        "systemId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "description": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 16384
+        },
+        "clientToken": {
+          "type": "string",
+          "minLength": 16,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9._~-]+$"
+        },
+        "expectedVersion": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Version"
+        }
+      },
+      "required": [
+        "systemId",
+        "expectedVersion",
+        "clientToken"
+      ],
+      "additionalProperties": false,
+      "anyOf": [
+        {
+          "required": [
+            "name"
+          ]
+        },
+        {
+          "required": [
+            "description"
+          ]
+        }
+      ]
+    },
+    "UpdateSystemResponse": {
+      "type": "object",
+      "properties": {
+        "command": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Command"
+        },
+        "system": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/System"
+        }
+      },
+      "required": [
+        "command",
+        "system"
+      ],
+      "additionalProperties": false
+    },
+    "CreateUserJourneyRequest": {
+      "type": "object",
+      "properties": {
+        "systemId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "description": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 16384
+        },
+        "clientToken": {
+          "type": "string",
+          "minLength": 16,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9._~-]+$"
+        }
+      },
+      "required": [
+        "systemId",
+        "name",
+        "clientToken"
+      ],
+      "additionalProperties": false
+    },
+    "CreateUserJourneyResponse": {
+      "type": "object",
+      "properties": {
+        "command": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Command"
+        },
+        "userJourney": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/UserJourney"
+        }
+      },
+      "required": [
+        "command",
+        "userJourney"
+      ],
+      "additionalProperties": false
+    },
+    "GetUserJourneyRequest": {
+      "type": "object",
+      "properties": {
+        "systemId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "userJourneyId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        }
+      },
+      "required": [
+        "systemId",
+        "userJourneyId"
+      ],
+      "additionalProperties": false
+    },
+    "GetUserJourneyResponse": {
+      "type": "object",
+      "properties": {
+        "userJourney": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/UserJourney"
+        }
+      },
+      "required": [
+        "userJourney"
+      ],
+      "additionalProperties": false
+    },
+    "ListUserJourneysRequest": {
+      "type": "object",
+      "properties": {
+        "systemId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "maxResults": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "systemId"
+      ],
+      "additionalProperties": false
+    },
+    "ListUserJourneysResponse": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/UserJourney"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "page": {
+          "$ref": "#/$defs/Page"
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "items",
+        "page"
+      ],
+      "additionalProperties": false
+    },
+    "UpdateUserJourneyRequest": {
+      "type": "object",
+      "properties": {
+        "systemId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "userJourneyId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "description": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 16384
+        },
+        "clientToken": {
+          "type": "string",
+          "minLength": 16,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9._~-]+$"
+        },
+        "expectedVersion": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Version"
+        }
+      },
+      "required": [
+        "systemId",
+        "userJourneyId",
+        "expectedVersion",
+        "clientToken"
+      ],
+      "additionalProperties": false,
+      "anyOf": [
+        {
+          "required": [
+            "name"
+          ]
+        },
+        {
+          "required": [
+            "description"
+          ]
+        }
+      ]
+    },
+    "UpdateUserJourneyResponse": {
+      "type": "object",
+      "properties": {
+        "command": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Command"
+        },
+        "userJourney": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/UserJourney"
+        }
+      },
+      "required": [
+        "command",
+        "userJourney"
+      ],
+      "additionalProperties": false
+    },
+    "CreateServiceRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "description": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 16384
+        },
+        "memberships": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/MembershipInput"
+          },
+          "minItems": 0,
+          "maxItems": 100,
+          "uniqueItems": true
+        },
+        "resourceIds": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+          },
+          "minItems": 0,
+          "maxItems": 1000,
+          "uniqueItems": true
+        },
+        "clientToken": {
+          "type": "string",
+          "minLength": 16,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9._~-]+$"
+        }
+      },
+      "required": [
+        "name",
+        "clientToken"
+      ],
+      "additionalProperties": false
+    },
+    "CreateServiceResponse": {
+      "type": "object",
+      "properties": {
+        "command": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Command"
+        },
+        "service": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Service"
+        }
+      },
+      "required": [
+        "command",
+        "service"
+      ],
+      "additionalProperties": false
+    },
+    "GetServiceRequest": {
+      "type": "object",
+      "properties": {
+        "serviceId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        }
+      },
+      "required": [
+        "serviceId"
+      ],
+      "additionalProperties": false
+    },
+    "GetServiceResponse": {
+      "type": "object",
+      "properties": {
+        "service": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Service"
+        }
+      },
+      "required": [
+        "service"
+      ],
+      "additionalProperties": false
+    },
+    "ListServicesRequest": {
+      "type": "object",
+      "properties": {
+        "systemId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "userJourneyId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "maxResults": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "ListServicesResponse": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Service"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "page": {
+          "$ref": "#/$defs/Page"
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "items",
+        "page"
+      ],
+      "additionalProperties": false
+    },
+    "UpdateServiceRequest": {
+      "type": "object",
+      "properties": {
+        "serviceId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "description": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 16384
+        },
+        "memberships": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/MembershipInput"
+          },
+          "minItems": 0,
+          "maxItems": 100,
+          "uniqueItems": true
+        },
+        "resourceIds": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+          },
+          "minItems": 0,
+          "maxItems": 1000,
+          "uniqueItems": true
+        },
+        "clientToken": {
+          "type": "string",
+          "minLength": 16,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9._~-]+$"
+        },
+        "expectedVersion": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Version"
+        }
+      },
+      "required": [
+        "serviceId",
+        "expectedVersion",
+        "clientToken"
+      ],
+      "additionalProperties": false,
+      "anyOf": [
+        {
+          "required": [
+            "name"
+          ]
+        },
+        {
+          "required": [
+            "description"
+          ]
+        },
+        {
+          "required": [
+            "memberships"
+          ]
+        },
+        {
+          "required": [
+            "resourceIds"
+          ]
+        }
+      ]
+    },
+    "UpdateServiceResponse": {
+      "type": "object",
+      "properties": {
+        "command": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Command"
+        },
+        "service": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Service"
+        }
+      },
+      "required": [
+        "command",
+        "service"
+      ],
+      "additionalProperties": false
+    },
+    "GetServiceStatusRequest": {
+      "type": "object",
+      "properties": {
+        "serviceId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        }
+      },
+      "required": [
+        "serviceId"
+      ],
+      "additionalProperties": false
+    },
+    "GetServiceStatusResponse": {
+      "type": "object",
+      "properties": {
+        "projectionRevision": {
+          "allOf": [
+            {
+              "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/ProjectionRevision"
+            },
+            {
+              "properties": {
+                "profile": {
+                  "const": "SERVICE_STATUS"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "required": [
+        "projectionRevision"
+      ],
+      "additionalProperties": false
+    },
+    "GetWorkspaceSummaryRequest": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    },
+    "GetWorkspaceSummaryResponse": {
+      "type": "object",
+      "properties": {
+        "projectionRevision": {
+          "allOf": [
+            {
+              "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/ProjectionRevision"
+            },
+            {
+              "properties": {
+                "profile": {
+                  "const": "WORKSPACE_SUMMARY"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "required": [
+        "projectionRevision"
+      ],
+      "additionalProperties": false
+    },
+    "GetDependencyRequest": {
+      "type": "object",
+      "properties": {
+        "serviceId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "dependencyId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        }
+      },
+      "required": [
+        "serviceId",
+        "dependencyId"
+      ],
+      "additionalProperties": false
+    },
+    "GetDependencyResponse": {
+      "type": "object",
+      "properties": {
+        "dependency": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Dependency"
+        }
+      },
+      "required": [
+        "dependency"
+      ],
+      "additionalProperties": false
+    },
+    "ListDependenciesRequest": {
+      "type": "object",
+      "properties": {
+        "serviceId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "maxResults": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "serviceId"
+      ],
+      "additionalProperties": false
+    },
+    "ListDependenciesResponse": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Dependency"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "page": {
+          "$ref": "#/$defs/Page"
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "items",
+        "page"
+      ],
+      "additionalProperties": false
+    },
+    "UpdateDependencyGovernanceRequest": {
+      "type": "object",
+      "properties": {
+        "serviceId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "dependencyId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "decision": {
+          "type": "string",
+          "enum": [
+            "ALLOWED",
+            "REVIEW",
+            "DENIED"
+          ]
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "clientToken": {
+          "type": "string",
+          "minLength": 16,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9._~-]+$"
+        },
+        "expectedVersion": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Version"
+        }
+      },
+      "required": [
+        "serviceId",
+        "dependencyId",
+        "decision",
+        "reason",
+        "clientToken",
+        "expectedVersion"
+      ],
+      "additionalProperties": false
+    },
+    "UpdateDependencyGovernanceResponse": {
+      "type": "object",
+      "properties": {
+        "command": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Command"
+        },
+        "dependency": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Dependency"
+        }
+      },
+      "required": [
+        "command",
+        "dependency"
+      ],
+      "additionalProperties": false
+    },
+    "GetHealthEventRequest": {
+      "type": "object",
+      "properties": {
+        "healthEventId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        }
+      },
+      "required": [
+        "healthEventId"
+      ],
+      "additionalProperties": false
+    },
+    "GetHealthEventResponse": {
+      "type": "object",
+      "properties": {
+        "healthEvent": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/HealthEvent"
+        }
+      },
+      "required": [
+        "healthEvent"
+      ],
+      "additionalProperties": false
+    },
+    "ListHealthEventsRequest": {
+      "type": "object",
+      "properties": {
+        "serviceCode": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "eventTypeCode": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "maxResults": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "ListHealthEventsResponse": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/HealthEvent"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "page": {
+          "$ref": "#/$defs/Page"
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "items",
+        "page"
+      ],
+      "additionalProperties": false
+    },
+    "ListEventContextsRequest": {
+      "type": "object",
+      "properties": {
+        "healthEventId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "PUBLIC",
+            "ACCOUNT",
+            "ORG_SUMMARY"
+          ]
+        },
+        "maxResults": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "healthEventId"
+      ],
+      "additionalProperties": false
+    },
+    "ListEventContextsResponse": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/EventContext"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "page": {
+          "$ref": "#/$defs/Page"
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "items",
+        "page"
+      ],
+      "additionalProperties": false
+    },
+    "ListEntityImpactsRequest": {
+      "type": "object",
+      "properties": {
+        "healthEventId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "eventContextId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "maxResults": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "healthEventId",
+        "eventContextId"
+      ],
+      "additionalProperties": false
+    },
+    "ListEntityImpactsResponse": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/EntityImpact"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "page": {
+          "$ref": "#/$defs/Page"
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "items",
+        "page"
+      ],
+      "additionalProperties": false
+    },
+    "ListCommunicationsRequest": {
+      "type": "object",
+      "properties": {
+        "healthEventId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "eventContextId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "maxResults": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "healthEventId",
+        "eventContextId"
+      ],
+      "additionalProperties": false
+    },
+    "ListCommunicationsResponse": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Communication"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "page": {
+          "$ref": "#/$defs/Page"
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "items",
+        "page"
+      ],
+      "additionalProperties": false
+    },
+    "ListLifecycleEntriesRequest": {
+      "type": "object",
+      "properties": {
+        "snapshotId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "serviceCode": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "maxResults": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "snapshotId"
+      ],
+      "additionalProperties": false
+    },
+    "ListLifecycleEntriesResponse": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/LifecycleEntry"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "page": {
+          "$ref": "#/$defs/Page"
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "items",
+        "page"
+      ],
+      "additionalProperties": false
+    },
+    "GetComponentDeploymentRequest": {
+      "type": "object",
+      "properties": {
+        "resourceId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "componentDeploymentId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        }
+      },
+      "required": [
+        "resourceId",
+        "componentDeploymentId"
+      ],
+      "additionalProperties": false
+    },
+    "GetComponentDeploymentResponse": {
+      "type": "object",
+      "properties": {
+        "componentDeployment": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/ComponentDeployment"
+        }
+      },
+      "required": [
+        "componentDeployment"
+      ],
+      "additionalProperties": false
+    },
+    "ListComponentDeploymentsRequest": {
+      "type": "object",
+      "properties": {
+        "resourceId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "maxResults": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "resourceId"
+      ],
+      "additionalProperties": false
+    },
+    "ListComponentDeploymentsResponse": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/ComponentDeployment"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "page": {
+          "$ref": "#/$defs/Page"
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "items",
+        "page"
+      ],
+      "additionalProperties": false
+    },
+    "GetResiliencePolicyRequest": {
+      "type": "object",
+      "properties": {
+        "resiliencePolicyId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        }
+      },
+      "required": [
+        "resiliencePolicyId"
+      ],
+      "additionalProperties": false
+    },
+    "GetResiliencePolicyResponse": {
+      "type": "object",
+      "properties": {
+        "resiliencePolicy": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/ResiliencePolicy"
+        }
+      },
+      "required": [
+        "resiliencePolicy"
+      ],
+      "additionalProperties": false
+    },
+    "ListResiliencePoliciesRequest": {
+      "type": "object",
+      "properties": {
+        "maxResults": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "ListResiliencePoliciesResponse": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/ResiliencePolicy"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "page": {
+          "$ref": "#/$defs/Page"
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "items",
+        "page"
+      ],
+      "additionalProperties": false
+    },
+    "GetResilienceAssessmentRequest": {
+      "type": "object",
+      "properties": {
+        "serviceId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "resilienceAssessmentId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        }
+      },
+      "required": [
+        "serviceId",
+        "resilienceAssessmentId"
+      ],
+      "additionalProperties": false
+    },
+    "GetResilienceAssessmentResponse": {
+      "type": "object",
+      "properties": {
+        "resilienceAssessment": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/ResilienceAssessment"
+        }
+      },
+      "required": [
+        "resilienceAssessment"
+      ],
+      "additionalProperties": false
+    },
+    "ListResilienceAssessmentsRequest": {
+      "type": "object",
+      "properties": {
+        "serviceId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "maxResults": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "serviceId"
+      ],
+      "additionalProperties": false
+    },
+    "ListResilienceAssessmentsResponse": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/ResilienceAssessment"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "page": {
+          "$ref": "#/$defs/Page"
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "items",
+        "page"
+      ],
+      "additionalProperties": false
+    },
+    "GetFindingRequest": {
+      "type": "object",
+      "properties": {
+        "serviceId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "findingId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        }
+      },
+      "required": [
+        "serviceId",
+        "findingId"
+      ],
+      "additionalProperties": false
+    },
+    "GetFindingResponse": {
+      "type": "object",
+      "properties": {
+        "finding": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Finding"
+        }
+      },
+      "required": [
+        "finding"
+      ],
+      "additionalProperties": false
+    },
+    "ListFindingsRequest": {
+      "type": "object",
+      "properties": {
+        "serviceId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "disposition": {
+          "type": "string",
+          "enum": [
+            "OPEN",
+            "RESOLVED",
+            "IRRELEVANT"
+          ]
+        },
+        "severity": {
+          "type": "string",
+          "enum": [
+            "LOW",
+            "MEDIUM",
+            "HIGH"
+          ]
+        },
+        "maxResults": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "serviceId"
+      ],
+      "additionalProperties": false
+    },
+    "ListFindingsResponse": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Finding"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "page": {
+          "$ref": "#/$defs/Page"
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "items",
+        "page"
+      ],
+      "additionalProperties": false
+    },
+    "GetRecommendationRequest": {
+      "type": "object",
+      "properties": {
+        "serviceId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "findingId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "recommendationId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        }
+      },
+      "required": [
+        "serviceId",
+        "findingId",
+        "recommendationId"
+      ],
+      "additionalProperties": false
+    },
+    "GetRecommendationResponse": {
+      "type": "object",
+      "properties": {
+        "recommendation": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Recommendation"
+        }
+      },
+      "required": [
+        "recommendation"
+      ],
+      "additionalProperties": false
+    },
+    "ListRecommendationsRequest": {
+      "type": "object",
+      "properties": {
+        "serviceId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "findingId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "sourceRevisionId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "maxResults": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "serviceId",
+        "findingId"
+      ],
+      "additionalProperties": false
+    },
+    "ListRecommendationsResponse": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Recommendation"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "page": {
+          "$ref": "#/$defs/Page"
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "items",
+        "page"
+      ],
+      "additionalProperties": false
+    },
+    "StartResilienceAssessmentRequest": {
+      "type": "object",
+      "properties": {
+        "serviceId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "connectionId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "expectedServiceVersion": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Version"
+        },
+        "clientToken": {
+          "type": "string",
+          "minLength": 16,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9._~-]+$"
+        }
+      },
+      "required": [
+        "serviceId",
+        "connectionId",
+        "expectedServiceVersion",
+        "clientToken"
+      ],
+      "additionalProperties": false
+    },
+    "StartResilienceAssessmentResponse": {
+      "type": "object",
+      "properties": {
+        "command": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Command"
+        }
+      },
+      "required": [
+        "command"
+      ],
+      "additionalProperties": false
+    },
+    "UpdateFindingDispositionRequest": {
+      "type": "object",
+      "properties": {
+        "serviceId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "findingId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "connectionId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "expectedSourceRevisionId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "clientToken": {
+          "type": "string",
+          "minLength": 16,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9._~-]+$"
+        },
+        "disposition": {
+          "type": "string",
+          "enum": [
+            "OPEN",
+            "RESOLVED",
+            "IRRELEVANT"
+          ]
+        },
+        "comment": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "serviceId",
+        "findingId",
+        "connectionId",
+        "expectedSourceRevisionId",
+        "clientToken",
+        "disposition"
+      ],
+      "additionalProperties": false
+    },
+    "UpdateFindingDispositionResponse": {
+      "type": "object",
+      "properties": {
+        "command": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Command"
+        }
+      },
+      "required": [
+        "command"
+      ],
+      "additionalProperties": false
+    },
+    "UpdateDependencyClassificationRequest": {
+      "type": "object",
+      "properties": {
+        "serviceId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "dependencyId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "connectionId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "expectedSourceRevisionId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "clientToken": {
+          "type": "string",
+          "minLength": 16,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9._~-]+$"
+        },
+        "criticality": {
+          "type": "string",
+          "enum": [
+            "HARD",
+            "SOFT",
+            "UNKNOWN"
+          ]
+        },
+        "comment": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "serviceId",
+        "dependencyId",
+        "connectionId",
+        "expectedSourceRevisionId",
+        "clientToken"
+      ],
+      "additionalProperties": false,
+      "anyOf": [
+        {
+          "required": [
+            "criticality"
+          ]
+        },
+        {
+          "required": [
+            "comment"
+          ]
+        }
+      ]
+    },
+    "UpdateDependencyClassificationResponse": {
+      "type": "object",
+      "properties": {
+        "command": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Command"
+        }
+      },
+      "required": [
+        "command"
+      ],
+      "additionalProperties": false
+    },
+    "RecoveryTargetsInput": {
+      "type": "object",
+      "properties": {
+        "rtoInMinutes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 5256000
+        },
+        "rpoInMinutes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 5256000
+        },
+        "disasterRecoveryApproach": {
+          "type": "string",
+          "enum": [
+            "ACTIVE_ACTIVE",
+            "HOT_STANDBY",
+            "WARM_STANDBY",
+            "PILOT_LIGHT",
+            "BACKUP_AND_RESTORE"
+          ]
+        }
+      },
+      "required": [],
+      "additionalProperties": false,
+      "minProperties": 1
+    },
+    "ResiliencePolicyChanges": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 615
+        },
+        "availabilitySlo": {
+          "type": "object",
+          "properties": {
+            "target": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            }
+          },
+          "required": [
+            "target"
+          ],
+          "additionalProperties": false
+        },
+        "dataRecovery": {
+          "type": "object",
+          "properties": {
+            "timeBetweenBackupsInMinutes": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 5256000
+            }
+          },
+          "required": [
+            "timeBetweenBackupsInMinutes"
+          ],
+          "additionalProperties": false
+        },
+        "multiAz": {
+          "$ref": "#/$defs/RecoveryTargetsInput"
+        },
+        "multiRegion": {
+          "$ref": "#/$defs/RecoveryTargetsInput"
+        },
+        "sharingEnabled": {
+          "type": "boolean"
+        }
+      },
+      "required": [],
+      "additionalProperties": false,
+      "minProperties": 1
+    },
+    "UpdateResiliencePolicyConfigurationRequest": {
+      "type": "object",
+      "properties": {
+        "resiliencePolicyId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "connectionId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "expectedSourceRevisionId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "clientToken": {
+          "type": "string",
+          "minLength": 16,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9._~-]+$"
+        },
+        "changes": {
+          "$ref": "#/$defs/ResiliencePolicyChanges"
+        }
+      },
+      "required": [
+        "resiliencePolicyId",
+        "connectionId",
+        "expectedSourceRevisionId",
+        "clientToken",
+        "changes"
+      ],
+      "additionalProperties": false
+    },
+    "UpdateResiliencePolicyConfigurationResponse": {
+      "type": "object",
+      "properties": {
+        "command": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Command"
+        }
+      },
+      "required": [
+        "command"
+      ],
+      "additionalProperties": false
+    },
+    "ResilienceServiceChanges": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 615
+        },
+        "regions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 6,
+            "maxLength": 64,
+            "pattern": "^[a-z]{2}-((iso[a-z]?|gov)-)?[a-z]+-[0-9]$"
+          },
+          "minItems": 1,
+          "maxItems": 5,
+          "uniqueItems": true
+        },
+        "resiliencePolicyId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "dependencyDiscovery": {
+          "type": "string",
+          "enum": [
+            "ENABLED",
+            "DISABLED"
+          ]
+        }
+      },
+      "required": [],
+      "additionalProperties": false,
+      "minProperties": 1
+    },
+    "UpdateResilienceServiceConfigurationRequest": {
+      "type": "object",
+      "properties": {
+        "serviceId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "connectionId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "expectedSourceRevisionId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "clientToken": {
+          "type": "string",
+          "minLength": 16,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9._~-]+$"
+        },
+        "changes": {
+          "$ref": "#/$defs/ResilienceServiceChanges"
+        }
+      },
+      "required": [
+        "serviceId",
+        "connectionId",
+        "expectedSourceRevisionId",
+        "clientToken",
+        "changes"
+      ],
+      "additionalProperties": false
+    },
+    "UpdateResilienceServiceConfigurationResponse": {
+      "type": "object",
+      "properties": {
+        "command": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Command"
+        }
+      },
+      "required": [
+        "command"
+      ],
+      "additionalProperties": false
+    },
+    "UpdateRecommendationEnrichmentRequest": {
+      "type": "object",
+      "properties": {
+        "serviceId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "findingId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "recommendationId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "effort": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "estimate": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/RecommendationEstimate"
+        },
+        "assigneeSubjectId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "workState": {
+          "type": "string",
+          "enum": [
+            "OPEN",
+            "PLANNED",
+            "IN_PROGRESS",
+            "DONE",
+            "DISMISSED"
+          ]
+        },
+        "note": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 16384
+        },
+        "clearFields": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "title",
+              "effort",
+              "estimate",
+              "owner"
+            ]
+          },
+          "minItems": 1,
+          "maxItems": 4,
+          "uniqueItems": true
+        },
+        "clientToken": {
+          "type": "string",
+          "minLength": 16,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9._~-]+$"
+        },
+        "expectedVersion": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Version"
+        }
+      },
+      "required": [
+        "serviceId",
+        "findingId",
+        "recommendationId",
+        "expectedVersion",
+        "clientToken"
+      ],
+      "additionalProperties": false,
+      "anyOf": [
+        {
+          "required": [
+            "title"
+          ]
+        },
+        {
+          "required": [
+            "effort"
+          ]
+        },
+        {
+          "required": [
+            "estimate"
+          ]
+        },
+        {
+          "required": [
+            "assigneeSubjectId"
+          ]
+        },
+        {
+          "required": [
+            "workState"
+          ]
+        },
+        {
+          "required": [
+            "note"
+          ]
+        },
+        {
+          "required": [
+            "clearFields"
+          ]
+        }
+      ],
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "clearFields"
+            ],
+            "properties": {
+              "clearFields": {
+                "contains": {
+                  "const": "title"
+                }
+              }
+            }
+          },
+          "then": {
+            "not": {
+              "required": [
+                "title"
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "clearFields"
+            ],
+            "properties": {
+              "clearFields": {
+                "contains": {
+                  "const": "effort"
+                }
+              }
+            }
+          },
+          "then": {
+            "not": {
+              "required": [
+                "effort"
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "clearFields"
+            ],
+            "properties": {
+              "clearFields": {
+                "contains": {
+                  "const": "estimate"
+                }
+              }
+            }
+          },
+          "then": {
+            "not": {
+              "required": [
+                "estimate"
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "clearFields"
+            ],
+            "properties": {
+              "clearFields": {
+                "contains": {
+                  "const": "owner"
+                }
+              }
+            }
+          },
+          "then": {
+            "not": {
+              "required": [
+                "assigneeSubjectId"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "UpdateRecommendationEnrichmentResponse": {
+      "type": "object",
+      "properties": {
+        "command": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Command"
+        },
+        "recommendation": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Recommendation"
+        }
+      },
+      "required": [
+        "command",
+        "recommendation"
+      ],
+      "additionalProperties": false
+    },
+    "GetAgentSpaceRequest": {
+      "type": "object",
+      "properties": {
+        "agentSpaceId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        }
+      },
+      "required": [
+        "agentSpaceId"
+      ],
+      "additionalProperties": false
+    },
+    "GetAgentSpaceResponse": {
+      "type": "object",
+      "properties": {
+        "agentSpace": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/AgentSpace"
+        }
+      },
+      "required": [
+        "agentSpace"
+      ],
+      "additionalProperties": false
+    },
+    "ListAgentSpacesRequest": {
+      "type": "object",
+      "properties": {
+        "maxResults": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "ListAgentSpacesResponse": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/AgentSpace"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "page": {
+          "$ref": "#/$defs/Page"
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "items",
+        "page"
+      ],
+      "additionalProperties": false
+    },
+    "GetInvestigationRequest": {
+      "type": "object",
+      "properties": {
+        "agentSpaceId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "investigationId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        }
+      },
+      "required": [
+        "agentSpaceId",
+        "investigationId"
+      ],
+      "additionalProperties": false
+    },
+    "GetInvestigationResponse": {
+      "type": "object",
+      "properties": {
+        "investigation": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Investigation"
+        }
+      },
+      "required": [
+        "investigation"
+      ],
+      "additionalProperties": false
+    },
+    "ListInvestigationsRequest": {
+      "type": "object",
+      "properties": {
+        "agentSpaceId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "maxResults": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "agentSpaceId"
+      ],
+      "additionalProperties": false
+    },
+    "ListInvestigationsResponse": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Investigation"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "page": {
+          "$ref": "#/$defs/Page"
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "items",
+        "page"
+      ],
+      "additionalProperties": false
+    },
+    "GetExecutionRequest": {
+      "type": "object",
+      "properties": {
+        "agentSpaceId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "executionId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        }
+      },
+      "required": [
+        "agentSpaceId",
+        "executionId"
+      ],
+      "additionalProperties": false
+    },
+    "GetExecutionResponse": {
+      "type": "object",
+      "properties": {
+        "execution": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Execution"
+        }
+      },
+      "required": [
+        "execution"
+      ],
+      "additionalProperties": false
+    },
+    "ListExecutionsRequest": {
+      "type": "object",
+      "properties": {
+        "agentSpaceId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "investigationId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "maxResults": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "agentSpaceId"
+      ],
+      "additionalProperties": false
+    },
+    "ListExecutionsResponse": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Execution"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "page": {
+          "$ref": "#/$defs/Page"
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "items",
+        "page"
+      ],
+      "additionalProperties": false
+    },
+    "GetJournalRecordRequest": {
+      "type": "object",
+      "properties": {
+        "agentSpaceId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "executionId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "journalRecordId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        }
+      },
+      "required": [
+        "agentSpaceId",
+        "executionId",
+        "journalRecordId"
+      ],
+      "additionalProperties": false
+    },
+    "GetJournalRecordResponse": {
+      "type": "object",
+      "properties": {
+        "journalRecord": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/JournalRecord"
+        }
+      },
+      "required": [
+        "journalRecord"
+      ],
+      "additionalProperties": false
+    },
+    "ListJournalRecordsRequest": {
+      "type": "object",
+      "properties": {
+        "agentSpaceId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "executionId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "maxResults": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "agentSpaceId",
+        "executionId"
+      ],
+      "additionalProperties": false
+    },
+    "ListJournalRecordsResponse": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/JournalRecord"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "page": {
+          "$ref": "#/$defs/Page"
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "items",
+        "page"
+      ],
+      "additionalProperties": false
+    },
+    "GetApprovalRequestRequest": {
+      "type": "object",
+      "properties": {
+        "agentSpaceId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "executionId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "approvalRequestId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        }
+      },
+      "required": [
+        "agentSpaceId",
+        "executionId",
+        "approvalRequestId"
+      ],
+      "additionalProperties": false
+    },
+    "GetApprovalRequestResponse": {
+      "type": "object",
+      "properties": {
+        "approvalRequest": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/ApprovalRequest"
+        }
+      },
+      "required": [
+        "approvalRequest"
+      ],
+      "additionalProperties": false
+    },
+    "ListApprovalRequestsRequest": {
+      "type": "object",
+      "properties": {
+        "agentSpaceId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "executionId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "maxResults": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "agentSpaceId",
+        "executionId"
+      ],
+      "additionalProperties": false
+    },
+    "ListApprovalRequestsResponse": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/ApprovalRequest"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "page": {
+          "$ref": "#/$defs/Page"
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "items",
+        "page"
+      ],
+      "additionalProperties": false
+    },
+    "GetAssetRequest": {
+      "type": "object",
+      "properties": {
+        "agentSpaceId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "assetId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        }
+      },
+      "required": [
+        "agentSpaceId",
+        "assetId"
+      ],
+      "additionalProperties": false
+    },
+    "GetAssetResponse": {
+      "type": "object",
+      "properties": {
+        "asset": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Asset"
+        }
+      },
+      "required": [
+        "asset"
+      ],
+      "additionalProperties": false
+    },
+    "ListAssetsRequest": {
+      "type": "object",
+      "properties": {
+        "agentSpaceId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "maxResults": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "agentSpaceId"
+      ],
+      "additionalProperties": false
+    },
+    "ListAssetsResponse": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Asset"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "page": {
+          "$ref": "#/$defs/Page"
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "items",
+        "page"
+      ],
+      "additionalProperties": false
+    },
+    "StartInvestigationRequest": {
+      "type": "object",
+      "properties": {
+        "agentSpaceId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "connectionId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 400
+        },
+        "description": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 10000
+        },
+        "priority": {
+          "type": "string",
+          "enum": [
+            "CRITICAL",
+            "HIGH",
+            "MEDIUM",
+            "LOW",
+            "MINIMAL"
+          ]
+        },
+        "clientToken": {
+          "type": "string",
+          "minLength": 16,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9._~-]+$"
+        }
+      },
+      "required": [
+        "agentSpaceId",
+        "connectionId",
+        "title",
+        "priority",
+        "clientToken"
+      ],
+      "additionalProperties": false
+    },
+    "StartInvestigationResponse": {
+      "type": "object",
+      "properties": {
+        "command": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Command"
+        }
+      },
+      "required": [
+        "command"
+      ],
+      "additionalProperties": false
+    },
+    "DecideApprovalRequest": {
+      "type": "object",
+      "properties": {
+        "agentSpaceId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "executionId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "approvalRequestId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "connectionId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "expectedRequestSourceRevisionId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "expectedActionDigest": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Digest"
+        },
+        "decision": {
+          "type": "string",
+          "enum": [
+            "APPROVED",
+            "REJECTED"
+          ]
+        },
+        "singleUse": {
+          "const": true
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 1024
+        },
+        "clientToken": {
+          "type": "string",
+          "minLength": 16,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9._~-]+$"
+        }
+      },
+      "required": [
+        "agentSpaceId",
+        "executionId",
+        "approvalRequestId",
+        "connectionId",
+        "expectedRequestSourceRevisionId",
+        "expectedActionDigest",
+        "decision",
+        "clientToken"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "decision": {
+                "const": "APPROVED"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "singleUse"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "decision": {
+                "const": "REJECTED"
+              }
+            }
+          },
+          "then": {
+            "not": {
+              "required": [
+                "singleUse"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "DecideApprovalResponse": {
+      "type": "object",
+      "properties": {
+        "command": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Command"
+        }
+      },
+      "required": [
+        "command"
+      ],
+      "additionalProperties": false
+    },
+    "ResumeExecutionRequest": {
+      "type": "object",
+      "properties": {
+        "agentSpaceId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "executionId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "approvalRequestId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "decisionCommandId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "connectionId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "clientToken": {
+          "type": "string",
+          "minLength": 16,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9._~-]+$"
+        }
+      },
+      "required": [
+        "agentSpaceId",
+        "executionId",
+        "approvalRequestId",
+        "decisionCommandId",
+        "connectionId",
+        "clientToken"
+      ],
+      "additionalProperties": false
+    },
+    "ResumeExecutionResponse": {
+      "type": "object",
+      "properties": {
+        "command": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Command"
+        }
+      },
+      "required": [
+        "command"
+      ],
+      "additionalProperties": false
+    },
+    "CreateScenarioRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "description": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 16384
+        },
+        "draftDefinition": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/ScenarioDraft"
+        },
+        "clientToken": {
+          "type": "string",
+          "minLength": 16,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9._~-]+$"
+        }
+      },
+      "required": [
+        "name",
+        "draftDefinition",
+        "clientToken"
+      ],
+      "additionalProperties": false
+    },
+    "CreateScenarioResponse": {
+      "type": "object",
+      "properties": {
+        "command": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Command"
+        },
+        "scenario": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Scenario"
+        }
+      },
+      "required": [
+        "command",
+        "scenario"
+      ],
+      "additionalProperties": false
+    },
+    "GetScenarioRequest": {
+      "type": "object",
+      "properties": {
+        "scenarioId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        }
+      },
+      "required": [
+        "scenarioId"
+      ],
+      "additionalProperties": false
+    },
+    "GetScenarioResponse": {
+      "type": "object",
+      "properties": {
+        "scenario": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Scenario"
+        }
+      },
+      "required": [
+        "scenario"
+      ],
+      "additionalProperties": false
+    },
+    "ListScenariosRequest": {
+      "type": "object",
+      "properties": {
+        "archived": {
+          "type": "boolean"
+        },
+        "maxResults": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "ListScenariosResponse": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Scenario"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "page": {
+          "$ref": "#/$defs/Page"
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "items",
+        "page"
+      ],
+      "additionalProperties": false
+    },
+    "UpdateScenarioRequest": {
+      "type": "object",
+      "properties": {
+        "scenarioId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "description": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 16384
+        },
+        "draftDefinition": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/ScenarioDraft"
+        },
+        "archived": {
+          "type": "boolean"
+        },
+        "defaultRevisionId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "clearFields": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "defaultRevisionId"
+            ]
+          },
+          "minItems": 1,
+          "maxItems": 1,
+          "uniqueItems": true
+        },
+        "clientToken": {
+          "type": "string",
+          "minLength": 16,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9._~-]+$"
+        },
+        "expectedVersion": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Version"
+        }
+      },
+      "required": [
+        "scenarioId",
+        "expectedVersion",
+        "clientToken"
+      ],
+      "additionalProperties": false,
+      "anyOf": [
+        {
+          "required": [
+            "name"
+          ]
+        },
+        {
+          "required": [
+            "description"
+          ]
+        },
+        {
+          "required": [
+            "draftDefinition"
+          ]
+        },
+        {
+          "required": [
+            "archived"
+          ]
+        },
+        {
+          "required": [
+            "defaultRevisionId"
+          ]
+        },
+        {
+          "required": [
+            "clearFields"
+          ]
+        }
+      ],
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "clearFields"
+            ],
+            "properties": {
+              "clearFields": {
+                "contains": {
+                  "const": "defaultRevisionId"
+                }
+              }
+            }
+          },
+          "then": {
+            "not": {
+              "required": [
+                "defaultRevisionId"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "UpdateScenarioResponse": {
+      "type": "object",
+      "properties": {
+        "command": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Command"
+        },
+        "scenario": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Scenario"
+        }
+      },
+      "required": [
+        "command",
+        "scenario"
+      ],
+      "additionalProperties": false
+    },
+    "PublishScenarioRevisionRequest": {
+      "type": "object",
+      "properties": {
+        "scenarioId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "expectedVersion": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Version"
+        },
+        "clientToken": {
+          "type": "string",
+          "minLength": 16,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9._~-]+$"
+        }
+      },
+      "required": [
+        "scenarioId",
+        "expectedVersion",
+        "clientToken"
+      ],
+      "additionalProperties": false
+    },
+    "PublishScenarioRevisionResponse": {
+      "type": "object",
+      "properties": {
+        "command": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Command"
+        },
+        "scenarioRevision": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/ScenarioRevision"
+        }
+      },
+      "required": [
+        "command",
+        "scenarioRevision"
+      ],
+      "additionalProperties": false
+    },
+    "GetScenarioRevisionRequest": {
+      "type": "object",
+      "properties": {
+        "scenarioId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "scenarioRevisionId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        }
+      },
+      "required": [
+        "scenarioId",
+        "scenarioRevisionId"
+      ],
+      "additionalProperties": false
+    },
+    "GetScenarioRevisionResponse": {
+      "type": "object",
+      "properties": {
+        "scenarioRevision": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/ScenarioRevision"
+        }
+      },
+      "required": [
+        "scenarioRevision"
+      ],
+      "additionalProperties": false
+    },
+    "ListScenarioRevisionsRequest": {
+      "type": "object",
+      "properties": {
+        "scenarioId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "maxResults": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "scenarioId"
+      ],
+      "additionalProperties": false
+    },
+    "ListScenarioRevisionsResponse": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/ScenarioRevision"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "page": {
+          "$ref": "#/$defs/Page"
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "items",
+        "page"
+      ],
+      "additionalProperties": false
+    },
+    "StartRunRequest": {
+      "type": "object",
+      "properties": {
+        "scenarioRevisionId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "subject": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/EntityRef"
+        },
+        "expectedSubjectVersion": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Version"
+        },
+        "inputs": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/JsonValue"
+          },
+          "maxProperties": 100
+        },
+        "bindings": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64,
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "additionalProperties": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+          },
+          "maxProperties": 100
+        },
+        "clientToken": {
+          "type": "string",
+          "minLength": 16,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9._~-]+$"
+        }
+      },
+      "required": [
+        "scenarioRevisionId",
+        "subject",
+        "inputs",
+        "bindings",
+        "clientToken"
+      ],
+      "additionalProperties": false
+    },
+    "StartRunResponse": {
+      "type": "object",
+      "properties": {
+        "command": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Command"
+        },
+        "run": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Run"
+        }
+      },
+      "required": [
+        "command",
+        "run"
+      ],
+      "additionalProperties": false
+    },
+    "GetRunRequest": {
+      "type": "object",
+      "properties": {
+        "runId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        }
+      },
+      "required": [
+        "runId"
+      ],
+      "additionalProperties": false
+    },
+    "GetRunResponse": {
+      "type": "object",
+      "properties": {
+        "run": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Run"
+        }
+      },
+      "required": [
+        "run"
+      ],
+      "additionalProperties": false
+    },
+    "ListRunsRequest": {
+      "type": "object",
+      "properties": {
+        "scenarioRevisionId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "phase": {
+          "type": "string",
+          "enum": [
+            "ADMITTED",
+            "RUNNING",
+            "FINALIZING",
+            "TERMINAL"
+          ]
+        },
+        "maxResults": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "ListRunsResponse": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Run"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "page": {
+          "$ref": "#/$defs/Page"
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "items",
+        "page"
+      ],
+      "additionalProperties": false
+    },
+    "RequestRunCancellationRequest": {
+      "type": "object",
+      "properties": {
+        "runId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "clientToken": {
+          "type": "string",
+          "minLength": 16,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9._~-]+$"
+        }
+      },
+      "required": [
+        "runId",
+        "clientToken"
+      ],
+      "additionalProperties": false
+    },
+    "RequestRunCancellationResponse": {
+      "type": "object",
+      "properties": {
+        "command": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Command"
+        },
+        "accepted": {
+          "type": "boolean"
+        },
+        "run": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Run"
+        }
+      },
+      "required": [
+        "command",
+        "accepted",
+        "run"
+      ],
+      "additionalProperties": false
+    },
+    "ListRunStepsRequest": {
+      "type": "object",
+      "properties": {
+        "runId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "maxResults": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "runId"
+      ],
+      "additionalProperties": false
+    },
+    "ListRunStepsResponse": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/StepRun"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "page": {
+          "$ref": "#/$defs/Page"
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "items",
+        "page"
+      ],
+      "additionalProperties": false
+    },
+    "ListStepAttemptsRequest": {
+      "type": "object",
+      "properties": {
+        "runId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "stepRunId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "maxResults": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "runId",
+        "stepRunId"
+      ],
+      "additionalProperties": false
+    },
+    "ListStepAttemptsResponse": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/StepAttempt"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "page": {
+          "$ref": "#/$defs/Page"
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "items",
+        "page"
+      ],
+      "additionalProperties": false
+    },
+    "GetExperimentRequest": {
+      "type": "object",
+      "properties": {
+        "experimentId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        }
+      },
+      "required": [
+        "experimentId"
+      ],
+      "additionalProperties": false
+    },
+    "GetExperimentResponse": {
+      "type": "object",
+      "properties": {
+        "experiment": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Experiment"
+        }
+      },
+      "required": [
+        "experiment"
+      ],
+      "additionalProperties": false
+    },
+    "ListExperimentsRequest": {
+      "type": "object",
+      "properties": {
+        "connectionId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "runId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "maxResults": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "ListExperimentsResponse": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Experiment"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "page": {
+          "$ref": "#/$defs/Page"
+        },
+        "nextToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "items",
+        "page"
+      ],
+      "additionalProperties": false
+    },
+    "StopExperimentRequest": {
+      "type": "object",
+      "properties": {
+        "experimentId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "connectionId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "expectedSourceRevisionId": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Id"
+        },
+        "clientToken": {
+          "type": "string",
+          "minLength": 16,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9._~-]+$"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "experimentId",
+        "connectionId",
+        "expectedSourceRevisionId",
+        "clientToken"
+      ],
+      "additionalProperties": false
+    },
+    "StopExperimentResponse": {
+      "type": "object",
+      "properties": {
+        "command": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json#/$defs/Command"
+        }
+      },
+      "required": [
+        "command"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

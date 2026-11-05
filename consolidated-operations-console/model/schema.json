@@ -1,0 +1,6568 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json",
+  "title": "Consolidated Operations Console logical data model",
+  "description": "Phase 1 proposed normalized contracts. Source payloads are retained, not claimed to be complete native SDK schemas. Entity schemas describe one current publication; provider observations and immutable revisions remain separate.",
+  "x-apiVersion": "2026-11-05",
+  "x-sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+  "x-entities": [
+    "Workspace",
+    "Connection",
+    "Resource",
+    "Collection",
+    "ReadAttempt",
+    "SourceRevision",
+    "Observation",
+    "ProjectionRevision",
+    "Snapshot",
+    "WorkItem",
+    "Command",
+    "System",
+    "UserJourney",
+    "Service",
+    "Dependency",
+    "HealthEvent",
+    "EventContext",
+    "EntityImpact",
+    "Communication",
+    "LifecycleEntry",
+    "ComponentDeployment",
+    "ResiliencePolicy",
+    "ResilienceAssessment",
+    "Finding",
+    "Recommendation",
+    "AgentSpace",
+    "Investigation",
+    "Execution",
+    "JournalRecord",
+    "ApprovalRequest",
+    "Asset",
+    "Scenario",
+    "ScenarioRevision",
+    "Run",
+    "StepRun",
+    "StepAttempt",
+    "Experiment"
+  ],
+  "x-projectionProfiles": {
+    "EVALUATION": "Evaluation",
+    "LIFECYCLE_EXPOSURE": "LifecycleExposure",
+    "INVESTIGATION_RESULT": "InvestigationResult",
+    "SERVICE_STATUS": "ServiceStatus",
+    "WORKSPACE_SUMMARY": "WorkspaceSummary"
+  },
+  "x-relationships": [
+    {
+      "from": "Workspace",
+      "to": "Connection",
+      "fromCardinality": "1",
+      "toCardinality": "0..*",
+      "label": "scopes"
+    },
+    {
+      "from": "Workspace",
+      "to": "System",
+      "fromCardinality": "1",
+      "toCardinality": "0..*",
+      "label": "catalogues"
+    },
+    {
+      "from": "Workspace",
+      "to": "WorkItem",
+      "fromCardinality": "1",
+      "toCardinality": "0..*",
+      "label": "tracks"
+    },
+    {
+      "from": "Connection",
+      "to": "Collection",
+      "fromCardinality": "1",
+      "toCardinality": "0..*",
+      "label": "access path"
+    },
+    {
+      "from": "Collection",
+      "to": "ReadAttempt",
+      "fromCardinality": "1",
+      "toCardinality": "0..*",
+      "label": "owns"
+    },
+    {
+      "from": "ReadAttempt",
+      "to": "Observation",
+      "fromCardinality": "0..1",
+      "toCardinality": "0..*",
+      "label": "records"
+    },
+    {
+      "from": "SourceRevision",
+      "to": "Observation",
+      "fromCardinality": "1",
+      "toCardinality": "0..*",
+      "label": "observed as"
+    },
+    {
+      "from": "Observation",
+      "to": "ProjectionRevision",
+      "fromCardinality": "0..*",
+      "toCardinality": "0..*",
+      "label": "immutable inputs"
+    },
+    {
+      "from": "SourceRevision",
+      "to": "ProjectionRevision",
+      "fromCardinality": "0..*",
+      "toCardinality": "0..*",
+      "label": "immutable inputs"
+    },
+    {
+      "from": "ProjectionRevision",
+      "to": "Snapshot",
+      "fromCardinality": "0..*",
+      "toCardinality": "0..*",
+      "label": "pins"
+    },
+    {
+      "from": "SourceRevision",
+      "to": "Snapshot",
+      "fromCardinality": "0..*",
+      "toCardinality": "0..*",
+      "label": "pins"
+    },
+    {
+      "from": "Command",
+      "to": "Observation",
+      "fromCardinality": "0..*",
+      "toCardinality": "0..*",
+      "label": "reconciled by"
+    },
+    {
+      "from": "Resource",
+      "to": "ComponentDeployment",
+      "fromCardinality": "1",
+      "toCardinality": "0..*",
+      "label": "hosts"
+    },
+    {
+      "from": "System",
+      "to": "UserJourney",
+      "fromCardinality": "1",
+      "toCardinality": "0..*",
+      "label": "contains"
+    },
+    {
+      "from": "System",
+      "to": "Service",
+      "fromCardinality": "0..*",
+      "toCardinality": "0..*",
+      "label": "membership value"
+    },
+    {
+      "from": "UserJourney",
+      "to": "Service",
+      "fromCardinality": "0..*",
+      "toCardinality": "0..*",
+      "label": "membership value"
+    },
+    {
+      "from": "Service",
+      "to": "Resource",
+      "fromCardinality": "0..*",
+      "toCardinality": "0..*",
+      "label": "catalogue link"
+    },
+    {
+      "from": "Service",
+      "to": "Dependency",
+      "fromCardinality": "1",
+      "toCardinality": "0..*",
+      "label": "scopes"
+    },
+    {
+      "from": "HealthEvent",
+      "to": "EventContext",
+      "fromCardinality": "1",
+      "toCardinality": "0..*",
+      "label": "contextualized as"
+    },
+    {
+      "from": "EventContext",
+      "to": "EntityImpact",
+      "fromCardinality": "1",
+      "toCardinality": "0..*",
+      "label": "qualified impacts"
+    },
+    {
+      "from": "EventContext",
+      "to": "Communication",
+      "fromCardinality": "1",
+      "toCardinality": "0..*",
+      "label": "receives"
+    },
+    {
+      "from": "EntityImpact",
+      "to": "Resource",
+      "fromCardinality": "0..*",
+      "toCardinality": "0..*",
+      "label": "explicit match"
+    },
+    {
+      "from": "Snapshot",
+      "to": "LifecycleEntry",
+      "fromCardinality": "1",
+      "toCardinality": "0..*",
+      "label": "catalogue capture"
+    },
+    {
+      "from": "LifecycleEntry",
+      "to": "ProjectionRevision",
+      "fromCardinality": "0..*",
+      "toCardinality": "0..*",
+      "label": "exposure input"
+    },
+    {
+      "from": "ComponentDeployment",
+      "to": "ProjectionRevision",
+      "fromCardinality": "0..*",
+      "toCardinality": "0..*",
+      "label": "exposure input"
+    },
+    {
+      "from": "Service",
+      "to": "ResilienceAssessment",
+      "fromCardinality": "1",
+      "toCardinality": "0..*",
+      "label": "assessed by"
+    },
+    {
+      "from": "Service",
+      "to": "Finding",
+      "fromCardinality": "1",
+      "toCardinality": "0..*",
+      "label": "scopes"
+    },
+    {
+      "from": "Finding",
+      "to": "Recommendation",
+      "fromCardinality": "1",
+      "toCardinality": "0..*",
+      "label": "detail suggestions"
+    },
+    {
+      "from": "ResiliencePolicy",
+      "to": "Snapshot",
+      "fromCardinality": "0..*",
+      "toCardinality": "0..*",
+      "label": "captured context"
+    },
+    {
+      "from": "Snapshot",
+      "to": "ResilienceAssessment",
+      "fromCardinality": "0..1",
+      "toCardinality": "0..*",
+      "label": "context evidence"
+    },
+    {
+      "from": "AgentSpace",
+      "to": "Investigation",
+      "fromCardinality": "1",
+      "toCardinality": "0..*",
+      "label": "scopes"
+    },
+    {
+      "from": "AgentSpace",
+      "to": "Execution",
+      "fromCardinality": "1",
+      "toCardinality": "0..*",
+      "label": "scopes"
+    },
+    {
+      "from": "Investigation",
+      "to": "Execution",
+      "fromCardinality": "0..*",
+      "toCardinality": "0..*",
+      "label": "observed memberships"
+    },
+    {
+      "from": "Execution",
+      "to": "JournalRecord",
+      "fromCardinality": "1",
+      "toCardinality": "0..*",
+      "label": "publishes"
+    },
+    {
+      "from": "Execution",
+      "to": "ApprovalRequest",
+      "fromCardinality": "1",
+      "toCardinality": "0..*",
+      "label": "requests"
+    },
+    {
+      "from": "ApprovalRequest",
+      "to": "Command",
+      "fromCardinality": "0..1",
+      "toCardinality": "0..*",
+      "label": "decision or resume"
+    },
+    {
+      "from": "AgentSpace",
+      "to": "Asset",
+      "fromCardinality": "1",
+      "toCardinality": "0..*",
+      "label": "owns"
+    },
+    {
+      "from": "Investigation",
+      "to": "Snapshot",
+      "fromCardinality": "0..*",
+      "toCardinality": "0..*",
+      "label": "historical subjects"
+    },
+    {
+      "from": "Scenario",
+      "to": "ScenarioRevision",
+      "fromCardinality": "1",
+      "toCardinality": "0..*",
+      "label": "publishes"
+    },
+    {
+      "from": "ScenarioRevision",
+      "to": "Run",
+      "fromCardinality": "1",
+      "toCardinality": "0..*",
+      "label": "executed as"
+    },
+    {
+      "from": "Snapshot",
+      "to": "Run",
+      "fromCardinality": "1",
+      "toCardinality": "0..*",
+      "label": "pinned admission"
+    },
+    {
+      "from": "Run",
+      "to": "StepRun",
+      "fromCardinality": "1",
+      "toCardinality": "1..*",
+      "label": "owns"
+    },
+    {
+      "from": "StepRun",
+      "to": "StepAttempt",
+      "fromCardinality": "1",
+      "toCardinality": "0..*",
+      "label": "attempts"
+    },
+    {
+      "from": "StepAttempt",
+      "to": "Experiment",
+      "fromCardinality": "0..*",
+      "toCardinality": "0..*",
+      "label": "external effect reference"
+    },
+    {
+      "from": "StepAttempt",
+      "to": "ResilienceAssessment",
+      "fromCardinality": "0..*",
+      "toCardinality": "0..*",
+      "label": "external effect reference"
+    },
+    {
+      "from": "WorkItem",
+      "to": "Command",
+      "fromCardinality": "0..*",
+      "toCardinality": "0..*",
+      "label": "related intents"
+    }
+  ],
+  "$defs": {
+    "Id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "Timestamp": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 253402300799.999,
+      "multipleOf": 0.001,
+      "description": "Epoch seconds, millisecond precision. Validators must use decimal arithmetic before ordering; reject higher precision."
+    },
+    "Version": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+    },
+    "Digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "StringMap": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "maxLength": 4096
+      },
+      "maxProperties": 100
+    },
+    "JsonValue": {
+      "description": "Retained native document content may be any JSON value; strict write DTOs never reuse this as their entire request."
+    },
+    "EntityRef": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "Workspace",
+            "Connection",
+            "Resource",
+            "Collection",
+            "ReadAttempt",
+            "SourceRevision",
+            "Observation",
+            "ProjectionRevision",
+            "Snapshot",
+            "WorkItem",
+            "Command",
+            "System",
+            "UserJourney",
+            "Service",
+            "Dependency",
+            "HealthEvent",
+            "EventContext",
+            "EntityImpact",
+            "Communication",
+            "LifecycleEntry",
+            "ComponentDeployment",
+            "ResiliencePolicy",
+            "ResilienceAssessment",
+            "Finding",
+            "Recommendation",
+            "AgentSpace",
+            "Investigation",
+            "Execution",
+            "JournalRecord",
+            "ApprovalRequest",
+            "Asset",
+            "Scenario",
+            "ScenarioRevision",
+            "Run",
+            "StepRun",
+            "StepAttempt",
+            "Experiment"
+          ]
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        }
+      },
+      "required": [
+        "kind",
+        "id"
+      ],
+      "additionalProperties": false,
+      "description": "An application identity in the containing workspace. Resolution must enforce the workspace, entity kind and parent ownership."
+    },
+    "OwningScope": {
+      "type": "object",
+      "properties": {
+        "partition": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "accountId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "region": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "organizationId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "parentKeys": {
+          "$ref": "#/$defs/StringMap"
+        }
+      },
+      "required": [
+        "partition",
+        "accountId",
+        "region",
+        "organizationId",
+        "parentKeys"
+      ],
+      "additionalProperties": false,
+      "description": "Resource owner, independent of the principal/connection used to observe it. Null is explicit global/not-applicable, never inferred from delivery recipient."
+    },
+    "SourceIdentity": {
+      "type": "object",
+      "properties": {
+        "provider": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "service": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "resourceType": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "scope": {
+          "$ref": "#/$defs/OwningScope"
+        },
+        "nativeId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "identityKind": {
+          "type": "string",
+          "enum": [
+            "NATIVE",
+            "PROVISIONAL"
+          ]
+        },
+        "provisionalKey": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          },
+          "maxItems": 32
+        }
+      },
+      "required": [
+        "provider",
+        "service",
+        "resourceType",
+        "scope",
+        "nativeId",
+        "identityKind",
+        "provisionalKey",
+        "aliases"
+      ],
+      "additionalProperties": false,
+      "description": "Stable native identity or explicit provisional source identity. Encode the complete tuple, never delimiter-join opaque components. Provider ARN aliases are preserved separately.",
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "identityKind": {
+                "const": "NATIVE"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "nativeId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+              },
+              "provisionalKey": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "identityKind": {
+                "const": "PROVISIONAL"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "nativeId": {
+                "type": "null"
+              },
+              "provisionalKey": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+              }
+            }
+          }
+        }
+      ]
+    },
+    "ActorRef": {
+      "type": "object",
+      "properties": {
+        "issuer": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "subject": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "HUMAN",
+            "SERVICE"
+          ]
+        }
+      },
+      "required": [
+        "issuer",
+        "subject",
+        "kind"
+      ],
+      "additionalProperties": false,
+      "description": "Authenticated human/service identity supplied by trusted runtime, not selected by request body."
+    },
+    "ArtifactRef": {
+      "type": "object",
+      "properties": {
+        "store": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "key": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "version": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "mediaType": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "byteLength": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "digest": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Digest"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "availability": {
+          "type": "string",
+          "enum": [
+            "AVAILABLE",
+            "UNAVAILABLE",
+            "EXPIRED",
+            "NOT_COLLECTED"
+          ]
+        }
+      },
+      "required": [
+        "store",
+        "key",
+        "version",
+        "mediaType",
+        "byteLength",
+        "digest",
+        "availability"
+      ],
+      "additionalProperties": false,
+      "description": "Durable content locator with version and digest. A signed download URL is resolved separately and is never identity."
+    },
+    "EvidenceRef": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "SOURCE_REVISION",
+            "OBSERVATION",
+            "PROJECTION_REVISION",
+            "SNAPSHOT"
+          ]
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "locator": {
+          "$ref": "#/$defs/EvidenceLocator"
+        }
+      },
+      "required": [
+        "kind",
+        "id"
+      ],
+      "additionalProperties": false,
+      "description": "Immutable evidence reference with explicit type, in the same workspace."
+    },
+    "FieldPresence": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "PRESENT",
+            "ABSENT",
+            "NOT_REQUESTED",
+            "UNAVAILABLE",
+            "REDACTED"
+          ]
+        }
+      },
+      "required": [
+        "path",
+        "state"
+      ],
+      "additionalProperties": false,
+      "description": "Presence is independent of value. Omitted detail cannot be converted into an empty collection."
+    },
+    "Coverage": {
+      "type": "object",
+      "properties": {
+        "queryKey": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "scopeDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "windowStart": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "windowEnd": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "pagination": {
+          "type": "string",
+          "enum": [
+            "EXHAUSTED",
+            "PARTIAL",
+            "NOT_APPLICABLE",
+            "UNKNOWN"
+          ]
+        },
+        "detail": {
+          "type": "string",
+          "enum": [
+            "COMPLETE",
+            "PARTIAL",
+            "NOT_REQUESTED",
+            "UNKNOWN"
+          ]
+        },
+        "resolution": {
+          "type": "string",
+          "enum": [
+            "FINISHED",
+            "IN_PROGRESS",
+            "NOT_APPLICABLE",
+            "UNKNOWN"
+          ]
+        },
+        "identity": {
+          "type": "string",
+          "enum": [
+            "COMPLETE",
+            "PARTIAL",
+            "UNKNOWN"
+          ]
+        },
+        "claim": {
+          "type": "string",
+          "enum": [
+            "SUFFICIENT",
+            "INSUFFICIENT",
+            "UNKNOWN"
+          ]
+        },
+        "knownGaps": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          },
+          "maxItems": 100
+        },
+        "evaluatedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "readAttemptIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "maxItems": 1000
+        },
+        "windowState": {
+          "type": "string",
+          "enum": [
+            "OPEN",
+            "CLOSED",
+            "POINT",
+            "UNKNOWN"
+          ]
+        },
+        "rationale": {
+          "type": "string",
+          "maxLength": 16384
+        }
+      },
+      "required": [
+        "queryKey",
+        "scopeDigest",
+        "windowStart",
+        "windowEnd",
+        "pagination",
+        "detail",
+        "resolution",
+        "identity",
+        "claim",
+        "knownGaps",
+        "evaluatedAt",
+        "readAttemptIds",
+        "windowState",
+        "rationale"
+      ],
+      "additionalProperties": false,
+      "description": "A bounded claim about a named query and time window; dimensions remain independent."
+    },
+    "CollectionQuery": {
+      "type": "object",
+      "properties": {
+        "queryKey": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "operation": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "subject": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/EntityRef"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "filters": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "maxProperties": 100,
+          "description": "Exact normalized structured filters; raw provider request pagination/ordering is pinned on each ReadAttempt."
+        },
+        "windowStart": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "windowEnd": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "requestDigest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "queryKey",
+        "operation",
+        "subject",
+        "filters",
+        "windowStart",
+        "windowEnd",
+        "requestDigest"
+      ],
+      "additionalProperties": false,
+      "description": "Exact request scope and declared question; pagination is not a universal proof of completeness."
+    },
+    "ReadError": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "message": {
+          "type": "string",
+          "maxLength": 16384
+        },
+        "retryable": {
+          "type": "boolean"
+        },
+        "providerRequestId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "code",
+        "message",
+        "retryable",
+        "providerRequestId"
+      ],
+      "additionalProperties": false,
+      "description": "Observed technical/authorization failure; never substitute zero rows for failure."
+    },
+    "ProviderBinding": {
+      "type": "object",
+      "properties": {
+        "identity": {
+          "$ref": "#/$defs/SourceIdentity"
+        },
+        "sourceRevisionId": {
+          "$ref": "#/$defs/Id"
+        },
+        "bindingRule": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "observedAt": {
+          "$ref": "#/$defs/Timestamp"
+        }
+      },
+      "required": [
+        "identity",
+        "sourceRevisionId",
+        "bindingRule",
+        "observedAt"
+      ],
+      "additionalProperties": false,
+      "description": "Explicit observed relationship between a canonical entity and provider object. Importing/binding never grants remote write authority."
+    },
+    "ResourceMatch": {
+      "type": "object",
+      "properties": {
+        "resourceId": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "MATCHED",
+            "AMBIGUOUS",
+            "UNMATCHED"
+          ]
+        },
+        "ruleDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EvidenceRef"
+          },
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "resourceId",
+        "state",
+        "ruleDigest",
+        "evidenceRefs"
+      ],
+      "additionalProperties": false,
+      "description": "Explicit evidence-backed match, including ambiguity. Identity is not inferred solely from a display string."
+    },
+    "OrganizationMembership": {
+      "type": "object",
+      "properties": {
+        "organizationId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "accountId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "validFrom": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "validTo": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "sourceRevisionId": {
+          "$ref": "#/$defs/Id"
+        }
+      },
+      "required": [
+        "organizationId",
+        "accountId",
+        "validFrom",
+        "validTo",
+        "sourceRevisionId"
+      ],
+      "additionalProperties": false,
+      "description": "External, time-bounded organization membership; unrelated to notification recipients."
+    },
+    "OrganizationAccess": {
+      "type": "object",
+      "properties": {
+        "organizationId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "rawStatus": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "observationId": {
+          "$ref": "#/$defs/Id"
+        }
+      },
+      "required": [
+        "organizationId",
+        "rawStatus",
+        "observationId"
+      ],
+      "additionalProperties": false,
+      "description": "Observed AWS Health organization integration status. Configuration, access and collection coverage are distinct."
+    },
+    "ServiceMembership": {
+      "type": "object",
+      "properties": {
+        "systemId": {
+          "$ref": "#/$defs/Id"
+        },
+        "userJourneyIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "maxItems": 100
+        },
+        "origin": {
+          "type": "string",
+          "enum": [
+            "LOCAL",
+            "IMPORTED"
+          ]
+        },
+        "sourceRevisionId": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "systemId",
+        "userJourneyIds",
+        "origin",
+        "sourceRevisionId"
+      ],
+      "additionalProperties": false,
+      "description": "Sole writable workload membership authority is Service.memberships. Reverse journey/system service lists are projections."
+    },
+    "LocalDecision": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "$ref": "#/$defs/Version"
+        },
+        "decision": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "reason": {
+          "type": "string",
+          "maxLength": 16384
+        },
+        "actor": {
+          "$ref": "#/$defs/ActorRef"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Timestamp"
+        }
+      },
+      "required": [
+        "version",
+        "decision",
+        "reason",
+        "actor",
+        "updatedAt"
+      ],
+      "additionalProperties": false,
+      "description": "Independently versioned operator metadata; cannot rewrite provider evidence."
+    },
+    "WorkAction": {
+      "type": "object",
+      "properties": {
+        "actionKey": {
+          "$ref": "#/$defs/Id"
+        },
+        "action": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "actor": {
+          "$ref": "#/$defs/ActorRef"
+        },
+        "at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "reason": {
+          "type": "string",
+          "maxLength": 16384
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EvidenceRef"
+          },
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "actionKey",
+        "action",
+        "actor",
+        "at",
+        "reason",
+        "evidenceRefs"
+      ],
+      "additionalProperties": false,
+      "description": "Immutable append-only operator action owned by a WorkItem; no standalone CRUD root."
+    },
+    "CommandAttempt": {
+      "type": "object",
+      "properties": {
+        "attemptNo": {
+          "$ref": "#/$defs/Version"
+        },
+        "at": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "DISPATCH",
+            "RECONCILE"
+          ]
+        },
+        "outcome": {
+          "type": "string",
+          "enum": [
+            "ACCEPTED",
+            "REJECTED",
+            "UNKNOWN",
+            "OBSERVED"
+          ]
+        },
+        "providerRequestId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EvidenceRef"
+          },
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "attemptNo",
+        "at",
+        "kind",
+        "outcome",
+        "providerRequestId",
+        "evidenceRefs"
+      ],
+      "additionalProperties": false,
+      "description": "Owned dispatch/reconciliation attempt. Acceptance, remote effect and local completion are independent."
+    },
+    "ExternalOperationRef": {
+      "type": "object",
+      "properties": {
+        "originEffectKey": {
+          "$ref": "#/$defs/Id"
+        },
+        "providerIdentity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SourceIdentity"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "entityRef": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/EntityRef"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "remoteDisposition": {
+          "type": "string",
+          "enum": [
+            "NOT_DISPATCHED",
+            "ACTIVE",
+            "TERMINAL",
+            "NO_EFFECT_CONFIRMED",
+            "UNKNOWN"
+          ]
+        },
+        "observationIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "originEffectKey",
+        "providerIdentity",
+        "entityRef",
+        "remoteDisposition",
+        "observationIds"
+      ],
+      "additionalProperties": false,
+      "description": "Provider effect identity may be unknown after a lost response. originEffectKey exists before dispatch and remains stable."
+    },
+    "EventDescription": {
+      "type": "object",
+      "properties": {
+        "locale": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "text": {
+          "type": "string",
+          "maxLength": 16384
+        }
+      },
+      "required": [
+        "locale",
+        "text"
+      ],
+      "additionalProperties": false,
+      "description": "Localized text belongs to an event revision, not a mutable global event field."
+    },
+    "CommunicationPage": {
+      "type": "object",
+      "properties": {
+        "rawCommunicationId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "pageNumber": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "totalPages": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "payloadDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "deliveryObservationIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "maxItems": 1000
+        }
+      },
+      "required": [
+        "rawCommunicationId",
+        "pageNumber",
+        "totalPages",
+        "payloadDigest",
+        "deliveryObservationIds"
+      ],
+      "additionalProperties": false,
+      "description": "An immutable candidate page, not an independently writable entity. Conflicting candidates are retained, not overwritten."
+    },
+    "LifecycleMilestone": {
+      "type": "object",
+      "properties": {
+        "milestoneKey": {
+          "$ref": "#/$defs/Id"
+        },
+        "rawDate": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "kind": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "risks": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          },
+          "maxItems": 32
+        },
+        "regions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          },
+          "maxItems": 100
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 16384
+        }
+      },
+      "required": [
+        "milestoneKey",
+        "rawDate",
+        "kind",
+        "risks",
+        "regions",
+        "description"
+      ],
+      "additionalProperties": false,
+      "description": "Identity is milestoneKey within a pinned catalog revision. Raw provider date preserves date precision."
+    },
+    "PolicyComponent": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "AVAILABILITY",
+            "DATA_RECOVERY",
+            "MULTI_AZ",
+            "MULTI_REGION"
+          ]
+        },
+        "targets": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "number"
+          },
+          "maxProperties": 16
+        },
+        "units": {
+          "$ref": "#/$defs/StringMap"
+        },
+        "disasterRecoveryApproach": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "kind",
+        "targets",
+        "units"
+      ],
+      "additionalProperties": false,
+      "description": "Only reviewed native component families; optional configured components determine the assessment denominator."
+    },
+    "PolicyContext": {
+      "type": "object",
+      "properties": {
+        "serviceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "assignmentSourceRevisionIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "maxItems": 100
+        },
+        "effectiveTargetObservationId": {
+          "$ref": "#/$defs/Id"
+        },
+        "effectiveTargetSourceRevisionId": {
+          "$ref": "#/$defs/Id"
+        },
+        "expectedComponents": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "AVAILABILITY",
+              "DATA_RECOVERY",
+              "MULTI_AZ",
+              "MULTI_REGION"
+            ]
+          },
+          "maxItems": 4
+        },
+        "providerEvaluatedRevisionKnown": {
+          "type": "boolean"
+        },
+        "providerEvaluatedRevision": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "serviceId",
+        "assignmentSourceRevisionIds",
+        "effectiveTargetObservationId",
+        "effectiveTargetSourceRevisionId",
+        "expectedComponents",
+        "providerEvaluatedRevisionKnown",
+        "providerEvaluatedRevision"
+      ],
+      "additionalProperties": false,
+      "description": "Frozen selection of assignment and effective-target evidence. Captured context is not proof of the exact AWS-evaluated policy revision.",
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "providerEvaluatedRevisionKnown": {
+                "const": false
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "providerEvaluatedRevision": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "providerEvaluatedRevisionKnown": {
+                "const": true
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "providerEvaluatedRevision": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+              }
+            }
+          }
+        }
+      ]
+    },
+    "RecommendationEnrichment": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "$ref": "#/$defs/Version"
+        },
+        "title": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "effort": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "owner": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AssigneeRef"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "workState": {
+          "type": "string",
+          "enum": [
+            "OPEN",
+            "PLANNED",
+            "IN_PROGRESS",
+            "DONE",
+            "DISMISSED"
+          ]
+        },
+        "note": {
+          "type": "string",
+          "maxLength": 16384
+        },
+        "estimate": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RecommendationEstimate"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "updatedAt": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "provenance": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "version",
+        "title",
+        "effort",
+        "owner",
+        "workState",
+        "note"
+      ],
+      "additionalProperties": false,
+      "description": "Local estimate/owner/workflow with its own revision, independent of immutable suggestion evidence."
+    },
+    "AgentAssociation": {
+      "type": "object",
+      "properties": {
+        "associationId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "serviceId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "configurationKind": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "registeredServiceIdentity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SourceIdentity"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "sourceRevisionId": {
+          "$ref": "#/$defs/Id"
+        }
+      },
+      "required": [
+        "associationId",
+        "serviceId",
+        "configurationKind",
+        "registeredServiceIdentity",
+        "sourceRevisionId"
+      ],
+      "additionalProperties": false,
+      "description": "Provider-owned scoped association, never a business Service or product Connection. Built-in serviceId aws need not resolve to a registered provider."
+    },
+    "TaskExecutionMembership": {
+      "type": "object",
+      "properties": {
+        "investigationId": {
+          "$ref": "#/$defs/Id"
+        },
+        "executionId": {
+          "$ref": "#/$defs/Id"
+        },
+        "observationId": {
+          "$ref": "#/$defs/Id"
+        }
+      },
+      "required": [
+        "investigationId",
+        "executionId",
+        "observationId"
+      ],
+      "additionalProperties": false,
+      "description": "Observed request/response association, not inferred ownership. An Execution has no single investigationId."
+    },
+    "ExternalReference": {
+      "type": "object",
+      "properties": {
+        "system": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "referenceId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "referenceUrl": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "associationId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "resolvedAssociationId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "system",
+        "referenceId",
+        "referenceUrl",
+        "associationId",
+        "resolvedAssociationId"
+      ],
+      "additionalProperties": false,
+      "description": "Native linked-incident reference; may remain unresolved after its integration disappears."
+    },
+    "AssetVersion": {
+      "type": "object",
+      "properties": {
+        "nativeVersion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "sourceRevisionId": {
+          "$ref": "#/$defs/Id"
+        },
+        "files": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AssetFile"
+          },
+          "maxItems": 1000
+        }
+      },
+      "required": [
+        "nativeVersion",
+        "sourceRevisionId",
+        "files"
+      ],
+      "additionalProperties": false,
+      "description": "Exact provider asset version with retained source revision. latest is never an archival reference."
+    },
+    "AssetFile": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "sourceRevisionId": {
+          "$ref": "#/$defs/Id"
+        },
+        "artifact": {
+          "$ref": "#/$defs/ArtifactRef"
+        }
+      },
+      "required": [
+        "path",
+        "sourceRevisionId",
+        "artifact"
+      ],
+      "additionalProperties": false,
+      "description": "A file is identified by owning asset version and exact path, including case."
+    },
+    "GraphNode": {
+      "type": "object",
+      "properties": {
+        "nodeKey": {
+          "$ref": "#/$defs/Id"
+        },
+        "entityRef": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/EntityRef"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "sourceIdentity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SourceIdentity"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EvidenceRef"
+          },
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "nodeKey",
+        "entityRef",
+        "sourceIdentity",
+        "label",
+        "evidenceRefs"
+      ],
+      "additionalProperties": false,
+      "description": "Snapshot-owned node; unknown/inferred identity remains qualified."
+    },
+    "GraphEdge": {
+      "type": "object",
+      "properties": {
+        "edgeKey": {
+          "$ref": "#/$defs/Id"
+        },
+        "fromNodeKey": {
+          "$ref": "#/$defs/Id"
+        },
+        "toNodeKey": {
+          "$ref": "#/$defs/Id"
+        },
+        "relationKind": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "claimKind": {
+          "type": "string",
+          "enum": [
+            "PROVIDER",
+            "DERIVED",
+            "HYPOTHESIS"
+          ]
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EvidenceRef"
+          },
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "edgeKey",
+        "fromNodeKey",
+        "toNodeKey",
+        "relationKind",
+        "claimKind",
+        "evidenceRefs"
+      ],
+      "additionalProperties": false,
+      "description": "Snapshot-owned typed edge. Causal claim, dependency, provider topology and sequence are different meanings."
+    },
+    "GraphContents": {
+      "type": "object",
+      "properties": {
+        "graphKind": {
+          "type": "string",
+          "enum": [
+            "RESOURCE_TOPOLOGY",
+            "DEPENDENCY",
+            "CAUSAL",
+            "INVESTIGATION"
+          ]
+        },
+        "nodes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/GraphNode"
+          },
+          "maxItems": 10000
+        },
+        "edges": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/GraphEdge"
+          },
+          "maxItems": 30000
+        }
+      },
+      "required": [
+        "graphKind",
+        "nodes",
+        "edges"
+      ],
+      "additionalProperties": false,
+      "description": "Nodes/edges belong to one immutable capture. Unresolved endpoints use explicitly marked nodes, never fabricated resources."
+    },
+    "OperationLock": {
+      "type": "object",
+      "properties": {
+        "alias": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "contractVersion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "implementationDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "inputSchemaDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "outputSchemaDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "capability": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "effectKind": {
+          "type": "string",
+          "enum": [
+            "READ",
+            "MUTATE",
+            "COMPENSATE"
+          ]
+        },
+        "canReconcileWithoutCreate": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "alias",
+        "contractVersion",
+        "implementationDigest",
+        "inputSchemaDigest",
+        "outputSchemaDigest",
+        "capability",
+        "effectKind",
+        "canReconcileWithoutCreate"
+      ],
+      "additionalProperties": false,
+      "description": "Publish resolves exact implementation and schema digests; execution never re-resolves a mutable alias."
+    },
+    "StepDefinition": {
+      "type": "object",
+      "properties": {
+        "stepKey": {
+          "$ref": "#/$defs/Id"
+        },
+        "phase": {
+          "type": "string",
+          "enum": [
+            "MAIN",
+            "FINALIZER"
+          ]
+        },
+        "operationAlias": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "needs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "maxItems": 100
+        },
+        "dependencyMode": {
+          "type": "string",
+          "enum": [
+            "SUCCESS",
+            "SETTLED"
+          ]
+        },
+        "checkRole": {
+          "type": "string",
+          "enum": [
+            "NONE",
+            "PRECONDITION",
+            "CRITERION",
+            "DIAGNOSTIC"
+          ]
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "timeoutSeconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 86400
+        },
+        "inputBindings": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "maxProperties": 100,
+          "description": "Typed values/expressions checked against the operation lock input schema at publication."
+        },
+        "when": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "enabledWhen": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "retry": {
+          "$ref": "#/$defs/RetryPolicy"
+        }
+      },
+      "required": [
+        "stepKey",
+        "phase",
+        "operationAlias",
+        "needs",
+        "dependencyMode",
+        "checkRole",
+        "required",
+        "timeoutSeconds",
+        "inputBindings",
+        "when",
+        "enabledWhen",
+        "retry"
+      ],
+      "additionalProperties": false,
+      "description": "Owned scenario-revision step with stable stepKey. Native FIS actions are not these workflow steps.",
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "phase": {
+                "const": "FINALIZER"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "when": {
+                "type": "null"
+              },
+              "enabledWhen": {
+                "type": "null"
+              },
+              "checkRole": {
+                "const": "NONE"
+              },
+              "required": {
+                "const": true
+              },
+              "dependencyMode": {
+                "const": "SETTLED"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "ScenarioDefinition": {
+      "type": "object",
+      "properties": {
+        "inputSchemaDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "steps": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/StepDefinition"
+          },
+          "maxItems": 100
+        },
+        "operationLocks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/OperationLock"
+          },
+          "maxItems": 100
+        },
+        "expressionProfile": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "inputSchema": {
+          "type": "object",
+          "description": "Retained JSON Schema, validated as a schema and restricted to a closed top-level object at publication."
+        },
+        "bindings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/BindingDeclaration"
+          },
+          "maxItems": 100
+        },
+        "policies": {
+          "$ref": "#/$defs/WorkflowPolicies"
+        }
+      },
+      "required": [
+        "inputSchemaDigest",
+        "steps",
+        "operationLocks",
+        "expressionProfile",
+        "inputSchema",
+        "bindings",
+        "policies"
+      ],
+      "additionalProperties": false,
+      "description": "Bounded main and finalizer DAGs; language/operation contracts are pinned at publication."
+    },
+    "Admission": {
+      "type": "object",
+      "properties": {
+        "scenarioRevisionId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revisionDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "resolvedBindings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ResolvedBinding"
+          },
+          "maxItems": 100
+        },
+        "inputValues": {
+          "$ref": "#/$defs/JsonValue"
+        },
+        "requiredCriterionKeys": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "maxItems": 100
+        },
+        "enabledStepKeys": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "maxItems": 100
+        },
+        "policyDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "admittedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "subjectRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EntityRef"
+          },
+          "maxItems": 100
+        },
+        "deploymentIdentity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SourceIdentity"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "concurrencyKey": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "scenarioRevisionId",
+        "revisionDigest",
+        "resolvedBindings",
+        "inputValues",
+        "requiredCriterionKeys",
+        "enabledStepKeys",
+        "policyDigest",
+        "admittedAt",
+        "subjectRefs",
+        "deploymentIdentity",
+        "concurrencyKey"
+      ],
+      "additionalProperties": false,
+      "description": "Immutable run inputs, capabilities and criterion denominator. References grant no permission; trusted binding restricts effects."
+    },
+    "CheckResult": {
+      "type": "object",
+      "properties": {
+        "verdict": {
+          "type": "string",
+          "enum": [
+            "PASS",
+            "FAIL",
+            "INCONCLUSIVE"
+          ]
+        },
+        "reasonCode": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "predicateDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EvidenceRef"
+          },
+          "maxItems": 1000
+        },
+        "evaluatedThrough": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "claimType": {
+          "type": "string",
+          "enum": [
+            "EXISTENTIAL",
+            "ABSENCE",
+            "UNIVERSAL",
+            "NUMERIC"
+          ]
+        },
+        "coverage": {
+          "$ref": "#/$defs/Coverage"
+        }
+      },
+      "required": [
+        "verdict",
+        "reasonCode",
+        "predicateDigest",
+        "evidenceRefs",
+        "evaluatedThrough",
+        "claimType",
+        "coverage"
+      ],
+      "additionalProperties": false,
+      "description": "Final immutable evaluation of one check. Missing evidence is not false, and technical success is not PASS."
+    },
+    "CancellationIntent": {
+      "type": "object",
+      "properties": {
+        "commandId": {
+          "$ref": "#/$defs/Id"
+        },
+        "acceptedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "actor": {
+          "$ref": "#/$defs/ActorRef"
+        },
+        "reason": {
+          "type": "string",
+          "maxLength": 16384
+        }
+      },
+      "required": [
+        "commandId",
+        "acceptedAt",
+        "actor",
+        "reason"
+      ],
+      "additionalProperties": false,
+      "description": "First accepted intent is monotonic. Local cancellation cannot prove remote cessation."
+    },
+    "CriterionResult": {
+      "type": "object",
+      "properties": {
+        "criterionKey": {
+          "$ref": "#/$defs/Id"
+        },
+        "result": {
+          "$ref": "#/$defs/CheckResult"
+        }
+      },
+      "required": [
+        "criterionKey",
+        "result"
+      ],
+      "additionalProperties": false,
+      "description": "Assessment denominator is frozen; missing/skipped/error checks remain INCONCLUSIVE."
+    },
+    "Evaluation": {
+      "type": "object",
+      "properties": {
+        "subject": {
+          "$ref": "#/$defs/EntityRef"
+        },
+        "inputSnapshotId": {
+          "$ref": "#/$defs/Id"
+        },
+        "evidenceCutoffAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "verdict": {
+          "type": "string",
+          "enum": [
+            "PASS",
+            "FAIL",
+            "INCONCLUSIVE",
+            "NOT_EVALUATED"
+          ]
+        },
+        "finality": {
+          "type": "string",
+          "enum": [
+            "PROVISIONAL",
+            "FINAL"
+          ]
+        },
+        "requiredCriterionKeys": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "maxItems": 100
+        },
+        "criteria": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CriterionResult"
+          },
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "subject",
+        "inputSnapshotId",
+        "evidenceCutoffAt",
+        "verdict",
+        "finality",
+        "requiredCriterionKeys",
+        "criteria"
+      ],
+      "additionalProperties": false,
+      "description": "A new evaluation never overwrites the sealed run/experiment result it re-examines."
+    },
+    "LifecycleExposure": {
+      "type": "object",
+      "properties": {
+        "componentDeploymentId": {
+          "$ref": "#/$defs/Id"
+        },
+        "deploymentObservationId": {
+          "$ref": "#/$defs/Id"
+        },
+        "catalogSourceRevisionId": {
+          "$ref": "#/$defs/Id"
+        },
+        "milestoneKey": {
+          "$ref": "#/$defs/Id"
+        },
+        "applicability": {
+          "type": "string",
+          "enum": [
+            "APPLIES",
+            "DOES_NOT_APPLY",
+            "UNKNOWN"
+          ]
+        },
+        "reason": {
+          "type": "string",
+          "maxLength": 16384
+        },
+        "matchingRuleDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "policySnapshotId": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "componentDeploymentId",
+        "deploymentObservationId",
+        "catalogSourceRevisionId",
+        "milestoneKey",
+        "applicability",
+        "reason",
+        "matchingRuleDigest",
+        "policySnapshotId"
+      ],
+      "additionalProperties": false,
+      "description": "Derived applicability with exact deployment, catalog revision, milestone and matching rule."
+    },
+    "InvestigationResult": {
+      "type": "object",
+      "properties": {
+        "investigationId": {
+          "$ref": "#/$defs/Id"
+        },
+        "phase": {
+          "type": "string",
+          "enum": [
+            "INVESTIGATION",
+            "MITIGATION",
+            "PREVENTION"
+          ]
+        },
+        "availability": {
+          "type": "string",
+          "enum": [
+            "AVAILABLE",
+            "NOT_REPORTED",
+            "PENDING",
+            "UNAVAILABLE",
+            "AMBIGUOUS",
+            "UNKNOWN"
+          ]
+        },
+        "selectedSourceRevisionId": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "completionObservationId": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "knownGaps": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          },
+          "maxItems": 100
+        },
+        "selectionBasis": {
+          "type": "string",
+          "enum": [
+            "EXPLICIT_COMPLETION_REFERENCE",
+            "VALIDATED_JOURNAL_PROFILE",
+            "CANDIDATE_ONLY",
+            "NONE",
+            "AMBIGUOUS"
+          ]
+        },
+        "expectedSummaryIdentity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SourceIdentity"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "candidateSourceRevisionIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "maxItems": 1000
+        }
+      },
+      "required": [
+        "investigationId",
+        "phase",
+        "availability",
+        "selectedSourceRevisionId",
+        "completionObservationId",
+        "knownGaps",
+        "selectionBasis",
+        "expectedSummaryIdentity",
+        "candidateSourceRevisionIds"
+      ],
+      "additionalProperties": false,
+      "description": "Phase-scoped selected result; completion events from another phase cannot replace it."
+    },
+    "StateDimension": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "rawState": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EvidenceRef"
+          },
+          "maxItems": 100
+        },
+        "expiresAt": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "state",
+        "rawState",
+        "evidenceRefs",
+        "expiresAt"
+      ],
+      "additionalProperties": false,
+      "description": "One independently meaningful status backed by explicit evidence."
+    },
+    "ServiceStatus": {
+      "type": "object",
+      "properties": {
+        "serviceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "runtimeHealth": {
+          "$ref": "#/$defs/StateDimension"
+        },
+        "resiliencePosture": {
+          "$ref": "#/$defs/StateDimension"
+        },
+        "assessmentExecution": {
+          "$ref": "#/$defs/StateDimension"
+        },
+        "discovery": {
+          "$ref": "#/$defs/StateDimension"
+        },
+        "findingCoverage": {
+          "$ref": "#/$defs/Coverage"
+        },
+        "policyContextSnapshotId": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "attentionReasons": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          },
+          "maxItems": 100
+        },
+        "reassessmentRequired": {
+          "type": "boolean"
+        },
+        "policyContextRefreshRequired": {
+          "type": "boolean"
+        },
+        "nativeRerunAssessment": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "serviceId",
+        "runtimeHealth",
+        "resiliencePosture",
+        "assessmentExecution",
+        "discovery",
+        "findingCoverage",
+        "policyContextSnapshotId",
+        "attentionReasons",
+        "reassessmentRequired",
+        "policyContextRefreshRequired",
+        "nativeRerunAssessment"
+      ],
+      "additionalProperties": false,
+      "description": "Separate dimensions, selected policy context and explicit reasons. No universal healthy/successful flag."
+    },
+    "WorkspaceSummary": {
+      "type": "object",
+      "properties": {
+        "serviceIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "maxItems": 10000
+        },
+        "attentionServiceIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "maxItems": 10000
+        },
+        "currentCoverageServiceIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "maxItems": 10000
+        },
+        "retainedEvidenceServiceIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "maxItems": 10000
+        },
+        "currentCoveragePercent": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "knownGaps": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          },
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "serviceIds",
+        "attentionServiceIds",
+        "currentCoverageServiceIds",
+        "retainedEvidenceServiceIds",
+        "currentCoveragePercent",
+        "knownGaps"
+      ],
+      "additionalProperties": false,
+      "description": "One denominator of distinct authorized services. No denominator yields null percentage, not zero or 100."
+    },
+    "FISAction": {
+      "type": "object",
+      "properties": {
+        "actionName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "actionId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "rawState": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "startAfter": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          },
+          "maxItems": 100
+        },
+        "targetBindings": {
+          "$ref": "#/$defs/StringMap"
+        },
+        "selectedObservationId": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "actionName",
+        "actionId",
+        "rawState",
+        "startAfter",
+        "targetBindings",
+        "selectedObservationId"
+      ],
+      "additionalProperties": false,
+      "description": "Native named action owned by an Experiment. Its state is read-only and cannot be stopped/restarted individually."
+    },
+    "TargetMembership": {
+      "type": "object",
+      "properties": {
+        "selectionKey": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "sourceIdentity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SourceIdentity"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "resourceId": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "identityCompleteness": {
+          "type": "string",
+          "enum": [
+            "IDENTIFIED",
+            "UNIDENTIFIED"
+          ]
+        },
+        "selectionObservationId": {
+          "$ref": "#/$defs/Id"
+        },
+        "containerNames": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          },
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "selectionKey",
+        "sourceIdentity",
+        "resourceId",
+        "identityCompleteness",
+        "selectionObservationId",
+        "containerNames"
+      ],
+      "additionalProperties": false,
+      "description": "Run-scoped resolved selection, never proof that fault was applied. Pod/container choices are different identity layers."
+    },
+    "FISReport": {
+      "type": "object",
+      "properties": {
+        "configurationState": {
+          "type": "string",
+          "enum": [
+            "CONFIGURED",
+            "NOT_CONFIGURED",
+            "UNKNOWN"
+          ]
+        },
+        "rawState": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "selectedObservationId": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "artifacts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ArtifactRef"
+          },
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "configurationState",
+        "rawState",
+        "selectedObservationId",
+        "artifacts"
+      ],
+      "additionalProperties": false,
+      "description": "Configured, absent configuration, unobserved and known report readiness are distinct."
+    },
+    "Workspace": {
+      "type": "object",
+      "properties": {
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "version": {
+          "$ref": "#/$defs/Version"
+        },
+        "localUpdatedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "enabledModules": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "WORKLOAD",
+              "HEALTH",
+              "RESILIENCE",
+              "INVESTIGATION",
+              "WORKFLOW",
+              "FIS"
+            ]
+          },
+          "maxItems": 6
+        },
+        "organizationMemberships": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/OrganizationMembership"
+          },
+          "maxItems": 1000
+        },
+        "organizationAccess": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/OrganizationAccess"
+          },
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "workspaceId",
+        "version",
+        "localUpdatedAt",
+        "name",
+        "enabledModules",
+        "organizationMemberships",
+        "organizationAccess"
+      ],
+      "additionalProperties": false,
+      "description": "Application authorization and configuration boundary, distinct from AWS AgentSpace.",
+      "x-entity": true,
+      "x-module": "foundation",
+      "x-owner": "application",
+      "x-identity": "workspaceId",
+      "x-mutable": true
+    },
+    "Connection": {
+      "type": "object",
+      "properties": {
+        "connectionId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "version": {
+          "$ref": "#/$defs/Version"
+        },
+        "localUpdatedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "provider": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "credentialRef": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "allowedScopes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/OwningScope"
+          },
+          "maxItems": 1000
+        },
+        "authorizationContextKey": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "enabled": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "connectionId",
+        "workspaceId",
+        "version",
+        "localUpdatedAt",
+        "name",
+        "provider",
+        "credentialRef",
+        "allowedScopes",
+        "authorizationContextKey",
+        "enabled"
+      ],
+      "additionalProperties": false,
+      "description": "Access path/credential reference, not native owner identity. Secrets remain outside the model.",
+      "x-entity": true,
+      "x-module": "foundation",
+      "x-owner": "application",
+      "x-identity": "workspaceId + connectionId",
+      "x-mutable": true
+    },
+    "Resource": {
+      "type": "object",
+      "properties": {
+        "resourceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "identity": {
+          "$ref": "#/$defs/SourceIdentity"
+        },
+        "identityStability": {
+          "type": "string",
+          "enum": [
+            "STABLE",
+            "RUN_SCOPED",
+            "PROVISIONAL"
+          ]
+        },
+        "incarnationKey": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "selectedObservationId": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "displayName": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "matches": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ResourceMatch"
+          },
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "resourceId",
+        "workspaceId",
+        "identity",
+        "identityStability",
+        "incarnationKey",
+        "selectedObservationId",
+        "displayName",
+        "matches"
+      ],
+      "additionalProperties": false,
+      "description": "Canonical inventory identity with explicit stable or run-scoped boundary; does not represent all native objects.",
+      "x-entity": true,
+      "x-module": "foundation",
+      "x-owner": "observed",
+      "x-identity": "workspaceId + resourceId",
+      "x-mutable": false
+    },
+    "Collection": {
+      "type": "object",
+      "properties": {
+        "collectionId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "connectionId": {
+          "$ref": "#/$defs/Id"
+        },
+        "queries": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CollectionQuery"
+          },
+          "maxItems": 1000
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "PLANNED",
+            "RUNNING",
+            "COMPLETED",
+            "FAILED",
+            "CANCELED"
+          ]
+        },
+        "startedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "endedAt": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "coverage": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Coverage"
+          },
+          "maxItems": 1000
+        },
+        "projectionVersion": {
+          "$ref": "#/$defs/Version"
+        }
+      },
+      "required": [
+        "collectionId",
+        "workspaceId",
+        "connectionId",
+        "queries",
+        "state",
+        "startedAt",
+        "endedAt",
+        "coverage",
+        "projectionVersion"
+      ],
+      "additionalProperties": false,
+      "description": "A finite collection pass records its exact query set, including empty and failed reads.",
+      "x-entity": true,
+      "x-module": "foundation",
+      "x-owner": "collector",
+      "x-identity": "workspaceId + collectionId",
+      "x-mutable": false
+    },
+    "ReadAttempt": {
+      "type": "object",
+      "properties": {
+        "readAttemptId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "collectionId": {
+          "$ref": "#/$defs/Id"
+        },
+        "queryKey": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "attemptNo": {
+          "$ref": "#/$defs/Version"
+        },
+        "requestDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "STARTED",
+            "SUCCEEDED",
+            "FAILED"
+          ]
+        },
+        "startedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "endedAt": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "providerRequestId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "returnedCount": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "nextTokenPresent": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "error": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ReadError"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "authorizationContextKey": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "requestSourceRevisionId": {
+          "$ref": "#/$defs/Id"
+        },
+        "responseSourceRevisionId": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "readAttemptId",
+        "workspaceId",
+        "collectionId",
+        "queryKey",
+        "attemptNo",
+        "requestDigest",
+        "state",
+        "startedAt",
+        "endedAt",
+        "providerRequestId",
+        "returnedCount",
+        "nextTokenPresent",
+        "error",
+        "authorizationContextKey",
+        "requestSourceRevisionId",
+        "responseSourceRevisionId"
+      ],
+      "additionalProperties": false,
+      "description": "A single request attempt exists even if it returned zero objects or failed. It is immutable once settled.",
+      "x-entity": true,
+      "x-module": "foundation",
+      "x-owner": "collector",
+      "x-identity": "workspaceId + collectionId + readAttemptId",
+      "x-mutable": false
+    },
+    "SourceRevision": {
+      "type": "object",
+      "properties": {
+        "sourceRevisionId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "identity": {
+          "$ref": "#/$defs/SourceIdentity"
+        },
+        "representation": {
+          "type": "string",
+          "enum": [
+            "SUMMARY",
+            "DETAIL",
+            "EVENT",
+            "STREAM",
+            "ARTIFACT",
+            "CONFIGURATION",
+            "LOCAL_EVIDENCE"
+          ]
+        },
+        "profile": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "profileVersion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "sourceOperation": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "contentDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "providerUpdatedAt": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "providerVersion": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "fieldPresence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/FieldPresence"
+          },
+          "maxItems": 1000
+        },
+        "payload": {
+          "$ref": "#/$defs/JsonValue"
+        },
+        "artifact": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "digestProfile": {
+          "type": "string",
+          "enum": [
+            "RAW_BYTES_SHA256",
+            "RFC8785_SHA256"
+          ]
+        },
+        "payloadStorage": {
+          "type": "string",
+          "enum": [
+            "INLINE",
+            "ARTIFACT"
+          ]
+        }
+      },
+      "required": [
+        "sourceRevisionId",
+        "workspaceId",
+        "identity",
+        "representation",
+        "profile",
+        "profileVersion",
+        "sourceOperation",
+        "contentDigest",
+        "providerUpdatedAt",
+        "providerVersion",
+        "fieldPresence",
+        "payload",
+        "artifact",
+        "digestProfile",
+        "payloadStorage"
+      ],
+      "additionalProperties": false,
+      "description": "Immutable distinct source payload/envelope for one identity, representation and content digest. Observation time is recorded separately.",
+      "x-entity": true,
+      "x-module": "foundation",
+      "x-owner": "retained evidence",
+      "x-identity": "workspaceId + sourceRevisionId",
+      "x-mutable": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "payloadStorage": {
+                "const": "ARTIFACT"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "payload": {
+                "type": "null"
+              },
+              "artifact": {
+                "$ref": "#/$defs/ArtifactRef"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "Observation": {
+      "type": "object",
+      "properties": {
+        "observationId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "sourceRevisionId": {
+          "$ref": "#/$defs/Id"
+        },
+        "readAttemptId": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "connectionId": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "observedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "sourceTime": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "transportTime": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "expiresAt": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "authorizationContextKey": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "receiptKey": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "channel": {
+          "type": "string",
+          "enum": [
+            "API",
+            "EVENTBRIDGE",
+            "STREAM",
+            "LOCAL"
+          ]
+        }
+      },
+      "required": [
+        "observationId",
+        "workspaceId",
+        "sourceRevisionId",
+        "readAttemptId",
+        "connectionId",
+        "observedAt",
+        "sourceTime",
+        "transportTime",
+        "expiresAt",
+        "authorizationContextKey",
+        "receiptKey",
+        "channel"
+      ],
+      "additionalProperties": false,
+      "description": "Immutable receipt/read observation of one revision. Repeated polls do not create new logical objects. Event/stream/local receipts may have no ReadAttempt; no native read is fabricated.",
+      "x-entity": true,
+      "x-module": "foundation",
+      "x-owner": "collector",
+      "x-identity": "workspaceId + observationId",
+      "x-mutable": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "channel": {
+                "const": "API"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "readAttemptId": {
+                "$ref": "#/$defs/Id"
+              },
+              "connectionId": {
+                "$ref": "#/$defs/Id"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "channel": {
+                "enum": [
+                  "EVENTBRIDGE",
+                  "STREAM"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "connectionId": {
+                "$ref": "#/$defs/Id"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "ProjectionRevision": {
+      "type": "object",
+      "properties": {
+        "projectionRevisionId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "projectionKey": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "profile": {
+          "type": "string",
+          "enum": [
+            "EVALUATION",
+            "LIFECYCLE_EXPOSURE",
+            "INVESTIGATION_RESULT",
+            "SERVICE_STATUS",
+            "WORKSPACE_SUMMARY"
+          ]
+        },
+        "profileVersion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "subjectRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EntityRef"
+          },
+          "maxItems": 1000
+        },
+        "inputRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EvidenceRef"
+          },
+          "maxItems": 10000
+        },
+        "ruleDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "asOf": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "generatedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "coverage": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Coverage"
+          },
+          "maxItems": 1000
+        },
+        "value": {
+          "$ref": "#/$defs/JsonValue"
+        }
+      },
+      "required": [
+        "projectionRevisionId",
+        "workspaceId",
+        "projectionKey",
+        "profile",
+        "profileVersion",
+        "subjectRefs",
+        "inputRefs",
+        "ruleDigest",
+        "asOf",
+        "generatedAt",
+        "coverage",
+        "value"
+      ],
+      "additionalProperties": false,
+      "description": "Immutable versioned derivation with retained inputs, coverage and rule digest. Current selection is a read view.",
+      "x-entity": true,
+      "x-module": "foundation",
+      "x-owner": "derived",
+      "x-identity": "workspaceId + projectionRevisionId",
+      "x-mutable": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "profile": {
+                "const": "EVALUATION"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "$ref": "#/$defs/Evaluation"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "profile": {
+                "const": "LIFECYCLE_EXPOSURE"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "$ref": "#/$defs/LifecycleExposure"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "profile": {
+                "const": "INVESTIGATION_RESULT"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "$ref": "#/$defs/InvestigationResult"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "profile": {
+                "const": "SERVICE_STATUS"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "$ref": "#/$defs/ServiceStatus"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "profile": {
+                "const": "WORKSPACE_SUMMARY"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "$ref": "#/$defs/WorkspaceSummary"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "Snapshot": {
+      "type": "object",
+      "properties": {
+        "snapshotId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "INVESTIGATION",
+            "TOPOLOGY",
+            "POLICY_CONTEXT",
+            "LIFECYCLE_CATALOG",
+            "RUN_INPUT",
+            "EVALUATION_INPUT"
+          ]
+        },
+        "subjectRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EntityRef"
+          },
+          "maxItems": 1000
+        },
+        "capturedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "manifestDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "sourceRevisionIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "maxItems": 10000
+        },
+        "observationIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "maxItems": 10000
+        },
+        "projectionRevisionIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "maxItems": 10000
+        },
+        "readAttempts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ReadAttempt"
+          },
+          "maxItems": 10000
+        },
+        "coverage": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Coverage"
+          },
+          "maxItems": 1000
+        },
+        "contents": {
+          "$ref": "#/$defs/JsonValue"
+        },
+        "captureStartedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "captureFinishedAt": {
+          "$ref": "#/$defs/Timestamp"
+        }
+      },
+      "required": [
+        "snapshotId",
+        "workspaceId",
+        "kind",
+        "subjectRefs",
+        "capturedAt",
+        "manifestDigest",
+        "sourceRevisionIds",
+        "observationIds",
+        "projectionRevisionIds",
+        "readAttempts",
+        "coverage",
+        "contents",
+        "captureStartedAt",
+        "captureFinishedAt"
+      ],
+      "additionalProperties": false,
+      "description": "Immutable closed manifest and contents. CapturedAt never replaces provider/source time. Access remains checked on reads/exports.",
+      "x-entity": true,
+      "x-module": "foundation",
+      "x-owner": "application retained capture",
+      "x-identity": "workspaceId + snapshotId",
+      "x-mutable": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "TOPOLOGY"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "contents": {
+                "$ref": "#/$defs/GraphContents"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "POLICY_CONTEXT"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "contents": {
+                "$ref": "#/$defs/PolicyContext"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "RUN_INPUT"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "contents": {
+                "$ref": "#/$defs/Admission"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "WorkItem": {
+      "type": "object",
+      "properties": {
+        "workItemId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "version": {
+          "$ref": "#/$defs/Version"
+        },
+        "localUpdatedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "targets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EntityRef"
+          },
+          "maxItems": 100
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "OPEN",
+            "ACKNOWLEDGED",
+            "IN_PROGRESS",
+            "RESOLVED",
+            "DISMISSED"
+          ]
+        },
+        "owner": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AssigneeRef"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "snoozedUntil": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "resolutionEvidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EvidenceRef"
+          },
+          "maxItems": 100
+        },
+        "actions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/WorkAction"
+          },
+          "maxItems": 10000
+        },
+        "priority": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "dueAt": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "verificationState": {
+          "type": "string",
+          "enum": [
+            "NOT_REQUESTED",
+            "PENDING",
+            "VERIFIED",
+            "FAILED",
+            "UNKNOWN"
+          ]
+        },
+        "verificationEvidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EvidenceRef"
+          },
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "workItemId",
+        "workspaceId",
+        "version",
+        "localUpdatedAt",
+        "title",
+        "targets",
+        "state",
+        "owner",
+        "snoozedUntil",
+        "resolutionEvidence",
+        "actions",
+        "priority",
+        "dueAt",
+        "verificationState",
+        "verificationEvidence"
+      ],
+      "additionalProperties": false,
+      "description": "Local operator workflow over typed domain targets; completion does not establish provider recovery or remediation.",
+      "x-entity": true,
+      "x-module": "foundation",
+      "x-owner": "application",
+      "x-identity": "workspaceId + workItemId",
+      "x-mutable": true
+    },
+    "Command": {
+      "type": "object",
+      "properties": {
+        "commandId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "operation": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "subjectRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EntityRef"
+          },
+          "maxItems": 100
+        },
+        "actor": {
+          "$ref": "#/$defs/ActorRef"
+        },
+        "clientToken": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "requestDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "expectedVersion": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Version"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "acceptedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "ACCEPTED",
+            "DISPATCHING",
+            "RECONCILING",
+            "SUCCEEDED",
+            "FAILED",
+            "CANCELED",
+            "OUTCOME_UNKNOWN"
+          ]
+        },
+        "attempts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CommandAttempt"
+          },
+          "maxItems": 1000
+        },
+        "effects": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ExternalOperationRef"
+          },
+          "maxItems": 100
+        },
+        "resultRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EntityRef"
+          },
+          "maxItems": 100
+        },
+        "replayExpiresAt": {
+          "$ref": "#/$defs/Timestamp"
+        }
+      },
+      "required": [
+        "commandId",
+        "workspaceId",
+        "operation",
+        "subjectRefs",
+        "actor",
+        "clientToken",
+        "requestDigest",
+        "expectedVersion",
+        "acceptedAt",
+        "state",
+        "attempts",
+        "effects",
+        "resultRefs",
+        "replayExpiresAt"
+      ],
+      "additionalProperties": false,
+      "description": "Durable intent and receipt; conditional local admission is not an AWS transaction. Unknown remote outcomes are reconciled without inventing success.",
+      "x-entity": true,
+      "x-module": "foundation",
+      "x-owner": "application",
+      "x-identity": "workspaceId + commandId",
+      "x-mutable": false
+    },
+    "System": {
+      "type": "object",
+      "properties": {
+        "systemId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "version": {
+          "$ref": "#/$defs/Version"
+        },
+        "localUpdatedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 16384
+        },
+        "providerBindings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ProviderBinding"
+          },
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "systemId",
+        "workspaceId",
+        "version",
+        "localUpdatedAt",
+        "name",
+        "description",
+        "providerBindings"
+      ],
+      "additionalProperties": false,
+      "description": "Business system. Provider system aliases are explicit; local metadata changes do not mutate AWS.",
+      "x-entity": true,
+      "x-module": "workload",
+      "x-owner": "application",
+      "x-identity": "workspaceId + systemId",
+      "x-mutable": true
+    },
+    "UserJourney": {
+      "type": "object",
+      "properties": {
+        "userJourneyId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "version": {
+          "$ref": "#/$defs/Version"
+        },
+        "localUpdatedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "systemId": {
+          "$ref": "#/$defs/Id"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 16384
+        },
+        "providerBindings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ProviderBinding"
+          },
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "userJourneyId",
+        "workspaceId",
+        "version",
+        "localUpdatedAt",
+        "systemId",
+        "name",
+        "description",
+        "providerBindings"
+      ],
+      "additionalProperties": false,
+      "description": "A user journey belongs to one system; its service set is derived from Service.memberships.",
+      "x-entity": true,
+      "x-module": "workload",
+      "x-owner": "application",
+      "x-identity": "workspaceId + userJourneyId",
+      "x-mutable": true
+    },
+    "Service": {
+      "type": "object",
+      "properties": {
+        "serviceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "version": {
+          "$ref": "#/$defs/Version"
+        },
+        "localUpdatedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 16384
+        },
+        "memberships": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ServiceMembership"
+          },
+          "maxItems": 100
+        },
+        "resourceIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "maxItems": 10000
+        },
+        "providerBindings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ProviderBinding"
+          },
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "serviceId",
+        "workspaceId",
+        "version",
+        "localUpdatedAt",
+        "name",
+        "description",
+        "memberships",
+        "resourceIds",
+        "providerBindings"
+      ],
+      "additionalProperties": false,
+      "description": "Business workload boundary, distinct from an AWS service family and a RegisteredService integration.",
+      "x-entity": true,
+      "x-module": "workload",
+      "x-owner": "application",
+      "x-identity": "workspaceId + serviceId",
+      "x-mutable": true
+    },
+    "Dependency": {
+      "type": "object",
+      "properties": {
+        "dependencyId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "serviceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "identity": {
+          "$ref": "#/$defs/SourceIdentity"
+        },
+        "targetResourceId": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "targetServiceId": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "rawClassification": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "selectedObservationId": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "governance": {
+          "$ref": "#/$defs/LocalDecision"
+        }
+      },
+      "required": [
+        "dependencyId",
+        "workspaceId",
+        "serviceId",
+        "identity",
+        "targetResourceId",
+        "targetServiceId",
+        "rawClassification",
+        "selectedObservationId",
+        "governance"
+      ],
+      "additionalProperties": false,
+      "description": "Scoped service dependency. Provider classification and local governance have separate authority and version ownership.",
+      "x-entity": true,
+      "x-module": "workload",
+      "x-owner": "observed plus local governance",
+      "x-identity": "workspaceId + serviceId + dependencyId",
+      "x-mutable": false
+    },
+    "HealthEvent": {
+      "type": "object",
+      "properties": {
+        "healthEventId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "eventArn": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "eventTypeCode": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "serviceCode": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "impactedRegion": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "rawScopeCode": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "selectedSourceRevisionId": {
+          "$ref": "#/$defs/Id"
+        }
+      },
+      "required": [
+        "healthEventId",
+        "workspaceId",
+        "eventArn",
+        "eventTypeCode",
+        "serviceCode",
+        "impactedRegion",
+        "rawScopeCode",
+        "selectedSourceRevisionId"
+      ],
+      "additionalProperties": false,
+      "description": "Shared provider Health event identity. EventBridge envelope IDs and recipient accounts are not this identity.",
+      "x-entity": true,
+      "x-module": "health",
+      "x-owner": "observed",
+      "x-identity": "workspaceId + healthEventId",
+      "x-mutable": false
+    },
+    "EventContext": {
+      "type": "object",
+      "properties": {
+        "eventContextId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "healthEventId": {
+          "$ref": "#/$defs/Id"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "PUBLIC",
+            "ACCOUNT",
+            "ORG_SUMMARY"
+          ]
+        },
+        "contextKey": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "accountId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "organizationId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "selectedObservationId": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "rawProviderStatus": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "eventContextId",
+        "workspaceId",
+        "healthEventId",
+        "kind",
+        "contextKey",
+        "accountId",
+        "organizationId",
+        "selectedObservationId",
+        "rawProviderStatus"
+      ],
+      "additionalProperties": false,
+      "description": "Public/account/organization-summary evidence partition. Context-specific state never leaks into another context.",
+      "x-entity": true,
+      "x-module": "health",
+      "x-owner": "observed",
+      "x-identity": "workspaceId + healthEventId + kind + contextKey",
+      "x-mutable": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "PUBLIC"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "contextKey": {
+                "const": "PUBLIC"
+              },
+              "accountId": {
+                "type": "null"
+              },
+              "organizationId": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "ACCOUNT"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "accountId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+              },
+              "organizationId": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "ORG_SUMMARY"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "accountId": {
+                "type": "null"
+              },
+              "organizationId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+              }
+            }
+          }
+        }
+      ]
+    },
+    "EntityImpact": {
+      "type": "object",
+      "properties": {
+        "entityImpactId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "eventContextId": {
+          "$ref": "#/$defs/Id"
+        },
+        "healthEntityArn": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "entityValue": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "selectedObservationId": {
+          "$ref": "#/$defs/Id"
+        },
+        "rawProviderStatus": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "resourceMatches": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ResourceMatch"
+          },
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "entityImpactId",
+        "workspaceId",
+        "eventContextId",
+        "healthEntityArn",
+        "entityValue",
+        "selectedObservationId",
+        "rawProviderStatus",
+        "resourceMatches"
+      ],
+      "additionalProperties": false,
+      "description": "Event-relative affected-entity record, not an inventory Resource or a global health state.",
+      "x-entity": true,
+      "x-module": "health",
+      "x-owner": "observed",
+      "x-identity": "workspaceId + eventContextId + scoped provider entity key",
+      "x-mutable": false
+    },
+    "Communication": {
+      "type": "object",
+      "properties": {
+        "communicationId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "eventContextId": {
+          "$ref": "#/$defs/Id"
+        },
+        "notificationAccountContext": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "validatedBaseId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "groupingRuleDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "assemblyState": {
+          "type": "string",
+          "enum": [
+            "COMPLETE",
+            "PARTIAL",
+            "CONFLICTED",
+            "UNKNOWN"
+          ]
+        },
+        "pages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CommunicationPage"
+          },
+          "maxItems": 1000
+        }
+      },
+      "required": [
+        "communicationId",
+        "workspaceId",
+        "eventContextId",
+        "notificationAccountContext",
+        "validatedBaseId",
+        "groupingRuleDigest",
+        "assemblyState",
+        "pages"
+      ],
+      "additionalProperties": false,
+      "description": "Validated logical Health communication grouping, preserving conflicting pages and per-recipient delivery observations.",
+      "x-entity": true,
+      "x-module": "health",
+      "x-owner": "derived grouping",
+      "x-identity": "workspaceId + communicationId",
+      "x-mutable": false
+    },
+    "LifecycleEntry": {
+      "type": "object",
+      "properties": {
+        "lifecycleEntryId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "catalogSnapshotId": {
+          "$ref": "#/$defs/Id"
+        },
+        "sourceRevisionId": {
+          "$ref": "#/$defs/Id"
+        },
+        "serviceCode": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "versionLabel": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "recommendedVersion": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "milestones": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/LifecycleMilestone"
+          },
+          "maxItems": 1000
+        }
+      },
+      "required": [
+        "lifecycleEntryId",
+        "workspaceId",
+        "catalogSnapshotId",
+        "sourceRevisionId",
+        "serviceCode",
+        "title",
+        "versionLabel",
+        "recommendedVersion",
+        "milestones"
+      ],
+      "additionalProperties": false,
+      "description": "Provider lifecycle catalog entry has no established stable provider ID; retain snapshot identity and explicit match provenance.",
+      "x-entity": true,
+      "x-module": "health",
+      "x-owner": "observed local identity",
+      "x-identity": "workspaceId + lifecycleEntryId",
+      "x-mutable": false
+    },
+    "ComponentDeployment": {
+      "type": "object",
+      "properties": {
+        "componentDeploymentId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "resourceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "componentKind": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "versionLabel": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "observationId": {
+          "$ref": "#/$defs/Id"
+        }
+      },
+      "required": [
+        "componentDeploymentId",
+        "workspaceId",
+        "resourceId",
+        "componentKind",
+        "versionLabel",
+        "observationId"
+      ],
+      "additionalProperties": false,
+      "description": "An observed installed component/version on a resource, with explicit inventory provenance.",
+      "x-entity": true,
+      "x-module": "health",
+      "x-owner": "observed inventory",
+      "x-identity": "workspaceId + componentDeploymentId",
+      "x-mutable": false
+    },
+    "ResiliencePolicy": {
+      "type": "object",
+      "properties": {
+        "resiliencePolicyId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "identity": {
+          "$ref": "#/$defs/SourceIdentity"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "selectedObservationId": {
+          "$ref": "#/$defs/Id"
+        },
+        "components": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/PolicyComponent"
+          },
+          "maxItems": 4
+        },
+        "providerUpdatedAt": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "resiliencePolicyId",
+        "workspaceId",
+        "identity",
+        "name",
+        "selectedObservationId",
+        "components",
+        "providerUpdatedAt"
+      ],
+      "additionalProperties": false,
+      "description": "Provider resilience policy. Configured components stay optional; latency is not invented as a native policy component.",
+      "x-entity": true,
+      "x-module": "resilience",
+      "x-owner": "observed",
+      "x-identity": "workspaceId + resiliencePolicyId",
+      "x-mutable": false
+    },
+    "ResilienceAssessment": {
+      "type": "object",
+      "properties": {
+        "resilienceAssessmentId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "serviceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "identity": {
+          "$ref": "#/$defs/SourceIdentity"
+        },
+        "rawExecutionStatus": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "selectedObservationId": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "policyContextSnapshotId": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "selectedPostureProjectionId": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "resilienceAssessmentId",
+        "workspaceId",
+        "serviceId",
+        "identity",
+        "rawExecutionStatus",
+        "selectedObservationId",
+        "policyContextSnapshotId",
+        "selectedPostureProjectionId"
+      ],
+      "additionalProperties": false,
+      "description": "Native service-scoped assessment execution; execution success, posture and runtime health remain independent.",
+      "x-entity": true,
+      "x-module": "resilience",
+      "x-owner": "observed",
+      "x-identity": "workspaceId + serviceId + resilienceAssessmentId",
+      "x-mutable": false
+    },
+    "Finding": {
+      "type": "object",
+      "properties": {
+        "findingId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "serviceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "identity": {
+          "$ref": "#/$defs/SourceIdentity"
+        },
+        "selectedSummaryObservationId": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "selectedDetailObservationId": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "currentCaptureCollectionId": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "rawDisposition": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "rawSeverity": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "recommendationPresence": {
+          "type": "string",
+          "enum": [
+            "PRESENT",
+            "EMPTY",
+            "UNAVAILABLE",
+            "NOT_REQUESTED"
+          ]
+        },
+        "recommendationIds": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/Id"
+              },
+              "maxItems": 1000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "findingId",
+        "workspaceId",
+        "serviceId",
+        "identity",
+        "selectedSummaryObservationId",
+        "selectedDetailObservationId",
+        "currentCaptureCollectionId",
+        "rawDisposition",
+        "rawSeverity",
+        "recommendationPresence",
+        "recommendationIds"
+      ],
+      "additionalProperties": false,
+      "description": "Service-scoped finding with no mandatory assessment foreign key. Detail absence is distinct from zero suggestions.",
+      "x-entity": true,
+      "x-module": "resilience",
+      "x-owner": "observed",
+      "x-identity": "workspaceId + serviceId + findingId",
+      "x-mutable": false
+    },
+    "Recommendation": {
+      "type": "object",
+      "properties": {
+        "recommendationId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "serviceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "findingId": {
+          "$ref": "#/$defs/Id"
+        },
+        "findingDetailObservationId": {
+          "$ref": "#/$defs/Id"
+        },
+        "sourceRevisionId": {
+          "$ref": "#/$defs/Id"
+        },
+        "groupKey": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "ordinal": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "suggestion": {
+          "$ref": "#/$defs/JsonValue"
+        },
+        "enrichment": {
+          "$ref": "#/$defs/RecommendationEnrichment"
+        }
+      },
+      "required": [
+        "recommendationId",
+        "workspaceId",
+        "serviceId",
+        "findingId",
+        "findingDetailObservationId",
+        "sourceRevisionId",
+        "groupKey",
+        "ordinal",
+        "suggestion",
+        "enrichment"
+      ],
+      "additionalProperties": false,
+      "description": "Immutable suggested change anchored to one finding detail observation, group and ordinal. Later changed source content is a new recommendation.",
+      "x-entity": true,
+      "x-module": "resilience",
+      "x-owner": "immutable evidence plus local enrichment",
+      "x-identity": "workspaceId + serviceId + findingId + detail observation + group + ordinal",
+      "x-mutable": false
+    },
+    "AgentSpace": {
+      "type": "object",
+      "properties": {
+        "agentSpaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "identity": {
+          "$ref": "#/$defs/SourceIdentity"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "selectedObservationId": {
+          "$ref": "#/$defs/Id"
+        },
+        "associations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AgentAssociation"
+          },
+          "maxItems": 1000
+        }
+      },
+      "required": [
+        "agentSpaceId",
+        "workspaceId",
+        "identity",
+        "name",
+        "selectedObservationId",
+        "associations"
+      ],
+      "additionalProperties": false,
+      "description": "AWS workspace resource inside the application Workspace. Never merge it with the product authorization boundary.",
+      "x-entity": true,
+      "x-module": "investigation",
+      "x-owner": "observed",
+      "x-identity": "workspaceId + agentSpaceId",
+      "x-mutable": false
+    },
+    "Investigation": {
+      "type": "object",
+      "properties": {
+        "investigationId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "agentSpaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "identity": {
+          "$ref": "#/$defs/SourceIdentity"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "rawTaskStatus": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "nativeTaskVersion": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Version"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "selectedTaskObservationId": {
+          "$ref": "#/$defs/Id"
+        },
+        "executionPointerIdentity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SourceIdentity"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "executionMemberships": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/TaskExecutionMembership"
+          },
+          "maxItems": 10000
+        },
+        "externalReference": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ExternalReference"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "primaryTaskIdentity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SourceIdentity"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "investigationId",
+        "workspaceId",
+        "agentSpaceId",
+        "identity",
+        "title",
+        "rawTaskStatus",
+        "nativeTaskVersion",
+        "selectedTaskObservationId",
+        "executionPointerIdentity",
+        "executionMemberships",
+        "externalReference",
+        "primaryTaskIdentity"
+      ],
+      "additionalProperties": false,
+      "description": "Native Task with taskType INVESTIGATION plus observed execution memberships and result views; no invented native GetInvestigation contract.",
+      "x-entity": true,
+      "x-module": "investigation",
+      "x-owner": "observed aggregate",
+      "x-identity": "workspaceId + agentSpaceId + native taskId",
+      "x-mutable": false
+    },
+    "Execution": {
+      "type": "object",
+      "properties": {
+        "executionId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "agentSpaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "identity": {
+          "$ref": "#/$defs/SourceIdentity"
+        },
+        "parentExecutionIdentity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SourceIdentity"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "rawExecutionStatus": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "agentSubTask": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "selectedObservationId": {
+          "$ref": "#/$defs/Id"
+        }
+      },
+      "required": [
+        "executionId",
+        "workspaceId",
+        "agentSpaceId",
+        "identity",
+        "parentExecutionIdentity",
+        "rawExecutionStatus",
+        "agentSubTask",
+        "selectedObservationId"
+      ],
+      "additionalProperties": false,
+      "description": "Native DevOps execution in an AgentSpace; task membership is an observed relation, not a single foreign key.",
+      "x-entity": true,
+      "x-module": "investigation",
+      "x-owner": "observed",
+      "x-identity": "workspaceId + agentSpaceId + native executionId",
+      "x-mutable": false
+    },
+    "JournalRecord": {
+      "type": "object",
+      "properties": {
+        "journalRecordId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "agentSpaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "executionId": {
+          "$ref": "#/$defs/Id"
+        },
+        "identity": {
+          "$ref": "#/$defs/SourceIdentity"
+        },
+        "recordType": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "selectedSourceRevisionId": {
+          "$ref": "#/$defs/Id"
+        },
+        "selectedObservationId": {
+          "$ref": "#/$defs/Id"
+        }
+      },
+      "required": [
+        "journalRecordId",
+        "workspaceId",
+        "agentSpaceId",
+        "executionId",
+        "identity",
+        "recordType",
+        "selectedSourceRevisionId",
+        "selectedObservationId"
+      ],
+      "additionalProperties": false,
+      "description": "Stable journal envelope identity with retained source revisions. Content stays arbitrary JSON; no assumed root-cause schema.",
+      "x-entity": true,
+      "x-module": "investigation",
+      "x-owner": "observed",
+      "x-identity": "workspaceId + agentSpaceId + executionId + native recordId",
+      "x-mutable": false
+    },
+    "ApprovalRequest": {
+      "type": "object",
+      "properties": {
+        "approvalRequestId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "agentSpaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "executionId": {
+          "$ref": "#/$defs/Id"
+        },
+        "nativeApprovalId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "requestSourceRevisionId": {
+          "$ref": "#/$defs/Id"
+        },
+        "selectedObservationId": {
+          "$ref": "#/$defs/Id"
+        },
+        "rawState": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "actionDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "decisionCommandIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "maxItems": 100
+        },
+        "resumeCommandIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "approvalRequestId",
+        "workspaceId",
+        "agentSpaceId",
+        "executionId",
+        "nativeApprovalId",
+        "requestSourceRevisionId",
+        "selectedObservationId",
+        "rawState",
+        "actionDigest",
+        "decisionCommandIds",
+        "resumeCommandIds"
+      ],
+      "additionalProperties": false,
+      "description": "Approval decision and resume are separate commands; neither is evidence of tool execution success.",
+      "x-entity": true,
+      "x-module": "investigation",
+      "x-owner": "observed control request",
+      "x-identity": "workspaceId + approvalRequestId",
+      "x-mutable": false
+    },
+    "Asset": {
+      "type": "object",
+      "properties": {
+        "assetId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "agentSpaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "identity": {
+          "$ref": "#/$defs/SourceIdentity"
+        },
+        "assetType": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "versions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AssetVersion"
+          },
+          "maxItems": 1000
+        }
+      },
+      "required": [
+        "assetId",
+        "workspaceId",
+        "agentSpaceId",
+        "identity",
+        "assetType",
+        "name",
+        "versions"
+      ],
+      "additionalProperties": false,
+      "description": "Native asset root; exact versions and files retain immutable source/content references and availability.",
+      "x-entity": true,
+      "x-module": "investigation",
+      "x-owner": "observed",
+      "x-identity": "workspaceId + assetId",
+      "x-mutable": false
+    },
+    "Scenario": {
+      "type": "object",
+      "properties": {
+        "scenarioId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "version": {
+          "$ref": "#/$defs/Version"
+        },
+        "localUpdatedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 16384
+        },
+        "draftDefinition": {
+          "$ref": "#/$defs/ScenarioDraft"
+        },
+        "defaultRevisionId": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "archived": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "scenarioId",
+        "workspaceId",
+        "version",
+        "localUpdatedAt",
+        "name",
+        "description",
+        "draftDefinition",
+        "defaultRevisionId",
+        "archived"
+      ],
+      "additionalProperties": false,
+      "description": "Editable scenario metadata and draft; executions reference a published immutable ScenarioRevision.",
+      "x-entity": true,
+      "x-module": "workflow",
+      "x-owner": "application",
+      "x-identity": "workspaceId + scenarioId",
+      "x-mutable": true
+    },
+    "ScenarioRevision": {
+      "type": "object",
+      "properties": {
+        "scenarioRevisionId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "scenarioId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revisionNumber": {
+          "$ref": "#/$defs/Version"
+        },
+        "publishedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "digest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "definition": {
+          "$ref": "#/$defs/ScenarioDefinition"
+        }
+      },
+      "required": [
+        "scenarioRevisionId",
+        "workspaceId",
+        "scenarioId",
+        "revisionNumber",
+        "publishedAt",
+        "digest",
+        "definition"
+      ],
+      "additionalProperties": false,
+      "description": "Validated immutable definition with complete operation/schema locks. Alias changes cannot change published meaning.",
+      "x-entity": true,
+      "x-module": "workflow",
+      "x-owner": "application immutable publication",
+      "x-identity": "workspaceId + scenarioId + scenarioRevisionId",
+      "x-mutable": false
+    },
+    "Run": {
+      "type": "object",
+      "properties": {
+        "runId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "scenarioRevisionId": {
+          "$ref": "#/$defs/Id"
+        },
+        "inputSnapshotId": {
+          "$ref": "#/$defs/Id"
+        },
+        "phase": {
+          "type": "string",
+          "enum": [
+            "ADMITTED",
+            "RUNNING",
+            "FINALIZING",
+            "TERMINAL"
+          ]
+        },
+        "executionOutcome": {
+          "type": "string",
+          "enum": [
+            "PENDING",
+            "RUNNING",
+            "SUCCEEDED",
+            "FAILED",
+            "CANCELED",
+            "BLOCKED",
+            "TIMED_OUT",
+            "INDETERMINATE"
+          ]
+        },
+        "assessmentVerdict": {
+          "type": "string",
+          "enum": [
+            "PASS",
+            "FAIL",
+            "INCONCLUSIVE",
+            "NOT_EVALUATED"
+          ]
+        },
+        "assessmentFinality": {
+          "type": "string",
+          "enum": [
+            "PROVISIONAL",
+            "FINAL"
+          ]
+        },
+        "finalizationState": {
+          "type": "string",
+          "enum": [
+            "PENDING",
+            "RUNNING",
+            "COMPLETE",
+            "INCOMPLETE"
+          ]
+        },
+        "effectState": {
+          "type": "string",
+          "enum": [
+            "NONE",
+            "ACTIVE",
+            "QUIESCENT",
+            "UNKNOWN"
+          ]
+        },
+        "cancellationIntent": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CancellationIntent"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "projectionVersion": {
+          "$ref": "#/$defs/Version"
+        },
+        "admittedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "terminalAt": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reducerVersion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "asOfSequence": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "runId",
+        "workspaceId",
+        "scenarioRevisionId",
+        "inputSnapshotId",
+        "phase",
+        "executionOutcome",
+        "assessmentVerdict",
+        "assessmentFinality",
+        "finalizationState",
+        "effectState",
+        "cancellationIntent",
+        "projectionVersion",
+        "admittedAt",
+        "terminalAt",
+        "reducerVersion",
+        "asOfSequence"
+      ],
+      "additionalProperties": false,
+      "description": "An admitted workflow execution; its phase, technical outcome, verdict and finalization remain separate.",
+      "x-entity": true,
+      "x-module": "workflow",
+      "x-owner": "application execution",
+      "x-identity": "workspaceId + runId",
+      "x-mutable": false
+    },
+    "StepRun": {
+      "type": "object",
+      "properties": {
+        "stepRunId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "runId": {
+          "$ref": "#/$defs/Id"
+        },
+        "stepKey": {
+          "$ref": "#/$defs/Id"
+        },
+        "selectedAttemptNo": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Version"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "skipReason": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "phase": {
+          "type": "string",
+          "enum": [
+            "PENDING",
+            "RUNNING",
+            "FINISHED"
+          ]
+        },
+        "outcome": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "SUCCEEDED",
+                "FAILED",
+                "CANCELED",
+                "BLOCKED",
+                "TIMED_OUT",
+                "INDETERMINATE",
+                "SKIPPED"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "stepRunId",
+        "workspaceId",
+        "runId",
+        "stepKey",
+        "selectedAttemptNo",
+        "skipReason",
+        "phase",
+        "outcome"
+      ],
+      "additionalProperties": false,
+      "description": "Run-owned step lifecycle. Selection of an attempt is explicit; retry history is retained.",
+      "x-entity": true,
+      "x-module": "workflow",
+      "x-owner": "application execution",
+      "x-identity": "workspaceId + runId + stepKey",
+      "x-mutable": false
+    },
+    "StepAttempt": {
+      "type": "object",
+      "properties": {
+        "stepAttemptId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "runId": {
+          "$ref": "#/$defs/Id"
+        },
+        "stepRunId": {
+          "$ref": "#/$defs/Id"
+        },
+        "attemptNo": {
+          "$ref": "#/$defs/Version"
+        },
+        "dispatchKey": {
+          "$ref": "#/$defs/Id"
+        },
+        "outcome": {
+          "type": "string",
+          "enum": [
+            "PENDING",
+            "RUNNING",
+            "SUCCEEDED",
+            "FAILED",
+            "CANCELED",
+            "TIMED_OUT",
+            "INDETERMINATE"
+          ]
+        },
+        "startedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "settledAt": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "checkResult": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CheckResult"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "externalOperations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ExternalOperationRef"
+          },
+          "maxItems": 100
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EvidenceRef"
+          },
+          "maxItems": 1000
+        }
+      },
+      "required": [
+        "stepAttemptId",
+        "workspaceId",
+        "runId",
+        "stepRunId",
+        "attemptNo",
+        "dispatchKey",
+        "outcome",
+        "startedAt",
+        "settledAt",
+        "checkResult",
+        "externalOperations",
+        "evidenceRefs"
+      ],
+      "additionalProperties": false,
+      "description": "Immutable settled execution facts; late reconciliation adds observations without editing a sealed attempt.",
+      "x-entity": true,
+      "x-module": "workflow",
+      "x-owner": "application execution facts",
+      "x-identity": "workspaceId + runId + stepRunId + attemptNo",
+      "x-mutable": false
+    },
+    "Experiment": {
+      "type": "object",
+      "properties": {
+        "experimentId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "identity": {
+          "$ref": "#/$defs/SourceIdentity"
+        },
+        "templateSourceRevisionId": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "selectedObservationId": {
+          "$ref": "#/$defs/Id"
+        },
+        "rawExperimentState": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "actions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/FISAction"
+          },
+          "maxItems": 100
+        },
+        "targetMemberships": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/TargetMembership"
+          },
+          "maxItems": 10000
+        },
+        "resolutionCoverage": {
+          "$ref": "#/$defs/Coverage"
+        },
+        "report": {
+          "$ref": "#/$defs/FISReport"
+        }
+      },
+      "required": [
+        "experimentId",
+        "workspaceId",
+        "identity",
+        "templateSourceRevisionId",
+        "selectedObservationId",
+        "rawExperimentState",
+        "actions",
+        "targetMemberships",
+        "resolutionCoverage",
+        "report"
+      ],
+      "additionalProperties": false,
+      "description": "Native AWS FIS experiment, possibly linked to a workflow attempt but independently observable. Actions are provider-owned named values.",
+      "x-entity": true,
+      "x-module": "fis",
+      "x-owner": "observed",
+      "x-identity": "workspaceId + experimentId",
+      "x-mutable": false
+    },
+    "WorkflowPolicies": {
+      "type": "object",
+      "properties": {
+        "timeoutSeconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 86400
+        },
+        "finalizationTimeoutSeconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3600
+        },
+        "concurrency": {
+          "type": "string",
+          "enum": [
+            "QUEUE_PER_DEPLOYMENT",
+            "REJECT_PER_DEPLOYMENT"
+          ]
+        }
+      },
+      "required": [
+        "timeoutSeconds",
+        "finalizationTimeoutSeconds",
+        "concurrency"
+      ],
+      "additionalProperties": false,
+      "description": "Main/finalization budgets and trusted deployment concurrency are independent."
+    },
+    "BindingDeclaration": {
+      "type": "object",
+      "properties": {
+        "bindingKey": {
+          "$ref": "#/$defs/Id"
+        },
+        "kind": {
+          "const": "CONNECTION"
+        },
+        "capability": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "bindingKey",
+        "kind",
+        "capability"
+      ],
+      "additionalProperties": false,
+      "description": "Authoring declaration resolved against an authorized connection at admission."
+    },
+    "RetryPolicy": {
+      "type": "object",
+      "properties": {
+        "maxAttempts": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "on": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "THROTTLED",
+              "TRANSIENT_READ_FAILURE"
+            ]
+          },
+          "maxItems": 2
+        }
+      },
+      "required": [
+        "maxAttempts",
+        "on"
+      ],
+      "additionalProperties": false,
+      "description": "Bounded read retries. Mutating retries require trusted adapter capability and resolved previous effect."
+    },
+    "ScenarioDraft": {
+      "type": "object",
+      "properties": {
+        "steps": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/StepDefinition"
+          },
+          "maxItems": 100
+        },
+        "expressionProfile": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "inputSchema": {
+          "type": "object",
+          "description": "Retained JSON Schema, validated as a schema and restricted to a closed top-level object at publication."
+        },
+        "bindings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/BindingDeclaration"
+          },
+          "maxItems": 100
+        },
+        "policies": {
+          "$ref": "#/$defs/WorkflowPolicies"
+        }
+      },
+      "required": [
+        "steps",
+        "expressionProfile",
+        "inputSchema",
+        "bindings",
+        "policies"
+      ],
+      "additionalProperties": false,
+      "description": "Editable authoring document. Trusted publication resolves operation and schema locks; authors cannot grant capabilities by supplying a lock."
+    },
+    "ResolvedBinding": {
+      "type": "object",
+      "properties": {
+        "bindingKey": {
+          "$ref": "#/$defs/Id"
+        },
+        "connectionId": {
+          "$ref": "#/$defs/Id"
+        },
+        "authorizationContextKey": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "scopeDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "allowedScopes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/OwningScope"
+          },
+          "maxItems": 1000
+        },
+        "providerBindings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ProviderBinding"
+          },
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "bindingKey",
+        "connectionId",
+        "authorizationContextKey",
+        "scopeDigest",
+        "allowedScopes",
+        "providerBindings"
+      ],
+      "additionalProperties": false,
+      "description": "Trusted admitted mapping from a declaration to a connection and constrained effect scope. A provider identity alone is not an access grant."
+    },
+    "EvidenceLocator": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "JSON_POINTER",
+            "ASSET_PATH",
+            "TEXT_RANGE"
+          ]
+        },
+        "path": {
+          "type": "string",
+          "maxLength": 4096
+        },
+        "startOffset": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "endOffset": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "kind",
+        "path",
+        "startOffset",
+        "endOffset"
+      ],
+      "additionalProperties": false,
+      "description": "Optional exact fragment attribution: JSON Pointer, asset path, or half-open Unicode code-point text offsets. Omitted locator means the entire retained value."
+    },
+    "RecommendationEstimate": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "currency": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 3
+        },
+        "basis": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "complexity": {
+          "type": "string",
+          "enum": [
+            "LOW",
+            "MEDIUM",
+            "HIGH",
+            "UNKNOWN"
+          ]
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "estimatedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "confidence": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "amount",
+        "currency",
+        "basis",
+        "complexity",
+        "source",
+        "estimatedAt",
+        "confidence"
+      ],
+      "additionalProperties": false,
+      "description": "Local estimate with declared amount/currency/basis, complexity, source, time and confidence; separate from provider suggested-change evidence."
+    },
+    "AssigneeRef": {
+      "type": "object",
+      "properties": {
+        "issuer": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "subject": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "HUMAN",
+            "GROUP",
+            "SERVICE"
+          ]
+        }
+      },
+      "required": [
+        "issuer",
+        "subject",
+        "kind"
+      ],
+      "additionalProperties": false,
+      "description": "Resolved directory identity assigned to local work. A team/group is an assignee, never an authenticated audit actor."
+    }
+  },
+  "oneOf": [
+    {
+      "$ref": "#/$defs/Workspace"
+    },
+    {
+      "$ref": "#/$defs/Connection"
+    },
+    {
+      "$ref": "#/$defs/Resource"
+    },
+    {
+      "$ref": "#/$defs/Collection"
+    },
+    {
+      "$ref": "#/$defs/ReadAttempt"
+    },
+    {
+      "$ref": "#/$defs/SourceRevision"
+    },
+    {
+      "$ref": "#/$defs/Observation"
+    },
+    {
+      "$ref": "#/$defs/ProjectionRevision"
+    },
+    {
+      "$ref": "#/$defs/Snapshot"
+    },
+    {
+      "$ref": "#/$defs/WorkItem"
+    },
+    {
+      "$ref": "#/$defs/Command"
+    },
+    {
+      "$ref": "#/$defs/System"
+    },
+    {
+      "$ref": "#/$defs/UserJourney"
+    },
+    {
+      "$ref": "#/$defs/Service"
+    },
+    {
+      "$ref": "#/$defs/Dependency"
+    },
+    {
+      "$ref": "#/$defs/HealthEvent"
+    },
+    {
+      "$ref": "#/$defs/EventContext"
+    },
+    {
+      "$ref": "#/$defs/EntityImpact"
+    },
+    {
+      "$ref": "#/$defs/Communication"
+    },
+    {
+      "$ref": "#/$defs/LifecycleEntry"
+    },
+    {
+      "$ref": "#/$defs/ComponentDeployment"
+    },
+    {
+      "$ref": "#/$defs/ResiliencePolicy"
+    },
+    {
+      "$ref": "#/$defs/ResilienceAssessment"
+    },
+    {
+      "$ref": "#/$defs/Finding"
+    },
+    {
+      "$ref": "#/$defs/Recommendation"
+    },
+    {
+      "$ref": "#/$defs/AgentSpace"
+    },
+    {
+      "$ref": "#/$defs/Investigation"
+    },
+    {
+      "$ref": "#/$defs/Execution"
+    },
+    {
+      "$ref": "#/$defs/JournalRecord"
+    },
+    {
+      "$ref": "#/$defs/ApprovalRequest"
+    },
+    {
+      "$ref": "#/$defs/Asset"
+    },
+    {
+      "$ref": "#/$defs/Scenario"
+    },
+    {
+      "$ref": "#/$defs/ScenarioRevision"
+    },
+    {
+      "$ref": "#/$defs/Run"
+    },
+    {
+      "$ref": "#/$defs/StepRun"
+    },
+    {
+      "$ref": "#/$defs/StepAttempt"
+    },
+    {
+      "$ref": "#/$defs/Experiment"
+    }
+  ]
+}

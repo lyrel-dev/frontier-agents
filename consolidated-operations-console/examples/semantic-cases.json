@@ -1,0 +1,983 @@
+{
+  "status": "OFFLINE_NORMATIVE_CASES",
+  "scope": "Alternative fixture datasets exercise structure, identity, evidence prerequisites and cross-artifact invariants. No case executes a predicate, provider call, scheduler, database or authorization system.",
+  "cases": [
+    {
+      "id": "execution-and-acceptance-independent",
+      "description": "Successful technical execution coexists with a failed required acceptance criterion.",
+      "expect": "VALID",
+      "mutations": [],
+      "assertions": [
+        {
+          "entity": "Run",
+          "id": "run-checkout",
+          "path": "/executionOutcome",
+          "equals": "SUCCEEDED"
+        },
+        {
+          "entity": "Run",
+          "id": "run-checkout",
+          "path": "/assessmentVerdict",
+          "equals": "FAIL"
+        }
+      ]
+    },
+    {
+      "id": "local-review-does-not-repair-source",
+      "description": "Local review completion leaves the provider finding open and Health impact pending.",
+      "expect": "VALID",
+      "mutations": [],
+      "assertions": [
+        {
+          "entity": "WorkItem",
+          "id": "workitem-review",
+          "path": "/state",
+          "equals": "RESOLVED"
+        },
+        {
+          "entity": "Finding",
+          "id": "finding-single-node",
+          "path": "/rawDisposition",
+          "equals": "OPEN"
+        },
+        {
+          "entity": "EntityImpact",
+          "id": "impact-db",
+          "path": "/rawProviderStatus",
+          "equals": "PENDING"
+        }
+      ]
+    },
+    {
+      "id": "observation-is-not-revision",
+      "description": "Two successful reads of the same payload retain two observations and one source revision.",
+      "expect": "VALID",
+      "mutations": [],
+      "assertions": [
+        {
+          "entity": "Observation",
+          "id": "obs-health-impact",
+          "path": "/sourceRevisionId",
+          "equals": "src-health-impact"
+        },
+        {
+          "entity": "Observation",
+          "id": "obs-health-impact-repeat",
+          "path": "/sourceRevisionId",
+          "equals": "src-health-impact"
+        }
+      ]
+    },
+    {
+      "id": "finding-has-no-required-assessment-foreign-key",
+      "description": "A service-scoped finding is valid without inventing membership in an assessment result set.",
+      "expect": "VALID",
+      "mutations": [],
+      "assertions": [
+        {
+          "entity": "Finding",
+          "id": "finding-single-node",
+          "path": "/serviceId",
+          "equals": "svc-checkout"
+        }
+      ]
+    },
+    {
+      "id": "failed-read-preserves-unknown-count",
+      "description": "An access failure retains its error and unknown count instead of creating an empty successful response.",
+      "expect": "VALID",
+      "mutations": [],
+      "assertions": [
+        {
+          "entity": "ReadAttempt",
+          "id": "read-external-traces",
+          "path": "/returnedCount",
+          "equals": null
+        },
+        {
+          "entity": "ReadAttempt",
+          "id": "read-external-traces",
+          "path": "/error/code",
+          "equals": "AccessDenied"
+        }
+      ]
+    },
+    {
+      "id": "states-are-independent",
+      "description": "Successful assessment execution, unmet posture and degraded runtime health remain independent dimensions.",
+      "expect": "VALID",
+      "mutations": [],
+      "assertions": [
+        {
+          "entity": "ProjectionRevision",
+          "id": "projection-service-status",
+          "path": "/value/assessmentExecution/state",
+          "equals": "SUCCEEDED"
+        },
+        {
+          "entity": "ProjectionRevision",
+          "id": "projection-service-status",
+          "path": "/value/resiliencePosture/state",
+          "equals": "NOT_ACHIEVABLE"
+        },
+        {
+          "entity": "ProjectionRevision",
+          "id": "projection-service-status",
+          "path": "/value/runtimeHealth/state",
+          "equals": "DEGRADED"
+        }
+      ]
+    },
+    {
+      "id": "native-json-null-is-retained",
+      "description": "An explicit native JSON null is retained inline and is not confused with an external payload locator.",
+      "expect": "VALID",
+      "mutations": [
+        {
+          "entity": "SourceRevision",
+          "id": "src-journal",
+          "path": "/payload",
+          "value": null
+        }
+      ],
+      "rehash": [
+        {
+          "entity": "SourceRevision",
+          "id": "src-journal"
+        }
+      ],
+      "assertions": [
+        {
+          "entity": "SourceRevision",
+          "id": "src-journal",
+          "path": "/payloadStorage",
+          "equals": "INLINE"
+        }
+      ]
+    },
+    {
+      "id": "open-provider-vocabulary",
+      "description": "An unfamiliar provider status is preserved as raw source evidence.",
+      "expect": "VALID",
+      "mutations": [
+        {
+          "entity": "EventContext",
+          "id": "context-account",
+          "path": "/rawProviderStatus",
+          "value": "FUTURE_PROVIDER_STATE"
+        },
+        {
+          "entity": "SourceRevision",
+          "id": "src-health-context",
+          "path": "/payload/statusCode",
+          "value": "FUTURE_PROVIDER_STATE"
+        }
+      ],
+      "rehash": [
+        {
+          "entity": "SourceRevision",
+          "id": "src-health-context"
+        }
+      ]
+    },
+    {
+      "id": "workspace-isolation",
+      "description": "A source revision cannot escape the authenticated enclosing workspace.",
+      "expect": "INVALID",
+      "mutations": [
+        {
+          "entity": "SourceRevision",
+          "id": "src-health-impact",
+          "path": "/workspaceId",
+          "value": "ws-other"
+        }
+      ],
+      "expectedCodes": [
+        "WORKSPACE_MISMATCH"
+      ]
+    },
+    {
+      "id": "typed-reference-kind",
+      "description": "A Finding ID cannot be used as a Resource reference.",
+      "expect": "INVALID",
+      "mutations": [
+        {
+          "entity": "WorkItem",
+          "id": "workitem-review",
+          "path": "/targets/0",
+          "value": {
+            "kind": "Resource",
+            "id": "finding-single-node"
+          }
+        }
+      ],
+      "expectedCodes": [
+        "REFERENCE_SCOPE"
+      ]
+    },
+    {
+      "id": "organization-summary-has-no-impacts",
+      "description": "Organization summaries cannot own affected-entity records.",
+      "expect": "INVALID",
+      "mutations": [
+        {
+          "entity": "EntityImpact",
+          "id": "impact-db",
+          "path": "/eventContextId",
+          "value": "context-organization"
+        }
+      ],
+      "expectedCodes": [
+        "ORG_SUMMARY_IMPACT"
+      ]
+    },
+    {
+      "id": "impact-account-agrees",
+      "description": "A source account must agree with its explicit ACCOUNT context.",
+      "expect": "INVALID",
+      "mutations": [
+        {
+          "entity": "SourceRevision",
+          "id": "src-health-impact",
+          "path": "/payload/awsAccountId",
+          "value": "999900001111"
+        }
+      ],
+      "rehash": [
+        {
+          "entity": "SourceRevision",
+          "id": "src-health-impact"
+        }
+      ],
+      "expectedCodes": [
+        "IMPACT_ACCOUNT"
+      ]
+    },
+    {
+      "id": "public-context-no-account",
+      "description": "Public context visibility must not be relabeled as an affected account.",
+      "expect": "INVALID",
+      "mutations": [
+        {
+          "entity": "EventContext",
+          "id": "context-account",
+          "path": "/kind",
+          "value": "PUBLIC"
+        },
+        {
+          "entity": "EventContext",
+          "id": "context-account",
+          "path": "/contextKey",
+          "value": "PUBLIC"
+        }
+      ],
+      "expectedCodes": [
+        "SCHEMA"
+      ]
+    },
+    {
+      "id": "partial-communication-is-not-complete",
+      "description": "One of two logical pages cannot be marked a complete communication.",
+      "expect": "INVALID",
+      "mutations": [
+        {
+          "entity": "Communication",
+          "id": "communication-maintenance",
+          "path": "/assemblyState",
+          "value": "COMPLETE"
+        }
+      ],
+      "expectedCodes": [
+        "COMMUNICATION_COMPLETENESS"
+      ]
+    },
+    {
+      "id": "agent-space-parent",
+      "description": "Native execution identity must carry the same Agent Space as its canonical parent.",
+      "expect": "INVALID",
+      "mutations": [
+        {
+          "entity": "Execution",
+          "id": "execution-investigation",
+          "path": "/identity/scope/parentKeys/agentSpaceId",
+          "value": "other-native-space"
+        }
+      ],
+      "expectedCodes": [
+        "AGENT_SPACE_SCOPE"
+      ]
+    },
+    {
+      "id": "membership-request-evidence",
+      "description": "Observed task membership must retain the ListExecutions request association.",
+      "expect": "INVALID",
+      "mutations": [
+        {
+          "entity": "Investigation",
+          "id": "investigation-checkout",
+          "path": "/executionMemberships/0/observationId",
+          "value": "obs-task"
+        }
+      ],
+      "expectedCodes": [
+        "EXECUTION_MEMBERSHIP_EVIDENCE"
+      ]
+    },
+    {
+      "id": "current-inspector-exact-source",
+      "description": "A journal inspector must use the source revision actually selected by its observation.",
+      "expect": "INVALID",
+      "mutations": [
+        {
+          "entity": "JournalRecord",
+          "id": "journal-summary",
+          "path": "/selectedSourceRevisionId",
+          "value": "src-task"
+        }
+      ],
+      "expectedCodes": [
+        "SELECTED_REVISION"
+      ]
+    },
+    {
+      "id": "phase-specific-result",
+      "description": "A mitigation completion cannot replace the investigation-phase result.",
+      "expect": "INVALID",
+      "mutations": [
+        {
+          "entity": "SourceRevision",
+          "id": "src-completion",
+          "path": "/payload/phase",
+          "value": "MITIGATION"
+        }
+      ],
+      "rehash": [
+        {
+          "entity": "SourceRevision",
+          "id": "src-completion"
+        }
+      ],
+      "expectedCodes": [
+        "RESULT_PHASE"
+      ]
+    },
+    {
+      "id": "duplicate-source-revision",
+      "description": "Repeat observations do not justify a second identical immutable revision.",
+      "expect": "INVALID",
+      "mutations": [],
+      "appendRecords": [
+        {
+          "entity": "SourceRevision",
+          "record": {
+            "workspaceId": "ws-demo",
+            "sourceRevisionId": "src-duplicate-impact",
+            "identity": {
+              "provider": "AWS",
+              "service": "health",
+              "resourceType": "EntityImpact",
+              "scope": {
+                "partition": "aws",
+                "accountId": "111122223333",
+                "region": "eu-central-1",
+                "organizationId": null,
+                "parentKeys": {
+                  "eventArn": "arn:aws:health:eu-central-1::event/RDS/AWS_RDS_MAINTENANCE/fixture-event-1"
+                }
+              },
+              "nativeId": "entity-fixture-1",
+              "identityKind": "NATIVE",
+              "provisionalKey": null,
+              "aliases": []
+            },
+            "representation": "DETAIL",
+            "profile": "aws.health.entity-impact/v1",
+            "profileVersion": "1",
+            "sourceOperation": "health:DescribeAffectedEntities",
+            "contentDigest": "sha256:53366c7e3003df8e0ae41d93a9623bc69ebe7920e19848725765a7f362cdfa2c",
+            "providerUpdatedAt": 1793869200,
+            "providerVersion": null,
+            "fieldPresence": [
+              {
+                "path": "/",
+                "state": "PRESENT"
+              }
+            ],
+            "payload": {
+              "entityValue": "arn:aws:rds:eu-central-1:111122223333:db:checkout-fixture",
+              "awsAccountId": "111122223333",
+              "statusCode": "PENDING",
+              "synthetic": true
+            },
+            "payloadStorage": "INLINE",
+            "artifact": null,
+            "digestProfile": "RFC8785_SHA256"
+          }
+        }
+      ],
+      "expectedCodes": [
+        "DUPLICATE_SOURCE_REVISION"
+      ]
+    },
+    {
+      "id": "unknown-evidence-cannot-pass",
+      "description": "A requested PASS with no retained evidence is invalid.",
+      "expect": "INVALID",
+      "mutations": [
+        {
+          "entity": "StepAttempt",
+          "id": "attempt-error_budget",
+          "path": "/checkResult/verdict",
+          "value": "PASS"
+        },
+        {
+          "entity": "StepAttempt",
+          "id": "attempt-error_budget",
+          "path": "/checkResult/evidenceRefs",
+          "value": []
+        }
+      ],
+      "expectedCodes": [
+        "CHECK_EVIDENCE"
+      ]
+    },
+    {
+      "id": "incomplete-numeric-evidence",
+      "description": "A numerical conclusion requires sufficient evidence for the declared question.",
+      "expect": "INVALID",
+      "mutations": [
+        {
+          "entity": "StepAttempt",
+          "id": "attempt-error_budget",
+          "path": "/checkResult/coverage/claim",
+          "value": "INSUFFICIENT"
+        }
+      ],
+      "expectedCodes": [
+        "CHECK_COVERAGE"
+      ]
+    },
+    {
+      "id": "absence-needs-closed-scope",
+      "description": "Conclusive absence cannot be inferred while the observation window is open.",
+      "expect": "INVALID",
+      "mutations": [
+        {
+          "entity": "StepAttempt",
+          "id": "attempt-error_budget",
+          "path": "/checkResult/claimType",
+          "value": "ABSENCE"
+        },
+        {
+          "entity": "StepAttempt",
+          "id": "attempt-error_budget",
+          "path": "/checkResult/coverage/windowState",
+          "value": "OPEN"
+        }
+      ],
+      "expectedCodes": [
+        "ABSENCE_COVERAGE"
+      ]
+    },
+    {
+      "id": "skipped-required-criterion",
+      "description": "A runtime-skipped required criterion cannot disappear from the pass denominator.",
+      "expect": "INVALID",
+      "mutations": [
+        {
+          "entity": "StepRun",
+          "id": "step-error_budget",
+          "path": "/selectedAttemptNo",
+          "value": null
+        },
+        {
+          "entity": "StepRun",
+          "id": "step-error_budget",
+          "path": "/skipReason",
+          "value": "Synthetic runtime condition was false."
+        },
+        {
+          "entity": "StepRun",
+          "id": "step-error_budget",
+          "path": "/outcome",
+          "value": "SKIPPED"
+        },
+        {
+          "entity": "Run",
+          "id": "run-checkout",
+          "path": "/assessmentVerdict",
+          "value": "PASS"
+        }
+      ],
+      "expectedCodes": [
+        "RUN_VERDICT"
+      ]
+    },
+    {
+      "id": "admission-denominator-is-frozen",
+      "description": "Admission cannot omit an enabled required criterion.",
+      "expect": "INVALID",
+      "mutations": [
+        {
+          "entity": "Snapshot",
+          "id": "snap-run-input",
+          "path": "/contents/requiredCriterionKeys",
+          "value": []
+        },
+        {
+          "entity": "Run",
+          "id": "run-checkout",
+          "path": "/assessmentVerdict",
+          "value": "NOT_EVALUATED"
+        }
+      ],
+      "rehash": [
+        {
+          "entity": "Snapshot",
+          "id": "snap-run-input"
+        }
+      ],
+      "expectedCodes": [
+        "CRITERION_DENOMINATOR"
+      ]
+    },
+    {
+      "id": "scope-binding-is-complete",
+      "description": "The admitted access path must map each declared binding exactly once.",
+      "expect": "INVALID",
+      "mutations": [
+        {
+          "entity": "Snapshot",
+          "id": "snap-run-input",
+          "path": "/contents/resolvedBindings",
+          "value": []
+        }
+      ],
+      "rehash": [
+        {
+          "entity": "Snapshot",
+          "id": "snap-run-input"
+        }
+      ],
+      "expectedCodes": [
+        "BINDING_CLOSURE"
+      ]
+    },
+    {
+      "id": "published-definition-lock",
+      "description": "Changing a published definition without changing its digest is rejected.",
+      "expect": "INVALID",
+      "mutations": [
+        {
+          "entity": "ScenarioRevision",
+          "id": "rev-checkout-1",
+          "path": "/definition/steps/0/timeoutSeconds",
+          "value": 301
+        }
+      ],
+      "expectedCodes": [
+        "REVISION_DIGEST"
+      ]
+    },
+    {
+      "id": "workflow-cycle",
+      "description": "A self dependency is a cycle, not executable ordering.",
+      "expect": "INVALID",
+      "mutations": [
+        {
+          "entity": "ScenarioRevision",
+          "id": "rev-checkout-1",
+          "path": "/definition/steps/0/needs",
+          "value": [
+            "inject"
+          ]
+        }
+      ],
+      "expectedCodes": [
+        "STEP_CYCLE"
+      ]
+    },
+    {
+      "id": "future-reconciliation-is-not-attempt-history",
+      "description": "A sealed injection attempt cannot be rewritten using later terminal evidence.",
+      "expect": "INVALID",
+      "mutations": [
+        {
+          "entity": "StepAttempt",
+          "id": "attempt-inject",
+          "path": "/evidenceRefs/0/id",
+          "value": "obs-experiment"
+        }
+      ],
+      "expectedCodes": [
+        "SEALED_ATTEMPT_FUTURE_EVIDENCE"
+      ]
+    },
+    {
+      "id": "unknown-effect-blocks-complete-finalization",
+      "description": "A tracked effect with unknown remote disposition cannot be hidden behind complete finalization.",
+      "expect": "INVALID",
+      "mutations": [
+        {
+          "entity": "StepAttempt",
+          "id": "attempt-reconcile",
+          "path": "/externalOperations/0/remoteDisposition",
+          "value": "UNKNOWN"
+        }
+      ],
+      "expectedCodes": [
+        "UNRESOLVED_FINALIZATION"
+      ]
+    },
+    {
+      "id": "same-capture-effective-targets",
+      "description": "Effective targets must be selected through the observation and revision in the same policy capture.",
+      "expect": "INVALID",
+      "mutations": [
+        {
+          "entity": "Snapshot",
+          "id": "snap-policy-context",
+          "path": "/contents/effectiveTargetSourceRevisionId",
+          "value": "src-policy"
+        }
+      ],
+      "rehash": [
+        {
+          "entity": "Snapshot",
+          "id": "snap-policy-context"
+        }
+      ],
+      "expectedCodes": [
+        "POLICY_TARGET_SELECTION"
+      ]
+    },
+    {
+      "id": "captured-policy-is-not-native-revision",
+      "description": "A captured context cannot invent an AWS-evaluated revision when it is unknown.",
+      "expect": "INVALID",
+      "mutations": [
+        {
+          "entity": "Snapshot",
+          "id": "snap-policy-context",
+          "path": "/contents/providerEvaluatedRevision",
+          "value": "invented-native-version"
+        }
+      ],
+      "expectedCodes": [
+        "SCHEMA"
+      ]
+    },
+    {
+      "id": "recommendation-detail-parent",
+      "description": "A recommendation cannot point to a different source payload than its detail observation.",
+      "expect": "INVALID",
+      "mutations": [
+        {
+          "entity": "Recommendation",
+          "id": "recommendation-second-node",
+          "path": "/sourceRevisionId",
+          "value": "src-policy"
+        }
+      ],
+      "expectedCodes": [
+        "RECOMMENDATION_PROVENANCE"
+      ]
+    },
+    {
+      "id": "unavailable-recommendations-not-empty",
+      "description": "Unknown/unavailable suggestion detail is not a known empty array.",
+      "expect": "INVALID",
+      "mutations": [
+        {
+          "entity": "Finding",
+          "id": "finding-single-node",
+          "path": "/recommendationPresence",
+          "value": "UNAVAILABLE"
+        },
+        {
+          "entity": "Finding",
+          "id": "finding-single-node",
+          "path": "/recommendationIds",
+          "value": []
+        }
+      ],
+      "expectedCodes": [
+        "RECOMMENDATION_PRESENCE"
+      ]
+    },
+    {
+      "id": "historical-capture-closure",
+      "description": "A historical capture must pin all source inputs used by its retained read/projection evidence.",
+      "expect": "INVALID",
+      "mutations": [
+        {
+          "entity": "Snapshot",
+          "id": "snap-investigation",
+          "path": "/sourceRevisionIds",
+          "value": [
+            "src-task",
+            "src-execution",
+            "src-completion",
+            "src-request-task",
+            "src-request-execution",
+            "src-request-journal"
+          ]
+        }
+      ],
+      "rehash": [
+        {
+          "entity": "Snapshot",
+          "id": "snap-investigation"
+        }
+      ],
+      "expectedCodes": [
+        "SNAPSHOT_CLOSURE"
+      ]
+    },
+    {
+      "id": "historical-read-facts",
+      "description": "Captured read attempts cannot be silently reconstructed from different facts.",
+      "expect": "INVALID",
+      "mutations": [
+        {
+          "entity": "Snapshot",
+          "id": "snap-investigation",
+          "path": "/readAttempts/0/returnedCount",
+          "value": 2
+        }
+      ],
+      "rehash": [
+        {
+          "entity": "Snapshot",
+          "id": "snap-investigation"
+        }
+      ],
+      "expectedCodes": [
+        "SNAPSHOT_READ_COPY"
+      ]
+    },
+    {
+      "id": "graph-endpoints-stay-in-capture",
+      "description": "Graph edges must resolve endpoints in the same graph capture.",
+      "expect": "INVALID",
+      "mutations": [
+        {
+          "entity": "Snapshot",
+          "id": "snap-topology",
+          "path": "/contents/edges/0/toNodeKey",
+          "value": "node-from-another-capture"
+        }
+      ],
+      "rehash": [
+        {
+          "entity": "Snapshot",
+          "id": "snap-topology"
+        }
+      ],
+      "expectedCodes": [
+        "GRAPH_ENDPOINT_SCOPE"
+      ]
+    },
+    {
+      "id": "target-selection-not-fault-proof",
+      "description": "A selected target membership has no writable faultApplied field; fault effect needs separate evidence.",
+      "expect": "INVALID",
+      "mutations": [
+        {
+          "entity": "Experiment",
+          "id": "experiment-checkout",
+          "path": "/targetMemberships/0/faultApplied",
+          "value": true
+        }
+      ],
+      "expectedCodes": [
+        "SCHEMA"
+      ]
+    },
+    {
+      "id": "target-resource-match",
+      "description": "A selected native worker cannot be joined to the database inventory resource.",
+      "expect": "INVALID",
+      "mutations": [
+        {
+          "entity": "Experiment",
+          "id": "experiment-checkout",
+          "path": "/targetMemberships/0/resourceId",
+          "value": "res-db"
+        }
+      ],
+      "expectedCodes": [
+        "TARGET_IDENTITY"
+      ]
+    },
+    {
+      "id": "native-actions-not-cross-run",
+      "description": "Native action dependencies cannot refer to another experiment action.",
+      "expect": "INVALID",
+      "mutations": [
+        {
+          "entity": "Experiment",
+          "id": "experiment-checkout",
+          "path": "/actions/0/startAfter",
+          "value": [
+            "other-run-action"
+          ]
+        }
+      ],
+      "expectedCodes": [
+        "FIS_ACTION_SCOPE"
+      ]
+    },
+    {
+      "id": "stale-is-not-current",
+      "description": "Expired retained evidence must not remain a current known health state.",
+      "expect": "INVALID",
+      "mutations": [
+        {
+          "entity": "ProjectionRevision",
+          "id": "projection-service-status",
+          "path": "/value/runtimeHealth/expiresAt",
+          "value": 1793869760
+        }
+      ],
+      "expectedCodes": [
+        "EXPIRED_CURRENT_STATUS"
+      ]
+    },
+    {
+      "id": "distinct-service-denominator",
+      "description": "Repeated membership cannot inflate the workspace service population.",
+      "expect": "INVALID",
+      "mutations": [
+        {
+          "entity": "ProjectionRevision",
+          "id": "projection-workspace",
+          "path": "/value/serviceIds",
+          "value": [
+            "svc-checkout",
+            "svc-checkout",
+            "svc-store"
+          ]
+        }
+      ],
+      "expectedCodes": [
+        "SUMMARY_DENOMINATOR"
+      ]
+    },
+    {
+      "id": "empty-scope-has-no-percentage",
+      "description": "No denominator yields null coverage, not zero or a perfect score.",
+      "expect": "VALID",
+      "mutations": [
+        {
+          "entity": "ProjectionRevision",
+          "id": "projection-workspace",
+          "path": "/value/serviceIds",
+          "value": []
+        },
+        {
+          "entity": "ProjectionRevision",
+          "id": "projection-workspace",
+          "path": "/value/attentionServiceIds",
+          "value": []
+        },
+        {
+          "entity": "ProjectionRevision",
+          "id": "projection-workspace",
+          "path": "/value/currentCoverageServiceIds",
+          "value": []
+        },
+        {
+          "entity": "ProjectionRevision",
+          "id": "projection-workspace",
+          "path": "/value/retainedEvidenceServiceIds",
+          "value": []
+        },
+        {
+          "entity": "ProjectionRevision",
+          "id": "projection-workspace",
+          "path": "/value/currentCoveragePercent",
+          "value": null
+        }
+      ]
+    },
+    {
+      "id": "empty-scope-not-perfect",
+      "description": "An empty service scope cannot be labelled 100 percent covered.",
+      "expect": "INVALID",
+      "mutations": [
+        {
+          "entity": "ProjectionRevision",
+          "id": "projection-workspace",
+          "path": "/value/serviceIds",
+          "value": []
+        },
+        {
+          "entity": "ProjectionRevision",
+          "id": "projection-workspace",
+          "path": "/value/attentionServiceIds",
+          "value": []
+        },
+        {
+          "entity": "ProjectionRevision",
+          "id": "projection-workspace",
+          "path": "/value/currentCoverageServiceIds",
+          "value": []
+        },
+        {
+          "entity": "ProjectionRevision",
+          "id": "projection-workspace",
+          "path": "/value/retainedEvidenceServiceIds",
+          "value": []
+        },
+        {
+          "entity": "ProjectionRevision",
+          "id": "projection-workspace",
+          "path": "/value/currentCoveragePercent",
+          "value": 100
+        }
+      ],
+      "expectedCodes": [
+        "SUMMARY_DENOMINATOR"
+      ]
+    },
+    {
+      "id": "millisecond-precision",
+      "description": "Sub-millisecond timestamps are rejected using decimal arithmetic, not rounded for ordering.",
+      "expect": "INVALID",
+      "mutations": [
+        {
+          "entity": "Observation",
+          "id": "obs-resource-worker",
+          "path": "/observedAt",
+          "value": 1793869300.0001
+        }
+      ],
+      "expectedCodes": [
+        "SCHEMA"
+      ]
+    },
+    {
+      "id": "external-payload-versus-json-null",
+      "description": "An ARTIFACT-backed source requires a retained artifact locator; explicit JSON null remains valid only in its declared storage mode.",
+      "expect": "INVALID",
+      "mutations": [
+        {
+          "entity": "SourceRevision",
+          "id": "src-journal",
+          "path": "/payloadStorage",
+          "value": "ARTIFACT"
+        },
+        {
+          "entity": "SourceRevision",
+          "id": "src-journal",
+          "path": "/payload",
+          "value": null
+        }
+      ],
+      "expectedCodes": [
+        "SCHEMA"
+      ]
+    }
+  ]
+}

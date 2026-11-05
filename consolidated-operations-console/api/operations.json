@@ -1,0 +1,4395 @@
+{
+  "apiVersion": "2026-11-05",
+  "namespace": "ConsolidatedOperationsConsole_20261105",
+  "maturity": "CONTRACT_ONLY",
+  "operationCount": 101,
+  "transport": {
+    "method": "POST",
+    "path": "/",
+    "contentType": "application/x-amz-json-1.1",
+    "targetHeader": "X-Amz-Target",
+    "successStatus": 200
+  },
+  "limits": {
+    "requestBytes": 1048576,
+    "responseBytes": 8388608,
+    "defaultMaxResults": 20,
+    "maxResults": 100,
+    "cursorTtlSeconds": 900
+  },
+  "schema": "rpc.schema.json",
+  "modelSchema": "../model/schema.json",
+  "operations": [
+    {
+      "name": "GetWorkspace",
+      "module": "foundation",
+      "kind": "READ",
+      "permission": "console:ReadWorkspace",
+      "entities": [
+        "Workspace"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.GetWorkspace",
+      "inputSchemaRef": "rpc.schema.json#/$defs/GetWorkspaceRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/GetWorkspaceResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException"
+      ],
+      "semantics": [
+        "Workspace comes exclusively from authenticated context; the request cannot select a tenant."
+      ],
+      "scopeFields": []
+    },
+    {
+      "name": "GetConnection",
+      "module": "foundation",
+      "kind": "READ",
+      "permission": "console:ReadConnections",
+      "entities": [
+        "Connection"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.GetConnection",
+      "inputSchemaRef": "rpc.schema.json#/$defs/GetConnectionRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/GetConnectionResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException"
+      ],
+      "semantics": [
+        "Returns retained canonical data with its provenance; does not fetch AWS synchronously.",
+        "Every supplied parent must agree with the stored record; a mismatch is not a cross-scope search."
+      ],
+      "scopeFields": [
+        "connectionId"
+      ]
+    },
+    {
+      "name": "ListConnections",
+      "module": "foundation",
+      "kind": "READ",
+      "permission": "console:ReadConnections",
+      "entities": [
+        "Connection"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.ListConnections",
+      "inputSchemaRef": "rpc.schema.json#/$defs/ListConnectionsRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/ListConnectionsResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "PaginationTokenExpiredException"
+      ],
+      "semantics": [
+        "Stable local snapshot traversal ordered by the documented immutable key; nextToken is absent only at the end.",
+        "A completed local traversal does not establish complete upstream collection or claim coverage."
+      ],
+      "scopeFields": []
+    },
+    {
+      "name": "CreateConnection",
+      "module": "foundation",
+      "kind": "LOCAL_COMMAND",
+      "permission": "console:ManageConnections",
+      "entities": [
+        "Connection",
+        "Command"
+      ],
+      "mutating": true,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P3_DURABLE_COMMANDS",
+      "target": "ConsolidatedOperationsConsole_20261105.CreateConnection",
+      "inputSchemaRef": "rpc.schema.json#/$defs/CreateConnectionRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/CreateConnectionResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "IdempotencyConflictException",
+        "CommandInProgressException",
+        "InvalidStateException"
+      ],
+      "semantics": [
+        "Binds an already registered secret/identity reference after authorization; accepts no credential bytes.",
+        "Requested scopes are checked against the caller's grant and the binding's capabilities; references do not grant access."
+      ],
+      "scopeFields": [
+        "credentialBindingId"
+      ]
+    },
+    {
+      "name": "UpdateConnection",
+      "module": "foundation",
+      "kind": "LOCAL_COMMAND",
+      "permission": "console:ManageConnections",
+      "entities": [
+        "Connection",
+        "Command"
+      ],
+      "mutating": true,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P3_DURABLE_COMMANDS",
+      "target": "ConsolidatedOperationsConsole_20261105.UpdateConnection",
+      "inputSchemaRef": "rpc.schema.json#/$defs/UpdateConnectionRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/UpdateConnectionResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "IdempotencyConflictException",
+        "CommandInProgressException",
+        "InvalidStateException",
+        "VersionConflictException"
+      ],
+      "semantics": [
+        "Changes local connection configuration only; existing observations retain their original authorization provenance.",
+        "Revocation is checked on every later read, replay and dispatch; disabling a connection does not erase historical evidence."
+      ],
+      "scopeFields": [
+        "connectionId",
+        "credentialBindingId"
+      ]
+    },
+    {
+      "name": "GetResource",
+      "module": "foundation",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "Resource"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.GetResource",
+      "inputSchemaRef": "rpc.schema.json#/$defs/GetResourceRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/GetResourceResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException"
+      ],
+      "semantics": [
+        "Returns retained canonical data with its provenance; does not fetch AWS synchronously.",
+        "Every supplied parent must agree with the stored record; a mismatch is not a cross-scope search."
+      ],
+      "scopeFields": [
+        "resourceId"
+      ]
+    },
+    {
+      "name": "ListResources",
+      "module": "foundation",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "Resource"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.ListResources",
+      "inputSchemaRef": "rpc.schema.json#/$defs/ListResourcesRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/ListResourcesResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "PaginationTokenExpiredException"
+      ],
+      "semantics": [
+        "Stable local snapshot traversal ordered by the documented immutable key; nextToken is absent only at the end.",
+        "A completed local traversal does not establish complete upstream collection or claim coverage."
+      ],
+      "scopeFields": [
+        "serviceId"
+      ]
+    },
+    {
+      "name": "GetCollection",
+      "module": "foundation",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "Collection"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.GetCollection",
+      "inputSchemaRef": "rpc.schema.json#/$defs/GetCollectionRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/GetCollectionResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException"
+      ],
+      "semantics": [
+        "Returns retained canonical data with its provenance; does not fetch AWS synchronously.",
+        "Every supplied parent must agree with the stored record; a mismatch is not a cross-scope search."
+      ],
+      "scopeFields": [
+        "collectionId"
+      ]
+    },
+    {
+      "name": "ListCollections",
+      "module": "foundation",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "Collection"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.ListCollections",
+      "inputSchemaRef": "rpc.schema.json#/$defs/ListCollectionsRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/ListCollectionsResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "PaginationTokenExpiredException"
+      ],
+      "semantics": [
+        "Stable local snapshot traversal ordered by the documented immutable key; nextToken is absent only at the end.",
+        "A completed local traversal does not establish complete upstream collection or claim coverage."
+      ],
+      "scopeFields": [
+        "connectionId"
+      ]
+    },
+    {
+      "name": "ListReadAttempts",
+      "module": "foundation",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "ReadAttempt"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.ListReadAttempts",
+      "inputSchemaRef": "rpc.schema.json#/$defs/ListReadAttemptsRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/ListReadAttemptsResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "PaginationTokenExpiredException"
+      ],
+      "semantics": [
+        "Stable local snapshot traversal ordered by the documented immutable key; nextToken is absent only at the end.",
+        "A completed local traversal does not establish complete upstream collection or claim coverage.",
+        "Includes failed and empty reads; their absence from returned object rows must not erase collection evidence."
+      ],
+      "scopeFields": [
+        "collectionId"
+      ]
+    },
+    {
+      "name": "GetSourceRevision",
+      "module": "foundation",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "SourceRevision"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.GetSourceRevision",
+      "inputSchemaRef": "rpc.schema.json#/$defs/GetSourceRevisionRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/GetSourceRevisionResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "EvidenceUnavailableException"
+      ],
+      "semantics": [
+        "Returns retained canonical data with its provenance; does not fetch AWS synchronously.",
+        "Every supplied parent must agree with the stored record; a mismatch is not a cross-scope search."
+      ],
+      "scopeFields": [
+        "sourceRevisionId"
+      ]
+    },
+    {
+      "name": "GetObservation",
+      "module": "foundation",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "Observation"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.GetObservation",
+      "inputSchemaRef": "rpc.schema.json#/$defs/GetObservationRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/GetObservationResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "EvidenceUnavailableException"
+      ],
+      "semantics": [
+        "Returns retained canonical data with its provenance; does not fetch AWS synchronously.",
+        "Every supplied parent must agree with the stored record; a mismatch is not a cross-scope search."
+      ],
+      "scopeFields": [
+        "observationId"
+      ]
+    },
+    {
+      "name": "GetProjectionRevision",
+      "module": "foundation",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "ProjectionRevision"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.GetProjectionRevision",
+      "inputSchemaRef": "rpc.schema.json#/$defs/GetProjectionRevisionRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/GetProjectionRevisionResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException"
+      ],
+      "semantics": [
+        "Returns retained canonical data with its provenance; does not fetch AWS synchronously.",
+        "Every supplied parent must agree with the stored record; a mismatch is not a cross-scope search."
+      ],
+      "scopeFields": [
+        "projectionRevisionId"
+      ]
+    },
+    {
+      "name": "GetSnapshot",
+      "module": "foundation",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "Snapshot"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.GetSnapshot",
+      "inputSchemaRef": "rpc.schema.json#/$defs/GetSnapshotRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/GetSnapshotResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "EvidenceUnavailableException"
+      ],
+      "semantics": [
+        "Returns retained canonical data with its provenance; does not fetch AWS synchronously.",
+        "Every supplied parent must agree with the stored record; a mismatch is not a cross-scope search."
+      ],
+      "scopeFields": [
+        "snapshotId"
+      ]
+    },
+    {
+      "name": "GetWorkItem",
+      "module": "foundation",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "WorkItem"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.GetWorkItem",
+      "inputSchemaRef": "rpc.schema.json#/$defs/GetWorkItemRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/GetWorkItemResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException"
+      ],
+      "semantics": [
+        "Returns retained canonical data with its provenance; does not fetch AWS synchronously.",
+        "Every supplied parent must agree with the stored record; a mismatch is not a cross-scope search."
+      ],
+      "scopeFields": [
+        "workItemId"
+      ]
+    },
+    {
+      "name": "GetCommand",
+      "module": "foundation",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "Command"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.GetCommand",
+      "inputSchemaRef": "rpc.schema.json#/$defs/GetCommandRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/GetCommandResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException"
+      ],
+      "semantics": [
+        "Returns retained canonical data with its provenance; does not fetch AWS synchronously.",
+        "Every supplied parent must agree with the stored record; a mismatch is not a cross-scope search."
+      ],
+      "scopeFields": [
+        "commandId"
+      ]
+    },
+    {
+      "name": "ListSourceRevisions",
+      "module": "foundation",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "SourceRevision"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.ListSourceRevisions",
+      "inputSchemaRef": "rpc.schema.json#/$defs/ListSourceRevisionsRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/ListSourceRevisionsResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "PaginationTokenExpiredException",
+        "EvidenceUnavailableException"
+      ],
+      "semantics": [
+        "Stable local snapshot traversal ordered by the documented immutable key; nextToken is absent only at the end.",
+        "A completed local traversal does not establish complete upstream collection or claim coverage.",
+        "Native peripheral resources are retained typed profiles, including FIS templates/catalogs and DevOps registrations/triggers/goals.",
+        "Representation and source identity are explicit; matching hashes do not merge different logical source records."
+      ],
+      "scopeFields": []
+    },
+    {
+      "name": "ListObservations",
+      "module": "foundation",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "Observation"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.ListObservations",
+      "inputSchemaRef": "rpc.schema.json#/$defs/ListObservationsRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/ListObservationsResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "PaginationTokenExpiredException",
+        "EvidenceUnavailableException"
+      ],
+      "semantics": [
+        "Stable local snapshot traversal ordered by the documented immutable key; nextToken is absent only at the end.",
+        "A completed local traversal does not establish complete upstream collection or claim coverage."
+      ],
+      "scopeFields": [
+        "sourceRevisionId",
+        "collectionId"
+      ]
+    },
+    {
+      "name": "ListProjectionRevisions",
+      "module": "foundation",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "ProjectionRevision"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.ListProjectionRevisions",
+      "inputSchemaRef": "rpc.schema.json#/$defs/ListProjectionRevisionsRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/ListProjectionRevisionsResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "PaginationTokenExpiredException"
+      ],
+      "semantics": [
+        "Stable local snapshot traversal ordered by the documented immutable key; nextToken is absent only at the end.",
+        "A completed local traversal does not establish complete upstream collection or claim coverage.",
+        "Returns immutable derivations. Current selection is a view; re-evaluation creates another revision and never rewrites a sealed Run."
+      ],
+      "scopeFields": []
+    },
+    {
+      "name": "ListSnapshots",
+      "module": "foundation",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "Snapshot"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.ListSnapshots",
+      "inputSchemaRef": "rpc.schema.json#/$defs/ListSnapshotsRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/ListSnapshotsResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "PaginationTokenExpiredException",
+        "EvidenceUnavailableException"
+      ],
+      "semantics": [
+        "Stable local snapshot traversal ordered by the documented immutable key; nextToken is absent only at the end.",
+        "A completed local traversal does not establish complete upstream collection or claim coverage."
+      ],
+      "scopeFields": []
+    },
+    {
+      "name": "ListWorkItems",
+      "module": "foundation",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "WorkItem"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.ListWorkItems",
+      "inputSchemaRef": "rpc.schema.json#/$defs/ListWorkItemsRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/ListWorkItemsResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "PaginationTokenExpiredException"
+      ],
+      "semantics": [
+        "Stable local snapshot traversal ordered by the documented immutable key; nextToken is absent only at the end.",
+        "A completed local traversal does not establish complete upstream collection or claim coverage."
+      ],
+      "scopeFields": []
+    },
+    {
+      "name": "ListCommands",
+      "module": "foundation",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "Command"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.ListCommands",
+      "inputSchemaRef": "rpc.schema.json#/$defs/ListCommandsRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/ListCommandsResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "PaginationTokenExpiredException"
+      ],
+      "semantics": [
+        "Stable local snapshot traversal ordered by the documented immutable key; nextToken is absent only at the end.",
+        "A completed local traversal does not establish complete upstream collection or claim coverage."
+      ],
+      "scopeFields": []
+    },
+    {
+      "name": "StartCollection",
+      "module": "foundation",
+      "kind": "INGEST",
+      "permission": "console:Collect",
+      "entities": [
+        "Collection",
+        "Command"
+      ],
+      "mutating": true,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.StartCollection",
+      "inputSchemaRef": "rpc.schema.json#/$defs/StartCollectionRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/StartCollectionResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "IdempotencyConflictException",
+        "CommandInProgressException",
+        "InvalidStateException"
+      ],
+      "semantics": [
+        "Admits a finite exact query set from the registered read-only adapter catalog; unknown operations or unauthorized scope fail admission.",
+        "queryKey uniqueness, canonical requestDigest, filter types and operation-specific bounds are validated against that registered adapter.",
+        "Completion, pagination, hydration, resolution and claim coverage remain independent facts."
+      ],
+      "scopeFields": [
+        "connectionId"
+      ]
+    },
+    {
+      "name": "RecordReadAttempt",
+      "module": "foundation",
+      "kind": "INGEST",
+      "permission": "console:IngestEvidence",
+      "entities": [
+        "ReadAttempt",
+        "Command"
+      ],
+      "mutating": true,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.RecordReadAttempt",
+      "inputSchemaRef": "rpc.schema.json#/$defs/RecordReadAttemptRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/RecordReadAttemptResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "IdempotencyConflictException",
+        "CommandInProgressException",
+        "InvalidStateException"
+      ],
+      "semantics": [
+        "Settles the same existing STARTED ReadAttempt created by the trusted collector dispatch transaction before the actual read; does not append a second attempt or fabricate a pre-call record after the fact.",
+        "Trusted context assigns authorizationContextKey; a caller cannot forge its acting principal or provenance.",
+        "The requestSourceRevisionId must equal the already retained normalized request envelope for this attempt. Response envelope references must belong to this exact request and scope, including empty responses.",
+        "IngestObservation may retain response/object observations while the attempt is STARTED; settlement then references those revisions. A response-lost failure has an explicit null response reference, not a fabricated empty response.",
+        "A settled attempt is immutable. Exact replay returns the original result; conflicting terminal facts reject. Query identity, attemptNo, requestDigest, startedAt and authorization provenance are server-owned."
+      ],
+      "scopeFields": [
+        "collectionId",
+        "readAttemptId",
+        "providerRequestId",
+        "requestSourceRevisionId",
+        "responseSourceRevisionId"
+      ]
+    },
+    {
+      "name": "IngestObservation",
+      "module": "foundation",
+      "kind": "INGEST",
+      "permission": "console:IngestEvidence",
+      "entities": [
+        "SourceRevision",
+        "Observation",
+        "Command"
+      ],
+      "mutating": true,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.IngestObservation",
+      "inputSchemaRef": "rpc.schema.json#/$defs/IngestObservationRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/IngestObservationResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "IdempotencyConflictException",
+        "CommandInProgressException",
+        "InvalidStateException",
+        "EvidenceUnavailableException"
+      ],
+      "semantics": [
+        "Atomically retains or resolves the immutable source revision and appends this distinct receipt observation.",
+        "The registered versioned profile validates typed known members, source identity, representation and digest; raw unknown provider output remains retained evidence.",
+        "payload is the intentionally opaque provider document, bounded by the body cap and adapter schema; it cannot patch canonical state or set a verdict.",
+        "The adapter reconciles canonical entity indexes through verified mappings. Digest equality alone is not event identity; receipt dedupe includes the authenticated channel/scope."
+      ],
+      "scopeFields": [
+        "readAttemptId",
+        "connectionId"
+      ]
+    },
+    {
+      "name": "CompleteCollection",
+      "module": "foundation",
+      "kind": "INGEST",
+      "permission": "console:IngestEvidence",
+      "entities": [
+        "Collection",
+        "Command"
+      ],
+      "mutating": true,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.CompleteCollection",
+      "inputSchemaRef": "rpc.schema.json#/$defs/CompleteCollectionRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/CompleteCollectionResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "IdempotencyConflictException",
+        "CommandInProgressException",
+        "InvalidStateException",
+        "VersionConflictException"
+      ],
+      "semantics": [
+        "Seals collection coverage after every declared query has a settled or explicitly unresolved outcome; referenced attempts must belong to this collection.",
+        "A coverage conclusion must be justified by registered collector rules. Successful or exhausted pages cannot alone claim source sufficiency.",
+        "expectedProjectionVersion fences this collector completion only; it is not a configuration edit version or AWS conditional write."
+      ],
+      "scopeFields": [
+        "collectionId"
+      ]
+    },
+    {
+      "name": "PublishProjection",
+      "module": "foundation",
+      "kind": "DERIVE",
+      "permission": "console:PublishProjection",
+      "entities": [
+        "ProjectionRevision",
+        "Command"
+      ],
+      "mutating": true,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.PublishProjection",
+      "inputSchemaRef": "rpc.schema.json#/$defs/PublishProjectionRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/PublishProjectionResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "IdempotencyConflictException",
+        "CommandInProgressException",
+        "InvalidStateException"
+      ],
+      "semantics": [
+        "Executes an authorized registered immutable rule over the exact immutable inputs and appends a derived revision.",
+        "The request cannot supply value, generatedAt, coverage or a desired verdict. The trusted projector derives them from the selected evidence.",
+        "Every reference must be authorized, same-workspace and available. Missing evidence produces a qualified result or explicit failure; it never becomes success.",
+        "Current projections and historical evaluations do not consume a local configuration version or modify prior revisions."
+      ],
+      "scopeFields": []
+    },
+    {
+      "name": "CaptureSnapshot",
+      "module": "foundation",
+      "kind": "LOCAL_COMMAND",
+      "permission": "console:CaptureEvidence",
+      "entities": [
+        "Snapshot",
+        "Command"
+      ],
+      "mutating": true,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P3_DURABLE_COMMANDS",
+      "target": "ConsolidatedOperationsConsole_20261105.CaptureSnapshot",
+      "inputSchemaRef": "rpc.schema.json#/$defs/CaptureSnapshotRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/CaptureSnapshotResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "IdempotencyConflictException",
+        "CommandInProgressException",
+        "InvalidStateException",
+        "EvidenceUnavailableException"
+      ],
+      "semantics": [
+        "Builds a closed immutable manifest and typed contents from existing retained evidence, including failed/empty read attempts and coverage.",
+        "The manifest does not consult mutable current fields after capture. capturedAt does not renew source timestamps or make paginated AWS reads atomic.",
+        "RUN_INPUT snapshots are created only during StartRun admission; clients cannot replace a Run's inputs by creating a similarly named snapshot."
+      ],
+      "scopeFields": []
+    },
+    {
+      "name": "CreateWorkItem",
+      "module": "foundation",
+      "kind": "LOCAL_COMMAND",
+      "permission": "console:ManageWork",
+      "entities": [
+        "WorkItem",
+        "Command"
+      ],
+      "mutating": true,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P3_DURABLE_COMMANDS",
+      "target": "ConsolidatedOperationsConsole_20261105.CreateWorkItem",
+      "inputSchemaRef": "rpc.schema.json#/$defs/CreateWorkItemRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/CreateWorkItemResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "IdempotencyConflictException",
+        "CommandInProgressException",
+        "InvalidStateException"
+      ],
+      "semantics": [
+        "Creates local operator work; no provider state or operational conclusion is implied.",
+        "assigneeSubjectId resolves through the trusted workspace directory and assignment policy; it selects a work owner, never the acting principal."
+      ],
+      "scopeFields": [
+        "assigneeSubjectId"
+      ]
+    },
+    {
+      "name": "UpdateWorkItem",
+      "module": "foundation",
+      "kind": "LOCAL_COMMAND",
+      "permission": "console:ManageWork",
+      "entities": [
+        "WorkItem",
+        "Command"
+      ],
+      "mutating": true,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P3_DURABLE_COMMANDS",
+      "target": "ConsolidatedOperationsConsole_20261105.UpdateWorkItem",
+      "inputSchemaRef": "rpc.schema.json#/$defs/UpdateWorkItemRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/UpdateWorkItemResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "IdempotencyConflictException",
+        "CommandInProgressException",
+        "InvalidStateException",
+        "VersionConflictException"
+      ],
+      "semantics": [
+        "Records a server-attributed WorkAction and advances only WorkItem.version.",
+        "RESOLVED is an operator work state, not provider recovery, approved cloud work or verified remediation.",
+        "A field cannot be both assigned and named in clearFields; assigneeSubjectId conflicts with clearing owner. Evidence citations retain their original meaning.",
+        "The trusted directory resolves the assigned owner independently of the server-attributed acting principal. Verification uses its separate command."
+      ],
+      "scopeFields": [
+        "workItemId",
+        "assigneeSubjectId"
+      ]
+    },
+    {
+      "name": "RecordWorkItemVerification",
+      "module": "foundation",
+      "kind": "LOCAL_COMMAND",
+      "permission": "console:VerifyWork",
+      "entities": [
+        "WorkItem",
+        "Command"
+      ],
+      "mutating": true,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P3_DURABLE_COMMANDS",
+      "target": "ConsolidatedOperationsConsole_20261105.RecordWorkItemVerification",
+      "inputSchemaRef": "rpc.schema.json#/$defs/RecordWorkItemVerificationRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/RecordWorkItemVerificationResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "IdempotencyConflictException",
+        "CommandInProgressException",
+        "InvalidStateException",
+        "VersionConflictException"
+      ],
+      "semantics": [
+        "Records a separately authorized, qualified local verification judgment and an immutable server-attributed action under the WorkItem version.",
+        "All evidence must resolve to this work's target scope. VERIFIED requires independent supporting evidence under the registered verification policy; the same operator resolution action or assessment completion alone is insufficient.",
+        "The result updates verificationState/verificationEvidence, not WorkItem.state or any provider status, posture or historical source record."
+      ],
+      "scopeFields": [
+        "workItemId"
+      ]
+    },
+    {
+      "name": "CreateSystem",
+      "module": "workload",
+      "kind": "LOCAL_COMMAND",
+      "permission": "console:ManageCatalog",
+      "entities": [
+        "System",
+        "Command"
+      ],
+      "mutating": true,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P3_DURABLE_COMMANDS",
+      "target": "ConsolidatedOperationsConsole_20261105.CreateSystem",
+      "inputSchemaRef": "rpc.schema.json#/$defs/CreateSystemRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/CreateSystemResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "IdempotencyConflictException",
+        "CommandInProgressException",
+        "InvalidStateException"
+      ],
+      "semantics": [
+        "Creates local canonical workload identity and metadata; it does not create an AWS resource.",
+        "Provider aliases are established by trusted verified mapping, not by caller-supplied matching names.",
+        "Membership inputs contain only local system/journey IDs; the server stamps origin=LOCAL and sourceRevisionId=null. Imported provenance is reserved to the trusted importer."
+      ],
+      "scopeFields": []
+    },
+    {
+      "name": "GetSystem",
+      "module": "workload",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "System"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.GetSystem",
+      "inputSchemaRef": "rpc.schema.json#/$defs/GetSystemRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/GetSystemResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException"
+      ],
+      "semantics": [
+        "Returns retained canonical data with its provenance; does not fetch AWS synchronously.",
+        "Every supplied parent must agree with the stored record; a mismatch is not a cross-scope search."
+      ],
+      "scopeFields": [
+        "systemId"
+      ]
+    },
+    {
+      "name": "ListSystems",
+      "module": "workload",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "System"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.ListSystems",
+      "inputSchemaRef": "rpc.schema.json#/$defs/ListSystemsRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/ListSystemsResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "PaginationTokenExpiredException"
+      ],
+      "semantics": [
+        "Stable local snapshot traversal ordered by the documented immutable key; nextToken is absent only at the end.",
+        "A completed local traversal does not establish complete upstream collection or claim coverage."
+      ],
+      "scopeFields": []
+    },
+    {
+      "name": "UpdateSystem",
+      "module": "workload",
+      "kind": "LOCAL_COMMAND",
+      "permission": "console:ManageCatalog",
+      "entities": [
+        "System",
+        "Command"
+      ],
+      "mutating": true,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P3_DURABLE_COMMANDS",
+      "target": "ConsolidatedOperationsConsole_20261105.UpdateSystem",
+      "inputSchemaRef": "rpc.schema.json#/$defs/UpdateSystemRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/UpdateSystemResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "IdempotencyConflictException",
+        "CommandInProgressException",
+        "InvalidStateException",
+        "VersionConflictException"
+      ],
+      "semantics": [
+        "Updates only local fields under this record's version; an observation or projection does not cause a configuration conflict.",
+        "Omitted fields are unchanged; an empty description is a known empty value; supplied arrays replace their complete owned membership set.",
+        "Service is the sole membership writer. Every journey must belong to its paired system; a journey update cannot set a second service list."
+      ],
+      "scopeFields": [
+        "systemId"
+      ]
+    },
+    {
+      "name": "CreateUserJourney",
+      "module": "workload",
+      "kind": "LOCAL_COMMAND",
+      "permission": "console:ManageCatalog",
+      "entities": [
+        "UserJourney",
+        "Command"
+      ],
+      "mutating": true,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P3_DURABLE_COMMANDS",
+      "target": "ConsolidatedOperationsConsole_20261105.CreateUserJourney",
+      "inputSchemaRef": "rpc.schema.json#/$defs/CreateUserJourneyRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/CreateUserJourneyResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "IdempotencyConflictException",
+        "CommandInProgressException",
+        "InvalidStateException"
+      ],
+      "semantics": [
+        "Creates local canonical workload identity and metadata; it does not create an AWS resource.",
+        "Provider aliases are established by trusted verified mapping, not by caller-supplied matching names.",
+        "Membership inputs contain only local system/journey IDs; the server stamps origin=LOCAL and sourceRevisionId=null. Imported provenance is reserved to the trusted importer."
+      ],
+      "scopeFields": [
+        "systemId"
+      ]
+    },
+    {
+      "name": "GetUserJourney",
+      "module": "workload",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "UserJourney"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.GetUserJourney",
+      "inputSchemaRef": "rpc.schema.json#/$defs/GetUserJourneyRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/GetUserJourneyResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException"
+      ],
+      "semantics": [
+        "Returns retained canonical data with its provenance; does not fetch AWS synchronously.",
+        "Every supplied parent must agree with the stored record; a mismatch is not a cross-scope search."
+      ],
+      "scopeFields": [
+        "systemId",
+        "userJourneyId"
+      ]
+    },
+    {
+      "name": "ListUserJourneys",
+      "module": "workload",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "UserJourney"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.ListUserJourneys",
+      "inputSchemaRef": "rpc.schema.json#/$defs/ListUserJourneysRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/ListUserJourneysResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "PaginationTokenExpiredException"
+      ],
+      "semantics": [
+        "Stable local snapshot traversal ordered by the documented immutable key; nextToken is absent only at the end.",
+        "A completed local traversal does not establish complete upstream collection or claim coverage."
+      ],
+      "scopeFields": [
+        "systemId"
+      ]
+    },
+    {
+      "name": "UpdateUserJourney",
+      "module": "workload",
+      "kind": "LOCAL_COMMAND",
+      "permission": "console:ManageCatalog",
+      "entities": [
+        "UserJourney",
+        "Command"
+      ],
+      "mutating": true,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P3_DURABLE_COMMANDS",
+      "target": "ConsolidatedOperationsConsole_20261105.UpdateUserJourney",
+      "inputSchemaRef": "rpc.schema.json#/$defs/UpdateUserJourneyRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/UpdateUserJourneyResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "IdempotencyConflictException",
+        "CommandInProgressException",
+        "InvalidStateException",
+        "VersionConflictException"
+      ],
+      "semantics": [
+        "Updates only local fields under this record's version; an observation or projection does not cause a configuration conflict.",
+        "Omitted fields are unchanged; an empty description is a known empty value; supplied arrays replace their complete owned membership set.",
+        "Service is the sole membership writer. Every journey must belong to its paired system; a journey update cannot set a second service list."
+      ],
+      "scopeFields": [
+        "systemId",
+        "userJourneyId"
+      ]
+    },
+    {
+      "name": "CreateService",
+      "module": "workload",
+      "kind": "LOCAL_COMMAND",
+      "permission": "console:ManageCatalog",
+      "entities": [
+        "Service",
+        "Command"
+      ],
+      "mutating": true,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P3_DURABLE_COMMANDS",
+      "target": "ConsolidatedOperationsConsole_20261105.CreateService",
+      "inputSchemaRef": "rpc.schema.json#/$defs/CreateServiceRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/CreateServiceResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "IdempotencyConflictException",
+        "CommandInProgressException",
+        "InvalidStateException"
+      ],
+      "semantics": [
+        "Creates local canonical workload identity and metadata; it does not create an AWS resource.",
+        "Provider aliases are established by trusted verified mapping, not by caller-supplied matching names.",
+        "Membership inputs contain only local system/journey IDs; the server stamps origin=LOCAL and sourceRevisionId=null. Imported provenance is reserved to the trusted importer."
+      ],
+      "scopeFields": []
+    },
+    {
+      "name": "GetService",
+      "module": "workload",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "Service"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.GetService",
+      "inputSchemaRef": "rpc.schema.json#/$defs/GetServiceRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/GetServiceResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException"
+      ],
+      "semantics": [
+        "Returns retained canonical data with its provenance; does not fetch AWS synchronously.",
+        "Every supplied parent must agree with the stored record; a mismatch is not a cross-scope search."
+      ],
+      "scopeFields": [
+        "serviceId"
+      ]
+    },
+    {
+      "name": "ListServices",
+      "module": "workload",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "Service"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.ListServices",
+      "inputSchemaRef": "rpc.schema.json#/$defs/ListServicesRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/ListServicesResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "PaginationTokenExpiredException"
+      ],
+      "semantics": [
+        "Stable local snapshot traversal ordered by the documented immutable key; nextToken is absent only at the end.",
+        "A completed local traversal does not establish complete upstream collection or claim coverage.",
+        "Service membership is many-to-many and deduplicated by canonical serviceId; it does not establish journey execution order or end-to-end compliance."
+      ],
+      "scopeFields": [
+        "systemId",
+        "userJourneyId"
+      ]
+    },
+    {
+      "name": "UpdateService",
+      "module": "workload",
+      "kind": "LOCAL_COMMAND",
+      "permission": "console:ManageCatalog",
+      "entities": [
+        "Service",
+        "Command"
+      ],
+      "mutating": true,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P3_DURABLE_COMMANDS",
+      "target": "ConsolidatedOperationsConsole_20261105.UpdateService",
+      "inputSchemaRef": "rpc.schema.json#/$defs/UpdateServiceRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/UpdateServiceResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "IdempotencyConflictException",
+        "CommandInProgressException",
+        "InvalidStateException",
+        "VersionConflictException"
+      ],
+      "semantics": [
+        "Updates only local fields under this record's version; an observation or projection does not cause a configuration conflict.",
+        "Omitted fields are unchanged; an empty description is a known empty value; supplied arrays replace their complete owned membership set.",
+        "Service is the sole membership writer. Every journey must belong to its paired system; a journey update cannot set a second service list."
+      ],
+      "scopeFields": [
+        "serviceId"
+      ]
+    },
+    {
+      "name": "GetServiceStatus",
+      "module": "workload",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "ProjectionRevision"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.GetServiceStatus",
+      "inputSchemaRef": "rpc.schema.json#/$defs/GetServiceStatusRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/GetServiceStatusResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException"
+      ],
+      "semantics": [
+        "Returns the currently selected SERVICE_STATUS projection under its named rule, including evidence/freshness/coverage. Clients do not infer current state from newest receipt time.",
+        "No current selected projection returns ResourceNotFoundException with code PROJECTION_NOT_AVAILABLE, never an invented healthy/default object.",
+        "Runtime health, native assessed posture, collection quality and operator workflow remain distinct dimensions."
+      ],
+      "scopeFields": [
+        "serviceId"
+      ]
+    },
+    {
+      "name": "GetWorkspaceSummary",
+      "module": "workload",
+      "kind": "READ",
+      "permission": "console:ReadWorkspace",
+      "entities": [
+        "ProjectionRevision"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.GetWorkspaceSummary",
+      "inputSchemaRef": "rpc.schema.json#/$defs/GetWorkspaceSummaryRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/GetWorkspaceSummaryResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException"
+      ],
+      "semantics": [
+        "Returns the current qualified WORKSPACE_SUMMARY for the trusted caller's authorized workload scope, including exact distinct contributor identities, denominator and rule.",
+        "An empty authorized scope has null percentages. Retained historical evidence is separate from current usable coverage; no end-to-end journey compliance is inferred.",
+        "A cached broader summary must be recomputed/selected for the authorized scope; hidden records cannot leak through counts."
+      ],
+      "scopeFields": []
+    },
+    {
+      "name": "GetDependency",
+      "module": "workload",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "Dependency"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.GetDependency",
+      "inputSchemaRef": "rpc.schema.json#/$defs/GetDependencyRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/GetDependencyResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException"
+      ],
+      "semantics": [
+        "Returns retained canonical data with its provenance; does not fetch AWS synchronously.",
+        "Every supplied parent must agree with the stored record; a mismatch is not a cross-scope search."
+      ],
+      "scopeFields": [
+        "serviceId",
+        "dependencyId"
+      ]
+    },
+    {
+      "name": "ListDependencies",
+      "module": "workload",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "Dependency"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.ListDependencies",
+      "inputSchemaRef": "rpc.schema.json#/$defs/ListDependenciesRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/ListDependenciesResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "PaginationTokenExpiredException"
+      ],
+      "semantics": [
+        "Stable local snapshot traversal ordered by the documented immutable key; nextToken is absent only at the end.",
+        "A completed local traversal does not establish complete upstream collection or claim coverage."
+      ],
+      "scopeFields": [
+        "serviceId"
+      ]
+    },
+    {
+      "name": "UpdateDependencyGovernance",
+      "module": "workload",
+      "kind": "LOCAL_COMMAND",
+      "permission": "console:ManageGovernance",
+      "entities": [
+        "Dependency",
+        "Command"
+      ],
+      "mutating": true,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P3_DURABLE_COMMANDS",
+      "target": "ConsolidatedOperationsConsole_20261105.UpdateDependencyGovernance",
+      "inputSchemaRef": "rpc.schema.json#/$defs/UpdateDependencyGovernanceRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/UpdateDependencyGovernanceResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "IdempotencyConflictException",
+        "CommandInProgressException",
+        "InvalidStateException",
+        "VersionConflictException"
+      ],
+      "semantics": [
+        "expectedVersion addresses dependency.governance.version only; native classification remains separate.",
+        "An allowed/denied decision is local governance. It neither changes DNS evidence nor grants/revokes network access."
+      ],
+      "scopeFields": [
+        "serviceId",
+        "dependencyId"
+      ]
+    },
+    {
+      "name": "GetHealthEvent",
+      "module": "health",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "HealthEvent"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.GetHealthEvent",
+      "inputSchemaRef": "rpc.schema.json#/$defs/GetHealthEventRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/GetHealthEventResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException"
+      ],
+      "semantics": [
+        "Returns retained canonical data with its provenance; does not fetch AWS synchronously.",
+        "Every supplied parent must agree with the stored record; a mismatch is not a cross-scope search."
+      ],
+      "scopeFields": [
+        "healthEventId"
+      ]
+    },
+    {
+      "name": "ListHealthEvents",
+      "module": "health",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "HealthEvent"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.ListHealthEvents",
+      "inputSchemaRef": "rpc.schema.json#/$defs/ListHealthEventsRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/ListHealthEventsResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "PaginationTokenExpiredException"
+      ],
+      "semantics": [
+        "Stable local snapshot traversal ordered by the documented immutable key; nextToken is absent only at the end.",
+        "A completed local traversal does not establish complete upstream collection or claim coverage."
+      ],
+      "scopeFields": []
+    },
+    {
+      "name": "ListEventContexts",
+      "module": "health",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "EventContext"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.ListEventContexts",
+      "inputSchemaRef": "rpc.schema.json#/$defs/ListEventContextsRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/ListEventContextsResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "PaginationTokenExpiredException"
+      ],
+      "semantics": [
+        "Stable local snapshot traversal ordered by the documented immutable key; nextToken is absent only at the end.",
+        "A completed local traversal does not establish complete upstream collection or claim coverage."
+      ],
+      "scopeFields": [
+        "healthEventId"
+      ]
+    },
+    {
+      "name": "ListEntityImpacts",
+      "module": "health",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "EntityImpact"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.ListEntityImpacts",
+      "inputSchemaRef": "rpc.schema.json#/$defs/ListEntityImpactsRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/ListEntityImpactsResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "PaginationTokenExpiredException"
+      ],
+      "semantics": [
+        "Stable local snapshot traversal ordered by the documented immutable key; nextToken is absent only at the end.",
+        "A completed local traversal does not establish complete upstream collection or claim coverage.",
+        "Account/public/organization-summary evidence never leaks between contexts. Counts remain qualified by collection coverage."
+      ],
+      "scopeFields": [
+        "healthEventId",
+        "eventContextId"
+      ]
+    },
+    {
+      "name": "ListCommunications",
+      "module": "health",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "Communication"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.ListCommunications",
+      "inputSchemaRef": "rpc.schema.json#/$defs/ListCommunicationsRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/ListCommunicationsResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "PaginationTokenExpiredException"
+      ],
+      "semantics": [
+        "Stable local snapshot traversal ordered by the documented immutable key; nextToken is absent only at the end.",
+        "A completed local traversal does not establish complete upstream collection or claim coverage.",
+        "Conflicting and partial notification pages remain visible; delivery recipients do not redefine impacted account identity."
+      ],
+      "scopeFields": [
+        "healthEventId",
+        "eventContextId"
+      ]
+    },
+    {
+      "name": "ListLifecycleEntries",
+      "module": "health",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "LifecycleEntry"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.ListLifecycleEntries",
+      "inputSchemaRef": "rpc.schema.json#/$defs/ListLifecycleEntriesRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/ListLifecycleEntriesResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "PaginationTokenExpiredException"
+      ],
+      "semantics": [
+        "Stable local snapshot traversal ordered by the documented immutable key; nextToken is absent only at the end.",
+        "A completed local traversal does not establish complete upstream collection or claim coverage.",
+        "snapshotId must identify a LIFECYCLE_CATALOG capture. Entries from different catalog snapshots are not merged by title."
+      ],
+      "scopeFields": [
+        "snapshotId"
+      ]
+    },
+    {
+      "name": "GetComponentDeployment",
+      "module": "health",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "ComponentDeployment"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.GetComponentDeployment",
+      "inputSchemaRef": "rpc.schema.json#/$defs/GetComponentDeploymentRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/GetComponentDeploymentResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException"
+      ],
+      "semantics": [
+        "Returns retained canonical data with its provenance; does not fetch AWS synchronously.",
+        "Every supplied parent must agree with the stored record; a mismatch is not a cross-scope search."
+      ],
+      "scopeFields": [
+        "resourceId",
+        "componentDeploymentId"
+      ]
+    },
+    {
+      "name": "ListComponentDeployments",
+      "module": "health",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "ComponentDeployment"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.ListComponentDeployments",
+      "inputSchemaRef": "rpc.schema.json#/$defs/ListComponentDeploymentsRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/ListComponentDeploymentsResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "PaginationTokenExpiredException"
+      ],
+      "semantics": [
+        "Stable local snapshot traversal ordered by the documented immutable key; nextToken is absent only at the end.",
+        "A completed local traversal does not establish complete upstream collection or claim coverage.",
+        "Lifecycle exposure is a separate versioned projection using these observed component versions and a pinned lifecycle catalog."
+      ],
+      "scopeFields": [
+        "resourceId"
+      ]
+    },
+    {
+      "name": "GetResiliencePolicy",
+      "module": "resilience",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "ResiliencePolicy"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.GetResiliencePolicy",
+      "inputSchemaRef": "rpc.schema.json#/$defs/GetResiliencePolicyRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/GetResiliencePolicyResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException"
+      ],
+      "semantics": [
+        "Returns retained canonical data with its provenance; does not fetch AWS synchronously.",
+        "Every supplied parent must agree with the stored record; a mismatch is not a cross-scope search."
+      ],
+      "scopeFields": [
+        "resiliencePolicyId"
+      ]
+    },
+    {
+      "name": "ListResiliencePolicies",
+      "module": "resilience",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "ResiliencePolicy"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.ListResiliencePolicies",
+      "inputSchemaRef": "rpc.schema.json#/$defs/ListResiliencePoliciesRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/ListResiliencePoliciesResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "PaginationTokenExpiredException"
+      ],
+      "semantics": [
+        "Stable local snapshot traversal ordered by the documented immutable key; nextToken is absent only at the end.",
+        "A completed local traversal does not establish complete upstream collection or claim coverage."
+      ],
+      "scopeFields": []
+    },
+    {
+      "name": "GetResilienceAssessment",
+      "module": "resilience",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "ResilienceAssessment"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.GetResilienceAssessment",
+      "inputSchemaRef": "rpc.schema.json#/$defs/GetResilienceAssessmentRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/GetResilienceAssessmentResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException"
+      ],
+      "semantics": [
+        "Returns retained canonical data with its provenance; does not fetch AWS synchronously.",
+        "Every supplied parent must agree with the stored record; a mismatch is not a cross-scope search."
+      ],
+      "scopeFields": [
+        "serviceId",
+        "resilienceAssessmentId"
+      ]
+    },
+    {
+      "name": "ListResilienceAssessments",
+      "module": "resilience",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "ResilienceAssessment"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.ListResilienceAssessments",
+      "inputSchemaRef": "rpc.schema.json#/$defs/ListResilienceAssessmentsRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/ListResilienceAssessmentsResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "PaginationTokenExpiredException"
+      ],
+      "semantics": [
+        "Stable local snapshot traversal ordered by the documented immutable key; nextToken is absent only at the end.",
+        "A completed local traversal does not establish complete upstream collection or claim coverage."
+      ],
+      "scopeFields": [
+        "serviceId"
+      ]
+    },
+    {
+      "name": "GetFinding",
+      "module": "resilience",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "Finding"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.GetFinding",
+      "inputSchemaRef": "rpc.schema.json#/$defs/GetFindingRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/GetFindingResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException"
+      ],
+      "semantics": [
+        "Returns retained canonical data with its provenance; does not fetch AWS synchronously.",
+        "Every supplied parent must agree with the stored record; a mismatch is not a cross-scope search."
+      ],
+      "scopeFields": [
+        "serviceId",
+        "findingId"
+      ]
+    },
+    {
+      "name": "ListFindings",
+      "module": "resilience",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "Finding"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.ListFindings",
+      "inputSchemaRef": "rpc.schema.json#/$defs/ListFindingsRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/ListFindingsResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "PaginationTokenExpiredException"
+      ],
+      "semantics": [
+        "Stable local snapshot traversal ordered by the documented immutable key; nextToken is absent only at the end.",
+        "A completed local traversal does not establish complete upstream collection or claim coverage.",
+        "Findings are service-scoped. No mandatory assessment filter or ownership FK is invented; capture-to-assessment is qualified correlation."
+      ],
+      "scopeFields": [
+        "serviceId"
+      ]
+    },
+    {
+      "name": "GetRecommendation",
+      "module": "resilience",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "Recommendation"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.GetRecommendation",
+      "inputSchemaRef": "rpc.schema.json#/$defs/GetRecommendationRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/GetRecommendationResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException"
+      ],
+      "semantics": [
+        "Returns retained canonical data with its provenance; does not fetch AWS synchronously.",
+        "Every supplied parent must agree with the stored record; a mismatch is not a cross-scope search."
+      ],
+      "scopeFields": [
+        "serviceId",
+        "findingId",
+        "recommendationId"
+      ]
+    },
+    {
+      "name": "ListRecommendations",
+      "module": "resilience",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "Recommendation"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.ListRecommendations",
+      "inputSchemaRef": "rpc.schema.json#/$defs/ListRecommendationsRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/ListRecommendationsResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "PaginationTokenExpiredException"
+      ],
+      "semantics": [
+        "Stable local snapshot traversal ordered by the documented immutable key; nextToken is absent only at the end.",
+        "A completed local traversal does not establish complete upstream collection or claim coverage.",
+        "Instances are observation/group/ordinal scoped; historical equal text does not establish provider identity continuity."
+      ],
+      "scopeFields": [
+        "serviceId",
+        "findingId",
+        "sourceRevisionId"
+      ]
+    },
+    {
+      "name": "StartResilienceAssessment",
+      "module": "resilience",
+      "kind": "PROVIDER_COMMAND",
+      "permission": "console:RunResilienceAssessment",
+      "entities": [
+        "Command",
+        "ResilienceAssessment"
+      ],
+      "mutating": true,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P3_DURABLE_COMMANDS",
+      "target": "ConsolidatedOperationsConsole_20261105.StartResilienceAssessment",
+      "inputSchemaRef": "rpc.schema.json#/$defs/StartResilienceAssessmentRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/StartResilienceAssessmentResponse",
+      "nativeOperations": [
+        "StartFailureModeAssessment"
+      ],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "IdempotencyConflictException",
+        "CommandInProgressException",
+        "InvalidStateException",
+        "VersionConflictException"
+      ],
+      "semantics": [
+        "Pins the local service scope at admission, then requests native StartFailureModeAssessment. expectedServiceVersion is local only.",
+        "GetCommand exposes the created assessment identity after readback. SUCCESS of assessment execution does not imply achievable posture or verified remediation.",
+        "Findings remain service-scoped and independent of a particular run."
+      ],
+      "scopeFields": [
+        "serviceId",
+        "connectionId"
+      ]
+    },
+    {
+      "name": "UpdateFindingDisposition",
+      "module": "resilience",
+      "kind": "PROVIDER_COMMAND",
+      "permission": "console:UpdateFindingDisposition",
+      "entities": [
+        "Finding",
+        "Command"
+      ],
+      "mutating": true,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P3_DURABLE_COMMANDS",
+      "target": "ConsolidatedOperationsConsole_20261105.UpdateFindingDisposition",
+      "inputSchemaRef": "rpc.schema.json#/$defs/UpdateFindingDispositionRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/UpdateFindingDispositionResponse",
+      "nativeOperations": [
+        "UpdateFailureModeFinding"
+      ],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "IdempotencyConflictException",
+        "CommandInProgressException",
+        "InvalidStateException"
+      ],
+      "semantics": [
+        "Admits a durable command and returns its receipt. Provider dispatch and authoritative observation reconciliation occur later.",
+        "expectedSourceRevisionId compares the local observed version before admission/dispatch; it does not create an AWS compare-and-swap guarantee.",
+        "The adapter resolves verified native aliases and enforces connection scope. An ambiguous provider response becomes OUTCOME_UNKNOWN until safe reconciliation.",
+        "The source precondition must belong to this exact native object and an appropriate configuration/detail representation. A different object's revision or a stale unrelated summary is rejected even in the same workspace.",
+        "Maps only status/comment. Disposition is an operator assertion, not a new posture or finding-specific verification."
+      ],
+      "scopeFields": [
+        "serviceId",
+        "findingId",
+        "connectionId",
+        "expectedSourceRevisionId"
+      ]
+    },
+    {
+      "name": "UpdateDependencyClassification",
+      "module": "resilience",
+      "kind": "PROVIDER_COMMAND",
+      "permission": "console:UpdateDependencyClassification",
+      "entities": [
+        "Dependency",
+        "Command"
+      ],
+      "mutating": true,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P3_DURABLE_COMMANDS",
+      "target": "ConsolidatedOperationsConsole_20261105.UpdateDependencyClassification",
+      "inputSchemaRef": "rpc.schema.json#/$defs/UpdateDependencyClassificationRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/UpdateDependencyClassificationResponse",
+      "nativeOperations": [
+        "UpdateDependency"
+      ],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "IdempotencyConflictException",
+        "CommandInProgressException",
+        "InvalidStateException"
+      ],
+      "semantics": [
+        "Admits a durable command and returns its receipt. Provider dispatch and authoritative observation reconciliation occur later.",
+        "expectedSourceRevisionId compares the local observed version before admission/dispatch; it does not create an AWS compare-and-swap guarantee.",
+        "The adapter resolves verified native aliases and enforces connection scope. An ambiguous provider response becomes OUTCOME_UNKNOWN until safe reconciliation.",
+        "The source precondition must belong to this exact native object and an appropriate configuration/detail representation. A different object's revision or a stale unrelated summary is rejected even in the same workspace.",
+        "Native criticality/comment and local allowed/denied governance have separate commands and revision ownership."
+      ],
+      "scopeFields": [
+        "serviceId",
+        "dependencyId",
+        "connectionId",
+        "expectedSourceRevisionId"
+      ]
+    },
+    {
+      "name": "UpdateResiliencePolicyConfiguration",
+      "module": "resilience",
+      "kind": "PROVIDER_COMMAND",
+      "permission": "console:ManageProviderConfiguration",
+      "entities": [
+        "ResiliencePolicy",
+        "Command"
+      ],
+      "mutating": true,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P3_DURABLE_COMMANDS",
+      "target": "ConsolidatedOperationsConsole_20261105.UpdateResiliencePolicyConfiguration",
+      "inputSchemaRef": "rpc.schema.json#/$defs/UpdateResiliencePolicyConfigurationRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/UpdateResiliencePolicyConfigurationResponse",
+      "nativeOperations": [
+        "UpdatePolicy"
+      ],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "IdempotencyConflictException",
+        "CommandInProgressException",
+        "InvalidStateException"
+      ],
+      "semantics": [
+        "Admits a durable command and returns its receipt. Provider dispatch and authoritative observation reconciliation occur later.",
+        "expectedSourceRevisionId compares the local observed version before admission/dispatch; it does not create an AWS compare-and-swap guarantee.",
+        "The adapter resolves verified native aliases and enforces connection scope. An ambiguous provider response becomes OUTCOME_UNKNOWN until safe reconciliation.",
+        "The source precondition must belong to this exact native object and an appropriate configuration/detail representation. A different object's revision or a stale unrelated summary is rejected even in the same workspace.",
+        "The narrow supported write subset has four native component families. Explicit detachment/component clearing is deferred until native semantics are verified.",
+        "Policy changes invalidate current applicability without modifying captured policy contexts or historical posture."
+      ],
+      "scopeFields": [
+        "resiliencePolicyId",
+        "connectionId",
+        "expectedSourceRevisionId"
+      ]
+    },
+    {
+      "name": "UpdateResilienceServiceConfiguration",
+      "module": "resilience",
+      "kind": "PROVIDER_COMMAND",
+      "permission": "console:ManageProviderConfiguration",
+      "entities": [
+        "Service",
+        "Command"
+      ],
+      "mutating": true,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P3_DURABLE_COMMANDS",
+      "target": "ConsolidatedOperationsConsole_20261105.UpdateResilienceServiceConfiguration",
+      "inputSchemaRef": "rpc.schema.json#/$defs/UpdateResilienceServiceConfigurationRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/UpdateResilienceServiceConfigurationResponse",
+      "nativeOperations": [
+        "UpdateService"
+      ],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "IdempotencyConflictException",
+        "CommandInProgressException",
+        "InvalidStateException"
+      ],
+      "semantics": [
+        "Admits a durable command and returns its receipt. Provider dispatch and authoritative observation reconciliation occur later.",
+        "expectedSourceRevisionId compares the local observed version before admission/dispatch; it does not create an AWS compare-and-swap guarantee.",
+        "The adapter resolves verified native aliases and enforces connection scope. An ambiguous provider response becomes OUTCOME_UNKNOWN until safe reconciliation.",
+        "The source precondition must belong to this exact native object and an appropriate configuration/detail representation. A different object's revision or a stale unrelated summary is rejected even in the same workspace.",
+        "Changes the verified Resilience Hub service profile only. Local UpdateService remains the canonical catalog/membership command.",
+        "This initial write subset covers description, Regions, direct policy attachment and desired discovery state. Native creation/deletion, association replacement, permissions, report configuration and clearing remain deferred adapter commands."
+      ],
+      "scopeFields": [
+        "serviceId",
+        "connectionId",
+        "expectedSourceRevisionId"
+      ]
+    },
+    {
+      "name": "UpdateRecommendationEnrichment",
+      "module": "resilience",
+      "kind": "LOCAL_COMMAND",
+      "permission": "console:ManageRecommendationWork",
+      "entities": [
+        "Recommendation",
+        "Command"
+      ],
+      "mutating": true,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P3_DURABLE_COMMANDS",
+      "target": "ConsolidatedOperationsConsole_20261105.UpdateRecommendationEnrichment",
+      "inputSchemaRef": "rpc.schema.json#/$defs/UpdateRecommendationEnrichmentRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/UpdateRecommendationEnrichmentResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "IdempotencyConflictException",
+        "CommandInProgressException",
+        "InvalidStateException",
+        "VersionConflictException"
+      ],
+      "semantics": [
+        "expectedVersion refers to recommendation.enrichment.version; immutable source suggestion and observation identity never change.",
+        "Estimate amount/currency/basis/complexity/source/time/confidence are typed local information, separate from native assessment execution cost.",
+        "The trusted directory resolves assigneeSubjectId; the server stamps mutation provenance/updatedAt. Assignment is not acting identity and cannot be combined with clearing owner.",
+        "Local work completion/estimates do not establish provider remediation or recommendation identity across generated observations."
+      ],
+      "scopeFields": [
+        "serviceId",
+        "findingId",
+        "recommendationId",
+        "assigneeSubjectId"
+      ]
+    },
+    {
+      "name": "GetAgentSpace",
+      "module": "investigation",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "AgentSpace"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.GetAgentSpace",
+      "inputSchemaRef": "rpc.schema.json#/$defs/GetAgentSpaceRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/GetAgentSpaceResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException"
+      ],
+      "semantics": [
+        "Returns retained canonical data with its provenance; does not fetch AWS synchronously.",
+        "Every supplied parent must agree with the stored record; a mismatch is not a cross-scope search."
+      ],
+      "scopeFields": [
+        "agentSpaceId"
+      ]
+    },
+    {
+      "name": "ListAgentSpaces",
+      "module": "investigation",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "AgentSpace"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.ListAgentSpaces",
+      "inputSchemaRef": "rpc.schema.json#/$defs/ListAgentSpacesRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/ListAgentSpacesResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "PaginationTokenExpiredException"
+      ],
+      "semantics": [
+        "Stable local snapshot traversal ordered by the documented immutable key; nextToken is absent only at the end.",
+        "A completed local traversal does not establish complete upstream collection or claim coverage."
+      ],
+      "scopeFields": []
+    },
+    {
+      "name": "GetInvestigation",
+      "module": "investigation",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "Investigation"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.GetInvestigation",
+      "inputSchemaRef": "rpc.schema.json#/$defs/GetInvestigationRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/GetInvestigationResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException"
+      ],
+      "semantics": [
+        "Returns retained canonical data with its provenance; does not fetch AWS synchronously.",
+        "Every supplied parent must agree with the stored record; a mismatch is not a cross-scope search."
+      ],
+      "scopeFields": [
+        "agentSpaceId",
+        "investigationId"
+      ]
+    },
+    {
+      "name": "ListInvestigations",
+      "module": "investigation",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "Investigation"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.ListInvestigations",
+      "inputSchemaRef": "rpc.schema.json#/$defs/ListInvestigationsRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/ListInvestigationsResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "PaginationTokenExpiredException"
+      ],
+      "semantics": [
+        "Stable local snapshot traversal ordered by the documented immutable key; nextToken is absent only at the end.",
+        "A completed local traversal does not establish complete upstream collection or claim coverage."
+      ],
+      "scopeFields": [
+        "agentSpaceId"
+      ]
+    },
+    {
+      "name": "GetExecution",
+      "module": "investigation",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "Execution"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.GetExecution",
+      "inputSchemaRef": "rpc.schema.json#/$defs/GetExecutionRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/GetExecutionResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException"
+      ],
+      "semantics": [
+        "Returns retained canonical data with its provenance; does not fetch AWS synchronously.",
+        "Every supplied parent must agree with the stored record; a mismatch is not a cross-scope search.",
+        "AgentSpace is the owner scope. A single investigation foreign key is not required, preserving chat and shared/referenced executions."
+      ],
+      "scopeFields": [
+        "agentSpaceId",
+        "executionId"
+      ]
+    },
+    {
+      "name": "ListExecutions",
+      "module": "investigation",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "Execution"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.ListExecutions",
+      "inputSchemaRef": "rpc.schema.json#/$defs/ListExecutionsRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/ListExecutionsResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "PaginationTokenExpiredException"
+      ],
+      "semantics": [
+        "Stable local snapshot traversal ordered by the documented immutable key; nextToken is absent only at the end.",
+        "A completed local traversal does not establish complete upstream collection or claim coverage.",
+        "The optional investigation filter uses explicit TaskExecutionMembership evidence. A linked task can reference an execution created elsewhere in the same AgentSpace."
+      ],
+      "scopeFields": [
+        "agentSpaceId",
+        "investigationId"
+      ]
+    },
+    {
+      "name": "GetJournalRecord",
+      "module": "investigation",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "JournalRecord"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.GetJournalRecord",
+      "inputSchemaRef": "rpc.schema.json#/$defs/GetJournalRecordRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/GetJournalRecordResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException"
+      ],
+      "semantics": [
+        "Returns retained canonical data with its provenance; does not fetch AWS synchronously.",
+        "Every supplied parent must agree with the stored record; a mismatch is not a cross-scope search."
+      ],
+      "scopeFields": [
+        "agentSpaceId",
+        "executionId",
+        "journalRecordId"
+      ]
+    },
+    {
+      "name": "ListJournalRecords",
+      "module": "investigation",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "JournalRecord"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.ListJournalRecords",
+      "inputSchemaRef": "rpc.schema.json#/$defs/ListJournalRecordsRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/ListJournalRecordsResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "PaginationTokenExpiredException"
+      ],
+      "semantics": [
+        "Stable local snapshot traversal ordered by the documented immutable key; nextToken is absent only at the end.",
+        "A completed local traversal does not establish complete upstream collection or claim coverage.",
+        "Journal record identity, raw native type and graph extraction provenance remain separate; a textual mention does not create a graph link."
+      ],
+      "scopeFields": [
+        "agentSpaceId",
+        "executionId"
+      ]
+    },
+    {
+      "name": "GetApprovalRequest",
+      "module": "investigation",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "ApprovalRequest"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.GetApprovalRequest",
+      "inputSchemaRef": "rpc.schema.json#/$defs/GetApprovalRequestRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/GetApprovalRequestResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException"
+      ],
+      "semantics": [
+        "Returns retained canonical data with its provenance; does not fetch AWS synchronously.",
+        "Every supplied parent must agree with the stored record; a mismatch is not a cross-scope search."
+      ],
+      "scopeFields": [
+        "agentSpaceId",
+        "executionId",
+        "approvalRequestId"
+      ]
+    },
+    {
+      "name": "ListApprovalRequests",
+      "module": "investigation",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "ApprovalRequest"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.ListApprovalRequests",
+      "inputSchemaRef": "rpc.schema.json#/$defs/ListApprovalRequestsRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/ListApprovalRequestsResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "PaginationTokenExpiredException"
+      ],
+      "semantics": [
+        "Stable local snapshot traversal ordered by the documented immutable key; nextToken is absent only at the end.",
+        "A completed local traversal does not establish complete upstream collection or claim coverage.",
+        "These are retained validated chat request contexts, not a fabricated native Get/ListApproval API. A waiting task or Markdown button is insufficient."
+      ],
+      "scopeFields": [
+        "agentSpaceId",
+        "executionId"
+      ]
+    },
+    {
+      "name": "GetAsset",
+      "module": "investigation",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "Asset"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.GetAsset",
+      "inputSchemaRef": "rpc.schema.json#/$defs/GetAssetRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/GetAssetResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "EvidenceUnavailableException"
+      ],
+      "semantics": [
+        "Returns retained canonical data with its provenance; does not fetch AWS synchronously.",
+        "Every supplied parent must agree with the stored record; a mismatch is not a cross-scope search."
+      ],
+      "scopeFields": [
+        "agentSpaceId",
+        "assetId"
+      ]
+    },
+    {
+      "name": "ListAssets",
+      "module": "investigation",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "Asset"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.ListAssets",
+      "inputSchemaRef": "rpc.schema.json#/$defs/ListAssetsRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/ListAssetsResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "PaginationTokenExpiredException",
+        "EvidenceUnavailableException"
+      ],
+      "semantics": [
+        "Stable local snapshot traversal ordered by the documented immutable key; nextToken is absent only at the end.",
+        "A completed local traversal does not establish complete upstream collection or claim coverage."
+      ],
+      "scopeFields": [
+        "agentSpaceId"
+      ]
+    },
+    {
+      "name": "StartInvestigation",
+      "module": "investigation",
+      "kind": "PROVIDER_COMMAND",
+      "permission": "console:StartInvestigation",
+      "entities": [
+        "Investigation",
+        "Command"
+      ],
+      "mutating": true,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P3_DURABLE_COMMANDS",
+      "target": "ConsolidatedOperationsConsole_20261105.StartInvestigation",
+      "inputSchemaRef": "rpc.schema.json#/$defs/StartInvestigationRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/StartInvestigationResponse",
+      "nativeOperations": [
+        "CreateBacklogTask"
+      ],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "IdempotencyConflictException",
+        "CommandInProgressException",
+        "InvalidStateException"
+      ],
+      "semantics": [
+        "Requests CreateBacklogTask with taskType=INVESTIGATION; it is not a native operation named StartInvestigation.",
+        "A task creation receipt does not prove execution started. Native task, execution and result observations are reconciled separately.",
+        "The adapter maps the durable console intent to a stable provider token within native bounds; no raw tenant/actor is accepted."
+      ],
+      "scopeFields": [
+        "agentSpaceId",
+        "connectionId"
+      ]
+    },
+    {
+      "name": "DecideApproval",
+      "module": "investigation",
+      "kind": "PROVIDER_COMMAND",
+      "permission": "console:DecideApproval",
+      "entities": [
+        "ApprovalRequest",
+        "Command"
+      ],
+      "mutating": true,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P3_DURABLE_COMMANDS",
+      "target": "ConsolidatedOperationsConsole_20261105.DecideApproval",
+      "inputSchemaRef": "rpc.schema.json#/$defs/DecideApprovalRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/DecideApprovalResponse",
+      "nativeOperations": [
+        "UpdateApprovalAction"
+      ],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "IdempotencyConflictException",
+        "CommandInProgressException",
+        "InvalidStateException"
+      ],
+      "semantics": [
+        "First-release decision supports exact observed scope and single use only; reusable grants and pattern editing are explicitly deferred.",
+        "APPROVED requires singleUse=true. REJECTED omits singleUse; the adapter also omits native pattern and TTL fields for rejection.",
+        "Validates a complete authenticated chat request context and exact action digest, then invokes UpdateApprovalAction. It neither resumes the execution nor claims the tool ran.",
+        "Native UpdateApprovalAction has no modeled idempotency token. A lost response is OUTCOME_UNKNOWN; local replay returns the receipt and must not repeat the remote mutation blindly.",
+        "A successful rejection is a successful decision command, not a provider API failure."
+      ],
+      "scopeFields": [
+        "agentSpaceId",
+        "executionId",
+        "approvalRequestId",
+        "connectionId",
+        "expectedRequestSourceRevisionId"
+      ]
+    },
+    {
+      "name": "ResumeExecution",
+      "module": "investigation",
+      "kind": "PROVIDER_COMMAND",
+      "permission": "console:ResumeExecution",
+      "entities": [
+        "Execution",
+        "ApprovalRequest",
+        "Command"
+      ],
+      "mutating": true,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P3_DURABLE_COMMANDS",
+      "target": "ConsolidatedOperationsConsole_20261105.ResumeExecution",
+      "inputSchemaRef": "rpc.schema.json#/$defs/ResumeExecutionRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/ResumeExecutionResponse",
+      "nativeOperations": [
+        "SendMessage"
+      ],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "IdempotencyConflictException",
+        "CommandInProgressException",
+        "InvalidStateException"
+      ],
+      "semantics": [
+        "Requires a definitively successful matching decision Command, valid current authorization and a validated approval/interrupt/tool-use context.",
+        "Constructs the native SendMessage APPROVAL_ACTION context from that retained request; the caller cannot substitute interrupt/tool IDs or widen approved scope.",
+        "Decision, resume submission, credential redemption and actual tool outcome remain separate. Opening or completing a stream does not prove the tool succeeded.",
+        "SendMessage has no modeled idempotency token. Persist stream fragments and unknown outcomes; do not blindly resend on disconnect."
+      ],
+      "scopeFields": [
+        "agentSpaceId",
+        "executionId",
+        "approvalRequestId",
+        "decisionCommandId",
+        "connectionId"
+      ]
+    },
+    {
+      "name": "CreateScenario",
+      "module": "workflow",
+      "kind": "LOCAL_COMMAND",
+      "permission": "console:AuthorScenario",
+      "entities": [
+        "Scenario",
+        "Command"
+      ],
+      "mutating": true,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P3_DURABLE_COMMANDS",
+      "target": "ConsolidatedOperationsConsole_20261105.CreateScenario",
+      "inputSchemaRef": "rpc.schema.json#/$defs/CreateScenarioRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/CreateScenarioResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "IdempotencyConflictException",
+        "CommandInProgressException",
+        "InvalidStateException"
+      ],
+      "semantics": [
+        "Creates a local editable draft. An author cannot set trusted operation locks, capability grants or a published digest."
+      ],
+      "scopeFields": []
+    },
+    {
+      "name": "GetScenario",
+      "module": "workflow",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "Scenario"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.GetScenario",
+      "inputSchemaRef": "rpc.schema.json#/$defs/GetScenarioRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/GetScenarioResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException"
+      ],
+      "semantics": [
+        "Returns retained canonical data with its provenance; does not fetch AWS synchronously.",
+        "Every supplied parent must agree with the stored record; a mismatch is not a cross-scope search."
+      ],
+      "scopeFields": [
+        "scenarioId"
+      ]
+    },
+    {
+      "name": "ListScenarios",
+      "module": "workflow",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "Scenario"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.ListScenarios",
+      "inputSchemaRef": "rpc.schema.json#/$defs/ListScenariosRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/ListScenariosResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "PaginationTokenExpiredException"
+      ],
+      "semantics": [
+        "Stable local snapshot traversal ordered by the documented immutable key; nextToken is absent only at the end.",
+        "A completed local traversal does not establish complete upstream collection or claim coverage."
+      ],
+      "scopeFields": []
+    },
+    {
+      "name": "UpdateScenario",
+      "module": "workflow",
+      "kind": "LOCAL_COMMAND",
+      "permission": "console:AuthorScenario",
+      "entities": [
+        "Scenario",
+        "Command"
+      ],
+      "mutating": true,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P3_DURABLE_COMMANDS",
+      "target": "ConsolidatedOperationsConsole_20261105.UpdateScenario",
+      "inputSchemaRef": "rpc.schema.json#/$defs/UpdateScenarioRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/UpdateScenarioResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "IdempotencyConflictException",
+        "CommandInProgressException",
+        "InvalidStateException",
+        "VersionConflictException"
+      ],
+      "semantics": [
+        "Only the draft/catalog record changes; a default revision must belong to this Scenario. No already admitted Run is redirected.",
+        "Omitted fields preserve; clearFields=[defaultRevisionId] removes the default pointer. Supplying it and clearing it in one request is invalid.",
+        "archived=true rejects new Run admission while preserving all published revisions and historical Runs; exact replay of an already admitted Run still returns its original receipt."
+      ],
+      "scopeFields": [
+        "scenarioId",
+        "defaultRevisionId"
+      ]
+    },
+    {
+      "name": "PublishScenarioRevision",
+      "module": "workflow",
+      "kind": "LOCAL_COMMAND",
+      "permission": "console:PublishScenario",
+      "entities": [
+        "ScenarioRevision",
+        "Scenario",
+        "Command"
+      ],
+      "mutating": true,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P3_DURABLE_COMMANDS",
+      "target": "ConsolidatedOperationsConsole_20261105.PublishScenarioRevision",
+      "inputSchemaRef": "rpc.schema.json#/$defs/PublishScenarioRevisionRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/PublishScenarioRevisionResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "IdempotencyConflictException",
+        "CommandInProgressException",
+        "InvalidStateException",
+        "VersionConflictException"
+      ],
+      "semantics": [
+        "Compiles the exact current draft, resolves retained immutable implementation/schema locks and atomically publishes a new revision.",
+        "Publication validates DAGs, dependency-scoped references, typed bindings, capability checks, required criteria, finalizers and fixed language/reducer semantics before any external work.",
+        "The caller cannot submit a trusted lock or digest. Changing a later alias cannot alter this revision. Missing/revoked pinned artifacts reject future admission, never substitute."
+      ],
+      "scopeFields": [
+        "scenarioId"
+      ]
+    },
+    {
+      "name": "GetScenarioRevision",
+      "module": "workflow",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "ScenarioRevision"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.GetScenarioRevision",
+      "inputSchemaRef": "rpc.schema.json#/$defs/GetScenarioRevisionRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/GetScenarioRevisionResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException"
+      ],
+      "semantics": [
+        "Returns retained canonical data with its provenance; does not fetch AWS synchronously.",
+        "Every supplied parent must agree with the stored record; a mismatch is not a cross-scope search."
+      ],
+      "scopeFields": [
+        "scenarioId",
+        "scenarioRevisionId"
+      ]
+    },
+    {
+      "name": "ListScenarioRevisions",
+      "module": "workflow",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "ScenarioRevision"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.ListScenarioRevisions",
+      "inputSchemaRef": "rpc.schema.json#/$defs/ListScenarioRevisionsRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/ListScenarioRevisionsResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "PaginationTokenExpiredException"
+      ],
+      "semantics": [
+        "Stable local snapshot traversal ordered by the documented immutable key; nextToken is absent only at the end.",
+        "A completed local traversal does not establish complete upstream collection or claim coverage."
+      ],
+      "scopeFields": [
+        "scenarioId"
+      ]
+    },
+    {
+      "name": "StartRun",
+      "module": "workflow",
+      "kind": "EXECUTION_COMMAND",
+      "permission": "console:StartRun",
+      "entities": [
+        "Run",
+        "Snapshot",
+        "Command"
+      ],
+      "mutating": true,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P4_WORKFLOW_RUNTIME",
+      "target": "ConsolidatedOperationsConsole_20261105.StartRun",
+      "inputSchemaRef": "rpc.schema.json#/$defs/StartRunRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/StartRunResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "IdempotencyConflictException",
+        "CommandInProgressException",
+        "InvalidStateException",
+        "VersionConflictException",
+        "EvidenceUnavailableException"
+      ],
+      "semantics": [
+        "Durably admits one Run, all StepRuns and a closed RUN_INPUT snapshot atomically; no claim that an AWS call has started.",
+        "inputs are intentionally revision-defined and must pass its pinned closed input schema; unknown binding names, raw secrets, undeclared operations or unauthorized scope are rejected.",
+        "Admission fixes enabled steps and the required-criterion denominator. Runtime skips/cancellation cannot shrink it; inapplicable admission criteria remain recorded.",
+        "expectedSubjectVersion applies only when the subject is a local mutable configuration; it is not an AWS deployment lock. Material dispatch preconditions are rechecked by the adapter.",
+        "A new execution intent uses a new clientToken. Pinned revision identity, never the default pointer, selects the program.",
+        "The revision's owning Scenario must not be archived at new admission; archive state cannot redirect or cancel an already admitted Run."
+      ],
+      "scopeFields": [
+        "scenarioRevisionId"
+      ]
+    },
+    {
+      "name": "GetRun",
+      "module": "workflow",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "Run"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.GetRun",
+      "inputSchemaRef": "rpc.schema.json#/$defs/GetRunRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/GetRunResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException"
+      ],
+      "semantics": [
+        "Returns retained canonical data with its provenance; does not fetch AWS synchronously.",
+        "Every supplied parent must agree with the stored record; a mismatch is not a cross-scope search."
+      ],
+      "scopeFields": [
+        "runId"
+      ]
+    },
+    {
+      "name": "ListRuns",
+      "module": "workflow",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "Run"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.ListRuns",
+      "inputSchemaRef": "rpc.schema.json#/$defs/ListRunsRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/ListRunsResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "PaginationTokenExpiredException"
+      ],
+      "semantics": [
+        "Stable local snapshot traversal ordered by the documented immutable key; nextToken is absent only at the end.",
+        "A completed local traversal does not establish complete upstream collection or claim coverage."
+      ],
+      "scopeFields": [
+        "scenarioRevisionId"
+      ]
+    },
+    {
+      "name": "RequestRunCancellation",
+      "module": "workflow",
+      "kind": "EXECUTION_COMMAND",
+      "permission": "console:CancelRun",
+      "entities": [
+        "Run",
+        "Command"
+      ],
+      "mutating": true,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P4_WORKFLOW_RUNTIME",
+      "target": "ConsolidatedOperationsConsole_20261105.RequestRunCancellation",
+      "inputSchemaRef": "rpc.schema.json#/$defs/RequestRunCancellationRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/RequestRunCancellationResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "IdempotencyConflictException",
+        "CommandInProgressException",
+        "InvalidStateException"
+      ],
+      "semantics": [
+        "Atomically accepts monotonic cancellation intent and fences new main dispatch; it does not set a remote effect to stopped.",
+        "Already sealed Run returns accepted=false and its unchanged terminal record. Exact replay preserves the original accepted receipt after later completion.",
+        "Finalizers reconcile active/unknown effects, including a lost Start response with no handle. A creating Start must never be reissued after cancellation just to discover its result.",
+        "Different cancellation tokens converge on the first accepted intent. Cleanup, execution result and workload verdict remain independently visible."
+      ],
+      "scopeFields": [
+        "runId"
+      ]
+    },
+    {
+      "name": "ListRunSteps",
+      "module": "workflow",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "StepRun"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.ListRunSteps",
+      "inputSchemaRef": "rpc.schema.json#/$defs/ListRunStepsRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/ListRunStepsResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "PaginationTokenExpiredException"
+      ],
+      "semantics": [
+        "Stable local snapshot traversal ordered by the documented immutable key; nextToken is absent only at the end.",
+        "A completed local traversal does not establish complete upstream collection or claim coverage.",
+        "Includes every compiled step, including skipped zero-attempt steps. No independent retry/stop/status-update command exists."
+      ],
+      "scopeFields": [
+        "runId"
+      ]
+    },
+    {
+      "name": "ListStepAttempts",
+      "module": "workflow",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "StepAttempt"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.ListStepAttempts",
+      "inputSchemaRef": "rpc.schema.json#/$defs/ListStepAttemptsRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/ListStepAttemptsResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "PaginationTokenExpiredException"
+      ],
+      "semantics": [
+        "Stable local snapshot traversal ordered by the documented immutable key; nextToken is absent only at the end.",
+        "A completed local traversal does not establish complete upstream collection or claim coverage.",
+        "Ordered by attemptNo; polling/resume/transport retry remain within the same attempt. A new mutating attempt is forbidden while its predecessor's effect is unresolved."
+      ],
+      "scopeFields": [
+        "runId",
+        "stepRunId"
+      ]
+    },
+    {
+      "name": "GetExperiment",
+      "module": "fis",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "Experiment"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.GetExperiment",
+      "inputSchemaRef": "rpc.schema.json#/$defs/GetExperimentRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/GetExperimentResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException"
+      ],
+      "semantics": [
+        "Returns retained canonical data with its provenance; does not fetch AWS synchronously.",
+        "Every supplied parent must agree with the stored record; a mismatch is not a cross-scope search.",
+        "Native actions are keyed by experiment + actionName; their catalog actionId is not an execution identity.",
+        "Selected memberships, applied effects, workload criteria and report readiness are separate evidence dimensions."
+      ],
+      "scopeFields": [
+        "experimentId"
+      ]
+    },
+    {
+      "name": "ListExperiments",
+      "module": "fis",
+      "kind": "READ",
+      "permission": "console:Read",
+      "entities": [
+        "Experiment"
+      ],
+      "mutating": false,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P2_READ_AND_INGEST",
+      "target": "ConsolidatedOperationsConsole_20261105.ListExperiments",
+      "inputSchemaRef": "rpc.schema.json#/$defs/ListExperimentsRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/ListExperimentsResponse",
+      "nativeOperations": [],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "PaginationTokenExpiredException"
+      ],
+      "semantics": [
+        "Stable local snapshot traversal ordered by the documented immutable key; nextToken is absent only at the end.",
+        "A completed local traversal does not establish complete upstream collection or claim coverage.",
+        "runId filters only verified ExternalOperationRef links; imported experiments can have no product workflow Run."
+      ],
+      "scopeFields": [
+        "connectionId",
+        "runId"
+      ]
+    },
+    {
+      "name": "StopExperiment",
+      "module": "fis",
+      "kind": "PROVIDER_COMMAND",
+      "permission": "console:StopExperiment",
+      "entities": [
+        "Experiment",
+        "Command"
+      ],
+      "mutating": true,
+      "maturity": "CONTRACT_ONLY",
+      "deliveryPhase": "P3_DURABLE_COMMANDS",
+      "target": "ConsolidatedOperationsConsole_20261105.StopExperiment",
+      "inputSchemaRef": "rpc.schema.json#/$defs/StopExperimentRequest",
+      "outputSchemaRef": "rpc.schema.json#/$defs/StopExperimentResponse",
+      "nativeOperations": [
+        "StopExperiment"
+      ],
+      "errors": [
+        "ValidationException",
+        "UnauthenticatedException",
+        "AccessDeniedException",
+        "ResourceNotFoundException",
+        "ThrottlingException",
+        "InternalServerException",
+        "ServiceUnavailableException",
+        "IdempotencyConflictException",
+        "CommandInProgressException",
+        "InvalidStateException"
+      ],
+      "semantics": [
+        "Admits a durable command and returns its receipt. Provider dispatch and authoritative observation reconciliation occur later.",
+        "expectedSourceRevisionId compares the local observed version before admission/dispatch; it does not create an AWS compare-and-swap guarantee.",
+        "The adapter resolves verified native aliases and enforces connection scope. An ambiguous provider response becomes OUTCOME_UNKNOWN until safe reconciliation.",
+        "The source precondition must belong to this exact native object and an appropriate configuration/detail representation. A different object's revision or a stale unrelated summary is rejected even in the same workspace.",
+        "Requests native StopExperiment for the whole experiment; no individual native action stop/retry/pause command is fabricated.",
+        "Stop acceptance, final native state, post-action cleanup, workload recovery and report completion remain separate.",
+        "Starting new fault experiments is available only through an explicitly authorized pinned workflow adapter in this initial facade."
+      ],
+      "scopeFields": [
+        "experimentId",
+        "connectionId",
+        "expectedSourceRevisionId"
+      ]
+    }
+  ],
+  "entityCoverage": {
+    "Workspace": [
+      "GetWorkspace"
+    ],
+    "Connection": [
+      "GetConnection",
+      "ListConnections",
+      "CreateConnection",
+      "UpdateConnection"
+    ],
+    "Resource": [
+      "GetResource",
+      "ListResources"
+    ],
+    "Collection": [
+      "GetCollection",
+      "ListCollections",
+      "StartCollection",
+      "CompleteCollection"
+    ],
+    "ReadAttempt": [
+      "ListReadAttempts",
+      "RecordReadAttempt"
+    ],
+    "SourceRevision": [
+      "GetSourceRevision",
+      "ListSourceRevisions",
+      "IngestObservation"
+    ],
+    "Observation": [
+      "GetObservation",
+      "ListObservations",
+      "IngestObservation"
+    ],
+    "ProjectionRevision": [
+      "GetProjectionRevision",
+      "ListProjectionRevisions",
+      "PublishProjection",
+      "GetServiceStatus",
+      "GetWorkspaceSummary"
+    ],
+    "Snapshot": [
+      "GetSnapshot",
+      "ListSnapshots",
+      "CaptureSnapshot",
+      "StartRun"
+    ],
+    "WorkItem": [
+      "GetWorkItem",
+      "ListWorkItems",
+      "CreateWorkItem",
+      "UpdateWorkItem",
+      "RecordWorkItemVerification"
+    ],
+    "Command": [
+      "CreateConnection",
+      "UpdateConnection",
+      "GetCommand",
+      "ListCommands",
+      "StartCollection",
+      "RecordReadAttempt",
+      "IngestObservation",
+      "CompleteCollection",
+      "PublishProjection",
+      "CaptureSnapshot",
+      "CreateWorkItem",
+      "UpdateWorkItem",
+      "RecordWorkItemVerification",
+      "CreateSystem",
+      "UpdateSystem",
+      "CreateUserJourney",
+      "UpdateUserJourney",
+      "CreateService",
+      "UpdateService",
+      "UpdateDependencyGovernance",
+      "StartResilienceAssessment",
+      "UpdateFindingDisposition",
+      "UpdateDependencyClassification",
+      "UpdateResiliencePolicyConfiguration",
+      "UpdateResilienceServiceConfiguration",
+      "UpdateRecommendationEnrichment",
+      "StartInvestigation",
+      "DecideApproval",
+      "ResumeExecution",
+      "CreateScenario",
+      "UpdateScenario",
+      "PublishScenarioRevision",
+      "StartRun",
+      "RequestRunCancellation",
+      "StopExperiment"
+    ],
+    "System": [
+      "CreateSystem",
+      "GetSystem",
+      "ListSystems",
+      "UpdateSystem"
+    ],
+    "UserJourney": [
+      "CreateUserJourney",
+      "GetUserJourney",
+      "ListUserJourneys",
+      "UpdateUserJourney"
+    ],
+    "Service": [
+      "CreateService",
+      "GetService",
+      "ListServices",
+      "UpdateService",
+      "UpdateResilienceServiceConfiguration"
+    ],
+    "Dependency": [
+      "GetDependency",
+      "ListDependencies",
+      "UpdateDependencyGovernance",
+      "UpdateDependencyClassification"
+    ],
+    "HealthEvent": [
+      "GetHealthEvent",
+      "ListHealthEvents"
+    ],
+    "EventContext": [
+      "ListEventContexts"
+    ],
+    "EntityImpact": [
+      "ListEntityImpacts"
+    ],
+    "Communication": [
+      "ListCommunications"
+    ],
+    "LifecycleEntry": [
+      "ListLifecycleEntries"
+    ],
+    "ComponentDeployment": [
+      "GetComponentDeployment",
+      "ListComponentDeployments"
+    ],
+    "ResiliencePolicy": [
+      "GetResiliencePolicy",
+      "ListResiliencePolicies",
+      "UpdateResiliencePolicyConfiguration"
+    ],
+    "ResilienceAssessment": [
+      "GetResilienceAssessment",
+      "ListResilienceAssessments",
+      "StartResilienceAssessment"
+    ],
+    "Finding": [
+      "GetFinding",
+      "ListFindings",
+      "UpdateFindingDisposition"
+    ],
+    "Recommendation": [
+      "GetRecommendation",
+      "ListRecommendations",
+      "UpdateRecommendationEnrichment"
+    ],
+    "AgentSpace": [
+      "GetAgentSpace",
+      "ListAgentSpaces"
+    ],
+    "Investigation": [
+      "GetInvestigation",
+      "ListInvestigations",
+      "StartInvestigation"
+    ],
+    "Execution": [
+      "GetExecution",
+      "ListExecutions",
+      "ResumeExecution"
+    ],
+    "JournalRecord": [
+      "GetJournalRecord",
+      "ListJournalRecords"
+    ],
+    "ApprovalRequest": [
+      "GetApprovalRequest",
+      "ListApprovalRequests",
+      "DecideApproval",
+      "ResumeExecution"
+    ],
+    "Asset": [
+      "GetAsset",
+      "ListAssets"
+    ],
+    "Scenario": [
+      "CreateScenario",
+      "GetScenario",
+      "ListScenarios",
+      "UpdateScenario",
+      "PublishScenarioRevision"
+    ],
+    "ScenarioRevision": [
+      "PublishScenarioRevision",
+      "GetScenarioRevision",
+      "ListScenarioRevisions"
+    ],
+    "Run": [
+      "StartRun",
+      "GetRun",
+      "ListRuns",
+      "RequestRunCancellation"
+    ],
+    "StepRun": [
+      "ListRunSteps"
+    ],
+    "StepAttempt": [
+      "ListStepAttempts"
+    ],
+    "Experiment": [
+      "GetExperiment",
+      "ListExperiments",
+      "StopExperiment"
+    ]
+  },
+  "predecessorMappings": [
+    {
+      "sourcePackage": "aws/resilience-hub/analysis/api",
+      "sourceOperation": "GetSystem",
+      "disposition": "CANONICAL_READ_WITH_NATIVE_FACET",
+      "newOperations": [
+        "GetSystem",
+        "GetSourceRevision"
+      ],
+      "notes": "Local canonical identity is separate from the retained native profile; verified provider binding supplies the bridge."
+    },
+    {
+      "sourcePackage": "aws/resilience-hub/analysis/api",
+      "sourceOperation": "ListSystems",
+      "disposition": "CANONICAL_READ_WITH_NATIVE_FACET",
+      "newOperations": [
+        "ListSystems",
+        "ListSourceRevisions"
+      ],
+      "notes": "Canonical catalog list plus typed native source profiles; unresolved native references are not silently discarded."
+    },
+    {
+      "sourcePackage": "aws/resilience-hub/analysis/api",
+      "sourceOperation": "GetUserJourney",
+      "disposition": "CANONICAL_READ_WITH_NATIVE_FACET",
+      "newOperations": [
+        "GetUserJourney",
+        "GetSourceRevision"
+      ],
+      "notes": "Local canonical identity is separate from the retained native profile; verified provider binding supplies the bridge."
+    },
+    {
+      "sourcePackage": "aws/resilience-hub/analysis/api",
+      "sourceOperation": "ListUserJourneys",
+      "disposition": "CANONICAL_READ_WITH_NATIVE_FACET",
+      "newOperations": [
+        "ListUserJourneys",
+        "ListSourceRevisions"
+      ],
+      "notes": "Canonical catalog list plus typed native source profiles; unresolved native references are not silently discarded."
+    },
+    {
+      "sourcePackage": "aws/resilience-hub/analysis/api",
+      "sourceOperation": "GetService",
+      "disposition": "CANONICAL_READ_WITH_NATIVE_FACET",
+      "newOperations": [
+        "GetService",
+        "GetSourceRevision"
+      ],
+      "notes": "Local canonical identity is separate from the retained native profile; verified provider binding supplies the bridge."
+    },
+    {
+      "sourcePackage": "aws/resilience-hub/analysis/api",
+      "sourceOperation": "ListServices",
+      "disposition": "CANONICAL_READ_WITH_NATIVE_FACET",
+      "newOperations": [
+        "ListServices",
+        "ListSourceRevisions"
+      ],
+      "notes": "Canonical catalog list plus typed native source profiles; unresolved native references are not silently discarded."
+    },
+    {
+      "sourcePackage": "aws/resilience-hub/analysis/api",
+      "sourceOperation": "CreateSystem",
+      "disposition": "DEFERRED_NATIVE_COMMAND",
+      "newOperations": [],
+      "notes": "Old commands created provider resources. New identically named catalog Create commands are LOCAL and are not migration aliases for native creation."
+    },
+    {
+      "sourcePackage": "aws/resilience-hub/analysis/api",
+      "sourceOperation": "CreateUserJourney",
+      "disposition": "DEFERRED_NATIVE_COMMAND",
+      "newOperations": [],
+      "notes": "Old commands created provider resources. New identically named catalog Create commands are LOCAL and are not migration aliases for native creation."
+    },
+    {
+      "sourcePackage": "aws/resilience-hub/analysis/api",
+      "sourceOperation": "CreateService",
+      "disposition": "DEFERRED_NATIVE_COMMAND",
+      "newOperations": [],
+      "notes": "Old commands created provider resources. New identically named catalog Create commands are LOCAL and are not migration aliases for native creation."
+    },
+    {
+      "sourcePackage": "aws/resilience-hub/analysis/api",
+      "sourceOperation": "CreatePolicy",
+      "disposition": "DEFERRED_NATIVE_COMMAND",
+      "newOperations": [],
+      "notes": "Old commands created provider resources. New identically named catalog Create commands are LOCAL and are not migration aliases for native creation."
+    },
+    {
+      "sourcePackage": "aws/resilience-hub/analysis/api",
+      "sourceOperation": "UpdateSystem",
+      "disposition": "DEFERRED_NATIVE_COMMAND",
+      "newOperations": [],
+      "notes": "Native description/sharing/journey/policy edits remain later adapter work; local UpdateSystem/UpdateUserJourney edit canonical metadata only."
+    },
+    {
+      "sourcePackage": "aws/resilience-hub/analysis/api",
+      "sourceOperation": "UpdateUserJourney",
+      "disposition": "DEFERRED_NATIVE_COMMAND",
+      "newOperations": [],
+      "notes": "Native description/sharing/journey/policy edits remain later adapter work; local UpdateSystem/UpdateUserJourney edit canonical metadata only."
+    },
+    {
+      "sourcePackage": "aws/resilience-hub/analysis/api",
+      "sourceOperation": "DeleteSystem",
+      "disposition": "DEFERRED_NATIVE_COMMAND",
+      "newOperations": [],
+      "notes": "Native destructive semantics/guards and preserved history need explicit later commands. No local delete substitutes for them."
+    },
+    {
+      "sourcePackage": "aws/resilience-hub/analysis/api",
+      "sourceOperation": "DeleteUserJourney",
+      "disposition": "DEFERRED_NATIVE_COMMAND",
+      "newOperations": [],
+      "notes": "Native destructive semantics/guards and preserved history need explicit later commands. No local delete substitutes for them."
+    },
+    {
+      "sourcePackage": "aws/resilience-hub/analysis/api",
+      "sourceOperation": "DeleteService",
+      "disposition": "DEFERRED_NATIVE_COMMAND",
+      "newOperations": [],
+      "notes": "Native destructive semantics/guards and preserved history need explicit later commands. No local delete substitutes for them."
+    },
+    {
+      "sourcePackage": "aws/resilience-hub/analysis/api",
+      "sourceOperation": "DeletePolicy",
+      "disposition": "DEFERRED_NATIVE_COMMAND",
+      "newOperations": [],
+      "notes": "Native destructive semantics/guards and preserved history need explicit later commands. No local delete substitutes for them."
+    },
+    {
+      "sourcePackage": "aws/resilience-hub/analysis/api",
+      "sourceOperation": "UpdateService",
+      "disposition": "NARROW_PROVIDER_SUBSET",
+      "newOperations": [
+        "UpdateResilienceServiceConfiguration"
+      ],
+      "notes": "Description, Regions, direct policy attachment and discovery intent now have explicit native authority. Remaining native fields and clearing are deferred."
+    },
+    {
+      "sourcePackage": "aws/resilience-hub/analysis/api",
+      "sourceOperation": "UpdatePolicy",
+      "disposition": "NARROW_PROVIDER_SUBSET",
+      "newOperations": [
+        "UpdateResiliencePolicyConfiguration"
+      ],
+      "notes": "Typed native policy components/description/sharing; no generic clear or local rename forwarded to the provider."
+    },
+    {
+      "sourcePackage": "aws/resilience-hub/analysis/api",
+      "sourceOperation": "GetPolicy",
+      "disposition": "RENAMED_TYPED_READ",
+      "newOperations": [
+        "GetResiliencePolicy"
+      ],
+      "notes": "Explicitly names the resilience policy bounded context."
+    },
+    {
+      "sourcePackage": "aws/resilience-hub/analysis/api",
+      "sourceOperation": "ListPolicies",
+      "disposition": "RENAMED_TYPED_READ",
+      "newOperations": [
+        "ListResiliencePolicies"
+      ],
+      "notes": "Explicitly names the resilience policy bounded context."
+    },
+    {
+      "sourcePackage": "aws/resilience-hub/analysis/api",
+      "sourceOperation": "CreateInputSource",
+      "disposition": "DEFERRED_NATIVE_COMMAND",
+      "newOperations": [],
+      "notes": "Retained input-source profile is in scope; provider CRUD is deferred."
+    },
+    {
+      "sourcePackage": "aws/resilience-hub/analysis/api",
+      "sourceOperation": "DeleteInputSource",
+      "disposition": "DEFERRED_NATIVE_COMMAND",
+      "newOperations": [],
+      "notes": "Retained input-source profile is in scope; provider CRUD is deferred."
+    },
+    {
+      "sourcePackage": "aws/resilience-hub/analysis/api",
+      "sourceOperation": "ListInputSources",
+      "disposition": "RETAINED_TYPED_PROFILE",
+      "newOperations": [
+        "ListSourceRevisions",
+        "GetSourceRevision"
+      ],
+      "notes": "Use aws.resilience-hub.input-source/v1 and exact service-scoped source identity."
+    },
+    {
+      "sourcePackage": "aws/resilience-hub/analysis/api",
+      "sourceOperation": "StartFailureModeAssessment",
+      "disposition": "EXPLICIT_ASYNC_COMMAND",
+      "newOperations": [
+        "StartResilienceAssessment"
+      ],
+      "notes": "Receipt and later provider assessment identity are separate."
+    },
+    {
+      "sourcePackage": "aws/resilience-hub/analysis/api",
+      "sourceOperation": "GetFailureModeAssessment",
+      "disposition": "RENAMED_TYPED_READ",
+      "newOperations": [
+        "GetResilienceAssessment"
+      ],
+      "notes": "Retained service-scoped provider execution; no invented native Get call."
+    },
+    {
+      "sourcePackage": "aws/resilience-hub/analysis/api",
+      "sourceOperation": "ListFailureModeAssessments",
+      "disposition": "RENAMED_TYPED_READ",
+      "newOperations": [
+        "ListResilienceAssessments"
+      ],
+      "notes": "Stable local traversal, with independent upstream coverage."
+    },
+    {
+      "sourcePackage": "aws/resilience-hub/analysis/api",
+      "sourceOperation": "GetFailureModeFinding",
+      "disposition": "CANONICAL_READ_WITH_NATIVE_FACET",
+      "newOperations": [
+        "GetFinding"
+      ],
+      "notes": "Scoped finding; summary/detail observations and captures remain explicit."
+    },
+    {
+      "sourcePackage": "aws/resilience-hub/analysis/api",
+      "sourceOperation": "ListFailureModeFindings",
+      "disposition": "CANONICAL_READ_WITH_NATIVE_FACET",
+      "newOperations": [
+        "ListFindings"
+      ],
+      "notes": "No mandatory assessment ownership is inferred."
+    },
+    {
+      "sourcePackage": "aws/resilience-hub/analysis/api",
+      "sourceOperation": "UpdateFailureModeFinding",
+      "disposition": "EXPLICIT_ASYNC_COMMAND",
+      "newOperations": [
+        "UpdateFindingDisposition"
+      ],
+      "notes": "Native status/comment only; no posture or repair verification implied."
+    },
+    {
+      "sourcePackage": "aws/resilience-hub/analysis/api",
+      "sourceOperation": "GetRecommendation",
+      "disposition": "PRESERVED_WITH_CANONICAL_SCOPE",
+      "newOperations": [
+        "GetRecommendation"
+      ],
+      "notes": "Canonical IDs replace native URL-like keys; source identity and independent local versions remain retained."
+    },
+    {
+      "sourcePackage": "aws/resilience-hub/analysis/api",
+      "sourceOperation": "ListRecommendations",
+      "disposition": "PRESERVED_WITH_CANONICAL_SCOPE",
+      "newOperations": [
+        "ListRecommendations"
+      ],
+      "notes": "Canonical IDs replace native URL-like keys; source identity and independent local versions remain retained."
+    },
+    {
+      "sourcePackage": "aws/resilience-hub/analysis/api",
+      "sourceOperation": "UpdateRecommendationEnrichment",
+      "disposition": "PRESERVED_WITH_CANONICAL_SCOPE",
+      "newOperations": [
+        "UpdateRecommendationEnrichment"
+      ],
+      "notes": "Canonical IDs replace native URL-like keys; source identity and independent local versions remain retained."
+    },
+    {
+      "sourcePackage": "aws/resilience-hub/analysis/api",
+      "sourceOperation": "GetDependency",
+      "disposition": "PRESERVED_WITH_CANONICAL_SCOPE",
+      "newOperations": [
+        "GetDependency"
+      ],
+      "notes": "Canonical IDs replace native URL-like keys; source identity and independent local versions remain retained."
+    },
+    {
+      "sourcePackage": "aws/resilience-hub/analysis/api",
+      "sourceOperation": "ListDependencies",
+      "disposition": "PRESERVED_WITH_CANONICAL_SCOPE",
+      "newOperations": [
+        "ListDependencies"
+      ],
+      "notes": "Canonical IDs replace native URL-like keys; source identity and independent local versions remain retained."
+    },
+    {
+      "sourcePackage": "aws/resilience-hub/analysis/api",
+      "sourceOperation": "UpdateDependencyGovernance",
+      "disposition": "PRESERVED_WITH_CANONICAL_SCOPE",
+      "newOperations": [
+        "UpdateDependencyGovernance"
+      ],
+      "notes": "Canonical IDs replace native URL-like keys; source identity and independent local versions remain retained."
+    },
+    {
+      "sourcePackage": "aws/resilience-hub/analysis/api",
+      "sourceOperation": "UpdateDependency",
+      "disposition": "EXPLICIT_ASYNC_COMMAND",
+      "newOperations": [
+        "UpdateDependencyClassification"
+      ],
+      "notes": "Provider criticality/comment remain separate from local governance."
+    },
+    {
+      "sourcePackage": "aws/resilience-hub/analysis/api",
+      "sourceOperation": "CaptureTopologySnapshot",
+      "disposition": "SHARED_CAPTURE",
+      "newOperations": [
+        "CaptureSnapshot"
+      ],
+      "notes": "kind=TOPOLOGY; preserves source times and closed manifest, not a native atomic snapshot."
+    },
+    {
+      "sourcePackage": "aws/resilience-hub/analysis/api",
+      "sourceOperation": "GetTopologySnapshot",
+      "disposition": "SHARED_CAPTURE",
+      "newOperations": [
+        "GetSnapshot"
+      ],
+      "notes": "Read the exact retained topology snapshot identity."
+    },
+    {
+      "sourcePackage": "aws/resilience-hub/analysis/api",
+      "sourceOperation": "ListTopologySnapshots",
+      "disposition": "SHARED_CAPTURE",
+      "newOperations": [
+        "ListSnapshots"
+      ],
+      "notes": "Filter kind=TOPOLOGY and the exact service subject."
+    },
+    {
+      "sourcePackage": "aws/resilience-hub/analysis/api",
+      "sourceOperation": "GetServiceStatus",
+      "disposition": "QUALIFIED_PROJECTION_READ",
+      "newOperations": [
+        "GetServiceStatus"
+      ],
+      "notes": "Returns currently selected SERVICE_STATUS ProjectionRevision with its evidence and independent dimensions."
+    },
+    {
+      "sourcePackage": "aws/resilience-hub/analysis/api",
+      "sourceOperation": "GetWorkspaceSummary",
+      "disposition": "QUALIFIED_PROJECTION_READ",
+      "newOperations": [
+        "GetWorkspaceSummary"
+      ],
+      "notes": "Returns WORKSPACE_SUMMARY for authorized contributors, with denominator and rule."
+    },
+    {
+      "sourcePackage": "aws/resilience-hub/analysis/api",
+      "sourceOperation": "ListEvents",
+      "disposition": "SHARED_EVIDENCE_READ",
+      "newOperations": [
+        "ListObservations",
+        "ListSourceRevisions"
+      ],
+      "notes": "Filter exact subjects/profile/channel evidence; delivery ID never becomes a HealthEvent ID."
+    },
+    {
+      "sourcePackage": "aws/resilience-hub/analysis/api",
+      "sourceOperation": "PutHealthObservation",
+      "disposition": "SHARED_TRUSTED_INGEST",
+      "newOperations": [
+        "IngestObservation",
+        "PublishProjection"
+      ],
+      "notes": "Retain runtime-health source evidence then derive SERVICE_STATUS. This is distinct from AWS Health Event ingestion."
+    },
+    {
+      "sourcePackage": "aws/resilience-hub/analysis/api",
+      "sourceOperation": "IngestEvent",
+      "disposition": "SHARED_TRUSTED_INGEST",
+      "newOperations": [
+        "IngestObservation",
+        "StartCollection"
+      ],
+      "notes": "Retains raw channel evidence and schedules authorized read collection; event body cannot patch authoritative state."
+    },
+    {
+      "sourcePackage": "aws/fis/analysis/workflow",
+      "sourceOperation": "GetScenario",
+      "disposition": "RPC_REBINDING",
+      "newOperations": [
+        "GetScenario"
+      ],
+      "notes": "Preserves scoped entity/lifecycle semantics; RPC body fields, typed errors and maxResults/nextToken replace resource HTTP conventions."
+    },
+    {
+      "sourcePackage": "aws/fis/analysis/workflow",
+      "sourceOperation": "ListScenarios",
+      "disposition": "RPC_REBINDING",
+      "newOperations": [
+        "ListScenarios"
+      ],
+      "notes": "Preserves scoped entity/lifecycle semantics; RPC body fields, typed errors and maxResults/nextToken replace resource HTTP conventions."
+    },
+    {
+      "sourcePackage": "aws/fis/analysis/workflow",
+      "sourceOperation": "GetScenarioRevision",
+      "disposition": "RPC_REBINDING",
+      "newOperations": [
+        "GetScenarioRevision"
+      ],
+      "notes": "Preserves scoped entity/lifecycle semantics; RPC body fields, typed errors and maxResults/nextToken replace resource HTTP conventions."
+    },
+    {
+      "sourcePackage": "aws/fis/analysis/workflow",
+      "sourceOperation": "ListScenarioRevisions",
+      "disposition": "RPC_REBINDING",
+      "newOperations": [
+        "ListScenarioRevisions"
+      ],
+      "notes": "Preserves scoped entity/lifecycle semantics; RPC body fields, typed errors and maxResults/nextToken replace resource HTTP conventions."
+    },
+    {
+      "sourcePackage": "aws/fis/analysis/workflow",
+      "sourceOperation": "GetRun",
+      "disposition": "RPC_REBINDING",
+      "newOperations": [
+        "GetRun"
+      ],
+      "notes": "Preserves scoped entity/lifecycle semantics; RPC body fields, typed errors and maxResults/nextToken replace resource HTTP conventions."
+    },
+    {
+      "sourcePackage": "aws/fis/analysis/workflow",
+      "sourceOperation": "ListRuns",
+      "disposition": "RPC_REBINDING",
+      "newOperations": [
+        "ListRuns"
+      ],
+      "notes": "Preserves scoped entity/lifecycle semantics; RPC body fields, typed errors and maxResults/nextToken replace resource HTTP conventions."
+    },
+    {
+      "sourcePackage": "aws/fis/analysis/workflow",
+      "sourceOperation": "RequestRunCancellation",
+      "disposition": "RPC_REBINDING",
+      "newOperations": [
+        "RequestRunCancellation"
+      ],
+      "notes": "Preserves scoped entity/lifecycle semantics; RPC body fields, typed errors and maxResults/nextToken replace resource HTTP conventions."
+    },
+    {
+      "sourcePackage": "aws/fis/analysis/workflow",
+      "sourceOperation": "ListRunSteps",
+      "disposition": "RPC_REBINDING",
+      "newOperations": [
+        "ListRunSteps"
+      ],
+      "notes": "Preserves scoped entity/lifecycle semantics; RPC body fields, typed errors and maxResults/nextToken replace resource HTTP conventions."
+    },
+    {
+      "sourcePackage": "aws/fis/analysis/workflow",
+      "sourceOperation": "ListStepAttempts",
+      "disposition": "RPC_REBINDING",
+      "newOperations": [
+        "ListStepAttempts"
+      ],
+      "notes": "Preserves scoped entity/lifecycle semantics; RPC body fields, typed errors and maxResults/nextToken replace resource HTTP conventions."
+    },
+    {
+      "sourcePackage": "aws/fis/analysis/workflow",
+      "sourceOperation": "CreateScenario",
+      "disposition": "EXTENDED_AUTHORING_CONTRACT",
+      "newOperations": [
+        "CreateScenario"
+      ],
+      "notes": "Creates metadata and a typed editable draft; trusted operation locks remain publication-owned."
+    },
+    {
+      "sourcePackage": "aws/fis/analysis/workflow",
+      "sourceOperation": "UpdateScenario",
+      "disposition": "RPC_REBINDING",
+      "newOperations": [
+        "UpdateScenario"
+      ],
+      "notes": "expectedVersion replaces If-Match; omission preserves and explicit allowed clears replace nullable PATCH ambiguity."
+    },
+    {
+      "sourcePackage": "aws/fis/analysis/workflow",
+      "sourceOperation": "PublishScenarioRevision",
+      "disposition": "DRAFT_THEN_PUBLISH",
+      "newOperations": [
+        "UpdateScenario",
+        "PublishScenarioRevision"
+      ],
+      "notes": "Update the typed draft, then publish its exact expected Scenario version; server compiles and resolves trusted locks."
+    },
+    {
+      "sourcePackage": "aws/fis/analysis/workflow",
+      "sourceOperation": "StartRun",
+      "disposition": "RPC_REBINDING",
+      "newOperations": [
+        "StartRun"
+      ],
+      "notes": "Pins canonical subject, revision, validated inputs and authorized bindings; retains immutable admission and criterion denominator."
+    },
+    {
+      "sourcePackage": "aws/fis/analysis/workflow",
+      "sourceOperation": "ListRunEvidence",
+      "disposition": "SHARED_TYPED_EVIDENCE",
+      "newOperations": [
+        "ListObservations",
+        "ListSourceRevisions",
+        "ListProjectionRevisions"
+      ],
+      "notes": "Filter the exact Run subject/producer references; raw source, receipt and derived evidence types stay explicit."
+    },
+    {
+      "sourcePackage": "aws/fis/analysis/workflow",
+      "sourceOperation": "GetEvidence",
+      "disposition": "SHARED_TYPED_EVIDENCE",
+      "newOperations": [
+        "GetSourceRevision",
+        "GetObservation",
+        "GetProjectionRevision",
+        "GetSnapshot"
+      ],
+      "notes": "Resolve the discriminated EvidenceRef kind; evidence is not collapsed into an untyped payload."
+    },
+    {
+      "sourcePackage": "aws/fis/analysis/workflow",
+      "sourceOperation": "ListOperations",
+      "disposition": "DYNAMIC_DISCOVERY_DEFERRED",
+      "newOperations": [
+        "GetScenarioRevision"
+      ],
+      "notes": "Published locks remain inspectable. Authorized discovery of executable adapter aliases is later registry work; facade operations.json is not that adapter registry."
+    }
+  ],
+  "errors": {
+    "ValidationException": {
+      "status": 400,
+      "retryable": false,
+      "description": "Invalid syntax, field, union, scalar or semantic input; no accepted mutation."
+    },
+    "UnauthenticatedException": {
+      "status": 401,
+      "retryable": false,
+      "description": "No verified caller identity."
+    },
+    "AccessDeniedException": {
+      "status": 403,
+      "retryable": false,
+      "description": "Caller or connection lacks permission for the complete subject/evidence scope."
+    },
+    "ResourceNotFoundException": {
+      "status": 404,
+      "retryable": false,
+      "description": "Identity is absent or invisible in its trusted workspace and required parent scope."
+    },
+    "VersionConflictException": {
+      "status": 409,
+      "retryable": false,
+      "description": "The named local mutable record no longer has expectedVersion."
+    },
+    "IdempotencyConflictException": {
+      "status": 409,
+      "retryable": false,
+      "description": "The same operation/clientToken was used with different intent or precondition."
+    },
+    "CommandInProgressException": {
+      "status": 409,
+      "retryable": true,
+      "description": "A matching durable token reservation is in flight; reconcile the returned command and retry the exact request."
+    },
+    "InvalidStateException": {
+      "status": 409,
+      "retryable": false,
+      "description": "State, scope, binding, source precondition or cross-record invariant prevents this command."
+    },
+    "PaginationTokenExpiredException": {
+      "status": 410,
+      "retryable": false,
+      "description": "The traversal snapshot expired; explicitly begin a new traversal."
+    },
+    "EvidenceUnavailableException": {
+      "status": 410,
+      "retryable": false,
+      "description": "Retained content is expired, redacted or unavailable; its identity and known history remain."
+    },
+    "RequestTooLargeException": {
+      "status": 413,
+      "retryable": false,
+      "description": "The request exceeds the declared byte or collection bound."
+    },
+    "UnsupportedMediaTypeException": {
+      "status": 415,
+      "retryable": false,
+      "description": "The request is not application/x-amz-json-1.1."
+    },
+    "ThrottlingException": {
+      "status": 429,
+      "retryable": true,
+      "description": "Admission capacity is limited; honor retryAfterSeconds and keep the original token."
+    },
+    "InternalServerException": {
+      "status": 500,
+      "retryable": true,
+      "description": "An internal failure prevented a complete response; outcome requires receipt reconciliation."
+    },
+    "ServiceUnavailableException": {
+      "status": 503,
+      "retryable": true,
+      "description": "Temporarily unavailable; retry the exact intent only within the recorded replay contract."
+    }
+  }
+}

@@ -1,0 +1,57 @@
+%% Generated from model/schema.json; edit the schema and rerun tools/render_model.py.
+%% Consolidated Operations Console — AWS Health
+classDiagram
+direction TB
+class HealthEvent {
+  <<health>>
+  +Id healthEventId
+  +Id selectedSourceRevisionId
+  +string eventArn
+  +string eventTypeCode
+  +string serviceCode
+}
+class EventContext {
+  <<health>>
+  +Id eventContextId
+  +Id healthEventId
+  +enum kind
+  +string? accountId
+  +string? organizationId
+}
+class EntityImpact {
+  <<health>>
+  +Id entityImpactId
+  +Id eventContextId
+  +Id selectedObservationId
+  +string? rawProviderStatus
+}
+class Communication {
+  <<health>>
+  +Id communicationId
+  +Id eventContextId
+  +string? validatedBaseId
+  +string? notificationAccountContext
+  +Digest groupingRuleDigest
+}
+class LifecycleEntry {
+  <<health>>
+  +Id lifecycleEntryId
+  +Id catalogSnapshotId
+  +Id sourceRevisionId
+  +string serviceCode
+  +string title
+}
+class ComponentDeployment {
+  <<health>>
+  +Id componentDeploymentId
+  +Id resourceId
+  +Id observationId
+  +string componentKind
+  +string versionLabel
+}
+HealthEvent "1" --> "0..*" EventContext : contextualized as
+EventContext "1" --> "0..*" EntityImpact : qualified impacts
+EventContext "1" --> "0..*" Communication : receives
+%% All entities are workspace-scoped; all foreign references require same-workspace validation.
+%% EventContext impacts exclude ORG_SUMMARY; Investigation-Execution is observed membership.
+%% Cross-module references remain typed fields when a focused panel omits their target.

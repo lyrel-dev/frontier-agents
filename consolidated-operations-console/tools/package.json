@@ -1,0 +1,12 @@
+{
+  "name": "frontier-consolidated-console-diagram-tools",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "node check_mermaid.mjs"
+  },
+  "devDependencies": {
+    "jsdom": "26.1.0",
+    "mermaid": "11.12.2"
+  }
+}
