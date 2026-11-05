@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1300 790" role="img" aria-labelledby="title desc">
+<title id="title">Systems, services and user journeys</title>
+<desc id="desc">Entity relationship diagram. Navy entities are AWS-backed; teal entities are local records. Cardinalities are printed on relationship lines. See the accompanying Mermaid source and report for constraints.</desc>
+<style>text{font-family:Inter,Arial,sans-serif}.entity{font-size:17px;font-weight:700}.field{font-size:16px}.meta{font-size:13px}.link{font-size:14px}.note{font-size:16px}</style>
+<rect width="1300" height="790" rx="18" fill="#f8fbfd"/>
+<text font-family="sans-serif" x="32" y="42" fill="#16304a" font-size="25" font-weight="700">Systems, services and user journeys</text>
+<text font-family="sans-serif" x="32" y="69" fill="#53677c" font-size="16">Membership is many-to-many and constrained through the same system.</text>
+<polyline points="390,220 480,220" fill="none" stroke="#6e8397" stroke-width="1.8"/>
+<text font-family="sans-serif" x="408" y="207" text-anchor="middle" class="link" font-size="14" fill="#53677c">1</text>
+<text font-family="sans-serif" x="458" y="207" text-anchor="middle" class="link" font-size="14" fill="#53677c">0..*</text>
+<text font-family="sans-serif" x="435" y="245" text-anchor="middle" class="link" font-size="14" fill="#53677c">associates</text>
+<polyline points="920,220 830,220" fill="none" stroke="#6e8397" stroke-width="1.8"/>
+<text font-family="sans-serif" x="902" y="207" text-anchor="middle" class="link" font-size="14" fill="#53677c">1</text>
+<text font-family="sans-serif" x="850" y="207" text-anchor="middle" class="link" font-size="14" fill="#53677c">0..*</text>
+<text font-family="sans-serif" x="875" y="245" text-anchor="middle" class="link" font-size="14" fill="#53677c">participates</text>
+<polyline points="215,345 215,455" fill="none" stroke="#6e8397" stroke-width="1.8"/>
+<text font-family="sans-serif" x="198" y="367" text-anchor="middle" class="link" font-size="14" fill="#53677c">1</text>
+<text font-family="sans-serif" x="198" y="438" text-anchor="middle" class="link" font-size="14" fill="#53677c">0..*</text>
+<text font-family="sans-serif" x="255" y="402" text-anchor="middle" class="link" font-size="14" fill="#53677c">owns</text>
+<polyline points="390,548 480,548" fill="none" stroke="#6e8397" stroke-width="1.8"/>
+<text font-family="sans-serif" x="408" y="534" text-anchor="middle" class="link" font-size="14" fill="#53677c">1</text>
+<text font-family="sans-serif" x="458" y="534" text-anchor="middle" class="link" font-size="14" fill="#53677c">0..*</text>
+<text font-family="sans-serif" x="435" y="575" text-anchor="middle" class="link" font-size="14" fill="#53677c">includes</text>
+<polyline points="655,345 655,455" fill="none" stroke="#6e8397" stroke-width="1.8"/>
+<text font-family="sans-serif" x="638" y="367" text-anchor="middle" class="link" font-size="14" fill="#53677c">1</text>
+<text font-family="sans-serif" x="638" y="438" text-anchor="middle" class="link" font-size="14" fill="#53677c">0..*</text>
+<text font-family="sans-serif" x="710" y="402" text-anchor="middle" class="link" font-size="14" fill="#53677c">constrains</text>
+<rect x="40" y="125" width="350" height="220" rx="9" fill="white" stroke="#cbd8e3"/>
+<path d="M49,125 H381 Q390,125 390,134 V168 H40 V134 Q40,125 49,125 Z" fill="#183750"/>
+<text font-family="sans-serif" x="55" y="153" fill="white" class="entity" font-size="17" font-weight="700">SYSTEM</text>
+<text font-family="sans-serif" x="55" y="193" fill="#16304a" class="field" font-size="16">systemKey  [PK]</text>
+<text font-family="sans-serif" x="55" y="213" fill="#53677c" class="meta" font-size="13">Local identity in verified source scope</text>
+<text font-family="sans-serif" x="55" y="233" fill="#16304a" class="field" font-size="16">systemId</text>
+<text font-family="sans-serif" x="55" y="253" fill="#53677c" class="meta" font-size="13">Provider identifier</text>
+<text font-family="sans-serif" x="55" y="273" fill="#16304a" class="field" font-size="16">systemArn</text>
+<text font-family="sans-serif" x="55" y="293" fill="#53677c" class="meta" font-size="13">Nullable in partial summaries</text>
+<text font-family="sans-serif" x="55" y="313" fill="#16304a" class="field" font-size="16">name</text>
+<rect x="480" y="125" width="350" height="220" rx="9" fill="white" stroke="#cbd8e3"/>
+<path d="M489,125 H821 Q830,125 830,134 V168 H480 V134 Q480,125 489,125 Z" fill="#087f83"/>
+<text font-family="sans-serif" x="495" y="153" fill="white" class="entity" font-size="17" font-weight="700">SYSTEM_SERVICE</text>
+<text font-family="sans-serif" x="495" y="193" fill="#16304a" class="field" font-size="16">systemKey  [PK, FK]</text>
+<text font-family="sans-serif" x="495" y="215" fill="#16304a" class="field" font-size="16">serviceArn  [PK, FK]</text>
+<rect x="920" y="125" width="340" height="220" rx="9" fill="white" stroke="#cbd8e3"/>
+<path d="M929,125 H1251 Q1260,125 1260,134 V168 H920 V134 Q920,125 929,125 Z" fill="#183750"/>
+<text font-family="sans-serif" x="935" y="153" fill="white" class="entity" font-size="17" font-weight="700">SERVICE</text>
+<text font-family="sans-serif" x="935" y="193" fill="#16304a" class="field" font-size="16">serviceArn  [PK]</text>
+<text font-family="sans-serif" x="935" y="215" fill="#16304a" class="field" font-size="16">name</text>
+<text font-family="sans-serif" x="935" y="237" fill="#16304a" class="field" font-size="16">permissionModel</text>
+<text font-family="sans-serif" x="935" y="259" fill="#16304a" class="field" font-size="16">regions</text>
+<rect x="40" y="455" width="350" height="185" rx="9" fill="white" stroke="#cbd8e3"/>
+<path d="M49,455 H381 Q390,455 390,464 V498 H40 V464 Q40,455 49,455 Z" fill="#183750"/>
+<text font-family="sans-serif" x="55" y="483" fill="white" class="entity" font-size="17" font-weight="700">USER_JOURNEY</text>
+<text font-family="sans-serif" x="55" y="523" fill="#16304a" class="field" font-size="16">systemKey  [PK, FK]</text>
+<text font-family="sans-serif" x="55" y="545" fill="#16304a" class="field" font-size="16">userJourneyId  [PK]</text>
+<text font-family="sans-serif" x="55" y="567" fill="#16304a" class="field" font-size="16">name</text>
+<rect x="480" y="455" width="350" height="185" rx="9" fill="white" stroke="#cbd8e3"/>
+<path d="M489,455 H821 Q830,455 830,464 V498 H480 V464 Q480,455 489,455 Z" fill="#087f83"/>
+<text font-family="sans-serif" x="495" y="483" fill="white" class="entity" font-size="17" font-weight="700">JOURNEY_SERVICE</text>
+<text font-family="sans-serif" x="495" y="523" fill="#16304a" class="field" font-size="16">systemKey  [PK, FK]</text>
+<text font-family="sans-serif" x="495" y="545" fill="#16304a" class="field" font-size="16">userJourneyId  [PK, FK]</text>
+<text font-family="sans-serif" x="495" y="567" fill="#16304a" class="field" font-size="16">serviceArn  [PK, FK]</text>
+<rect x="32" y="689" width="13" height="13" rx="3" fill="#183750"/><text font-family="sans-serif" x="54" y="701" fill="#53677c" class="link" font-size="14">AWS-backed identity or value</text>
+<rect x="335" y="689" width="13" height="13" rx="3" fill="#087f83"/><text font-family="sans-serif" x="357" y="701" fill="#53677c" class="link" font-size="14">Local normalization or evidence</text>
+<text font-family="sans-serif" x="32" y="733" fill="#53677c" class="note" font-size="16">JourneyService must reference both (systemKey, serviceArn) and (systemKey, userJourneyId).</text>
+<text font-family="sans-serif" x="32" y="757" fill="#53677c" class="note" font-size="16">A service may belong to a system without a journey. Membership does not establish execution order.</text>
+</svg>

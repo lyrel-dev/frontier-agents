@@ -1,0 +1,1130 @@
+{
+  "01-business-structure": {
+    "title": "Systems, services and user journeys",
+    "subtitle": "Membership is many-to-many and constrained through the same system.",
+    "size": [
+      1300,
+      790
+    ],
+    "boxes": {
+      "SYSTEM": [
+        40,
+        125,
+        350,
+        220
+      ],
+      "SYSTEM_SERVICE": [
+        480,
+        125,
+        350,
+        220
+      ],
+      "SERVICE": [
+        920,
+        125,
+        340,
+        220
+      ],
+      "USER_JOURNEY": [
+        40,
+        455,
+        350,
+        185
+      ],
+      "JOURNEY_SERVICE": [
+        480,
+        455,
+        350,
+        185
+      ]
+    },
+    "local": [
+      "SYSTEM_SERVICE",
+      "JOURNEY_SERVICE"
+    ],
+    "routes": [
+      {
+        "points": [
+          [
+            390,
+            220
+          ],
+          [
+            480,
+            220
+          ]
+        ],
+        "a": [
+          408,
+          207
+        ],
+        "b": [
+          458,
+          207
+        ],
+        "labelAt": [
+          435,
+          245
+        ],
+        "label": "associates"
+      },
+      {
+        "points": [
+          [
+            920,
+            220
+          ],
+          [
+            830,
+            220
+          ]
+        ],
+        "a": [
+          902,
+          207
+        ],
+        "b": [
+          850,
+          207
+        ],
+        "labelAt": [
+          875,
+          245
+        ],
+        "label": "participates"
+      },
+      {
+        "points": [
+          [
+            215,
+            345
+          ],
+          [
+            215,
+            455
+          ]
+        ],
+        "a": [
+          198,
+          367
+        ],
+        "b": [
+          198,
+          438
+        ],
+        "labelAt": [
+          255,
+          402
+        ],
+        "label": "owns"
+      },
+      {
+        "points": [
+          [
+            390,
+            548
+          ],
+          [
+            480,
+            548
+          ]
+        ],
+        "a": [
+          408,
+          534
+        ],
+        "b": [
+          458,
+          534
+        ],
+        "labelAt": [
+          435,
+          575
+        ],
+        "label": "includes"
+      },
+      {
+        "points": [
+          [
+            655,
+            345
+          ],
+          [
+            655,
+            455
+          ]
+        ],
+        "a": [
+          638,
+          367
+        ],
+        "b": [
+          638,
+          438
+        ],
+        "labelAt": [
+          710,
+          402
+        ],
+        "label": "constrains"
+      }
+    ],
+    "legendY": 701,
+    "notes": [
+      "JourneyService must reference both (systemKey, serviceArn) and (systemKey, userJourneyId).",
+      "A service may belong to a system without a journey. Membership does not establish execution order."
+    ]
+  },
+  "02-policy-context": {
+    "title": "Policies, assignments and effective targets",
+    "subtitle": "Current provider assignments and locally captured target evidence have separate identities.",
+    "size": [
+      1300,
+      1190
+    ],
+    "boxes": {
+      "POLICY": [
+        450,
+        115,
+        400,
+        185
+      ],
+      "POLICY_COMPONENT": [
+        450,
+        410,
+        400,
+        195
+      ],
+      "USER_JOURNEY": [
+        40,
+        410,
+        350,
+        195
+      ],
+      "SERVICE": [
+        910,
+        410,
+        350,
+        195
+      ],
+      "EFFECTIVE_TARGET_OBSERVATION": [
+        790,
+        725,
+        470,
+        200
+      ],
+      "EFFECTIVE_TARGET": [
+        40,
+        725,
+        650,
+        300
+      ]
+    },
+    "local": [
+      "POLICY_COMPONENT",
+      "EFFECTIVE_TARGET_OBSERVATION",
+      "EFFECTIVE_TARGET"
+    ],
+    "routes": [
+      {
+        "points": [
+          [
+            450,
+            200
+          ],
+          [
+            215,
+            200
+          ],
+          [
+            215,
+            410
+          ]
+        ],
+        "a": [
+          430,
+          187
+        ],
+        "b": [
+          195,
+          391
+        ],
+        "labelAt": [
+          215,
+          335
+        ],
+        "label": "direct policy"
+      },
+      {
+        "points": [
+          [
+            850,
+            200
+          ],
+          [
+            1085,
+            200
+          ],
+          [
+            1085,
+            410
+          ]
+        ],
+        "a": [
+          873,
+          187
+        ],
+        "b": [
+          1105,
+          391
+        ],
+        "labelAt": [
+          1085,
+          335
+        ],
+        "label": "direct policy"
+      },
+      {
+        "points": [
+          [
+            650,
+            300
+          ],
+          [
+            650,
+            410
+          ]
+        ],
+        "a": [
+          633,
+          321
+        ],
+        "b": [
+          633,
+          393
+        ],
+        "labelAt": [
+          690,
+          357
+        ],
+        "label": "has 0..4"
+      },
+      {
+        "points": [
+          [
+            1085,
+            605
+          ],
+          [
+            1085,
+            725
+          ]
+        ],
+        "a": [
+          1067,
+          626
+        ],
+        "b": [
+          1065,
+          707
+        ],
+        "labelAt": [
+          1146,
+          666
+        ],
+        "label": "observed as"
+      },
+      {
+        "points": [
+          [
+            790,
+            825
+          ],
+          [
+            690,
+            825
+          ]
+        ],
+        "a": [
+          770,
+          811
+        ],
+        "b": [
+          712,
+          811
+        ],
+        "labelAt": [
+          740,
+          854
+        ],
+        "label": "0..8 targets"
+      }
+    ],
+    "legendY": 1080,
+    "notes": [
+      "Inherited applicability follows journey membership; it is not encoded by ownershipSource.",
+      "policyName is a returned label. Any policy identity match must be verified and remain optional.",
+      "A captured context is not proof of the policy revision that AWS evaluated."
+    ]
+  },
+  "03-assessments-findings": {
+    "title": "Assessments, finding captures and recommendations",
+    "subtitle": "Findings are service-scoped. Captures preserve observation history without inventing run ownership.",
+    "size": [
+      1320,
+      970
+    ],
+    "boxes": {
+      "SERVICE": [
+        35,
+        125,
+        360,
+        225
+      ],
+      "ASSESSMENT": [
+        480,
+        125,
+        360,
+        225
+      ],
+      "FINDING": [
+        925,
+        125,
+        360,
+        225
+      ],
+      "FINDING_CAPTURE": [
+        35,
+        495,
+        360,
+        285
+      ],
+      "FINDING_OBSERVATION": [
+        480,
+        495,
+        360,
+        310
+      ],
+      "RECOMMENDATION": [
+        925,
+        495,
+        360,
+        280
+      ]
+    },
+    "local": [
+      "FINDING_CAPTURE",
+      "FINDING_OBSERVATION",
+      "RECOMMENDATION"
+    ],
+    "routes": [
+      {
+        "points": [
+          [
+            395,
+            195
+          ],
+          [
+            480,
+            195
+          ]
+        ],
+        "a": [
+          413,
+          181
+        ],
+        "b": [
+          458,
+          181
+        ],
+        "labelAt": [
+          437,
+          221
+        ],
+        "label": "owns"
+      },
+      {
+        "points": [
+          [
+            215,
+            125
+          ],
+          [
+            215,
+            100
+          ],
+          [
+            1105,
+            100
+          ],
+          [
+            1105,
+            125
+          ]
+        ],
+        "a": [
+          237,
+          115
+        ],
+        "b": [
+          1084,
+          115
+        ],
+        "labelAt": [
+          662,
+          97
+        ],
+        "label": "contains"
+      },
+      {
+        "points": [
+          [
+            135,
+            350
+          ],
+          [
+            135,
+            495
+          ]
+        ],
+        "a": [
+          118,
+          373
+        ],
+        "b": [
+          115,
+          476
+        ],
+        "labelAt": [
+          177,
+          436
+        ],
+        "label": "capture scope"
+      },
+      {
+        "points": [
+          [
+            660,
+            350
+          ],
+          [
+            660,
+            397
+          ],
+          [
+            315,
+            397
+          ],
+          [
+            315,
+            495
+          ]
+        ],
+        "a": [
+          680,
+          373
+        ],
+        "b": [
+          336,
+          478
+        ],
+        "labelAt": [
+          489,
+          388
+        ],
+        "label": "local correlation only"
+      },
+      {
+        "points": [
+          [
+            1105,
+            350
+          ],
+          [
+            1105,
+            450
+          ],
+          [
+            735,
+            450
+          ],
+          [
+            735,
+            495
+          ]
+        ],
+        "a": [
+          1126,
+          373
+        ],
+        "b": [
+          755,
+          477
+        ],
+        "labelAt": [
+          952,
+          441
+        ],
+        "label": "observed state"
+      },
+      {
+        "points": [
+          [
+            395,
+            625
+          ],
+          [
+            480,
+            625
+          ]
+        ],
+        "a": [
+          413,
+          611
+        ],
+        "b": [
+          458,
+          611
+        ],
+        "labelAt": [
+          437,
+          651
+        ],
+        "label": "collects"
+      },
+      {
+        "points": [
+          [
+            840,
+            625
+          ],
+          [
+            925,
+            625
+          ]
+        ],
+        "a": [
+          858,
+          611
+        ],
+        "b": [
+          903,
+          611
+        ],
+        "labelAt": [
+          882,
+          651
+        ],
+        "label": "owns"
+      }
+    ],
+    "legendY": 853,
+    "notes": [
+      "Observation uniqueness: (captureId, serviceArn, findingId, representation). Recommendations require DETAIL.",
+      "relatedAssessmentId joins with the capture serviceArn. It records correlation, not an authoritative result set.",
+      "List coverage and detail hydration coverage are independent. Missing recommendation data is not an empty set."
+    ]
+  },
+  "04-dependencies-topology": {
+    "title": "Dependency discovery and captured topology",
+    "subtitle": "DNS dependencies, discovery coverage and graph relationships remain distinct kinds of evidence.",
+    "size": [
+      1320,
+      1130
+    ],
+    "boxes": {
+      "SERVICE": [
+        480,
+        125,
+        360,
+        125
+      ],
+      "DEPENDENCY_DISCOVERY_CONFIG": [
+        35,
+        125,
+        360,
+        245
+      ],
+      "DEPENDENCY": [
+        925,
+        125,
+        360,
+        245
+      ],
+      "TOPOLOGY_SNAPSHOT": [
+        480,
+        420,
+        360,
+        245
+      ],
+      "TOPOLOGY_NODE": [
+        35,
+        755,
+        360,
+        200
+      ],
+      "TOPOLOGY_EDGE": [
+        925,
+        755,
+        360,
+        245
+      ]
+    },
+    "local": [
+      "TOPOLOGY_SNAPSHOT",
+      "TOPOLOGY_NODE",
+      "TOPOLOGY_EDGE"
+    ],
+    "routes": [
+      {
+        "points": [
+          [
+            480,
+            195
+          ],
+          [
+            395,
+            195
+          ]
+        ],
+        "a": [
+          460,
+          181
+        ],
+        "b": [
+          418,
+          181
+        ],
+        "labelAt": [
+          437,
+          221
+        ],
+        "label": "has"
+      },
+      {
+        "points": [
+          [
+            840,
+            195
+          ],
+          [
+            925,
+            195
+          ]
+        ],
+        "a": [
+          858,
+          181
+        ],
+        "b": [
+          903,
+          181
+        ],
+        "labelAt": [
+          882,
+          221
+        ],
+        "label": "discovers"
+      },
+      {
+        "points": [
+          [
+            660,
+            250
+          ],
+          [
+            660,
+            420
+          ]
+        ],
+        "a": [
+          642,
+          272
+        ],
+        "b": [
+          639,
+          402
+        ],
+        "labelAt": [
+          725,
+          346
+        ],
+        "label": "captured as"
+      },
+      {
+        "points": [
+          [
+            480,
+            550
+          ],
+          [
+            215,
+            550
+          ],
+          [
+            215,
+            755
+          ]
+        ],
+        "a": [
+          457,
+          537
+        ],
+        "b": [
+          196,
+          736
+        ],
+        "labelAt": [
+          315,
+          541
+        ],
+        "label": "contains"
+      },
+      {
+        "points": [
+          [
+            840,
+            550
+          ],
+          [
+            1105,
+            550
+          ],
+          [
+            1105,
+            755
+          ]
+        ],
+        "a": [
+          860,
+          537
+        ],
+        "b": [
+          1125,
+          736
+        ],
+        "labelAt": [
+          997,
+          541
+        ],
+        "label": "contains"
+      },
+      {
+        "points": [
+          [
+            395,
+            830
+          ],
+          [
+            925,
+            830
+          ]
+        ],
+        "a": [
+          418,
+          817
+        ],
+        "b": [
+          900,
+          817
+        ],
+        "labelAt": [
+          660,
+          817
+        ],
+        "label": "source endpoint"
+      },
+      {
+        "points": [
+          [
+            395,
+            902
+          ],
+          [
+            925,
+            902
+          ]
+        ],
+        "a": [
+          418,
+          924
+        ],
+        "b": [
+          900,
+          924
+        ],
+        "labelAt": [
+          660,
+          924
+        ],
+        "label": "destination endpoint"
+      }
+    ],
+    "legendY": 1040,
+    "notes": [
+      "Both endpoint foreign keys include topologyId; unresolved endpoints remain snapshot-scoped stubs.",
+      "No native dependency-to-topology foreign key exists. COMPLETE is collector completion, not an atomic graph."
+    ]
+  },
+  "05-events-observations": {
+    "title": "Events, observations and the current operator view",
+    "subtitle": "Proposed application model: provider events trigger hydration; projections select qualified evidence.",
+    "size": [
+      1350,
+      1160
+    ],
+    "boxes": {
+      "ENTITY_REF": [
+        35,
+        125,
+        390,
+        230
+      ],
+      "EVENT_ENTITY": [
+        480,
+        125,
+        390,
+        230
+      ],
+      "EVENT": [
+        925,
+        125,
+        390,
+        230
+      ],
+      "POSTURE_OBSERVATION": [
+        35,
+        550,
+        390,
+        330
+      ],
+      "HEALTH_OBSERVATION": [
+        480,
+        550,
+        390,
+        260
+      ],
+      "CURRENT_PROJECTION": [
+        925,
+        550,
+        390,
+        260
+      ]
+    },
+    "local": [
+      "ENTITY_REF",
+      "EVENT_ENTITY",
+      "EVENT",
+      "POSTURE_OBSERVATION",
+      "HEALTH_OBSERVATION",
+      "CURRENT_PROJECTION"
+    ],
+    "routes": [
+      {
+        "points": [
+          [
+            425,
+            230
+          ],
+          [
+            480,
+            230
+          ]
+        ],
+        "a": [
+          438,
+          216
+        ],
+        "b": [
+          464,
+          216
+        ],
+        "labelAt": [
+          453,
+          260
+        ],
+        "label": "links"
+      },
+      {
+        "points": [
+          [
+            925,
+            230
+          ],
+          [
+            870,
+            230
+          ]
+        ],
+        "a": [
+          912,
+          216
+        ],
+        "b": [
+          886,
+          216
+        ],
+        "labelAt": [
+          898,
+          260
+        ],
+        "label": "subjects"
+      },
+      {
+        "points": [
+          [
+            130,
+            355
+          ],
+          [
+            130,
+            550
+          ]
+        ],
+        "a": [
+          110,
+          378
+        ],
+        "b": [
+          108,
+          530
+        ],
+        "labelAt": [
+          182,
+          452
+        ],
+        "label": "posture"
+      },
+      {
+        "points": [
+          [
+            265,
+            355
+          ],
+          [
+            265,
+            420
+          ],
+          [
+            675,
+            420
+          ],
+          [
+            675,
+            550
+          ]
+        ],
+        "a": [
+          245,
+          378
+        ],
+        "b": [
+          655,
+          530
+        ],
+        "labelAt": [
+          505,
+          410
+        ],
+        "label": "health"
+      },
+      {
+        "points": [
+          [
+            395,
+            355
+          ],
+          [
+            395,
+            470
+          ],
+          [
+            1120,
+            470
+          ],
+          [
+            1120,
+            550
+          ]
+        ],
+        "a": [
+          375,
+          378
+        ],
+        "b": [
+          1100,
+          530
+        ],
+        "labelAt": [
+          940,
+          460
+        ],
+        "label": "current view"
+      },
+      {
+        "points": [
+          [
+            1120,
+            810
+          ],
+          [
+            1120,
+            972
+          ],
+          [
+            230,
+            972
+          ],
+          [
+            230,
+            880
+          ]
+        ],
+        "a": [
+          1140,
+          836
+        ],
+        "b": [
+          211,
+          902
+        ],
+        "labelAt": [
+          668,
+          960
+        ],
+        "label": "selected posture evidence"
+      },
+      {
+        "points": [
+          [
+            925,
+            700
+          ],
+          [
+            870,
+            700
+          ]
+        ],
+        "a": [
+          913,
+          687
+        ],
+        "b": [
+          885,
+          687
+        ],
+        "labelAt": [
+          898,
+          731
+        ],
+        "label": "selects"
+      }
+    ],
+    "legendY": 1030,
+    "notes": [
+      "Event uniqueness: (sourceChannel, streamScope, sourceEventId). Subjects retain type, provider scope and key.",
+      "Aggregate attention summaries retain distinct contributor identities, membership context and rule version.",
+      "computedAt belongs to the projection. occurredAt, receivedAt and observation timestamps remain separate."
+    ]
+  }
+}

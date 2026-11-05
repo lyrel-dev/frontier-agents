@@ -1,0 +1,43 @@
+%% Reviewed 2026-11-05. Official sources: report S08, S10-S13.
+%% A service can also inherit journey policies through the memberships in Figure 1.
+%% ownershipSource is SELF or CROSS_ACCOUNT; it does not encode inheritance.
+%% No provider-evaluated policy revision is asserted by these observations.
+erDiagram
+    direction TB
+    POLICY {
+        string policyArn PK
+        string name
+        datetime updatedAt "Optional provider timestamp"
+    }
+    POLICY_COMPONENT {
+        string policyArn PK, FK
+        string componentType PK "One of four typed components"
+        json targets
+    }
+    USER_JOURNEY {
+        string systemKey PK
+        string userJourneyId PK
+        string policyArn FK "Zero or one direct assignment"
+    }
+    SERVICE {
+        string serviceArn PK
+        string policyArn FK "Zero or one direct assignment"
+    }
+    EFFECTIVE_TARGET_OBSERVATION {
+        string effectiveTargetObservationId PK
+        string serviceArn FK
+        datetime observedAt
+        json sourceEvidence
+    }
+    EFFECTIVE_TARGET {
+        string effectiveTargetObservationId PK, FK
+        string metric PK "One of eight returned metrics"
+        json value "Typed value with explicit units"
+        string policyName "Returned label; not a policy identity"
+        string ownershipSource "SELF or CROSS_ACCOUNT"
+    }
+    POLICY o|--o{ USER_JOURNEY : directly_assigned
+    POLICY o|--o{ SERVICE : directly_assigned
+    POLICY ||--o{ POLICY_COMPONENT : has
+    SERVICE ||--o{ EFFECTIVE_TARGET_OBSERVATION : observed_as
+    EFFECTIVE_TARGET_OBSERVATION ||--o{ EFFECTIVE_TARGET : contains

@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1350 1160" role="img" aria-labelledby="title desc">
+<title id="title">Events, observations and the current operator view</title>
+<desc id="desc">Entity relationship diagram. Navy entities are AWS-backed; teal entities are local records. Cardinalities are printed on relationship lines. See the accompanying Mermaid source and report for constraints.</desc>
+<style>text{font-family:Inter,Arial,sans-serif}.entity{font-size:17px;font-weight:700}.field{font-size:16px}.meta{font-size:13px}.link{font-size:14px}.note{font-size:16px}</style>
+<rect width="1350" height="1160" rx="18" fill="#f8fbfd"/>
+<text font-family="sans-serif" x="32" y="42" fill="#16304a" font-size="25" font-weight="700">Events, observations and the current operator view</text>
+<text font-family="sans-serif" x="32" y="69" fill="#53677c" font-size="16">Proposed application model: provider events trigger hydration; projections select qualified evidence.</text>
+<polyline points="425,230 480,230" fill="none" stroke="#6e8397" stroke-width="1.8"/>
+<text font-family="sans-serif" x="438" y="216" text-anchor="middle" class="link" font-size="14" fill="#53677c">1</text>
+<text font-family="sans-serif" x="464" y="216" text-anchor="middle" class="link" font-size="14" fill="#53677c">0..*</text>
+<text font-family="sans-serif" x="453" y="260" text-anchor="middle" class="link" font-size="14" fill="#53677c">links</text>
+<polyline points="925,230 870,230" fill="none" stroke="#6e8397" stroke-width="1.8"/>
+<text font-family="sans-serif" x="912" y="216" text-anchor="middle" class="link" font-size="14" fill="#53677c">1</text>
+<text font-family="sans-serif" x="886" y="216" text-anchor="middle" class="link" font-size="14" fill="#53677c">0..*</text>
+<text font-family="sans-serif" x="898" y="260" text-anchor="middle" class="link" font-size="14" fill="#53677c">subjects</text>
+<polyline points="130,355 130,550" fill="none" stroke="#6e8397" stroke-width="1.8"/>
+<text font-family="sans-serif" x="110" y="378" text-anchor="middle" class="link" font-size="14" fill="#53677c">1</text>
+<text font-family="sans-serif" x="108" y="530" text-anchor="middle" class="link" font-size="14" fill="#53677c">0..*</text>
+<text font-family="sans-serif" x="182" y="452" text-anchor="middle" class="link" font-size="14" fill="#53677c">posture</text>
+<polyline points="265,355 265,420 675,420 675,550" fill="none" stroke="#6e8397" stroke-width="1.8"/>
+<text font-family="sans-serif" x="245" y="378" text-anchor="middle" class="link" font-size="14" fill="#53677c">1</text>
+<text font-family="sans-serif" x="655" y="530" text-anchor="middle" class="link" font-size="14" fill="#53677c">0..*</text>
+<text font-family="sans-serif" x="505" y="410" text-anchor="middle" class="link" font-size="14" fill="#53677c">health</text>
+<polyline points="395,355 395,470 1120,470 1120,550" fill="none" stroke="#6e8397" stroke-width="1.8"/>
+<text font-family="sans-serif" x="375" y="378" text-anchor="middle" class="link" font-size="14" fill="#53677c">1</text>
+<text font-family="sans-serif" x="1100" y="530" text-anchor="middle" class="link" font-size="14" fill="#53677c">0..*</text>
+<text font-family="sans-serif" x="940" y="460" text-anchor="middle" class="link" font-size="14" fill="#53677c">current view</text>
+<polyline points="1120,810 1120,972 230,972 230,880" fill="none" stroke="#6e8397" stroke-width="1.8" stroke-dasharray="7 5"/>
+<text font-family="sans-serif" x="1140" y="836" text-anchor="middle" class="link" font-size="14" fill="#53677c">0..*</text>
+<text font-family="sans-serif" x="211" y="902" text-anchor="middle" class="link" font-size="14" fill="#53677c">0..*</text>
+<text font-family="sans-serif" x="668" y="960" text-anchor="middle" class="link" font-size="14" fill="#53677c">selected posture evidence</text>
+<polyline points="925,700 870,700" fill="none" stroke="#6e8397" stroke-width="1.8" stroke-dasharray="7 5"/>
+<text font-family="sans-serif" x="913" y="687" text-anchor="middle" class="link" font-size="14" fill="#53677c">0..*</text>
+<text font-family="sans-serif" x="885" y="687" text-anchor="middle" class="link" font-size="14" fill="#53677c">0..*</text>
+<text font-family="sans-serif" x="898" y="731" text-anchor="middle" class="link" font-size="14" fill="#53677c">selects</text>
+<rect x="35" y="125" width="390" height="230" rx="9" fill="white" stroke="#cbd8e3"/>
+<path d="M44,125 H416 Q425,125 425,134 V168 H35 V134 Q35,125 44,125 Z" fill="#087f83"/>
+<text font-family="sans-serif" x="50" y="153" fill="white" class="entity" font-size="17" font-weight="700">ENTITY_REF</text>
+<text font-family="sans-serif" x="50" y="193" fill="#16304a" class="field" font-size="16">entityKey  [PK]</text>
+<text font-family="sans-serif" x="50" y="215" fill="#16304a" class="field" font-size="16">entityType</text>
+<text font-family="sans-serif" x="50" y="237" fill="#16304a" class="field" font-size="16">providerScope</text>
+<text font-family="sans-serif" x="50" y="259" fill="#16304a" class="field" font-size="16">providerKey</text>
+<text font-family="sans-serif" x="50" y="281" fill="#16304a" class="field" font-size="16">visibilityState</text>
+<text font-family="sans-serif" x="50" y="301" fill="#53677c" class="meta" font-size="13">Includes tombstones and unresolved refs</text>
+<rect x="480" y="125" width="390" height="230" rx="9" fill="white" stroke="#cbd8e3"/>
+<path d="M489,125 H861 Q870,125 870,134 V168 H480 V134 Q480,125 489,125 Z" fill="#087f83"/>
+<text font-family="sans-serif" x="495" y="153" fill="white" class="entity" font-size="17" font-weight="700">EVENT_ENTITY</text>
+<text font-family="sans-serif" x="495" y="193" fill="#16304a" class="field" font-size="16">eventKey  [PK, FK]</text>
+<text font-family="sans-serif" x="495" y="215" fill="#16304a" class="field" font-size="16">entityKey  [PK, FK]</text>
+<text font-family="sans-serif" x="495" y="237" fill="#16304a" class="field" font-size="16">role</text>
+<text font-family="sans-serif" x="495" y="259" fill="#16304a" class="field" font-size="16">linkageEvidence</text>
+<rect x="925" y="125" width="390" height="230" rx="9" fill="white" stroke="#cbd8e3"/>
+<path d="M934,125 H1306 Q1315,125 1315,134 V168 H925 V134 Q925,125 934,125 Z" fill="#087f83"/>
+<text font-family="sans-serif" x="940" y="153" fill="white" class="entity" font-size="17" font-weight="700">EVENT</text>
+<text font-family="sans-serif" x="940" y="193" fill="#16304a" class="field" font-size="16">eventKey  [PK]</text>
+<text font-family="sans-serif" x="940" y="215" fill="#16304a" class="field" font-size="16">sourceChannel</text>
+<text font-family="sans-serif" x="940" y="237" fill="#16304a" class="field" font-size="16">streamScope</text>
+<text font-family="sans-serif" x="940" y="259" fill="#16304a" class="field" font-size="16">sourceEventId</text>
+<text font-family="sans-serif" x="940" y="281" fill="#16304a" class="field" font-size="16">occurredAt</text>
+<text font-family="sans-serif" x="940" y="303" fill="#16304a" class="field" font-size="16">receivedAt</text>
+<rect x="35" y="550" width="390" height="330" rx="9" fill="white" stroke="#cbd8e3"/>
+<path d="M44,550 H416 Q425,550 425,559 V593 H35 V559 Q35,550 44,550 Z" fill="#087f83"/>
+<text font-family="sans-serif" x="50" y="578" fill="white" class="entity" font-size="17" font-weight="700">POSTURE_OBSERVATION</text>
+<text font-family="sans-serif" x="50" y="618" fill="#16304a" class="field" font-size="16">observationId  [PK]</text>
+<text font-family="sans-serif" x="50" y="640" fill="#16304a" class="field" font-size="16">entityKey  [FK]</text>
+<text font-family="sans-serif" x="50" y="662" fill="#16304a" class="field" font-size="16">observationKind</text>
+<text font-family="sans-serif" x="50" y="682" fill="#53677c" class="meta" font-size="13">AWS_SERVICE or DERIVED_ATTENTION</text>
+<text font-family="sans-serif" x="50" y="702" fill="#16304a" class="field" font-size="16">assessmentRef</text>
+<text font-family="sans-serif" x="50" y="722" fill="#53677c" class="meta" font-size="13">Optional scoped correlation</text>
+<text font-family="sans-serif" x="50" y="742" fill="#16304a" class="field" font-size="16">policyContextRef</text>
+<text font-family="sans-serif" x="50" y="762" fill="#53677c" class="meta" font-size="13">Observed context; not evaluated revision</text>
+<text font-family="sans-serif" x="50" y="782" fill="#16304a" class="field" font-size="16">contributorEvidence</text>
+<text font-family="sans-serif" x="50" y="804" fill="#16304a" class="field" font-size="16">aggregationRuleVersion</text>
+<text font-family="sans-serif" x="50" y="824" fill="#53677c" class="meta" font-size="13">Required for derived summaries</text>
+<rect x="480" y="550" width="390" height="260" rx="9" fill="white" stroke="#cbd8e3"/>
+<path d="M489,550 H861 Q870,550 870,559 V593 H480 V559 Q480,550 489,550 Z" fill="#087f83"/>
+<text font-family="sans-serif" x="495" y="578" fill="white" class="entity" font-size="17" font-weight="700">HEALTH_OBSERVATION</text>
+<text font-family="sans-serif" x="495" y="618" fill="#16304a" class="field" font-size="16">observationId  [PK]</text>
+<text font-family="sans-serif" x="495" y="640" fill="#16304a" class="field" font-size="16">entityKey  [FK]</text>
+<text font-family="sans-serif" x="495" y="662" fill="#16304a" class="field" font-size="16">sourceSignal</text>
+<text font-family="sans-serif" x="495" y="684" fill="#16304a" class="field" font-size="16">measuredAt</text>
+<text font-family="sans-serif" x="495" y="706" fill="#16304a" class="field" font-size="16">expiresAt</text>
+<text font-family="sans-serif" x="495" y="728" fill="#16304a" class="field" font-size="16">state</text>
+<text font-family="sans-serif" x="495" y="750" fill="#16304a" class="field" font-size="16">evidence</text>
+<rect x="925" y="550" width="390" height="260" rx="9" fill="white" stroke="#cbd8e3"/>
+<path d="M934,550 H1306 Q1315,550 1315,559 V593 H925 V559 Q925,550 934,550 Z" fill="#087f83"/>
+<text font-family="sans-serif" x="940" y="578" fill="white" class="entity" font-size="17" font-weight="700">CURRENT_PROJECTION</text>
+<text font-family="sans-serif" x="940" y="618" fill="#16304a" class="field" font-size="16">entityKey  [PK, FK]</text>
+<text font-family="sans-serif" x="940" y="640" fill="#16304a" class="field" font-size="16">dimension  [PK]</text>
+<text font-family="sans-serif" x="940" y="662" fill="#16304a" class="field" font-size="16">selectedObservationRefs</text>
+<text font-family="sans-serif" x="940" y="684" fill="#16304a" class="field" font-size="16">projectionRevision</text>
+<text font-family="sans-serif" x="940" y="706" fill="#16304a" class="field" font-size="16">computedAt</text>
+<text font-family="sans-serif" x="940" y="728" fill="#16304a" class="field" font-size="16">freshnessAndCoverage</text>
+<rect x="32" y="1018" width="13" height="13" rx="3" fill="#183750"/><text font-family="sans-serif" x="54" y="1030" fill="#53677c" class="link" font-size="14">AWS-backed identity or value</text>
+<rect x="335" y="1018" width="13" height="13" rx="3" fill="#087f83"/><text font-family="sans-serif" x="357" y="1030" fill="#53677c" class="link" font-size="14">Local normalization or evidence</text>
+<text font-family="sans-serif" x="32" y="1062" fill="#53677c" class="note" font-size="16">Event uniqueness: (sourceChannel, streamScope, sourceEventId). Subjects retain type, provider scope and key.</text>
+<text font-family="sans-serif" x="32" y="1086" fill="#53677c" class="note" font-size="16">Aggregate attention summaries retain distinct contributor identities, membership context and rule version.</text>
+<text font-family="sans-serif" x="32" y="1110" fill="#53677c" class="note" font-size="16">computedAt belongs to the projection. occurredAt, receivedAt and observation timestamps remain separate.</text>
+</svg>

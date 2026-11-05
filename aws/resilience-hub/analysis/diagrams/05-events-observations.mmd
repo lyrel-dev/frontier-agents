@@ -1,0 +1,60 @@
+%% Reviewed 2026-11-05. Proposed local temporal model; official context S32-S44.
+%% Event uniqueness includes source channel, stream scope and provider event ID.
+%% Native service posture and derived aggregate summaries have different kinds.
+%% Projection computedAt is distinct from evidence observation timestamps.
+erDiagram
+    direction TB
+    ENTITY_REF {
+        string entityKey PK
+        string entityType
+        string providerScope
+        string providerKey
+        string visibilityState "Includes tombstones and unresolved refs"
+    }
+    EVENT_ENTITY {
+        string eventKey PK, FK
+        string entityKey PK, FK
+        string role
+        json linkageEvidence
+    }
+    EVENT {
+        string eventKey PK
+        string sourceChannel
+        string streamScope
+        string sourceEventId
+        datetime occurredAt
+        datetime receivedAt
+    }
+    POSTURE_OBSERVATION {
+        string observationId PK
+        string entityKey FK
+        string observationKind "AWS_SERVICE or DERIVED_ATTENTION"
+        string assessmentRef "Optional scoped correlation"
+        string policyContextRef "Observed context; not evaluated revision"
+        json contributorEvidence
+        string aggregationRuleVersion "Required for derived summaries"
+    }
+    HEALTH_OBSERVATION {
+        string observationId PK
+        string entityKey FK
+        string sourceSignal
+        datetime measuredAt
+        datetime expiresAt
+        string state
+        json evidence
+    }
+    CURRENT_PROJECTION {
+        string entityKey PK, FK
+        string dimension PK
+        json selectedObservationRefs
+        int projectionRevision
+        datetime computedAt
+        json freshnessAndCoverage
+    }
+    ENTITY_REF ||--o{ EVENT_ENTITY : linked_by
+    EVENT ||--o{ EVENT_ENTITY : subjects
+    ENTITY_REF ||--o{ POSTURE_OBSERVATION : observed_as
+    ENTITY_REF ||--o{ HEALTH_OBSERVATION : observed_as
+    ENTITY_REF ||--o{ CURRENT_PROJECTION : projects
+    CURRENT_PROJECTION }o..o{ POSTURE_OBSERVATION : selects_evidence
+    CURRENT_PROJECTION }o..o{ HEALTH_OBSERVATION : selects_evidence

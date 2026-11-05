@@ -1,0 +1,50 @@
+%% Reviewed 2026-11-05. Official sources: report S23-S31.
+%% Node and edge identity and both endpoint foreign keys are snapshot-scoped.
+%% COMPLETE records collector completion, not an atomic provider snapshot.
+erDiagram
+    direction TB
+    SERVICE {
+        string serviceArn PK
+    }
+    DEPENDENCY_DISCOVERY_CONFIG {
+        string serviceArn PK, FK
+        string status
+        int eligibleResourceCount "Nullable; zero is not unknown"
+        datetime updatedAt "Optional provider timestamp"
+    }
+    DEPENDENCY {
+        string serviceArn PK, FK
+        string dependencyId PK
+        string dnsName
+        string criticality
+        datetime lastDetectedTime
+        json queryRange
+    }
+    TOPOLOGY_SNAPSHOT {
+        string topologyId PK "Local capture identity"
+        string serviceArn FK
+        datetime captureStartedAt
+        datetime captureCompletedAt
+        string collectionStatus
+        json queryScope
+    }
+    TOPOLOGY_NODE {
+        string topologyId PK, FK
+        string localNodeId PK
+        string resourceIdentifier
+        string endpointResolution
+    }
+    TOPOLOGY_EDGE {
+        string topologyId PK, FK
+        string localEdgeId PK
+        string sourceNodeId FK "Endpoint must share topologyId"
+        string destinationNodeId FK "Endpoint must share topologyId"
+        json properties
+    }
+    SERVICE ||--o| DEPENDENCY_DISCOVERY_CONFIG : has
+    SERVICE ||--o{ DEPENDENCY : discovers
+    SERVICE ||--o{ TOPOLOGY_SNAPSHOT : captured_as
+    TOPOLOGY_SNAPSHOT ||--o{ TOPOLOGY_NODE : contains
+    TOPOLOGY_SNAPSHOT ||--o{ TOPOLOGY_EDGE : contains
+    TOPOLOGY_NODE ||--o{ TOPOLOGY_EDGE : source_role
+    TOPOLOGY_NODE ||--o{ TOPOLOGY_EDGE : destination_role

@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1320 970" role="img" aria-labelledby="title desc">
+<title id="title">Assessments, finding captures and recommendations</title>
+<desc id="desc">Entity relationship diagram. Navy entities are AWS-backed; teal entities are local records. Cardinalities are printed on relationship lines. See the accompanying Mermaid source and report for constraints.</desc>
+<style>text{font-family:Inter,Arial,sans-serif}.entity{font-size:17px;font-weight:700}.field{font-size:16px}.meta{font-size:13px}.link{font-size:14px}.note{font-size:16px}</style>
+<rect width="1320" height="970" rx="18" fill="#f8fbfd"/>
+<text font-family="sans-serif" x="32" y="42" fill="#16304a" font-size="25" font-weight="700">Assessments, finding captures and recommendations</text>
+<text font-family="sans-serif" x="32" y="69" fill="#53677c" font-size="16">Findings are service-scoped. Captures preserve observation history without inventing run ownership.</text>
+<polyline points="395,195 480,195" fill="none" stroke="#6e8397" stroke-width="1.8"/>
+<text font-family="sans-serif" x="413" y="181" text-anchor="middle" class="link" font-size="14" fill="#53677c">1</text>
+<text font-family="sans-serif" x="458" y="181" text-anchor="middle" class="link" font-size="14" fill="#53677c">0..*</text>
+<text font-family="sans-serif" x="437" y="221" text-anchor="middle" class="link" font-size="14" fill="#53677c">owns</text>
+<polyline points="215,125 215,100 1105,100 1105,125" fill="none" stroke="#6e8397" stroke-width="1.8"/>
+<text font-family="sans-serif" x="237" y="115" text-anchor="middle" class="link" font-size="14" fill="#53677c">1</text>
+<text font-family="sans-serif" x="1084" y="115" text-anchor="middle" class="link" font-size="14" fill="#53677c">0..*</text>
+<text font-family="sans-serif" x="662" y="97" text-anchor="middle" class="link" font-size="14" fill="#53677c">contains</text>
+<polyline points="135,350 135,495" fill="none" stroke="#6e8397" stroke-width="1.8"/>
+<text font-family="sans-serif" x="118" y="373" text-anchor="middle" class="link" font-size="14" fill="#53677c">1</text>
+<text font-family="sans-serif" x="115" y="476" text-anchor="middle" class="link" font-size="14" fill="#53677c">0..*</text>
+<text font-family="sans-serif" x="177" y="436" text-anchor="middle" class="link" font-size="14" fill="#53677c">capture scope</text>
+<polyline points="660,350 660,397 315,397 315,495" fill="none" stroke="#6e8397" stroke-width="1.8" stroke-dasharray="7 5"/>
+<text font-family="sans-serif" x="680" y="373" text-anchor="middle" class="link" font-size="14" fill="#53677c">0..1</text>
+<text font-family="sans-serif" x="336" y="478" text-anchor="middle" class="link" font-size="14" fill="#53677c">0..*</text>
+<text font-family="sans-serif" x="489" y="388" text-anchor="middle" class="link" font-size="14" fill="#53677c">local correlation only</text>
+<polyline points="1105,350 1105,450 735,450 735,495" fill="none" stroke="#6e8397" stroke-width="1.8"/>
+<text font-family="sans-serif" x="1126" y="373" text-anchor="middle" class="link" font-size="14" fill="#53677c">1</text>
+<text font-family="sans-serif" x="755" y="477" text-anchor="middle" class="link" font-size="14" fill="#53677c">0..*</text>
+<text font-family="sans-serif" x="952" y="441" text-anchor="middle" class="link" font-size="14" fill="#53677c">observed state</text>
+<polyline points="395,625 480,625" fill="none" stroke="#6e8397" stroke-width="1.8"/>
+<text font-family="sans-serif" x="413" y="611" text-anchor="middle" class="link" font-size="14" fill="#53677c">1</text>
+<text font-family="sans-serif" x="458" y="611" text-anchor="middle" class="link" font-size="14" fill="#53677c">0..*</text>
+<text font-family="sans-serif" x="437" y="651" text-anchor="middle" class="link" font-size="14" fill="#53677c">collects</text>
+<polyline points="840,625 925,625" fill="none" stroke="#6e8397" stroke-width="1.8"/>
+<text font-family="sans-serif" x="858" y="611" text-anchor="middle" class="link" font-size="14" fill="#53677c">1</text>
+<text font-family="sans-serif" x="903" y="611" text-anchor="middle" class="link" font-size="14" fill="#53677c">0..*</text>
+<text font-family="sans-serif" x="882" y="651" text-anchor="middle" class="link" font-size="14" fill="#53677c">owns</text>
+<rect x="35" y="125" width="360" height="225" rx="9" fill="white" stroke="#cbd8e3"/>
+<path d="M44,125 H386 Q395,125 395,134 V168 H35 V134 Q35,125 44,125 Z" fill="#183750"/>
+<text font-family="sans-serif" x="50" y="153" fill="white" class="entity" font-size="17" font-weight="700">SERVICE</text>
+<text font-family="sans-serif" x="50" y="193" fill="#16304a" class="field" font-size="16">serviceArn  [PK]</text>
+<rect x="480" y="125" width="360" height="225" rx="9" fill="white" stroke="#cbd8e3"/>
+<path d="M489,125 H831 Q840,125 840,134 V168 H480 V134 Q480,125 489,125 Z" fill="#183750"/>
+<text font-family="sans-serif" x="495" y="153" fill="white" class="entity" font-size="17" font-weight="700">ASSESSMENT</text>
+<text font-family="sans-serif" x="495" y="193" fill="#16304a" class="field" font-size="16">serviceArn  [PK, FK]</text>
+<text font-family="sans-serif" x="495" y="215" fill="#16304a" class="field" font-size="16">assessmentId  [PK]</text>
+<text font-family="sans-serif" x="495" y="237" fill="#16304a" class="field" font-size="16">assessmentStatus</text>
+<text font-family="sans-serif" x="495" y="259" fill="#16304a" class="field" font-size="16">totalFindings</text>
+<text font-family="sans-serif" x="495" y="279" fill="#53677c" class="meta" font-size="13">Run result; not current backlog</text>
+<rect x="925" y="125" width="360" height="225" rx="9" fill="white" stroke="#cbd8e3"/>
+<path d="M934,125 H1276 Q1285,125 1285,134 V168 H925 V134 Q925,125 934,125 Z" fill="#183750"/>
+<text font-family="sans-serif" x="940" y="153" fill="white" class="entity" font-size="17" font-weight="700">FINDING</text>
+<text font-family="sans-serif" x="940" y="193" fill="#16304a" class="field" font-size="16">serviceArn  [PK, FK]</text>
+<text font-family="sans-serif" x="940" y="215" fill="#16304a" class="field" font-size="16">findingId  [PK]</text>
+<text font-family="sans-serif" x="940" y="237" fill="#16304a" class="field" font-size="16">status</text>
+<text font-family="sans-serif" x="940" y="259" fill="#16304a" class="field" font-size="16">failureCategory</text>
+<text font-family="sans-serif" x="940" y="281" fill="#16304a" class="field" font-size="16">severity</text>
+<rect x="35" y="495" width="360" height="285" rx="9" fill="white" stroke="#cbd8e3"/>
+<path d="M44,495 H386 Q395,495 395,504 V538 H35 V504 Q35,495 44,495 Z" fill="#087f83"/>
+<text font-family="sans-serif" x="50" y="523" fill="white" class="entity" font-size="17" font-weight="700">FINDING_CAPTURE</text>
+<text font-family="sans-serif" x="50" y="563" fill="#16304a" class="field" font-size="16">captureId  [PK]</text>
+<text font-family="sans-serif" x="50" y="585" fill="#16304a" class="field" font-size="16">serviceArn  [FK]</text>
+<text font-family="sans-serif" x="50" y="607" fill="#16304a" class="field" font-size="16">captureStartedAt</text>
+<text font-family="sans-serif" x="50" y="629" fill="#16304a" class="field" font-size="16">captureCompletedAt</text>
+<text font-family="sans-serif" x="50" y="651" fill="#16304a" class="field" font-size="16">listCoverage</text>
+<text font-family="sans-serif" x="50" y="673" fill="#16304a" class="field" font-size="16">detailCoverage</text>
+<text font-family="sans-serif" x="50" y="695" fill="#16304a" class="field" font-size="16">relatedAssessmentId  [FK]</text>
+<text font-family="sans-serif" x="50" y="715" fill="#53677c" class="meta" font-size="13">Optional same-service correlation</text>
+<rect x="480" y="495" width="360" height="310" rx="9" fill="white" stroke="#cbd8e3"/>
+<path d="M489,495 H831 Q840,495 840,504 V538 H480 V504 Q480,495 489,495 Z" fill="#087f83"/>
+<text font-family="sans-serif" x="495" y="523" fill="white" class="entity" font-size="17" font-weight="700">FINDING_OBSERVATION</text>
+<text font-family="sans-serif" x="495" y="563" fill="#16304a" class="field" font-size="16">observationId  [PK]</text>
+<text font-family="sans-serif" x="495" y="585" fill="#16304a" class="field" font-size="16">captureId  [FK]</text>
+<text font-family="sans-serif" x="495" y="607" fill="#16304a" class="field" font-size="16">serviceArn  [FK]</text>
+<text font-family="sans-serif" x="495" y="629" fill="#16304a" class="field" font-size="16">findingId  [FK]</text>
+<text font-family="sans-serif" x="495" y="651" fill="#16304a" class="field" font-size="16">representation</text>
+<text font-family="sans-serif" x="495" y="671" fill="#53677c" class="meta" font-size="13">SUMMARY or DETAIL</text>
+<text font-family="sans-serif" x="495" y="691" fill="#16304a" class="field" font-size="16">observedAt</text>
+<text font-family="sans-serif" x="495" y="713" fill="#16304a" class="field" font-size="16">sourceUpdatedAt</text>
+<text font-family="sans-serif" x="495" y="733" fill="#53677c" class="meta" font-size="13">Optional provider timestamp</text>
+<rect x="925" y="495" width="360" height="280" rx="9" fill="white" stroke="#cbd8e3"/>
+<path d="M934,495 H1276 Q1285,495 1285,504 V538 H925 V504 Q925,495 934,495 Z" fill="#087f83"/>
+<text font-family="sans-serif" x="940" y="523" fill="white" class="entity" font-size="17" font-weight="700">RECOMMENDATION</text>
+<text font-family="sans-serif" x="940" y="563" fill="#16304a" class="field" font-size="16">recommendationId  [PK]</text>
+<text font-family="sans-serif" x="940" y="583" fill="#53677c" class="meta" font-size="13">Local, observation-scoped identity</text>
+<text font-family="sans-serif" x="940" y="603" fill="#16304a" class="field" font-size="16">observationId  [FK]</text>
+<text font-family="sans-serif" x="940" y="623" fill="#53677c" class="meta" font-size="13">DETAIL observation only</text>
+<text font-family="sans-serif" x="940" y="643" fill="#16304a" class="field" font-size="16">category</text>
+<text font-family="sans-serif" x="940" y="663" fill="#53677c" class="meta" font-size="13">Source recommendation array</text>
+<text font-family="sans-serif" x="940" y="683" fill="#16304a" class="field" font-size="16">sourceArrayOrdinal</text>
+<text font-family="sans-serif" x="940" y="705" fill="#16304a" class="field" font-size="16">suggestedChanges</text>
+<rect x="32" y="841" width="13" height="13" rx="3" fill="#183750"/><text font-family="sans-serif" x="54" y="853" fill="#53677c" class="link" font-size="14">AWS-backed identity or value</text>
+<rect x="335" y="841" width="13" height="13" rx="3" fill="#087f83"/><text font-family="sans-serif" x="357" y="853" fill="#53677c" class="link" font-size="14">Local normalization or evidence</text>
+<text font-family="sans-serif" x="32" y="885" fill="#53677c" class="note" font-size="16">Observation uniqueness: (captureId, serviceArn, findingId, representation). Recommendations require DETAIL.</text>
+<text font-family="sans-serif" x="32" y="909" fill="#53677c" class="note" font-size="16">relatedAssessmentId joins with the capture serviceArn. It records correlation, not an authoritative result set.</text>
+<text font-family="sans-serif" x="32" y="933" fill="#53677c" class="note" font-size="16">List coverage and detail hydration coverage are independent. Missing recommendation data is not an empty set.</text>
+</svg>

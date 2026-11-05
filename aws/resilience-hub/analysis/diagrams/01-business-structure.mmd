@@ -1,0 +1,36 @@
+%% Reviewed 2026-11-05. Official sources: report S03-S07, S47.
+%% Join records normalize Service.associatedSystems; they are not AWS resources.
+%% Journey membership references BOTH the matching SystemService and UserJourney.
+erDiagram
+    direction TB
+    SYSTEM {
+        string systemKey PK "Local identity in verified source scope"
+        string systemId "Provider identifier"
+        string systemArn "Nullable in partial summaries"
+        string name
+    }
+    SYSTEM_SERVICE {
+        string systemKey PK, FK
+        string serviceArn PK, FK
+    }
+    SERVICE {
+        string serviceArn PK
+        string name
+        json permissionModel
+        json regions
+    }
+    USER_JOURNEY {
+        string systemKey PK, FK
+        string userJourneyId PK
+        string name
+    }
+    JOURNEY_SERVICE {
+        string systemKey PK, FK
+        string userJourneyId PK, FK
+        string serviceArn PK, FK
+    }
+    SYSTEM ||--o{ SYSTEM_SERVICE : associates
+    SERVICE ||--o{ SYSTEM_SERVICE : participates
+    SYSTEM ||--o{ USER_JOURNEY : owns
+    USER_JOURNEY ||--o{ JOURNEY_SERVICE : includes
+    SYSTEM_SERVICE ||--o{ JOURNEY_SERVICE : constrains
