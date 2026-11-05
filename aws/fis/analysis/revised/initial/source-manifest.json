@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "fis-initial-preservation/1",
+  "sourceCommit": "1b5ae1bd11fc61a2701d74ea89ccce2721889ef0",
+  "sourceDirectory": "aws/fis/analysis",
+  "files": [
+    {
+      "path": "app/app.js",
+      "sourceSha256": "80e0d0527654fbe9e1c8bf6f30cee0670075518fa76c496b6a12dc9f099f1205",
+      "packagedSha256": "f8403fd369e516edd348830f9ff4929ec4675e55d9aabb320a32002dd7e4784d",
+      "adaptation": "documentation and diagram paths only"
+    },
+    {
+      "path": "app/fixtures.js",
+      "sourceSha256": "fedbf76e30187f7c2a498b46dbd8f125522d628eee9d5e8d59bf14221ce32b99",
+      "packagedSha256": "fedbf76e30187f7c2a498b46dbd8f125522d628eee9d5e8d59bf14221ce32b99",
+      "adaptation": "none"
+    },
+    {
+      "path": "app/model.js",
+      "sourceSha256": "fbcf33ae8ba03b5f5612c13c79b84f988056048a807d7e2b675a4d4ecc765c99",
+      "packagedSha256": "fbcf33ae8ba03b5f5612c13c79b84f988056048a807d7e2b675a4d4ecc765c99",
+      "adaptation": "none"
+    },
+    {
+      "path": "app/styles.css",
+      "sourceSha256": "eebaaacd0e4d80dff20548990027b981b69097cbf68b3dd8d393191dc7cde7ad",
+      "packagedSha256": "eebaaacd0e4d80dff20548990027b981b69097cbf68b3dd8d393191dc7cde7ad",
+      "adaptation": "none"
+    },
+    {
+      "path": "app/tests/model.test.cjs",
+      "sourceSha256": "3b12bff20cca73fb7f6ae131bd031b7c91bd72600f48eafab880034da751aa92",
+      "packagedSha256": "3b12bff20cca73fb7f6ae131bd031b7c91bd72600f48eafab880034da751aa92",
+      "adaptation": "none"
+    },
+    {
+      "path": "index.html",
+      "sourceSha256": "3298ff4a5b94d1eca27e75c54c349dcca2906db403133ffd204512b7deafad72",
+      "packagedSha256": "5268b9a0ed8f615d7b44cdd4b43e149177378f8eba2d42d3518c63fee8676cc6",
+      "adaptation": "documentation and diagram paths only"
+    }
+  ]
+}

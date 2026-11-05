@@ -1,0 +1,49 @@
+{
+  "schema": "frontier-fis-revised-initial-diagrams/v1",
+  "sourceCommit": "1b5ae1bd11fc61a2701d74ea89ccce2721889ef0",
+  "sourceManifest": "https://github.com/lyrel-dev/frontier-agents/blob/1b5ae1bd11fc61a2701d74ea89ccce2721889ef0/aws/fis/analysis/tools/render-manifest.json",
+  "sourceRenderer": "https://github.com/lyrel-dev/frontier-agents/blob/1b5ae1bd11fc61a2701d74ea89ccce2721889ef0/aws/fis/analysis/tools/render_report.py",
+  "mode": "preserved-reviewed-renderings",
+  "diagrams": [
+    {
+      "source": "01_execution.mmd",
+      "output": "01_execution.svg",
+      "entities": 5,
+      "relationships": 5,
+      "sourceSha256": "4bf200418711e9ebde0fb23422a3950268f95a2f3dcaa50fd6e95b864ba8c7a2",
+      "outputSha256": "43b1a7e0a043d3d099a12244c63dd041205a797a153d4cf25dfe912cec26e618"
+    },
+    {
+      "source": "02_catalog_templates.mmd",
+      "output": "02_catalog_templates.svg",
+      "entities": 10,
+      "relationships": 12,
+      "sourceSha256": "d879b54afd169d5ebc9d26d2b6e29f21c73fa0d508de03dbd8e7760b45b0f868",
+      "outputSha256": "8a0bcdd1adba735609ed173e84c59b2278b514b748904749b59f6d4abf81379f"
+    },
+    {
+      "source": "03_targeting.mmd",
+      "output": "03_targeting.svg",
+      "entities": 8,
+      "relationships": 7,
+      "sourceSha256": "380fbb8c085a1919a12fea021346af7519db4882a1b2bdfde701b1b8767bdef1",
+      "outputSha256": "b037e3c3c50b4aeade8cc25ad0444d21d7e75ff5d095beab56c42823e3d3bb66"
+    },
+    {
+      "source": "04_evidence_reports.mmd",
+      "output": "04_evidence_reports.svg",
+      "entities": 11,
+      "relationships": 12,
+      "sourceSha256": "e79b65a4720baf4316b2a28bc206175593d8def416daf19b720dda7f17dfaa70",
+      "outputSha256": "cee3149f62daa449525e5621561bfe182cd5f473c28ec694db047ee4af555a67"
+    },
+    {
+      "source": "05_assessments.mmd",
+      "output": "05_assessments.svg",
+      "entities": 7,
+      "relationships": 7,
+      "sourceSha256": "7a2add98566b27d1d0f375e180f44247b4382debeb6baa8ec631fa04c5711dd3",
+      "outputSha256": "c9f3be5d1554f6b8547431d35bb806e9a665b158ef33b64f33248a52a0cbe9cb"
+    }
+  ]
+}

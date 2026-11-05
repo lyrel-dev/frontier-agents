@@ -1,0 +1,927 @@
+{
+  "schemaVersion": "assessment-review-cases/0.2",
+  "title": "Independent behavioral review cases",
+  "purpose": "Normative counterexamples for the reviewed proposal. These examples describe contract decisions; they do not execute workflows, compile CEL, authenticate evidence, contact AWS, or establish receiver coverage.",
+  "conventions": {
+    "assessment": "requiredCriteria is the immutable admission denominator. results maps step keys to check verdicts; executionOutcomes and notApplicableCriteria are explanatory context. Missing final results are inconclusive; missing live results are pending.",
+    "eligibility": "dependencyOutcomes contains null for locally nonterminal prerequisites. preconditionVerdicts contains the already determined transitive guard set. criterionVerdicts is explanatory and never an implicit gate. Static validation rejects settled main mutations.",
+    "proof": "matchingRecords is the count of already validated records matching the declared identity, temporal and claim scope; it is not a raw row count. windowClosed is a real observation fact, never inferred solely from elapsed wall time. The helper does not authenticate sources or establish coverage.",
+    "cancellation": "A tokenReplay identifies a retained command receipt in the same trusted workspace, principal and operation scope. Payload equality and authorization are assumed to have been established by the API boundary.",
+    "termination": "All cases are evaluated at sealing after bounded finalization. unresolvedEffects includes active, unknown, or ambiguous mutating effects requiring continued protection. retainScopeHold concerns unresolved remote effects, not an assertion that all other admission policies permit another Run."
+  },
+  "cases": [
+    {
+      "id": "A01",
+      "category": "assessment",
+      "input": {
+        "final": true,
+        "requiredCriteria": [],
+        "results": {}
+      },
+      "expected": {
+        "verdict": "not_evaluated",
+        "final": true,
+        "requiredCount": 0,
+        "passedCount": 0,
+        "failedCount": 0,
+        "inconclusiveCount": 0,
+        "pendingCount": 0
+      },
+      "reason": "No admitted required criteria is not a vacuous pass.",
+      "contractRefs": [
+        "model.md §4"
+      ]
+    },
+    {
+      "id": "A02",
+      "category": "assessment",
+      "input": {
+        "final": true,
+        "requiredCriteria": [
+          "transition",
+          "delivery"
+        ],
+        "results": {
+          "transition": "passed",
+          "delivery": "passed"
+        }
+      },
+      "expected": {
+        "verdict": "passed",
+        "final": true,
+        "requiredCount": 2,
+        "passedCount": 2,
+        "failedCount": 0,
+        "inconclusiveCount": 0,
+        "pendingCount": 0
+      },
+      "reason": "All admitted required criteria have conclusive passes.",
+      "contractRefs": [
+        "model.md §4"
+      ]
+    },
+    {
+      "id": "A03",
+      "category": "assessment",
+      "input": {
+        "final": true,
+        "requiredCriteria": [
+          "transition",
+          "delivery"
+        ],
+        "results": {
+          "transition": "failed"
+        }
+      },
+      "expected": {
+        "verdict": "failed",
+        "final": true,
+        "requiredCount": 2,
+        "passedCount": 0,
+        "failedCount": 1,
+        "inconclusiveCount": 1,
+        "pendingCount": 0
+      },
+      "reason": "A known required failure remains failed even if cancellation or an upstream problem prevented the second criterion.",
+      "contractRefs": [
+        "model.md §4"
+      ]
+    },
+    {
+      "id": "A04",
+      "category": "assessment",
+      "input": {
+        "final": true,
+        "requiredCriteria": [
+          "transition",
+          "delivery"
+        ],
+        "results": {
+          "transition": "passed"
+        },
+        "executionOutcomes": {
+          "delivery": "skipped"
+        }
+      },
+      "expected": {
+        "verdict": "inconclusive",
+        "final": true,
+        "requiredCount": 2,
+        "passedCount": 1,
+        "failedCount": 0,
+        "inconclusiveCount": 1,
+        "pendingCount": 0
+      },
+      "reason": "A runtime-skipped required criterion remains in the admission-fixed denominator.",
+      "contractRefs": [
+        "model.md §3",
+        "model.md §4"
+      ]
+    },
+    {
+      "id": "A05",
+      "category": "assessment",
+      "input": {
+        "final": true,
+        "requiredCriteria": [
+          "delivery"
+        ],
+        "results": {
+          "delivery": "future_unknown_verdict"
+        }
+      },
+      "expected": {
+        "verdict": "inconclusive",
+        "final": true,
+        "requiredCount": 1,
+        "passedCount": 0,
+        "failedCount": 0,
+        "inconclusiveCount": 1,
+        "pendingCount": 0
+      },
+      "reason": "An unknown result vocabulary cannot be silently counted as success.",
+      "contractRefs": [
+        "model.md §4"
+      ]
+    },
+    {
+      "id": "A06",
+      "category": "assessment",
+      "input": {
+        "final": false,
+        "requiredCriteria": [
+          "transition",
+          "delivery"
+        ],
+        "results": {
+          "transition": "passed"
+        }
+      },
+      "expected": {
+        "verdict": "inconclusive",
+        "final": false,
+        "requiredCount": 2,
+        "passedCount": 1,
+        "failedCount": 0,
+        "inconclusiveCount": 0,
+        "pendingCount": 1
+      },
+      "reason": "An active run with a pending required criterion does not yet establish all requirements.",
+      "contractRefs": [
+        "model.md §4"
+      ]
+    },
+    {
+      "id": "A07",
+      "category": "assessment",
+      "input": {
+        "final": false,
+        "requiredCriteria": [
+          "transition",
+          "delivery"
+        ],
+        "results": {
+          "transition": "failed"
+        }
+      },
+      "expected": {
+        "verdict": "failed",
+        "final": false,
+        "requiredCount": 2,
+        "passedCount": 0,
+        "failedCount": 1,
+        "inconclusiveCount": 0,
+        "pendingCount": 1
+      },
+      "reason": "A known conclusive failure is visible before other checks finish, while the projection remains provisional.",
+      "contractRefs": [
+        "model.md §4"
+      ]
+    },
+    {
+      "id": "A08",
+      "category": "assessment",
+      "input": {
+        "final": false,
+        "requiredCriteria": [
+          "delivery"
+        ],
+        "results": {
+          "delivery": "passed"
+        }
+      },
+      "expected": {
+        "verdict": "passed",
+        "final": false,
+        "requiredCount": 1,
+        "passedCount": 1,
+        "failedCount": 0,
+        "inconclusiveCount": 0,
+        "pendingCount": 0
+      },
+      "reason": "All checks may have passed while finalization continues; that does not seal the Run.",
+      "contractRefs": [
+        "model.md §4"
+      ]
+    },
+    {
+      "id": "A09",
+      "category": "assessment",
+      "input": {
+        "final": true,
+        "requiredCriteria": [
+          "delivery"
+        ],
+        "results": {
+          "delivery": "passed",
+          "informational_latency": "failed"
+        },
+        "notApplicableCriteria": [
+          "optional_audit"
+        ]
+      },
+      "expected": {
+        "verdict": "passed",
+        "final": true,
+        "requiredCount": 1,
+        "passedCount": 1,
+        "failedCount": 0,
+        "inconclusiveCount": 0,
+        "pendingCount": 0
+      },
+      "reason": "Informational results and criteria made inapplicable at admission do not join the required denominator.",
+      "contractRefs": [
+        "model.md §2",
+        "model.md §4"
+      ]
+    },
+    {
+      "id": "G01",
+      "category": "eligibility",
+      "input": {
+        "phase": "main",
+        "effect": "observe",
+        "after": "settled",
+        "dependencyOutcomes": {
+          "query": null
+        },
+        "preconditionVerdicts": {},
+        "cancellationAccepted": false
+      },
+      "expected": {
+        "decision": "wait",
+        "reasonCode": "DEPENDENCY_PENDING"
+      },
+      "reason": "Settled semantics still waits for local terminal facts; it does not mean run immediately.",
+      "contractRefs": [
+        "model.md §3"
+      ]
+    },
+    {
+      "id": "G02",
+      "category": "eligibility",
+      "input": {
+        "phase": "main",
+        "effect": "observe",
+        "after": "success",
+        "dependencyOutcomes": {
+          "check": "succeeded"
+        },
+        "preconditionVerdicts": {},
+        "cancellationAccepted": false,
+        "criterionVerdicts": {
+          "check": "failed"
+        }
+      },
+      "expected": {
+        "decision": "run",
+        "reasonCode": "ELIGIBLE"
+      },
+      "reason": "A false criterion is a successful technical evaluation and is not an implicit gate.",
+      "contractRefs": [
+        "model.md §3"
+      ]
+    },
+    {
+      "id": "G03",
+      "category": "eligibility",
+      "input": {
+        "phase": "main",
+        "effect": "observe",
+        "after": "success",
+        "dependencyOutcomes": {
+          "query": "failed"
+        },
+        "preconditionVerdicts": {},
+        "cancellationAccepted": false
+      },
+      "expected": {
+        "decision": "skip",
+        "reasonCode": "DEPENDENCY_UNSUCCESSFUL"
+      },
+      "reason": "The default success policy does not dispatch after a failed technical prerequisite.",
+      "contractRefs": [
+        "model.md §3"
+      ]
+    },
+    {
+      "id": "G04",
+      "category": "eligibility",
+      "input": {
+        "phase": "main",
+        "effect": "observe",
+        "after": "settled",
+        "dependencyOutcomes": {
+          "query": "failed"
+        },
+        "preconditionVerdicts": {},
+        "cancellationAccepted": false
+      },
+      "expected": {
+        "decision": "run",
+        "reasonCode": "ELIGIBLE"
+      },
+      "reason": "A diagnostic observer may execute after a failed prerequisite under explicit settled semantics.",
+      "contractRefs": [
+        "model.md §3"
+      ]
+    },
+    {
+      "id": "G05",
+      "category": "eligibility",
+      "input": {
+        "phase": "main",
+        "effect": "mutate",
+        "after": "success",
+        "dependencyOutcomes": {
+          "baseline": "succeeded"
+        },
+        "preconditionVerdicts": {
+          "baseline": "failed"
+        },
+        "cancellationAccepted": false
+      },
+      "expected": {
+        "decision": "skip",
+        "reasonCode": "PRECONDITION_NOT_PASSED"
+      },
+      "reason": "Technical evaluation success does not authorize mutation when the precondition is false.",
+      "contractRefs": [
+        "model.md §3"
+      ]
+    },
+    {
+      "id": "G06",
+      "category": "eligibility",
+      "input": {
+        "phase": "main",
+        "effect": "mutate",
+        "after": "success",
+        "dependencyOutcomes": {
+          "baseline": "succeeded"
+        },
+        "preconditionVerdicts": {
+          "baseline": "inconclusive"
+        },
+        "cancellationAccepted": false
+      },
+      "expected": {
+        "decision": "skip",
+        "reasonCode": "PRECONDITION_NOT_PASSED"
+      },
+      "reason": "An unproven precondition is not permission to perturb the deployment.",
+      "contractRefs": [
+        "model.md §3"
+      ]
+    },
+    {
+      "id": "G07",
+      "category": "eligibility",
+      "input": {
+        "phase": "main",
+        "effect": "mutate",
+        "after": "success",
+        "dependencyOutcomes": {
+          "baseline": "succeeded"
+        },
+        "preconditionVerdicts": {
+          "baseline": "passed"
+        },
+        "cancellationAccepted": true
+      },
+      "expected": {
+        "decision": "skip",
+        "reasonCode": "RUN_CANCELLED"
+      },
+      "reason": "A passed guard cannot override the cancellation dispatch fence.",
+      "contractRefs": [
+        "model.md §3",
+        "model.md §5"
+      ]
+    },
+    {
+      "id": "G08",
+      "category": "eligibility",
+      "input": {
+        "phase": "finalizer",
+        "effect": "compensate",
+        "after": "settled",
+        "dependencyOutcomes": {
+          "stop": "failed"
+        },
+        "preconditionVerdicts": {
+          "baseline": "failed"
+        },
+        "cancellationAccepted": true
+      },
+      "expected": {
+        "decision": "run",
+        "reasonCode": "ELIGIBLE"
+      },
+      "reason": "Capture close still executes after failed stop cleanup and accepted cancellation; main-path guards do not suppress compensation.",
+      "contractRefs": [
+        "model.md §3",
+        "model.md §5",
+        "adapters.md §4"
+      ]
+    },
+    {
+      "id": "G09",
+      "category": "eligibility",
+      "input": {
+        "phase": "main",
+        "effect": "mutate",
+        "after": "settled",
+        "dependencyOutcomes": {
+          "baseline": "failed"
+        },
+        "preconditionVerdicts": {},
+        "cancellationAccepted": false
+      },
+      "expected": {
+        "decision": "reject",
+        "reasonCode": "SETTLED_MUTATION_FORBIDDEN"
+      },
+      "reason": "A main mutating operation cannot use settled policy to bypass technical protection; this is rejected before runtime.",
+      "contractRefs": [
+        "model.md §3"
+      ]
+    },
+    {
+      "id": "P01",
+      "category": "proof",
+      "input": {
+        "proof": "witness",
+        "collection": "partial",
+        "coverage": "unknown",
+        "sourceTrusted": true,
+        "windowClosed": false,
+        "predicateValue": true,
+        "matchingRecords": 1
+      },
+      "expected": {
+        "verdict": "passed",
+        "reasonCode": "QUALIFYING_WITNESS"
+      },
+      "reason": "One trustworthy matching record proves existence without claiming that all records have been collected.",
+      "contractRefs": [
+        "model.md §6",
+        "adapters.md §6"
+      ]
+    },
+    {
+      "id": "P02",
+      "category": "proof",
+      "input": {
+        "proof": "witness",
+        "collection": "partial",
+        "coverage": "unknown",
+        "sourceTrusted": true,
+        "windowClosed": true,
+        "predicateValue": true,
+        "matchingRecords": 0
+      },
+      "expected": {
+        "verdict": "inconclusive",
+        "reasonCode": "INSUFFICIENT_EVIDENCE"
+      },
+      "reason": "No witness in partial data does not prove absence.",
+      "contractRefs": [
+        "model.md §6"
+      ]
+    },
+    {
+      "id": "P03",
+      "category": "proof",
+      "input": {
+        "proof": "witness",
+        "collection": "complete",
+        "coverage": "sufficient",
+        "sourceTrusted": true,
+        "windowClosed": true,
+        "predicateValue": true,
+        "matchingRecords": 0
+      },
+      "expected": {
+        "verdict": "failed",
+        "reasonCode": "NO_WITNESS_IN_COVERED_WINDOW"
+      },
+      "reason": "A closed, sufficiently covered collection with no qualifying witness can falsify the scoped existence criterion.",
+      "contractRefs": [
+        "model.md §6"
+      ]
+    },
+    {
+      "id": "P04",
+      "category": "proof",
+      "input": {
+        "proof": "witness",
+        "collection": "complete",
+        "coverage": "sufficient",
+        "sourceTrusted": true,
+        "windowClosed": false,
+        "predicateValue": true,
+        "matchingRecords": 0
+      },
+      "expected": {
+        "verdict": "inconclusive",
+        "reasonCode": "WINDOW_OPEN"
+      },
+      "reason": "A collection complete as of now does not prove absence for a decision window that remains open.",
+      "contractRefs": [
+        "model.md §6",
+        "adapters.md §4"
+      ]
+    },
+    {
+      "id": "P05",
+      "category": "proof",
+      "input": {
+        "proof": "complete",
+        "collection": "complete",
+        "coverage": "unknown",
+        "sourceTrusted": true,
+        "windowClosed": true,
+        "predicateValue": false
+      },
+      "expected": {
+        "verdict": "inconclusive",
+        "reasonCode": "INSUFFICIENT_EVIDENCE"
+      },
+      "reason": "A completed query with unknown source coverage cannot make an arbitrary negative claim conclusive.",
+      "contractRefs": [
+        "model.md §6",
+        "adapters.md §3",
+        "adapters.md §5"
+      ]
+    },
+    {
+      "id": "P06",
+      "category": "proof",
+      "input": {
+        "proof": "complete",
+        "collection": "complete",
+        "coverage": "sufficient",
+        "sourceTrusted": true,
+        "windowClosed": true,
+        "predicateValue": false
+      },
+      "expected": {
+        "verdict": "failed",
+        "reasonCode": "PREDICATE_FALSE"
+      },
+      "reason": "An adequately evidenced false predicate is an assessment failure, not an execution exception.",
+      "contractRefs": [
+        "model.md §4",
+        "model.md §6"
+      ]
+    },
+    {
+      "id": "P07",
+      "category": "proof",
+      "input": {
+        "proof": "complete",
+        "collection": "complete",
+        "coverage": "sufficient",
+        "sourceTrusted": true,
+        "windowClosed": true,
+        "predicateValue": true
+      },
+      "expected": {
+        "verdict": "passed",
+        "reasonCode": "PREDICATE_TRUE"
+      },
+      "reason": "A complete and sufficiently covered typed observation can support a general true predicate.",
+      "contractRefs": [
+        "model.md §6"
+      ]
+    },
+    {
+      "id": "P08",
+      "category": "proof",
+      "input": {
+        "proof": "witness",
+        "collection": "complete",
+        "coverage": "sufficient",
+        "sourceTrusted": false,
+        "windowClosed": true,
+        "predicateValue": true,
+        "matchingRecords": 1
+      },
+      "expected": {
+        "verdict": "inconclusive",
+        "reasonCode": "UNTRUSTED_SOURCE"
+      },
+      "reason": "An unauthenticated or otherwise untrusted matching record is not a trustworthy witness.",
+      "contractRefs": [
+        "model.md §6"
+      ]
+    },
+    {
+      "id": "P09",
+      "category": "proof",
+      "input": {
+        "proof": "witness",
+        "collection": "unavailable",
+        "coverage": "sufficient",
+        "sourceTrusted": true,
+        "windowClosed": true,
+        "predicateValue": true,
+        "matchingRecords": 1
+      },
+      "expected": {
+        "verdict": "inconclusive",
+        "reasonCode": "INSUFFICIENT_EVIDENCE"
+      },
+      "reason": "An unavailable observation cannot contain an admissible witness; inconsistent normalized input must fail closed.",
+      "contractRefs": [
+        "model.md §6"
+      ]
+    },
+    {
+      "id": "C01",
+      "category": "cancellation",
+      "input": {
+        "runSealed": false,
+        "existingIntent": false,
+        "tokenReplay": false,
+        "payloadMatches": true
+      },
+      "expected": {
+        "decision": "accept",
+        "httpStatus": 202,
+        "accepted": true,
+        "newIntent": true,
+        "fenceMainDispatch": true
+      },
+      "reason": "Acceptance persists a single intent before fencing further main dispatch; it does not assert remote cessation.",
+      "contractRefs": [
+        "api.md §4",
+        "model.md §5"
+      ]
+    },
+    {
+      "id": "C02",
+      "category": "cancellation",
+      "input": {
+        "runSealed": true,
+        "existingIntent": false,
+        "tokenReplay": false,
+        "payloadMatches": true
+      },
+      "expected": {
+        "decision": "no_op",
+        "httpStatus": 200,
+        "accepted": false,
+        "newIntent": false,
+        "reasonCode": "RUN_ALREADY_FINISHED"
+      },
+      "reason": "A new cancellation loses the race to sealed completion and cannot rewrite its outcome.",
+      "contractRefs": [
+        "api.md §4"
+      ]
+    },
+    {
+      "id": "C03",
+      "category": "cancellation",
+      "input": {
+        "runSealed": true,
+        "existingIntent": false,
+        "tokenReplay": true,
+        "payloadMatches": true,
+        "recordedReceipt": {
+          "httpStatus": 202,
+          "accepted": true
+        }
+      },
+      "expected": {
+        "decision": "replay",
+        "httpStatus": 202,
+        "accepted": true,
+        "newIntent": false
+      },
+      "reason": "An exact accepted-command replay retains its original receipt after the Run finishes.",
+      "contractRefs": [
+        "api.md §3",
+        "api.md §4"
+      ]
+    },
+    {
+      "id": "C04",
+      "category": "cancellation",
+      "input": {
+        "runSealed": true,
+        "existingIntent": false,
+        "tokenReplay": true,
+        "payloadMatches": false,
+        "recordedReceipt": {
+          "httpStatus": 202,
+          "accepted": true
+        }
+      },
+      "expected": {
+        "decision": "conflict",
+        "httpStatus": 409,
+        "newIntent": false,
+        "reasonCode": "IdempotencyConflict"
+      },
+      "reason": "Reusing a token for different intent conflicts even when the Run is now terminal.",
+      "contractRefs": [
+        "api.md §3",
+        "api.md §4"
+      ]
+    },
+    {
+      "id": "C05",
+      "category": "cancellation",
+      "input": {
+        "runSealed": false,
+        "existingIntent": true,
+        "tokenReplay": false,
+        "payloadMatches": true
+      },
+      "expected": {
+        "decision": "join_existing",
+        "httpStatus": 202,
+        "accepted": true,
+        "newIntent": false,
+        "replaceOriginalIntent": false
+      },
+      "reason": "A different token converges on the existing cancellation and does not replace its first principal, reason or acceptance time.",
+      "contractRefs": [
+        "api.md §4"
+      ]
+    },
+    {
+      "id": "T01",
+      "category": "termination",
+      "input": {
+        "unresolvedEffects": 1,
+        "substantiveFailure": true,
+        "deadlineTermination": false,
+        "cancellationAccepted": true,
+        "preconditionBlocked": false,
+        "requiredFinalizersSucceeded": false
+      },
+      "expected": {
+        "outcome": "indeterminate",
+        "finalizationStatus": "incomplete",
+        "retainScopeHold": true
+      },
+      "reason": "An unknown remote effect dominates the summary while all original failure and cancellation reasons remain retained.",
+      "contractRefs": [
+        "model.md §4",
+        "model.md §5",
+        "api.md §2"
+      ]
+    },
+    {
+      "id": "T02",
+      "category": "termination",
+      "input": {
+        "unresolvedEffects": 0,
+        "substantiveFailure": true,
+        "deadlineTermination": false,
+        "cancellationAccepted": true,
+        "preconditionBlocked": false,
+        "requiredFinalizersSucceeded": true
+      },
+      "expected": {
+        "outcome": "failed",
+        "finalizationStatus": "complete",
+        "retainScopeHold": false
+      },
+      "reason": "A substantive technical failure is not erased by later cancellation; successfully resolved cleanup remains a separate fact.",
+      "contractRefs": [
+        "model.md §4"
+      ]
+    },
+    {
+      "id": "T03",
+      "category": "termination",
+      "input": {
+        "unresolvedEffects": 0,
+        "substantiveFailure": false,
+        "deadlineTermination": true,
+        "cancellationAccepted": true,
+        "preconditionBlocked": false,
+        "requiredFinalizersSucceeded": true
+      },
+      "expected": {
+        "outcome": "timed_out",
+        "finalizationStatus": "complete",
+        "retainScopeHold": false
+      },
+      "reason": "Deadline termination has the documented precedence when external effects are resolved and cleanup succeeds.",
+      "contractRefs": [
+        "model.md §4"
+      ]
+    },
+    {
+      "id": "T04",
+      "category": "termination",
+      "input": {
+        "unresolvedEffects": 0,
+        "substantiveFailure": false,
+        "deadlineTermination": false,
+        "cancellationAccepted": true,
+        "preconditionBlocked": false,
+        "requiredFinalizersSucceeded": true
+      },
+      "expected": {
+        "outcome": "cancelled",
+        "finalizationStatus": "complete",
+        "retainScopeHold": false
+      },
+      "reason": "Confirmed cessation after cancellation is distinct from an unresolved stop request.",
+      "contractRefs": [
+        "model.md §4",
+        "model.md §5"
+      ]
+    },
+    {
+      "id": "T05",
+      "category": "termination",
+      "input": {
+        "unresolvedEffects": 0,
+        "substantiveFailure": false,
+        "deadlineTermination": false,
+        "cancellationAccepted": false,
+        "preconditionBlocked": true,
+        "requiredFinalizersSucceeded": true
+      },
+      "expected": {
+        "outcome": "blocked",
+        "finalizationStatus": "complete",
+        "retainScopeHold": false
+      },
+      "reason": "A failed guard that prevented perturbation is visible without misclassifying the workload criterion as failed.",
+      "contractRefs": [
+        "model.md §4"
+      ]
+    },
+    {
+      "id": "T06",
+      "category": "termination",
+      "input": {
+        "unresolvedEffects": 0,
+        "substantiveFailure": false,
+        "deadlineTermination": false,
+        "cancellationAccepted": false,
+        "preconditionBlocked": false,
+        "requiredFinalizersSucceeded": true
+      },
+      "expected": {
+        "outcome": "succeeded",
+        "finalizationStatus": "complete",
+        "retainScopeHold": false
+      },
+      "reason": "Execution can succeed even when a separately evaluated workload criterion is false; assessment is reduced independently.",
+      "contractRefs": [
+        "model.md §4"
+      ]
+    },
+    {
+      "id": "T07",
+      "category": "termination",
+      "input": {
+        "unresolvedEffects": 0,
+        "substantiveFailure": true,
+        "deadlineTermination": false,
+        "cancellationAccepted": false,
+        "preconditionBlocked": false,
+        "requiredFinalizersSucceeded": false
+      },
+      "expected": {
+        "outcome": "failed",
+        "finalizationStatus": "incomplete",
+        "retainScopeHold": false
+      },
+      "reason": "A failed required finalizer can make finalization incomplete even if no remote cloud effect remains unresolved.",
+      "contractRefs": [
+        "model.md §4",
+        "api.md §2"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,99 @@
+apiVersion: assessment/v0.2
+name: Checkout alarm notification delivery
+description: Verify an alarm transition and timely receipt by the explicitly bound probe receiver.
+inputs:
+  type: object
+  additionalProperties: false
+  required: [templateId, alarmArn, topicArn, receiverId]
+  properties:
+    templateId: {type: string, minLength: 1}
+    alarmArn: {type: string, minLength: 1}
+    topicArn: {type: string, minLength: 1}
+    receiverId: {type: string, minLength: 1}
+bindings:
+  aws: {kind: connection, capability: aws_assessment_scope}
+  receiver: {kind: connection, capability: dedicated_notification_receiver}
+policies:
+  timeoutSeconds: 600
+  finalizationTimeoutSeconds: 180
+  concurrency: queue_per_deployment
+steps:
+  capture:
+    uses: events/capture.open@1
+    timeoutSeconds: 30
+    with:
+      connection: "${{ bindings.receiver }}"
+      receiverId: "${{ inputs.receiverId }}"
+      topicArn: "${{ inputs.topicArn }}"
+      leaseSeconds: 900
+  baseline:
+    uses: aws/cloudwatch.alarm.read@1
+    timeoutSeconds: 30
+    with:
+      connection: "${{ bindings.aws }}"
+      alarmArn: "${{ inputs.alarmArn }}"
+  baseline_ok:
+    needs: [baseline]
+    uses: core/assert@1
+    assessmentRole: precondition
+    timeoutSeconds: 5
+    with:
+      observation: "${{ steps.baseline.outputs.observation }}"
+      proof: complete
+      expect: value.state == "OK"
+  inject:
+    needs: [capture, baseline_ok]
+    uses: aws/fis.start@1
+    timeoutSeconds: 45
+    with:
+      connection: "${{ bindings.aws }}"
+      templateId: "${{ inputs.templateId }}"
+  collect:
+    needs: [inject]
+    after: settled
+    uses: events/capture.collect-alarm@1
+    timeoutSeconds: 300
+    with:
+      captureStep: "${{ steps.capture.ref }}"
+      injectionStep: "${{ steps.inject.ref }}"
+      alarmArn: "${{ inputs.alarmArn }}"
+      topicArn: "${{ inputs.topicArn }}"
+      receiverId: "${{ inputs.receiverId }}"
+      transitionWindowSeconds: 180
+      receiptDeadlineSeconds: 60
+      collectionGraceSeconds: 30
+  alarm_transition:
+    needs: [collect]
+    after: settled
+    uses: core/assert@1
+    assessmentRole: criterion
+    timeoutSeconds: 5
+    with:
+      observation: "${{ steps.collect.outputs.transition }}"
+      proof: witness
+      operator: exists
+  notification_received:
+    needs: [collect]
+    after: settled
+    uses: core/assert@1
+    assessmentRole: criterion
+    timeoutSeconds: 5
+    with:
+      observation: "${{ steps.collect.outputs.receipt }}"
+      proof: witness
+      operator: exists
+finally:
+  stop_injection:
+    uses: aws/fis.ensure-stopped@1
+    after: settled
+    timeoutSeconds: 120
+    with:
+      connection: "${{ bindings.aws }}"
+      step: "${{ steps.inject.ref }}"
+  close_capture:
+    needs: [stop_injection]
+    after: settled
+    uses: events/capture.close@1
+    timeoutSeconds: 30
+    with:
+      step: "${{ steps.capture.ref }}"

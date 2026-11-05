@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/assessment/v0.2/scenario.schema.json",
+  "title": "Assessment scenario authoring document",
+  "description": "Structural authoring contract. Publication additionally validates expressions, DAGs, operation schemas, trusted capabilities and immutable dependency locks.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "name", "inputs", "bindings", "policies", "steps"],
+  "properties": {
+    "apiVersion": {"const": "assessment/v0.2"},
+    "name": {"type": "string", "minLength": 1, "maxLength": 100},
+    "description": {"type": "string", "maxLength": 2000},
+    "inputs": {"$ref": "#/$defs/InputSchema"},
+    "bindings": {
+      "type": "object",
+      "propertyNames": {"$ref": "#/$defs/Key"},
+      "additionalProperties": {"$ref": "#/$defs/Binding"}
+    },
+    "policies": {"$ref": "#/$defs/Policies"},
+    "steps": {"$ref": "#/$defs/StepMap"},
+    "finally": {"$ref": "#/$defs/StepMap"}
+  },
+  "$defs": {
+    "Key": {"type": "string", "pattern": "^[a-z][a-z0-9_]{0,63}$"},
+    "PropertyName": {"type": "string", "pattern": "^[a-z][a-zA-Z0-9_]{0,63}$"},
+    "InputSchema": {
+      "type": "object",
+      "required": ["type", "properties", "required", "additionalProperties"],
+      "properties": {
+        "type": {"const": "object"},
+        "properties": {"type": "object", "propertyNames": {"$ref": "#/$defs/PropertyName"}},
+        "required": {"type": "array", "items": {"$ref": "#/$defs/PropertyName"}, "uniqueItems": true},
+        "additionalProperties": {"const": false}
+      }
+    },
+    "Binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "capability"],
+      "properties": {
+        "kind": {"const": "connection"},
+        "capability": {"type": "string", "minLength": 1, "maxLength": 100}
+      }
+    },
+    "Policies": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["timeoutSeconds", "finalizationTimeoutSeconds", "concurrency"],
+      "properties": {
+        "timeoutSeconds": {"type": "integer", "minimum": 1, "maximum": 86400},
+        "finalizationTimeoutSeconds": {"type": "integer", "minimum": 1, "maximum": 3600},
+        "concurrency": {"enum": ["queue_per_deployment", "reject_per_deployment"]}
+      }
+    },
+    "Retry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["maxAttempts", "on"],
+      "properties": {
+        "maxAttempts": {"type": "integer", "minimum": 1, "maximum": 5},
+        "on": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"enum": ["throttled", "transient_read_failure"]}
+        }
+      }
+    },
+    "StepMap": {
+      "type": "object",
+      "minProperties": 1,
+      "maxProperties": 100,
+      "propertyNames": {"$ref": "#/$defs/Key"},
+      "additionalProperties": {"$ref": "#/$defs/Step"}
+    },
+    "Step": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["uses", "with", "timeoutSeconds"],
+      "properties": {
+        "uses": {"type": "string", "pattern": "^[a-z][a-z0-9_./-]*@[0-9]+$"},
+        "with": {"type": "object"},
+        "needs": {"type": "array", "items": {"$ref": "#/$defs/Key"}, "uniqueItems": true},
+        "after": {"enum": ["success", "settled"]},
+        "if": {"type": "string", "minLength": 1, "maxLength": 4096},
+        "enabledWhen": {"type": "string", "minLength": 1, "maxLength": 4096},
+        "assessmentRole": {"enum": ["precondition", "criterion", "informational"]},
+        "timeoutSeconds": {"type": "integer", "minimum": 1, "maximum": 86400},
+        "retry": {"$ref": "#/$defs/Retry"}
+      }
+    }
+  }
+}

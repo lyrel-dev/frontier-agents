@@ -1,0 +1,32 @@
+erDiagram
+    direction TB
+    EXPERIMENT_TEMPLATE o|--o{ EXPERIMENT_RUN : source
+    EXPERIMENT_RUN ||--|{ ACTION_EXECUTION : contains
+    CATALOG_ACTION ||--o{ ACTION_EXECUTION : identifies
+    ACTION_EXECUTION ||--o{ ACTION_DEPENDENCY : predecessor
+    ACTION_EXECUTION ||--o{ ACTION_DEPENDENCY : successor
+    EXPERIMENT_RUN {
+        string experimentKey PK
+        string arn
+        string sourceTemplateId
+        string status
+        datetime creationTime
+        datetime startTime
+        datetime endTime
+        json configSnapshot
+    }
+    ACTION_EXECUTION {
+        string experimentKey PK, FK
+        string actionName PK
+        string actionId FK
+        string status
+        string reason
+        datetime startTime
+        datetime endTime
+        json parameters
+    }
+    ACTION_DEPENDENCY {
+        string experimentKey PK, FK
+        string predecessorActionName PK, FK
+        string successorActionName PK, FK
+    }

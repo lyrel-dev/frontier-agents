@@ -1,0 +1,637 @@
+{
+  "schema": "frontier-fis-revised-documentation/v1",
+  "sourceCommit": "1b5ae1bd11fc61a2701d74ea89ccce2721889ef0",
+  "packagedOn": "2026-11-05",
+  "scope": "docs/ and diagrams/ only; UI and current revision validation are owned by the revised package root",
+  "reviewCorrections": [
+    {
+      "id": "DOC01",
+      "targetPath": "docs/suggested/adapters.md",
+      "scope": "events/capture.collect-alarm product proposal only; no AWS fact changed",
+      "change": "Permit early settlement only after both validated positive witnesses exist; preserve actual collection, coverage and window closure; absence still waits for the applicable window/grace and sufficient proof.",
+      "reason": "Align the adapter contract with generic witness semantics and the positive-notification demonstration without fabricating complete or closed evidence."
+    }
+  ],
+  "policy": {
+    "sourceFacts": "Preserve reviewed provider facts and complete model/API/adapter prose; document semantic clarifications separately from YAML metadata, navigation and explicit package status adaptations.",
+    "documents": "All prose documents are Obsidian Markdown with unique YAML metadata.",
+    "historicalEvidence": "Baseline reviews, browser observations and PDF provenance are labelled historical; revised validation is separate.",
+    "pdf": "No duplicate PDF or mutable PDF renderer; source artifacts remain available through commit-pinned links.",
+    "code": "Reference checks and example contracts are not a scheduler, API server, CEL evaluator or AWS adapter."
+  },
+  "checks": {
+    "markdownNotesInOwnedDirectories": 27,
+    "canonicalDiagrams": 8,
+    "diagramNoteParity": "exact source text, including final newline",
+    "initialAndSuggestedSvgParity": "all 8 SVGs identical to baseline bytes",
+    "completeExampleNoteParity": 2,
+    "officialFisSourceCount": 53,
+    "initialReportSections": 14,
+    "modelAndApiBodyParity": "identical after removing YAML metadata and normalizing link destinations",
+    "adapterBodyParity": "identical after reversing documented DOC01 positive-witness clarification and normalizing YAML metadata/link destinations",
+    "initialReportBodyParity": "identical after removing YAML metadata and reversing documented navigation changes",
+    "preservedImportedFiles": 29,
+    "workflowReferenceTests": 68,
+    "independentDecisionCases": 39,
+    "executedWorkflows": 0,
+    "liveAwsCalls": 0
+  },
+  "imports": [
+    {
+      "sourcePath": "aws/fis/analysis/report.md",
+      "sourceSha256": "97b93fa00692d353641e0b84535053a4ffe4c21624c1781d52c6323cfce79917",
+      "targetPath": "docs/initial/report.md",
+      "transform": "metadata-and-navigation",
+      "targetSha256": "e95de5244dd50322bb1c12608da57b57deb19b2d7a2d7e9a8b767b89e1c89dba"
+    },
+    {
+      "sourcePath": "aws/fis/analysis/sources.json",
+      "sourceSha256": "52bd19fad58094459a8fa1018ce94694a5e613c72ac9c5587fb39b6c4d2f70d4",
+      "targetPath": "docs/initial/sources.json",
+      "transform": "byte-preserved",
+      "targetSha256": "52bd19fad58094459a8fa1018ce94694a5e613c72ac9c5587fb39b6c4d2f70d4"
+    },
+    {
+      "sourcePath": "aws/fis/analysis/REVIEW.md",
+      "sourceSha256": "27601e27f3fbb28f4e126b09bb4be6c696bea350697a9d62c6f8cedaa18a4b5c",
+      "targetPath": "docs/review/baseline-review.md",
+      "transform": "metadata-and-navigation",
+      "targetSha256": "f2723ce64133ca37417b22c0445eb2fd789b86133867077f3d75131cc15a3838"
+    },
+    {
+      "sourcePath": "aws/fis/analysis/QUALITY_REVIEW.md",
+      "sourceSha256": "23d5d445ff8e0c9d7e90c8ee20c3288f852b434249f1946631a9b033e85f41d2",
+      "targetPath": "docs/review/quality-review.md",
+      "transform": "metadata-and-navigation",
+      "targetSha256": "35f98fe5a6ba427f4da377495a85f11ab883713367a461f847162a5f15bef71f"
+    },
+    {
+      "sourcePath": "aws/fis/analysis/VALIDATION.md",
+      "sourceSha256": "ee7317d503b0a1d9396791af74eaa7466647c17507491603f7e3b18d5bdde499",
+      "targetPath": "docs/review/baseline-validation.md",
+      "transform": "metadata-and-navigation",
+      "targetSha256": "3e2e2cedbd7aee44f5c0ef8f86b5ba120d0d852d5f7592d3bdf8310580cc07f9"
+    },
+    {
+      "sourcePath": "aws/fis/analysis/preview.jpg",
+      "sourceSha256": "54bee1f3aa2348eb5c4556a178bfee199bb0a0be1f484a6bf74901bd09b832d7",
+      "targetPath": "docs/review/assets/initial-overview.jpg",
+      "transform": "byte-preserved",
+      "targetSha256": "54bee1f3aa2348eb5c4556a178bfee199bb0a0be1f484a6bf74901bd09b832d7"
+    },
+    {
+      "sourcePath": "aws/fis/analysis/qa/stop-intervention.jpg",
+      "sourceSha256": "7053f6f87c0fd61615554988097973f5fd6283f8b6dd18554b953943f52ad161",
+      "targetPath": "docs/review/assets/stop-intervention.jpg",
+      "transform": "byte-preserved",
+      "targetSha256": "7053f6f87c0fd61615554988097973f5fd6283f8b6dd18554b953943f52ad161"
+    },
+    {
+      "sourcePath": "aws/fis/analysis/workflow/README.md",
+      "sourceSha256": "36a145416657f547d311baa9cbc4ee619fee1d3af2b903f7d6baab8060ff1d16",
+      "targetPath": "docs/suggested/README.md",
+      "transform": "metadata-and-navigation",
+      "targetSha256": "8aff7a6b830da7a32f6388e5a6d4acee184ed2d45b4829f66a7d0d02d286ff33"
+    },
+    {
+      "sourcePath": "aws/fis/analysis/workflow/model.md",
+      "sourceSha256": "7fcbbe59228ef983dfd5cb5dfb2e24a2f75603e36b7bba5fcfe49d5cb719b057",
+      "targetPath": "docs/suggested/model.md",
+      "transform": "metadata-and-navigation",
+      "targetSha256": "6857575cf0c25abbb992b022cec314fae76d393584bca617e1a1761ec3c65dc6"
+    },
+    {
+      "sourcePath": "aws/fis/analysis/workflow/api.md",
+      "sourceSha256": "b80dd4fb48d0fc12ff5327dbb59770e566854f97335f799bcd35e6c381a7343b",
+      "targetPath": "docs/suggested/api.md",
+      "transform": "metadata-and-navigation",
+      "targetSha256": "a5b950ca51beccbcdf0c1a4de4534152ba30bf42d751aa5ab116723a6bb2063d"
+    },
+    {
+      "sourcePath": "aws/fis/analysis/workflow/adapters.md",
+      "sourceSha256": "933ae413a4829c67dd762c849e4ea7b0ddcd9931b12d5934c3e0c4dc0af1f7d8",
+      "targetPath": "docs/suggested/adapters.md",
+      "transform": "documented-semantic-clarification-and-navigation",
+      "reviewCorrection": "DOC01",
+      "targetSha256": "db746b96e05ff913409f3c8ccdae2802fd3795c286f154f49e1885120794409f"
+    },
+    {
+      "sourcePath": "aws/fis/analysis/workflow/scenario.schema.json",
+      "sourceSha256": "af4c83e3eb4ebe6e0a1cd0a6ee2bcaaee8640c181a4b8bbb22bca10f1600a9e1",
+      "targetPath": "docs/suggested/scenario.schema.json",
+      "transform": "byte-preserved",
+      "targetSha256": "af4c83e3eb4ebe6e0a1cd0a6ee2bcaaee8640c181a4b8bbb22bca10f1600a9e1"
+    },
+    {
+      "sourcePath": "aws/fis/analysis/workflow/operation-catalog.json",
+      "sourceSha256": "7fb346530b110a1a388e0fb07751eab9dd0249bb47d5d39f058d24764f1e2ff6",
+      "targetPath": "docs/suggested/operation-catalog.json",
+      "transform": "byte-preserved",
+      "targetSha256": "7fb346530b110a1a388e0fb07751eab9dd0249bb47d5d39f058d24764f1e2ff6"
+    },
+    {
+      "sourcePath": "aws/fis/analysis/workflow/review-cases.json",
+      "sourceSha256": "47f58f4fa7103c34ec1f8c235c78fbf1ef2de635bf18f4fdedd62c1b818613eb",
+      "targetPath": "docs/suggested/review-cases.json",
+      "transform": "byte-preserved",
+      "targetSha256": "47f58f4fa7103c34ec1f8c235c78fbf1ef2de635bf18f4fdedd62c1b818613eb"
+    },
+    {
+      "sourcePath": "aws/fis/analysis/workflow/contract.py",
+      "sourceSha256": "486bdedfe43211cb21602b867e049b319c44a1303105a4d46bc6f89617a4a0c5",
+      "targetPath": "docs/suggested/contract.py",
+      "transform": "shared-diagram-path-adaptation",
+      "targetSha256": "2eb47473a5aaf5d9f143d7f76343cbe2bb8b447041dd3b92b3f6af85c4e4911f"
+    },
+    {
+      "sourcePath": "aws/fis/analysis/workflow/tests/test_contract.py",
+      "sourceSha256": "da75ca47994a43ff09c6d06c8f27168e92c16ebcca048e465e518fec36a293c5",
+      "targetPath": "docs/suggested/tests/test_contract.py",
+      "transform": "byte-preserved",
+      "targetSha256": "da75ca47994a43ff09c6d06c8f27168e92c16ebcca048e465e518fec36a293c5"
+    },
+    {
+      "sourcePath": "aws/fis/analysis/workflow/tools/README.md",
+      "sourceSha256": "292e0a471a8bf70b64eedc9ce81414a37adde0ed8ec2c211ec9bff8da79c7845",
+      "targetPath": "docs/suggested/tools/README.md",
+      "transform": "metadata-and-navigation",
+      "targetSha256": "93abaf9181e29b2785355faf6eede4953485d355a2971abee660005741731e88"
+    },
+    {
+      "sourcePath": "aws/fis/analysis/workflow/tools/render-diagrams.mjs",
+      "sourceSha256": "e7aafb9bf4b060243aed7951ca0d2245a26ef79b441584bcde1bda17a2bba48f",
+      "targetPath": "docs/suggested/tools/render-diagrams.mjs",
+      "transform": "shared-diagram-path-adaptation",
+      "targetSha256": "f3f747bf94e8ba6564841352f73e97a99c1795727e0405c989302d4d2f0cf04d"
+    },
+    {
+      "sourcePath": "aws/fis/analysis/workflow/tools/package.json",
+      "sourceSha256": "4146bc48662ab561b91441c646cf2ff64a37cb182076ff8fffe83b6062bdf730",
+      "targetPath": "docs/suggested/tools/package.json",
+      "transform": "byte-preserved",
+      "targetSha256": "4146bc48662ab561b91441c646cf2ff64a37cb182076ff8fffe83b6062bdf730"
+    },
+    {
+      "sourcePath": "aws/fis/analysis/workflow/tools/package-lock.json",
+      "sourceSha256": "9b6e16d7af7964352fd25482fbfc655795a49552b7031be0334e35e4fac9d5bf",
+      "targetPath": "docs/suggested/tools/package-lock.json",
+      "transform": "byte-preserved",
+      "targetSha256": "9b6e16d7af7964352fd25482fbfc655795a49552b7031be0334e35e4fac9d5bf"
+    },
+    {
+      "sourcePath": "aws/fis/analysis/workflow/examples/alarm-delivery.yaml",
+      "sourceSha256": "6eb560efe44bb04bcc44b3a4ef9321aee6fcb586524d4ca51ea353086cb37055",
+      "targetPath": "docs/suggested/examples/alarm-delivery.yaml",
+      "transform": "byte-preserved",
+      "targetSha256": "6eb560efe44bb04bcc44b3a4ef9321aee6fcb586524d4ca51ea353086cb37055"
+    },
+    {
+      "sourcePath": "aws/fis/analysis/workflow/examples/alarm-delivery.lock.json",
+      "sourceSha256": "f6db52eb022e29c36a6d0d0dbbf478a52ca5a880f927a2caeda4aa703151503e",
+      "targetPath": "docs/suggested/examples/alarm-delivery.lock.json",
+      "transform": "byte-preserved",
+      "targetSha256": "f6db52eb022e29c36a6d0d0dbbf478a52ca5a880f927a2caeda4aa703151503e"
+    },
+    {
+      "sourcePath": "aws/fis/analysis/workflow/examples/logs-error-budget.yaml",
+      "sourceSha256": "a1559c4151a39eb8f148f9841a0335a158bc7a3c596895cff30de237f96ae691",
+      "targetPath": "docs/suggested/examples/logs-error-budget.yaml",
+      "transform": "byte-preserved",
+      "targetSha256": "a1559c4151a39eb8f148f9841a0335a158bc7a3c596895cff30de237f96ae691"
+    },
+    {
+      "sourcePath": "aws/fis/analysis/workflow/examples/logs-error-budget.lock.json",
+      "sourceSha256": "ae40e0f0087d413b632fa26234c536e93a14129db5866c396204fd773427403c",
+      "targetPath": "docs/suggested/examples/logs-error-budget.lock.json",
+      "transform": "byte-preserved",
+      "targetSha256": "ae40e0f0087d413b632fa26234c536e93a14129db5866c396204fd773427403c"
+    },
+    {
+      "sourcePath": "aws/fis/analysis/diagrams/01_execution.mmd",
+      "sourceSha256": "4bf200418711e9ebde0fb23422a3950268f95a2f3dcaa50fd6e95b864ba8c7a2",
+      "targetPath": "diagrams/initial/01_execution.mmd",
+      "transform": "byte-preserved",
+      "targetSha256": "4bf200418711e9ebde0fb23422a3950268f95a2f3dcaa50fd6e95b864ba8c7a2"
+    },
+    {
+      "sourcePath": "aws/fis/analysis/diagrams/01_execution.svg",
+      "sourceSha256": "43b1a7e0a043d3d099a12244c63dd041205a797a153d4cf25dfe912cec26e618",
+      "targetPath": "diagrams/initial/01_execution.svg",
+      "transform": "byte-preserved",
+      "targetSha256": "43b1a7e0a043d3d099a12244c63dd041205a797a153d4cf25dfe912cec26e618"
+    },
+    {
+      "sourcePath": "aws/fis/analysis/diagrams/02_catalog_templates.mmd",
+      "sourceSha256": "d879b54afd169d5ebc9d26d2b6e29f21c73fa0d508de03dbd8e7760b45b0f868",
+      "targetPath": "diagrams/initial/02_catalog_templates.mmd",
+      "transform": "byte-preserved",
+      "targetSha256": "d879b54afd169d5ebc9d26d2b6e29f21c73fa0d508de03dbd8e7760b45b0f868"
+    },
+    {
+      "sourcePath": "aws/fis/analysis/diagrams/02_catalog_templates.svg",
+      "sourceSha256": "8a0bcdd1adba735609ed173e84c59b2278b514b748904749b59f6d4abf81379f",
+      "targetPath": "diagrams/initial/02_catalog_templates.svg",
+      "transform": "byte-preserved",
+      "targetSha256": "8a0bcdd1adba735609ed173e84c59b2278b514b748904749b59f6d4abf81379f"
+    },
+    {
+      "sourcePath": "aws/fis/analysis/diagrams/03_targeting.mmd",
+      "sourceSha256": "380fbb8c085a1919a12fea021346af7519db4882a1b2bdfde701b1b8767bdef1",
+      "targetPath": "diagrams/initial/03_targeting.mmd",
+      "transform": "byte-preserved",
+      "targetSha256": "380fbb8c085a1919a12fea021346af7519db4882a1b2bdfde701b1b8767bdef1"
+    },
+    {
+      "sourcePath": "aws/fis/analysis/diagrams/03_targeting.svg",
+      "sourceSha256": "b037e3c3c50b4aeade8cc25ad0444d21d7e75ff5d095beab56c42823e3d3bb66",
+      "targetPath": "diagrams/initial/03_targeting.svg",
+      "transform": "byte-preserved",
+      "targetSha256": "b037e3c3c50b4aeade8cc25ad0444d21d7e75ff5d095beab56c42823e3d3bb66"
+    },
+    {
+      "sourcePath": "aws/fis/analysis/diagrams/04_evidence_reports.mmd",
+      "sourceSha256": "e79b65a4720baf4316b2a28bc206175593d8def416daf19b720dda7f17dfaa70",
+      "targetPath": "diagrams/initial/04_evidence_reports.mmd",
+      "transform": "byte-preserved",
+      "targetSha256": "e79b65a4720baf4316b2a28bc206175593d8def416daf19b720dda7f17dfaa70"
+    },
+    {
+      "sourcePath": "aws/fis/analysis/diagrams/04_evidence_reports.svg",
+      "sourceSha256": "cee3149f62daa449525e5621561bfe182cd5f473c28ec694db047ee4af555a67",
+      "targetPath": "diagrams/initial/04_evidence_reports.svg",
+      "transform": "byte-preserved",
+      "targetSha256": "cee3149f62daa449525e5621561bfe182cd5f473c28ec694db047ee4af555a67"
+    },
+    {
+      "sourcePath": "aws/fis/analysis/diagrams/05_assessments.mmd",
+      "sourceSha256": "7a2add98566b27d1d0f375e180f44247b4382debeb6baa8ec631fa04c5711dd3",
+      "targetPath": "diagrams/initial/05_assessments.mmd",
+      "transform": "byte-preserved",
+      "targetSha256": "7a2add98566b27d1d0f375e180f44247b4382debeb6baa8ec631fa04c5711dd3"
+    },
+    {
+      "sourcePath": "aws/fis/analysis/diagrams/05_assessments.svg",
+      "sourceSha256": "c9f3be5d1554f6b8547431d35bb806e9a665b158ef33b64f33248a52a0cbe9cb",
+      "targetPath": "diagrams/initial/05_assessments.svg",
+      "transform": "byte-preserved",
+      "targetSha256": "c9f3be5d1554f6b8547431d35bb806e9a665b158ef33b64f33248a52a0cbe9cb"
+    },
+    {
+      "sourcePath": "aws/fis/analysis/workflow/diagrams/01_entities.mmd",
+      "sourceSha256": "83859382794c7e978bcad129945a185ec912d76cabd7150ea3149e3ce0eff476",
+      "targetPath": "diagrams/suggested/01_entities.mmd",
+      "transform": "byte-preserved",
+      "targetSha256": "83859382794c7e978bcad129945a185ec912d76cabd7150ea3149e3ce0eff476"
+    },
+    {
+      "sourcePath": "aws/fis/analysis/workflow/diagrams/01_entities.svg",
+      "sourceSha256": "51fcc7ca92026fd70994d668945c27f3e003459b16bcfa1b0ee0c6bc1baab968",
+      "targetPath": "diagrams/suggested/01_entities.svg",
+      "transform": "byte-preserved",
+      "targetSha256": "51fcc7ca92026fd70994d668945c27f3e003459b16bcfa1b0ee0c6bc1baab968"
+    },
+    {
+      "sourcePath": "aws/fis/analysis/workflow/diagrams/02_owned_values.mmd",
+      "sourceSha256": "4903d1df083bf24aa86c6cdccb6b915f5ed7e2d592298a65c28ada3457f87458",
+      "targetPath": "diagrams/suggested/02_owned_values.mmd",
+      "transform": "byte-preserved",
+      "targetSha256": "4903d1df083bf24aa86c6cdccb6b915f5ed7e2d592298a65c28ada3457f87458"
+    },
+    {
+      "sourcePath": "aws/fis/analysis/workflow/diagrams/02_owned_values.svg",
+      "sourceSha256": "9d8d527c8956c4c47bf8bda90a14f03bddb7dd09b5c86bd5e230a3632685ebc0",
+      "targetPath": "diagrams/suggested/02_owned_values.svg",
+      "transform": "byte-preserved",
+      "targetSha256": "9d8d527c8956c4c47bf8bda90a14f03bddb7dd09b5c86bd5e230a3632685ebc0"
+    },
+    {
+      "sourcePath": "aws/fis/analysis/workflow/diagrams/03_lifecycle.mmd",
+      "sourceSha256": "0cd1834c78bb3c5f10e3e14cae3c90a542f5f3b3f40b3c77ca211ddf228ffcb7",
+      "targetPath": "diagrams/suggested/03_lifecycle.mmd",
+      "transform": "byte-preserved",
+      "targetSha256": "0cd1834c78bb3c5f10e3e14cae3c90a542f5f3b3f40b3c77ca211ddf228ffcb7"
+    },
+    {
+      "sourcePath": "aws/fis/analysis/workflow/diagrams/03_lifecycle.svg",
+      "sourceSha256": "6b1b0bbed8fe1cae5c29e2ac302034d32fe8ae7c7ddc9015c5e9172df696f77e",
+      "targetPath": "diagrams/suggested/03_lifecycle.svg",
+      "transform": "byte-preserved",
+      "targetSha256": "6b1b0bbed8fe1cae5c29e2ac302034d32fe8ae7c7ddc9015c5e9172df696f77e"
+    },
+    {
+      "sourcePath": "aws/fis/analysis/workflow/diagrams/manifest.json",
+      "sourceSha256": "7423852888bc402d7ef51eacedba6fc612bf1c494d93e0f8d642c8fd0653a531",
+      "targetPath": "diagrams/suggested/manifest.json",
+      "transform": "renderer-provenance-updated",
+      "targetSha256": "a1d0baea49921052348a8806e428e0ba385ddb1f3d4e9b91ff6acf5e3b20e4a8"
+    }
+  ],
+  "files": [
+    {
+      "path": "docs/README.md",
+      "sha256": "e1d3d4015a1329f89219e3e5756fc24ef2d2a9430568ae788df19b7e9db6a833",
+      "bytes": 3652
+    },
+    {
+      "path": "docs/initial/README.md",
+      "sha256": "7d1c6bbaf8482e78b102a4cee183437b353df71f4d4acfcd54489e3efa0bd335",
+      "bytes": 2017
+    },
+    {
+      "path": "docs/initial/REVIEW.md",
+      "sha256": "bbb98bd6c3df3962fb4a29f9a18eb4768f65a11e9fc4d6fe8dea1148b33938c7",
+      "bytes": 1562
+    },
+    {
+      "path": "docs/initial/report.md",
+      "sha256": "e95de5244dd50322bb1c12608da57b57deb19b2d7a2d7e9a8b767b89e1c89dba",
+      "bytes": 49210
+    },
+    {
+      "path": "docs/initial/sources.json",
+      "sha256": "52bd19fad58094459a8fa1018ce94694a5e613c72ac9c5587fb39b6c4d2f70d4",
+      "bytes": 15040
+    },
+    {
+      "path": "docs/initial/sources.md",
+      "sha256": "43405eb6fe3190e5395be03b91e25c4ce406485ec4b6d86e8c107368356fb935",
+      "bytes": 9248
+    },
+    {
+      "path": "docs/review/assets/initial-overview.jpg",
+      "sha256": "54bee1f3aa2348eb5c4556a178bfee199bb0a0be1f484a6bf74901bd09b832d7",
+      "bytes": 106640
+    },
+    {
+      "path": "docs/review/assets/stop-intervention.jpg",
+      "sha256": "7053f6f87c0fd61615554988097973f5fd6283f8b6dd18554b953943f52ad161",
+      "bytes": 55300
+    },
+    {
+      "path": "docs/review/baseline-review.md",
+      "sha256": "f2723ce64133ca37417b22c0445eb2fd789b86133867077f3d75131cc15a3838",
+      "bytes": 10512
+    },
+    {
+      "path": "docs/review/baseline-validation.md",
+      "sha256": "3e2e2cedbd7aee44f5c0ef8f86b5ba120d0d852d5f7592d3bdf8310580cc07f9",
+      "bytes": 12465
+    },
+    {
+      "path": "docs/review/quality-review.md",
+      "sha256": "35f98fe5a6ba427f4da377495a85f11ab883713367a461f847162a5f15bef71f",
+      "bytes": 15933
+    },
+    {
+      "path": "docs/suggested/.gitignore",
+      "sha256": "7514384fcc3e7aa99b3161570e609007fb7e85b7a711de80e74e85ff84409bc8",
+      "bytes": 43
+    },
+    {
+      "path": "docs/suggested/README.md",
+      "sha256": "8aff7a6b830da7a32f6388e5a6d4acee184ed2d45b4829f66a7d0d02d286ff33",
+      "bytes": 5129
+    },
+    {
+      "path": "docs/suggested/adapters.md",
+      "sha256": "db746b96e05ff913409f3c8ccdae2802fd3795c286f154f49e1885120794409f",
+      "bytes": 15293
+    },
+    {
+      "path": "docs/suggested/api.md",
+      "sha256": "a5b950ca51beccbcdf0c1a4de4534152ba30bf42d751aa5ab116723a6bb2063d",
+      "bytes": 16518
+    },
+    {
+      "path": "docs/suggested/contract.py",
+      "sha256": "2eb47473a5aaf5d9f143d7f76343cbe2bb8b447041dd3b92b3f6af85c4e4911f",
+      "bytes": 21400
+    },
+    {
+      "path": "docs/suggested/examples/README.md",
+      "sha256": "0113f9e006e3c92bd5e7eb0d28958b47deb0d72e4547aa8a55ae82a53bead743",
+      "bytes": 1973
+    },
+    {
+      "path": "docs/suggested/examples/alarm-delivery.lock.json",
+      "sha256": "f6db52eb022e29c36a6d0d0dbbf478a52ca5a880f927a2caeda4aa703151503e",
+      "bytes": 3503
+    },
+    {
+      "path": "docs/suggested/examples/alarm-delivery.md",
+      "sha256": "bae271da9bc3e686dc1f5144cee3e2a6d672532d0e64e8baeeeec366de82dff0",
+      "bytes": 4862
+    },
+    {
+      "path": "docs/suggested/examples/alarm-delivery.yaml",
+      "sha256": "6eb560efe44bb04bcc44b3a4ef9321aee6fcb586524d4ca51ea353086cb37055",
+      "bytes": 2865
+    },
+    {
+      "path": "docs/suggested/examples/logs-error-budget.lock.json",
+      "sha256": "ae40e0f0087d413b632fa26234c536e93a14129db5866c396204fd773427403c",
+      "bytes": 1719
+    },
+    {
+      "path": "docs/suggested/examples/logs-error-budget.md",
+      "sha256": "5d86d404bd58bc10f8a9de54c28f95bbdf73674d06908b9e11a2243322a4f5cc",
+      "bytes": 3556
+    },
+    {
+      "path": "docs/suggested/examples/logs-error-budget.yaml",
+      "sha256": "a1559c4151a39eb8f148f9841a0335a158bc7a3c596895cff30de237f96ae691",
+      "bytes": 1682
+    },
+    {
+      "path": "docs/suggested/model.md",
+      "sha256": "6857575cf0c25abbb992b022cec314fae76d393584bca617e1a1761ec3c65dc6",
+      "bytes": 29224
+    },
+    {
+      "path": "docs/suggested/operation-catalog.json",
+      "sha256": "7fb346530b110a1a388e0fb07751eab9dd0249bb47d5d39f058d24764f1e2ff6",
+      "bytes": 50009
+    },
+    {
+      "path": "docs/suggested/review-cases.json",
+      "sha256": "47f58f4fa7103c34ec1f8c235c78fbf1ef2de635bf18f4fdedd62c1b818613eb",
+      "bytes": 26053
+    },
+    {
+      "path": "docs/suggested/scenario.schema.json",
+      "sha256": "af4c83e3eb4ebe6e0a1cd0a6ee2bcaaee8640c181a4b8bbb22bca10f1600a9e1",
+      "bytes": 3719
+    },
+    {
+      "path": "docs/suggested/tests/test_contract.py",
+      "sha256": "da75ca47994a43ff09c6d06c8f27168e92c16ebcca048e465e518fec36a293c5",
+      "bytes": 9977
+    },
+    {
+      "path": "docs/suggested/tools/README.md",
+      "sha256": "93abaf9181e29b2785355faf6eede4953485d355a2971abee660005741731e88",
+      "bytes": 1656
+    },
+    {
+      "path": "docs/suggested/tools/package-lock.json",
+      "sha256": "9b6e16d7af7964352fd25482fbfc655795a49552b7031be0334e35e4fac9d5bf",
+      "bytes": 590
+    },
+    {
+      "path": "docs/suggested/tools/package.json",
+      "sha256": "4146bc48662ab561b91441c646cf2ff64a37cb182076ff8fffe83b6062bdf730",
+      "bytes": 188
+    },
+    {
+      "path": "docs/suggested/tools/render-diagrams.mjs",
+      "sha256": "f3f747bf94e8ba6564841352f73e97a99c1795727e0405c989302d4d2f0cf04d",
+      "bytes": 3825
+    },
+    {
+      "path": "diagrams/README.md",
+      "sha256": "ce6fb7315fa7ccac53a801125c5c69d4aa11be0402ebed07c0f4d66aeced925a",
+      "bytes": 1371
+    },
+    {
+      "path": "diagrams/initial/01_execution.md",
+      "sha256": "ac19ae5ac8be0d7c514c66736c3c3147ea43493a70e258e2784ec5db4b61ade5",
+      "bytes": 2622
+    },
+    {
+      "path": "diagrams/initial/01_execution.mmd",
+      "sha256": "4bf200418711e9ebde0fb23422a3950268f95a2f3dcaa50fd6e95b864ba8c7a2",
+      "bytes": 945
+    },
+    {
+      "path": "diagrams/initial/01_execution.svg",
+      "sha256": "43b1a7e0a043d3d099a12244c63dd041205a797a153d4cf25dfe912cec26e618",
+      "bytes": 15087
+    },
+    {
+      "path": "diagrams/initial/02_catalog_templates.md",
+      "sha256": "b0e9d1b4ba0cb5a61e2b234cad5895b41030df497f621d08218044f95c8ae092",
+      "bytes": 2497
+    },
+    {
+      "path": "diagrams/initial/02_catalog_templates.mmd",
+      "sha256": "d879b54afd169d5ebc9d26d2b6e29f21c73fa0d508de03dbd8e7760b45b0f868",
+      "bytes": 728
+    },
+    {
+      "path": "diagrams/initial/02_catalog_templates.svg",
+      "sha256": "8a0bcdd1adba735609ed173e84c59b2278b514b748904749b59f6d4abf81379f",
+      "bytes": 18099
+    },
+    {
+      "path": "diagrams/initial/03_targeting.md",
+      "sha256": "6202e232be06f3625e7487324cc63af496728e4a2091bf8bad0bcba33e4dddde",
+      "bytes": 2736
+    },
+    {
+      "path": "diagrams/initial/03_targeting.mmd",
+      "sha256": "380fbb8c085a1919a12fea021346af7519db4882a1b2bdfde701b1b8767bdef1",
+      "bytes": 1020
+    },
+    {
+      "path": "diagrams/initial/03_targeting.svg",
+      "sha256": "b037e3c3c50b4aeade8cc25ad0444d21d7e75ff5d095beab56c42823e3d3bb66",
+      "bytes": 17564
+    },
+    {
+      "path": "diagrams/initial/04_evidence_reports.md",
+      "sha256": "b466f40a70c01b43e2d23b67ef3f9b80b3e1a7255c16eff133dcad69f456488f",
+      "bytes": 2820
+    },
+    {
+      "path": "diagrams/initial/04_evidence_reports.mmd",
+      "sha256": "e79b65a4720baf4316b2a28bc206175593d8def416daf19b720dda7f17dfaa70",
+      "bytes": 940
+    },
+    {
+      "path": "diagrams/initial/04_evidence_reports.svg",
+      "sha256": "cee3149f62daa449525e5621561bfe182cd5f473c28ec694db047ee4af555a67",
+      "bytes": 20940
+    },
+    {
+      "path": "diagrams/initial/05_assessments.md",
+      "sha256": "e641d0efbcb7a12b5ba68d21145ff4b5f7ed315fc54b15e32220ed919a3e6723",
+      "bytes": 2482
+    },
+    {
+      "path": "diagrams/initial/05_assessments.mmd",
+      "sha256": "7a2add98566b27d1d0f375e180f44247b4382debeb6baa8ec631fa04c5711dd3",
+      "bytes": 763
+    },
+    {
+      "path": "diagrams/initial/05_assessments.svg",
+      "sha256": "c9f3be5d1554f6b8547431d35bb806e9a665b158ef33b64f33248a52a0cbe9cb",
+      "bytes": 14985
+    },
+    {
+      "path": "diagrams/initial/README.md",
+      "sha256": "d9578de185d172aeda5a23b2981ce72a7f0efccf1a5b4ac00eed5417963262a4",
+      "bytes": 1882
+    },
+    {
+      "path": "diagrams/initial/manifest.json",
+      "sha256": "77808adf5c437c26ce017bab2fc32a6df330f6a4ae1dbd71fb752f3a24258726",
+      "bytes": 2089
+    },
+    {
+      "path": "diagrams/suggested/01_entities.md",
+      "sha256": "d10342b7c8ba380fb351cc94faaf14fd850e8471cf0e9c24b0384a908478ba25",
+      "bytes": 2782
+    },
+    {
+      "path": "diagrams/suggested/01_entities.mmd",
+      "sha256": "83859382794c7e978bcad129945a185ec912d76cabd7150ea3149e3ce0eff476",
+      "bytes": 1031
+    },
+    {
+      "path": "diagrams/suggested/01_entities.svg",
+      "sha256": "51fcc7ca92026fd70994d668945c27f3e003459b16bcfa1b0ee0c6bc1baab968",
+      "bytes": 10609
+    },
+    {
+      "path": "diagrams/suggested/02_owned_values.md",
+      "sha256": "eaab083413240e309aaaa948f2df516184f03bd6483cc27a1cb5e25bfd9744ed",
+      "bytes": 2813
+    },
+    {
+      "path": "diagrams/suggested/02_owned_values.mmd",
+      "sha256": "4903d1df083bf24aa86c6cdccb6b915f5ed7e2d592298a65c28ada3457f87458",
+      "bytes": 1058
+    },
+    {
+      "path": "diagrams/suggested/02_owned_values.svg",
+      "sha256": "9d8d527c8956c4c47bf8bda90a14f03bddb7dd09b5c86bd5e230a3632685ebc0",
+      "bytes": 11874
+    },
+    {
+      "path": "diagrams/suggested/03_lifecycle.md",
+      "sha256": "d5d5a1c7b0ccb4b3a340765dc0a1a47f75665dee5364ed3476343b0865ff0afa",
+      "bytes": 2040
+    },
+    {
+      "path": "diagrams/suggested/03_lifecycle.mmd",
+      "sha256": "0cd1834c78bb3c5f10e3e14cae3c90a542f5f3b3f40b3c77ca211ddf228ffcb7",
+      "bytes": 368
+    },
+    {
+      "path": "diagrams/suggested/03_lifecycle.svg",
+      "sha256": "6b1b0bbed8fe1cae5c29e2ac302034d32fe8ae7c7ddc9015c5e9172df696f77e",
+      "bytes": 5162
+    },
+    {
+      "path": "diagrams/suggested/README.md",
+      "sha256": "6503c1931ae08b715d4efb94d73b710eecb0ee6dcec78d6010f7cf9211d4d074",
+      "bytes": 1641
+    },
+    {
+      "path": "diagrams/suggested/manifest.json",
+      "sha256": "a1d0baea49921052348a8806e428e0ba385ddb1f3d4e9b91ff6acf5e3b20e4a8",
+      "bytes": 1278
+    }
+  ],
+  "manifestExclusion": "This manifest does not hash itself; ignored dependencies and caches are excluded."
+}

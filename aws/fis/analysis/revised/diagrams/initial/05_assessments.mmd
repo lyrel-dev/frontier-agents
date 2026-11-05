@@ -1,0 +1,20 @@
+erDiagram
+    direction TB
+    EXPERIMENT_RUN ||--o{ EXPERIMENT_METRIC_BINDING : binds
+    METRIC_BINDING ||--o{ EXPERIMENT_METRIC_BINDING : used_by
+    METRIC_BINDING ||--o{ METRIC_OBSERVATION : supplies
+    EXPERIMENT_RUN ||--o{ RESILIENCE_ASSESSMENT : assessed_by
+    ASSESSMENT_CRITERION ||--o{ RESILIENCE_ASSESSMENT : evaluates
+    RESILIENCE_ASSESSMENT ||--o{ ASSESSMENT_EVIDENCE : cites
+    METRIC_OBSERVATION ||--o{ ASSESSMENT_EVIDENCE : supports
+    RESILIENCE_ASSESSMENT {
+        string assessmentKey PK
+        string experimentKey FK
+        string criterionRevision FK
+        string verdict
+        string missingDataPolicy
+        datetime evaluatedAt
+        json evidenceWindow
+        datetime evidenceCutoffAt
+        json inputSnapshot
+    }

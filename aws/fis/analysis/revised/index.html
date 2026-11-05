@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="Compare the initial AWS FIS experiment interface with the suggested assessment workflow interface. Synthetic data only.">
+  <title>FIS assessment workspace · Initial and suggested interfaces</title>
+  <link rel="stylesheet" href="shell.css">
+  <script defer src="shell.js"></script>
+</head>
+<body>
+  <header class="review-bar">
+    <a class="review-brand" href="#initial" aria-label="FIS assessment workspace, initial interface"><span class="brand-mark" aria-hidden="true">f.</span><span>Assessment workspace<small>AWS FIS · design review</small></span></a>
+    <nav class="mode-tabs" role="tablist" aria-label="Interface version">
+      <button id="initial-tab" type="button" role="tab" aria-selected="true" aria-controls="initial-panel" tabindex="0" data-mode="initial"><span class="mode-number">01</span><span>Initial <small>FIS experiments</small></span></button>
+      <button id="suggested-tab" type="button" role="tab" aria-selected="false" aria-controls="suggested-panel" tabindex="-1" data-mode="suggested"><span class="mode-number">02</span><span>Suggested <small>Assessment workflows</small></span></button>
+    </nav>
+    <div class="review-links"><span class="demo-label"><span aria-hidden="true"></span>Synthetic data</span><a href="docs/README.md" target="_blank" rel="noopener">Reviewed notes <span aria-hidden="true">↗</span></a><a id="standalone-link" href="initial/index.html" target="_blank" rel="noopener" aria-label="Open current interface on its own">Open interface <span aria-hidden="true">↗</span></a></div>
+  </header>
+  <main class="workspace" aria-label="Interface comparison">
+    <section id="initial-panel" class="mode-panel" role="tabpanel" aria-labelledby="initial-tab">
+      <iframe id="initial-frame" class="app-frame" src="initial/index.html" title="Initial FIS experiment interface"></iframe>
+    </section>
+    <section id="suggested-panel" class="mode-panel" role="tabpanel" aria-labelledby="suggested-tab" hidden>
+      <iframe id="suggested-frame" class="app-frame" data-src="suggested/index.html" title="Suggested assessment workflow interface"></iframe>
+    </section>
+  </main>
+  <p id="mode-announcement" class="sr-only" role="status" aria-live="polite">Initial FIS experiment interface selected.</p>
+  <noscript><div class="no-script">Open the <a href="initial/index.html">initial FIS interface</a>, the <a href="suggested/index.html">suggested assessment interface</a>, or the <a href="docs/README.md">reviewed Obsidian notes</a>.</div></noscript>
+</body>
+</html>

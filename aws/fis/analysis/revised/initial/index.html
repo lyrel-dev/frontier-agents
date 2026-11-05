@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="An interactive AWS Fault Injection Service operator workspace with synthetic experiments, action timelines, selected resources and evidence-aware results.">
+  <title>FIS Observatory · Experiment operations</title>
+  <link rel="stylesheet" href="app/styles.css">
+  <script defer src="app/fixtures.js"></script>
+  <script defer src="app/model.js"></script>
+  <script defer src="app/app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to experiment</a>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Experiment navigation">
+      <a class="brand" href="#" aria-label="FIS Observatory home"><span class="brand-icon" aria-hidden="true">f<span>•</span></span><span>FIS Observatory<small>EXPERIMENT OPERATIONS</small></span></a>
+      <div class="workspace-label"><span class="workspace-dot"></span> Platform engineering <span class="workspace-tag">DEMO</span></div>
+      <div class="side-heading"><span>Experiments</span><span id="run-count" class="count-bubble">5</span></div>
+      <label class="search-field"><span class="search-symbol" aria-hidden="true">⌕</span><input id="run-search" type="search" placeholder="Find an experiment…" aria-label="Search experiments"></label>
+      <div class="side-filters" role="group" aria-label="Filter experiments"><button class="side-filter active" data-run-filter="all" aria-pressed="true">All runs</button><button class="side-filter" data-run-filter="active" aria-pressed="false">Active</button><button class="side-filter" data-run-filter="final" aria-pressed="false">Finalized</button></div>
+      <nav id="run-list" class="run-list" aria-label="Choose experiment"></nav>
+      <div class="sidebar-bottom">
+        <div class="side-info"><span class="side-info-mark" aria-hidden="true">i</span><p><strong>A model you can explore</strong><br>Five synthetic scenarios. Every view follows the same replay clock.</p></div>
+        <a href="../docs/initial/report.md" class="side-link">Reviewed analysis <span aria-hidden="true">↗</span></a>
+        <a href="../docs/README.md" class="side-link" target="_blank" rel="noopener">Obsidian notes & diagrams <span aria-hidden="true">↗</span></a>
+        <div class="side-footer"><span class="avatar">PE</span><div>Platform engineering<small>eu-central-1 · mock workspace</small></div></div>
+      </div>
+    </aside>
+    <div class="main-shell">
+      <header class="topbar"><div class="breadcrumbs"><span>AWS</span><span class="crumb-separator">/</span><span>Fault Injection Service</span><span class="crumb-separator">/</span><strong>Experiments</strong></div><div class="topbar-right"><span class="synthetic-label"><span></span> Synthetic data</span><button id="model-shortcut" class="icon-button" aria-label="Explore the data model" title="Explore the data model">◈</button></div></header>
+      <main id="main-content" tabindex="-1">
+        <section id="run-header" aria-label="Experiment summary"></section>
+        <section class="replay-bar" aria-label="Replay controls">
+          <div class="replay-intro"><span class="replay-icon" aria-hidden="true">↻</span><div><strong>Experiment replay</strong><small id="replay-asof">Synthetic clock</small></div></div>
+          <button id="play-replay" class="button button-dark" aria-label="Play replay"><span aria-hidden="true">▶</span> Play replay</button>
+          <div class="replay-range"><label for="replay-cursor" class="sr-only">Replay time</label><input id="replay-cursor" type="range" min="0" max="900" value="0" step="1"><div class="range-times"><span id="replay-elapsed">00:00</span><span id="replay-total">15:00</span></div></div>
+          <label class="replay-speed"><span class="sr-only">Replay speed</span><select id="replay-speed"><option value="1">1× speed</option><option value="5" selected>5× speed</option><option value="15">15× speed</option></select></label>
+          <button id="advance-replay" class="button button-subtle" title="Advance replay by 30 seconds">+30s</button>
+          <button id="reset-replay" class="icon-button" aria-label="Reset replay" title="Reset replay">↺</button>
+        </section>
+        <section id="outcome-cards" class="outcome-grid" aria-label="Independent outcome dimensions"></section>
+        <div class="tabs-row"><nav id="view-tabs" class="view-tabs" aria-label="Experiment views" role="tablist"></nav><span id="observation-freshness" class="freshness"></span></div>
+        <section id="view-panel" class="view-panel" role="tabpanel" aria-label="Overview"></section>
+        <footer class="page-footer"><span>FIS Observatory <span class="footer-dot">·</span> Initial model showcase</span><span>Execution • selected scope • workload • evidence</span></footer>
+      </main>
+    </div>
+  </div>
+  <dialog id="action-dialog" class="detail-dialog" aria-labelledby="action-dialog-title"><div id="action-dialog-content"></div></dialog>
+  <dialog id="stop-dialog" class="stop-dialog" aria-labelledby="stop-title"><form method="dialog"><div class="dialog-heading"><span class="dialog-eyebrow">MOCK CONTROL</span><button class="icon-button" aria-label="Close stop dialog" value="cancel">×</button></div><h2 id="stop-title">Simulate stopping this experiment?</h2><p>This changes only the local replay. Running actions enter <strong>stopping</strong>, pending actions are cancelled, and cleanup finishes before the mock experiment becomes stopped.</p><div class="callout">No AWS request is made. Workload recovery is assessed separately.</div><div class="dialog-actions"><button class="button button-subtle" value="cancel">Keep replaying</button><button id="confirm-stop" class="button button-danger" type="button">Simulate stop</button></div></form></dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <div id="state-announcement" class="sr-only" role="status" aria-live="polite"></div>
+  <noscript><div class="no-script">Enable JavaScript to explore the mock experiments. The <a href="../docs/initial/report.md">reviewed report</a> and <a href="../docs/README.md">diagram notes</a> are available without JavaScript.</div></noscript>
+</body>
+</html>

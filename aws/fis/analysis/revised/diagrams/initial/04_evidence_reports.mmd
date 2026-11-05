@@ -1,0 +1,23 @@
+erDiagram
+    direction TB
+    EXPERIMENT_RUN ||--o{ EXECUTION_EVIDENCE : accumulates
+    EXPERIMENT_RUN ||--o{ STATE_OBSERVATION : observed_by
+    ACTION_EXECUTION o|--o{ EXECUTION_EVIDENCE : optionally_identifies
+    ACTION_EXECUTION o|--o{ STATE_OBSERVATION : optionally_identifies
+    EXECUTION_EVIDENCE o|--o{ STATE_OBSERVATION : may_support
+    EXPERIMENT_RUN ||--o| EXPERIMENT_REPORT : generates
+    EXPERIMENT_REPORT ||--o{ REPORT_ARTIFACT : contains
+    EXPERIMENT_RUN ||--o{ STOP_CONDITION : configures
+    CLOUDWATCH_ALARM o|--o{ STOP_CONDITION : referenced_by
+    CLOUDWATCH_ALARM ||--o{ ALARM_OBSERVATION : observed_by
+    AWS_SCOPE ||--o{ EXPERIMENT_RUN : owns
+    AWS_SCOPE ||--|| SAFETY_LEVER : has
+    EXECUTION_EVIDENCE {
+        string evidenceKey PK
+        string experimentKey FK
+        string source
+        string sourceRecordId
+        datetime occurredAt
+        datetime observedAt
+        json rawPayload
+    }

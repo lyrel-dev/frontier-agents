@@ -1,0 +1,37 @@
+{
+  "renderer": "pele",
+  "version": "1.6.0",
+  "rendererSha256": "f3f747bf94e8ba6564841352f73e97a99c1795727e0405c989302d4d2f0cf04d",
+  "diagrams": [
+    {
+      "id": "01_entities",
+      "title": "Assessment workflow entities",
+      "source": "01_entities.mmd",
+      "rendered": "01_entities.svg",
+      "width": 451,
+      "height": 1165,
+      "sourceSha256": "83859382794c7e978bcad129945a185ec912d76cabd7150ea3149e3ce0eff476",
+      "svgSha256": "51fcc7ca92026fd70994d668945c27f3e003459b16bcfa1b0ee0c6bc1baab968"
+    },
+    {
+      "id": "02_owned_values",
+      "title": "Owned workflow values",
+      "source": "02_owned_values.mmd",
+      "rendered": "02_owned_values.svg",
+      "width": 1109,
+      "height": 569,
+      "sourceSha256": "4903d1df083bf24aa86c6cdccb6b915f5ed7e2d592298a65c28ada3457f87458",
+      "svgSha256": "9d8d527c8956c4c47bf8bda90a14f03bddb7dd09b5c86bd5e230a3632685ebc0"
+    },
+    {
+      "id": "03_lifecycle",
+      "title": "Run lifecycle",
+      "source": "03_lifecycle.mmd",
+      "rendered": "03_lifecycle.svg",
+      "width": 570,
+      "height": 565,
+      "sourceSha256": "0cd1834c78bb3c5f10e3e14cae3c90a542f5f3b3f40b3c77ca211ddf228ffcb7",
+      "svgSha256": "6b1b0bbed8fe1cae5c29e2ac302034d32fe8ae7c7ddc9015c5e9172df696f77e"
+    }
+  ]
+}

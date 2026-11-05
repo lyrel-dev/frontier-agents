@@ -1,0 +1,7 @@
+{
+  "name": "frontier-assessment-workflow-diagrams",
+  "private": true,
+  "type": "module",
+  "scripts": {"diagrams": "node render-diagrams.mjs"},
+  "devDependencies": {"pele": "1.6.0"}
+}

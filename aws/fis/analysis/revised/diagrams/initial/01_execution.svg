@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1250" height="1070" viewBox="0 0 1250 1070" role="img" aria-labelledby="title description">
+<title id="title">01 / Run identity and action dependencies</title>
+<desc id="description">Logical ER model. Cardinalities are counts at each endpoint. EXPERIMENT_TEMPLATE (0..1) source EXPERIMENT_RUN (0..N); EXPERIMENT_RUN (1) contains ACTION_EXECUTION (1..N); CATALOG_ACTION (1) identifies ACTION_EXECUTION (0..N); ACTION_EXECUTION (1) predecessor ACTION_DEPENDENCY (0..N); ACTION_EXECUTION (1) successor ACTION_DEPENDENCY (0..N)</desc>
+<style>text{font-family:"DejaVu Sans",Arial,sans-serif} .mono{font-family:"DejaVu Sans Mono",monospace}</style>
+<rect x="0" y="0" width="1250" height="1070" rx="0" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<rect x="50" y="30" width="42" height="5" rx="0" fill="#007E83" stroke="none" stroke-width="1"/>
+<text x="50" y="76" font-size="30" font-weight="bold" text-anchor="start" fill="#183346">01 / Run identity and action dependencies</text>
+<text x="50" y="101" font-size="15" font-weight="normal" text-anchor="start" fill="#586E7C">Logical model | Endpoint labels show multiplicity | Source: canonical Mermaid</text>
+<polyline points="270,207 270,360" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linejoin="round"/>
+<polyline points="270,207 270,360" fill="none" stroke="#8A9CA8" stroke-width="2" stroke-linejoin="round"/>
+<polyline points="480,510 770,510" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linejoin="round"/>
+<polyline points="480,510 770,510" fill="none" stroke="#8A9CA8" stroke-width="2" stroke-linejoin="round"/>
+<polyline points="980,207 980,360" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linejoin="round"/>
+<polyline points="980,207 980,360" fill="none" stroke="#8A9CA8" stroke-width="2" stroke-linejoin="round"/>
+<polyline points="890,666 890,815" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linejoin="round"/>
+<polyline points="890,666 890,815" fill="none" stroke="#8A9CA8" stroke-width="2" stroke-linejoin="round"/>
+<polyline points="1070,666 1070,815" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linejoin="round"/>
+<polyline points="1070,666 1070,815" fill="none" stroke="#8A9CA8" stroke-width="2" stroke-linejoin="round"/>
+<rect x="60" y="125" width="420" height="82" rx="8" fill="#FFFFFF" stroke="#CCD9E0" stroke-width="1.3"/>
+<rect x="60" y="125" width="420" height="42" rx="8" fill="#007E83" stroke="none" stroke-width="1"/>
+<rect x="60" y="153" width="420" height="14" rx="0" fill="#007E83" stroke="none" stroke-width="1"/>
+<text x="76" y="154" font-size="23" font-weight="bold" text-anchor="start" fill="#FFFFFF">Experiment template</text>
+<text x="76" y="190" font-size="14" font-weight="normal" text-anchor="start" fill="#586E7C">AWS FIS data</text>
+<rect x="60" y="360" width="420" height="306" rx="8" fill="#FFFFFF" stroke="#CCD9E0" stroke-width="1.3"/>
+<rect x="60" y="360" width="420" height="42" rx="8" fill="#007E83" stroke="none" stroke-width="1"/>
+<rect x="60" y="388" width="420" height="14" rx="0" fill="#007E83" stroke="none" stroke-width="1"/>
+<text x="76" y="389" font-size="23" font-weight="bold" text-anchor="start" fill="#FFFFFF">Experiment run</text>
+<text x="76" y="425" font-size="14" font-weight="normal" text-anchor="start" fill="#586E7C">AWS FIS data</text>
+<rect x="61" y="437" width="418" height="28" rx="0" fill="#F4F7F9" stroke="none" stroke-width="1"/>
+<text x="76" y="458" font-size="12" font-weight="bold" text-anchor="start" fill="#007E83">PK</text>
+<text x="140" y="458" font-size="19.5" font-weight="normal" text-anchor="start" fill="#183346">experimentKey</text>
+<text x="466" y="458" font-size="12.5" font-weight="normal" text-anchor="end" fill="#586E7C" class="mono">string</text>
+<text x="140" y="486" font-size="19.5" font-weight="normal" text-anchor="start" fill="#183346">arn</text>
+<text x="466" y="486" font-size="12.5" font-weight="normal" text-anchor="end" fill="#586E7C" class="mono">string</text>
+<rect x="61" y="493" width="418" height="28" rx="0" fill="#F4F7F9" stroke="none" stroke-width="1"/>
+<text x="140" y="514" font-size="19.5" font-weight="normal" text-anchor="start" fill="#183346">sourceTemplateId</text>
+<text x="466" y="514" font-size="12.5" font-weight="normal" text-anchor="end" fill="#586E7C" class="mono">string</text>
+<text x="140" y="542" font-size="19.5" font-weight="normal" text-anchor="start" fill="#183346">status</text>
+<text x="466" y="542" font-size="12.5" font-weight="normal" text-anchor="end" fill="#586E7C" class="mono">string</text>
+<rect x="61" y="549" width="418" height="28" rx="0" fill="#F4F7F9" stroke="none" stroke-width="1"/>
+<text x="140" y="570" font-size="19.5" font-weight="normal" text-anchor="start" fill="#183346">creationTime</text>
+<text x="466" y="570" font-size="12.5" font-weight="normal" text-anchor="end" fill="#586E7C" class="mono">datetime</text>
+<text x="140" y="598" font-size="19.5" font-weight="normal" text-anchor="start" fill="#183346">startTime</text>
+<text x="466" y="598" font-size="12.5" font-weight="normal" text-anchor="end" fill="#586E7C" class="mono">datetime</text>
+<rect x="61" y="605" width="418" height="28" rx="0" fill="#F4F7F9" stroke="none" stroke-width="1"/>
+<text x="140" y="626" font-size="19.5" font-weight="normal" text-anchor="start" fill="#183346">endTime</text>
+<text x="466" y="626" font-size="12.5" font-weight="normal" text-anchor="end" fill="#586E7C" class="mono">datetime</text>
+<text x="140" y="654" font-size="19.5" font-weight="normal" text-anchor="start" fill="#183346">configSnapshot</text>
+<text x="466" y="654" font-size="12.5" font-weight="normal" text-anchor="end" fill="#586E7C" class="mono">json</text>
+<rect x="770" y="360" width="420" height="306" rx="8" fill="#FFFFFF" stroke="#CCD9E0" stroke-width="1.3"/>
+<rect x="770" y="360" width="420" height="42" rx="8" fill="#007E83" stroke="none" stroke-width="1"/>
+<rect x="770" y="388" width="420" height="14" rx="0" fill="#007E83" stroke="none" stroke-width="1"/>
+<text x="786" y="389" font-size="23" font-weight="bold" text-anchor="start" fill="#FFFFFF">Action execution</text>
+<text x="786" y="425" font-size="14" font-weight="normal" text-anchor="start" fill="#586E7C">AWS FIS data</text>
+<rect x="771" y="437" width="418" height="28" rx="0" fill="#F4F7F9" stroke="none" stroke-width="1"/>
+<text x="786" y="458" font-size="12" font-weight="bold" text-anchor="start" fill="#007E83">PK FK</text>
+<text x="850" y="458" font-size="19.5" font-weight="normal" text-anchor="start" fill="#183346">experimentKey</text>
+<text x="1176" y="458" font-size="12.5" font-weight="normal" text-anchor="end" fill="#586E7C" class="mono">string</text>
+<text x="786" y="486" font-size="12" font-weight="bold" text-anchor="start" fill="#007E83">PK</text>
+<text x="850" y="486" font-size="19.5" font-weight="normal" text-anchor="start" fill="#183346">actionName</text>
+<text x="1176" y="486" font-size="12.5" font-weight="normal" text-anchor="end" fill="#586E7C" class="mono">string</text>
+<rect x="771" y="493" width="418" height="28" rx="0" fill="#F4F7F9" stroke="none" stroke-width="1"/>
+<text x="786" y="514" font-size="12" font-weight="bold" text-anchor="start" fill="#007E83">FK</text>
+<text x="850" y="514" font-size="19.5" font-weight="normal" text-anchor="start" fill="#183346">actionId</text>
+<text x="1176" y="514" font-size="12.5" font-weight="normal" text-anchor="end" fill="#586E7C" class="mono">string</text>
+<text x="850" y="542" font-size="19.5" font-weight="normal" text-anchor="start" fill="#183346">status</text>
+<text x="1176" y="542" font-size="12.5" font-weight="normal" text-anchor="end" fill="#586E7C" class="mono">string</text>
+<rect x="771" y="549" width="418" height="28" rx="0" fill="#F4F7F9" stroke="none" stroke-width="1"/>
+<text x="850" y="570" font-size="19.5" font-weight="normal" text-anchor="start" fill="#183346">reason</text>
+<text x="1176" y="570" font-size="12.5" font-weight="normal" text-anchor="end" fill="#586E7C" class="mono">string</text>
+<text x="850" y="598" font-size="19.5" font-weight="normal" text-anchor="start" fill="#183346">startTime</text>
+<text x="1176" y="598" font-size="12.5" font-weight="normal" text-anchor="end" fill="#586E7C" class="mono">datetime</text>
+<rect x="771" y="605" width="418" height="28" rx="0" fill="#F4F7F9" stroke="none" stroke-width="1"/>
+<text x="850" y="626" font-size="19.5" font-weight="normal" text-anchor="start" fill="#183346">endTime</text>
+<text x="1176" y="626" font-size="12.5" font-weight="normal" text-anchor="end" fill="#586E7C" class="mono">datetime</text>
+<text x="850" y="654" font-size="19.5" font-weight="normal" text-anchor="start" fill="#183346">parameters</text>
+<text x="1176" y="654" font-size="12.5" font-weight="normal" text-anchor="end" fill="#586E7C" class="mono">json</text>
+<rect x="770" y="125" width="420" height="82" rx="8" fill="#FFFFFF" stroke="#CCD9E0" stroke-width="1.3"/>
+<rect x="770" y="125" width="420" height="42" rx="8" fill="#007E83" stroke="none" stroke-width="1"/>
+<rect x="770" y="153" width="420" height="14" rx="0" fill="#007E83" stroke="none" stroke-width="1"/>
+<text x="786" y="154" font-size="23" font-weight="bold" text-anchor="start" fill="#FFFFFF">Catalog action</text>
+<text x="786" y="190" font-size="14" font-weight="normal" text-anchor="start" fill="#586E7C">AWS FIS data</text>
+<rect x="770" y="815" width="420" height="166" rx="8" fill="#FFFFFF" stroke="#CCD9E0" stroke-width="1.3"/>
+<rect x="770" y="815" width="420" height="42" rx="8" fill="#A66B1B" stroke="none" stroke-width="1"/>
+<rect x="770" y="843" width="420" height="14" rx="0" fill="#A66B1B" stroke="none" stroke-width="1"/>
+<text x="786" y="844" font-size="23" font-weight="bold" text-anchor="start" fill="#FFFFFF">Action dependency</text>
+<text x="786" y="880" font-size="14" font-weight="normal" text-anchor="start" fill="#586E7C">Application model</text>
+<rect x="771" y="892" width="418" height="28" rx="0" fill="#F4F7F9" stroke="none" stroke-width="1"/>
+<text x="786" y="913" font-size="12" font-weight="bold" text-anchor="start" fill="#A66B1B">PK FK</text>
+<text x="850" y="913" font-size="19.5" font-weight="normal" text-anchor="start" fill="#183346">experimentKey</text>
+<text x="1176" y="913" font-size="12.5" font-weight="normal" text-anchor="end" fill="#586E7C" class="mono">string</text>
+<text x="786" y="941" font-size="12" font-weight="bold" text-anchor="start" fill="#A66B1B">PK FK</text>
+<text x="850" y="941" font-size="19.5" font-weight="normal" text-anchor="start" fill="#183346">predecessorActionName</text>
+<text x="1176" y="941" font-size="12.5" font-weight="normal" text-anchor="end" fill="#586E7C" class="mono">string</text>
+<rect x="771" y="948" width="418" height="28" rx="0" fill="#F4F7F9" stroke="none" stroke-width="1"/>
+<text x="786" y="969" font-size="12" font-weight="bold" text-anchor="start" fill="#A66B1B">PK FK</text>
+<text x="850" y="969" font-size="19.5" font-weight="normal" text-anchor="start" fill="#183346">successorActionName</text>
+<text x="1176" y="969" font-size="12.5" font-weight="normal" text-anchor="end" fill="#586E7C" class="mono">string</text>
+<rect x="235.586" y="275" width="68.8271" height="23" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="270" y="291" font-size="17" font-weight="normal" text-anchor="middle" fill="#586E7C">source</text>
+<rect x="278.688" y="221" width="40.623" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="299" y="235" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">0..1</text>
+<rect x="277.85" y="328" width="42.3003" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="299" y="342" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">0..N</text>
+<rect x="583.02" y="476" width="83.9595" height="23" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="625" y="492" font-size="17" font-weight="normal" text-anchor="middle" fill="#586E7C">contains</text>
+<rect x="493.228" y="514" width="21.5435" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="504" y="528" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">1</text>
+<rect x="724.85" y="514" width="42.3003" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="746" y="528" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">1..N</text>
+<rect x="934.92" y="275" width="90.1602" height="23" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="980" y="291" font-size="17" font-weight="normal" text-anchor="middle" fill="#586E7C">identifies</text>
+<rect x="998.228" y="221" width="21.5435" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="1009" y="235" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">1</text>
+<rect x="987.85" y="328" width="42.3003" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="1009" y="342" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">0..N</text>
+<rect x="831.801" y="711" width="116.399" height="23" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="890" y="727" font-size="17" font-weight="normal" text-anchor="middle" fill="#586E7C">predecessor</text>
+<rect x="908.228" y="680" width="21.5435" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="919" y="694" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">1</text>
+<rect x="897.85" y="783" width="42.3003" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="919" y="797" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">0..N</text>
+<rect x="1022.06" y="751" width="95.8877" height="23" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="1070" y="767" font-size="17" font-weight="normal" text-anchor="middle" fill="#586E7C">successor</text>
+<rect x="1088.23" y="680" width="21.5435" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="1099" y="694" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">1</text>
+<rect x="1077.85" y="783" width="42.3003" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="1099" y="797" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">0..N</text>
+<rect x="50" y="1027" width="15" height="15" rx="3" fill="#007E83" stroke="none" stroke-width="1"/>
+<text x="75" y="1040" font-size="16" font-weight="normal" text-anchor="start" fill="#586E7C">AWS FIS data / scope</text>
+<rect x="420" y="1027" width="15" height="15" rx="3" fill="#A66B1B" stroke="none" stroke-width="1"/>
+<text x="445" y="1040" font-size="16" font-weight="normal" text-anchor="start" fill="#586E7C">Application model</text>
+<rect x="830" y="1027" width="15" height="15" rx="3" fill="#2A6B9B" stroke="none" stroke-width="1"/>
+<text x="855" y="1040" font-size="16" font-weight="normal" text-anchor="start" fill="#586E7C">External evidence / resource</text>
+</svg>
