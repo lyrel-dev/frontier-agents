@@ -1,0 +1,151 @@
+{
+  "format": "consolidated-html-reference/1",
+  "status": "PASS",
+  "contractVersion": 2,
+  "modelApiBaselineCommit": "31980a1b7540b1ad74274b0edfc7fc1f08f6a396",
+  "earlierAnalysisCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+  "output": "reference.html",
+  "outputSha256": "908609e18e52cb12a26813cc5eb9dbe4dfb401b9ccfa343ad3d7898206b613a1",
+  "coverage": {
+    "entities": 36,
+    "entityFields": 450,
+    "operations": 108,
+    "requestFields": 441,
+    "responseFields": 211,
+    "entityUseCases": 72,
+    "entityHistoricalOrigins": 74,
+    "operationUseCases": 108,
+    "crossModuleUseCases": 7,
+    "modelValueTypes": 64,
+    "rpcValueTypes": 8,
+    "relationships": 45,
+    "drawioPages": 8,
+    "sourceMappingRows": 174,
+    "sourceAliases": 340,
+    "sourceProfiles": 65,
+    "operationPredecessorMappings": 161,
+    "rpcPayloadExamples": 216,
+    "rpcErrorExamples": 3,
+    "uniqueEntityHistoricalSources": 6,
+    "internalLinks": 4916
+  },
+  "checks": {
+    "exactCatalogCoverage": true,
+    "useCasesAndHistoricalOriginsPresent": true,
+    "pinnedEntitySourcePathsExist": true,
+    "allInternalLinksResolve": true,
+    "uniqueHtmlAndEmbeddedSvgIds": true,
+    "noExternalRuntimeAssets": true,
+    "canonicalSchemasAndExamplesRendered": true
+  },
+  "limits": [
+    "These checks validate document coverage and generation, not production runtime behavior.",
+    "Visual and interaction QA is recorded separately in reference/README.md."
+  ],
+  "inputs": [
+    {
+      "path": "model/schema.json",
+      "sha256": "5ed58f736388fffa7fd5d816be4797aa6ff419c86d00647022b2f75f2ef67011"
+    },
+    {
+      "path": "model/adapter-profiles.json",
+      "sha256": "2695ee87bde5009db469534bea84e7b26bb6b1ebacc4b2c194f67c422e683c3c"
+    },
+    {
+      "path": "model/examples.json",
+      "sha256": "8ef05deeebd16fd0abde50780a7fc5df699a38e286261dae3290879e7a19571c"
+    },
+    {
+      "path": "api/operations.json",
+      "sha256": "397b67d82aa4f85c065e5ed32d1524e51235044a52b2cfb565c3d9670dc89ba3"
+    },
+    {
+      "path": "api/rpc.schema.json",
+      "sha256": "2b71668c5662cb20b44366a7dc67f3d8096f9511b85cd2ec51e1d0481891bd91"
+    },
+    {
+      "path": "api/examples.json",
+      "sha256": "600bc3dd6e82c53b9b28aba5db8b104b66a02028b79f43295f419a8e453cf2fc"
+    },
+    {
+      "path": "inventory.json",
+      "sha256": "631a00b5d72d5417b5f81db44022158a7b0ced9a49df4778c1289766ac7f53a4"
+    },
+    {
+      "path": "diagrams/manifest.json",
+      "sha256": "1752fa85edd7cc0aa73d229f2dff94d67454d440c642b7ed4172c9f8daec052c"
+    },
+    {
+      "path": "reference/entity-notes.json",
+      "sha256": "567976d29a70b5bf8a3b45dacf73e7b02ea1bc30a74f8f45e4c9472435cec9a2"
+    },
+    {
+      "path": "reference/operation-notes.json",
+      "sha256": "c7302d34627afd5b029ea3970980a69bb4f365895503136568e15961712ba5e4"
+    },
+    {
+      "path": "reference/reference.css",
+      "sha256": "4f0ad2cd026b2b11d8dc2b35e4803b42308c5eeca7a368c2b162f73e1c13982b"
+    },
+    {
+      "path": "reference/reference.js",
+      "sha256": "fa67bfeeccbf48f27eeb12b3bb436061dcaf599640f9a2e3ad17b274e3ca10e3"
+    },
+    {
+      "path": "tools/build_reference.py",
+      "sha256": "11bbca5b6a42e10f321ef88f15c3841f6333945eb6fce5454399138ed79c518a"
+    },
+    {
+      "path": "diagrams/complete-model.svg",
+      "sha256": "d3011f843d29f2ba4dc1b2698dc6dcb37ab55d91dabf6d41071f4efedf9983cc"
+    },
+    {
+      "path": "diagrams/foundation.svg",
+      "sha256": "ef716577cd31915713101edb24829cba3d821ed683f0ed4047778f2a2351ddeb"
+    },
+    {
+      "path": "diagrams/evidence.svg",
+      "sha256": "e97536f0a1a76ccd04b815f86d512927cd31b3cb10ff383ffd3f59e85a26e072"
+    },
+    {
+      "path": "diagrams/workload.svg",
+      "sha256": "c1204ba4ff0fa54493d42d3acc6431cd1913b94478f79ec9ba1d7932028299d0"
+    },
+    {
+      "path": "diagrams/health.svg",
+      "sha256": "5e251c8de593d0b6f3133cae548da2e3e9cbc8b1d7f5575a0803509c3421a293"
+    },
+    {
+      "path": "diagrams/resilience.svg",
+      "sha256": "366613ea74ae3f9f886d38061dadec1660dc450a8b6e35343d2fbc7587f1af2c"
+    },
+    {
+      "path": "diagrams/investigation.svg",
+      "sha256": "29d68081738f158e3e33b70c48e66c35fcad912cd062e5f31778fd32ac2eddf2"
+    },
+    {
+      "path": "diagrams/workflow.svg",
+      "sha256": "caa78d53d46776329237aac7910b2ec58c2298de353ebc6a280f755815df6ca7"
+    },
+    {
+      "path": "reference/fonts/DejaVuSans-Bold.woff",
+      "sha256": "f8f728daae2eab49efd120be2798ef2ef4cab28f2a956f7c3932ac1634ffb965"
+    },
+    {
+      "path": "reference/fonts/DejaVuSans.woff",
+      "sha256": "18b6675948264edc9e75ac7cc1621bf2179afe28cbf4b581ca67c188fe745c9c"
+    },
+    {
+      "path": "reference/fonts/DejaVuSansMono-Bold.woff",
+      "sha256": "35963e00f74617ef4b772bab54eda4a1093115603adbea5bf2f9b941a29e5040"
+    },
+    {
+      "path": "reference/fonts/DejaVuSansMono.woff",
+      "sha256": "965616263f091ecf3c7bbb0218c49778cd10d1525dbb112f39b6f4334c16e857"
+    },
+    {
+      "path": "reference/fonts/LICENSE.txt",
+      "sha256": "562c8f5e92af7a06339292a1bb0b9a3e9c8d5142af5d7167f2866fc50261b993"
+    }
+  ]
+}

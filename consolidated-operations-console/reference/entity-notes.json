@@ -1,0 +1,2665 @@
+{
+  "schemaVersion": "1.0",
+  "modelCommit": "31980a1b7540b1ad74274b0edfc7fc1f08f6a396",
+  "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+  "scope": "Authored entity narratives for the corrected 36-entity consolidated model. Structural fields, raw crosswalk rows and operation contracts remain authoritative in the existing schemas and catalogs.",
+  "versionRule": "Every entity has stable identity and ordinary immutable versions. There are no version-only entities. Owned values inherit their owner version; native versions and attempt numbers remain separate facts.",
+  "entities": [
+    {
+      "entity": "Workspace",
+      "purpose": "The application authorization and configuration boundary for the consolidated console. It gives the seven modules one trusted scope without treating an AWS account, organization or DevOps AgentSpace as the product tenant.",
+      "ownership": "The application owns its name, enabled module set and captured organization context. The authenticated server establishes workspace scope; a caller cannot grant access by supplying a workspaceId.",
+      "lifecycle": "Workspace versions record changes to this boundary and its configuration. Historical entities continue to belong to the same stable workspaceId, while access to retained versions is checked against current authorization. The current operation catalog exposes reads and version history; it does not imply a public Workspace creation or administration API.",
+      "useCases": [
+        {
+          "title": "One portfolio, several AWS scopes",
+          "scenario": "An operations team needs Health and Resilience information for resources in several accounts.",
+          "howEntityIsUsed": "Use one Workspace as the authorization boundary and separate Connection values for the authorized collection paths; retain account and organization context as scoped values.",
+          "outcome": "The team can navigate a consolidated portfolio without confusing tenancy with AWS resource ownership."
+        },
+        {
+          "title": "Enable a module deliberately",
+          "scenario": "A workspace adds investigation views alongside its existing workload catalog.",
+          "howEntityIsUsed": "Publish the permitted configuration as a new Workspace version with an updated enabledModules set.",
+          "outcome": "The same workspace identity acquires the module configuration while older representations remain interpretable."
+        }
+      ],
+      "historicalOrigins": [
+        {
+          "sourcePath": "aws/fis/analysis/workflow/model.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "trusted workspace",
+            "application IDs"
+          ],
+          "kind": "application-boundary",
+          "heading": "1. Entities, ownership and identity",
+          "anchor": "1-entities-ownership-and-identity",
+          "previousUse": "The workflow model scoped opaque application IDs and concurrency/authorization to a trusted workspace established by server context. It did not define a complete Workspace entity.",
+          "consolidation": "There is no one-to-one prior Workspace entity. Consolidation promotes that cross-module authorization boundary to a versioned entity."
+        },
+        {
+          "sourcePath": "aws/health/analysis/report.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "Account",
+            "Organization",
+            "OrganizationMembership"
+          ],
+          "kind": "external-context",
+          "heading": "3. Core entity dictionary and keys",
+          "anchor": "3-core-entity-dictionary-and-keys",
+          "previousUse": "The Health model retained account, organization and membership validity as external context around event impact.",
+          "consolidation": "These contribute organization context owned by Workspace; none becomes the workspace identity or a new account entity."
+        }
+      ],
+      "invariants": [
+        "Workspace is distinct from AgentSpace and from provider account/Region ownership.",
+        "Every entity, including Workspace, has a stable ID, version, createdAt and updatedAt.",
+        "A retained historical version does not preserve an obsolete permission grant."
+      ],
+      "relatedEntities": [
+        "Connection",
+        "AgentSpace",
+        "System"
+      ],
+      "operations": [
+        "GetWorkspace",
+        "ListEntityVersions"
+      ],
+      "preferredExample": {
+        "id": "ws-demo",
+        "version": 1
+      }
+    },
+    {
+      "entity": "Connection",
+      "purpose": "A versioned reference to an authorized access path: provider, external credential reference, allowed scopes and authorization-context key. It tells collection how access was obtained without redefining the identity of the observed AWS object.",
+      "ownership": "Application commands create and change Connection configuration. Credential material stays in a separate secret system; the model stores only credentialRef and scoped access metadata.",
+      "lifecycle": "CreateConnection admits a new configuration; UpdateConnection uses its expectedVersion. Observations and Collections pin the Connection version actually used. Disabling or rotating a connection changes later access behavior without making a second copy of every resource observed through it.",
+      "useCases": [
+        {
+          "title": "Rotate the collection role",
+          "scenario": "The role used for reading one account is replaced.",
+          "howEntityIsUsed": "Update Connection under its version precondition and have subsequent Collections pin the new version.",
+          "outcome": "Old evidence still explains the access context used at collection time, while the canonical resource identity remains stable."
+        },
+        {
+          "title": "Compare two access paths",
+          "scenario": "Two authorized connections return the same native event or resource.",
+          "howEntityIsUsed": "Compare the fully scoped native identity independently of connectionId and keep each read occurrence with its own Connection and authorization context.",
+          "outcome": "The console avoids duplicate domain objects while retaining permission-sensitive provenance."
+        }
+      ],
+      "historicalOrigins": [
+        {
+          "sourcePath": "aws/health/analysis/report.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "SourceConnection",
+            "OrganizationHealthAccess"
+          ],
+          "kind": "application-access-context",
+          "heading": "12. Coverage and collection model",
+          "anchor": "12-coverage-and-collection-model",
+          "previousUse": "SourceConnection recorded caller, account/organization scope, capabilities and integration readiness so unavailable Health reads could be explained.",
+          "consolidation": "Connection consolidates the access path; observed organization access and capability evidence remain qualified context rather than credentials or native owner identity."
+        },
+        {
+          "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "ConnectionContext",
+            "OwningScope"
+          ],
+          "kind": "application-access-context",
+          "heading": "Identity and scope",
+          "anchor": "identity-and-scope",
+          "previousUse": "ConnectionContext represented an authorization-sensitive access path separately from the partition/account/Region owning scope.",
+          "consolidation": "The distinction becomes common across every module, with exact Connection versions in collection and observation history."
+        }
+      ],
+      "invariants": [
+        "Never store resolved secrets in Connection or evidence payloads.",
+        "Changing a principal does not change native resource identity.",
+        "An allowed scope is an access constraint, not proof that an API read succeeded."
+      ],
+      "relatedEntities": [
+        "Workspace",
+        "Collection",
+        "Observation",
+        "ReadAttempt"
+      ],
+      "operations": [
+        "ListEntityVersions",
+        "GetConnection",
+        "ListConnections",
+        "CreateConnection",
+        "UpdateConnection"
+      ],
+      "preferredExample": {
+        "id": "conn-demo",
+        "version": 1
+      }
+    },
+    {
+      "entity": "Resource",
+      "purpose": "The canonical inventory identity for a sufficiently identified external resource. Resource carries scoped native identity, identity stability, selected observation and explicit matching evidence; it is not a universal wrapper around every provider object or selected target.",
+      "ownership": "A trusted collector or normalizer publishes Resource representations. Local operators can inspect identity and matching provenance but cannot assert provider health or invent inventory existence by editing it.",
+      "lifecycle": "A stable resourceId survives new inventory observations and publishes later versions. A provisional or run-scoped identity remains qualified until matching evidence establishes its relationship to a stable resource; an alias match does not erase the original evidence.",
+      "useCases": [
+        {
+          "title": "Resolve an affected database",
+          "scenario": "A Health entity contains a resource identifier that might identify the database in inventory.",
+          "howEntityIsUsed": "Use an evidenced ResourceMatch from EntityImpact to Resource and retain the Health identity independently.",
+          "outcome": "An operator can navigate from impact to inventory while seeing whether the match is confirmed or unresolved."
+        },
+        {
+          "title": "Preserve overlapping FIS selections",
+          "scenario": "Two experiment selectors include the same instance, while another selector returns a pod with only run-scoped identity.",
+          "howEntityIsUsed": "Deduplicate the established instance Resource but retain every selector membership; keep the pod identity qualified by its available scope and incarnation evidence.",
+          "outcome": "Resource counts remain distinct from membership counts and do not merge unrelated pod incarnations."
+        }
+      ],
+      "historicalOrigins": [
+        {
+          "sourcePath": "aws/health/analysis/report.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "InventoryResource",
+            "EntityResourceMatch"
+          ],
+          "kind": "external-resource",
+          "heading": "Entity identity and inventory matching",
+          "anchor": "entity-identity-and-inventory-matching",
+          "previousUse": "Health affected constructs could match zero, one or several inventory resources through an evidence-bearing bridge. Resource names, tags and owners came from external inventory.",
+          "consolidation": "Resource centralizes inventory identity while EntityImpact keeps its separate event-relative identity and owned matching values."
+        },
+        {
+          "sourcePath": "aws/fis/analysis/report.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "ResourceIdentity",
+            "ResolvedTarget"
+          ],
+          "kind": "external-resource",
+          "heading": "Exact target and account fields",
+          "anchor": "exact-target-and-account-fields",
+          "previousUse": "FIS targetInformation was retained in full; a resource-type adapter could normalize identity only when the returned information supported it.",
+          "consolidation": "The common Resource is optional. Experiment retains selector memberships even when no stable Resource can be established."
+        },
+        {
+          "sourcePath": "aws/resilience-hub/analysis/report.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "ServiceResource"
+          ],
+          "kind": "retained-provider-value",
+          "heading": "Supporting service configuration",
+          "anchor": "supporting-service-configuration",
+          "previousUse": "ServiceResource related a service-local resourceIdentifier to a descriptor and optional input source; global resolution required sufficient account, Region, type and identifier evidence.",
+          "consolidation": "The shared Resource replaces parallel global inventories without discarding service-local identifiers or unresolved references."
+        }
+      ],
+      "invariants": [
+        "A provider name, DNS label or unqualified version is not a resource identity.",
+        "Resource identity and access Connection are independent.",
+        "Selected by FIS does not establish fault application; affected by Health does not establish global resource health."
+      ],
+      "relatedEntities": [
+        "Connection",
+        "Observation",
+        "Service",
+        "EntityImpact",
+        "ComponentDeployment",
+        "Experiment"
+      ],
+      "operations": [
+        "ListEntityVersions",
+        "GetResource",
+        "ListResources"
+      ],
+      "preferredExample": {
+        "id": "res-worker",
+        "version": 1
+      }
+    },
+    {
+      "entity": "Collection",
+      "purpose": "One finite evidence-gathering pass over a fixed set of declared queries. Collection makes collection state, scope, times and qualified coverage first-class across all modules.",
+      "ownership": "The trusted collector owns query execution and lifecycle publication. Each Collection pins its Connection version; queries and their fingerprints define the scope for the identity.",
+      "lifecycle": "StartCollection creates the pass. Lifecycle changes publish Collection versions, and CompleteCollection settles the requested pass with explicit coverage. Changing query definitions requires a new Collection identity, not an edit disguised as a lifecycle update.",
+      "useCases": [
+        {
+          "title": "Hydrate findings after an assessment",
+          "scenario": "A new assessment triggers a paginated service finding list followed by detail reads.",
+          "howEntityIsUsed": "Retain one Collection with the list/detail query scopes, their ReadAttempts and independent pagination and hydration outcomes.",
+          "outcome": "A finished list can coexist with failed detail hydration without claiming complete recommendations."
+        },
+        {
+          "title": "Explain an empty target list",
+          "scenario": "FIS target enumeration returns no members.",
+          "howEntityIsUsed": "Combine the Collection query scope and page-chain outcome with separately retained resolution-ended evidence.",
+          "outcome": "The console distinguishes a scoped complete empty result from a premature or incomplete read."
+        }
+      ],
+      "historicalOrigins": [
+        {
+          "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "CollectionPass",
+            "CoverageClaim"
+          ],
+          "kind": "application-collection",
+          "heading": "Collection observations are separate from source revisions",
+          "anchor": "collection-observations-are-separate-from-source-revisions",
+          "previousUse": "CollectionPass bounded an investigation reconciliation attempt; CoverageClaim stated what a query traversal had established and cited its read attempts.",
+          "consolidation": "Collection applies the same bounded-pass meaning to every module, with coverage retained as owned values and ordinary entity versions."
+        },
+        {
+          "sourcePath": "aws/health/analysis/report.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "CollectionRun",
+            "CoverageAssessment"
+          ],
+          "kind": "application-collection",
+          "heading": "12. Coverage and collection model",
+          "anchor": "12-coverage-and-collection-model",
+          "previousUse": "CollectionRun captured operation, filters, times, pagination and result state. CoverageAssessment explained stale or unavailable evidence.",
+          "consolidation": "Their shared collection mechanics become Collection without folding provider health into collection status."
+        },
+        {
+          "sourcePath": "aws/resilience-hub/analysis/report.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "FindingCapture"
+          ],
+          "kind": "application-collection",
+          "heading": "Reviewed capture identity and detail coverage",
+          "anchor": "reviewed-capture-identity-and-detail-coverage",
+          "previousUse": "FindingCapture recorded service scope, filters, list pagination, detail hydration and optional qualified assessment correlation.",
+          "consolidation": "Collection retains those boundaries; neither the Collection nor Finding gains an unsupported assessment-ownership relationship."
+        }
+      ],
+      "invariants": [
+        "Fixed query definitions are part of Collection identity.",
+        "Completed pagination is not complete external history or an atomic multi-API snapshot.",
+        "Collection failures, detail gaps and identity resolution remain separate coverage dimensions."
+      ],
+      "relatedEntities": [
+        "Connection",
+        "ReadAttempt",
+        "Observation",
+        "Finding",
+        "Snapshot"
+      ],
+      "operations": [
+        "ListEntityVersions",
+        "GetCollection",
+        "ListCollections",
+        "StartCollection",
+        "CompleteCollection"
+      ],
+      "preferredExample": {
+        "id": "col-checkout",
+        "version": 2
+      }
+    },
+    {
+      "entity": "ReadAttempt",
+      "purpose": "The durable record of one actual request attempt, including successful empty responses and failures. It preserves the exact request/response evidence and makes retry and pagination claims reviewable.",
+      "ownership": "The collector owns ReadAttempt under a Collection and queryKey. attemptNo describes retry order, not the entity version. The application retains provider request identifiers, errors and authorization context when supplied.",
+      "lifecycle": "RecordReadAttempt records the attempt and its request/response Sources. A running attempt can publish a settled representation under its own version. Once settled it is sealed; a retry is another attempt and later evidence does not reopen it.",
+      "useCases": [
+        {
+          "title": "Retain a denied detail read",
+          "scenario": "The service summary was fetched but a subsequent detail request is denied.",
+          "howEntityIsUsed": "Record the failed ReadAttempt with query context, modeled error and retained request/response envelope when available.",
+          "outcome": "The missing detail is explained as unavailable rather than an empty successful result."
+        },
+        {
+          "title": "Audit a page traversal",
+          "scenario": "An operator asks whether every journal page was read.",
+          "howEntityIsUsed": "Inspect the sequence of attempts, opaque page tokens retained in Sources, returned counts and terminal page evidence.",
+          "outcome": "The coverage claim can be traced to actual requests, including retried pages."
+        }
+      ],
+      "historicalOrigins": [
+        {
+          "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "ReadAttempt"
+          ],
+          "kind": "application-collection-record",
+          "heading": "Collection observations are separate from source revisions",
+          "anchor": "collection-observations-are-separate-from-source-revisions",
+          "previousUse": "ReadAttempt represented one operation/page request even when no SourceObservation resulted; query fingerprints excluded the changing nextToken.",
+          "consolidation": "The same entity becomes shared infrastructure with universal versions and exact requestSource/responseSource references."
+        },
+        {
+          "sourcePath": "aws/health/analysis/report.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "CollectionItemError",
+            "CollectionRun"
+          ],
+          "kind": "owned-error-and-collection",
+          "heading": "12. Coverage and collection model",
+          "anchor": "12-coverage-and-collection-model",
+          "previousUse": "Health collections retained item-level failedSet errors, including errors inside a successful HTTP response.",
+          "consolidation": "ReadAttempt and its owned error/response evidence retain these outcomes without treating transport success as complete domain success."
+        }
+      ],
+      "invariants": [
+        "No Observation is required for a request that returned no domain object.",
+        "EventBridge and stream receipts do not manufacture native ReadAttempts.",
+        "Settled attempts are immutable facts; failed is not equivalent to empty."
+      ],
+      "relatedEntities": [
+        "Collection",
+        "Source",
+        "Observation",
+        "Connection"
+      ],
+      "operations": [
+        "ListEntityVersions",
+        "GetReadAttempt",
+        "ListReadAttempts",
+        "RecordReadAttempt"
+      ],
+      "preferredExample": {
+        "id": "read-resource-worker",
+        "version": 1
+      }
+    },
+    {
+      "entity": "Source",
+      "purpose": "One logical retained source representation, identified independently of content digest or provider version. Source stores the original provider or adapter document so normalized entities and derived views can be explained and reprocessed.",
+      "ownership": "A trusted collector publishes Source representations under a registered identity/profile contract. Raw open JSON belongs here or in an exact artifact, not in writable extension bags on ordinary domain entities.",
+      "lifecycle": "Changed accepted content appends Source.version under the same sourceId; a repeated unchanged read creates another Observation of the current Source version. A content sequence A→B→A produces versions 1, 2 and 3. Native versions and content digests remain independent attributes.",
+      "useCases": [
+        {
+          "title": "Preserve a status reversal",
+          "scenario": "A Health impact is observed as PENDING, then RESOLVED, then PENDING again.",
+          "howEntityIsUsed": "Retain three Source versions and the Observations that selected them, even if the first and third payload bytes can share storage.",
+          "outcome": "History records the actual sequence rather than rewinding to an old digest."
+        },
+        {
+          "title": "Keep summary and detail honest",
+          "scenario": "A list response omits recommendation detail that was fetched earlier.",
+          "howEntityIsUsed": "Retain SUMMARY and DETAIL as distinct source representations with their own versions and observation clocks.",
+          "outcome": "The newer summary cannot erase or artificially refresh older detailed evidence."
+        }
+      ],
+      "historicalOrigins": [
+        {
+          "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "SourceRevision",
+            "JournalRecordRevision"
+          ],
+          "kind": "retained-evidence",
+          "heading": "Collection observations are separate from source revisions",
+          "anchor": "collection-observations-are-separate-from-source-revisions",
+          "previousUse": "The investigation study separated distinct retained payload revisions from read occurrences, with hash/canonicalization metadata and native version retained as a fact.",
+          "consolidation": "The version-only SourceRevision class is removed. Source is the logical entity; each representation uses the common version contract."
+        },
+        {
+          "sourcePath": "aws/health/analysis/report.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "SourceObservation",
+            "EventRevision",
+            "EntityRevision"
+          ],
+          "kind": "retained-evidence",
+          "heading": "5. ERD: history and delivery",
+          "anchor": "5-erd-history-and-delivery",
+          "previousUse": "The Health model retained raw messages/API responses and contextual event/entity evidence, separate from notification delivery.",
+          "consolidation": "Source holds retained content while Observation holds the occurrence, avoiding a different history mechanism for each Health entity."
+        },
+        {
+          "sourcePath": "aws/resilience-hub/analysis/report.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "FindingObservation",
+            "SUMMARY",
+            "DETAIL"
+          ],
+          "kind": "retained-evidence",
+          "heading": "Reviewed capture identity and detail coverage",
+          "anchor": "reviewed-capture-identity-and-detail-coverage",
+          "previousUse": "Finding observations retained distinct summary/detail payloads and field presence so failed hydration did not look like an empty recommendation array.",
+          "consolidation": "Registered Source representations preserve those meanings with shared exact version references."
+        }
+      ],
+      "invariants": [
+        "Content digest, provider nativeVersion and sourceId answer different questions.",
+        "INLINE payload storage preserves a real JSON null; ARTIFACT explicitly selects an external payload reference.",
+        "Unknown provider fields remain retained and read tolerant; write inputs remain closed and typed."
+      ],
+      "relatedEntities": [
+        "ReadAttempt",
+        "Observation",
+        "Projection",
+        "Snapshot",
+        "JournalRecord"
+      ],
+      "operations": [
+        "ListEntityVersions",
+        "GetSource",
+        "ListSources",
+        "IngestObservation"
+      ],
+      "preferredExample": {
+        "id": "src-health-impact",
+        "version": 3
+      }
+    },
+    {
+      "entity": "Observation",
+      "purpose": "A genuine occurrence in which one exact Source version was read or received. Observation answers when and through which access/channel context evidence was seen; it does not create a new logical provider object on each poll.",
+      "ownership": "The collector owns observations and their occurrence identity. API observations pin the actual ReadAttempt and Connection; event, stream and local receipts retain their real channel context without inventing a request.",
+      "lifecycle": "IngestObservation retains a new receipt with universal version metadata. Replaying the same ingestion intent returns its original receipt; a second genuine read or delivery is a new Observation even when it refers to unchanged source content. Source time, transport time, observedAt and expiry remain distinct.",
+      "useCases": [
+        {
+          "title": "Record a fresh poll of unchanged content",
+          "scenario": "The same FIS experiment body is returned by a later successful read.",
+          "howEntityIsUsed": "Create another Observation of the same Source version and pin that later request and connection.",
+          "outcome": "The console knows the object was checked again without inventing new content or new experiments."
+        },
+        {
+          "title": "Retain redundant notification deliveries",
+          "scenario": "Primary and backup Health notifications deliver the same logical page.",
+          "howEntityIsUsed": "Keep each genuine delivery occurrence as Observation evidence while Communication groups the logical page.",
+          "outcome": "Delivery audit remains complete and event/impact counts do not multiply."
+        }
+      ],
+      "historicalOrigins": [
+        {
+          "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "SourceObservation"
+          ],
+          "kind": "application-observation",
+          "heading": "Collection observations are separate from source revisions",
+          "anchor": "collection-observations-are-separate-from-source-revisions",
+          "previousUse": "SourceObservation recorded one occurrence of a retained revision, allowing repeated polls to cite the same revision and failed reads to have none.",
+          "consolidation": "The concept becomes the shared Observation entity and selects an exact Source version rather than a separate revision entity."
+        },
+        {
+          "sourcePath": "aws/health/analysis/report.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "SourceObservation",
+            "MessageDelivery"
+          ],
+          "kind": "application-observation",
+          "heading": "5. ERD: history and delivery",
+          "anchor": "5-erd-history-and-delivery",
+          "previousUse": "Health distinguished API/source evidence from delivery records and preserved independent provider update clocks.",
+          "consolidation": "Observation supplies the common receipt mechanism; delivery provenance remains channel-specific owned content."
+        },
+        {
+          "sourcePath": "aws/fis/analysis/report.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "ExecutionEvidence",
+            "StateObservation",
+            "MetricObservation"
+          ],
+          "kind": "retained-evidence",
+          "heading": "8. Evidence and audit model",
+          "anchor": "8-evidence-and-audit-model",
+          "previousUse": "FIS required source identity/location, event and ingestion times, action/selector/account associations and coverage for execution and workload evidence.",
+          "consolidation": "Observation and Source consolidate those retention mechanics while provider-specific associations and telemetry shapes remain in registered source profiles."
+        }
+      ],
+      "invariants": [
+        "Observation occurrence is not Source identity and observedAt is not a provider update time.",
+        "An exact ingestion replay is different from a later legitimate receipt.",
+        "Current access is checked when retained evidence is read."
+      ],
+      "relatedEntities": [
+        "Source",
+        "ReadAttempt",
+        "Connection",
+        "Collection",
+        "Projection"
+      ],
+      "operations": [
+        "ListEntityVersions",
+        "GetObservation",
+        "ListObservations",
+        "IngestObservation"
+      ],
+      "preferredExample": {
+        "id": "obs-resource-worker",
+        "version": 1
+      }
+    },
+    {
+      "entity": "Projection",
+      "purpose": "A named derived view with a stable projectionId, exact subject/input versions, a registered result profile and a rule digest. Projection explains what a rule concluded from particular evidence without presenting derived state as a native provider fact.",
+      "ownership": "The trusted derivation service publishes the typed result and its coverage. Supported profiles are EVALUATION, LIFECYCLE_EXPOSURE, INVESTIGATION_RESULT, SERVICE_STATUS and WORKSPACE_SUMMARY; profile values are owned data, not new entity families.",
+      "lifecycle": "PublishProjection appends a version when selected inputs or rules change. Existing versions remain immutable and independently readable. Recomputing a conclusion cannot freshen its source evidence, rewrite a sealed Run or make an unavailable historical input resolve to current head.",
+      "useCases": [
+        {
+          "title": "Explain service attention",
+          "scenario": "A service has healthy recent telemetry, an older resilience assessment and incomplete finding detail.",
+          "howEntityIsUsed": "Publish SERVICE_STATUS using exact selected observations, captured context, coverage and the named aggregation rule.",
+          "outcome": "The UI can explain each attention reason while keeping health, posture and collection quality separate."
+        },
+        {
+          "title": "Reevaluate lifecycle exposure",
+          "scenario": "A corrected matching rule is applied to the same retained database deployment and lifecycle catalog.",
+          "howEntityIsUsed": "Publish a later LIFECYCLE_EXPOSURE Projection version over the exact deployment/catalog inputs and new ruleDigest.",
+          "outcome": "The revised interpretation is reviewable beside the earlier result without changing the original inventory evidence."
+        }
+      ],
+      "historicalOrigins": [
+        {
+          "sourcePath": "aws/resilience-hub/analysis/report.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "CurrentProjection",
+            "Service status projection"
+          ],
+          "kind": "derived-view",
+          "heading": "12. Temporal model for the operator view",
+          "anchor": "12-temporal-model-for-the-operator-view",
+          "previousUse": "The Resilience UI selected typed health/posture evidence into current status with freshness, coverage and computation time.",
+          "consolidation": "Projection consolidates this interpretation layer and replaces local projection counters with ordinary entity versioning."
+        },
+        {
+          "sourcePath": "aws/health/analysis/report.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "LifecycleExposure"
+          ],
+          "kind": "derived-view",
+          "heading": "8. Catalog identity and applicability",
+          "anchor": "8-catalog-identity-and-applicability",
+          "previousUse": "LifecycleExposure joined independently observed component deployments to catalog milestones with matching method, confidence, policy and assessment time.",
+          "consolidation": "Lifecycle exposure becomes a typed Projection profile, preserving exact inputs rather than an extra lifecycle entity."
+        },
+        {
+          "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "ResultDocument",
+            "DerivedRevision",
+            "Derivation"
+          ],
+          "kind": "derived-view",
+          "heading": "Proposed semantic entities",
+          "anchor": "proposed-semantic-entities",
+          "previousUse": "ResultDocument and derived items retained source fragments, parser versions, selection policy and phase; richer result schemas were explicitly application proposals.",
+          "consolidation": "Projection replaces separate revision entities and retains only validated typed result profiles; open native journal content stays in Source."
+        },
+        {
+          "sourcePath": "aws/fis/analysis/report.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "ResilienceAssessment",
+            "AssessmentEvidence"
+          ],
+          "kind": "derived-view",
+          "heading": "9. Workload assessment model",
+          "anchor": "9-workload-assessment-model",
+          "previousUse": "The FIS study modeled workload evaluation separately from experiment execution using explicit criteria and external evidence.",
+          "consolidation": "This application evaluation maps to EVALUATION Projection; it is not the native Resilience Hub ResilienceAssessment entity."
+        }
+      ],
+      "invariants": [
+        "A result must retain exact input and subject versions, rule identity, cutoff and coverage.",
+        "A passed acceptance result does not imply remote cleanup or provider recovery.",
+        "Missing evidence remains unknown; empty denominators cannot manufacture success."
+      ],
+      "relatedEntities": [
+        "Source",
+        "Observation",
+        "Snapshot",
+        "Service",
+        "Run",
+        "ComponentDeployment"
+      ],
+      "operations": [
+        "ListEntityVersions",
+        "GetProjection",
+        "ListProjections",
+        "PublishProjection",
+        "GetServiceStatus",
+        "GetWorkspaceSummary"
+      ],
+      "preferredExample": {
+        "id": "projection-service-status",
+        "version": 1
+      }
+    },
+    {
+      "entity": "Snapshot",
+      "purpose": "A deliberate closed capture of exact entity versions and profile-specific contents. Snapshot supports reproducible admission, historical investigation views, policy context, topology and evaluation inputs; ordinary entity history remains the normal version mechanism.",
+      "ownership": "The capture service validates and owns the manifest, capture interval, coverage and digest. Graph nodes, edges and capture-specific values belong to the Snapshot rather than creating independent CRUD roots.",
+      "lifecycle": "CaptureSnapshot creates a new capture identity at version 1. The model supports guarded later corrections as new Snapshot versions, but that correction writer is deferred. A distinct capture occurrence has a distinct identity. Retained members never fall back to latest records.",
+      "useCases": [
+        {
+          "title": "Reopen an investigation as reviewed",
+          "scenario": "An investigation continues after an operator reviewed its earlier result.",
+          "howEntityIsUsed": "Read the prior Snapshot manifest containing exact task/execution/journal/source/projection and collection evidence versions.",
+          "outcome": "The earlier reviewed result stays reproducible while later live work is visible separately."
+        },
+        {
+          "title": "Freeze run admission inputs",
+          "scenario": "A published Scenario is admitted against the current workload and connections.",
+          "howEntityIsUsed": "Create a RUN_INPUT Snapshot containing validated inputs, resolved bindings, enabled steps and required criteria with exact supporting versions.",
+          "outcome": "Later inventory or definition drift cannot silently change what was admitted; future runtime facts are not inserted into that admission capture."
+        }
+      ],
+      "historicalOrigins": [
+        {
+          "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "InvestigationSnapshot",
+            "SnapshotSource",
+            "SnapshotProjection"
+          ],
+          "kind": "application-capture",
+          "heading": "10. Historical snapshots and result readiness",
+          "anchor": "10-historical-snapshots-and-result-readiness",
+          "previousUse": "An investigation snapshot froze source revisions, projections and collection/coverage evidence over a recorded capture interval, because completion was not a native immutable archive.",
+          "consolidation": "One Snapshot entity supplies that closure with exact EntityRefs; ReadAttempt records are referenced rather than copied."
+        },
+        {
+          "sourcePath": "aws/resilience-hub/analysis/report.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "TopologySnapshot",
+            "TopologyNode",
+            "TopologyEdge"
+          ],
+          "kind": "application-capture",
+          "heading": "10. Topology snapshots and graph meaning",
+          "anchor": "10-topology-snapshots-and-graph-meaning",
+          "previousUse": "Topology captures retained scoped nodes/edges, unresolved endpoints, collection intervals and query scope; no native atomic topology ID was assumed.",
+          "consolidation": "TOPOLOGY Snapshot content keeps graph values and endpoints within one captured scope."
+        },
+        {
+          "sourcePath": "aws/resilience-hub/analysis/report.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "PolicyContextCapture",
+            "EffectiveTargetObservation"
+          ],
+          "kind": "application-capture",
+          "heading": "Historical context",
+          "anchor": "historical-context",
+          "previousUse": "Policy context retained observed target values, associations and policy evidence without claiming the provider had evaluated that exact revision.",
+          "consolidation": "POLICY_CONTEXT Snapshot keeps this qualified historical context distinct from an AWS revision guarantee."
+        },
+        {
+          "sourcePath": "aws/fis/analysis/workflow/model.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "AdmissionSnapshot"
+          ],
+          "kind": "owned-value",
+          "heading": "Owned values and external references",
+          "anchor": "owned-values-and-external-references",
+          "previousUse": "AdmissionSnapshot was a Run-owned value freezing validated inputs, resolved references, enabled steps and criterion denominator.",
+          "consolidation": "The consolidation promotes deliberate captures to shared Snapshot entities and has Run pin the exact capture version."
+        }
+      ],
+      "invariants": [
+        "Snapshot is a business capture, not a replacement for versioning every entity.",
+        "Every historical input required to interpret its contents must resolve in the exact retained closure.",
+        "Capture completion means collection over an interval; it does not assert atomic AWS state.",
+        "A RUN_INPUT capture cannot contain future terminal outcomes."
+      ],
+      "relatedEntities": [
+        "Source",
+        "Observation",
+        "Projection",
+        "Collection",
+        "ReadAttempt",
+        "Run"
+      ],
+      "operations": [
+        "ListEntityVersions",
+        "GetSnapshot",
+        "ListSnapshots",
+        "CaptureSnapshot",
+        "StartRun"
+      ],
+      "preferredExample": {
+        "id": "snap-run-input",
+        "version": 1
+      }
+    },
+    {
+      "entity": "WorkItem",
+      "purpose": "The sole owner of local operator assignment, priority, due dates, work state and verification over typed domain targets. It coordinates human or service follow-up without modifying native event, finding or experiment outcomes.",
+      "ownership": "Application commands own WorkItem state. owner may identify a human, group or service; action audit actors identify the actual human or service. Targets are deliberately live EntityIdentity links, while resolution and verification evidence pin exact retained versions.",
+      "lifecycle": "CreateWorkItem establishes the task. UpdateWorkItem publishes changes under its expectedVersion, and RecordWorkItemVerification records qualified verification evidence. A completed local task can still await fresh AWS or inventory confirmation; its history is retained under one workItemId.",
+      "useCases": [
+        {
+          "title": "Track a maintenance campaign",
+          "scenario": "Several affected resources require coordinated upgrades for related Health contexts.",
+          "howEntityIsUsed": "Create a WorkItem with explicit targets, an owner and due-date rationale, then attach exact inventory/Health evidence during verification.",
+          "outcome": "Coordinated work is visible without inventing a provider incident-group identity or clearing PENDING impact."
+        },
+        {
+          "title": "Implement repeated suggestions once",
+          "scenario": "Several captured recommendations propose the same practical infrastructure change.",
+          "howEntityIsUsed": "Use one WorkItem to target those recommendation identities and track assignment and completion; keep each Recommendation suggestion and enrichment independently retained.",
+          "outcome": "Operators avoid duplicate task state without falsely merging provider-generated suggestions."
+        }
+      ],
+      "historicalOrigins": [
+        {
+          "sourcePath": "aws/health/analysis/report.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "WorkItem",
+            "WorkItemTarget",
+            "OperatorAction"
+          ],
+          "kind": "application-workflow",
+          "heading": "9. ERD: operator workflow",
+          "anchor": "9-erd-operator-workflow",
+          "previousUse": "WorkItem grouped context, impact or exposure targets with version-checked operator actions, ownership, priority and due-date evidence.",
+          "consolidation": "The same concept becomes the shared local workflow owner and uses common versions and typed targets."
+        },
+        {
+          "sourcePath": "aws/resilience-hub/analysis/report.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "RecommendationEnrichment",
+            "RemediationTask"
+          ],
+          "kind": "application-enrichment",
+          "heading": "RecommendationEntity as an owned value",
+          "anchor": "recommendationentity-as-an-owned-value",
+          "previousUse": "The Resilience analysis proposed enrichment or a separate remediation task for ownership, cost estimates and completion, because nested suggestions had no native lifecycle.",
+          "consolidation": "Assignment and work state move exclusively to WorkItem. Estimates and explanatory notes remain owned Recommendation enrichment under Recommendation.version."
+        }
+      ],
+      "invariants": [
+        "Closing a WorkItem does not establish Health resolution, finding remediation or workload recovery.",
+        "Live targets do not freeze target content; verification evidence must pin exact versions.",
+        "WorkItem owns operator workflow so Recommendation cannot maintain a competing assignment/state machine."
+      ],
+      "relatedEntities": [
+        "HealthEvent",
+        "EventContext",
+        "EntityImpact",
+        "Finding",
+        "Recommendation",
+        "Projection"
+      ],
+      "operations": [
+        "ListEntityVersions",
+        "GetWorkItem",
+        "ListWorkItems",
+        "CreateWorkItem",
+        "UpdateWorkItem",
+        "RecordWorkItemVerification"
+      ],
+      "preferredExample": {
+        "id": "workitem-review",
+        "version": 1
+      }
+    },
+    {
+      "entity": "Command",
+      "purpose": "A durable record of admitted intent, dispatch and reconciliation. Command separates what an authorized actor requested from provider acceptance, remote effects and observed completion, using one common version and idempotency contract.",
+      "ownership": "The command service admits validated intent; trusted dispatchers and reconcilers publish subsequent lifecycle versions. Operation-specific typed inputs determine what may change. Command attempts and effects are owned values.",
+      "lifecycle": "Admission retains operation, actor, clientToken, canonical requestDigest and relevant preconditions before dispatch. An exact replay is reauthorized and resolves to the original receipt before mutable head checks. Later versions retain attempts, effects, results or uncertainty; a lost response is reconciled without manufacturing success.",
+      "useCases": [
+        {
+          "title": "Recover a lost start response",
+          "scenario": "An assessment start request is accepted but the client loses the response.",
+          "howEntityIsUsed": "Replay the same scoped token and complete intent to obtain its existing Command receipt, then inspect reconciliation rather than creating a second start.",
+          "outcome": "The user can discover admitted work and uncertain effects without assuming exactly-once AWS execution."
+        },
+        {
+          "title": "Separate approval from continuation",
+          "scenario": "An operator approves a paused investigation action.",
+          "howEntityIsUsed": "Retain one decision Command and a distinct resume Command, each with its exact request context and observed result.",
+          "outcome": "Approval, resumed execution and verified operational recovery remain separately auditable facts."
+        }
+      ],
+      "historicalOrigins": [
+        {
+          "sourcePath": "aws/resilience-hub/analysis/report.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "local command",
+            "clientToken",
+            "reconciliation state"
+          ],
+          "kind": "application-command",
+          "heading": "Command handling",
+          "anchor": "command-handling",
+          "previousUse": "The Resilience analysis required a local command ID, input, actor, submission time, request result and reconciliation state; asynchronous acceptance could not establish completion.",
+          "consolidation": "There was no complete one-to-one shared Command schema. Consolidation makes this cross-module intent/receipt record explicit and versioned."
+        },
+        {
+          "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_UI_Contract.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "ApprovalRequest",
+            "DecisionAttempt",
+            "ResumeAttempt"
+          ],
+          "kind": "application-control-audit",
+          "heading": "5. Actions, approvals and operator decisions",
+          "anchor": "5-actions-approvals-and-operator-decisions",
+          "previousUse": "The investigation UI contract retained distinct observed approval request, decision attempt and resume attempt records, with actual responses and ambiguous outcomes.",
+          "consolidation": "DecisionAttempt and ResumeAttempt become instances of the shared Command entity; ApprovalRequest retains the observed provider request context."
+        },
+        {
+          "sourcePath": "aws/fis/analysis/workflow/model.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "dispatch intent",
+            "CancellationIntent",
+            "ExternalOperationRef"
+          ],
+          "kind": "owned-control-values",
+          "heading": "5. Retries, cancellation and finalization",
+          "anchor": "5-retries-cancellation-and-finalization",
+          "previousUse": "Workflow attempts persisted a dispatch key before provider calls, reconciled ambiguous effects, and retained cancellation intent independently from remote stopping.",
+          "consolidation": "Command unifies public mutation admission and receipt behavior; workflow StepAttempt still owns execution-attempt facts and its effects."
+        }
+      ],
+      "invariants": [
+        "Local expectedVersion protects admission, not an atomic cross-service AWS transaction.",
+        "Idempotency compares the complete canonical intent, including preconditions, within trusted workspace/principal/operation scope.",
+        "An accepted command, an accepted stop and a permission grant are not proof of remote completion.",
+        "An unresolved effect cannot justify a blind creating retry."
+      ],
+      "relatedEntities": [
+        "Workspace",
+        "WorkItem",
+        "ApprovalRequest",
+        "Run",
+        "StepAttempt",
+        "Experiment"
+      ],
+      "operations": [
+        "ListEntityVersions",
+        "CreateConnection",
+        "UpdateConnection",
+        "GetCommand",
+        "ListCommands",
+        "StartCollection",
+        "RecordReadAttempt",
+        "IngestObservation",
+        "CompleteCollection",
+        "PublishProjection",
+        "CaptureSnapshot",
+        "CreateWorkItem",
+        "UpdateWorkItem",
+        "RecordWorkItemVerification",
+        "CreateSystem",
+        "UpdateSystem",
+        "CreateUserJourney",
+        "UpdateUserJourney",
+        "CreateService",
+        "UpdateService",
+        "UpdateDependencyGovernance",
+        "StartResilienceAssessment",
+        "UpdateFindingDisposition",
+        "UpdateDependencyClassification",
+        "UpdateResiliencePolicyConfiguration",
+        "UpdateResilienceServiceConfiguration",
+        "UpdateRecommendationEnrichment",
+        "StartInvestigation",
+        "DecideApproval",
+        "ResumeExecution",
+        "CreateScenario",
+        "UpdateScenario",
+        "PublishScenario",
+        "ArchiveScenario",
+        "StartRun",
+        "RequestRunCancellation",
+        "StopExperiment"
+      ],
+      "preferredExample": {
+        "id": "command-start-run",
+        "version": 1
+      }
+    },
+    {
+      "entity": "System",
+      "purpose": "A local business-system catalog entry that groups workload context for the operator. It retains verified provider bindings so the console can relate its catalog to earlier Resilience system definitions without making every local change an AWS configuration command.",
+      "ownership": "Application commands own System name, description and provider bindings. Service.memberships is the sole writable source of system/service membership; reverse service lists and counts are derived.",
+      "lifecycle": "CreateSystem creates the stable systemId and first version. UpdateSystem compares the owning System version and publishes a successor. Historical projections and captures pin the System representation they used; a business rename does not alter those earlier views.",
+      "useCases": [
+        {
+          "title": "Describe the commerce boundary",
+          "scenario": "An operator defines the commerce system containing purchase and fulfillment journeys.",
+          "howEntityIsUsed": "Create a System with local business metadata and retain any verified Resilience system association in providerBindings.",
+          "outcome": "All modules can present the same business context without assuming local catalog creation provisioned a native system."
+        },
+        {
+          "title": "Count a shared service once",
+          "scenario": "One service participates in two journeys within the same system.",
+          "howEntityIsUsed": "Derive the system service set from distinct Service.memberships rather than adding journey counts.",
+          "outcome": "System-level counts reflect unique services and preserve the evidence behind their status."
+        }
+      ],
+      "historicalOrigins": [
+        {
+          "sourcePath": "aws/resilience-hub/analysis/report.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "SystemEntity",
+            "System",
+            "SystemService"
+          ],
+          "kind": "native-resource-and-local-membership",
+          "heading": "3. Systems services and user journeys",
+          "anchor": "3-systems-services-and-user-journeys",
+          "previousUse": "The earlier Resilience model normalized native System fields and Service.associatedSystems into a system catalog and local join records. A system could contain journeys and directly associated services.",
+          "consolidation": "The consolidated System is the application business catalog. Native aliases are explicit provider bindings; Service owns local membership and AWS writes have separate command boundaries."
+        }
+      ],
+      "invariants": [
+        "Names are display fields, not identity joins.",
+        "System has no invented directly assigned native policy field.",
+        "Journey membership does not supply execution order, redundancy or critical-path weighting."
+      ],
+      "relatedEntities": [
+        "UserJourney",
+        "Service",
+        "Projection",
+        "Snapshot"
+      ],
+      "operations": [
+        "ListEntityVersions",
+        "CreateSystem",
+        "GetSystem",
+        "ListSystems",
+        "UpdateSystem"
+      ],
+      "preferredExample": {
+        "id": "sys-commerce",
+        "version": 1
+      }
+    },
+    {
+      "entity": "UserJourney",
+      "purpose": "A named local user journey within exactly one System. It provides business context for participating services, without claiming that membership alone defines an executable workflow or measured end-to-end availability.",
+      "ownership": "Application commands own the journey metadata and verified provider bindings. Its parent systemId is ownership context. Service.memberships owns the service association; UserJourney does not keep a competing writable service list.",
+      "lifecycle": "CreateUserJourney creates a system-scoped identity and UpdateUserJourney publishes later metadata versions under expectedVersion. An exact historical view pins the appropriate journey and membership evidence instead of joining to the latest catalog.",
+      "useCases": [
+        {
+          "title": "Define the purchase journey",
+          "scenario": "A team wants to examine checkout and payment as the services supporting a customer purchase.",
+          "howEntityIsUsed": "Create UserJourney under the commerce System and associate the services through their memberships.",
+          "outcome": "Operators gain a business navigation view while retaining each service as an independently observed workload."
+        },
+        {
+          "title": "Explain qualified journey posture",
+          "scenario": "One shared service misses its effective resilience target.",
+          "howEntityIsUsed": "Use the journey membership and captured policy context in a Projection rather than assigning a native success/failure field to the journey.",
+          "outcome": "The view shows which member and requirement need attention without asserting unmeasured journey compliance."
+        }
+      ],
+      "historicalOrigins": [
+        {
+          "sourcePath": "aws/resilience-hub/analysis/report.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "UserJourneyEntity",
+            "UserJourney",
+            "JourneyService"
+          ],
+          "kind": "native-resource-and-local-membership",
+          "heading": "3. Systems services and user journeys",
+          "anchor": "3-systems-services-and-user-journeys",
+          "previousUse": "The prior model scoped userJourneyId by System, preserved a native policy reference and normalized service participation from Service.associatedSystems. The journey body had no embedded service list.",
+          "consolidation": "UserJourney becomes a local catalog entity with explicit provider bindings; the consolidated model retains one membership writer on Service."
+        },
+        {
+          "sourcePath": "aws/resilience-hub/analysis/report.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "journey policy assignment",
+            "effectivePolicyValues"
+          ],
+          "kind": "provider-configuration-context",
+          "heading": "Assignment and effective targets",
+          "anchor": "assignment-and-effective-targets",
+          "previousUse": "The analysis distinguished journey policy applicability from service-level effective targets and warned that a strict combined target did not prove each looser journey requirement failed.",
+          "consolidation": "Those provider facts remain retained Source and policy-context Snapshot evidence rather than local writable journey status."
+        }
+      ],
+      "invariants": [
+        "A UserJourney belongs to one System, and journey membership must agree with that system.",
+        "Do not derive ordering or redundancy from membership.",
+        "Local journey edits do not mutate native policy assignments."
+      ],
+      "relatedEntities": [
+        "System",
+        "Service",
+        "ResiliencePolicy",
+        "Snapshot",
+        "Projection"
+      ],
+      "operations": [
+        "ListEntityVersions",
+        "CreateUserJourney",
+        "GetUserJourney",
+        "ListUserJourneys",
+        "UpdateUserJourney"
+      ],
+      "preferredExample": {
+        "id": "journey-purchase",
+        "version": 1
+      }
+    },
+    {
+      "entity": "Service",
+      "purpose": "The business workload boundary reused by Health, Resilience, investigations and workflow context. Service is distinct from an AWS service family such as EC2 and from a DevOps RegisteredService integration.",
+      "ownership": "Application commands own Service catalog metadata, resource links, provider bindings and memberships. Memberships is the only writable system/journey association in the consolidated catalog; native Resilience configuration remains separately observed and separately commanded.",
+      "lifecycle": "CreateService and UpdateService publish local catalog versions under expectedVersion. Provider-observed changes retain Source/Observation evidence and may invalidate derived context without rewriting prior Service snapshots. UpdateResilienceServiceConfiguration is a distinct native mutation boundary.",
+      "useCases": [
+        {
+          "title": "Connect a workload to observed resources",
+          "scenario": "The checkout workload uses worker instances and a database.",
+          "howEntityIsUsed": "Retain the local Service, qualified resourceIds and explicit providerBindings, then associate domain observations through their scoped identities.",
+          "outcome": "The operator sees a common workload page without treating incomplete resource discovery as a complete architecture."
+        },
+        {
+          "title": "Move a service into a journey",
+          "scenario": "A service becomes part of the purchase journey in the commerce system.",
+          "howEntityIsUsed": "Replace the allowed membership value through UpdateService using its current version; derive reverse system/journey views.",
+          "outcome": "There is one membership authority, and historical captures preserve the earlier associations."
+        }
+      ],
+      "historicalOrigins": [
+        {
+          "sourcePath": "aws/resilience-hub/analysis/report.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "ServiceEntity",
+            "Service.associatedSystems",
+            "SystemService",
+            "JourneyService"
+          ],
+          "kind": "native-resource-and-local-membership",
+          "heading": "3. Systems services and user journeys",
+          "anchor": "3-systems-services-and-user-journeys",
+          "previousUse": "The earlier model retained native Service metadata and normalized associatedSystems into constrained system/journey joins; services could be shared across several systems.",
+          "consolidation": "Service is now the common local workload catalog with one memberships owner. Native ARNs and configuration remain explicit bindings and source evidence."
+        },
+        {
+          "sourcePath": "aws/resilience-hub/analysis/report.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "ServiceResource",
+            "InputSourceEntity",
+            "PermissionModel"
+          ],
+          "kind": "provider-configuration-context",
+          "heading": "Supporting service configuration",
+          "anchor": "supporting-service-configuration",
+          "previousUse": "Service resource descriptors, input sources and permission configuration supported discovery and native execution; partial read shapes were not valid create requests.",
+          "consolidation": "The local Service exposes catalog resource links while those native configuration objects remain registered retained DTOs, avoiding a writable universal configuration blob."
+        }
+      ],
+      "invariants": [
+        "One writer owns memberships; reverse lists are derived.",
+        "A local catalog edit cannot assert that AWS configuration changed.",
+        "Provider permission configuration is not application authorization.",
+        "Distinct service identities, not summed memberships, are the rollup population."
+      ],
+      "relatedEntities": [
+        "System",
+        "UserJourney",
+        "Resource",
+        "Dependency",
+        "ResilienceAssessment",
+        "Finding",
+        "Projection"
+      ],
+      "operations": [
+        "ListEntityVersions",
+        "CreateService",
+        "GetService",
+        "ListServices",
+        "UpdateService",
+        "UpdateResilienceServiceConfiguration"
+      ],
+      "preferredExample": {
+        "id": "svc-checkout",
+        "version": 2
+      }
+    },
+    {
+      "entity": "Dependency",
+      "purpose": "A service-scoped observed dependency with optional evidenced Resource or Service resolution and a small local governance value. It keeps native classification and local allow/deny reasoning distinct without creating a second entity or version clock.",
+      "ownership": "Mixed field authority shares one Dependency.version: the collector owns native identity, observation and rawClassification; the application owns governance through UpdateDependencyGovernance. UpdateDependencyClassification is the separate provider command boundary.",
+      "lifecycle": "New provider evidence and permitted governance edits both append versions of the same dependencyId. Governance has no independent version. A provider refresh can make a local expectedVersion stale, preserving the conservative conflict instead of overwriting new evidence.",
+      "useCases": [
+        {
+          "title": "Review a discovered DNS dependency",
+          "scenario": "Checkout discovers a database DNS name with HARD native criticality.",
+          "howEntityIsUsed": "Inspect the observed Dependency and its evidence; attach governance rationale using UpdateDependencyGovernance while preserving rawClassification.",
+          "outcome": "The local decision is auditable without implying network permissions or native criticality changed."
+        },
+        {
+          "title": "Resolve a dependency carefully",
+          "scenario": "A DNS name appears to identify a cataloged service.",
+          "howEntityIsUsed": "Set or retain a qualified targetServiceId or targetResourceId only when matching evidence supports the relationship.",
+          "outcome": "An operator can navigate the dependency without treating a display-name coincidence as an AWS foreign key."
+        }
+      ],
+      "historicalOrigins": [
+        {
+          "sourcePath": "aws/resilience-hub/analysis/report.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "DependencyEntity",
+            "DependencyGovernance",
+            "DNS queryRange"
+          ],
+          "kind": "native-resource-and-local-overlay",
+          "heading": "9. Dependencies and topology",
+          "anchor": "9-dependencies-and-topology",
+          "previousUse": "DependencyEntity retained service-scoped DNS evidence, usage windows and criticality. DependencyGovernance was a separately versioned local allowed-status overlay with rationale; DNS counts were not health metrics.",
+          "consolidation": "The concept stays service-scoped, but governance is now an owned value under the single Dependency version. Native classification and local governance retain separate writers and operation contracts."
+        }
+      ],
+      "invariants": [
+        "Governance shares Dependency.version; it has no separate counter.",
+        "Native classification describes dependency criticality, not current availability.",
+        "DNS query counts do not establish request success or latency.",
+        "An allowed-status decision does not change network permissions."
+      ],
+      "relatedEntities": [
+        "Service",
+        "Resource",
+        "Observation",
+        "Command"
+      ],
+      "operations": [
+        "ListEntityVersions",
+        "GetDependency",
+        "ListDependencies",
+        "UpdateDependencyGovernance",
+        "UpdateDependencyClassification"
+      ],
+      "preferredExample": {
+        "id": "dep-checkout-store",
+        "version": 1
+      }
+    },
+    {
+      "entity": "HealthEvent",
+      "purpose": "The shared identity of one AWS Health event, preserving the complete event ARN and indexed event classification. Context-specific status, affected constructs and delivery occurrences remain separate so one event is not multiplied by accounts or notifications.",
+      "ownership": "A trusted Health collector normalizes the provider identity and selected exact Source. Operators cannot create, acknowledge or close the native event through this entity; local follow-up belongs to WorkItem.",
+      "lifecycle": "The same healthEventId publishes versions as accepted provider evidence changes. EventContext partitions account/public/organization evidence, and independently observed entity impacts keep their own update clocks. Missing newer source access does not erase retained history.",
+      "useCases": [
+        {
+          "title": "Unify cross-account views of one event",
+          "scenario": "Organization and account reads reference the same full Health event ARN.",
+          "howEntityIsUsed": "Resolve them to one HealthEvent and keep their evidence in distinct EventContexts.",
+          "outcome": "Event totals remain stable while each account view preserves its own status and impact evidence."
+        },
+        {
+          "title": "Retain an updated event description",
+          "scenario": "Hydration supplies a newer event representation after an EventBridge notification.",
+          "howEntityIsUsed": "Retain its Source and update the selected versioned event representation without discarding the original notification.",
+          "outcome": "Operators can inspect what changed and which source supported the displayed event."
+        }
+      ],
+      "historicalOrigins": [
+        {
+          "sourcePath": "aws/health/analysis/report.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "HealthEvent",
+            "HEALTH_EVENT"
+          ],
+          "kind": "native-resource",
+          "heading": "3. Core entity dictionary and keys",
+          "anchor": "3-core-entity-dictionary-and-keys",
+          "previousUse": "HealthEvent used the full provider eventArn and indexed service/type/category/scope/Region while retained revisions preserved corrections and conflicts.",
+          "consolidation": "The entity is carried forward with universal versioning; contextual history moves through Source/Observation and EventContext rather than version-only classes."
+        }
+      ],
+      "invariants": [
+        "Use the full event ARN, not an EventBridge envelope ID or a friendly title.",
+        "Count events independently of contexts, deliveries and impacts.",
+        "Provider event closure is not local verification or global workload recovery."
+      ],
+      "relatedEntities": [
+        "EventContext",
+        "EntityImpact",
+        "Communication",
+        "Source",
+        "WorkItem"
+      ],
+      "operations": [
+        "ListEntityVersions",
+        "GetHealthEvent",
+        "ListHealthEvents"
+      ],
+      "preferredExample": {
+        "id": "event-rds-maintenance",
+        "version": 1
+      }
+    },
+    {
+      "entity": "EventContext",
+      "purpose": "An application evidence partition for one Health event: PUBLIC, ACCOUNT or ORG_SUMMARY. It carries the context key, selected observation and contextual provider status so information from one account or access scope cannot overwrite another.",
+      "ownership": "The trusted normalizer derives context from actual provider request/response scope. PUBLIC has no affected-account or organization owner; ACCOUNT has one account; ORG_SUMMARY has organization scope and cannot own EntityImpact children.",
+      "lifecycle": "A context has stable uniqueness within Workspace by event identity, kind and non-null contextKey. Later selected observations publish context versions. Notification recipients are retained as communication provenance and do not create additional affected-account contexts.",
+      "useCases": [
+        {
+          "title": "Keep public recipient metadata separate",
+          "scenario": "A public Health notification is delivered to several accounts.",
+          "howEntityIsUsed": "Resolve all copies to the shared PUBLIC EventContext and keep recipient details with Communication/Observation.",
+          "outcome": "Delivery count does not become affected-account count."
+        },
+        {
+          "title": "Hydrate one organization account",
+          "scenario": "An organization summary identifies an affected account requiring detail hydration.",
+          "howEntityIsUsed": "Create or resolve its ACCOUNT context and record the account-scoped detail/impact observations there.",
+          "outcome": "Partial organization summary evidence remains separate from actual account detail."
+        }
+      ],
+      "historicalOrigins": [
+        {
+          "sourcePath": "aws/health/analysis/report.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "EventContext",
+            "PUBLIC",
+            "ACCOUNT",
+            "ORG_SUMMARY"
+          ],
+          "kind": "application-aggregate",
+          "heading": "Exact context invariants",
+          "anchor": "exact-context-invariants",
+          "previousUse": "The earlier Health design introduced non-null context keys because account detail is addressed by event/account while public events have no affected-account owner. ORG_SUMMARY could not contain entity impacts.",
+          "consolidation": "The same local abstraction is retained as a universally versioned entity; its values remain application context kinds rather than invented AWS eventScopeCode values."
+        }
+      ],
+      "invariants": [
+        "Context kinds are application evidence partitions, not new AWS event scope values.",
+        "PUBLIC notification receipt cannot establish account impact.",
+        "ORG_SUMMARY has no EntityImpact children.",
+        "Context-specific status cannot leak into another context."
+      ],
+      "relatedEntities": [
+        "HealthEvent",
+        "Observation",
+        "EntityImpact",
+        "Communication"
+      ],
+      "operations": [
+        "ListEntityVersions",
+        "GetEventContext",
+        "ListEventContexts"
+      ],
+      "preferredExample": {
+        "id": "context-account",
+        "version": 1
+      }
+    },
+    {
+      "entity": "EntityImpact",
+      "purpose": "The participation of an affected construct in one Health EventContext. It retains the Health entity identity/value, independently observed event-relative state and optional inventory matches; it is not a globally healthy or unhealthy Resource.",
+      "ownership": "The Health collector owns the native impact representation and selected observation. Resource matching uses explicit method/evidence and may resolve zero, one or several inventory resources.",
+      "lifecycle": "The stable impact identity is context-scoped. Later provider observations publish versions even when the parent event timestamp does not change. An entityValue-only receipt can remain provisionally identified until supported reconciliation establishes its identity.",
+      "useCases": [
+        {
+          "title": "Track maintenance action on a database",
+          "scenario": "The event-relative database state changes from PENDING to RESOLVED.",
+          "howEntityIsUsed": "Retain the independent impact observations and publish the next EntityImpact version.",
+          "outcome": "The UI shows the provider transition while preserving local WorkItem verification as a separate fact."
+        },
+        {
+          "title": "Keep a broad affected construct visible",
+          "scenario": "Health reports a resource group or an unresolved value rather than one identifiable inventory object.",
+          "howEntityIsUsed": "Retain EntityImpact without forcing a one-to-one Resource link and expose its unresolved or multiple resourceMatches.",
+          "outcome": "Valid impact evidence survives even when inventory matching is incomplete."
+        }
+      ],
+      "historicalOrigins": [
+        {
+          "sourcePath": "aws/health/analysis/report.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "EntityImpact",
+            "EntityRevision",
+            "EntityResourceMatch"
+          ],
+          "kind": "normalized-native-fact",
+          "heading": "Entity identity and inventory matching",
+          "anchor": "entity-identity-and-inventory-matching",
+          "previousUse": "The Health model retained Health entityArn, context and entityValue because an affected construct could be a resource, group or broad/unknown scope. It used optional evidenced inventory matches.",
+          "consolidation": "EntityImpact keeps that meaning and ordinary entity versions; source history and receipt occurrences are consolidated in Source and Observation."
+        }
+      ],
+      "invariants": [
+        "Entity state is relative to this event context, not a global health verdict.",
+        "entityValue is not globally unique.",
+        "A selected impact observation retains its own provider clock.",
+        "Local completion cannot rewrite provider PENDING or RESOLVED state."
+      ],
+      "relatedEntities": [
+        "EventContext",
+        "Observation",
+        "Resource",
+        "WorkItem"
+      ],
+      "operations": [
+        "ListEntityVersions",
+        "GetEntityImpact",
+        "ListEntityImpacts"
+      ],
+      "preferredExample": {
+        "id": "impact-db",
+        "version": 1
+      }
+    },
+    {
+      "entity": "Communication",
+      "purpose": "A validated logical grouping of Health notification pages. It brings together page candidates and delivery observations without confusing a logical message/page with a native Health event or affected entity.",
+      "ownership": "A trusted derivation process owns groupingRuleDigest, validatedBaseId, assembly state and owned pages. Raw communication identifiers and contradictory candidates remain retained evidence; grouping is an explicit application interpretation.",
+      "lifecycle": "As pages or conflicting candidates arrive, new Communication versions preserve the evolving assembly. Repeated genuine deliveries remain separate Observations. Completion is asserted only when the expected pages and validated grouping evidence support it.",
+      "useCases": [
+        {
+          "title": "Assemble a paginated notification",
+          "scenario": "Three pages arrive out of order and page two is delivered twice.",
+          "howEntityIsUsed": "Group validated logical page identities in Communication and retain both page-two receipt observations.",
+          "outcome": "The message can become complete without counting duplicates as additional impact."
+        },
+        {
+          "title": "Expose conflicting page content",
+          "scenario": "Two deliveries claim the same page identity but their payloads disagree.",
+          "howEntityIsUsed": "Retain both candidates and publish a qualified assembly state instead of silently choosing the last arrival.",
+          "outcome": "Operators can inspect the conflict and avoid treating an incomplete or disputed resource list as a total."
+        }
+      ],
+      "historicalOrigins": [
+        {
+          "sourcePath": "aws/health/analysis/report.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "Communication",
+            "MessagePage",
+            "MessageDelivery",
+            "rawCommunicationId"
+          ],
+          "kind": "application-aggregate",
+          "heading": "Idempotency and page assembly",
+          "anchor": "idempotency-and-page-assembly",
+          "previousUse": "The earlier Health design distinguished a local communication grouping from raw AWS communicationId, validated page suffixes, retained redundant deliveries and required all expected pages.",
+          "consolidation": "Communication centralizes grouping as a versioned derived entity; pages are owned values and source/delivery history uses shared evidence entities."
+        }
+      ],
+      "invariants": [
+        "Raw provider communicationId and local communicationId are different identities.",
+        "Grouping must retain its validated rule and notification-account context.",
+        "Delivery region and recipient do not redefine logical event identity.",
+        "Incomplete pages cannot support a complete affected-resource count."
+      ],
+      "relatedEntities": [
+        "EventContext",
+        "Observation",
+        "Source"
+      ],
+      "operations": [
+        "ListEntityVersions",
+        "GetCommunication",
+        "ListCommunications"
+      ],
+      "preferredExample": {
+        "id": "communication-maintenance",
+        "version": 1
+      }
+    },
+    {
+      "entity": "LifecycleEntry",
+      "purpose": "One retained lifecycle catalog entry describing a component version and its milestones. It carries local identity and exact catalog capture/source provenance because the examined provider catalog does not establish a stable entry ID.",
+      "ownership": "The collector owns the returned catalog values. Milestones are owned values under LifecycleEntry.version; versionLabel and recommendedVersion are provider content, not entity-version counters.",
+      "lifecycle": "Observed catalog changes are retained as versions under an evidenced local identity, with catalogSnapshot and Source references. Distinct entries are not merged solely because serviceCode and versionLabel match. Changes in title, dates or milestone content remain historically inspectable.",
+      "useCases": [
+        {
+          "title": "Review an upcoming support milestone",
+          "scenario": "A catalog entry lists an end-of-support date for an engine version.",
+          "howEntityIsUsed": "Inspect the LifecycleEntry, its retained milestones and source catalog Snapshot; use a Projection to assess actual deployed components.",
+          "outcome": "Operators see the catalog fact separately from any claim that a resource is affected."
+        },
+        {
+          "title": "Preserve a revised milestone date",
+          "scenario": "A later catalog capture changes a previously observed milestone date.",
+          "howEntityIsUsed": "Retain both exact source/capture contexts and publish the accepted new LifecycleEntry representation.",
+          "outcome": "A prior lifecycle assessment remains traceable to the date it actually used."
+        }
+      ],
+      "historicalOrigins": [
+        {
+          "sourcePath": "aws/health/analysis/report.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "ServiceLifecycle",
+            "ServiceLifecycleEntry",
+            "LifecycleEvent",
+            "LifecycleMilestone"
+          ],
+          "kind": "provider-catalog-value",
+          "heading": "8. Catalog identity and applicability",
+          "anchor": "8-catalog-identity-and-applicability",
+          "previousUse": "The Health study modeled catalog service/title/version/recommendedVersion and milestones with local IDs and snapshots because stable provider IDs and source-update timestamps were not supplied.",
+          "consolidation": "LifecycleEntry becomes the versioned catalog entity; milestone values stay owned and applicability becomes LIFECYCLE_EXPOSURE Projection rather than an asserted event/resource foreign key."
+        }
+      ],
+      "invariants": [
+        "Do not treat service plus versionLabel as a provider-guaranteed unique key.",
+        "Catalog milestones are not ARN-identified Health events.",
+        "An unresolved recommendedVersion remains the provider-supplied value.",
+        "A create/update restriction milestone does not prove an existing workload is down."
+      ],
+      "relatedEntities": [
+        "Snapshot",
+        "Source",
+        "ComponentDeployment",
+        "Projection"
+      ],
+      "operations": [
+        "ListEntityVersions",
+        "GetLifecycleEntry",
+        "ListLifecycleEntries"
+      ],
+      "preferredExample": {
+        "id": "lifecycle-demo-1",
+        "version": 1
+      }
+    },
+    {
+      "entity": "ComponentDeployment",
+      "purpose": "An observed installed component and version on a Resource. It supplies the inventory side of lifecycle assessment, separately from catalog entries and from any later interpretation of support or applicability.",
+      "ownership": "The inventory collector owns componentKind, versionLabel and the exact supporting Observation. The resource link identifies where this deployment was observed; application publication time does not replace the inventory observation time.",
+      "lifecycle": "Fresh installed-version evidence publishes ComponentDeployment versions under a stable identity. Lifecycle Projections pin the exact deployment version and its observation, so later upgrades cannot rewrite an earlier exposure result.",
+      "useCases": [
+        {
+          "title": "Assess the database engine actually installed",
+          "scenario": "A database resource has a documented engine-version observation.",
+          "howEntityIsUsed": "Retain ComponentDeployment and evaluate it against a captured LifecycleEntry using the registered matching rule.",
+          "outcome": "The exposure result has an explicit inventory basis rather than a guessed match from a service name."
+        },
+        {
+          "title": "Verify an upgrade after local completion",
+          "scenario": "An operator completes an upgrade WorkItem.",
+          "howEntityIsUsed": "Collect a new deployment observation and compare the new ComponentDeployment version with the evidence used by the old exposure.",
+          "outcome": "Verification depends on fresh installed-version evidence; completing the task alone does not clear exposure."
+        }
+      ],
+      "historicalOrigins": [
+        {
+          "sourcePath": "aws/health/analysis/report.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "ComponentDeployment"
+          ],
+          "kind": "external-inventory-fact",
+          "heading": "8. Catalog identity and applicability",
+          "anchor": "8-catalog-identity-and-applicability",
+          "previousUse": "The earlier Health model required independent resource/component/version/account/Region and observation-time evidence for joining deployments to catalog milestones.",
+          "consolidation": "The concept is retained with the shared version contract and exact Observation references; applicability, confidence and matching-rule output stay in Projection."
+        }
+      ],
+      "invariants": [
+        "A component version label is domain content, not ComponentDeployment.version.",
+        "Absent or ambiguous inventory yields unknown applicability rather than automatic healthy/unsupported status.",
+        "Historical exposure must pin the exact deployment version; current head is not a substitute."
+      ],
+      "relatedEntities": [
+        "Resource",
+        "Observation",
+        "LifecycleEntry",
+        "Projection",
+        "WorkItem"
+      ],
+      "operations": [
+        "ListEntityVersions",
+        "GetComponentDeployment",
+        "ListComponentDeployments"
+      ],
+      "preferredExample": {
+        "id": "deployment-db-engine",
+        "version": 1
+      }
+    },
+    {
+      "entity": "ResiliencePolicy",
+      "purpose": "The normalized provider-observed Resilience policy with typed optional components and exact source evidence. It preserves configured objectives without inventing unsupported native performance targets or claiming which revision an assessment evaluated.",
+      "ownership": "The collector publishes observed policy representations. UpdateResiliencePolicyConfiguration admits a separate narrow provider command and reconciliation supplies observed state. Components are owned values under the one policy version.",
+      "lifecycle": "New accepted provider observations append ResiliencePolicy versions, retaining providerUpdatedAt when supplied. Policy changes can invalidate current context, but earlier policy-context Snapshots remain unchanged. Native creation/update times are distinct from local version publication.",
+      "useCases": [
+        {
+          "title": "Compare configured recovery objectives",
+          "scenario": "A policy defines multi-AZ recovery targets but leaves multi-Region recovery unconfigured.",
+          "howEntityIsUsed": "Read the typed components and retain absence rather than filling missing metrics with zero.",
+          "outcome": "The assessment view can distinguish configured objectives from unsupported or unconfigured dimensions."
+        },
+        {
+          "title": "Review a policy change safely",
+          "scenario": "An authorized operator changes a supported native target.",
+          "howEntityIsUsed": "Submit UpdateResiliencePolicyConfiguration with its source precondition and inspect the Command and later selected Observation.",
+          "outcome": "The console separates admitted intent from observed configuration and preserves earlier captured context."
+        }
+      ],
+      "historicalOrigins": [
+        {
+          "sourcePath": "aws/resilience-hub/analysis/report.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "Policy",
+            "PolicyComponent"
+          ],
+          "kind": "native-resource-and-owned-values",
+          "heading": "4. Policy structure and inheritance",
+          "anchor": "4-policy-structure-and-inheritance",
+          "previousUse": "The Resilience model retained availabilitySlo, dataRecovery, multiAz and multiRegion components, using typed component values rather than an unrestricted blob. It identified no native latency/error-rate component in the reviewed shape.",
+          "consolidation": "ResiliencePolicy retains the provider resource with ordinary versions; its components have no separate identities or version clocks."
+        },
+        {
+          "sourcePath": "aws/resilience-hub/analysis/report.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "PolicyContextCapture",
+            "effective target values"
+          ],
+          "kind": "application-capture",
+          "heading": "Historical context",
+          "anchor": "historical-context",
+          "previousUse": "Earlier analysis captured observed policy/target context while warning that a local hash or revision did not prove the exact AWS-evaluated policy.",
+          "consolidation": "Exact policy representations participate in shared Snapshot evidence; they remain qualified observations rather than an AWS evaluation-version guarantee."
+        }
+      ],
+      "invariants": [
+        "Unconfigured is different from zero.",
+        "Local entity version is not an AWS policy revision identifier.",
+        "Policy names alone cannot resolve cross-account policy identity.",
+        "Native permission/configuration commands remain separate from local catalog edits."
+      ],
+      "relatedEntities": [
+        "Observation",
+        "Source",
+        "Snapshot",
+        "ResilienceAssessment",
+        "Service"
+      ],
+      "operations": [
+        "ListEntityVersions",
+        "GetResiliencePolicy",
+        "ListResiliencePolicies",
+        "UpdateResiliencePolicyConfiguration"
+      ],
+      "preferredExample": {
+        "id": "policy-availability",
+        "version": 1
+      }
+    },
+    {
+      "entity": "ResilienceAssessment",
+      "purpose": "One native service-scoped Resilience assessment execution. It records observed execution state and optional selected posture/context evidence while keeping successful execution, achieved objectives and live workload health independent.",
+      "ownership": "A trusted collector owns provider assessment representations. StartResilienceAssessment admits an asynchronous provider command; it does not immediately create a successful assessed outcome. Any policy-context or finding association must be supported and qualified.",
+      "lifecycle": "The same native scoped assessment identity acquires later observed versions as it progresses. A failed new assessment does not erase the previous successful posture retained for the Service. Exact policyContextSnapshot and selectedPostureProjection references explain the selected interpretation when available.",
+      "useCases": [
+        {
+          "title": "Track a newly requested assessment",
+          "scenario": "An operator starts another assessment after a service change.",
+          "howEntityIsUsed": "Follow its Command and observed ResilienceAssessment state separately from the service’s retained last-known posture.",
+          "outcome": "Queued or running work is visible without prematurely marking the service assessed."
+        },
+        {
+          "title": "Explain failure without losing history",
+          "scenario": "The newest assessment fails while yesterday’s completed assessment has retained findings/context.",
+          "howEntityIsUsed": "Retain the failed execution and continue qualifying the older posture by age, coverage and context.",
+          "outcome": "Operators see both the execution failure and the limited evidence that remains available."
+        }
+      ],
+      "historicalOrigins": [
+        {
+          "sourcePath": "aws/resilience-hub/analysis/report.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "AssessmentEntity",
+            "AssessmentSummary",
+            "FailureModeAssessment"
+          ],
+          "kind": "native-resource",
+          "heading": "6. Assessments and findings",
+          "anchor": "6-assessments-and-findings",
+          "previousUse": "The earlier model scoped assessmentId by serviceArn, retained optional execution state, steps, counts and costs, and distinguished SUCCESS from posture and runtime health. Findings remained service children.",
+          "consolidation": "ResilienceAssessment preserves this native execution meaning with universal versions. It is distinct from the FIS study’s application workload assessment, which consolidates as EVALUATION Projection."
+        }
+      ],
+      "invariants": [
+        "Finding has no mandatory assessment foreign key.",
+        "SUCCESS describes assessment execution, not live health or finding-specific remediation.",
+        "A captured policy context is not proof of the exact revision AWS evaluated.",
+        "Assessment totalFindings is a run result, not the current backlog count."
+      ],
+      "relatedEntities": [
+        "Service",
+        "Observation",
+        "Snapshot",
+        "Projection",
+        "Finding",
+        "Command"
+      ],
+      "operations": [
+        "ListEntityVersions",
+        "GetResilienceAssessment",
+        "ListResilienceAssessments",
+        "StartResilienceAssessment"
+      ],
+      "preferredExample": {
+        "id": "assessment-checkout",
+        "version": 1
+      }
+    },
+    {
+      "entity": "Finding",
+      "purpose": "A native service-scoped resilience finding with independently selected summary and detail evidence. Finding preserves current disposition and severity while recording whether recommendation content was actually observed.",
+      "ownership": "The collector owns provider fields and selected observations. UpdateFindingDisposition is a provider command with narrow inputs; local task assignment, completion and verification belong to WorkItem.",
+      "lifecycle": "A stable service/finding identity publishes later representations as native evidence changes. currentCaptureCollection qualifies the current observation attempt. A newer incomplete summary or failed detail fetch cannot erase earlier detail or turn unknown recommendations into an empty array.",
+      "useCases": [
+        {
+          "title": "Show incomplete detail honestly",
+          "scenario": "The finding list is complete but a detail request fails.",
+          "howEntityIsUsed": "Retain selectedSummaryObservation, the prior selectedDetailObservation if available and the current Collection’s qualified coverage.",
+          "outcome": "The operator sees observed counts and detail uncertainty instead of a fabricated zero-suggestion result."
+        },
+        {
+          "title": "Track a claimed remediation",
+          "scenario": "An operator sets the native finding disposition to RESOLVED after implementing a change.",
+          "howEntityIsUsed": "Retain the disposition Command and later provider observation, and use separate WorkItem verification evidence for confirmed remediation.",
+          "outcome": "A status edit is not presented as an independently verified repair."
+        }
+      ],
+      "historicalOrigins": [
+        {
+          "sourcePath": "aws/resilience-hub/analysis/report.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "FindingEntity",
+            "FailureModeFinding"
+          ],
+          "kind": "native-resource",
+          "heading": "6. Assessments and findings",
+          "anchor": "6-assessments-and-findings",
+          "previousUse": "The prior model scoped findingId by serviceArn, retained provider severity/disposition and nested suggestions, and rejected an authoritative Assessment-to-Finding foreign key absent from native reads.",
+          "consolidation": "Finding retains that scope under shared versions; summary/detail provenance and collection coverage remain explicit."
+        },
+        {
+          "sourcePath": "aws/resilience-hub/analysis/report.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "FindingCapture",
+            "FindingObservation",
+            "SUMMARY",
+            "DETAIL"
+          ],
+          "kind": "application-collection-and-evidence",
+          "heading": "Reviewed capture identity and detail coverage",
+          "anchor": "reviewed-capture-identity-and-detail-coverage",
+          "previousUse": "The earlier capture model separated list pagination from detail hydration and retained immutable representation-specific observations with service scope.",
+          "consolidation": "Collection, Source and Observation consolidate those mechanisms. Finding selects them without acquiring separate revision-only entities."
+        }
+      ],
+      "invariants": [
+        "A finding belongs to a Service, not an invented immutable assessment result set.",
+        "Detail unavailable, omitted suggestion fields and known empty suggestions are different states.",
+        "RESOLVED or IRRELEVANT disposition does not itself prove remediation.",
+        "Do not invent resource ARNs when the provider supplies service-function references."
+      ],
+      "relatedEntities": [
+        "Service",
+        "Collection",
+        "Observation",
+        "Recommendation",
+        "ResilienceAssessment",
+        "WorkItem"
+      ],
+      "operations": [
+        "ListEntityVersions",
+        "GetFinding",
+        "ListFindings",
+        "UpdateFindingDisposition"
+      ],
+      "preferredExample": {
+        "id": "finding-single-node",
+        "version": 1
+      }
+    },
+    {
+      "entity": "Recommendation",
+      "purpose": "One captured Resilience finding suggestion, preserving its source grouping and text plus narrowly owned local enrichment. It is not the separate AWS DevOps prevention Recommendation resource, which remains a retained provider DTO.",
+      "ownership": "Mixed field authority shares one Recommendation.version: the collector owns the captured suggestion and exact source/detail observation; the application owns estimates and explanatory enrichment. WorkItem exclusively owns assignment and work state.",
+      "lifecycle": "Where the source provides no stable suggestion key, identity is scoped by Finding, exact Source version, groupKey and ordinal. Repeated observations of that same Source reuse the recommendation identity. A changed Source does not establish continuity merely because ordinal or text matches. Enrichment edits append ordinary Recommendation versions.",
+      "useCases": [
+        {
+          "title": "Estimate a suggested architecture change",
+          "scenario": "A detailed finding suggests adding another node.",
+          "howEntityIsUsed": "Retain the captured suggestion and add an estimate with provenance, currency/units, basis and confidence through UpdateRecommendationEnrichment.",
+          "outcome": "The operator can assess the proposal without presenting application estimates as native AWS recommendation fields."
+        },
+        {
+          "title": "Avoid duplicates from repeated polling",
+          "scenario": "The same detailed finding payload is read again.",
+          "howEntityIsUsed": "Reuse the Recommendation tied to the exact Source version and retain the later Observation separately.",
+          "outcome": "Polling does not create duplicate suggestions, while genuinely changed captures remain distinct and traceable."
+        }
+      ],
+      "historicalOrigins": [
+        {
+          "sourcePath": "aws/resilience-hub/analysis/report.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "RecommendationEntity",
+            "RecommendationEnrichment",
+            "RemediationTask"
+          ],
+          "kind": "native-owned-value-and-local-enrichment",
+          "heading": "RecommendationEntity as an owned value",
+          "anchor": "recommendationentity-as-an-owned-value",
+          "previousUse": "Native detail contained grouped infrastructure/code, observability and testing suggestedChanges arrays without a standalone recommendation ID or lifecycle. The study proposed observation-scoped normalization and separate enrichment/task support.",
+          "consolidation": "The captured suggestion becomes a versioned application Recommendation. Estimates/notes inherit its version; task ownership and state move to WorkItem."
+        },
+        {
+          "sourcePath": "aws/resilience-hub/analysis/report.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "Recommendation",
+            "FindingObservation",
+            "sourceArrayOrdinal"
+          ],
+          "kind": "application-capture-identity",
+          "heading": "Reviewed capture identity and detail coverage",
+          "anchor": "reviewed-capture-identity-and-detail-coverage",
+          "previousUse": "The earlier model keyed a suggestion by DETAIL observation, category and ordinal and warned that position or payload equality did not prove cross-capture continuity.",
+          "consolidation": "Identity now uses the exact Source version instead of each receipt, so repeated unchanged observations reuse the entity. Position still does not bridge changed Source versions."
+        }
+      ],
+      "invariants": [
+        "Recommendation has no independent enrichment version counter.",
+        "Ordinal and content equality do not prove native continuity across changed source versions.",
+        "Group identity is the source array, not Finding.failureCategory.",
+        "A local estimate or completed WorkItem is not native recommendation status."
+      ],
+      "relatedEntities": [
+        "Finding",
+        "Service",
+        "Source",
+        "Observation",
+        "WorkItem"
+      ],
+      "operations": [
+        "ListEntityVersions",
+        "GetRecommendation",
+        "ListRecommendations",
+        "UpdateRecommendationEnrichment"
+      ],
+      "preferredExample": {
+        "id": "recommendation-second-node",
+        "version": 1
+      }
+    },
+    {
+      "entity": "AgentSpace",
+      "purpose": "The native AWS DevOps Agent workspace resource observed inside the application Workspace. It supplies provider scope for tasks, executions, journals and assets and retains observed integration associations.",
+      "ownership": "The collector owns AgentSpace identity, name, selected observation and association values. A RegisteredService association is provider integration context, distinct from the local business Service and from the application Connection used to read it.",
+      "lifecycle": "Observed configuration changes publish ordinary AgentSpace versions. Historical interpretations pin the observed version and supporting Source/Observation; current integration access or asset configuration cannot be assumed to have existed during an earlier execution.",
+      "useCases": [
+        {
+          "title": "Browse investigations in one native space",
+          "scenario": "An operator selects a DevOps AgentSpace within the consolidated console.",
+          "howEntityIsUsed": "Use its scoped native identity to list retained Investigation, Execution and Asset entities under the same application Workspace.",
+          "outcome": "The user has a coherent native scope without confusing it with the product authorization boundary."
+        },
+        {
+          "title": "Explain available integrations at capture time",
+          "scenario": "A historical investigation refers to repository access that has since changed.",
+          "howEntityIsUsed": "Inspect the captured AgentSpace representation and associated source evidence rather than the latest associations.",
+          "outcome": "The view explains observed historical configuration without claiming that configured access was successfully consumed."
+        }
+      ],
+      "historicalOrigins": [
+        {
+          "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "AgentSpace",
+            "RegisteredService",
+            "Association"
+          ],
+          "kind": "native-resource-and-configuration",
+          "heading": "2. API-wide entity map",
+          "anchor": "2-api-wide-entity-map",
+          "previousUse": "Agent Spaces scoped native work and runtime history; RegisteredService and Association described integrations a space could use, with current configuration explicitly distinguished from past consumption.",
+          "consolidation": "AgentSpace remains a native entity within Workspace. Association values are retained under it or in source DTOs, rather than promoted to duplicate business Service or credential entities."
+        },
+        {
+          "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "Agent Space configuration",
+            "association context"
+          ],
+          "kind": "retained-configuration-evidence",
+          "heading": "Context snapshots",
+          "anchor": "context-snapshots",
+          "previousUse": "The prior model required observedAt and version/hash when retaining space, association, asset and trigger context for historical interpretation.",
+          "consolidation": "The common version contract and Snapshot closure supply this history without a separate configuration-revision entity."
+        }
+      ],
+      "invariants": [
+        "AgentSpace is not Workspace.",
+        "An integration association is not the business workload Service.",
+        "Configured permission does not prove successful access or historical consumption."
+      ],
+      "relatedEntities": [
+        "Workspace",
+        "Connection",
+        "Investigation",
+        "Execution",
+        "Asset",
+        "Observation"
+      ],
+      "operations": [
+        "ListEntityVersions",
+        "GetAgentSpace",
+        "ListAgentSpaces"
+      ],
+      "preferredExample": {
+        "id": "space-checkout",
+        "version": 1
+      }
+    },
+    {
+      "entity": "Investigation",
+      "purpose": "An application aggregate over a native DevOps Task whose taskType is INVESTIGATION. It brings together the task identity and selected observation, explicitly observed execution memberships, external references and phase-specific result views.",
+      "ownership": "The collector owns the normalized task representation and memberships. StartInvestigation is the consolidated facade command over the supported native task boundary; the model does not invent an AWS Investigation resource or native GetInvestigation operation.",
+      "lifecycle": "Provider Task changes publish Investigation versions, with nativeTaskVersion retained separately from the application version. Completion does not seal all future provider activity: an investigation can continue. Deliberate Snapshot captures preserve earlier reviewed results while current observations advance.",
+      "useCases": [
+        {
+          "title": "Open a completed case whose summary is unavailable",
+          "scenario": "The Task is completed but the completion event points to a journal record that has not been retrieved.",
+          "howEntityIsUsed": "Read the Investigation alongside its INVESTIGATION_RESULT Projection, exact completion evidence and collection status.",
+          "outcome": "Task completion remains visible while the result is correctly labeled pending or unavailable."
+        },
+        {
+          "title": "Preserve a case before further work",
+          "scenario": "An operator reviews an investigation and later continues the native task.",
+          "howEntityIsUsed": "Capture the earlier Investigation and its exact evidence/membership closure in Snapshot, then retain subsequent task versions.",
+          "outcome": "The earlier review remains reproducible rather than being overwritten by the continued case."
+        }
+      ],
+      "historicalOrigins": [
+        {
+          "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "Investigation",
+            "Task",
+            "TaskExecutionMembership"
+          ],
+          "kind": "application-aggregate-over-native-task",
+          "heading": "3. Investigation aggregate and keys",
+          "anchor": "3-investigation-aggregate-and-keys",
+          "previousUse": "The earlier model explicitly composed an Investigation from Task, observed memberships, executions, journals, notifications, results and historical snapshots. It stated that this was not an AWS response payload.",
+          "consolidation": "The composition remains, but Investigation itself now uses the universal identity/version contract; Task nativeVersion and exact evidence remain separate facts."
+        },
+        {
+          "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "Task.status",
+            "Execution.executionStatus",
+            "result availability"
+          ],
+          "kind": "independent-provider-and-application-state",
+          "heading": "4. Preserve separate state domains",
+          "anchor": "4-preserve-separate-state-domains",
+          "previousUse": "Task status, execution status, chat completion, investigation/mitigation milestones and result readiness were kept independent. A completed investigation could continue.",
+          "consolidation": "The consolidated aggregate preserves rawTaskStatus without folding these dimensions into a single done flag; result interpretation belongs to Projection."
+        }
+      ],
+      "invariants": [
+        "GetInvestigation is an application API, not a claimed native AWS operation.",
+        "The optional Task execution pointer is not guaranteed to identify the latest, root or only execution.",
+        "primaryTaskIdentity records linked tasks; it is not invented fork lineage.",
+        "Completion and authoritative summary availability are independent."
+      ],
+      "relatedEntities": [
+        "AgentSpace",
+        "Execution",
+        "JournalRecord",
+        "Source",
+        "Projection",
+        "Snapshot"
+      ],
+      "operations": [
+        "ListEntityVersions",
+        "GetInvestigation",
+        "ListInvestigations",
+        "StartInvestigation"
+      ],
+      "preferredExample": {
+        "id": "investigation-checkout",
+        "version": 1
+      }
+    },
+    {
+      "entity": "Execution",
+      "purpose": "A native DevOps execution scoped by AgentSpace, retaining its own status, optional parent execution identity, agent subtask and selected observation. Its relation to investigations is an observed membership, not a fictional single mandatory parent.",
+      "ownership": "The collector owns the native execution representation. Investigation retains memberships established through actual task-scoped reads; parentExecutionIdentity is the separately observed native execution hierarchy.",
+      "lifecycle": "Successive native observations publish Execution versions. ResumeExecution is a command boundary whose acceptance/stream activity is retained independently from later observed execution state. Provider status changes do not rewrite previously captured execution versions.",
+      "useCases": [
+        {
+          "title": "Display an observed execution tree",
+          "scenario": "Several executions are returned for an investigation, including a child whose parent detail has not yet been loaded.",
+          "howEntityIsUsed": "Retain each Execution with its native parent identity and preserve unresolved hierarchy context.",
+          "outcome": "The tree can explain partial coverage without deleting the child or fabricating a parent state."
+        },
+        {
+          "title": "Associate an execution with multiple tasks",
+          "scenario": "Task-scoped reads establish memberships involving the same native execution identity.",
+          "howEntityIsUsed": "Keep one AgentSpace-scoped Execution and retain the separate Investigation membership evidence.",
+          "outcome": "The model avoids duplicating runtime history or enforcing an unsupported single-task foreign key."
+        }
+      ],
+      "historicalOrigins": [
+        {
+          "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "Execution",
+            "TaskExecutionMembership"
+          ],
+          "kind": "native-resource-and-observed-membership",
+          "heading": "Identity and scope",
+          "anchor": "identity-and-scope",
+          "previousUse": "Execution used the space/execution tuple, while a separate membership table recorded the ListExecutions request and returned task-to-execution relation.",
+          "consolidation": "Execution retains its native scope with universal versions, and membership becomes an owned evidenced relationship on Investigation."
+        },
+        {
+          "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "Execution",
+            "parentExecutionId",
+            "agentSubTask"
+          ],
+          "kind": "native-resource",
+          "heading": "Native field groups and meaning",
+          "anchor": "native-field-groups-and-meaning",
+          "previousUse": "The native execution envelope supplied status, timestamps and open-text agentSubTask with optional parentExecutionId and context.",
+          "consolidation": "The normalized entity preserves these fields without inventing a deterministic step plan, duration or progress denominator."
+        }
+      ],
+      "invariants": [
+        "Execution scope includes AgentSpace.",
+        "Observed task membership and execution parentage are different relations.",
+        "STOPPED alone does not prove success, mitigation or recovery.",
+        "An opened response stream alone is not proof that a paused invocation resumed."
+      ],
+      "relatedEntities": [
+        "AgentSpace",
+        "Investigation",
+        "JournalRecord",
+        "ApprovalRequest",
+        "Observation"
+      ],
+      "operations": [
+        "ListEntityVersions",
+        "GetExecution",
+        "ListExecutions",
+        "ResumeExecution"
+      ],
+      "preferredExample": {
+        "id": "execution-investigation",
+        "version": 1
+      }
+    },
+    {
+      "entity": "JournalRecord",
+      "purpose": "A stable native journal envelope identified within AgentSpace and Execution. JournalRecord preserves recordType and exact selected Source/Observation references while leaving content as arbitrary retained JSON.",
+      "ownership": "The collector owns the envelope representation. Known content profiles may be interpreted by registered derivations, but unsupported record types and unexpected content forms remain available as source evidence instead of being discarded or coerced.",
+      "lifecycle": "Later accepted representations publish JournalRecord versions under the same scoped record identity. Each selected source and occurrence is pinned. Summary selection follows exact phase-specific completion references when supplied; selection and availability are derived concerns, not writable journal status.",
+      "useCases": [
+        {
+          "title": "Retrieve the exact investigation summary",
+          "scenario": "A completion event identifies a specific summary_record_id.",
+          "howEntityIsUsed": "Find that JournalRecord in the correct space/execution and use its exact source version for the INVESTIGATION_RESULT Projection.",
+          "outcome": "Another summary with a later timestamp cannot silently replace the referenced result."
+        },
+        {
+          "title": "Inspect an unfamiliar record type",
+          "scenario": "A provider returns a new recordType or content that is not a Markdown string.",
+          "howEntityIsUsed": "Retain the JournalRecord and arbitrary JSON Source, presenting a raw structured view until a validated parser is available.",
+          "outcome": "Evidence remains accessible and the UI avoids inventing missing root-cause or evidence fields."
+        }
+      ],
+      "historicalOrigins": [
+        {
+          "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "JournalRecord",
+            "JournalRecordRevision"
+          ],
+          "kind": "native-envelope-and-retained-evidence",
+          "heading": "The native envelope is the reliable base",
+          "anchor": "the-native-envelope-is-the-reliable-base",
+          "previousUse": "The prior model relied on required space/execution/record/type/time/content fields and emphasized that content was arbitrary JSON with no universal root-cause, evidence or sequence schema.",
+          "consolidation": "JournalRecord is uniformly versioned; retained payload history uses Source versions rather than separate JournalRecordRevision entities."
+        },
+        {
+          "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "investigation_summary_md",
+            "mitigation_summary_md",
+            "ResultDocument"
+          ],
+          "kind": "documented-content-profile",
+          "heading": "Documented summary profiles",
+          "anchor": "documented-summary-profiles",
+          "previousUse": "The analysis selected exact completion-referenced records by phase and kept missing pointers, unresolved pointers and ambiguous candidates distinct. The _md type did not change the content wire type.",
+          "consolidation": "Those selection and availability rules feed INVESTIGATION_RESULT Projection, while JournalRecord stays the native envelope."
+        }
+      ],
+      "invariants": [
+        "Scope is AgentSpace plus Execution plus native record ID.",
+        "Do not assume content.markdown, content.text or a fixed root-cause schema.",
+        "Investigation and mitigation summaries are separate phases.",
+        "No native single-record GetJournalRecord operation is inferred from the application getter."
+      ],
+      "relatedEntities": [
+        "AgentSpace",
+        "Execution",
+        "Source",
+        "Observation",
+        "Projection"
+      ],
+      "operations": [
+        "ListEntityVersions",
+        "GetJournalRecord",
+        "ListJournalRecords"
+      ],
+      "preferredExample": {
+        "id": "journal-summary",
+        "version": 1
+      }
+    },
+    {
+      "entity": "ApprovalRequest",
+      "purpose": "A retained application record of an observed DevOps approval request context, including its native approval identity, execution, exact request evidence and action digest. It is a control/audit entity, not evidence that a tool ran successfully.",
+      "ownership": "The collector owns request content and observed rawState. DecideApproval and ResumeExecution admit separate Commands under current authorization and exact request context; local clients cannot set provider approval state directly.",
+      "lifecycle": "Observed request/state changes publish ApprovalRequest versions. Decision and resume Command identities are retained independently, allowing partial success or an ambiguous response to remain visible. Neither decision acceptance nor resumption proves the intended operational result.",
+      "useCases": [
+        {
+          "title": "Approve a precisely observed action",
+          "scenario": "An execution pauses with a validated approval request.",
+          "howEntityIsUsed": "Review its exact actionDigest and request Source, then submit DecideApproval against that context.",
+          "outcome": "The accepted decision is auditable without broadening its scope or assuming action execution."
+        },
+        {
+          "title": "Recover decision success with failed resume",
+          "scenario": "The approval call succeeds but the resume response is lost or fails.",
+          "howEntityIsUsed": "Keep decisionCommandIds and resumeCommandIds distinct and inspect their reconciled outcomes before any new action.",
+          "outcome": "The UI preserves partial success and uncertainty rather than showing a false completed action."
+        }
+      ],
+      "historicalOrigins": [
+        {
+          "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_UI_Contract.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "ApprovalRequest",
+            "DecisionAttempt",
+            "ResumeAttempt"
+          ],
+          "kind": "application-control-audit",
+          "heading": "5. Actions, approvals and operator decisions",
+          "anchor": "5-actions-approvals-and-operator-decisions",
+          "previousUse": "The earlier UI contract modeled an observed request context around native approval values, then separate UpdateApprovalAction decision and SendMessage resumption stages. Space-scoped approvalId was separate from interrupt/tool/execution context.",
+          "consolidation": "ApprovalRequest remains the observed request entity. DecisionAttempt and ResumeAttempt consolidate into Command, with ordinary entity versions and no implied single-execution limit on reusable native approval identity."
+        }
+      ],
+      "invariants": [
+        "Preserve actual native approval, interrupt and tool-use context; a button label is not identity.",
+        "A successful rejection is different from a failed API request.",
+        "Approval redemption or decision acceptance does not prove successful tool execution.",
+        "Lost approval/resume responses require a verified recovery path, not blind mutating replay."
+      ],
+      "relatedEntities": [
+        "AgentSpace",
+        "Execution",
+        "Source",
+        "Observation",
+        "Command"
+      ],
+      "operations": [
+        "ListEntityVersions",
+        "GetApprovalRequest",
+        "ListApprovalRequests",
+        "DecideApproval",
+        "ResumeExecution"
+      ],
+      "preferredExample": {
+        "id": "approval-mitigation",
+        "version": 1
+      }
+    },
+    {
+      "entity": "Asset",
+      "purpose": "A native DevOps asset root with ordinary entity versions. Each retained Asset representation selects an exact nativeVersion, Source and owned file descriptors, allowing historical content to be addressed without a separate AssetVersion entity.",
+      "ownership": "The collector owns the observed metadata, native version and file evidence. assetType is open provider content; documented metadata profiles remain qualified source interpretation rather than arbitrary writable fields on the canonical entity.",
+      "lifecycle": "Observed native metadata/content versions publish Asset versions under the same assetId. The application version and nativeVersion are separate. A historical read uses exact file/artifact references and reports unavailable content rather than substituting the provider’s latest alias.",
+      "useCases": [
+        {
+          "title": "Reopen an attached checklist",
+          "scenario": "An investigation references a skill or attachment that has since changed.",
+          "howEntityIsUsed": "Use the captured Asset version and exact nativeVersion/file evidence retained for that historical context.",
+          "outcome": "The original reviewed content is reproducible if retained and authorized, instead of being replaced by current files."
+        },
+        {
+          "title": "Separate available context from consumed inputs",
+          "scenario": "The AgentSpace contains skills and memories while an execution runs.",
+          "howEntityIsUsed": "Retain asset availability/configuration with provenance and record actual consumption only when source evidence supports it.",
+          "outcome": "The UI does not claim that every available current asset was used by the historical execution."
+        }
+      ],
+      "historicalOrigins": [
+        {
+          "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "Asset",
+            "AssetVersion",
+            "AssetFileVersion",
+            "ArtifactReference"
+          ],
+          "kind": "native-resource-and-versioned-content",
+          "heading": "8. Artifacts, assets and reproducibility",
+          "anchor": "8-artifacts-assets-and-reproducibility",
+          "previousUse": "The earlier model kept native assets/files distinct from journal content and A2A artifacts and required a specific assetVersion for reproducible historical reads.",
+          "consolidation": "AssetVersion is no longer an independent entity or nested independent history array. Asset uses the same identity/version contract as all entities, with nativeVersion and files as fields of the selected representation."
+        },
+        {
+          "sourcePath": "aws/devops-agent/analysis/annexes/Investigation_Data_Model.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "skill",
+            "custom_agent",
+            "memory",
+            "feedback"
+          ],
+          "kind": "documented-content-profile",
+          "heading": "Documented Asset profiles",
+          "anchor": "documented-asset-profiles",
+          "previousUse": "Documented metadata could link custom agents to skills/memory stores, memories to stores and feedback to executions, without proving historical consumption.",
+          "consolidation": "The consolidation retains these as source-backed native profiles and preserves availability, attachment and consumption as different claims."
+        }
+      ],
+      "invariants": [
+        "Native version is not the application entity version.",
+        "Files are owned values under the selected Asset version.",
+        "A journal URI or A2A artifact ID is not automatically a native assetId.",
+        "Current asset availability does not prove historical consumption."
+      ],
+      "relatedEntities": [
+        "AgentSpace",
+        "Source",
+        "Snapshot",
+        "Investigation",
+        "Execution"
+      ],
+      "operations": [
+        "ListEntityVersions",
+        "GetAsset",
+        "ListAssets"
+      ],
+      "preferredExample": {
+        "id": "asset-checklist",
+        "version": 1
+      }
+    },
+    {
+      "entity": "Scenario",
+      "purpose": "One application-authored workflow definition with a stable identity and DRAFT, PUBLISHED or ARCHIVED representations. A Scenario owns step definitions, operation locks, checks and publication metadata; versions express publication history without a separate ScenarioRevision entity.",
+      "ownership": "Application authoring commands own the definition. PublishScenario validates and freezes the complete executable contract, schemas, expression/reducer rules and immutable operation locks under the Scenario version. Owned step definitions have no independent CRUD lifecycle.",
+      "lifecycle": "CreateScenario begins a draft; UpdateScenario appends a draft representation; PublishScenario appends a PUBLISHED representation with its digest. Editing a published or archived definition creates a later DRAFT without changing old publications. ArchiveScenario appends an ARCHIVED head that blocks new admissions, while exact replay of an already admitted Run preserves its receipt.",
+      "useCases": [
+        {
+          "title": "Publish a repeatable fault exercise",
+          "scenario": "An author defines a fault action, workload checks and finalizers.",
+          "howEntityIsUsed": "Publish the Scenario so every operation alias resolves to an exact retained implementation/schema lock and the check definitions are frozen.",
+          "outcome": "A Run can select a reproducible program rather than whichever implementation an alias points to later."
+        },
+        {
+          "title": "Revise without changing earlier runs",
+          "scenario": "The author adjusts the error-budget check after one run has finished.",
+          "howEntityIsUsed": "Create a later DRAFT and then publish another Scenario version; earlier Runs keep their exact PUBLISHED reference.",
+          "outcome": "Definition evolution does not rewrite the criteria or behavior of an admitted run."
+        }
+      ],
+      "historicalOrigins": [
+        {
+          "sourcePath": "aws/fis/analysis/workflow/model.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "Scenario",
+            "ScenarioRevision",
+            "StepDefinition",
+            "OperationLock"
+          ],
+          "kind": "application-authoring-aggregate",
+          "heading": "1. Entities, ownership and identity",
+          "anchor": "1-entities-ownership-and-identity",
+          "previousUse": "The earlier workflow split mutable Scenario catalog metadata from immutable ScenarioRevision configuration, with definitions and complete dependency locks owned by each revision.",
+          "consolidation": "ScenarioRevision is folded into Scenario. Draft editing, publication and archival now append ordinary Scenario versions under one identity; owned values inherit that version."
+        },
+        {
+          "sourcePath": "aws/fis/analysis/workflow/model.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "publication",
+            "operation lock",
+            "revision digest"
+          ],
+          "kind": "application-execution-contract",
+          "heading": "2. Publication and admission",
+          "anchor": "2-publication-and-admission",
+          "previousUse": "Publication resolved aliases and retained implementation/schema contracts; admission rejected missing or revoked pinned artifacts rather than silently substituting current aliases.",
+          "consolidation": "Those invariants remain, with Run selecting EntityRef(Scenario,id,version) instead of a separate revision ID."
+        }
+      ],
+      "invariants": [
+        "A published Scenario version is immutable.",
+        "New drafts do not invalidate explicit selection of an older PUBLISHED version; a current ARCHIVED head blocks new admission.",
+        "A FIS ExperimentTemplate is provider configuration, not automatically a Scenario.",
+        "A digest establishes declared content integrity, not external cloud immutability or permission."
+      ],
+      "relatedEntities": [
+        "Run",
+        "Snapshot",
+        "StepRun",
+        "Source"
+      ],
+      "operations": [
+        "ListEntityVersions",
+        "CreateScenario",
+        "GetScenario",
+        "ListScenarios",
+        "UpdateScenario",
+        "PublishScenario",
+        "ArchiveScenario"
+      ],
+      "preferredExample": {
+        "id": "scenario-checkout",
+        "version": 2
+      }
+    },
+    {
+      "entity": "Run",
+      "purpose": "An admitted execution of one exact published Scenario version, with a frozen input Snapshot and an explicitly selected history of StepRuns. Run keeps orchestration, acceptance, finalization and external-effect state separate.",
+      "ownership": "The workflow runtime owns Run lifecycle publications. StartRun performs trusted admission; RequestRunCancellation records monotonic control intent. Clients cannot set executionOutcome, assessmentVerdict or runtime status through a generic update.",
+      "lifecycle": "Admission pins the PUBLISHED Scenario, resolved bindings, enabled steps and required criterion denominator before dispatch. State transitions append Run versions. Cancellation fences new main dispatch while existing effects are reconciled. Terminal Run facts are sealed; later observations or new evaluation Projections do not rewrite the admitted execution.",
+      "useCases": [
+        {
+          "title": "Execute a published checkout exercise",
+          "scenario": "An operator starts a known Scenario version against captured workload bindings.",
+          "howEntityIsUsed": "Read the Run’s exact scenario, inputSnapshot and pinned StepRun references as its runtime progresses.",
+          "outcome": "The console can explain what was admitted and which exact child representations produced a displayed result."
+        },
+        {
+          "title": "Cancel while the remote effect is uncertain",
+          "scenario": "A fault-start request may have reached AWS but its response was lost.",
+          "howEntityIsUsed": "Record cancellation intent, reconcile the originating dispatch and use finalization/effect dimensions to retain unresolved remote work.",
+          "outcome": "The Run can terminate with an indeterminate effect state rather than falsely reporting that cancellation restored the workload."
+        }
+      ],
+      "historicalOrigins": [
+        {
+          "sourcePath": "aws/fis/analysis/workflow/model.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "Run",
+            "AdmissionSnapshot"
+          ],
+          "kind": "application-execution-aggregate",
+          "heading": "1. Entities, ownership and identity",
+          "anchor": "1-entities-ownership-and-identity",
+          "previousUse": "The earlier Run owned admission context, cancellation, steps and attempts and pinned one ScenarioRevision. Its final result was sealed.",
+          "consolidation": "Run now has an ordinary entity version, pins a Scenario version and a shared Snapshot, and records exact child versions rather than latest-only child IDs."
+        },
+        {
+          "sourcePath": "aws/fis/analysis/workflow/model.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "execution phase",
+            "assessment verdict",
+            "finalization",
+            "remoteDisposition"
+          ],
+          "kind": "application-execution-state",
+          "heading": "4. Execution and assessment are separate facts",
+          "anchor": "4-execution-and-assessment-are-separate-facts",
+          "previousUse": "The workflow model separated technical outcome, required-check verdict, finalization and unknown remote effects. An empty required set was not automatically passed.",
+          "consolidation": "The same dimensions remain explicit on Run; independent projectionVersion counters are removed in favor of Run.version."
+        },
+        {
+          "sourcePath": "aws/fis/analysis/workflow/model.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "CancellationIntent",
+            "finalizers",
+            "unresolvedEffects"
+          ],
+          "kind": "owned-control-values",
+          "heading": "5. Retries, cancellation and finalization",
+          "anchor": "5-retries-cancellation-and-finalization",
+          "previousUse": "Cancellation fenced further main dispatch, cleanup had a separate finite budget and unresolved effects remained indeterminate rather than hidden as normal cancellation.",
+          "consolidation": "These remain Run-owned control and state semantics with versioned command receipts and retained effect evidence."
+        }
+      ],
+      "invariants": [
+        "Run pins an exact PUBLISHED Scenario and RUN_INPUT Snapshot.",
+        "Runtime skipping or cancellation cannot shrink the admitted required-criterion denominator.",
+        "No required criteria means NOT_EVALUATED, not automatic success.",
+        "A finished Run or passed verdict does not establish remote cleanup.",
+        "Run.steps references exact StepRun versions; historical reads cannot join current child heads."
+      ],
+      "relatedEntities": [
+        "Scenario",
+        "Snapshot",
+        "StepRun",
+        "StepAttempt",
+        "Command",
+        "Projection"
+      ],
+      "operations": [
+        "ListEntityVersions",
+        "StartRun",
+        "GetRun",
+        "ListRuns",
+        "RequestRunCancellation",
+        "ListRunSteps"
+      ],
+      "preferredExample": {
+        "id": "run-checkout",
+        "version": 2
+      }
+    },
+    {
+      "entity": "StepRun",
+      "purpose": "The Run-owned lifecycle of one named Scenario step, including a step that never executes. It provides the scheduling outcome, explicit attempt selection and exact retry history without becoming an independently editable workflow definition.",
+      "ownership": "The workflow runtime owns StepRun. Its uniqueness includes runId and stepKey; Scenario owns the corresponding StepDefinition value. There is no independent retry, status-edit or step-authoring command for StepRun.",
+      "lifecycle": "Runtime transitions publish StepRun versions. attempts retains exact StepAttempt references and selectedAttempt states which result drives the step’s interpretation. A skipped step can validly have zero attempts, with a reason retained. The parent Run selects the exact StepRun versions used by that representation.",
+      "useCases": [
+        {
+          "title": "Explain a zero-attempt skipped check",
+          "scenario": "A required check cannot run because an upstream action failed.",
+          "howEntityIsUsed": "Retain its StepRun with skipReason and zero attempts rather than deleting it.",
+          "outcome": "The required criterion remains visible and cannot disappear from the Run denominator."
+        },
+        {
+          "title": "Inspect a permitted retry",
+          "scenario": "A read-only query is retried under the published bounded retry policy.",
+          "howEntityIsUsed": "Keep both attempt references and explicitly select the attempt used by the step result.",
+          "outcome": "The UI can explain retry history without confusing transport polling with a new workflow step."
+        }
+      ],
+      "historicalOrigins": [
+        {
+          "sourcePath": "aws/fis/analysis/workflow/model.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "StepRun"
+          ],
+          "kind": "application-owned-runtime-entity",
+          "heading": "1. Entities, ownership and identity",
+          "anchor": "1-entities-ownership-and-identity",
+          "previousUse": "The prior workflow had exactly one StepRun for every compiled main/finalizer step, even if never attempted, with no independent retry/status mutation API.",
+          "consolidation": "The entity is retained and uniformly versioned. attempts and selectedAttempt pin exact child representations rather than implicit current records."
+        },
+        {
+          "sourcePath": "aws/fis/analysis/workflow/model.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "StepRun phase",
+            "selected attempt",
+            "projectionVersion"
+          ],
+          "kind": "application-runtime-projection",
+          "heading": "4. Execution and assessment are separate facts",
+          "anchor": "4-execution-and-assessment-are-separate-facts",
+          "previousUse": "Earlier step summaries selected actual attempts under the retry policy while technical and assessment outcomes stayed separate.",
+          "consolidation": "StepRun now uses its common entity version instead of a special projection history mechanism."
+        }
+      ],
+      "invariants": [
+        "StepRun is runtime state, not the authored StepDefinition.",
+        "One Run/stepKey identifies the step; retries are StepAttempts.",
+        "Zero attempts is valid for a skipped step.",
+        "Selecting an attempt does not discard earlier attempts or unresolved effects."
+      ],
+      "relatedEntities": [
+        "Run",
+        "Scenario",
+        "StepAttempt"
+      ],
+      "operations": [
+        "ListEntityVersions",
+        "StartRun",
+        "GetStepRun",
+        "ListRunSteps",
+        "ListStepAttempts"
+      ],
+      "preferredExample": {
+        "id": "step-inject",
+        "version": 2
+      }
+    },
+    {
+      "entity": "StepAttempt",
+      "purpose": "One durable execution attempt of a StepRun, with a stable dispatch identity, observed external effects, exact evidence and optional check result. It is the record that makes retry and uncertain-effect handling concrete.",
+      "ownership": "The workflow runtime owns attempt facts. attemptNo counts deliberate retries and is distinct from StepAttempt.version. ExternalOperationRef and CheckResult are owned values; their provenance and remote disposition remain explicit.",
+      "lifecycle": "The dispatch key is persisted before any provider call. Polling, transport recovery and checkpoint resume stay within the same attempt; a permitted deliberate retry creates another attempt only after the previous effect is reconciled. Lifecycle versions accumulate until settlement, after which attempt facts are sealed. Late reconciliation adds new evidence rather than rewriting the settled attempt.",
+      "useCases": [
+        {
+          "title": "Reconcile a lost FIS start response",
+          "scenario": "A worker loses contact after dispatching the FIS start request.",
+          "howEntityIsUsed": "Use the retained dispatchKey and external-operation intent to investigate the existing effect through a supported non-creating recovery path.",
+          "outcome": "The engine avoids launching a second fault merely to discover whether the first exists."
+        },
+        {
+          "title": "Retain a conclusive check result",
+          "scenario": "A workload query supplies sufficient evidence for a required assertion.",
+          "howEntityIsUsed": "Store the result with evaluator/predicate identity, cutoff and exact evidence references on the settled attempt.",
+          "outcome": "The result can be audited without treating later samples or a new evaluator as part of the original check."
+        }
+      ],
+      "historicalOrigins": [
+        {
+          "sourcePath": "aws/fis/analysis/workflow/model.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "StepAttempt"
+          ],
+          "kind": "application-owned-runtime-entity",
+          "heading": "1. Entities, ownership and identity",
+          "anchor": "1-entities-ownership-and-identity",
+          "previousUse": "The earlier attempt was scoped by Run, step and attempt number, appended dispatch/checkpoint/effect facts during execution and sealed terminal facts.",
+          "consolidation": "StepAttempt retains its own identity and common version metadata; attemptNo remains an execution-order fact."
+        },
+        {
+          "sourcePath": "aws/fis/analysis/workflow/model.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "dispatchKey",
+            "ExternalOperationRef",
+            "remoteDisposition"
+          ],
+          "kind": "owned-effect-values",
+          "heading": "5. Retries, cancellation and finalization",
+          "anchor": "5-retries-cancellation-and-finalization",
+          "previousUse": "The workflow required persisted dispatch intent before calls, reconciliation before mutating retry and explicit indeterminate outcomes for unresolved effects.",
+          "consolidation": "Those safeguards remain with exact entity/evidence references and no exception to universal versioning."
+        },
+        {
+          "sourcePath": "aws/fis/analysis/workflow/model.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "CheckResult",
+            "Evidence",
+            "evaluation cutoff"
+          ],
+          "kind": "owned-evaluation-and-evidence",
+          "heading": "6. Evidence and assertions",
+          "anchor": "6-evidence-and-assertions",
+          "previousUse": "Assertions froze evidence IDs, evaluator contracts and cutoff; unavailable or insufficient evidence could not establish conclusive absence, and later data could not silently rewrite a sealed result.",
+          "consolidation": "Shared Source/Observation/Projection evidence replaces a separate generic Evidence entity while settled attempt facts stay sealed."
+        }
+      ],
+      "invariants": [
+        "Persist dispatch intent before the external call.",
+        "A timeout or lost handle does not establish that the remote effect did not happen.",
+        "A new mutating attempt is forbidden while the earlier effect is unresolved.",
+        "A false assertion is not a retryable technical error.",
+        "Sealed facts remain unchanged; later reconciliation is separately retained evidence."
+      ],
+      "relatedEntities": [
+        "Run",
+        "StepRun",
+        "Source",
+        "Observation",
+        "Projection",
+        "Experiment"
+      ],
+      "operations": [
+        "ListEntityVersions",
+        "GetStepAttempt",
+        "ListStepAttempts"
+      ],
+      "preferredExample": {
+        "id": "attempt-inject",
+        "version": 2
+      }
+    },
+    {
+      "entity": "Experiment",
+      "purpose": "One native AWS FIS experiment, independently observable whether or not the console launched it. It retains runtime configuration/evidence, named action values, selected target memberships, resolution coverage and report state.",
+      "ownership": "The FIS collector owns observed experiment representations. Native actions, dependencies, selector bindings, target accounts and reports remain provider-owned values under Experiment rather than independent console StepRuns or controllable action entities.",
+      "lifecycle": "Accepted provider observations publish Experiment versions under the scoped native identity. The historical run is interpreted from its retained runtime configuration and template provenance, never from current mutable template contents. StopExperiment records asynchronous intent; subsequent observed status and independent workload/effect evidence establish what followed.",
+      "useCases": [
+        {
+          "title": "Inspect a workflow-launched fault",
+          "scenario": "A StepAttempt starts FIS and retains its external experiment identity.",
+          "howEntityIsUsed": "Follow that evidence to Experiment while keeping the console Run/StepRun graph separate from native named actions.",
+          "outcome": "The operator sees both orchestration and provider execution without fabricating independent action controls."
+        },
+        {
+          "title": "Compare selected scope with observed recovery",
+          "scenario": "An experiment completes and its report later becomes available.",
+          "howEntityIsUsed": "Inspect targetMemberships, resolutionCoverage, actions and report independently, then evaluate workload telemetry through Projection.",
+          "outcome": "Selected targets, action completion, report readiness and workload recovery remain separate evidence-backed claims."
+        }
+      ],
+      "historicalOrigins": [
+        {
+          "sourcePath": "aws/fis/analysis/report.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "ExperimentRun",
+            "Experiment",
+            "ActionExecution",
+            "ActionDependency"
+          ],
+          "kind": "native-resource-and-owned-runtime-values",
+          "heading": "2. Core execution model",
+          "anchor": "2-core-execution-model",
+          "previousUse": "The FIS analysis centered on the native experiment and named action map keys, preserving same-experiment dependency/binding scope and the runtime configuration snapshot.",
+          "consolidation": "Experiment remains the native entity. Named action/runtime members are owned values, and universal Experiment versions replace any special state-history classes."
+        },
+        {
+          "sourcePath": "aws/fis/analysis/report.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "TargetSelection",
+            "ResolvedTargetMembership",
+            "ExperimentTargetAccount",
+            "TargetResolutionObservation"
+          ],
+          "kind": "provider-owned-values-and-collection-evidence",
+          "heading": "5. Target selectors, resolved memberships, and accounts",
+          "anchor": "5-target-selectors-resolved-memberships-and-accounts",
+          "previousUse": "The prior model retained every selector membership, complete targetInformation and separate resolution-ended versus page-traversal evidence; configured target accounts were not child experiments or per-account results.",
+          "consolidation": "Experiment retains memberships and qualified coverage; optional canonical Resource resolution is evidence-based, and shared Collection/Source/Observation retain the collection mechanics."
+        },
+        {
+          "sourcePath": "aws/fis/analysis/workflow/model.md",
+          "sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
+          "sourceConcepts": [
+            "Experiment",
+            "ExternalOperationRef",
+            "named FIS action",
+            "FIS report"
+          ],
+          "kind": "provider-execution-boundary",
+          "heading": "7. FIS and operator UI mapping",
+          "anchor": "7-fis-and-operator-ui-mapping",
+          "previousUse": "The generalized workflow treated an experiment as an external execution of a StepAttempt and native action detail as provider-owned, while reports and checks had independent lifecycles.",
+          "consolidation": "That boundary is preserved: Run can refer to zero, one or several Experiment identities, and workload acceptance remains a Projection rather than a native experiment field."
+        }
+      ],
+      "invariants": [
+        "No individual native action stop, retry or pause operation is invented.",
+        "Named action identity is experiment plus action name, not catalog actionId.",
+        "Selected membership does not prove a per-resource fault occurred.",
+        "A stopped experiment does not prove workload recovery.",
+        "Report availability is independent of experiment outcome and acceptance verdict."
+      ],
+      "relatedEntities": [
+        "Source",
+        "Observation",
+        "Collection",
+        "Resource",
+        "StepAttempt",
+        "Run",
+        "Projection"
+      ],
+      "operations": [
+        "ListEntityVersions",
+        "GetExperiment",
+        "ListExperiments",
+        "StopExperiment"
+      ],
+      "preferredExample": {
+        "id": "experiment-checkout",
+        "version": 1
+      }
+    }
+  ]
+}

@@ -1,0 +1,3862 @@
+{
+  "schemaVersion": "1",
+  "contractVersion": 2,
+  "sourceCommit": "31980a1b7540b1ad74274b0edfc7fc1f08f6a396",
+  "status": "Authored use-case guidance for the phase-one design contract; scenarios describe intended use, not an implemented runtime.",
+  "operations": [
+    {
+      "operation": "GetWorkspace",
+      "purpose": "Read the application scope already selected by trusted authentication, including the modules and organization access represented at a chosen version.",
+      "useCase": {
+        "title": "Orient an operator in the correct scope",
+        "actor": "Console user",
+        "scenario": "An operator opens the console before reviewing a checkout service and needs the selected workspace name and enabled modules.",
+        "whenToUse": "At application entry or when auditing the exact workspace representation retained by another record.",
+        "steps": [
+          "Read the authenticated workspace head, or pass an exact retained version for an audit.",
+          "Use its configuration to explain the visible module scope; enforce current permissions independently."
+        ],
+        "intendedResult": "The interface identifies the selected application workspace without accepting a tenant selector in JSON."
+      },
+      "preconditions": [
+        "Authentication must already establish the workspace; a version does not select a different workspace."
+      ],
+      "pitfalls": [
+        "Workspace is the application authorization boundary. AgentSpace is a separate native DevOps resource.",
+        "Historical workspace configuration cannot restore access that has since been revoked."
+      ],
+      "nextSteps": [
+        "ListConnections",
+        "ListSystems",
+        "ListAgentSpaces"
+      ],
+      "relatedEntities": [
+        "Workspace",
+        "AgentSpace"
+      ],
+      "relatedOperations": [
+        "ListConnections",
+        "ListSystems",
+        "ListAgentSpaces"
+      ]
+    },
+    {
+      "operation": "ListEntityVersions",
+      "purpose": "Enumerate exact retained representations of one logical entity using the same version contract for all entity types.",
+      "useCase": {
+        "title": "Compare a service before and after a membership edit",
+        "actor": "Reviewer",
+        "scenario": "A service has changed since a topology review. The reviewer needs the retained versions under the same serviceId rather than a separate revision object.",
+        "whenToUse": "When finding a known entity’s historical representations before reading an exact version.",
+        "steps": [
+          "Supply its EntityIdentity and traverse the returned references in descending version order.",
+          "Resolve selected references through the normal typed getter with the returned version."
+        ],
+        "intendedResult": "The reviewer can compare exact representations while preserving ordinary entity identity and domain authorization."
+      },
+      "preconditions": [
+        "The caller needs both history permission and the entity’s normal read permission; a Workspace identity must match authenticated scope."
+      ],
+      "pitfalls": [
+        "Returned values are EntityRef values, not independently managed Version resources.",
+        "Missing or inaccessible historical content must never be replaced with the current head. Pagination reveals no hidden version count."
+      ],
+      "nextSteps": [
+        "GetService",
+        "GetScenario",
+        "GetSource"
+      ],
+      "relatedEntities": [
+        "Workspace",
+        "Connection",
+        "Resource",
+        "Collection",
+        "ReadAttempt",
+        "Source",
+        "Observation",
+        "Projection",
+        "Snapshot",
+        "WorkItem",
+        "Command",
+        "System",
+        "UserJourney",
+        "Service",
+        "Dependency",
+        "HealthEvent",
+        "EventContext",
+        "EntityImpact",
+        "Communication",
+        "LifecycleEntry",
+        "ComponentDeployment",
+        "ResiliencePolicy",
+        "ResilienceAssessment",
+        "Finding",
+        "Recommendation",
+        "AgentSpace",
+        "Investigation",
+        "Execution",
+        "JournalRecord",
+        "ApprovalRequest",
+        "Asset",
+        "Scenario",
+        "Run",
+        "StepRun",
+        "StepAttempt",
+        "Experiment"
+      ],
+      "relatedOperations": [
+        "GetService",
+        "GetScenario",
+        "GetSource"
+      ],
+      "historicalInterpretation": "The prior workflow ListScenarioRevisions becomes history enumeration for Scenario, followed by GetScenario(version). The earlier dedicated revision-resource pattern is intentionally removed."
+    },
+    {
+      "operation": "GetConnection",
+      "purpose": "Inspect an access-path configuration and its retained scope without exposing credential material.",
+      "useCase": {
+        "title": "Review the connection pinned to a command",
+        "actor": "Operator",
+        "scenario": "A command names a Connection version. An operator checks which provider scope and credential binding were admitted.",
+        "whenToUse": "Before a scoped action, or to explain a recorded access path.",
+        "steps": [
+          "Read the exact Connection reference from the command when reviewing history.",
+          "For a new action, inspect current configuration and the proposed binding scope."
+        ],
+        "intendedResult": "The operator understands the configured access path and can choose an authorized binding."
+      },
+      "preconditions": [
+        "The Connection must be visible within the authenticated workspace."
+      ],
+      "pitfalls": [
+        "A Connection reference conveys no permission by itself; current authority is rechecked for dispatch.",
+        "Historical configuration does not reveal secrets or reinstate a disabled access path."
+      ],
+      "nextSteps": [
+        "GetCommand",
+        "UpdateConnection"
+      ],
+      "relatedEntities": [
+        "Connection",
+        "Command"
+      ],
+      "relatedOperations": [
+        "GetCommand",
+        "UpdateConnection"
+      ]
+    },
+    {
+      "operation": "ListConnections",
+      "purpose": "Find the retained access paths available within the selected workspace, optionally restricted by enabled state.",
+      "useCase": {
+        "title": "Choose a connection for a scoped collection",
+        "actor": "Collector administrator",
+        "scenario": "A team needs a configured connection for collecting evidence about a service in its account and Region.",
+        "whenToUse": "When selecting an existing access path before admitting collection or provider intent.",
+        "steps": [
+          "List enabled connections and traverse all required pages.",
+          "Inspect the chosen connection’s scopes and exact version before including it in the request."
+        ],
+        "intendedResult": "A suitable configured connection can be selected without passing raw credentials."
+      },
+      "preconditions": [
+        "The caller must have connection-read permission in the authenticated workspace."
+      ],
+      "pitfalls": [
+        "enabled=true is a configuration filter, not proof of current provider access or successful authentication.",
+        "A complete local list does not establish complete AWS inventory."
+      ],
+      "nextSteps": [
+        "GetConnection",
+        "StartCollection"
+      ],
+      "relatedEntities": [
+        "Connection"
+      ],
+      "relatedOperations": [
+        "GetConnection",
+        "StartCollection"
+      ]
+    },
+    {
+      "operation": "CreateConnection",
+      "purpose": "Create a local managed access-path record against an already registered credential or identity binding.",
+      "useCase": {
+        "title": "Register an approved evidence-collection access path",
+        "actor": "Workspace administrator",
+        "scenario": "An approved identity binding exists for a test account, and the team needs a named connection with bounded allowed scopes.",
+        "whenToUse": "After the credential binding is registered and its usable scope is known.",
+        "steps": [
+          "Provide the binding ID, provider, name and allowed scopes with a clientToken.",
+          "Review the returned Connection and Command before using the connection in collection."
+        ],
+        "intendedResult": "A versioned local Connection exists for subsequent scoped operations."
+      },
+      "preconditions": [
+        "The binding must already exist; requested scopes must fit both caller grants and binding capabilities."
+      ],
+      "pitfalls": [
+        "The request accepts a binding reference, never credential bytes.",
+        "Reusing the same token with a different scope or binding is a conflicting intent, not an edit."
+      ],
+      "nextSteps": [
+        "GetConnection",
+        "StartCollection"
+      ],
+      "relatedEntities": [
+        "Connection",
+        "Command"
+      ],
+      "relatedOperations": [
+        "GetConnection",
+        "StartCollection"
+      ]
+    },
+    {
+      "operation": "UpdateConnection",
+      "purpose": "Change an existing connection’s local name, credential binding, allowed scope or enabled state under its current version.",
+      "useCase": {
+        "title": "Disable an obsolete collection access path",
+        "actor": "Workspace administrator",
+        "scenario": "A collection connection is being retired after an account-access change. Its past observations must remain interpretable.",
+        "whenToUse": "When changing or disabling configured access rather than rewriting evidence history.",
+        "steps": [
+          "Read the current Connection and submit enabled=false with its expectedVersion and a clientToken.",
+          "Inspect the resulting version and preserve the older references used by observations and commands."
+        ],
+        "intendedResult": "The connection configuration changes while earlier authorization provenance remains retained."
+      },
+      "preconditions": [
+        "expectedVersion must match the current Connection head; replacement bindings and scopes require authorization."
+      ],
+      "pitfalls": [
+        "Disabling the connection does not erase historical observations.",
+        "Retained evidence still requires current read authorization, and dispatch must check revocation again."
+      ],
+      "nextSteps": [
+        "GetConnection",
+        "ListObservations"
+      ],
+      "relatedEntities": [
+        "Connection",
+        "Command",
+        "Observation"
+      ],
+      "relatedOperations": [
+        "GetConnection",
+        "ListObservations"
+      ]
+    },
+    {
+      "operation": "GetResource",
+      "purpose": "Inspect a canonical inventory identity, its scoped matching evidence and selected observation.",
+      "useCase": {
+        "title": "Resolve the database referenced by a finding",
+        "actor": "Responder",
+        "scenario": "A service review identifies a database Resource. The responder needs its observed identity and provenance before relating it to a lifecycle exposure.",
+        "whenToUse": "When moving from a canonical resource reference to inventory evidence.",
+        "steps": [
+          "Read the exact Resource version retained in the review, or select the current head for live navigation.",
+          "Follow selectedObservation and evaluate matching provenance before treating a provider identifier as equivalent."
+        ],
+        "intendedResult": "The resource identity can be examined without assuming a display name is a stable provider key."
+      },
+      "preconditions": [
+        "The Resource must be visible; retained evidence must be authorized."
+      ],
+      "pitfalls": [
+        "A Resource is inventory identity, not every possible provider object.",
+        "Run-scoped or provisional identity needs its explicit boundary; matching names alone cannot prove continuity."
+      ],
+      "nextSteps": [
+        "GetObservation",
+        "ListComponentDeployments"
+      ],
+      "relatedEntities": [
+        "Resource",
+        "ComponentDeployment",
+        "Observation"
+      ],
+      "relatedOperations": [
+        "GetObservation",
+        "ListComponentDeployments"
+      ]
+    },
+    {
+      "operation": "ListResources",
+      "purpose": "Browse retained inventory resources, optionally for one canonical service and resource type.",
+      "useCase": {
+        "title": "Inventory the resources attached to checkout",
+        "actor": "Service owner",
+        "scenario": "The owner is preparing a service review and wants the known database resources associated with checkout.",
+        "whenToUse": "When assembling a current local inventory view.",
+        "steps": [
+          "Filter by serviceId and resourceType as needed and follow nextToken.",
+          "Inspect individual resources and the collections that supplied their observations."
+        ],
+        "intendedResult": "The owner sees the retained service inventory with explicit evidence to assess coverage."
+      },
+      "preconditions": [
+        "The service filter must refer to an authorized local service."
+      ],
+      "pitfalls": [
+        "An empty local page is not proof that the provider has no resources.",
+        "Resource identity matching and collection coverage remain separate from service membership."
+      ],
+      "nextSteps": [
+        "GetResource",
+        "GetService",
+        "GetCollection"
+      ],
+      "relatedEntities": [
+        "Resource",
+        "Service",
+        "Collection"
+      ],
+      "relatedOperations": [
+        "GetResource",
+        "GetService",
+        "GetCollection"
+      ]
+    },
+    {
+      "operation": "GetCollection",
+      "purpose": "Read the exact query plan, lifecycle and qualified coverage of one finite evidence collection.",
+      "useCase": {
+        "title": "Explain an incomplete topology review",
+        "actor": "Reviewer",
+        "scenario": "A topology view has a gap. The reviewer checks whether dependency detail reads failed or whether list pagination remains open.",
+        "whenToUse": "When judging how far a collection’s evidence supports a conclusion.",
+        "steps": [
+          "Read the Collection version referenced by the view or capture.",
+          "Inspect each coverage dimension and follow the referenced ReadAttempts."
+        ],
+        "intendedResult": "The reviewer can distinguish collected objects from justified completeness claims."
+      },
+      "preconditions": [
+        "The selected Collection and its retained reference closure must be readable."
+      ],
+      "pitfalls": [
+        "Successful completion of a collection is not an atomic AWS snapshot.",
+        "Pagination, hydration, identity resolution and claim sufficiency are independent facts."
+      ],
+      "nextSteps": [
+        "ListReadAttempts",
+        "GetReadAttempt"
+      ],
+      "relatedEntities": [
+        "Collection",
+        "ReadAttempt"
+      ],
+      "relatedOperations": [
+        "ListReadAttempts",
+        "GetReadAttempt"
+      ]
+    },
+    {
+      "operation": "ListCollections",
+      "purpose": "Locate finite collections by connection or exact subject for evidence review and operational diagnosis.",
+      "useCase": {
+        "title": "Find the collection behind a stale service view",
+        "actor": "Collector operator",
+        "scenario": "A service status view appears stale and the operator wants to inspect collections associated with that subject.",
+        "whenToUse": "When locating collection records before inspecting individual query outcomes.",
+        "steps": [
+          "List collections for the relevant subject or connection.",
+          "Read candidate collections and compare their coverage and source timing."
+        ],
+        "intendedResult": "The operator can identify the retained collection that explains the available evidence."
+      },
+      "preconditions": [
+        "Filters must use authorized references and preserve their exact meaning throughout pagination."
+      ],
+      "pitfalls": [
+        "Collection updatedAt is local publication time; it is not proof that upstream evidence is fresh.",
+        "This list does not silently start another collection."
+      ],
+      "nextSteps": [
+        "GetCollection",
+        "ListReadAttempts"
+      ],
+      "relatedEntities": [
+        "Collection"
+      ],
+      "relatedOperations": [
+        "GetCollection",
+        "ListReadAttempts"
+      ]
+    },
+    {
+      "operation": "GetReadAttempt",
+      "purpose": "Read the retained facts for one actual provider read attempt, including failures, empty results and request/response references.",
+      "useCase": {
+        "title": "Investigate a read that returned no usable evidence",
+        "actor": "Collector operator",
+        "scenario": "A dependency query has no objects and the operator must distinguish a known empty response from a lost response or failed call.",
+        "whenToUse": "When explaining a collection gap or auditing a specific dispatched read.",
+        "steps": [
+          "Supply the owning collectionId and the exact attempt version referenced by the coverage record.",
+          "Inspect state, error, returnedCount and exact requestSource/responseSource references."
+        ],
+        "intendedResult": "An empty successful result can be distinguished from absent response content."
+      },
+      "preconditions": [
+        "The readAttemptId must belong to the supplied collection; current evidence access applies."
+      ],
+      "pitfalls": [
+        "A null responseSource after response loss is not an empty successful response.",
+        "A receipt that pins STARTED does not automatically retarget to a later settled version."
+      ],
+      "nextSteps": [
+        "GetSource",
+        "GetCollection"
+      ],
+      "relatedEntities": [
+        "ReadAttempt",
+        "Source",
+        "Collection"
+      ],
+      "relatedOperations": [
+        "GetSource",
+        "GetCollection"
+      ]
+    },
+    {
+      "operation": "ListReadAttempts",
+      "purpose": "Enumerate the read attempts retained for a collection, including calls that failed or returned zero objects.",
+      "useCase": {
+        "title": "Audit why a collection cannot support an absence claim",
+        "actor": "Reviewer",
+        "scenario": "The object list is empty, but the reviewer needs to see every recorded read and its settlement before accepting an absence conclusion.",
+        "whenToUse": "When reviewing collector behavior independently of returned object rows.",
+        "steps": [
+          "Traverse the attempts for the collection.",
+          "Read the relevant exact attempts and compare their facts with the collection’s coverage rationale."
+        ],
+        "intendedResult": "Failed and empty reads remain visible as evidence of how collection proceeded."
+      },
+      "preconditions": [
+        "The collection must be authorized and pagination must retain the same scope."
+      ],
+      "pitfalls": [
+        "The list returns retained attempt heads, not a replacement for the exact versions referenced by historical coverage.",
+        "A completed traversal does not itself establish sufficient upstream claim coverage."
+      ],
+      "nextSteps": [
+        "GetReadAttempt",
+        "GetCollection"
+      ],
+      "relatedEntities": [
+        "ReadAttempt"
+      ],
+      "relatedOperations": [
+        "GetReadAttempt",
+        "GetCollection"
+      ]
+    },
+    {
+      "operation": "GetSource",
+      "purpose": "Resolve a retained provider representation by canonical Source identity and optional exact version.",
+      "useCase": {
+        "title": "Inspect the raw detail supporting a recommendation",
+        "actor": "Analyst",
+        "scenario": "A recommendation cites a finding-detail Source version. The analyst needs that exact content, including preserved provider fields.",
+        "whenToUse": "When verifying a canonical interpretation or following an EvidenceRef of kind Source.",
+        "steps": [
+          "Use the sourceId and version from the referring record.",
+          "Inspect the registered profile, representation, field presence and retained payload or authorized artifact reference."
+        ],
+        "intendedResult": "The evidence remains tied to the provider representation actually cited."
+      },
+      "preconditions": [
+        "The source and any retained artifact content must be currently authorized and available."
+      ],
+      "pitfalls": [
+        "An omitted version selects the current head and can show different content from the cited evidence.",
+        "Matching payload digests do not merge source identities, and INLINE null is a legitimate payload value."
+      ],
+      "nextSteps": [
+        "ListEntityVersions",
+        "ListObservations"
+      ],
+      "relatedEntities": [
+        "Source"
+      ],
+      "relatedOperations": [
+        "ListEntityVersions",
+        "ListObservations"
+      ],
+      "historicalInterpretation": "Earlier GetEvidence resolves here when the discriminated evidence kind is Source. Native peripheral objects, such as input sources and FIS catalogs, remain typed source profiles rather than acquiring unnecessary canonical entities."
+    },
+    {
+      "operation": "GetObservation",
+      "purpose": "Inspect a particular receipt of source evidence, with its channel, timing, access path and exact Source reference.",
+      "useCase": {
+        "title": "Explain why identical content was seen twice",
+        "actor": "Collector analyst",
+        "scenario": "Two polls returned the same provider document. The analyst needs to distinguish separate observations from a change in the provider representation.",
+        "whenToUse": "When reasoning about receipt chronology, freshness or collection provenance.",
+        "steps": [
+          "Read the Observation version referenced by the domain entity or projection.",
+          "Follow its exact Source and, for API reads, its retained ReadAttempt reference."
+        ],
+        "intendedResult": "Separate receipts can be understood without manufacturing new logical provider objects."
+      },
+      "preconditions": [
+        "Referenced evidence and connection provenance must be within the caller’s current visibility."
+      ],
+      "pitfalls": [
+        "observedAt is receipt time, not provider event order.",
+        "A repeated observation may point to the same Source version; source version and observation identity serve different purposes."
+      ],
+      "nextSteps": [
+        "GetSource",
+        "GetReadAttempt"
+      ],
+      "relatedEntities": [
+        "Observation",
+        "Source",
+        "ReadAttempt"
+      ],
+      "relatedOperations": [
+        "GetSource",
+        "GetReadAttempt"
+      ]
+    },
+    {
+      "operation": "GetProjection",
+      "purpose": "Retrieve a derived view with its exact input references, rule identity and qualified coverage.",
+      "useCase": {
+        "title": "Reproduce a previous service-status explanation",
+        "actor": "Reviewer",
+        "scenario": "A past review cites Projection version 2 even though a later derivation is now selected. The reviewer needs the earlier result and rationale.",
+        "whenToUse": "For exact historical interpretations or when inspecting derivation provenance.",
+        "steps": [
+          "Request the exact projectionId and version cited by the review.",
+          "Inspect subjectRefs, inputRefs, ruleDigest, asOf and coverage before interpreting value."
+        ],
+        "intendedResult": "The prior interpretation remains reviewable alongside the precise evidence that supported it."
+      },
+      "preconditions": [
+        "The caller must be authorized for the full retained projection closure."
+      ],
+      "pitfalls": [
+        "A new generatedAt does not make old inputs fresh.",
+        "A projection records a qualified interpretation; it does not mutate the source subjects or rewrite a sealed Run."
+      ],
+      "nextSteps": [
+        "GetSource",
+        "GetObservation",
+        "ListEntityVersions"
+      ],
+      "relatedEntities": [
+        "Projection",
+        "Source",
+        "Observation"
+      ],
+      "relatedOperations": [
+        "GetSource",
+        "GetObservation",
+        "ListEntityVersions"
+      ]
+    },
+    {
+      "operation": "GetSnapshot",
+      "purpose": "Read a deliberate capture and its closed manifest of exact entity versions.",
+      "useCase": {
+        "title": "Reconstruct the evidence available at run admission",
+        "actor": "Workflow reviewer",
+        "scenario": "A completed Run cites an input Snapshot. The reviewer needs the published scenario, workload subjects and evidence selected at admission.",
+        "whenToUse": "When the question is what was captured at a defined boundary.",
+        "steps": [
+          "Request the exact Snapshot reference from the Run or review record.",
+          "Inspect its kind, capture window, members, coverage and digest, resolving exact members as needed."
+        ],
+        "intendedResult": "The captured state can be reviewed without joining current mutable entities."
+      },
+      "preconditions": [
+        "All returned capture content and its retained closure require current authorization."
+      ],
+      "pitfalls": [
+        "A Snapshot is a business capture, not a substitute for entity version history.",
+        "Capture time does not make paginated provider reads atomic or renew their source timestamps."
+      ],
+      "nextSteps": [
+        "GetRun",
+        "GetScenario",
+        "GetSource"
+      ],
+      "relatedEntities": [
+        "Snapshot",
+        "Run",
+        "Scenario",
+        "Source"
+      ],
+      "relatedOperations": [
+        "GetRun",
+        "GetScenario",
+        "GetSource"
+      ],
+      "historicalInterpretation": "The older topology-specific getter now resolves the same capture through GetSnapshot; topology is a Snapshot kind. Workflow GetEvidence also resolves here when its evidence kind is Snapshot."
+    },
+    {
+      "operation": "GetWorkItem",
+      "purpose": "Read local assignment, work state, actions and independent verification for a continuing set of domain targets.",
+      "useCase": {
+        "title": "Prepare a remediation handoff",
+        "actor": "Service owner",
+        "scenario": "A recommendation has an associated work item. The incoming owner needs the current assignment, resolution notes and evidence used for verification.",
+        "whenToUse": "When examining operator work around a finding, event or recommendation.",
+        "steps": [
+          "Read the WorkItem head for current coordination, or an exact version for an audit.",
+          "Inspect target identities, action history, resolutionEvidence and verificationState separately."
+        ],
+        "intendedResult": "The handoff can describe what people did and what has been independently verified."
+      },
+      "preconditions": [
+        "The work item and any referenced target evidence must be currently authorized."
+      ],
+      "pitfalls": [
+        "RESOLVED is local workflow state and does not prove provider recovery.",
+        "Identity-only targets support continuing navigation; they are not exact evidence captures."
+      ],
+      "nextSteps": [
+        "UpdateWorkItem",
+        "RecordWorkItemVerification"
+      ],
+      "relatedEntities": [
+        "WorkItem"
+      ],
+      "relatedOperations": [
+        "UpdateWorkItem",
+        "RecordWorkItemVerification"
+      ]
+    },
+    {
+      "operation": "GetCommand",
+      "purpose": "Inspect a durable intent and the separately recorded progress of dispatch, effects and reconciliation.",
+      "useCase": {
+        "title": "Recover from a timed-out mutation request",
+        "actor": "Operator or client recovery handler",
+        "scenario": "A provider-facing request timed out after admission. The caller needs to discover whether the intent was accepted and what outcome is now known.",
+        "whenToUse": "After receiving a command receipt or when resuming observation of an admitted intent.",
+        "steps": [
+          "Read the command head for current progress, retaining exact versions that matter to later actions.",
+          "Inspect state, attempts, effects and resultRefs before following the reconciled entity."
+        ],
+        "intendedResult": "The caller can recover through the durable receipt without inventing a new mutation."
+      },
+      "preconditions": [
+        "The command must belong to the authorized workspace and caller-visible scope."
+      ],
+      "pitfalls": [
+        "HTTP 200 or ACCEPTED is not evidence that an AWS effect occurred.",
+        "OUTCOME_UNKNOWN requires safe reconciliation. A succeeded command means its documented intent succeeded, not that the workload is healthy."
+      ],
+      "nextSteps": [
+        "ListCommands",
+        "ListEntityVersions"
+      ],
+      "relatedEntities": [
+        "Command",
+        "Observation"
+      ],
+      "relatedOperations": [
+        "ListCommands",
+        "ListEntityVersions"
+      ]
+    },
+    {
+      "operation": "ListSources",
+      "purpose": "Discover retained source representations using explicit native identity, profile and representation filters.",
+      "useCase": {
+        "title": "Find a retained FIS template without a new domain entity",
+        "actor": "Workflow author",
+        "scenario": "An author needs to inspect a retained FIS template profile before choosing a published workflow input.",
+        "whenToUse": "When locating native peripheral resources or raw representations behind canonical entities.",
+        "steps": [
+          "Filter by the registered profile, scoped identity or representation.",
+          "Read the selected exact Source version and inspect its provider scope and retained content."
+        ],
+        "intendedResult": "Native detail remains accessible through a typed source profile."
+      },
+      "preconditions": [
+        "Filters and returned content must be within current source-read authority."
+      ],
+      "pitfalls": [
+        "Equal hashes or display names are not identity joins.",
+        "This list does not imply that a retained template is currently usable or that an operation is authorized to execute it."
+      ],
+      "nextSteps": [
+        "GetSource",
+        "StartCollection"
+      ],
+      "relatedEntities": [
+        "Source"
+      ],
+      "relatedOperations": [
+        "GetSource",
+        "StartCollection"
+      ],
+      "historicalInterpretation": "Resilience ListInputSources maps to typed source discovery. The prior ListEvents and workflow ListRunEvidence also decompose into source, observation and projection queries according to evidence kind."
+    },
+    {
+      "operation": "ListObservations",
+      "purpose": "Find retained receipts by exact Source, collection or subject without collapsing repeated receipt events.",
+      "useCase": {
+        "title": "Trace the observations supporting a service review",
+        "actor": "Evidence analyst",
+        "scenario": "A reviewer wants to know which receipts were associated with a service and whether they came from an API collection or another channel.",
+        "whenToUse": "When exploring receipt chronology before resolving individual evidence references.",
+        "steps": [
+          "Filter by the relevant subject, source or collection and traverse the bounded pages.",
+          "Read selected observations and follow their exact sources and read attempts."
+        ],
+        "intendedResult": "The evidence trail preserves timing and access provenance distinct from provider content identity."
+      },
+      "preconditions": [
+        "The caller must have current access to each complete returned observation."
+      ],
+      "pitfalls": [
+        "The fixed list order is receipt chronology, not authoritative provider event order.",
+        "An event delivery is an Observation; its delivery ID does not become a HealthEvent identity."
+      ],
+      "nextSteps": [
+        "GetObservation",
+        "GetSource"
+      ],
+      "relatedEntities": [
+        "Observation"
+      ],
+      "relatedOperations": [
+        "GetObservation",
+        "GetSource"
+      ],
+      "historicalInterpretation": "Earlier ListEvents and ListRunEvidence concerns are represented through explicit evidence types. Runtime-health event ingestion remains separate from AWS Health event identity."
+    },
+    {
+      "operation": "ListProjections",
+      "purpose": "Locate named derived views for a subject or profile while returning one selected head per logical projection.",
+      "useCase": {
+        "title": "Find service-status and lifecycle interpretations",
+        "actor": "Analyst",
+        "scenario": "An analyst reviewing a workload wants the retained derived views relevant to its status and lifecycle exposure.",
+        "whenToUse": "When selecting among available interpretations before reading their exact provenance.",
+        "steps": [
+          "Filter by exact subject or registered projection profile.",
+          "Inspect the returned projection head and enumerate its history if a prior derivation is needed."
+        ],
+        "intendedResult": "Distinct named views remain discoverable without introducing separate revision resources."
+      },
+      "preconditions": [
+        "The caller must be authorized for each complete projection closure."
+      ],
+      "pitfalls": [
+        "Ordinary listing returns current heads within the fixed traversal, not all historical derivations.",
+        "A derived result is qualified by its inputs, rule and coverage, not by its publication date alone."
+      ],
+      "nextSteps": [
+        "GetProjection",
+        "ListEntityVersions"
+      ],
+      "relatedEntities": [
+        "Projection"
+      ],
+      "relatedOperations": [
+        "GetProjection",
+        "ListEntityVersions"
+      ]
+    },
+    {
+      "operation": "ListSnapshots",
+      "purpose": "Find deliberate captures by subject and kind for historical comparison.",
+      "useCase": {
+        "title": "Find topology captures for a service review",
+        "actor": "Service reviewer",
+        "scenario": "Two topology reviews were captured at different times. The reviewer needs to locate the captures before comparing their exact members.",
+        "whenToUse": "When browsing retained business captures rather than ordinary entity changes.",
+        "steps": [
+          "Filter by the service subject and kind=TOPOLOGY.",
+          "Read each selected Snapshot and compare its captured members and evidence windows."
+        ],
+        "intendedResult": "The reviewer can compare two explicit captures without substituting current resource state."
+      },
+      "preconditions": [
+        "The subject reference and complete capture closure must be authorized."
+      ],
+      "pitfalls": [
+        "A list of captures does not prove any capture has complete upstream coverage.",
+        "Capture kind is meaningful; a topology capture cannot replace a Run’s input snapshot."
+      ],
+      "nextSteps": [
+        "GetSnapshot"
+      ],
+      "relatedEntities": [
+        "Snapshot"
+      ],
+      "relatedOperations": [
+        "GetSnapshot"
+      ],
+      "historicalInterpretation": "The earlier ListTopologySnapshots is consolidated here with kind=TOPOLOGY and an explicit subject."
+    },
+    {
+      "operation": "ListWorkItems",
+      "purpose": "Find local operator work by continuing target identity and work state.",
+      "useCase": {
+        "title": "Review outstanding work for a recommendation",
+        "actor": "Team lead",
+        "scenario": "A recommendation needs follow-up, and the team lead checks whether work already exists before creating a second assignment.",
+        "whenToUse": "When coordinating local work around a domain target.",
+        "steps": [
+          "Filter by the target identity and, when useful, state.",
+          "Read matching work items to inspect owner, priority, actions and verification."
+        ],
+        "intendedResult": "Existing work can be reused and its current coordination state understood."
+      },
+      "preconditions": [
+        "The target must be visible within the authenticated workspace."
+      ],
+      "pitfalls": [
+        "Work state does not replace native disposition or assessment verdict.",
+        "A current work list is not a historical evidence snapshot of the target."
+      ],
+      "nextSteps": [
+        "GetWorkItem",
+        "CreateWorkItem"
+      ],
+      "relatedEntities": [
+        "WorkItem",
+        "Recommendation"
+      ],
+      "relatedOperations": [
+        "GetWorkItem",
+        "CreateWorkItem"
+      ]
+    },
+    {
+      "operation": "ListCommands",
+      "purpose": "Locate durable intents by subject, operation and command state.",
+      "useCase": {
+        "title": "Investigate unresolved provider requests",
+        "actor": "Operations supervisor",
+        "scenario": "Several operations have been admitted for a service, and a supervisor needs to find those whose provider outcomes remain uncertain.",
+        "whenToUse": "When auditing command progress or recovering a known intent through its receipt.",
+        "steps": [
+          "Use subject, operation or state filters and retain the same query during pagination.",
+          "Inspect each command’s current state and exact effects before deciding the next action."
+        ],
+        "intendedResult": "Uncertain external outcomes can be surfaced independently from domain status."
+      },
+      "preconditions": [
+        "The caller must be authorized for each command and its scope."
+      ],
+      "pitfalls": [
+        "Command state is not workload health or remediation verification.",
+        "A new token creates a new intent; listing an uncertain command is not permission to resend a remote mutation."
+      ],
+      "nextSteps": [
+        "GetCommand"
+      ],
+      "relatedEntities": [
+        "Command"
+      ],
+      "relatedOperations": [
+        "GetCommand"
+      ]
+    },
+    {
+      "operation": "StartCollection",
+      "purpose": "Admit a finite registered set of read-only provider queries under an exact Connection version.",
+      "useCase": {
+        "title": "Collect evidence for a topology review",
+        "actor": "Trusted collector",
+        "scenario": "A service review needs inventory, dependency and policy evidence from a defined account and Region.",
+        "whenToUse": "When initiating a bounded collection whose scope and queries can be reviewed in advance.",
+        "steps": [
+          "Resolve the authorized Connection version and registered query definitions with canonical request digests.",
+          "Submit the immutable query set with a clientToken, then inspect the admitted Collection."
+        ],
+        "intendedResult": "The collection has an explicit scope against which attempts and later coverage can be recorded."
+      },
+      "preconditions": [
+        "Queries must exist in the registered read-only adapter catalog, have unique queryKeys and fit authorized scope."
+      ],
+      "pitfalls": [
+        "Admission does not prove any provider read has finished.",
+        "Changing query definitions requires a new Collection identity; coverage cannot be inferred from the intent alone."
+      ],
+      "nextSteps": [
+        "GetCollection",
+        "ListReadAttempts"
+      ],
+      "relatedEntities": [
+        "Collection",
+        "Command"
+      ],
+      "relatedOperations": [
+        "GetCollection",
+        "ListReadAttempts"
+      ],
+      "historicalInterpretation": "The earlier event-ingestion facade scheduled reconciliation. Consolidation separates retaining event evidence from explicitly admitting authorized follow-up collection."
+    },
+    {
+      "operation": "RecordReadAttempt",
+      "purpose": "Settle an already recorded STARTED read attempt with exact request/response evidence and qualified result facts.",
+      "useCase": {
+        "title": "Preserve an empty provider response",
+        "actor": "Trusted collector",
+        "scenario": "A real list request returns zero objects. The collector must retain the response rather than leaving a gap indistinguishable from a failed call.",
+        "whenToUse": "After the dispatched read has a known settlement or an explicitly recorded lost-response failure.",
+        "steps": [
+          "Use the existing attempt identity, expectedVersion and exact requestSource recorded before dispatch.",
+          "Retain the response when available and submit settlement facts, including returnedCount, token presence or error."
+        ],
+        "intendedResult": "The same ReadAttempt receives its settled version, preserving the earlier STARTED representation."
+      },
+      "preconditions": [
+        "The attempt must still be STARTED and its requestSource must match the retained dispatched request."
+      ],
+      "pitfalls": [
+        "This operation cannot fabricate a pre-call record after dispatch or create a second logical attempt.",
+        "A lost response uses null responseSource and an error; it must not be recorded as a successful empty result."
+      ],
+      "nextSteps": [
+        "GetReadAttempt",
+        "CompleteCollection"
+      ],
+      "relatedEntities": [
+        "ReadAttempt",
+        "Command"
+      ],
+      "relatedOperations": [
+        "GetReadAttempt",
+        "CompleteCollection"
+      ]
+    },
+    {
+      "operation": "IngestObservation",
+      "purpose": "Retain a scoped source representation and a distinct receipt, resolving stable Source identity independently of content digest.",
+      "useCase": {
+        "title": "Record a repeated provider poll",
+        "actor": "Trusted ingestion adapter",
+        "scenario": "A second inventory poll returns unchanged database content. The adapter must record a new receipt while preserving the existing Source version.",
+        "whenToUse": "When accepting validated API, event, stream or local source evidence under a registered profile.",
+        "steps": [
+          "Supply the scoped source representation, exact connection and receipt facts with the appropriate channel/readAttempt context.",
+          "Inspect the returned Source and Observation references for later canonical mapping or derivation."
+        ],
+        "intendedResult": "Unchanged content reuses its current Source version and still receives a new observation when the receipt is distinct."
+      },
+      "preconditions": [
+        "The registered profile must validate identity, known fields, representation and digest; evidence scope must be authorized."
+      ],
+      "pitfalls": [
+        "A→B→A content creates Source versions 1→2→3, not a return to version 1.",
+        "Opaque provider payload cannot patch canonical state or assert a derived verdict. Receipt deduplication is distinct from byte deduplication."
+      ],
+      "nextSteps": [
+        "GetObservation",
+        "PublishProjection"
+      ],
+      "relatedEntities": [
+        "Source",
+        "Observation",
+        "Command"
+      ],
+      "relatedOperations": [
+        "GetObservation",
+        "PublishProjection"
+      ],
+      "historicalInterpretation": "The earlier PutHealthObservation separates into evidence ingestion and derived SERVICE_STATUS publication. IngestEvent also becomes retained channel evidence plus explicit collection admission."
+    },
+    {
+      "operation": "CompleteCollection",
+      "purpose": "Publish the Collection’s next version with sealed, separately qualified coverage for its declared queries.",
+      "useCase": {
+        "title": "Close a collection with a documented detail gap",
+        "actor": "Trusted collector",
+        "scenario": "All declared queries have settled, but one detail hydration failed. The collector needs to finish the collection without claiming complete evidence.",
+        "whenToUse": "After every declared query has a settled or explicitly unresolved outcome.",
+        "steps": [
+          "Assemble coverage from attempts belonging to this Collection under registered collector rules.",
+          "Submit coverage with the current Collection expectedVersion and retain the returned version."
+        ],
+        "intendedResult": "The completed collection records what is known, missing and sufficient for each supported claim."
+      },
+      "preconditions": [
+        "Every coverage reference must belong to the collection; expectedVersion must guard its current head."
+      ],
+      "pitfalls": [
+        "Exhausted pagination alone does not establish detail completeness or claim sufficiency.",
+        "Completion must preserve failed and empty reads rather than treating missing rows as proof of absence."
+      ],
+      "nextSteps": [
+        "GetCollection",
+        "CaptureSnapshot",
+        "PublishProjection"
+      ],
+      "relatedEntities": [
+        "Collection",
+        "Command"
+      ],
+      "relatedOperations": [
+        "GetCollection",
+        "CaptureSnapshot",
+        "PublishProjection"
+      ]
+    },
+    {
+      "operation": "PublishProjection",
+      "purpose": "Run a registered derivation over exact evidence and publish a new immutable version of a named Projection.",
+      "useCase": {
+        "title": "Refresh the qualified service-status view",
+        "actor": "Authorized projector",
+        "scenario": "Fresh evidence changes the status explanation for checkout. The projector must retain the earlier derivation while publishing the new one.",
+        "whenToUse": "When an authorized rule should interpret a selected evidence set.",
+        "steps": [
+          "Select exact subjects and input references, the registered profile and ruleDigest.",
+          "Use expectedVersion=null for first publication or the current Projection version for an update, then inspect the result."
+        ],
+        "intendedResult": "A versioned derived view records the rule, inputs, coverage and computed value."
+      },
+      "preconditions": [
+        "All exact inputs must be authorized and available; the rule must be registered and executable by the projector."
+      ],
+      "pitfalls": [
+        "The request cannot provide a desired value, verdict, generatedAt or coverage.",
+        "Publishing does not change subject entities, freshen source evidence or rewrite a sealed workflow result."
+      ],
+      "nextSteps": [
+        "GetProjection",
+        "GetServiceStatus"
+      ],
+      "relatedEntities": [
+        "Projection",
+        "Command"
+      ],
+      "relatedOperations": [
+        "GetProjection",
+        "GetServiceStatus"
+      ],
+      "historicalInterpretation": "The prior runtime-health facade’s derived status is preserved as a qualified Projection instead of an editable status field."
+    },
+    {
+      "operation": "CaptureSnapshot",
+      "purpose": "Create a deliberate closed capture of existing exact subjects and retained evidence.",
+      "useCase": {
+        "title": "Preserve topology at a review boundary",
+        "actor": "Service reviewer",
+        "scenario": "Before accepting a dependency governance decision, the reviewer captures the topology and supporting read evidence available at that moment.",
+        "whenToUse": "When a review needs a stable evidence set with a declared capture kind.",
+        "steps": [
+          "Select exact subjects and initial members, including relevant failed or empty reads where applicable.",
+          "Submit the capture and inspect the server-closed manifest and coverage."
+        ],
+        "intendedResult": "A new Snapshot identity at version 1 preserves a reviewable evidence boundary."
+      },
+      "preconditions": [
+        "Every selected version and the closed reference graph must be available and authorized."
+      ],
+      "pitfalls": [
+        "Capture does not consult later entity heads or create an atomic provider view.",
+        "RUN_INPUT is reserved for StartRun admission; a caller-created capture cannot replace Run inputs."
+      ],
+      "nextSteps": [
+        "GetSnapshot",
+        "CreateWorkItem"
+      ],
+      "relatedEntities": [
+        "Snapshot",
+        "Command"
+      ],
+      "relatedOperations": [
+        "GetSnapshot",
+        "CreateWorkItem"
+      ],
+      "historicalInterpretation": "The earlier CaptureTopologySnapshot becomes CaptureSnapshot(kind=TOPOLOGY). Capture remains meaningful business history alongside universal entity versioning."
+    },
+    {
+      "operation": "CreateWorkItem",
+      "purpose": "Create local operator work with continuing typed targets, optional assignment and scheduling metadata.",
+      "useCase": {
+        "title": "Assign follow-up for a resilience recommendation",
+        "actor": "Team lead",
+        "scenario": "A recommendation requires engineering analysis and the team needs one place for ownership and follow-up.",
+        "whenToUse": "When the need is coordination, assignment or tracking work around retained domain entities.",
+        "steps": [
+          "Select the target identities and provide a concrete title, plus optional priority, due date and authorized assignee.",
+          "Create the work item with a clientToken and inspect its assigned local state."
+        ],
+        "intendedResult": "Operator workflow is centralized in WorkItem rather than duplicated inside each target entity."
+      },
+      "preconditions": [
+        "The trusted workspace directory must resolve any assignee under assignment policy; the actor is server-attributed."
+      ],
+      "pitfalls": [
+        "Creating work does not change provider state or accept a recommendation’s conclusion as proven.",
+        "Targets are continuing identities; cite exact evidence separately when resolving or verifying the work."
+      ],
+      "nextSteps": [
+        "GetWorkItem",
+        "UpdateWorkItem"
+      ],
+      "relatedEntities": [
+        "WorkItem",
+        "Command",
+        "Recommendation"
+      ],
+      "relatedOperations": [
+        "GetWorkItem",
+        "UpdateWorkItem"
+      ]
+    },
+    {
+      "operation": "UpdateWorkItem",
+      "purpose": "Record a server-attributed local work action and publish the WorkItem’s next version.",
+      "useCase": {
+        "title": "Resolve a coordination task with supporting evidence",
+        "actor": "Assigned operator",
+        "scenario": "Engineering work has been completed and the operator wants to record the resolution evidence while preserving the previous work history.",
+        "whenToUse": "When changing assignment, work state, scheduling or local notes.",
+        "steps": [
+          "Read the current WorkItem and decide the specific fields or allowed clearFields to change.",
+          "Submit the update under expectedVersion with exact resolution evidence when appropriate."
+        ],
+        "intendedResult": "A new WorkItem version records the local action and its actor without changing target provider records."
+      },
+      "preconditions": [
+        "The current WorkItem version must match; evidence and any new assignee must be authorized."
+      ],
+      "pitfalls": [
+        "RESOLVED expresses work coordination, not verified repair or provider recovery.",
+        "Omitted fields preserve their values. A field cannot be both assigned and cleared, and verification uses its separate operation."
+      ],
+      "nextSteps": [
+        "GetWorkItem",
+        "RecordWorkItemVerification"
+      ],
+      "relatedEntities": [
+        "WorkItem",
+        "Command"
+      ],
+      "relatedOperations": [
+        "GetWorkItem",
+        "RecordWorkItemVerification"
+      ]
+    },
+    {
+      "operation": "RecordWorkItemVerification",
+      "purpose": "Record a separately authorized, evidence-backed local verification judgment on a work item.",
+      "useCase": {
+        "title": "Verify that a resolved remediation has independent support",
+        "actor": "Verifier",
+        "scenario": "A task was marked resolved, and a verifier now has independent target-scoped evidence to assess the claimed remediation.",
+        "whenToUse": "When evaluating the result of work after distinguishing it from the resolution action.",
+        "steps": [
+          "Read the current WorkItem and select evidence that applies to its targets.",
+          "Submit the qualified verification result and rationale with expectedVersion and exact evidence references."
+        ],
+        "intendedResult": "verificationState and verificationEvidence advance on the WorkItem while its work state remains independently meaningful."
+      },
+      "preconditions": [
+        "VERIFIED requires independent supporting evidence under the registered verification policy and separate authorization."
+      ],
+      "pitfalls": [
+        "The same resolution action or a completed assessment alone is insufficient proof.",
+        "This judgment does not rewrite provider status, posture or historical source records."
+      ],
+      "nextSteps": [
+        "GetWorkItem",
+        "GetProjection"
+      ],
+      "relatedEntities": [
+        "WorkItem",
+        "Command",
+        "Projection"
+      ],
+      "relatedOperations": [
+        "GetWorkItem",
+        "GetProjection"
+      ]
+    },
+    {
+      "operation": "CreateSystem",
+      "purpose": "Establish a local business-system identity that can organize user journeys and service membership.",
+      "useCase": {
+        "title": "Introduce the commerce system into the catalog",
+        "actor": "Catalog maintainer",
+        "scenario": "The team wants a stable local name and description for the commerce system before relating its journeys and services.",
+        "whenToUse": "When adding an application-owned workload grouping.",
+        "steps": [
+          "Provide the system name and optional description with a clientToken.",
+          "Use the returned systemId when creating local journeys or service membership."
+        ],
+        "intendedResult": "A versioned canonical System is available for workload organization."
+      },
+      "preconditions": [
+        "The caller must have local system-create authority in the selected workspace."
+      ],
+      "pitfalls": [
+        "This operation creates no AWS resource and cannot assert a native provider binding.",
+        "A matching provider name alone is insufficient to establish identity."
+      ],
+      "nextSteps": [
+        "CreateUserJourney",
+        "CreateService"
+      ],
+      "relatedEntities": [
+        "System",
+        "Command"
+      ],
+      "relatedOperations": [
+        "CreateUserJourney",
+        "CreateService"
+      ],
+      "historicalInterpretation": "The earlier Resilience RPC CreateSystem created a provider resource. The same name here has explicitly local authority and is not a migration alias for native creation."
+    },
+    {
+      "operation": "GetSystem",
+      "purpose": "Read the local business-system description and its verified provider bindings.",
+      "useCase": {
+        "title": "Explain the system referenced in an older review",
+        "actor": "Architect",
+        "scenario": "A captured workload review names a System version. The architect wants its historical description and the provider bindings retained then.",
+        "whenToUse": "When inspecting a system as a canonical catalog object or resolving an exact reference.",
+        "steps": [
+          "Read the specified version for the review, or omit version for current catalog navigation.",
+          "Inspect providerBindings explicitly before following native evidence."
+        ],
+        "intendedResult": "The local system and its provider aliases can be explained without conflating their authorities."
+      },
+      "preconditions": [
+        "The System and its retained evidence must be authorized."
+      ],
+      "pitfalls": [
+        "This read does not synchronously call the native system API.",
+        "A historical system representation does not implicitly load current journey names or service membership."
+      ],
+      "nextSteps": [
+        "ListUserJourneys",
+        "ListServices",
+        "GetSource"
+      ],
+      "relatedEntities": [
+        "System"
+      ],
+      "relatedOperations": [
+        "ListUserJourneys",
+        "ListServices",
+        "GetSource"
+      ],
+      "historicalInterpretation": "The earlier native-oriented GetSystem is split conceptually between the canonical System getter and typed native source evidence."
+    },
+    {
+      "operation": "ListSystems",
+      "purpose": "Browse the canonical business systems visible in the authenticated workspace.",
+      "useCase": {
+        "title": "Choose a system for a workload review",
+        "actor": "Portfolio reviewer",
+        "scenario": "The reviewer starts a review by selecting the business system that contains a checkout journey.",
+        "whenToUse": "When discovering local workload groupings before drilling into journeys and services.",
+        "steps": [
+          "Traverse the system list using its stable pagination.",
+          "Read the selected System and list its journeys or service membership."
+        ],
+        "intendedResult": "The reviewer can navigate the retained local catalog consistently."
+      },
+      "preconditions": [
+        "The caller needs current catalog-read authority."
+      ],
+      "pitfalls": [
+        "A canonical list is not a complete native provider-system inventory; unresolved native profiles may remain source evidence.",
+        "An empty page with a continuation token does not end the traversal."
+      ],
+      "nextSteps": [
+        "GetSystem",
+        "ListUserJourneys",
+        "ListServices"
+      ],
+      "relatedEntities": [
+        "System"
+      ],
+      "relatedOperations": [
+        "GetSystem",
+        "ListUserJourneys",
+        "ListServices"
+      ],
+      "historicalInterpretation": "The prior native-oriented list is represented by canonical catalog navigation plus typed source profiles when native records need separate inspection."
+    },
+    {
+      "operation": "UpdateSystem",
+      "purpose": "Publish a new local System representation after a guarded metadata edit.",
+      "useCase": {
+        "title": "Clarify a business-system description",
+        "actor": "Catalog maintainer",
+        "scenario": "The commerce system description no longer reflects its business scope. The maintainer needs to correct it without changing provider configuration.",
+        "whenToUse": "When editing local name or description.",
+        "steps": [
+          "Read the current System version and prepare only the intended metadata fields.",
+          "Submit expectedVersion and a clientToken, preserving omitted values."
+        ],
+        "intendedResult": "The same systemId receives a new immutable representation while old references remain readable."
+      },
+      "preconditions": [
+        "expectedVersion must match the current System head."
+      ],
+      "pitfalls": [
+        "This operation does not update native sharing, policies or provider-owned system metadata.",
+        "System does not become a second writable owner of service membership."
+      ],
+      "nextSteps": [
+        "GetSystem",
+        "UpdateService"
+      ],
+      "relatedEntities": [
+        "System",
+        "Command"
+      ],
+      "relatedOperations": [
+        "GetSystem",
+        "UpdateService"
+      ],
+      "historicalInterpretation": "Earlier native UpdateSystem semantics are deferred adapter work. This operation owns canonical metadata only."
+    },
+    {
+      "operation": "CreateUserJourney",
+      "purpose": "Create a local business journey under one existing System.",
+      "useCase": {
+        "title": "Model the purchase journey",
+        "actor": "Catalog maintainer",
+        "scenario": "The commerce system needs a named purchase journey so the team can relate supporting services to a user goal.",
+        "whenToUse": "When adding a journey before establishing service membership.",
+        "steps": [
+          "Select the authorized systemId and provide the journey name and description.",
+          "Use the returned journey identity in Service.memberships through service create or update."
+        ],
+        "intendedResult": "A journey has a single explicit system parent and can be referenced by service membership."
+      },
+      "preconditions": [
+        "The specified System must exist and be authorized in the same workspace."
+      ],
+      "pitfalls": [
+        "A journey name does not establish execution order or end-to-end compliance.",
+        "The operation creates no native AWS journey and accepts no caller-asserted provider alias."
+      ],
+      "nextSteps": [
+        "CreateService",
+        "UpdateService"
+      ],
+      "relatedEntities": [
+        "UserJourney",
+        "Command",
+        "System",
+        "Service"
+      ],
+      "relatedOperations": [
+        "CreateService",
+        "UpdateService"
+      ],
+      "historicalInterpretation": "The older Resilience CreateUserJourney created a provider object. This local catalog operation deliberately does not stand in for that native command."
+    },
+    {
+      "operation": "GetUserJourney",
+      "purpose": "Read a journey’s exact local metadata within its owning System.",
+      "useCase": {
+        "title": "Review the purpose of a critical user flow",
+        "actor": "Service reviewer",
+        "scenario": "A service participates in the purchase journey, and the reviewer needs to understand the business flow represented by that membership.",
+        "whenToUse": "When following a journey identity from service membership or a capture.",
+        "steps": [
+          "Provide both systemId and userJourneyId, with version for an exact historical read.",
+          "Use service listing to inspect current participation when the task is live navigation."
+        ],
+        "intendedResult": "The business journey remains distinct from the operational behavior of its participating services."
+      },
+      "preconditions": [
+        "The supplied System parent must match the stored UserJourney ownership."
+      ],
+      "pitfalls": [
+        "The getter does not infer a transaction sequence or prove that the complete user flow is healthy.",
+        "A current membership list must not be substituted into an exact historical capture."
+      ],
+      "nextSteps": [
+        "ListServices",
+        "GetSystem"
+      ],
+      "relatedEntities": [
+        "UserJourney",
+        "System",
+        "Service"
+      ],
+      "relatedOperations": [
+        "ListServices",
+        "GetSystem"
+      ],
+      "historicalInterpretation": "The prior native-oriented journey getter is preserved as canonical metadata plus separately retained native evidence."
+    },
+    {
+      "operation": "ListUserJourneys",
+      "purpose": "List the canonical journeys owned by one System.",
+      "useCase": {
+        "title": "Find the user goals supported by commerce",
+        "actor": "Architect",
+        "scenario": "An architect wants to organize a service review around business journeys rather than AWS service names.",
+        "whenToUse": "When navigating a selected System’s journey catalog.",
+        "steps": [
+          "List journeys for the exact systemId and traverse all relevant pages.",
+          "Inspect each selected journey and its service membership through the workload operations."
+        ],
+        "intendedResult": "The system’s retained journey set is available for review."
+      },
+      "preconditions": [
+        "The owning System must be visible in the authenticated workspace."
+      ],
+      "pitfalls": [
+        "A list of journeys is a local catalog view, not native discovery coverage.",
+        "Journey ownership is one-to-many from System; service participation is maintained on Service."
+      ],
+      "nextSteps": [
+        "GetUserJourney",
+        "ListServices"
+      ],
+      "relatedEntities": [
+        "UserJourney",
+        "System",
+        "Service"
+      ],
+      "relatedOperations": [
+        "GetUserJourney",
+        "ListServices"
+      ]
+    },
+    {
+      "operation": "UpdateUserJourney",
+      "purpose": "Edit a journey’s local name or description under its current entity version.",
+      "useCase": {
+        "title": "Rename a journey after a product terminology change",
+        "actor": "Catalog maintainer",
+        "scenario": "The product team now calls the purchase flow checkout. The catalog should reflect that wording while preserving the journey identity.",
+        "whenToUse": "When local journey metadata changes without reparenting or provider mutation.",
+        "steps": [
+          "Read the journey with its owning systemId and current version.",
+          "Submit the intended metadata fields and expectedVersion; keep service membership changes on Service."
+        ],
+        "intendedResult": "A new UserJourney representation retains its system ownership and historical identity."
+      },
+      "preconditions": [
+        "The systemId must match stored ownership and expectedVersion must match the current journey head."
+      ],
+      "pitfalls": [
+        "This request cannot move the journey to another system or create a competing service list.",
+        "The local edit does not rename the native provider journey."
+      ],
+      "nextSteps": [
+        "GetUserJourney",
+        "UpdateService"
+      ],
+      "relatedEntities": [
+        "UserJourney",
+        "Command",
+        "Service"
+      ],
+      "relatedOperations": [
+        "GetUserJourney",
+        "UpdateService"
+      ],
+      "historicalInterpretation": "The old native UpdateUserJourney command remains deferred. The consolidated command changes application-owned metadata only."
+    },
+    {
+      "operation": "CreateService",
+      "purpose": "Create a canonical business workload boundary with optional local memberships and resource references.",
+      "useCase": {
+        "title": "Register checkout as a shared business service",
+        "actor": "Catalog maintainer",
+        "scenario": "Checkout supports more than one user journey and needs one canonical identity across the console’s modules.",
+        "whenToUse": "When establishing a local workload before linking observed health, resilience or investigations.",
+        "steps": [
+          "Provide its name and, when known, memberships and resourceIds.",
+          "Inspect the returned Service and use its stable identity for subsequent observations and local work."
+        ],
+        "intendedResult": "Modules can refer to one canonical Service rather than duplicate a workload per provider."
+      },
+      "preconditions": [
+        "Membership system/journey pairs must be valid and authorized; referenced resources must be in scope."
+      ],
+      "pitfalls": [
+        "Service means a business workload, not an AWS product family or a DevOps registration.",
+        "Creating this local entity does not create, discover or rename an AWS service profile."
+      ],
+      "nextSteps": [
+        "GetService",
+        "ListResources"
+      ],
+      "relatedEntities": [
+        "Service",
+        "Command",
+        "Resource",
+        "System",
+        "UserJourney"
+      ],
+      "relatedOperations": [
+        "GetService",
+        "ListResources"
+      ],
+      "historicalInterpretation": "Earlier Resilience CreateService created a native resource. This operation is intentionally local; verified provider bindings are established by trusted mapping."
+    },
+    {
+      "operation": "GetService",
+      "purpose": "Read canonical workload metadata, its memberships, resource references and verified provider bindings.",
+      "useCase": {
+        "title": "Inspect the service version used at run admission",
+        "actor": "Workflow reviewer",
+        "scenario": "A Run pins Service version 2 while the current catalog has changed. The reviewer needs the exact admitted workload representation.",
+        "whenToUse": "When opening a live service page or resolving an exact historical Service reference.",
+        "steps": [
+          "Use the reference’s version for historical review; omit it only for a deliberate current-head read.",
+          "Follow exact retained evidence for historical details and inspect provider bindings explicitly."
+        ],
+        "intendedResult": "The service used by the review or run remains distinguishable from the current catalog head."
+      },
+      "preconditions": [
+        "The service and retained reference closure must be currently authorized."
+      ],
+      "pitfalls": [
+        "The getter does not infer runtime health; current qualified status has its own selector.",
+        "Reading a historical service never silently replaces its members with current versions."
+      ],
+      "nextSteps": [
+        "GetServiceStatus",
+        "ListDependencies",
+        "ListEntityVersions"
+      ],
+      "relatedEntities": [
+        "Service"
+      ],
+      "relatedOperations": [
+        "GetServiceStatus",
+        "ListDependencies",
+        "ListEntityVersions"
+      ],
+      "historicalInterpretation": "The older native-oriented service getter is consolidated into the canonical workload plus separately retained native facets."
+    },
+    {
+      "operation": "ListServices",
+      "purpose": "Find canonical services, optionally through System and UserJourney membership.",
+      "useCase": {
+        "title": "Identify shared services in the purchase journey",
+        "actor": "Architect",
+        "scenario": "The purchase journey uses checkout and a shared data service. The architect needs the deduplicated workload set.",
+        "whenToUse": "When navigating local workload participation.",
+        "steps": [
+          "Filter by systemId and userJourneyId where needed and traverse the fixed publication.",
+          "Inspect selected services and their independent status projections."
+        ],
+        "intendedResult": "One canonical service identity appears once even when it has several memberships."
+      },
+      "preconditions": [
+        "Membership filters must refer to valid authorized catalog identities."
+      ],
+      "pitfalls": [
+        "Membership does not establish journey execution order or end-to-end resilience compliance.",
+        "The list is a retained local view; it does not prove native inventory completeness."
+      ],
+      "nextSteps": [
+        "GetService",
+        "GetServiceStatus"
+      ],
+      "relatedEntities": [
+        "Service",
+        "System",
+        "UserJourney"
+      ],
+      "relatedOperations": [
+        "GetService",
+        "GetServiceStatus"
+      ]
+    },
+    {
+      "operation": "UpdateService",
+      "purpose": "Edit the local workload metadata and complete owned membership/resource sets under one Service version.",
+      "useCase": {
+        "title": "Add checkout to another business journey",
+        "actor": "Catalog maintainer",
+        "scenario": "Checkout now also supports a returns journey. The catalog needs the additional membership while preserving its existing memberships.",
+        "whenToUse": "When changing canonical name, description, membership or resource references.",
+        "steps": [
+          "Read the current Service and assemble the complete intended memberships array.",
+          "Submit the replacement array with expectedVersion and inspect the next Service version."
+        ],
+        "intendedResult": "Service remains the single writable source of catalog membership."
+      },
+      "preconditions": [
+        "Every journey must belong to its paired System; expectedVersion guards the whole Service."
+      ],
+      "pitfalls": [
+        "A supplied array replaces the complete owned set, so sending only the new member would omit existing ones.",
+        "Provider configuration belongs to UpdateResilienceServiceConfiguration; local editing does not mutate AWS."
+      ],
+      "nextSteps": [
+        "GetService",
+        "ListServices"
+      ],
+      "relatedEntities": [
+        "Service",
+        "Command"
+      ],
+      "relatedOperations": [
+        "GetService",
+        "ListServices"
+      ],
+      "historicalInterpretation": "The native UpdateService precedent maps to UpdateResilienceServiceConfiguration. This similarly named operation owns the application catalog only."
+    },
+    {
+      "operation": "GetServiceStatus",
+      "purpose": "Select the current qualified SERVICE_STATUS Projection for a service.",
+      "useCase": {
+        "title": "Explain a service that is operationally degraded despite a completed assessment",
+        "actor": "Operator",
+        "scenario": "Checkout has an assessment execution marked successful while runtime evidence reports degradation. The operator needs both dimensions and their provenance.",
+        "whenToUse": "When presenting the currently selected service interpretation.",
+        "steps": [
+          "Request the service’s current status projection.",
+          "Inspect runtime health, resilience posture, assessment execution, discovery and coverage independently, then follow exact evidence."
+        ],
+        "intendedResult": "The view gives an evidence-qualified explanation without collapsing distinct meanings into one status."
+      },
+      "preconditions": [
+        "A current authorized projection must be available for the service; otherwise PROJECTION_NOT_AVAILABLE is explicit."
+      ],
+      "pitfalls": [
+        "The newest receipt time does not select authoritative status by itself.",
+        "Historical status uses GetProjection with the exact returned version; this selector has no historical version parameter."
+      ],
+      "nextSteps": [
+        "GetProjection",
+        "GetObservation"
+      ],
+      "relatedEntities": [
+        "Projection",
+        "Service",
+        "Observation"
+      ],
+      "relatedOperations": [
+        "GetProjection",
+        "GetObservation"
+      ],
+      "historicalInterpretation": "The earlier status facade is retained as a named versioned Projection with separate health, posture, execution and collection dimensions."
+    },
+    {
+      "operation": "GetWorkspaceSummary",
+      "purpose": "Select the current qualified aggregate over the caller’s authorized workload contributors.",
+      "useCase": {
+        "title": "Review portfolio coverage with a defensible denominator",
+        "actor": "Workspace reviewer",
+        "scenario": "A reviewer wants a portfolio-level view and needs to know which distinct services contribute and which evidence is usable.",
+        "whenToUse": "When presenting the current authorized workspace summary.",
+        "steps": [
+          "Read the selected summary and inspect its contributor identities, denominator and rule.",
+          "Drill into service-status projections to explain individual contributions or coverage gaps."
+        ],
+        "intendedResult": "The aggregate is interpretable within the caller’s actual visible workload scope."
+      },
+      "preconditions": [
+        "The complete returned summary must match current authorization; a broader cached summary cannot be exposed unchanged."
+      ],
+      "pitfalls": [
+        "An empty authorized scope has null percentages rather than a misleading zero or full success.",
+        "Aggregate service results do not establish end-to-end journey compliance, and hidden records must not leak through counts."
+      ],
+      "nextSteps": [
+        "GetProjection",
+        "GetServiceStatus"
+      ],
+      "relatedEntities": [
+        "Projection",
+        "Service"
+      ],
+      "relatedOperations": [
+        "GetProjection",
+        "GetServiceStatus"
+      ],
+      "historicalInterpretation": "The prior workspace summary carries forward as a qualified Projection rather than an unqualified rollup."
+    },
+    {
+      "operation": "GetDependency",
+      "purpose": "Read an observed service dependency with separate native classification and local governance.",
+      "useCase": {
+        "title": "Examine an unexpected outbound dependency",
+        "actor": "Security reviewer",
+        "scenario": "Checkout is observed depending on another resource. The reviewer needs the observed identity and local allow/deny decision before discussing an exception.",
+        "whenToUse": "When reviewing one service-scoped dependency or its exact historical representation.",
+        "steps": [
+          "Supply the owning serviceId and dependencyId, using version when following captured evidence.",
+          "Inspect selectedObservation, rawClassification and governance as separate authorities."
+        ],
+        "intendedResult": "The reviewer can explain both what was observed and what local policy says about it."
+      },
+      "preconditions": [
+        "The dependency must belong to the supplied Service and its evidence must be readable."
+      ],
+      "pitfalls": [
+        "A local governance decision is not a network-control result.",
+        "Changing native criticality and changing local allowed/denied governance require different commands."
+      ],
+      "nextSteps": [
+        "GetObservation",
+        "UpdateDependencyGovernance",
+        "UpdateDependencyClassification"
+      ],
+      "relatedEntities": [
+        "Dependency"
+      ],
+      "relatedOperations": [
+        "GetObservation",
+        "UpdateDependencyGovernance",
+        "UpdateDependencyClassification"
+      ],
+      "historicalInterpretation": "The earlier dependency model and RPC getters are retained with canonical identities and one Dependency version for owned governance."
+    },
+    {
+      "operation": "ListDependencies",
+      "purpose": "List the retained dependencies observed for one canonical service.",
+      "useCase": {
+        "title": "Review checkout’s dependency surface",
+        "actor": "Service owner",
+        "scenario": "The owner is reviewing the dependencies known for checkout before evaluating resilience and governance decisions.",
+        "whenToUse": "When exploring a service’s observed dependency set.",
+        "steps": [
+          "List dependencies under the serviceId and traverse the local publication.",
+          "Inspect individual dependency evidence and the collection coverage before judging completeness."
+        ],
+        "intendedResult": "The owner can review observed relationships with their classification and governance."
+      },
+      "preconditions": [
+        "The caller must be authorized for the Service and each returned dependency."
+      ],
+      "pitfalls": [
+        "No returned dependency is not evidence that no dependency exists; collection and resolution coverage must support that claim.",
+        "Observed dependency does not automatically imply a verified targetServiceId or stable inventory match."
+      ],
+      "nextSteps": [
+        "GetDependency",
+        "GetCollection"
+      ],
+      "relatedEntities": [
+        "Dependency"
+      ],
+      "relatedOperations": [
+        "GetDependency",
+        "GetCollection"
+      ]
+    },
+    {
+      "operation": "UpdateDependencyGovernance",
+      "purpose": "Record a local allowed/denied decision and reason as an owned value on Dependency.",
+      "useCase": {
+        "title": "Document an approved dependency exception",
+        "actor": "Governance reviewer",
+        "scenario": "A dependency to a shared service is acceptable under a local policy exception, and the reviewer needs to record the decision.",
+        "whenToUse": "When expressing local governance independently of provider criticality.",
+        "steps": [
+          "Read the current Dependency and inspect its observed identity.",
+          "Submit the decision and reason with Dependency.expectedVersion and a clientToken."
+        ],
+        "intendedResult": "The Dependency gains a new version containing the local governance decision."
+      },
+      "preconditions": [
+        "The dependency must belong to the supplied service and the caller must have governance-write authority."
+      ],
+      "pitfalls": [
+        "The governance value has no independent identity or version clock.",
+        "Allowed/denied does not change DNS evidence, grant or revoke network access, or update native criticality."
+      ],
+      "nextSteps": [
+        "GetDependency",
+        "CreateWorkItem"
+      ],
+      "relatedEntities": [
+        "Dependency",
+        "Command"
+      ],
+      "relatedOperations": [
+        "GetDependency",
+        "CreateWorkItem"
+      ],
+      "historicalInterpretation": "The earlier local governance capability is preserved while its concurrency is consolidated into the owning Dependency version."
+    },
+    {
+      "operation": "GetHealthEvent",
+      "purpose": "Read the shared AWS Health event identity and its selected source representation.",
+      "useCase": {
+        "title": "Identify the regional event behind several notifications",
+        "actor": "Responder",
+        "scenario": "Notifications from multiple contexts refer to the same regional event. The responder needs the event identity before reviewing account impact.",
+        "whenToUse": "When resolving the provider event itself before choosing an evidence context.",
+        "steps": [
+          "Read the HealthEvent and inspect eventArn, serviceCode, impactedRegion and selectedSource.",
+          "List its contexts to choose the account, public or organization-summary evidence relevant to the question."
+        ],
+        "intendedResult": "One shared event identity can support several explicitly separated context views."
+      },
+      "preconditions": [
+        "The event and its selected source must be within current read scope."
+      ],
+      "pitfalls": [
+        "An EventBridge envelope ID is not the HealthEvent identity.",
+        "A public event does not by itself prove that an account or resource is affected."
+      ],
+      "nextSteps": [
+        "ListEventContexts",
+        "GetSource"
+      ],
+      "relatedEntities": [
+        "HealthEvent",
+        "EventContext",
+        "Source"
+      ],
+      "relatedOperations": [
+        "ListEventContexts",
+        "GetSource"
+      ]
+    },
+    {
+      "operation": "ListHealthEvents",
+      "purpose": "Discover retained Health events by provider service code or event type.",
+      "useCase": {
+        "title": "Find database-service events during incident triage",
+        "actor": "Responder",
+        "scenario": "An incident may coincide with a provider database event. The responder needs candidate Health events without assuming every event affects the workload.",
+        "whenToUse": "When locating relevant retained event identities.",
+        "steps": [
+          "Filter by serviceCode or eventTypeCode and traverse the result pages.",
+          "Open each candidate event and examine its applicable account context and impact evidence."
+        ],
+        "intendedResult": "Potential provider events can be investigated with context-specific evidence."
+      },
+      "preconditions": [
+        "The returned event evidence must be authorized."
+      ],
+      "pitfalls": [
+        "serviceCode identifies an AWS provider service family, not a canonical business Service.",
+        "The operation has no time-window filter in this contract; event timing must be assessed from retained details, not invented request fields."
+      ],
+      "nextSteps": [
+        "GetHealthEvent",
+        "ListEventContexts"
+      ],
+      "relatedEntities": [
+        "HealthEvent",
+        "EventContext"
+      ],
+      "relatedOperations": [
+        "GetHealthEvent",
+        "ListEventContexts"
+      ]
+    },
+    {
+      "operation": "GetEventContext",
+      "purpose": "Read one event’s public, account-specific or organization-summary evidence partition.",
+      "useCase": {
+        "title": "Check whether the incident account has affected-account evidence",
+        "actor": "Responder",
+        "scenario": "A public event exists, but the team needs the context belonging to its affected account rather than another recipient or summary.",
+        "whenToUse": "When selecting the scope in which status and impacts may be interpreted.",
+        "steps": [
+          "Supply healthEventId and the matching eventContextId, pinning version for a historical review.",
+          "Inspect kind, context key, account/organization ownership and selectedObservation."
+        ],
+        "intendedResult": "The responder can interpret status within the correct evidence partition."
+      },
+      "preconditions": [
+        "The supplied event parent must match the stored context and current access must authorize its evidence."
+      ],
+      "pitfalls": [
+        "Organization-summary evidence cannot be promoted into account-specific impacts.",
+        "Notification recipients do not establish the affected account identity."
+      ],
+      "nextSteps": [
+        "ListEntityImpacts",
+        "ListCommunications",
+        "GetObservation"
+      ],
+      "relatedEntities": [
+        "EventContext",
+        "EntityImpact",
+        "Communication",
+        "Observation"
+      ],
+      "relatedOperations": [
+        "ListEntityImpacts",
+        "ListCommunications",
+        "GetObservation"
+      ]
+    },
+    {
+      "operation": "ListEventContexts",
+      "purpose": "Find the evidence partitions retained for one shared Health event.",
+      "useCase": {
+        "title": "Move from a public event to account-specific impact review",
+        "actor": "Responder",
+        "scenario": "The team has identified a regional HealthEvent and wants to see which authorized account contexts are represented.",
+        "whenToUse": "When choosing the correct event scope before loading impacts or communications.",
+        "steps": [
+          "List contexts for healthEventId, using the kind filter when appropriate.",
+          "Select and inspect the context whose account or organization scope matches the review."
+        ],
+        "intendedResult": "The user can navigate distinct evidence scopes without merging their facts."
+      },
+      "preconditions": [
+        "The HealthEvent and each returned context must be visible under current authorization."
+      ],
+      "pitfalls": [
+        "The absence of an account context from a local list does not prove that the account is unaffected.",
+        "Public, ACCOUNT and ORG_SUMMARY contexts have different evidence meanings."
+      ],
+      "nextSteps": [
+        "GetEventContext",
+        "ListEntityImpacts"
+      ],
+      "relatedEntities": [
+        "EventContext"
+      ],
+      "relatedOperations": [
+        "GetEventContext",
+        "ListEntityImpacts"
+      ]
+    },
+    {
+      "operation": "GetEntityImpact",
+      "purpose": "Read an event-relative affected-entity record in its exact Health event and context scope.",
+      "useCase": {
+        "title": "Validate whether a database is an affected entity",
+        "actor": "Responder",
+        "scenario": "An account-context impact record looks like a database resource. The responder must examine its match provenance before linking it to inventory.",
+        "whenToUse": "When drilling into one provider-identified affected entity.",
+        "steps": [
+          "Supply the complete HealthEvent/EventContext ownership chain and the desired impact version.",
+          "Inspect native entity identity, status, selectedObservation and resourceMatches."
+        ],
+        "intendedResult": "Event-relative impact remains distinct from canonical inventory and global resource health."
+      },
+      "preconditions": [
+        "Both parent IDs must match stored ownership; an organization-summary context cannot own EntityImpact records."
+      ],
+      "pitfalls": [
+        "An entityValue that resembles a resource name is not a verified resource join.",
+        "The impact’s raw provider status is not a global status for the matched Resource."
+      ],
+      "nextSteps": [
+        "GetObservation",
+        "GetResource"
+      ],
+      "relatedEntities": [
+        "EntityImpact",
+        "Observation",
+        "Resource"
+      ],
+      "relatedOperations": [
+        "GetObservation",
+        "GetResource"
+      ]
+    },
+    {
+      "operation": "ListEntityImpacts",
+      "purpose": "Enumerate affected-entity evidence inside one permitted event context.",
+      "useCase": {
+        "title": "Assess the account-scoped impact set",
+        "actor": "Incident lead",
+        "scenario": "The lead needs the affected entities reported for the incident account while retaining the collection limitations.",
+        "whenToUse": "After choosing the correct account or other supported impact-bearing context.",
+        "steps": [
+          "List impacts with the matching event and context IDs.",
+          "Inspect individual matches and the supporting collection coverage before reporting an affected-resource count."
+        ],
+        "intendedResult": "The lead can describe the retained impact set with its scope and uncertainty."
+      },
+      "preconditions": [
+        "The context must belong to the event and support entity impacts; ORG_SUMMARY cannot own them."
+      ],
+      "pitfalls": [
+        "Account, public and organization-summary evidence must not leak into one another.",
+        "A complete local traversal does not establish a complete provider impact list or justify unqualified counts."
+      ],
+      "nextSteps": [
+        "GetEntityImpact",
+        "GetCollection"
+      ],
+      "relatedEntities": [
+        "EntityImpact",
+        "Collection"
+      ],
+      "relatedOperations": [
+        "GetEntityImpact",
+        "GetCollection"
+      ]
+    },
+    {
+      "operation": "GetCommunication",
+      "purpose": "Read one validated logical Health communication and its retained page/delivery evidence.",
+      "useCase": {
+        "title": "Inspect a partially assembled notification",
+        "actor": "Responder",
+        "scenario": "An event notification arrived in several pages, and the visible wording may be incomplete or contradictory.",
+        "whenToUse": "When understanding a communication’s assembly state and original delivered content.",
+        "steps": [
+          "Read the communication under its HealthEvent and EventContext parents.",
+          "Inspect assemblyState, grouping provenance and the retained pages before using its text."
+        ],
+        "intendedResult": "The responder can distinguish a complete logical communication from partial or conflicting delivery evidence."
+      },
+      "preconditions": [
+        "The communication must belong to both supplied parents and its content must be currently authorized."
+      ],
+      "pitfalls": [
+        "A communication is not an arbitrary text merge of pages.",
+        "Delivery recipients and grouping identifiers cannot redefine event or affected-account identity."
+      ],
+      "nextSteps": [
+        "ListCommunications",
+        "GetObservation"
+      ],
+      "relatedEntities": [
+        "Communication",
+        "Observation"
+      ],
+      "relatedOperations": [
+        "ListCommunications",
+        "GetObservation"
+      ]
+    },
+    {
+      "operation": "ListCommunications",
+      "purpose": "List the retained logical communications belonging to one Health event context.",
+      "useCase": {
+        "title": "Review how the provider communicated an event",
+        "actor": "Incident reviewer",
+        "scenario": "A post-incident review needs the communications visible for the affected account, including partial and conflicting notifications.",
+        "whenToUse": "When tracing retained provider communication within a known event context.",
+        "steps": [
+          "List communications for the exact event and context IDs.",
+          "Inspect individual groups, page provenance and assembly states."
+        ],
+        "intendedResult": "The reviewer can assess communication evidence without losing delivery distinctions."
+      },
+      "preconditions": [
+        "The event/context chain and all returned content must be authorized."
+      ],
+      "pitfalls": [
+        "This operation lists retained evidence; it does not send a message.",
+        "Repeated deliveries and recipient identities do not automatically create new event identities or affected-account facts."
+      ],
+      "nextSteps": [
+        "GetCommunication"
+      ],
+      "relatedEntities": [
+        "Communication"
+      ],
+      "relatedOperations": [
+        "GetCommunication"
+      ]
+    },
+    {
+      "operation": "GetLifecycleEntry",
+      "purpose": "Read a lifecycle-catalog entry in its retained capture context and inspect milestone/matching evidence.",
+      "useCase": {
+        "title": "Review a database engine support milestone",
+        "actor": "Platform engineer",
+        "scenario": "A deployed database engine appears to approach a lifecycle milestone. The engineer needs the exact catalog entry used by the exposure calculation.",
+        "whenToUse": "When verifying a lifecycle projection’s catalog input.",
+        "steps": [
+          "Read the exact LifecycleEntry version cited by the projection or snapshot.",
+          "Inspect catalogSnapshot, source, version labels and milestones, preserving matching provenance."
+        ],
+        "intendedResult": "The engineer can explain the catalog fact used to evaluate the deployed component."
+      },
+      "preconditions": [
+        "The entry’s exact source and catalog capture must be authorized and available."
+      ],
+      "pitfalls": [
+        "A title or version label is not an established stable native entry ID.",
+        "A later catalog publication must not silently replace the entry referenced by an older exposure calculation."
+      ],
+      "nextSteps": [
+        "GetSnapshot",
+        "GetSource",
+        "ListComponentDeployments"
+      ],
+      "relatedEntities": [
+        "LifecycleEntry",
+        "Snapshot",
+        "Source",
+        "ComponentDeployment"
+      ],
+      "relatedOperations": [
+        "GetSnapshot",
+        "GetSource",
+        "ListComponentDeployments"
+      ]
+    },
+    {
+      "operation": "ListLifecycleEntries",
+      "purpose": "Discover retained lifecycle catalog entries, optionally through an exact captured catalog manifest.",
+      "useCase": {
+        "title": "Compare a resource against the catalog captured for a review",
+        "actor": "Platform engineer",
+        "scenario": "A review has a LIFECYCLE_CATALOG Snapshot and needs the database entries from that precise capture.",
+        "whenToUse": "When selecting catalog evidence for reproducible lifecycle analysis.",
+        "steps": [
+          "Supply the exact catalogSnapshot and optional serviceCode.",
+          "Read selected entries with their exact versions and compare against observed component deployments through an authorized projection."
+        ],
+        "intendedResult": "Catalog selection remains reproducible even after later catalog captures exist."
+      },
+      "preconditions": [
+        "A supplied catalogSnapshot must resolve to an exact authorized LIFECYCLE_CATALOG capture."
+      ],
+      "pitfalls": [
+        "The list must select through the supplied manifest, not a later snapshot head.",
+        "Matching titles or equal version labels alone cannot establish continuity across catalog captures."
+      ],
+      "nextSteps": [
+        "GetLifecycleEntry",
+        "ListComponentDeployments",
+        "PublishProjection"
+      ],
+      "relatedEntities": [
+        "LifecycleEntry",
+        "Snapshot",
+        "ComponentDeployment",
+        "Projection"
+      ],
+      "relatedOperations": [
+        "GetLifecycleEntry",
+        "ListComponentDeployments",
+        "PublishProjection"
+      ]
+    },
+    {
+      "operation": "GetComponentDeployment",
+      "purpose": "Read an observed component/version on a Resource with its inventory provenance.",
+      "useCase": {
+        "title": "Confirm the database engine version used in an exposure review",
+        "actor": "Platform engineer",
+        "scenario": "A lifecycle finding cites a database engine deployment. The engineer needs the observed version and source timing behind that input.",
+        "whenToUse": "When verifying the installed-component evidence for a resource.",
+        "steps": [
+          "Supply the owning resourceId and componentDeploymentId, using the exact cited version.",
+          "Follow observation to examine the inventory read that reported the component version."
+        ],
+        "intendedResult": "The installed-version evidence remains distinct from lifecycle catalog and derived exposure."
+      },
+      "preconditions": [
+        "The deployment must belong to the supplied Resource and its observation must be readable."
+      ],
+      "pitfalls": [
+        "A ComponentDeployment is an observed fact, not a request to install or upgrade software.",
+        "The latest inventory observation must not be substituted into a historical exposure calculation."
+      ],
+      "nextSteps": [
+        "GetObservation",
+        "GetResource",
+        "GetProjection"
+      ],
+      "relatedEntities": [
+        "ComponentDeployment",
+        "Observation",
+        "Resource",
+        "Projection"
+      ],
+      "relatedOperations": [
+        "GetObservation",
+        "GetResource",
+        "GetProjection"
+      ]
+    },
+    {
+      "operation": "ListComponentDeployments",
+      "purpose": "List retained installed-component observations attached to one Resource.",
+      "useCase": {
+        "title": "Inspect lifecycle-relevant components on a database",
+        "actor": "Platform engineer",
+        "scenario": "The team needs to see the retained component versions for a database before evaluating support milestones.",
+        "whenToUse": "When building a resource-level inventory view for lifecycle analysis.",
+        "steps": [
+          "List component deployments under the resourceId.",
+          "Inspect the selected observations and pair exact component versions with a pinned lifecycle catalog for derivation."
+        ],
+        "intendedResult": "The resource’s observed component set can supply explicit inputs to an exposure projection."
+      },
+      "preconditions": [
+        "The Resource and component evidence must be currently authorized."
+      ],
+      "pitfalls": [
+        "No component rows does not prove the resource has no relevant software; inventory coverage matters.",
+        "Lifecycle exposure belongs in a separate versioned Projection rather than an editable component status."
+      ],
+      "nextSteps": [
+        "GetComponentDeployment",
+        "ListLifecycleEntries",
+        "PublishProjection"
+      ],
+      "relatedEntities": [
+        "ComponentDeployment",
+        "Resource",
+        "LifecycleEntry",
+        "Projection"
+      ],
+      "relatedOperations": [
+        "GetComponentDeployment",
+        "ListLifecycleEntries",
+        "PublishProjection"
+      ]
+    },
+    {
+      "operation": "GetResiliencePolicy",
+      "purpose": "Read the retained native resilience-policy configuration with its observed components and provenance.",
+      "useCase": {
+        "title": "Understand the policy used by a past assessment",
+        "actor": "Resilience reviewer",
+        "scenario": "An assessment captured its policy context before the policy changed. The reviewer needs the exact policy representation supporting that context.",
+        "whenToUse": "When inspecting policy configuration or resolving a policy reference from captured evidence.",
+        "steps": [
+          "Read the exact policy version when reviewing history.",
+          "Inspect configured components and selectedObservation, then compare with the assessment’s policy-context capture."
+        ],
+        "intendedResult": "The configured policy is distinguishable from its later applicability and assessed posture."
+      },
+      "preconditions": [
+        "The policy and its observation must be authorized and available."
+      ],
+      "pitfalls": [
+        "A missing optional component is not an implicit zero target or an invented default.",
+        "Reading the current policy cannot rewrite the policy context of an earlier assessment."
+      ],
+      "nextSteps": [
+        "GetObservation",
+        "GetSnapshot",
+        "UpdateResiliencePolicyConfiguration"
+      ],
+      "relatedEntities": [
+        "ResiliencePolicy",
+        "Observation",
+        "Snapshot"
+      ],
+      "relatedOperations": [
+        "GetObservation",
+        "GetSnapshot",
+        "UpdateResiliencePolicyConfiguration"
+      ],
+      "historicalInterpretation": "Earlier GetPolicy is renamed to make the resilience bounded context explicit."
+    },
+    {
+      "operation": "ListResiliencePolicies",
+      "purpose": "Discover retained resilience-policy identities and their selected current representations.",
+      "useCase": {
+        "title": "Choose a policy for a service-configuration review",
+        "actor": "Resilience operator",
+        "scenario": "The operator needs to inspect existing policy options before deciding which verified native policy to attach to a service.",
+        "whenToUse": "When browsing policies already represented in the authorized workspace.",
+        "steps": [
+          "Traverse retained policies and inspect candidate configurations.",
+          "Use the appropriate provider configuration command only after reviewing bindings and exact source evidence."
+        ],
+        "intendedResult": "The operator can compare retained policy configurations before issuing a separate intent."
+      },
+      "preconditions": [
+        "The caller needs policy-read authority for every returned record."
+      ],
+      "pitfalls": [
+        "Listing does not create a policy, prove provider availability or authorize attachment.",
+        "Local pagination completeness is independent of upstream policy discovery coverage."
+      ],
+      "nextSteps": [
+        "GetResiliencePolicy",
+        "UpdateResilienceServiceConfiguration"
+      ],
+      "relatedEntities": [
+        "ResiliencePolicy"
+      ],
+      "relatedOperations": [
+        "GetResiliencePolicy",
+        "UpdateResilienceServiceConfiguration"
+      ],
+      "historicalInterpretation": "Earlier ListPolicies is preserved under a domain-specific operation name."
+    },
+    {
+      "operation": "GetResilienceAssessment",
+      "purpose": "Read one service-scoped native assessment execution and its associated retained policy/posture context.",
+      "useCase": {
+        "title": "Interpret a successfully completed assessment",
+        "actor": "Resilience reviewer",
+        "scenario": "A native assessment finished successfully, but the reviewer must determine whether the resulting posture is achievable and which policy context applied.",
+        "whenToUse": "When following an assessment identity produced by command reconciliation or retained collection.",
+        "steps": [
+          "Read the assessment under its owning serviceId, using an exact version for a captured review.",
+          "Inspect execution status separately from the policy snapshot and selected posture projection."
+        ],
+        "intendedResult": "The reviewer understands the execution result without treating it as an automatic resilience verdict."
+      },
+      "preconditions": [
+        "The assessment must belong to the supplied Service and its evidence closure must be authorized."
+      ],
+      "pitfalls": [
+        "Execution success does not imply achievable posture, healthy runtime or verified remediation.",
+        "The operation reads retained evidence; it does not invent an unavailable native Get API."
+      ],
+      "nextSteps": [
+        "GetSnapshot",
+        "GetProjection",
+        "ListFindings"
+      ],
+      "relatedEntities": [
+        "ResilienceAssessment",
+        "Snapshot",
+        "Projection",
+        "Finding"
+      ],
+      "relatedOperations": [
+        "GetSnapshot",
+        "GetProjection",
+        "ListFindings"
+      ],
+      "historicalInterpretation": "Earlier GetFailureModeAssessment becomes the retained canonical assessment read; native retrieval details remain adapter-owned."
+    },
+    {
+      "operation": "ListResilienceAssessments",
+      "purpose": "Browse the retained assessment executions associated with one Service.",
+      "useCase": {
+        "title": "Compare assessment history for checkout",
+        "actor": "Service owner",
+        "scenario": "The owner wants to identify the assessment relevant to a review and compare it with other retained executions.",
+        "whenToUse": "When locating assessment executions before reading their exact context.",
+        "steps": [
+          "List assessments under the serviceId and traverse the fixed local publication.",
+          "Read selected assessments and inspect their policy snapshots and posture projections."
+        ],
+        "intendedResult": "The owner can distinguish assessment executions and the contexts used to interpret them."
+      },
+      "preconditions": [
+        "The Service and each returned assessment must be currently authorized."
+      ],
+      "pitfalls": [
+        "Assessment listing does not assign every service finding to one assessment.",
+        "A current list returns one head per assessment identity; use history enumeration for earlier representations of the same assessment."
+      ],
+      "nextSteps": [
+        "GetResilienceAssessment",
+        "ListEntityVersions"
+      ],
+      "relatedEntities": [
+        "ResilienceAssessment"
+      ],
+      "relatedOperations": [
+        "GetResilienceAssessment",
+        "ListEntityVersions"
+      ],
+      "historicalInterpretation": "Earlier ListFailureModeAssessments is retained as a local stable traversal with separate upstream coverage."
+    },
+    {
+      "operation": "GetFinding",
+      "purpose": "Read a service-scoped resilience finding, keeping summary/detail evidence and recommendation presence explicit.",
+      "useCase": {
+        "title": "Investigate why recommendations are unavailable",
+        "actor": "Resilience analyst",
+        "scenario": "A summary finding is visible, but the detail read may not have completed. The analyst must determine whether there are no suggestions or whether detail is missing.",
+        "whenToUse": "When examining one finding before triage or remediation planning.",
+        "steps": [
+          "Read the finding with its owning serviceId and exact version when cited by a capture.",
+          "Inspect summary/detail observations and recommendationPresence before listing recommendations."
+        ],
+        "intendedResult": "The analyst can distinguish a known empty recommendation set from unavailable detail."
+      },
+      "preconditions": [
+        "The Finding must belong to the supplied Service; parent IDs are not search hints."
+      ],
+      "pitfalls": [
+        "Finding is service-scoped and does not require an assessment parent.",
+        "Raw disposition is an operator/native assertion, not independent repair verification."
+      ],
+      "nextSteps": [
+        "ListRecommendations",
+        "GetObservation",
+        "UpdateFindingDisposition"
+      ],
+      "relatedEntities": [
+        "Finding",
+        "Observation",
+        "Recommendation"
+      ],
+      "relatedOperations": [
+        "ListRecommendations",
+        "GetObservation",
+        "UpdateFindingDisposition"
+      ],
+      "historicalInterpretation": "Earlier GetFailureModeFinding maps to a canonical Finding with explicit summary, detail and capture provenance."
+    },
+    {
+      "operation": "ListFindings",
+      "purpose": "Find retained service-scoped findings, optionally filtered by disposition and severity.",
+      "useCase": {
+        "title": "Prepare a resilience triage queue",
+        "actor": "Resilience analyst",
+        "scenario": "The analyst wants the open high-priority findings for checkout without assuming that they all belong to the latest assessment.",
+        "whenToUse": "When selecting findings for review or local follow-up.",
+        "steps": [
+          "Use serviceId with supported disposition and severity filters.",
+          "Open each finding and assess detail availability before assigning work or changing disposition."
+        ],
+        "intendedResult": "A scoped triage view preserves the distinction between native finding facts and local workflow."
+      },
+      "preconditions": [
+        "The Service and each returned finding must be authorized."
+      ],
+      "pitfalls": [
+        "The contract has no mandatory assessment ownership or assessment filter.",
+        "An empty local list cannot establish the absence of all provider findings without adequate collection coverage."
+      ],
+      "nextSteps": [
+        "GetFinding",
+        "CreateWorkItem"
+      ],
+      "relatedEntities": [
+        "Finding"
+      ],
+      "relatedOperations": [
+        "GetFinding",
+        "CreateWorkItem"
+      ],
+      "historicalInterpretation": "The prior ListFailureModeFindings concern is preserved without inventing capture-to-assessment ownership."
+    },
+    {
+      "operation": "GetRecommendation",
+      "purpose": "Read one captured recommendation and its local enrichment under the owning Service and Finding.",
+      "useCase": {
+        "title": "Review the exact suggestion selected for engineering work",
+        "actor": "Engineer",
+        "scenario": "A work item targets a recommendation captured from finding detail. The engineer needs its source text and the estimate recorded on that recommendation.",
+        "whenToUse": "When examining a specific suggestion or resolving its exact historical version.",
+        "steps": [
+          "Provide serviceId, findingId and recommendationId, adding version for a historical reference.",
+          "Inspect source, groupKey, ordinal, suggestion and enrichment before consulting the associated WorkItem."
+        ],
+        "intendedResult": "The engineer sees the captured provider suggestion and clearly separate local planning information."
+      },
+      "preconditions": [
+        "The complete parent chain must match stored ownership and the source evidence must be readable."
+      ],
+      "pitfalls": [
+        "Without a stable native key, equal text or the same ordinal in changed detail content does not prove continuity.",
+        "Local enrichment does not carry assignment, work state or verification; those belong to WorkItem."
+      ],
+      "nextSteps": [
+        "GetSource",
+        "ListWorkItems",
+        "UpdateRecommendationEnrichment"
+      ],
+      "relatedEntities": [
+        "Recommendation",
+        "Source",
+        "WorkItem"
+      ],
+      "relatedOperations": [
+        "GetSource",
+        "ListWorkItems",
+        "UpdateRecommendationEnrichment"
+      ],
+      "historicalInterpretation": "The earlier recommendation getter retains canonical identity plus exact source capture, while local changes use ordinary Recommendation versions."
+    },
+    {
+      "operation": "ListRecommendations",
+      "purpose": "Enumerate captured suggestions for a Finding, with an optional exact Source filter.",
+      "useCase": {
+        "title": "Review suggestions from one finding-detail capture",
+        "actor": "Resilience analyst",
+        "scenario": "Finding detail changed after the review. The analyst needs the recommendations associated with the exact source version used in the earlier planning discussion.",
+        "whenToUse": "When choosing suggestions within one finding and a defined evidence capture.",
+        "steps": [
+          "Supply the owning service and finding, and source when selecting a particular retained detail version.",
+          "Read the selected recommendations and compare source identity before carrying planning information forward."
+        ],
+        "intendedResult": "The recommendation set remains anchored to the captured content that defined it."
+      },
+      "preconditions": [
+        "The parent chain and any Source filter must be authorized and belong to the finding scope."
+      ],
+      "pitfalls": [
+        "Repeated observations of unchanged Source content do not create new recommendation identities.",
+        "Changed Source versions cannot be joined by ordinal or equal text alone."
+      ],
+      "nextSteps": [
+        "GetRecommendation",
+        "GetSource"
+      ],
+      "relatedEntities": [
+        "Recommendation"
+      ],
+      "relatedOperations": [
+        "GetRecommendation",
+        "GetSource"
+      ],
+      "historicalInterpretation": "Earlier recommendation navigation is retained while identity explicitly includes exact source capture where the provider supplies no stable suggestion key."
+    },
+    {
+      "operation": "StartResilienceAssessment",
+      "purpose": "Admit a request to start the native assessment for a verified service binding.",
+      "useCase": {
+        "title": "Assess checkout after an approved configuration change",
+        "actor": "Resilience operator",
+        "scenario": "Configuration work is complete and the operator wants a new native assessment against the service’s current admitted configuration.",
+        "whenToUse": "When a fresh assessment execution is required and the caller has provider-command authority.",
+        "steps": [
+          "Read the current Service and choose an exact authorized Connection version.",
+          "Submit the Service expectedVersion and clientToken, then follow the Command until an assessment identity is reconciled."
+        ],
+        "intendedResult": "A durable intent can be tracked separately from the created assessment and its eventual posture evidence."
+      },
+      "preconditions": [
+        "Service and Connection versions must satisfy admission; native binding and current provider scope must be verified."
+      ],
+      "pitfalls": [
+        "The operation maps to native StartFailureModeAssessment; it does not synchronously produce a verdict.",
+        "A successful assessment execution does not prove resilience or remediation, and the local version check is not AWS compare-and-swap."
+      ],
+      "nextSteps": [
+        "GetCommand",
+        "GetResilienceAssessment"
+      ],
+      "relatedEntities": [
+        "Command",
+        "ResilienceAssessment"
+      ],
+      "relatedOperations": [
+        "GetCommand",
+        "GetResilienceAssessment"
+      ],
+      "historicalInterpretation": "Earlier StartFailureModeAssessment is consolidated under the domain name StartResilienceAssessment, separating receipt from later provider identity."
+    },
+    {
+      "operation": "UpdateFindingDisposition",
+      "purpose": "Admit a native status/comment update for one finding under exact local and source preconditions.",
+      "useCase": {
+        "title": "Record that a finding is irrelevant to the reviewed scope",
+        "actor": "Resilience operator",
+        "scenario": "After reviewing the finding evidence, an authorized operator wants to set the native disposition to IRRELEVANT with an explanatory comment.",
+        "whenToUse": "When changing the provider-facing finding assertion rather than local work assignment.",
+        "steps": [
+          "Read the current Finding and its appropriate exact source evidence.",
+          "Submit disposition, optional comment, expectedVersion, expectedSource and exact Connection; follow the Command and readback."
+        ],
+        "intendedResult": "The provider intent has a durable receipt and any authoritative resulting state is reconciled separately."
+      },
+      "preconditions": [
+        "The Source precondition must belong to this finding and a valid detail/configuration representation; current authority is rechecked at dispatch."
+      ],
+      "pitfalls": [
+        "The status is an operator assertion, not a new posture verdict or verified repair.",
+        "A lost provider response remains OUTCOME_UNKNOWN until safe reconciliation; replay must not create a second remote mutation."
+      ],
+      "nextSteps": [
+        "GetCommand",
+        "GetFinding",
+        "CreateWorkItem"
+      ],
+      "relatedEntities": [
+        "Finding",
+        "Command"
+      ],
+      "relatedOperations": [
+        "GetCommand",
+        "GetFinding",
+        "CreateWorkItem"
+      ],
+      "historicalInterpretation": "Earlier UpdateFailureModeFinding maps only status/comment to this explicit provider command."
+    },
+    {
+      "operation": "UpdateDependencyClassification",
+      "purpose": "Admit a native dependency criticality or comment update, separate from local governance.",
+      "useCase": {
+        "title": "Classify a dependency as operationally hard",
+        "actor": "Resilience operator",
+        "scenario": "Review shows checkout cannot function without its database dependency, and the operator wants the provider classification to reflect that fact.",
+        "whenToUse": "When changing native criticality/comment for a verified dependency.",
+        "steps": [
+          "Read the Dependency head and its exact appropriate Source precondition.",
+          "Submit criticality=HARD or the intended comment with expectedVersion and an authorized exact Connection, then inspect command reconciliation."
+        ],
+        "intendedResult": "Native classification intent is tracked independently of the local governance decision."
+      },
+      "preconditions": [
+        "The dependency must belong to the specified service; source and connection scope must match its native identity."
+      ],
+      "pitfalls": [
+        "HARD/SOFT classification does not change local allowed/denied governance or network access.",
+        "Local version/source checks cannot promise an atomic conditional write at AWS."
+      ],
+      "nextSteps": [
+        "GetCommand",
+        "GetDependency",
+        "UpdateDependencyGovernance"
+      ],
+      "relatedEntities": [
+        "Dependency",
+        "Command"
+      ],
+      "relatedOperations": [
+        "GetCommand",
+        "GetDependency",
+        "UpdateDependencyGovernance"
+      ],
+      "historicalInterpretation": "Earlier native UpdateDependency maps here; UpdateDependencyGovernance continues to own the separate local decision."
+    },
+    {
+      "operation": "UpdateResiliencePolicyConfiguration",
+      "purpose": "Admit the supported typed native resilience-policy configuration changes.",
+      "useCase": {
+        "title": "Change a reviewed resilience target",
+        "actor": "Resilience policy owner",
+        "scenario": "A policy target has been revised and the owner needs the supported native component update to be auditable.",
+        "whenToUse": "When modifying the explicitly supported provider policy fields.",
+        "steps": [
+          "Read the policy head and exact configuration Source, then prepare only supported changes.",
+          "Submit guarded intent with an exact Connection and follow the Command to reconciled evidence."
+        ],
+        "intendedResult": "A narrow provider configuration intent can be reviewed without overwriting captured policy contexts."
+      },
+      "preconditions": [
+        "The policy must have a verified native binding, suitable expectedSource and authorized provider scope."
+      ],
+      "pitfalls": [
+        "Unconfigured components remain optional; unsupported components or generic clearing cannot be invented.",
+        "A policy change may alter current applicability, but historical policy snapshots and posture remain unchanged."
+      ],
+      "nextSteps": [
+        "GetCommand",
+        "GetResiliencePolicy",
+        "StartResilienceAssessment"
+      ],
+      "relatedEntities": [
+        "ResiliencePolicy",
+        "Command"
+      ],
+      "relatedOperations": [
+        "GetCommand",
+        "GetResiliencePolicy",
+        "StartResilienceAssessment"
+      ],
+      "historicalInterpretation": "Earlier UpdatePolicy maps to the explicit native configuration command. The initial subset preserves typed native component/description/sharing semantics while detachment or component clearing remains deferred."
+    },
+    {
+      "operation": "UpdateResilienceServiceConfiguration",
+      "purpose": "Admit supported changes to a verified native Resilience Hub service profile.",
+      "useCase": {
+        "title": "Enable native dependency discovery for a service",
+        "actor": "Resilience operator",
+        "scenario": "Checkout has an established native profile and the team wants to enable dependency discovery through the authorized provider access path.",
+        "whenToUse": "When the intent concerns supported provider configuration rather than canonical catalog metadata.",
+        "steps": [
+          "Read the Service head and suitable exact native Source evidence.",
+          "Submit the desired discovery setting or other supported changes with expectedVersion, expectedSource and Connection, then inspect command/readback."
+        ],
+        "intendedResult": "The provider request is tracked separately from observed discovery state and local service membership."
+      },
+      "preconditions": [
+        "The Service must have a verified native binding; connection scope and source representation must match the native object."
+      ],
+      "pitfalls": [
+        "Desired discovery state is not evidence that discovery has completed.",
+        "Creation, deletion, association replacement, permissions, report configuration and unsupported clearing remain outside this initial command."
+      ],
+      "nextSteps": [
+        "GetCommand",
+        "GetService",
+        "GetServiceStatus"
+      ],
+      "relatedEntities": [
+        "Service",
+        "Command"
+      ],
+      "relatedOperations": [
+        "GetCommand",
+        "GetService",
+        "GetServiceStatus"
+      ],
+      "historicalInterpretation": "The earlier native UpdateService maps here for description, Regions, direct policy attachment and desired discovery. Local UpdateService owns the canonical catalog."
+    },
+    {
+      "operation": "UpdateRecommendationEnrichment",
+      "purpose": "Edit local explanatory and estimation values owned by a Recommendation.",
+      "useCase": {
+        "title": "Add an implementation estimate to a captured suggestion",
+        "actor": "Engineer",
+        "scenario": "An engineer has sized a recommendation and wants to record effort, cost basis and confidence before prioritization.",
+        "whenToUse": "When enriching the captured suggestion with local planning information.",
+        "steps": [
+          "Read the current Recommendation and verify its exact source identity.",
+          "Submit title, effort, estimate or note under Recommendation.expectedVersion, using explicit allowed clearFields when needed."
+        ],
+        "intendedResult": "The same Recommendation receives a new version containing its local enrichment."
+      },
+      "preconditions": [
+        "The service/finding/recommendation ownership chain and current Recommendation version must match."
+      ],
+      "pitfalls": [
+        "An estimate is distinct from native assessment execution cost and does not prove remediation.",
+        "Assignment, completion and verification belong to WorkItem; enrichment has no separate version clock or workflow."
+      ],
+      "nextSteps": [
+        "GetRecommendation",
+        "CreateWorkItem"
+      ],
+      "relatedEntities": [
+        "Recommendation",
+        "Command",
+        "WorkItem"
+      ],
+      "relatedOperations": [
+        "GetRecommendation",
+        "CreateWorkItem"
+      ],
+      "historicalInterpretation": "The prior enrichment capability is retained while concurrency belongs to Recommendation itself and operator workflow is centralized in WorkItem."
+    },
+    {
+      "operation": "GetAgentSpace",
+      "purpose": "Read a native DevOps workspace representation within the application workspace.",
+      "useCase": {
+        "title": "Check the native investigation scope",
+        "actor": "Investigation operator",
+        "scenario": "The operator is preparing to inspect investigations and needs the retained native workspace identity and associations.",
+        "whenToUse": "When selecting or auditing the native scope used by DevOps operations.",
+        "steps": [
+          "Read the AgentSpace head for navigation, or the exact version pinned by a command.",
+          "Inspect identity and selectedObservation before selecting a compatible Connection."
+        ],
+        "intendedResult": "The native DevOps scope is explicit without confusing it with application tenancy."
+      },
+      "preconditions": [
+        "The AgentSpace and its source evidence must be currently authorized."
+      ],
+      "pitfalls": [
+        "AgentSpace is not Workspace and cannot select another application tenant.",
+        "A retained association is evidence, not a substitute for current dispatch authority."
+      ],
+      "nextSteps": [
+        "ListInvestigations",
+        "GetObservation",
+        "StartInvestigation"
+      ],
+      "relatedEntities": [
+        "AgentSpace",
+        "Observation"
+      ],
+      "relatedOperations": [
+        "ListInvestigations",
+        "GetObservation",
+        "StartInvestigation"
+      ]
+    },
+    {
+      "operation": "ListAgentSpaces",
+      "purpose": "Discover the native DevOps workspace scopes retained within the authenticated application workspace.",
+      "useCase": {
+        "title": "Choose the investigation workspace for checkout",
+        "actor": "Investigation operator",
+        "scenario": "Several native DevOps spaces are represented, and the operator must choose the one associated with the intended workload.",
+        "whenToUse": "When navigating retained native workspace scope before opening tasks or executions.",
+        "steps": [
+          "Traverse the visible AgentSpace list.",
+          "Inspect the selected space’s identity, associations and evidence before proceeding."
+        ],
+        "intendedResult": "The operator can choose a clearly scoped native workspace."
+      },
+      "preconditions": [
+        "Current read permission applies to each returned AgentSpace."
+      ],
+      "pitfalls": [
+        "The operation does not provision or switch the application Workspace.",
+        "A local list does not prove complete native workspace discovery or grant execution permission."
+      ],
+      "nextSteps": [
+        "GetAgentSpace",
+        "ListInvestigations"
+      ],
+      "relatedEntities": [
+        "AgentSpace"
+      ],
+      "relatedOperations": [
+        "GetAgentSpace",
+        "ListInvestigations"
+      ]
+    },
+    {
+      "operation": "GetInvestigation",
+      "purpose": "Read a retained native INVESTIGATION task and its observed execution memberships.",
+      "useCase": {
+        "title": "Understand the investigation linked from an incident",
+        "actor": "Responder",
+        "scenario": "An incident review links an Investigation. The responder needs its native task state and the executions actually associated with it.",
+        "whenToUse": "When examining one investigation task in its AgentSpace.",
+        "steps": [
+          "Provide agentSpaceId and investigationId, choosing an exact version for a review citation.",
+          "Inspect the task observation, execution pointer and membership evidence before opening executions."
+        ],
+        "intendedResult": "The task and its execution relationships remain explicit and evidence-based."
+      },
+      "preconditions": [
+        "The Investigation must belong to the supplied AgentSpace and its retained evidence must be readable."
+      ],
+      "pitfalls": [
+        "Investigation is a canonical projection of a native task, not a claim that a native GetInvestigation API exists.",
+        "A task pointer or task state alone does not prove an execution result."
+      ],
+      "nextSteps": [
+        "ListExecutions",
+        "GetObservation"
+      ],
+      "relatedEntities": [
+        "Investigation",
+        "Execution",
+        "Observation"
+      ],
+      "relatedOperations": [
+        "ListExecutions",
+        "GetObservation"
+      ]
+    },
+    {
+      "operation": "ListInvestigations",
+      "purpose": "Browse retained native INVESTIGATION tasks for one AgentSpace.",
+      "useCase": {
+        "title": "Review the investigation queue in the correct native scope",
+        "actor": "Investigation lead",
+        "scenario": "The lead needs the retained investigations for the selected DevOps workspace before opening a particular task.",
+        "whenToUse": "When navigating investigations after establishing AgentSpace scope.",
+        "steps": [
+          "List investigations under agentSpaceId and traverse the local publication.",
+          "Open selected tasks and inspect their execution membership and evidence."
+        ],
+        "intendedResult": "The lead can navigate investigations without merging tasks from different native spaces."
+      },
+      "preconditions": [
+        "The caller must have current access to the AgentSpace and returned investigations."
+      ],
+      "pitfalls": [
+        "The list contains retained task representations, not a guarantee of a live native task queue.",
+        "Task completion and execution outcomes remain separate observations."
+      ],
+      "nextSteps": [
+        "GetInvestigation",
+        "ListExecutions"
+      ],
+      "relatedEntities": [
+        "Investigation"
+      ],
+      "relatedOperations": [
+        "GetInvestigation",
+        "ListExecutions"
+      ]
+    },
+    {
+      "operation": "GetExecution",
+      "purpose": "Read one native DevOps execution under its AgentSpace owner.",
+      "useCase": {
+        "title": "Inspect an execution referenced by multiple tasks",
+        "actor": "Investigation analyst",
+        "scenario": "A task links an execution that originated elsewhere in the same AgentSpace. The analyst needs the execution itself without inventing a single parent investigation.",
+        "whenToUse": "When resolving an execution identity from a task membership, chat or evidence reference.",
+        "steps": [
+          "Provide agentSpaceId and executionId, with version when following exact retained evidence.",
+          "Inspect rawExecutionStatus, parentExecutionIdentity and selectedObservation before opening the journal."
+        ],
+        "intendedResult": "The execution can be reviewed independently of any one task’s membership."
+      },
+      "preconditions": [
+        "The execution must belong to the supplied AgentSpace."
+      ],
+      "pitfalls": [
+        "An investigation foreign key is not required or inferred.",
+        "A native status does not replace journal evidence or prove that a requested tool action succeeded."
+      ],
+      "nextSteps": [
+        "ListJournalRecords",
+        "ListApprovalRequests",
+        "GetObservation"
+      ],
+      "relatedEntities": [
+        "Execution",
+        "JournalRecord",
+        "ApprovalRequest",
+        "Observation"
+      ],
+      "relatedOperations": [
+        "ListJournalRecords",
+        "ListApprovalRequests",
+        "GetObservation"
+      ]
+    },
+    {
+      "operation": "ListExecutions",
+      "purpose": "Find native executions within an AgentSpace, optionally through explicit investigation-membership evidence.",
+      "useCase": {
+        "title": "Inspect the executions associated with an investigation",
+        "actor": "Investigation analyst",
+        "scenario": "An investigation has several observed execution links, and the analyst needs the matching executions without assuming exclusive ownership.",
+        "whenToUse": "When navigating an AgentSpace’s executions or an investigation’s recorded memberships.",
+        "steps": [
+          "List with agentSpaceId and, if useful, investigationId.",
+          "Read each returned execution and inspect the supporting membership evidence from the investigation."
+        ],
+        "intendedResult": "Shared or referenced executions remain navigable without duplicating their identities."
+      },
+      "preconditions": [
+        "The investigation filter must refer to an authorized investigation in the same AgentSpace."
+      ],
+      "pitfalls": [
+        "The filter uses observed TaskExecutionMembership; it does not turn the investigation into the execution owner.",
+        "An execution created elsewhere in the same space can validly appear through a retained task link."
+      ],
+      "nextSteps": [
+        "GetExecution",
+        "GetInvestigation"
+      ],
+      "relatedEntities": [
+        "Execution",
+        "Investigation"
+      ],
+      "relatedOperations": [
+        "GetExecution",
+        "GetInvestigation"
+      ]
+    },
+    {
+      "operation": "GetJournalRecord",
+      "purpose": "Read a retained native execution-journal envelope and its exact arbitrary content source.",
+      "useCase": {
+        "title": "Verify a claimed investigation conclusion",
+        "actor": "Investigation reviewer",
+        "scenario": "A summary cites a journal record as evidence for a possible root cause. The reviewer needs the original record type and retained content.",
+        "whenToUse": "When inspecting a specific cited journal item rather than trusting an extracted summary.",
+        "steps": [
+          "Supply AgentSpace, Execution and JournalRecord identities with an exact version when cited.",
+          "Inspect recordType and selectedSource, preserving the distinction between raw text and extracted relationships."
+        ],
+        "intendedResult": "The reviewer can check the actual journal evidence behind an interpretation."
+      },
+      "preconditions": [
+        "The complete ownership chain and source content must be currently authorized."
+      ],
+      "pitfalls": [
+        "Journal content is arbitrary JSON; a universal root-cause payload schema is not assumed.",
+        "A textual mention of another object does not itself create a verified graph relationship."
+      ],
+      "nextSteps": [
+        "GetSource",
+        "GetExecution"
+      ],
+      "relatedEntities": [
+        "JournalRecord",
+        "Source",
+        "Execution"
+      ],
+      "relatedOperations": [
+        "GetSource",
+        "GetExecution"
+      ]
+    },
+    {
+      "operation": "ListJournalRecords",
+      "purpose": "Enumerate retained journal records belonging to a particular native execution.",
+      "useCase": {
+        "title": "Review the evidence produced during an investigation execution",
+        "actor": "Investigation analyst",
+        "scenario": "The analyst wants the execution’s retained journal material before comparing observations and conclusions.",
+        "whenToUse": "When discovering journal evidence after selecting an execution.",
+        "steps": [
+          "List records under the AgentSpace and Execution parents.",
+          "Inspect relevant records and their sources, using native evidence fields to understand chronology and relationships."
+        ],
+        "intendedResult": "The execution’s journal envelopes remain visible with their native type and provenance."
+      },
+      "preconditions": [
+        "The Execution must belong to the supplied AgentSpace; every returned record must be authorized."
+      ],
+      "pitfalls": [
+        "The API’s ordinary list order is canonical identity order, not a guarantee of native chronological order.",
+        "Do not convert arbitrary text mentions into graph links or treat every record as a conclusion."
+      ],
+      "nextSteps": [
+        "GetJournalRecord",
+        "GetSource"
+      ],
+      "relatedEntities": [
+        "JournalRecord"
+      ],
+      "relatedOperations": [
+        "GetJournalRecord",
+        "GetSource"
+      ]
+    },
+    {
+      "operation": "GetApprovalRequest",
+      "purpose": "Inspect a retained validated approval request, its exact action digest and decision/resume references.",
+      "useCase": {
+        "title": "Review the exact action awaiting a decision",
+        "actor": "Approver",
+        "scenario": "An execution presents a proposed tool action. The approver needs the authenticated request context and exact scope before deciding.",
+        "whenToUse": "When evaluating a known approval request in its execution context.",
+        "steps": [
+          "Read the request under its AgentSpace and Execution, retaining the current version and requestSource.",
+          "Inspect the exact action digest and supporting request context before admitting a decision."
+        ],
+        "intendedResult": "The approver reviews a concrete action scope rather than inferred approval text."
+      },
+      "preconditions": [
+        "The approval request must belong to the supplied execution and have retained validated context."
+      ],
+      "pitfalls": [
+        "A waiting task, Markdown button or guessed tool name is insufficient approval evidence.",
+        "Decision and resume are distinct commands; neither proves actual tool success."
+      ],
+      "nextSteps": [
+        "GetSource",
+        "DecideApproval"
+      ],
+      "relatedEntities": [
+        "ApprovalRequest",
+        "Source"
+      ],
+      "relatedOperations": [
+        "GetSource",
+        "DecideApproval"
+      ]
+    },
+    {
+      "operation": "ListApprovalRequests",
+      "purpose": "Find validated retained approval-request contexts within a native execution.",
+      "useCase": {
+        "title": "Surface decisions that need operator review",
+        "actor": "Investigation operator",
+        "scenario": "An execution may contain approval requests, and the operator needs the retained validated requests available for review.",
+        "whenToUse": "When discovering approval contexts after opening an execution.",
+        "steps": [
+          "List under the correct AgentSpace and Execution.",
+          "Inspect each candidate request’s exact content and current state before offering a decision action."
+        ],
+        "intendedResult": "The interface can expose evidence-backed approval contexts without fabricating provider APIs."
+      },
+      "preconditions": [
+        "The owning execution and each complete request context must be authorized."
+      ],
+      "pitfalls": [
+        "This is a consolidated retained-data list, not a native Get/ListApproval API.",
+        "A pending task state alone must not create a synthetic ApprovalRequest."
+      ],
+      "nextSteps": [
+        "GetApprovalRequest",
+        "GetExecution"
+      ],
+      "relatedEntities": [
+        "ApprovalRequest"
+      ],
+      "relatedOperations": [
+        "GetApprovalRequest",
+        "GetExecution"
+      ]
+    },
+    {
+      "operation": "GetAsset",
+      "purpose": "Read an Asset representation with its selected native version, exact source and file references.",
+      "useCase": {
+        "title": "Open the investigation artifact cited in a review",
+        "actor": "Investigation reviewer",
+        "scenario": "A review cites an asset version containing an investigation report. The reviewer needs exactly those files, even if later native asset content exists.",
+        "whenToUse": "When following an asset citation or inspecting its current retained representation.",
+        "steps": [
+          "Request the cited Asset version within its AgentSpace.",
+          "Inspect nativeVersion, source and exact files, applying current access checks to artifact content."
+        ],
+        "intendedResult": "The cited asset content remains reproducible through the ordinary entity version contract."
+      },
+      "preconditions": [
+        "The asset must belong to the AgentSpace; retained file access must be currently authorized and available."
+      ],
+      "pitfalls": [
+        "nativeVersion is provider metadata, not a substitute for Asset.version.",
+        "There is no nested versions collection or separate AssetVersion resource; unavailable exact files never fall back to newer ones."
+      ],
+      "nextSteps": [
+        "GetSource",
+        "ListEntityVersions"
+      ],
+      "relatedEntities": [
+        "Asset",
+        "Source"
+      ],
+      "relatedOperations": [
+        "GetSource",
+        "ListEntityVersions"
+      ]
+    },
+    {
+      "operation": "ListAssets",
+      "purpose": "Discover retained native assets within an AgentSpace.",
+      "useCase": {
+        "title": "Find the investigation report asset",
+        "actor": "Investigation reviewer",
+        "scenario": "The reviewer knows the native workspace but needs to locate the report asset before opening its exact retained content.",
+        "whenToUse": "When browsing assets before choosing a particular representation.",
+        "steps": [
+          "List assets for the AgentSpace and inspect candidate names, types and native-version metadata.",
+          "Read the selected asset or enumerate its entity history for a historical citation."
+        ],
+        "intendedResult": "Assets remain discoverable without embedding their entire application history in every row."
+      },
+      "preconditions": [
+        "The AgentSpace and each returned Asset must be within current access scope."
+      ],
+      "pitfalls": [
+        "The list returns one selected head per asset identity, not every native or application version.",
+        "A matching asset name alone does not identify the exact files cited by an older review."
+      ],
+      "nextSteps": [
+        "GetAsset",
+        "ListEntityVersions"
+      ],
+      "relatedEntities": [
+        "Asset"
+      ],
+      "relatedOperations": [
+        "GetAsset",
+        "ListEntityVersions"
+      ]
+    },
+    {
+      "operation": "StartInvestigation",
+      "purpose": "Admit creation of a native backlog task with taskType=INVESTIGATION in a verified AgentSpace.",
+      "useCase": {
+        "title": "Request investigation of a service degradation",
+        "actor": "Investigation operator",
+        "scenario": "Checkout has qualified degradation evidence and the operator wants a native investigation task with a clear title, priority and context.",
+        "whenToUse": "When intentionally creating a new native investigation task.",
+        "steps": [
+          "Read the AgentSpace head and select an exact authorized Connection.",
+          "Submit title, priority and optional description under the AgentSpace expectedVersion, then follow the durable Command."
+        ],
+        "intendedResult": "The creation intent and later reconciled Investigation identity can be reviewed separately from execution progress."
+      },
+      "preconditions": [
+        "The AgentSpace and connection scope must be valid; current authority is rechecked before dispatch."
+      ],
+      "pitfalls": [
+        "The native operation is CreateBacklogTask, not a native API called StartInvestigation.",
+        "A task creation receipt does not prove that an execution began or that a result was produced."
+      ],
+      "nextSteps": [
+        "GetCommand",
+        "GetInvestigation",
+        "ListExecutions"
+      ],
+      "relatedEntities": [
+        "Investigation",
+        "Command"
+      ],
+      "relatedOperations": [
+        "GetCommand",
+        "GetInvestigation",
+        "ListExecutions"
+      ]
+    },
+    {
+      "operation": "DecideApproval",
+      "purpose": "Admit a decision for one exact validated native approval action.",
+      "useCase": {
+        "title": "Approve a reviewed single-use action",
+        "actor": "Approver",
+        "scenario": "An approver has inspected a concrete requested action and decides to allow that exact scope once.",
+        "whenToUse": "Only when the complete authenticated approval context and action digest are available for review.",
+        "steps": [
+          "Read the current ApprovalRequest and its exact requestSource/actionDigest.",
+          "Submit APPROVED with singleUse=true, expectedVersion, exact connection and a clientToken; inspect the decision Command before any resume."
+        ],
+        "intendedResult": "The decision has a durable receipt bound to the reviewed action scope."
+      },
+      "preconditions": [
+        "The request, source and digest must match; the first release supports exact observed scope and single use only."
+      ],
+      "pitfalls": [
+        "REJECTED omits singleUse and native pattern/TTL fields; a successful rejection is a successful decision command.",
+        "UpdateApprovalAction has no modeled native idempotency token. A lost response is OUTCOME_UNKNOWN and local replay must not blindly repeat it.",
+        "Decision does not resume execution or prove that the tool ran."
+      ],
+      "nextSteps": [
+        "GetCommand",
+        "ResumeExecution"
+      ],
+      "relatedEntities": [
+        "ApprovalRequest",
+        "Command"
+      ],
+      "relatedOperations": [
+        "GetCommand",
+        "ResumeExecution"
+      ]
+    },
+    {
+      "operation": "ResumeExecution",
+      "purpose": "Admit the native approval-action resume message using a validated request and a definitively successful matching decision.",
+      "useCase": {
+        "title": "Continue an execution after a recorded decision",
+        "actor": "Investigation operator",
+        "scenario": "The approval decision has reconciled successfully. The operator now needs to submit the corresponding resume context without changing the approved scope.",
+        "whenToUse": "After a matching decision Command has an exact SUCCEEDED representation and the retained execution context is still valid.",
+        "steps": [
+          "Read the current Execution and pin the validated ApprovalRequest and the successful decision Command version.",
+          "Submit ResumeExecution under the Execution expectedVersion and follow the new Command, stream evidence and execution observations."
+        ],
+        "intendedResult": "Resume submission remains separately observable from decision, credential use and actual tool outcome."
+      },
+      "preconditions": [
+        "The supplied decisionCommand must be the exact successful representation for this request; current authorization and validated interrupt/tool context are required."
+      ],
+      "pitfalls": [
+        "An ACCEPTED decision version is insufficient even if the command’s current head later succeeds.",
+        "SendMessage has no modeled native idempotency token. A disconnected stream is not permission to resend blindly.",
+        "The caller cannot substitute tool or interrupt IDs, and stream completion does not prove tool success."
+      ],
+      "nextSteps": [
+        "GetCommand",
+        "GetExecution",
+        "ListJournalRecords"
+      ],
+      "relatedEntities": [
+        "Execution",
+        "ApprovalRequest",
+        "Command"
+      ],
+      "relatedOperations": [
+        "GetCommand",
+        "GetExecution",
+        "ListJournalRecords"
+      ]
+    },
+    {
+      "operation": "CreateScenario",
+      "purpose": "Create the first DRAFT representation of a workflow scenario with a typed authoring definition.",
+      "useCase": {
+        "title": "Author a checkout resilience exercise",
+        "actor": "Workflow author",
+        "scenario": "An author wants a reusable exercise containing an authorized fault step, an explicit workload criterion and a bounded finalizer.",
+        "whenToUse": "When introducing a new scenario identity for review and later publication.",
+        "steps": [
+          "Provide the scenario name and authoring definition with declared inputs, steps and bindings.",
+          "Create the draft with a clientToken, then inspect it before publication."
+        ],
+        "intendedResult": "Scenario version 1 exists in DRAFT state and remains separate from executable publication."
+      },
+      "preconditions": [
+        "The caller needs scenario-authoring authority and the definition must satisfy the authoring schema."
+      ],
+      "pitfalls": [
+        "The author cannot set trusted locks, digest, publication state, version or server timestamps.",
+        "Creation does not execute a workflow or make the draft admissible to StartRun."
+      ],
+      "nextSteps": [
+        "GetScenario",
+        "UpdateScenario",
+        "PublishScenario"
+      ],
+      "relatedEntities": [
+        "Scenario",
+        "Command"
+      ],
+      "relatedOperations": [
+        "GetScenario",
+        "UpdateScenario",
+        "PublishScenario"
+      ],
+      "historicalInterpretation": "The earlier workflow CreateScenario created metadata separately from revision publication. Consolidation creates a typed draft as an ordinary Scenario representation and keeps trusted compilation publication-owned."
+    },
+    {
+      "operation": "GetScenario",
+      "purpose": "Read a Scenario’s draft, published or archived representation through one exact-version contract.",
+      "useCase": {
+        "title": "Review the published program used by a completed Run",
+        "actor": "Workflow reviewer",
+        "scenario": "A Run pins published Scenario version 2 while version 3 is a draft. The reviewer needs the compiled program and locks used by that Run.",
+        "whenToUse": "When inspecting current authoring state or resolving an exact execution definition.",
+        "steps": [
+          "Pass the scenarioId and the Run’s exact scenario version.",
+          "Inspect state, definition, publication facts and trusted operation locks retained on that representation."
+        ],
+        "intendedResult": "The executed program remains unambiguous despite subsequent editing."
+      },
+      "preconditions": [
+        "The Scenario and its retained artifacts must be currently authorized and available."
+      ],
+      "pitfalls": [
+        "Omitting version may return a DRAFT head; that is not the program selected by a historical Run.",
+        "A native operation registry is not exposed here. A published Scenario shows its resolved locks, not every executable adapter alias."
+      ],
+      "nextSteps": [
+        "ListEntityVersions",
+        "GetRun",
+        "PublishScenario"
+      ],
+      "relatedEntities": [
+        "Scenario",
+        "Run"
+      ],
+      "relatedOperations": [
+        "ListEntityVersions",
+        "GetRun",
+        "PublishScenario"
+      ],
+      "historicalInterpretation": "The prior GetScenarioRevision resolves through GetScenario(version). The older ListOperations concern is narrowed to the locks of an exact publication; general adapter-registry discovery remains later work."
+    },
+    {
+      "operation": "ListScenarios",
+      "purpose": "Browse retained Scenario heads, optionally by their current lifecycle state.",
+      "useCase": {
+        "title": "Choose a published exercise for a new run",
+        "actor": "Workflow operator",
+        "scenario": "The operator wants to find scenarios whose current heads are published before choosing a specific program version.",
+        "whenToUse": "When navigating the scenario catalog or separating draft authoring from published offerings.",
+        "steps": [
+          "List scenarios with the desired state filter.",
+          "Inspect the selected Scenario and explicitly pin the intended PUBLISHED version before admission."
+        ],
+        "intendedResult": "The catalog supports discovery while execution remains tied to an exact publication."
+      },
+      "preconditions": [
+        "The caller must have current access to each returned scenario and any required retained content."
+      ],
+      "pitfalls": [
+        "state filters the selected current head, not every historical representation.",
+        "A later DRAFT head can coexist with an earlier executable PUBLISHED version; use history for that deliberate selection."
+      ],
+      "nextSteps": [
+        "GetScenario",
+        "ListEntityVersions",
+        "StartRun"
+      ],
+      "relatedEntities": [
+        "Scenario"
+      ],
+      "relatedOperations": [
+        "GetScenario",
+        "ListEntityVersions",
+        "StartRun"
+      ],
+      "historicalInterpretation": "The earlier workflow list is adapted from resource-oriented HTTP to RPC pagination while the v2 lifecycle uses ordinary Scenario versions."
+    },
+    {
+      "operation": "UpdateScenario",
+      "purpose": "Publish the next DRAFT version of a Scenario after a guarded authoring edit.",
+      "useCase": {
+        "title": "Revise a criterion without changing an already admitted run",
+        "actor": "Workflow author",
+        "scenario": "The error threshold in a published checkout exercise needs review. Existing runs must keep their original program.",
+        "whenToUse": "When editing a draft or deliberately reopening a published/archived scenario for authoring.",
+        "steps": [
+          "Read the current Scenario and prepare the authoring definition.",
+          "Submit expectedVersion and the intended edits; reopening a PUBLISHED or ARCHIVED head requires an explicit definition."
+        ],
+        "intendedResult": "A new DRAFT version is created under the same scenarioId while prior publications remain retained."
+      },
+      "preconditions": [
+        "expectedVersion must match the current head; a reopened non-draft needs an explicit authoring definition."
+      ],
+      "pitfalls": [
+        "The new draft is not executable and cannot retarget existing Runs.",
+        "Omitted draft fields preserve values, but locked published content is not implicitly treated as an editable definition."
+      ],
+      "nextSteps": [
+        "GetScenario",
+        "PublishScenario"
+      ],
+      "relatedEntities": [
+        "Scenario",
+        "Command"
+      ],
+      "relatedOperations": [
+        "GetScenario",
+        "PublishScenario"
+      ],
+      "historicalInterpretation": "Earlier HTTP PATCH and If-Match become closed RPC fields with expectedVersion. Separate revision publication is replaced by guarded draft editing followed by PublishScenario."
+    },
+    {
+      "operation": "PublishScenario",
+      "purpose": "Compile the current draft and create the next PUBLISHED Scenario version with trusted immutable locks.",
+      "useCase": {
+        "title": "Publish a reviewed resilience exercise",
+        "actor": "Workflow publisher",
+        "scenario": "The draft’s criteria, dependencies and finalizers have been reviewed, and the team wants an exact program that can be admitted reproducibly.",
+        "whenToUse": "After authoring is complete and before starting runs from the definition.",
+        "steps": [
+          "Read the current DRAFT and submit its expectedVersion with a clientToken.",
+          "Inspect the PUBLISHED result, including resolved operation/schema locks and digest, before using its exact reference."
+        ],
+        "intendedResult": "Publication fixes the validated program and its implementation references under one Scenario version."
+      },
+      "preconditions": [
+        "Compilation must validate DAGs, typed bindings, capability checks, required criteria, finalizers and fixed language/reducer semantics."
+      ],
+      "pitfalls": [
+        "The caller cannot supply trusted locks or a chosen digest.",
+        "Later alias changes cannot modify this publication; unavailable or revoked pinned artifacts must reject future admission rather than substitute another implementation."
+      ],
+      "nextSteps": [
+        "GetScenario",
+        "StartRun"
+      ],
+      "relatedEntities": [
+        "Scenario",
+        "Command"
+      ],
+      "relatedOperations": [
+        "GetScenario",
+        "StartRun"
+      ],
+      "historicalInterpretation": "Earlier PublishScenarioRevision becomes UpdateScenario followed by PublishScenario. Publication appends an ordinary Scenario version; there is no ScenarioRevision entity or mutable default pointer."
+    },
+    {
+      "operation": "ArchiveScenario",
+      "purpose": "Create an ARCHIVED Scenario head that blocks new run admissions while preserving prior publications.",
+      "useCase": {
+        "title": "Withdraw an exercise pending review",
+        "actor": "Workflow owner",
+        "scenario": "A scenario should no longer admit new executions until its assumptions are reviewed, but its past runs and publications must remain readable.",
+        "whenToUse": "When intentionally withdrawing the whole Scenario from new admission.",
+        "steps": [
+          "Read the current head and submit ArchiveScenario with its expectedVersion.",
+          "Inspect the archived result; review existing Runs separately if they need a cancellation decision."
+        ],
+        "intendedResult": "All versions of this Scenario are blocked for new admissions while history and admitted runs remain intact."
+      },
+      "preconditions": [
+        "The caller needs archive authority and expectedVersion must match the current head."
+      ],
+      "pitfalls": [
+        "Archiving does not cancel or redirect already admitted Runs.",
+        "Exact replay of a prior successful StartRun still returns its original receipt after reauthorization; archival must not change that admission history."
+      ],
+      "nextSteps": [
+        "GetScenario",
+        "ListRuns",
+        "UpdateScenario"
+      ],
+      "relatedEntities": [
+        "Scenario",
+        "Command",
+        "Run"
+      ],
+      "relatedOperations": [
+        "GetScenario",
+        "ListRuns",
+        "UpdateScenario"
+      ],
+      "historicalInterpretation": "Earlier workflow archival was metadata on Scenario. The consolidated lifecycle records a new ARCHIVED representation under the common entity-version contract."
+    },
+    {
+      "operation": "StartRun",
+      "purpose": "Atomically admit one Run with an exact published program, exact subjects/bindings, StepRuns and a closed input Snapshot.",
+      "useCase": {
+        "title": "Execute a reviewed checkout exercise",
+        "actor": "Workflow operator",
+        "scenario": "An operator has chosen a published exercise and authorized test scope, and now wants one auditable execution intent.",
+        "whenToUse": "When starting a new execution from an explicit PUBLISHED Scenario version.",
+        "steps": [
+          "Select exact Scenario, subject and Connection versions, then provide inputs matching the pinned closed schema.",
+          "Submit a new clientToken for the new intent and inspect the returned Command, Run, Snapshot and StepRuns."
+        ],
+        "intendedResult": "Admission fixes the program, input evidence, enabled steps and criterion denominator before dispatch."
+      },
+      "preconditions": [
+        "For a new admission, the current Scenario head must not be ARCHIVED; an intervening DRAFT does not replace the explicitly chosen publication. Subjects and bindings must satisfy current admission authority."
+      ],
+      "pitfalls": [
+        "HTTP 200 and Run phase ADMITTED do not mean an AWS call has started.",
+        "Runtime skips or cancellation cannot shrink the admitted required-criterion denominator.",
+        "Retrying the same semantic request uses the same token; a genuinely new execution intent uses a new token."
+      ],
+      "nextSteps": [
+        "GetCommand",
+        "GetRun",
+        "GetSnapshot",
+        "ListRunSteps"
+      ],
+      "relatedEntities": [
+        "Run",
+        "Snapshot",
+        "StepRun",
+        "Command"
+      ],
+      "relatedOperations": [
+        "GetCommand",
+        "GetRun",
+        "GetSnapshot",
+        "ListRunSteps"
+      ],
+      "historicalInterpretation": "The prior workflow admission contract retains immutable scope and program selection while scenarioRevisionId becomes an exact Scenario reference and connections use exact entity versions."
+    },
+    {
+      "operation": "GetRun",
+      "purpose": "Read a Run’s admitted references and independently qualified execution, assessment, effects and finalization state.",
+      "useCase": {
+        "title": "Explain a run whose workflow ended but cleanup remains uncertain",
+        "actor": "Workflow reviewer",
+        "scenario": "The main workflow has ended, yet an external effect has unresolved reconciliation. The reviewer needs more than one success flag.",
+        "whenToUse": "When monitoring an admitted run or reading an exact historical representation.",
+        "steps": [
+          "Read the current Run head for monitoring, or a cited version for historical review.",
+          "Inspect phase, executionOutcome, assessmentVerdict/finality, finalizationState and effectState separately; follow exact input and step references."
+        ],
+        "intendedResult": "The run’s operational progress and workload conclusion remain independently explainable."
+      },
+      "preconditions": [
+        "The Run and its retained evidence closure must be currently authorized."
+      ],
+      "pitfalls": [
+        "A successful HTTP read is not a successful run; successful execution is not automatically a passing workload criterion.",
+        "A later understanding belongs in new evidence or an evaluation projection and does not rewrite a sealed Run."
+      ],
+      "nextSteps": [
+        "GetSnapshot",
+        "ListRunSteps",
+        "ListEntityVersions"
+      ],
+      "relatedEntities": [
+        "Run"
+      ],
+      "relatedOperations": [
+        "GetSnapshot",
+        "ListRunSteps",
+        "ListEntityVersions"
+      ],
+      "historicalInterpretation": "The earlier workflow Run projection is preserved while one ordinary Run.version replaces separate projection clocks."
+    },
+    {
+      "operation": "ListRuns",
+      "purpose": "Locate retained workflow executions by exact Scenario reference or phase.",
+      "useCase": {
+        "title": "Find executions of a particular published exercise",
+        "actor": "Workflow reviewer",
+        "scenario": "A reviewer wants to compare runs that admitted the same program rather than mix runs from later scenario edits.",
+        "whenToUse": "When locating run identities before inspecting their captured inputs and outcomes.",
+        "steps": [
+          "Filter by the exact Scenario reference or phase as appropriate and traverse the fixed publication.",
+          "Open selected Runs and compare their exact admission evidence and independent result dimensions."
+        ],
+        "intendedResult": "The reviewer can compare executions without losing the program version that each used."
+      },
+      "preconditions": [
+        "Scenario filters and returned Run closures must be authorized; the query must remain unchanged during pagination."
+      ],
+      "pitfalls": [
+        "The list selects one head per Run identity within its traversal, not every historical Run version.",
+        "Shared Scenario identity alone does not prove identical program, subject, inputs or provider targets."
+      ],
+      "nextSteps": [
+        "GetRun",
+        "GetSnapshot"
+      ],
+      "relatedEntities": [
+        "Run"
+      ],
+      "relatedOperations": [
+        "GetRun",
+        "GetSnapshot"
+      ],
+      "historicalInterpretation": "Earlier workflow run listing adopts RPC pagination and exact canonical references; it retains the distinction between separate executions and their read projections."
+    },
+    {
+      "operation": "RequestRunCancellation",
+      "purpose": "Record monotonic cancellation intent under the current Run version and fence new main dispatch.",
+      "useCase": {
+        "title": "Cancel an exercise after an uncertain provider start",
+        "actor": "Workflow operator",
+        "scenario": "An exercise is no longer desired, but a provider start response was lost and the external effect may already exist.",
+        "whenToUse": "When the operator intends to stop further main execution and enter bounded reconciliation/finalization.",
+        "steps": [
+          "Read the Run head and submit the cancellation reason, expectedVersion and clientToken.",
+          "Inspect the returned Run/Command, then monitor effect reconciliation and finalization separately."
+        ],
+        "intendedResult": "The first accepted cancellation intent becomes part of Run history without fabricating a remote stop result."
+      },
+      "preconditions": [
+        "expectedVersion must match after replay resolution. A new intent against a matching sealed Run returns accepted=false without changing it."
+      ],
+      "pitfalls": [
+        "Cancellation does not declare provider effects stopped or workload recovery complete.",
+        "A creating Start must never be reissued after cancellation merely to discover a lost handle; unresolved effects retain their protection/hold.",
+        "A stale new intent conflicts; exact replay returns the original receipt before current-version checks."
+      ],
+      "nextSteps": [
+        "GetRun",
+        "GetCommand",
+        "ListRunSteps"
+      ],
+      "relatedEntities": [
+        "Run",
+        "Command"
+      ],
+      "relatedOperations": [
+        "GetRun",
+        "GetCommand",
+        "ListRunSteps"
+      ],
+      "historicalInterpretation": "The earlier workflow cancellation semantics are retained under RPC with one Run.version; cleanup, assessment verdict and execution outcome remain distinct."
+    },
+    {
+      "operation": "GetStepRun",
+      "purpose": "Read a Run-owned step representation with its phase, outcome, selected attempt and exact attempt history.",
+      "useCase": {
+        "title": "Explain why a required criterion was skipped",
+        "actor": "Workflow reviewer",
+        "scenario": "A run contains a criterion step with zero attempts because its dependency did not permit dispatch. The reviewer must see the explicit skip.",
+        "whenToUse": "When inspecting one compiled step or following an exact reference from Run.steps.",
+        "steps": [
+          "Use runId, stepRunId and the version referenced by the chosen Run representation.",
+          "Inspect skipReason, phase, outcome and selectedAttempt before reading attempt evidence."
+        ],
+        "intendedResult": "The reviewer can distinguish an unattempted step from a failed attempt or a completed criterion."
+      },
+      "preconditions": [
+        "The StepRun must belong to the supplied Run; exact referenced versions must be available."
+      ],
+      "pitfalls": [
+        "The selected attempt is explicit and is not inferred from the largest attemptNo.",
+        "Read access does not imply a public step-status, retry or stop writer exists."
+      ],
+      "nextSteps": [
+        "ListStepAttempts",
+        "GetStepAttempt"
+      ],
+      "relatedEntities": [
+        "StepRun",
+        "StepAttempt"
+      ],
+      "relatedOperations": [
+        "ListStepAttempts",
+        "GetStepAttempt"
+      ]
+    },
+    {
+      "operation": "ListRunSteps",
+      "purpose": "Resolve the exact step set retained by a selected Run version.",
+      "useCase": {
+        "title": "Reconstruct the step view of a past Run representation",
+        "actor": "Workflow reviewer",
+        "scenario": "The Run head has advanced since an incident review. The reviewer needs the StepRun versions that belonged to the earlier Run state.",
+        "whenToUse": "When displaying or auditing a Run’s immutable step selection.",
+        "steps": [
+          "Pass runId and the chosen runVersion; omission deliberately selects the Run head once.",
+          "Follow returned exact StepRun versions in retained compiled order, including skipped zero-attempt steps."
+        ],
+        "intendedResult": "The parent’s historical step view cannot acquire later child state."
+      },
+      "preconditions": [
+        "Current authorization applies to the selected Run and each referenced child; missing exact child versions fail the read."
+      ],
+      "pitfalls": [
+        "The operation must not join to current StepRun heads or reconstruct children by timestamp.",
+        "Pagination binds the selected parent and its immutable member set, not a moving live view."
+      ],
+      "nextSteps": [
+        "GetStepRun",
+        "ListStepAttempts"
+      ],
+      "relatedEntities": [
+        "StepRun",
+        "Run"
+      ],
+      "relatedOperations": [
+        "GetStepRun",
+        "ListStepAttempts"
+      ],
+      "historicalInterpretation": "The earlier ListRunSteps preserves all compiled steps, while v2 makes parent selection and exact child-version references explicit."
+    },
+    {
+      "operation": "GetStepAttempt",
+      "purpose": "Read the execution facts and evidence for one attempt under its Run and StepRun ownership.",
+      "useCase": {
+        "title": "Review an uncertain native operation attempt",
+        "actor": "Workflow analyst",
+        "scenario": "A fault-injection step dispatched a native operation but could not establish its result. The analyst needs the exact attempt facts and external-operation evidence.",
+        "whenToUse": "When inspecting why a step selected an attempt or why an effect remains unresolved.",
+        "steps": [
+          "Supply the complete parent chain and exact StepAttempt version referenced by the StepRun.",
+          "Inspect outcome, checkResult, externalOperations and evidenceRefs without inventing a later success."
+        ],
+        "intendedResult": "The attempt’s recorded execution facts remain independently reviewable."
+      },
+      "preconditions": [
+        "The attempt must belong to the given StepRun and Run, and its evidence must be authorized."
+      ],
+      "pitfalls": [
+        "attemptNo is a retry ordinal, not the entity version.",
+        "A settled attempt does not reopen; late reconciliation adds evidence rather than rewriting sealed facts."
+      ],
+      "nextSteps": [
+        "GetSource",
+        "GetObservation",
+        "GetExperiment"
+      ],
+      "relatedEntities": [
+        "StepAttempt",
+        "Source",
+        "Observation",
+        "Experiment"
+      ],
+      "relatedOperations": [
+        "GetSource",
+        "GetObservation",
+        "GetExperiment"
+      ]
+    },
+    {
+      "operation": "ListStepAttempts",
+      "purpose": "Resolve the exact attempt history retained by a selected StepRun version, ordered by attemptNo.",
+      "useCase": {
+        "title": "Audit whether a retry was justified",
+        "actor": "Workflow reviewer",
+        "scenario": "A step has several recorded attempts. The reviewer needs to understand which attempts existed at a chosen step state and which one was selected.",
+        "whenToUse": "When examining retry history or a step’s exact execution evidence.",
+        "steps": [
+          "Pass runId, stepRunId and the desired stepRunVersion.",
+          "Read the exact attempts returned in attemptNo order and compare the selectedAttempt on that same StepRun."
+        ],
+        "intendedResult": "The retry history stays consistent with the selected parent representation."
+      },
+      "preconditions": [
+        "The supplied StepRun must belong to the Run; exact referenced attempt versions must be authorized and available."
+      ],
+      "pitfalls": [
+        "Polling, resume and transport retry remain within the same attempt; they do not automatically justify another attempt.",
+        "A new mutating attempt is forbidden while its predecessor’s effect is unresolved.",
+        "This read operation offers no independent retry or attempt-status command."
+      ],
+      "nextSteps": [
+        "GetStepRun",
+        "GetStepAttempt"
+      ],
+      "relatedEntities": [
+        "StepAttempt",
+        "StepRun"
+      ],
+      "relatedOperations": [
+        "GetStepRun",
+        "GetStepAttempt"
+      ],
+      "historicalInterpretation": "The earlier attempt listing retains its ascending attempt number and execution facts, with v2 pinning exact children through an ordinary StepRun version."
+    },
+    {
+      "operation": "GetExperiment",
+      "purpose": "Read a native FIS experiment independently from any application workflow Run.",
+      "useCase": {
+        "title": "Inspect what a fault experiment actually affected",
+        "actor": "Fault-experiment operator",
+        "scenario": "A workflow links a native experiment. The operator needs its native state, named action states, selected targets, effect evidence and report readiness.",
+        "whenToUse": "When following an external-operation link or reviewing an imported experiment.",
+        "steps": [
+          "Read the exact Experiment version referenced by evidence, or its current head for monitoring.",
+          "Inspect named actions, target memberships, resolution coverage and report facts separately from the workflow’s assessment verdict."
+        ],
+        "intendedResult": "The native experiment can be understood on its own terms while retaining any verified workflow relationship."
+      },
+      "preconditions": [
+        "The experiment and retained observation must be authorized within its provider scope."
+      ],
+      "pitfalls": [
+        "An action’s catalog actionId identifies an action type; execution identity is experiment plus actionName.",
+        "Selected targets, applied effects, workload criteria and report completion are separate evidence dimensions."
+      ],
+      "nextSteps": [
+        "GetObservation",
+        "GetRun",
+        "StopExperiment"
+      ],
+      "relatedEntities": [
+        "Experiment",
+        "Observation",
+        "Run"
+      ],
+      "relatedOperations": [
+        "GetObservation",
+        "GetRun",
+        "StopExperiment"
+      ]
+    },
+    {
+      "operation": "ListExperiments",
+      "purpose": "Discover retained FIS experiments by observing connection or verified workflow linkage.",
+      "useCase": {
+        "title": "Find the experiment associated with an exercise",
+        "actor": "Workflow operator",
+        "scenario": "A Run may have a reconciled native experiment, and the operator wants to locate that experiment without confusing it with unrelated imported experiments.",
+        "whenToUse": "When navigating native experiments after provider evidence has been retained.",
+        "steps": [
+          "Use connectionId or runId filters as appropriate.",
+          "Inspect each returned experiment and verify the retained external-operation link before attributing it to the workflow."
+        ],
+        "intendedResult": "Native experiments remain discoverable whether or not they were created by a product Run."
+      },
+      "preconditions": [
+        "The caller must have current experiment-read authority and the run filter must use verified ExternalOperationRef links."
+      ],
+      "pitfalls": [
+        "An imported experiment can validly have no Run.",
+        "A similar name, template or timestamp does not prove workflow membership."
+      ],
+      "nextSteps": [
+        "GetExperiment",
+        "GetRun"
+      ],
+      "relatedEntities": [
+        "Experiment",
+        "Run"
+      ],
+      "relatedOperations": [
+        "GetExperiment",
+        "GetRun"
+      ]
+    },
+    {
+      "operation": "StopExperiment",
+      "purpose": "Admit a provider request to stop one whole native FIS experiment.",
+      "useCase": {
+        "title": "Stop a fault experiment whose effects need reconciliation",
+        "actor": "Fault-experiment operator",
+        "scenario": "The operator has verified the target experiment and wants the native stop request tracked separately from its final state and cleanup.",
+        "whenToUse": "When intentionally requesting a whole-experiment stop through an authorized connection.",
+        "steps": [
+          "Read the Experiment head and its suitable exact Source precondition.",
+          "Submit expectedVersion, expectedSource and an exact Connection with the stop intent, then follow the Command and experiment observations."
+        ],
+        "intendedResult": "The stop request has a durable receipt while final native state and recovery are established through evidence."
+      },
+      "preconditions": [
+        "The source must belong to the same native experiment; connection scope and current dispatch authority must be valid."
+      ],
+      "pitfalls": [
+        "Stop acceptance does not prove final state, post-action cleanup, workload recovery or report completion.",
+        "No individual native action stop, pause or retry API is invented.",
+        "This request does not replace Run cancellation; workflow intent and native effect handling remain separately explicit."
+      ],
+      "nextSteps": [
+        "GetCommand",
+        "GetExperiment",
+        "RequestRunCancellation"
+      ],
+      "relatedEntities": [
+        "Experiment",
+        "Command",
+        "Run"
+      ],
+      "relatedOperations": [
+        "GetCommand",
+        "GetExperiment",
+        "RequestRunCancellation"
+      ]
+    }
+  ]
+}
