@@ -1,0 +1,434 @@
+{
+  "schema": "frontier-fis-analysis-sources/v1",
+  "service": "AWS Fault Injection Service",
+  "serviceCode": "fis",
+  "researchDate": "2026-11-05",
+  "reviewDate": "2026-11-05",
+  "sourcePolicy": "Official AWS API Reference, User Guide, and EventBridge reference only. Product entity names, formulas, ingestion policy, and mock scenarios are engineering proposals.",
+  "sources": [
+    {
+      "id": "S01",
+      "title": "Experiment API shape",
+      "url": "https://docs.aws.amazon.com/fis/latest/APIReference/API_Experiment.html",
+      "publisher": "Amazon Web Services",
+      "type": "api-reference",
+      "accessedOn": "2026-11-05"
+    },
+    {
+      "id": "S02",
+      "title": "GetExperiment",
+      "url": "https://docs.aws.amazon.com/fis/latest/APIReference/API_GetExperiment.html",
+      "publisher": "Amazon Web Services",
+      "type": "api-reference",
+      "accessedOn": "2026-11-05"
+    },
+    {
+      "id": "S03",
+      "title": "ExperimentAction",
+      "url": "https://docs.aws.amazon.com/fis/latest/APIReference/API_ExperimentAction.html",
+      "publisher": "Amazon Web Services",
+      "type": "api-reference",
+      "accessedOn": "2026-11-05"
+    },
+    {
+      "id": "S04",
+      "title": "Action catalog shape",
+      "url": "https://docs.aws.amazon.com/fis/latest/APIReference/API_Action.html",
+      "publisher": "Amazon Web Services",
+      "type": "api-reference",
+      "accessedOn": "2026-11-05"
+    },
+    {
+      "id": "S05",
+      "title": "ActionParameter",
+      "url": "https://docs.aws.amazon.com/fis/latest/APIReference/API_ActionParameter.html",
+      "publisher": "Amazon Web Services",
+      "type": "api-reference",
+      "accessedOn": "2026-11-05"
+    },
+    {
+      "id": "S06",
+      "title": "ExperimentTemplateAction",
+      "url": "https://docs.aws.amazon.com/fis/latest/APIReference/API_ExperimentTemplateAction.html",
+      "publisher": "Amazon Web Services",
+      "type": "api-reference",
+      "accessedOn": "2026-11-05"
+    },
+    {
+      "id": "S07",
+      "title": "ExperimentTemplate",
+      "url": "https://docs.aws.amazon.com/fis/latest/APIReference/API_ExperimentTemplate.html",
+      "publisher": "Amazon Web Services",
+      "type": "api-reference",
+      "accessedOn": "2026-11-05"
+    },
+    {
+      "id": "S08",
+      "title": "Start from a template: snapshot semantics",
+      "url": "https://docs.aws.amazon.com/fis/latest/userguide/start-experiment-from-template.html",
+      "publisher": "Amazon Web Services",
+      "type": "service-guide",
+      "accessedOn": "2026-11-05"
+    },
+    {
+      "id": "S09",
+      "title": "Action sequence and duration semantics",
+      "url": "https://docs.aws.amazon.com/fis/latest/userguide/action-sequence.html",
+      "publisher": "Amazon Web Services",
+      "type": "service-guide",
+      "accessedOn": "2026-11-05"
+    },
+    {
+      "id": "S10",
+      "title": "ExperimentState",
+      "url": "https://docs.aws.amazon.com/fis/latest/APIReference/API_ExperimentState.html",
+      "publisher": "Amazon Web Services",
+      "type": "api-reference",
+      "accessedOn": "2026-11-05"
+    },
+    {
+      "id": "S11",
+      "title": "ExperimentActionState",
+      "url": "https://docs.aws.amazon.com/fis/latest/APIReference/API_ExperimentActionState.html",
+      "publisher": "Amazon Web Services",
+      "type": "api-reference",
+      "accessedOn": "2026-11-05"
+    },
+    {
+      "id": "S12",
+      "title": "ExperimentError",
+      "url": "https://docs.aws.amazon.com/fis/latest/APIReference/API_ExperimentError.html",
+      "publisher": "Amazon Web Services",
+      "type": "api-reference",
+      "accessedOn": "2026-11-05"
+    },
+    {
+      "id": "S13",
+      "title": "Lifecycle states and retention",
+      "url": "https://docs.aws.amazon.com/fis/latest/userguide/view-experiment-progress.html",
+      "publisher": "Amazon Web Services",
+      "type": "service-guide",
+      "accessedOn": "2026-11-05"
+    },
+    {
+      "id": "S14",
+      "title": "ExperimentOptions",
+      "url": "https://docs.aws.amazon.com/fis/latest/APIReference/API_ExperimentOptions.html",
+      "publisher": "Amazon Web Services",
+      "type": "api-reference",
+      "accessedOn": "2026-11-05"
+    },
+    {
+      "id": "S15",
+      "title": "Experiment options and previews",
+      "url": "https://docs.aws.amazon.com/fis/latest/userguide/experiment-options.html",
+      "publisher": "Amazon Web Services",
+      "type": "service-guide",
+      "accessedOn": "2026-11-05"
+    },
+    {
+      "id": "S16",
+      "title": "ExperimentTarget",
+      "url": "https://docs.aws.amazon.com/fis/latest/APIReference/API_ExperimentTarget.html",
+      "publisher": "Amazon Web Services",
+      "type": "api-reference",
+      "accessedOn": "2026-11-05"
+    },
+    {
+      "id": "S17",
+      "title": "Target selection semantics",
+      "url": "https://docs.aws.amazon.com/fis/latest/userguide/targets.html",
+      "publisher": "Amazon Web Services",
+      "type": "service-guide",
+      "accessedOn": "2026-11-05"
+    },
+    {
+      "id": "S18",
+      "title": "ResolvedTarget",
+      "url": "https://docs.aws.amazon.com/fis/latest/APIReference/API_ResolvedTarget.html",
+      "publisher": "Amazon Web Services",
+      "type": "api-reference",
+      "accessedOn": "2026-11-05"
+    },
+    {
+      "id": "S19",
+      "title": "ListExperimentResolvedTargets",
+      "url": "https://docs.aws.amazon.com/fis/latest/APIReference/API_ListExperimentResolvedTargets.html",
+      "publisher": "Amazon Web Services",
+      "type": "api-reference",
+      "accessedOn": "2026-11-05"
+    },
+    {
+      "id": "S20",
+      "title": "Resolved target availability",
+      "url": "https://docs.aws.amazon.com/fis/latest/userguide/list-experiment-resolved-targets.html",
+      "publisher": "Amazon Web Services",
+      "type": "service-guide",
+      "accessedOn": "2026-11-05"
+    },
+    {
+      "id": "S21",
+      "title": "Experiment target account configuration",
+      "url": "https://docs.aws.amazon.com/fis/latest/APIReference/API_ExperimentTargetAccountConfiguration.html",
+      "publisher": "Amazon Web Services",
+      "type": "api-reference",
+      "accessedOn": "2026-11-05"
+    },
+    {
+      "id": "S22",
+      "title": "ListExperimentTargetAccountConfigurations",
+      "url": "https://docs.aws.amazon.com/fis/latest/APIReference/API_ListExperimentTargetAccountConfigurations.html",
+      "publisher": "Amazon Web Services",
+      "type": "api-reference",
+      "accessedOn": "2026-11-05"
+    },
+    {
+      "id": "S23",
+      "title": "TargetResourceType",
+      "url": "https://docs.aws.amazon.com/fis/latest/APIReference/API_TargetResourceType.html",
+      "publisher": "Amazon Web Services",
+      "type": "api-reference",
+      "accessedOn": "2026-11-05"
+    },
+    {
+      "id": "S24",
+      "title": "ExperimentStopCondition",
+      "url": "https://docs.aws.amazon.com/fis/latest/APIReference/API_ExperimentStopCondition.html",
+      "publisher": "Amazon Web Services",
+      "type": "api-reference",
+      "accessedOn": "2026-11-05"
+    },
+    {
+      "id": "S25",
+      "title": "Stop conditions",
+      "url": "https://docs.aws.amazon.com/fis/latest/userguide/stop-conditions.html",
+      "publisher": "Amazon Web Services",
+      "type": "service-guide",
+      "accessedOn": "2026-11-05"
+    },
+    {
+      "id": "S26",
+      "title": "SafetyLever",
+      "url": "https://docs.aws.amazon.com/fis/latest/APIReference/API_SafetyLever.html",
+      "publisher": "Amazon Web Services",
+      "type": "api-reference",
+      "accessedOn": "2026-11-05"
+    },
+    {
+      "id": "S27",
+      "title": "Safety lever behavior",
+      "url": "https://docs.aws.amazon.com/fis/latest/userguide/safety-lever.html",
+      "publisher": "Amazon Web Services",
+      "type": "service-guide",
+      "accessedOn": "2026-11-05"
+    },
+    {
+      "id": "S28",
+      "title": "UpdateSafetyLeverStateInput",
+      "url": "https://docs.aws.amazon.com/fis/latest/APIReference/API_UpdateSafetyLeverStateInput.html",
+      "publisher": "Amazon Web Services",
+      "type": "api-reference",
+      "accessedOn": "2026-11-05"
+    },
+    {
+      "id": "S29",
+      "title": "Multi-account safety and alarms",
+      "url": "https://docs.aws.amazon.com/fis/latest/userguide/multi-account-prerequisites.html",
+      "publisher": "Amazon Web Services",
+      "type": "service-guide",
+      "accessedOn": "2026-11-05"
+    },
+    {
+      "id": "S30",
+      "title": "ExperimentLogConfiguration",
+      "url": "https://docs.aws.amazon.com/fis/latest/APIReference/API_ExperimentLogConfiguration.html",
+      "publisher": "Amazon Web Services",
+      "type": "api-reference",
+      "accessedOn": "2026-11-05"
+    },
+    {
+      "id": "S31",
+      "title": "Experiment log schema and delivery",
+      "url": "https://docs.aws.amazon.com/fis/latest/userguide/monitoring-logging.html",
+      "publisher": "Amazon Web Services",
+      "type": "service-guide",
+      "accessedOn": "2026-11-05"
+    },
+    {
+      "id": "S32",
+      "title": "EventBridge notifications",
+      "url": "https://docs.aws.amazon.com/fis/latest/userguide/monitoring-eventbridge.html",
+      "publisher": "Amazon Web Services",
+      "type": "service-guide",
+      "accessedOn": "2026-11-05"
+    },
+    {
+      "id": "S33",
+      "title": "FIS EventBridge event catalog",
+      "url": "https://docs.aws.amazon.com/eventbridge/latest/ref/events-ref-fis.html",
+      "publisher": "Amazon Web Services",
+      "type": "service-guide",
+      "accessedOn": "2026-11-05"
+    },
+    {
+      "id": "S34",
+      "title": "ExperimentReport",
+      "url": "https://docs.aws.amazon.com/fis/latest/APIReference/API_ExperimentReport.html",
+      "publisher": "Amazon Web Services",
+      "type": "api-reference",
+      "accessedOn": "2026-11-05"
+    },
+    {
+      "id": "S35",
+      "title": "ExperimentReportState",
+      "url": "https://docs.aws.amazon.com/fis/latest/APIReference/API_ExperimentReportState.html",
+      "publisher": "Amazon Web Services",
+      "type": "api-reference",
+      "accessedOn": "2026-11-05"
+    },
+    {
+      "id": "S36",
+      "title": "ExperimentReportS3Report",
+      "url": "https://docs.aws.amazon.com/fis/latest/APIReference/API_ExperimentReportS3Report.html",
+      "publisher": "Amazon Web Services",
+      "type": "api-reference",
+      "accessedOn": "2026-11-05"
+    },
+    {
+      "id": "S37",
+      "title": "ExperimentReportConfiguration",
+      "url": "https://docs.aws.amazon.com/fis/latest/APIReference/API_ExperimentReportConfiguration.html",
+      "publisher": "Amazon Web Services",
+      "type": "api-reference",
+      "accessedOn": "2026-11-05"
+    },
+    {
+      "id": "S38",
+      "title": "Report configuration and limitations",
+      "url": "https://docs.aws.amazon.com/fis/latest/userguide/experiment-report-configuration.html",
+      "publisher": "Amazon Web Services",
+      "type": "service-guide",
+      "accessedOn": "2026-11-05"
+    },
+    {
+      "id": "S39",
+      "title": "CloudWatch impact and usage metrics",
+      "url": "https://docs.aws.amazon.com/fis/latest/userguide/monitoring-cloudwatch.html",
+      "publisher": "Amazon Web Services",
+      "type": "service-guide",
+      "accessedOn": "2026-11-05"
+    },
+    {
+      "id": "S40",
+      "title": "CloudTrail audit records",
+      "url": "https://docs.aws.amazon.com/fis/latest/userguide/logging-using-cloudtrail.html",
+      "publisher": "Amazon Web Services",
+      "type": "service-guide",
+      "accessedOn": "2026-11-05"
+    },
+    {
+      "id": "S41",
+      "title": "Troubleshooting and error stability",
+      "url": "https://docs.aws.amazon.com/fis/latest/userguide/troubleshooting.html",
+      "publisher": "Amazon Web Services",
+      "type": "service-guide",
+      "accessedOn": "2026-11-05"
+    },
+    {
+      "id": "S42",
+      "title": "ListExperiments",
+      "url": "https://docs.aws.amazon.com/fis/latest/APIReference/API_ListExperiments.html",
+      "publisher": "Amazon Web Services",
+      "type": "api-reference",
+      "accessedOn": "2026-11-05"
+    },
+    {
+      "id": "S43",
+      "title": "StartExperiment",
+      "url": "https://docs.aws.amazon.com/fis/latest/APIReference/API_StartExperiment.html",
+      "publisher": "Amazon Web Services",
+      "type": "api-reference",
+      "accessedOn": "2026-11-05"
+    },
+    {
+      "id": "S44",
+      "title": "StopExperiment",
+      "url": "https://docs.aws.amazon.com/fis/latest/APIReference/API_StopExperiment.html",
+      "publisher": "Amazon Web Services",
+      "type": "api-reference",
+      "accessedOn": "2026-11-05"
+    },
+    {
+      "id": "S45",
+      "title": "Stop and post-action cleanup",
+      "url": "https://docs.aws.amazon.com/fis/latest/userguide/stop-experiment.html",
+      "publisher": "Amazon Web Services",
+      "type": "service-guide",
+      "accessedOn": "2026-11-05"
+    },
+    {
+      "id": "S46",
+      "title": "All FIS API operations",
+      "url": "https://docs.aws.amazon.com/fis/latest/APIReference/API_Operations.html",
+      "publisher": "Amazon Web Services",
+      "type": "api-reference",
+      "accessedOn": "2026-11-05"
+    },
+    {
+      "id": "S47",
+      "title": "UpdateExperimentTemplate",
+      "url": "https://docs.aws.amazon.com/fis/latest/APIReference/API_UpdateExperimentTemplate.html",
+      "publisher": "Amazon Web Services",
+      "type": "api-reference",
+      "accessedOn": "2026-11-05"
+    },
+    {
+      "id": "S48",
+      "title": "AWS FIS action-specific reference",
+      "url": "https://docs.aws.amazon.com/fis/latest/userguide/fis-actions-reference.html",
+      "publisher": "Amazon Web Services",
+      "type": "service-guide",
+      "accessedOn": "2026-11-05"
+    },
+    {
+      "id": "S49",
+      "title": "SafetyLeverState",
+      "url": "https://docs.aws.amazon.com/fis/latest/APIReference/API_SafetyLeverState.html",
+      "publisher": "Amazon Web Services",
+      "type": "api-reference",
+      "accessedOn": "2026-11-05"
+    },
+    {
+      "id": "S50",
+      "title": "ActionTarget",
+      "url": "https://docs.aws.amazon.com/fis/latest/APIReference/API_ActionTarget.html",
+      "publisher": "Amazon Web Services",
+      "type": "api-reference",
+      "accessedOn": "2026-11-05"
+    },
+    {
+      "id": "S51",
+      "title": "TargetAccountConfiguration",
+      "url": "https://docs.aws.amazon.com/fis/latest/APIReference/API_TargetAccountConfiguration.html",
+      "publisher": "Amazon Web Services",
+      "type": "api-reference",
+      "accessedOn": "2026-11-05"
+    },
+    {
+      "id": "S52",
+      "title": "UpdateExperimentTemplateExperimentOptionsInput",
+      "url": "https://docs.aws.amazon.com/fis/latest/APIReference/API_UpdateExperimentTemplateExperimentOptionsInput.html",
+      "publisher": "Amazon Web Services",
+      "type": "api-reference",
+      "accessedOn": "2026-11-05"
+    },
+    {
+      "id": "S53",
+      "title": "ListActions",
+      "url": "https://docs.aws.amazon.com/fis/latest/APIReference/API_ListActions.html",
+      "publisher": "Amazon Web Services",
+      "type": "api-reference",
+      "accessedOn": "2026-11-05"
+    }
+  ]
+}

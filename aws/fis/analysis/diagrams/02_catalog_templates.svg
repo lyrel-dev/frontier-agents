@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1250" height="1120" viewBox="0 0 1250 1120" role="img" aria-labelledby="title description">
+<title id="title">02 / Templates and catalog definitions</title>
+<desc id="description">Logical ER model. Cardinalities are counts at each endpoint. EXPERIMENT_TEMPLATE (1) contains TEMPLATE_ACTION (1..N); EXPERIMENT_TEMPLATE (1) defines TEMPLATE_TARGET (0..N); CATALOG_ACTION (1) configures TEMPLATE_ACTION (0..N); CATALOG_ACTION (1) describes ACTION_PARAMETER_DEFINITION (0..N); CATALOG_ACTION (1) supports ACTION_TARGET_SLOT (0..N); RESOURCE_TYPE (1) accepted by ACTION_TARGET_SLOT (0..N); RESOURCE_TYPE (1) selects TEMPLATE_TARGET (0..N); TEMPLATE_ACTION (1) binds TEMPLATE_BINDING (0..N); TEMPLATE_TARGET (1) referenced by TEMPLATE_BINDING (0..N); TEMPLATE_ACTION (1) predecessor TEMPLATE_DEPENDENCY (0..N); TEMPLATE_ACTION (1) successor TEMPLATE_DEPENDENCY (0..N); EXPERIMENT_TEMPLATE (1) configures TEMPLATE_TARGET_ACCOUNT (0..N)</desc>
+<style>text{font-family:"DejaVu Sans",Arial,sans-serif} .mono{font-family:"DejaVu Sans Mono",monospace}</style>
+<rect x="0" y="0" width="1250" height="1120" rx="0" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<rect x="50" y="30" width="42" height="5" rx="0" fill="#007E83" stroke="none" stroke-width="1"/>
+<text x="50" y="76" font-size="30" font-weight="bold" text-anchor="start" fill="#183346">02 / Templates and catalog definitions</text>
+<text x="50" y="101" font-size="15" font-weight="normal" text-anchor="start" fill="#586E7C">Logical model | Endpoint labels show multiplicity | Source: canonical Mermaid</text>
+<polyline points="625,207 625,360" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linejoin="round"/>
+<polyline points="625,207 625,360" fill="none" stroke="#8A9CA8" stroke-width="2" stroke-linejoin="round"/>
+<polyline points="780,166 825,166 825,401 860,401" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linejoin="round"/>
+<polyline points="780,166 825,166 825,401 860,401" fill="none" stroke="#8A9CA8" stroke-width="2" stroke-linejoin="round"/>
+<polyline points="390,166 430,166 430,401 470,401" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linejoin="round"/>
+<polyline points="390,166 430,166 430,401 470,401" fill="none" stroke="#8A9CA8" stroke-width="2" stroke-linejoin="round"/>
+<polyline points="235,207 235,360" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linejoin="round"/>
+<polyline points="235,207 235,360" fill="none" stroke="#8A9CA8" stroke-width="2" stroke-linejoin="round"/>
+<polyline points="80,166 35,166 35,696 80,696" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linejoin="round"/>
+<polyline points="80,166 35,166 35,696 80,696" fill="none" stroke="#8A9CA8" stroke-width="2" stroke-linejoin="round"/>
+<polyline points="1170,166 1215,166 1215,845 235,845 235,737" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linejoin="round"/>
+<polyline points="1170,166 1215,166 1215,845 235,845 235,737" fill="none" stroke="#8A9CA8" stroke-width="2" stroke-linejoin="round"/>
+<polyline points="1015,207 1015,360" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linejoin="round"/>
+<polyline points="1015,207 1015,360" fill="none" stroke="#8A9CA8" stroke-width="2" stroke-linejoin="round"/>
+<polyline points="780,401 810,401 810,696 860,696" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linejoin="round"/>
+<polyline points="780,401 810,401 810,696 860,696" fill="none" stroke="#8A9CA8" stroke-width="2" stroke-linejoin="round"/>
+<polyline points="1015,442 1015,655" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linejoin="round"/>
+<polyline points="1015,442 1015,655" fill="none" stroke="#8A9CA8" stroke-width="2" stroke-linejoin="round"/>
+<polyline points="575,442 575,655" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linejoin="round"/>
+<polyline points="575,442 575,655" fill="none" stroke="#8A9CA8" stroke-width="2" stroke-linejoin="round"/>
+<polyline points="675,442 675,655" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linejoin="round"/>
+<polyline points="675,442 675,655" fill="none" stroke="#8A9CA8" stroke-width="2" stroke-linejoin="round"/>
+<polyline points="505,207 450,235 450,981 470,981" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linejoin="round"/>
+<polyline points="505,207 450,235 450,981 470,981" fill="none" stroke="#8A9CA8" stroke-width="2" stroke-linejoin="round"/>
+<rect x="470" y="125" width="310" height="82" rx="8" fill="#FFFFFF" stroke="#CCD9E0" stroke-width="1.3"/>
+<rect x="470" y="125" width="310" height="42" rx="8" fill="#007E83" stroke="none" stroke-width="1"/>
+<rect x="470" y="153" width="310" height="14" rx="0" fill="#007E83" stroke="none" stroke-width="1"/>
+<text x="486" y="154" font-size="23" font-weight="bold" text-anchor="start" fill="#FFFFFF">Experiment template</text>
+<text x="486" y="190" font-size="14" font-weight="normal" text-anchor="start" fill="#586E7C">AWS FIS data</text>
+<rect x="470" y="360" width="310" height="82" rx="8" fill="#FFFFFF" stroke="#CCD9E0" stroke-width="1.3"/>
+<rect x="470" y="360" width="310" height="42" rx="8" fill="#007E83" stroke="none" stroke-width="1"/>
+<rect x="470" y="388" width="310" height="14" rx="0" fill="#007E83" stroke="none" stroke-width="1"/>
+<text x="486" y="389" font-size="23" font-weight="bold" text-anchor="start" fill="#FFFFFF">Template action</text>
+<text x="486" y="425" font-size="14" font-weight="normal" text-anchor="start" fill="#586E7C">AWS FIS data</text>
+<rect x="860" y="360" width="310" height="82" rx="8" fill="#FFFFFF" stroke="#CCD9E0" stroke-width="1.3"/>
+<rect x="860" y="360" width="310" height="42" rx="8" fill="#007E83" stroke="none" stroke-width="1"/>
+<rect x="860" y="388" width="310" height="14" rx="0" fill="#007E83" stroke="none" stroke-width="1"/>
+<text x="876" y="389" font-size="23" font-weight="bold" text-anchor="start" fill="#FFFFFF">Template target</text>
+<text x="876" y="425" font-size="14" font-weight="normal" text-anchor="start" fill="#586E7C">AWS FIS data</text>
+<rect x="80" y="125" width="310" height="82" rx="8" fill="#FFFFFF" stroke="#CCD9E0" stroke-width="1.3"/>
+<rect x="80" y="125" width="310" height="42" rx="8" fill="#007E83" stroke="none" stroke-width="1"/>
+<rect x="80" y="153" width="310" height="14" rx="0" fill="#007E83" stroke="none" stroke-width="1"/>
+<text x="96" y="154" font-size="23" font-weight="bold" text-anchor="start" fill="#FFFFFF">Catalog action</text>
+<text x="96" y="190" font-size="14" font-weight="normal" text-anchor="start" fill="#586E7C">AWS FIS data</text>
+<rect x="80" y="360" width="310" height="82" rx="8" fill="#FFFFFF" stroke="#CCD9E0" stroke-width="1.3"/>
+<rect x="80" y="360" width="310" height="42" rx="8" fill="#007E83" stroke="none" stroke-width="1"/>
+<rect x="80" y="388" width="310" height="14" rx="0" fill="#007E83" stroke="none" stroke-width="1"/>
+<text x="96" y="389" font-size="17.7554" font-weight="bold" text-anchor="start" fill="#FFFFFF">Action parameter definition</text>
+<text x="96" y="425" font-size="14" font-weight="normal" text-anchor="start" fill="#586E7C">AWS FIS data</text>
+<rect x="80" y="655" width="310" height="82" rx="8" fill="#FFFFFF" stroke="#CCD9E0" stroke-width="1.3"/>
+<rect x="80" y="655" width="310" height="42" rx="8" fill="#007E83" stroke="none" stroke-width="1"/>
+<rect x="80" y="683" width="310" height="14" rx="0" fill="#007E83" stroke="none" stroke-width="1"/>
+<text x="96" y="684" font-size="23" font-weight="bold" text-anchor="start" fill="#FFFFFF">Action target slot</text>
+<text x="96" y="720" font-size="14" font-weight="normal" text-anchor="start" fill="#586E7C">AWS FIS data</text>
+<rect x="860" y="125" width="310" height="82" rx="8" fill="#FFFFFF" stroke="#CCD9E0" stroke-width="1.3"/>
+<rect x="860" y="125" width="310" height="42" rx="8" fill="#007E83" stroke="none" stroke-width="1"/>
+<rect x="860" y="153" width="310" height="14" rx="0" fill="#007E83" stroke="none" stroke-width="1"/>
+<text x="876" y="154" font-size="23" font-weight="bold" text-anchor="start" fill="#FFFFFF">Resource type</text>
+<text x="876" y="190" font-size="14" font-weight="normal" text-anchor="start" fill="#586E7C">AWS FIS data</text>
+<rect x="860" y="655" width="310" height="82" rx="8" fill="#FFFFFF" stroke="#CCD9E0" stroke-width="1.3"/>
+<rect x="860" y="655" width="310" height="42" rx="8" fill="#A66B1B" stroke="none" stroke-width="1"/>
+<rect x="860" y="683" width="310" height="14" rx="0" fill="#A66B1B" stroke="none" stroke-width="1"/>
+<text x="876" y="684" font-size="23" font-weight="bold" text-anchor="start" fill="#FFFFFF">Template binding</text>
+<text x="876" y="720" font-size="14" font-weight="normal" text-anchor="start" fill="#586E7C">Application model</text>
+<rect x="470" y="655" width="310" height="82" rx="8" fill="#FFFFFF" stroke="#CCD9E0" stroke-width="1.3"/>
+<rect x="470" y="655" width="310" height="42" rx="8" fill="#A66B1B" stroke="none" stroke-width="1"/>
+<rect x="470" y="683" width="310" height="14" rx="0" fill="#A66B1B" stroke="none" stroke-width="1"/>
+<text x="486" y="684" font-size="22.2565" font-weight="bold" text-anchor="start" fill="#FFFFFF">Template dependency</text>
+<text x="486" y="720" font-size="14" font-weight="normal" text-anchor="start" fill="#586E7C">Application model</text>
+<rect x="470" y="940" width="310" height="82" rx="8" fill="#FFFFFF" stroke="#CCD9E0" stroke-width="1.3"/>
+<rect x="470" y="940" width="310" height="42" rx="8" fill="#007E83" stroke="none" stroke-width="1"/>
+<rect x="470" y="968" width="310" height="14" rx="0" fill="#007E83" stroke="none" stroke-width="1"/>
+<text x="486" y="969" font-size="19.9204" font-weight="bold" text-anchor="start" fill="#FFFFFF">Template target account</text>
+<text x="486" y="1005" font-size="14" font-weight="normal" text-anchor="start" fill="#586E7C">AWS FIS data</text>
+<rect x="583.02" y="274" width="83.9595" height="23" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="625" y="290" font-size="17" font-weight="normal" text-anchor="middle" fill="#586E7C">contains</text>
+<rect x="643.228" y="221" width="21.5435" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="654" y="235" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">1</text>
+<rect x="632.85" y="328" width="42.3003" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="654" y="342" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">1..N</text>
+<rect x="787.976" y="269" width="74.0483" height="23" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="825" y="285" font-size="17" font-weight="normal" text-anchor="middle" fill="#586E7C">defines</text>
+<rect x="793.228" y="170" width="21.5435" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="804" y="184" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">1</text>
+<rect x="814.85" y="405" width="42.3003" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="836" y="419" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">0..N</text>
+<rect x="379.45" y="264" width="101.101" height="23" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="430" y="280" font-size="17" font-weight="normal" text-anchor="middle" fill="#586E7C">configures</text>
+<rect x="403.228" y="170" width="21.5435" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="414" y="184" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">1</text>
+<rect x="424.85" y="405" width="42.3003" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="446" y="419" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">0..N</text>
+<rect x="188.364" y="274" width="93.2729" height="23" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="235" y="290" font-size="17" font-weight="normal" text-anchor="middle" fill="#586E7C">describes</text>
+<rect x="253.228" y="221" width="21.5435" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="264" y="235" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">1</text>
+<rect x="242.85" y="328" width="42.3003" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="264" y="342" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">0..N</text>
+<text x="53" y="540" font-size="17" font-weight="normal" text-anchor="middle" fill="#586E7C" transform="rotate(-90 53 540)">supports</text>
+<rect x="45.2283" y="170" width="21.5435" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="56" y="184" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">1</text>
+<rect x="34.8499" y="700" width="42.3003" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="56" y="714" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">0..N</text>
+<rect x="701.734" y="814" width="116.532" height="23" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="760" y="830" font-size="17" font-weight="normal" text-anchor="middle" fill="#586E7C">accepted by</text>
+<rect x="1183.23" y="170" width="21.5435" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="1194" y="184" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">1</text>
+<rect x="242.85" y="751" width="42.3003" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="264" y="765" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">0..N</text>
+<rect x="979.316" y="274" width="71.3672" height="23" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="1015" y="290" font-size="17" font-weight="normal" text-anchor="middle" fill="#586E7C">selects</text>
+<rect x="1033.23" y="221" width="21.5435" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="1044" y="235" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">1</text>
+<rect x="1022.85" y="328" width="42.3003" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="1044" y="342" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">0..N</text>
+<rect x="781.032" y="534" width="57.9365" height="23" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="810" y="550" font-size="17" font-weight="normal" text-anchor="middle" fill="#586E7C">binds</text>
+<rect x="793.228" y="405" width="21.5435" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="804" y="419" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">1</text>
+<rect x="814.85" y="700" width="42.3003" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="836" y="714" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">0..N</text>
+<rect x="949.517" y="541" width="130.967" height="23" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="1015" y="557" font-size="17" font-weight="normal" text-anchor="middle" fill="#586E7C">referenced by</text>
+<rect x="1033.23" y="456" width="21.5435" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="1044" y="470" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">1</text>
+<rect x="1022.85" y="623" width="42.3003" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="1044" y="637" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">0..N</text>
+<rect x="516.801" y="509" width="116.399" height="23" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="575" y="525" font-size="17" font-weight="normal" text-anchor="middle" fill="#586E7C">predecessor</text>
+<rect x="593.228" y="456" width="21.5435" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="604" y="470" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">1</text>
+<rect x="582.85" y="623" width="42.3003" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="604" y="637" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">0..N</text>
+<rect x="627.056" y="574" width="95.8877" height="23" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="675" y="590" font-size="17" font-weight="normal" text-anchor="middle" fill="#586E7C">successor</text>
+<rect x="693.228" y="456" width="21.5435" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="704" y="470" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">1</text>
+<rect x="682.85" y="623" width="42.3003" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="704" y="637" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">0..N</text>
+<text x="450" y="850" font-size="17" font-weight="normal" text-anchor="middle" fill="#586E7C" transform="rotate(-90 450 850)">configures</text>
+<rect x="472.84" y="211" width="21.5435" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="483.612" y="225" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">1</text>
+<rect x="424.85" y="985" width="42.3003" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="446" y="999" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">0..N</text>
+<rect x="50" y="1077" width="15" height="15" rx="3" fill="#007E83" stroke="none" stroke-width="1"/>
+<text x="75" y="1090" font-size="16" font-weight="normal" text-anchor="start" fill="#586E7C">AWS FIS data / scope</text>
+<rect x="420" y="1077" width="15" height="15" rx="3" fill="#A66B1B" stroke="none" stroke-width="1"/>
+<text x="445" y="1090" font-size="16" font-weight="normal" text-anchor="start" fill="#586E7C">Application model</text>
+<rect x="830" y="1077" width="15" height="15" rx="3" fill="#2A6B9B" stroke="none" stroke-width="1"/>
+<text x="855" y="1090" font-size="16" font-weight="normal" text-anchor="start" fill="#586E7C">External evidence / resource</text>
+</svg>

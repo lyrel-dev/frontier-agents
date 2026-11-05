@@ -1,0 +1,29 @@
+erDiagram
+    direction TB
+    EXPERIMENT_RUN ||--o{ TARGET_SELECTION : defines
+    EXPERIMENT_RUN ||--o{ EXPERIMENT_TARGET_ACCOUNT : configures
+    ACTION_EXECUTION ||--o{ ACTION_TARGET_BINDING : binds
+    TARGET_SELECTION ||--o{ ACTION_TARGET_BINDING : referenced_by
+    TARGET_SELECTION ||--o{ RESOLVED_TARGET_MEMBERSHIP : resolves_to
+    RESOURCE_IDENTITY o|--o{ RESOLVED_TARGET_MEMBERSHIP : identifies
+    TARGET_SELECTION ||--o{ TARGET_RESOLUTION_OBSERVATION : observed_by
+    ACTION_TARGET_BINDING {
+        string experimentKey PK, FK
+        string actionName PK, FK
+        string slotName PK
+        string targetName FK
+    }
+    TARGET_SELECTION {
+        string experimentKey PK, FK
+        string targetName PK
+        string resourceType
+        string selectionMode
+        json selectorSnapshot
+    }
+    RESOLVED_TARGET_MEMBERSHIP {
+        string membershipKey PK
+        string experimentKey FK
+        string targetName FK
+        json targetInformation
+        string optionalResourceKey FK
+    }

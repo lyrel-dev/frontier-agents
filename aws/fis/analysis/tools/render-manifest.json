@@ -1,0 +1,75 @@
+{
+  "schema": "frontier-fis-render/v1",
+  "source": "report.md",
+  "diagrams": [
+    {
+      "source": "diagrams/01_execution.mmd",
+      "output": "diagrams/01_execution.svg",
+      "entities": 5,
+      "relationships": 5,
+      "sourceSha256": "4bf200418711e9ebde0fb23422a3950268f95a2f3dcaa50fd6e95b864ba8c7a2",
+      "outputSha256": "43b1a7e0a043d3d099a12244c63dd041205a797a153d4cf25dfe912cec26e618"
+    },
+    {
+      "source": "diagrams/02_catalog_templates.mmd",
+      "output": "diagrams/02_catalog_templates.svg",
+      "entities": 10,
+      "relationships": 12,
+      "sourceSha256": "d879b54afd169d5ebc9d26d2b6e29f21c73fa0d508de03dbd8e7760b45b0f868",
+      "outputSha256": "8a0bcdd1adba735609ed173e84c59b2278b514b748904749b59f6d4abf81379f"
+    },
+    {
+      "source": "diagrams/03_targeting.mmd",
+      "output": "diagrams/03_targeting.svg",
+      "entities": 8,
+      "relationships": 7,
+      "sourceSha256": "380fbb8c085a1919a12fea021346af7519db4882a1b2bdfde701b1b8767bdef1",
+      "outputSha256": "b037e3c3c50b4aeade8cc25ad0444d21d7e75ff5d095beab56c42823e3d3bb66"
+    },
+    {
+      "source": "diagrams/04_evidence_reports.mmd",
+      "output": "diagrams/04_evidence_reports.svg",
+      "entities": 11,
+      "relationships": 12,
+      "sourceSha256": "e79b65a4720baf4316b2a28bc206175593d8def416daf19b720dda7f17dfaa70",
+      "outputSha256": "cee3149f62daa449525e5621561bfe182cd5f473c28ec694db047ee4af555a67"
+    },
+    {
+      "source": "diagrams/05_assessments.mmd",
+      "output": "diagrams/05_assessments.svg",
+      "entities": 7,
+      "relationships": 7,
+      "sourceSha256": "87fac175e40c1138d20485e4cb14f1ee0293769b76cd0eacec148c8775e3e462",
+      "outputSha256": "b4d89357fe06599ebc77b515bb13e1c53db002abf128c19d211675d4b3a597b4"
+    }
+  ],
+  "report": {
+    "reportSha256": "3d208ed6c53bbab25aa41ee79bacad2034556cbe7c1ca8c50b0fc61b172414d9",
+    "sections": [
+      "1. Purpose and recommended design",
+      "2. Core execution model",
+      "3. Definitions, catalog metadata, and templates",
+      "4. ExperimentRun and ActionExecution field inventory",
+      "5. Target selectors, resolved memberships, and accounts",
+      "6. Supporting configuration and report objects",
+      "7. Lifecycle and operator controls",
+      "8. Evidence and audit model",
+      "9. Workload assessment model",
+      "10. Derived data catalog",
+      "11. API operations and mutation boundaries",
+      "12. Collection architecture and operator surfaces",
+      "13. Demonstration contract and remaining limits",
+      "14. Official sources"
+    ],
+    "figures": [
+      "01_execution",
+      "02_catalog_templates",
+      "03_targeting",
+      "04_evidence_reports",
+      "05_assessments"
+    ],
+    "output": "aws_fis_experiment_action_model.pdf",
+    "bytes": 185466,
+    "sha256": "7cd49c6043d7250f30241ce54f6498c723a00cb709718733cf0ce01b9348d47c"
+  }
+}

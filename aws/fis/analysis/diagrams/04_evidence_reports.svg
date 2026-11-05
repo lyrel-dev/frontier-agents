@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1250" height="1500" viewBox="0 0 1250 1500" role="img" aria-labelledby="title description">
+<title id="title">04 / Evidence, reports and safety observations</title>
+<desc id="description">Logical ER model. Cardinalities are counts at each endpoint. EXPERIMENT_RUN (1) accumulates EXECUTION_EVIDENCE (0..N); EXPERIMENT_RUN (1) observed by STATE_OBSERVATION (0..N); ACTION_EXECUTION (0..1) optionally identifies EXECUTION_EVIDENCE (0..N); ACTION_EXECUTION (0..1) optionally identifies STATE_OBSERVATION (0..N); EXECUTION_EVIDENCE (0..1) may support STATE_OBSERVATION (0..N); EXPERIMENT_RUN (1) generates EXPERIMENT_REPORT (0..1); EXPERIMENT_REPORT (1) contains REPORT_ARTIFACT (0..N); EXPERIMENT_RUN (1) configures STOP_CONDITION (0..N); CLOUDWATCH_ALARM (0..1) referenced by STOP_CONDITION (0..N); CLOUDWATCH_ALARM (1) observed by ALARM_OBSERVATION (0..N); AWS_SCOPE (1) owns EXPERIMENT_RUN (0..N); AWS_SCOPE (1) has SAFETY_LEVER (1)</desc>
+<style>text{font-family:"DejaVu Sans",Arial,sans-serif} .mono{font-family:"DejaVu Sans Mono",monospace}</style>
+<rect x="0" y="0" width="1250" height="1500" rx="0" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<rect x="50" y="30" width="42" height="5" rx="0" fill="#007E83" stroke="none" stroke-width="1"/>
+<text x="50" y="76" font-size="30" font-weight="bold" text-anchor="start" fill="#183346">04 / Evidence, reports and safety observations</text>
+<text x="50" y="101" font-size="15" font-weight="normal" text-anchor="start" fill="#586E7C">Logical model | Endpoint labels show multiplicity | Source: canonical Mermaid</text>
+<polyline points="150,432 150,650" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linejoin="round"/>
+<polyline points="150,432 150,650" fill="none" stroke="#8A9CA8" stroke-width="2" stroke-linejoin="round"/>
+<polyline points="410,391 620,391 620,490 825,490 825,680 850,680" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linejoin="round"/>
+<polyline points="410,391 620,391 620,490 825,490 825,680 850,680" fill="none" stroke="#8A9CA8" stroke-width="2" stroke-linejoin="round"/>
+<polyline points="850,391 780,391 780,550 325,550 325,650" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linejoin="round"/>
+<polyline points="850,391 780,391 780,550 325,550 325,650" fill="none" stroke="#8A9CA8" stroke-width="2" stroke-linejoin="round"/>
+<polyline points="1025,432 1025,650" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linejoin="round"/>
+<polyline points="1025,432 1025,650" fill="none" stroke="#8A9CA8" stroke-width="2" stroke-linejoin="round"/>
+<polyline points="410,710 850,710" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linejoin="round"/>
+<polyline points="410,710 850,710" fill="none" stroke="#8A9CA8" stroke-width="2" stroke-linejoin="round"/>
+<polyline points="345,432 445,460 445,1031 480,1031" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linejoin="round"/>
+<polyline points="345,432 445,460 445,1031 480,1031" fill="none" stroke="#8A9CA8" stroke-width="2" stroke-linejoin="round"/>
+<polyline points="655,1072 655,1320" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linejoin="round"/>
+<polyline points="655,1072 655,1320" fill="none" stroke="#8A9CA8" stroke-width="2" stroke-linejoin="round"/>
+<polyline points="60,391 25,391 25,1211 60,1211" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linejoin="round"/>
+<polyline points="60,391 25,391 25,1211 60,1211" fill="none" stroke="#8A9CA8" stroke-width="2" stroke-linejoin="round"/>
+<polyline points="850,1211 410,1211" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linejoin="round"/>
+<polyline points="850,1211 410,1211" fill="none" stroke="#8A9CA8" stroke-width="2" stroke-linejoin="round"/>
+<polyline points="1025,1252 1025,1320" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linejoin="round"/>
+<polyline points="1025,1252 1025,1320" fill="none" stroke="#8A9CA8" stroke-width="2" stroke-linejoin="round"/>
+<polyline points="235,207 235,350" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linejoin="round"/>
+<polyline points="235,207 235,350" fill="none" stroke="#8A9CA8" stroke-width="2" stroke-linejoin="round"/>
+<polyline points="410,166 850,166" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linejoin="round"/>
+<polyline points="410,166 850,166" fill="none" stroke="#8A9CA8" stroke-width="2" stroke-linejoin="round"/>
+<rect x="60" y="350" width="350" height="82" rx="8" fill="#FFFFFF" stroke="#CCD9E0" stroke-width="1.3"/>
+<rect x="60" y="350" width="350" height="42" rx="8" fill="#007E83" stroke="none" stroke-width="1"/>
+<rect x="60" y="378" width="350" height="14" rx="0" fill="#007E83" stroke="none" stroke-width="1"/>
+<text x="76" y="379" font-size="23" font-weight="bold" text-anchor="start" fill="#FFFFFF">Experiment run</text>
+<text x="76" y="415" font-size="14" font-weight="normal" text-anchor="start" fill="#586E7C">AWS FIS data</text>
+<rect x="60" y="650" width="350" height="278" rx="8" fill="#FFFFFF" stroke="#CCD9E0" stroke-width="1.3"/>
+<rect x="60" y="650" width="350" height="42" rx="8" fill="#A66B1B" stroke="none" stroke-width="1"/>
+<rect x="60" y="678" width="350" height="14" rx="0" fill="#A66B1B" stroke="none" stroke-width="1"/>
+<text x="76" y="679" font-size="23" font-weight="bold" text-anchor="start" fill="#FFFFFF">Execution evidence</text>
+<text x="76" y="715" font-size="14" font-weight="normal" text-anchor="start" fill="#586E7C">Application model</text>
+<rect x="61" y="727" width="348" height="28" rx="0" fill="#F4F7F9" stroke="none" stroke-width="1"/>
+<text x="76" y="748" font-size="12" font-weight="bold" text-anchor="start" fill="#A66B1B">PK</text>
+<text x="140" y="748" font-size="19.5" font-weight="normal" text-anchor="start" fill="#183346">evidenceKey</text>
+<text x="396" y="748" font-size="12.5" font-weight="normal" text-anchor="end" fill="#586E7C" class="mono">string</text>
+<text x="76" y="776" font-size="12" font-weight="bold" text-anchor="start" fill="#A66B1B">FK</text>
+<text x="140" y="776" font-size="19.5" font-weight="normal" text-anchor="start" fill="#183346">experimentKey</text>
+<text x="396" y="776" font-size="12.5" font-weight="normal" text-anchor="end" fill="#586E7C" class="mono">string</text>
+<rect x="61" y="783" width="348" height="28" rx="0" fill="#F4F7F9" stroke="none" stroke-width="1"/>
+<text x="140" y="804" font-size="19.5" font-weight="normal" text-anchor="start" fill="#183346">source</text>
+<text x="396" y="804" font-size="12.5" font-weight="normal" text-anchor="end" fill="#586E7C" class="mono">string</text>
+<text x="140" y="832" font-size="19.5" font-weight="normal" text-anchor="start" fill="#183346">sourceRecordId</text>
+<text x="396" y="832" font-size="12.5" font-weight="normal" text-anchor="end" fill="#586E7C" class="mono">string</text>
+<rect x="61" y="839" width="348" height="28" rx="0" fill="#F4F7F9" stroke="none" stroke-width="1"/>
+<text x="140" y="860" font-size="19.5" font-weight="normal" text-anchor="start" fill="#183346">occurredAt</text>
+<text x="396" y="860" font-size="12.5" font-weight="normal" text-anchor="end" fill="#586E7C" class="mono">datetime</text>
+<text x="140" y="888" font-size="19.5" font-weight="normal" text-anchor="start" fill="#183346">observedAt</text>
+<text x="396" y="888" font-size="12.5" font-weight="normal" text-anchor="end" fill="#586E7C" class="mono">datetime</text>
+<rect x="61" y="895" width="348" height="28" rx="0" fill="#F4F7F9" stroke="none" stroke-width="1"/>
+<text x="140" y="916" font-size="19.5" font-weight="normal" text-anchor="start" fill="#183346">rawPayload</text>
+<text x="396" y="916" font-size="12.5" font-weight="normal" text-anchor="end" fill="#586E7C" class="mono">json</text>
+<rect x="850" y="650" width="350" height="82" rx="8" fill="#FFFFFF" stroke="#CCD9E0" stroke-width="1.3"/>
+<rect x="850" y="650" width="350" height="42" rx="8" fill="#A66B1B" stroke="none" stroke-width="1"/>
+<rect x="850" y="678" width="350" height="14" rx="0" fill="#A66B1B" stroke="none" stroke-width="1"/>
+<text x="866" y="679" font-size="23" font-weight="bold" text-anchor="start" fill="#FFFFFF">State observation</text>
+<text x="866" y="715" font-size="14" font-weight="normal" text-anchor="start" fill="#586E7C">Application model</text>
+<rect x="850" y="350" width="350" height="82" rx="8" fill="#FFFFFF" stroke="#CCD9E0" stroke-width="1.3"/>
+<rect x="850" y="350" width="350" height="42" rx="8" fill="#007E83" stroke="none" stroke-width="1"/>
+<rect x="850" y="378" width="350" height="14" rx="0" fill="#007E83" stroke="none" stroke-width="1"/>
+<text x="866" y="379" font-size="23" font-weight="bold" text-anchor="start" fill="#FFFFFF">Action execution</text>
+<text x="866" y="415" font-size="14" font-weight="normal" text-anchor="start" fill="#586E7C">AWS FIS data</text>
+<rect x="480" y="990" width="350" height="82" rx="8" fill="#FFFFFF" stroke="#CCD9E0" stroke-width="1.3"/>
+<rect x="480" y="990" width="350" height="42" rx="8" fill="#007E83" stroke="none" stroke-width="1"/>
+<rect x="480" y="1018" width="350" height="14" rx="0" fill="#007E83" stroke="none" stroke-width="1"/>
+<text x="496" y="1019" font-size="23" font-weight="bold" text-anchor="start" fill="#FFFFFF">Experiment report</text>
+<text x="496" y="1055" font-size="14" font-weight="normal" text-anchor="start" fill="#586E7C">AWS FIS data</text>
+<rect x="480" y="1320" width="350" height="82" rx="8" fill="#FFFFFF" stroke="#CCD9E0" stroke-width="1.3"/>
+<rect x="480" y="1320" width="350" height="42" rx="8" fill="#007E83" stroke="none" stroke-width="1"/>
+<rect x="480" y="1348" width="350" height="14" rx="0" fill="#007E83" stroke="none" stroke-width="1"/>
+<text x="496" y="1349" font-size="23" font-weight="bold" text-anchor="start" fill="#FFFFFF">Report artifact</text>
+<text x="496" y="1385" font-size="14" font-weight="normal" text-anchor="start" fill="#586E7C">AWS FIS data</text>
+<rect x="60" y="1170" width="350" height="82" rx="8" fill="#FFFFFF" stroke="#CCD9E0" stroke-width="1.3"/>
+<rect x="60" y="1170" width="350" height="42" rx="8" fill="#007E83" stroke="none" stroke-width="1"/>
+<rect x="60" y="1198" width="350" height="14" rx="0" fill="#007E83" stroke="none" stroke-width="1"/>
+<text x="76" y="1199" font-size="23" font-weight="bold" text-anchor="start" fill="#FFFFFF">Stop condition</text>
+<text x="76" y="1235" font-size="14" font-weight="normal" text-anchor="start" fill="#586E7C">AWS FIS data</text>
+<rect x="850" y="1170" width="350" height="82" rx="8" fill="#FFFFFF" stroke="#CCD9E0" stroke-width="1.3"/>
+<rect x="850" y="1170" width="350" height="42" rx="8" fill="#2A6B9B" stroke="none" stroke-width="1"/>
+<rect x="850" y="1198" width="350" height="14" rx="0" fill="#2A6B9B" stroke="none" stroke-width="1"/>
+<text x="866" y="1199" font-size="23" font-weight="bold" text-anchor="start" fill="#FFFFFF">Cloudwatch alarm</text>
+<text x="866" y="1235" font-size="14" font-weight="normal" text-anchor="start" fill="#586E7C">External evidence / resource</text>
+<rect x="850" y="1320" width="350" height="82" rx="8" fill="#FFFFFF" stroke="#CCD9E0" stroke-width="1.3"/>
+<rect x="850" y="1320" width="350" height="42" rx="8" fill="#2A6B9B" stroke="none" stroke-width="1"/>
+<rect x="850" y="1348" width="350" height="14" rx="0" fill="#2A6B9B" stroke="none" stroke-width="1"/>
+<text x="866" y="1349" font-size="23" font-weight="bold" text-anchor="start" fill="#FFFFFF">Alarm observation</text>
+<text x="866" y="1385" font-size="14" font-weight="normal" text-anchor="start" fill="#586E7C">External evidence / resource</text>
+<rect x="60" y="125" width="350" height="82" rx="8" fill="#FFFFFF" stroke="#CCD9E0" stroke-width="1.3"/>
+<rect x="60" y="125" width="350" height="42" rx="8" fill="#007E83" stroke="none" stroke-width="1"/>
+<rect x="60" y="153" width="350" height="14" rx="0" fill="#007E83" stroke="none" stroke-width="1"/>
+<text x="76" y="154" font-size="23" font-weight="bold" text-anchor="start" fill="#FFFFFF">AWS scope</text>
+<text x="76" y="190" font-size="14" font-weight="normal" text-anchor="start" fill="#586E7C">Account and Region context</text>
+<rect x="850" y="125" width="350" height="82" rx="8" fill="#FFFFFF" stroke="#CCD9E0" stroke-width="1.3"/>
+<rect x="850" y="125" width="350" height="42" rx="8" fill="#007E83" stroke="none" stroke-width="1"/>
+<rect x="850" y="153" width="350" height="14" rx="0" fill="#007E83" stroke="none" stroke-width="1"/>
+<text x="866" y="154" font-size="23" font-weight="bold" text-anchor="start" fill="#FFFFFF">Safety lever</text>
+<text x="866" y="190" font-size="14" font-weight="normal" text-anchor="start" fill="#586E7C">AWS FIS data</text>
+<rect x="89.8291" y="534" width="120.342" height="23" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="150" y="550" font-size="17" font-weight="normal" text-anchor="middle" fill="#586E7C">accumulates</text>
+<rect x="168.228" y="446" width="21.5435" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="179" y="460" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">1</text>
+<rect x="157.85" y="618" width="42.3003" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="179" y="632" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">0..N</text>
+<rect x="561.469" y="458" width="117.063" height="23" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="620" y="474" font-size="17" font-weight="normal" text-anchor="middle" fill="#586E7C">observed by</text>
+<rect x="423.228" y="395" width="21.5435" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="434" y="409" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">1</text>
+<rect x="804.85" y="684" width="42.3003" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="826" y="698" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">0..N</text>
+<rect x="455.378" y="519" width="179.244" height="23" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="545" y="535" font-size="17" font-weight="normal" text-anchor="middle" fill="#586E7C">optionally identifies</text>
+<rect x="805.688" y="395" width="40.623" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="826" y="409" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">0..1</text>
+<rect x="332.85" y="618" width="42.3003" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="354" y="632" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">0..N</text>
+<rect x="935.378" y="534" width="179.244" height="23" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="1025" y="550" font-size="17" font-weight="normal" text-anchor="middle" fill="#586E7C">optionally identifies</text>
+<rect x="1033.69" y="446" width="40.623" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="1054" y="460" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">0..1</text>
+<rect x="1032.85" y="618" width="42.3003" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="1054" y="632" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">0..N</text>
+<rect x="570.145" y="677" width="119.711" height="23" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="630" y="693" font-size="17" font-weight="normal" text-anchor="middle" fill="#586E7C">may support</text>
+<rect x="413.688" y="714" width="40.623" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="434" y="728" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">0..1</text>
+<rect x="804.85" y="714" width="42.3003" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="826" y="728" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">0..N</text>
+<text x="461" y="830" font-size="17" font-weight="normal" text-anchor="middle" fill="#586E7C" transform="rotate(-90 461 830)">generates</text>
+<rect x="357.339" y="436" width="21.5435" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="368.111" y="450" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">1</text>
+<rect x="435.688" y="1035" width="40.623" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="456" y="1049" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">0..1</text>
+<rect x="613.02" y="1249" width="83.9595" height="23" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="655" y="1265" font-size="17" font-weight="normal" text-anchor="middle" fill="#586E7C">contains</text>
+<rect x="673.228" y="1086" width="21.5435" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="684" y="1100" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">1</text>
+<rect x="662.85" y="1288" width="42.3003" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="684" y="1302" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">0..N</text>
+<text x="44" y="1040" font-size="17" font-weight="normal" text-anchor="middle" fill="#586E7C" transform="rotate(-90 44 1040)">configures</text>
+<rect x="25.2283" y="395" width="21.5435" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="36" y="409" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">1</text>
+<rect x="14.8499" y="1215" width="42.3003" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="36" y="1229" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">0..N</text>
+<rect x="564.517" y="1177" width="130.967" height="23" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="630" y="1193" font-size="17" font-weight="normal" text-anchor="middle" fill="#586E7C">referenced by</text>
+<rect x="805.688" y="1215" width="40.623" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="826" y="1229" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">0..1</text>
+<rect x="412.85" y="1215" width="42.3003" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="434" y="1229" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">0..N</text>
+<rect x="1071.47" y="1277" width="117.063" height="23" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="1130" y="1293" font-size="17" font-weight="normal" text-anchor="middle" fill="#586E7C">observed by</text>
+<rect x="1043.23" y="1266" width="21.5435" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="1054" y="1280" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">1</text>
+<rect x="1032.85" y="1288" width="42.3003" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="1054" y="1302" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">0..N</text>
+<rect x="207.032" y="270" width="55.936" height="23" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="235" y="286" font-size="17" font-weight="normal" text-anchor="middle" fill="#586E7C">owns</text>
+<rect x="253.228" y="221" width="21.5435" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="264" y="235" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">1</text>
+<rect x="242.85" y="318" width="42.3003" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="264" y="332" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">0..N</text>
+<rect x="608.976" y="132" width="42.0488" height="23" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="630" y="148" font-size="17" font-weight="normal" text-anchor="middle" fill="#586E7C">has</text>
+<rect x="423.228" y="170" width="21.5435" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="434" y="184" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">1</text>
+<rect x="815.228" y="170" width="21.5435" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="826" y="184" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">1</text>
+<rect x="50" y="1457" width="15" height="15" rx="3" fill="#007E83" stroke="none" stroke-width="1"/>
+<text x="75" y="1470" font-size="16" font-weight="normal" text-anchor="start" fill="#586E7C">AWS FIS data / scope</text>
+<rect x="420" y="1457" width="15" height="15" rx="3" fill="#A66B1B" stroke="none" stroke-width="1"/>
+<text x="445" y="1470" font-size="16" font-weight="normal" text-anchor="start" fill="#586E7C">Application model</text>
+<rect x="830" y="1457" width="15" height="15" rx="3" fill="#2A6B9B" stroke="none" stroke-width="1"/>
+<text x="855" y="1470" font-size="16" font-weight="normal" text-anchor="start" fill="#586E7C">External evidence / resource</text>
+</svg>
