@@ -1,0 +1,52 @@
+{
+  "schemaVersion": "assessment-lock/0.2",
+  "synthetic": true,
+  "programDigest": "sha256:aa22e7c3b5abb1000a0f4e57e076a93ed8fcd98f2474925740370bc271d4e660",
+  "expressionContract": "cel/assessment-v0.2",
+  "reducerVersion": "assessment-reducer/0.2",
+  "operations": {
+    "aws/cloudwatch.alarm.read@1": {
+      "implementationDigest": "sha256:15aeee396852b974ec89e28b8be11cb2684a9bbf58364b8e7b35b49d095d919a",
+      "inputSchemaDigest": "sha256:18280675361c2fe029ee88e649de35aeb6afe5912d7ca003cf3231e593c679e2",
+      "outputSchemaDigest": "sha256:913e0d44e3496e83d0c24ec6f90fedb4a77c5d80f83e514bfa35975e0f68d529",
+      "capabilityDigest": "sha256:6878329e05d9007ab65cbc767b415c32a8c06d053385b868886da0e409255b1f"
+    },
+    "aws/fis.ensure-stopped@1": {
+      "implementationDigest": "sha256:19c4397346bd16bb1ad3079d293c9e4fa4afaa1ecf216bd240b7f63b720bb749",
+      "inputSchemaDigest": "sha256:5af9b48250df00e8be6af6e80e9af8a5f3d042a6d30e7ac2be784eb607949080",
+      "outputSchemaDigest": "sha256:c7891f2b30439e590722d5b1f6fd21af5ac20092c9fdd38e7bae83ac1b4fe12b",
+      "capabilityDigest": "sha256:c4457bd924d9f766979b15c1ed340d0f816001989ea131cd61199242bd12263e"
+    },
+    "aws/fis.start@1": {
+      "implementationDigest": "sha256:c9da508312034cf67c78f808e0d8cd1142710c340e725dd3f5bea8fbd34af962",
+      "inputSchemaDigest": "sha256:028f3ccc53e1d231e3dc2fa26482cf3b3d3033738cf79065b5f1800dc387aabc",
+      "outputSchemaDigest": "sha256:87cca2452fb8708f566d83b63e4fa10d669554714f44286936c6d4fd4beee5a3",
+      "capabilityDigest": "sha256:6a03b7fa1cde0a91f491f1cd996be54b480cb17cc0afec79225681bb4e0dcb64"
+    },
+    "core/assert@1": {
+      "implementationDigest": "sha256:98a28efdafe544e3ce570380013c87094829fbd67bf9bd59c64d6b68c478eeeb",
+      "inputSchemaDigest": "sha256:eaf72e914af5b51d6f6876884f5125a297877262e06287419440d271e66fa6eb",
+      "outputSchemaDigest": "sha256:83b8884d26c9f61f6c5e9367d0b538d8b76c5131831751febb4be36be61f4360",
+      "capabilityDigest": "sha256:37d19947ad488d900870d0b6af60bfd78f76deb8d0eb92c9a9bb634a5e6e6357"
+    },
+    "events/capture.close@1": {
+      "implementationDigest": "sha256:e18024914b8b2a0ba7903beb20b6a175d0e47415a3ee34fe106c6ea88878c5d8",
+      "inputSchemaDigest": "sha256:02c1ee2b6e5916916e1490f926fbceb11515b1b51381b3827ae454e3ca9a64fe",
+      "outputSchemaDigest": "sha256:c7891f2b30439e590722d5b1f6fd21af5ac20092c9fdd38e7bae83ac1b4fe12b",
+      "capabilityDigest": "sha256:943ce9cf012bb22c812c005c0c1790a0a001a691f9e05e3f1203fd1a97afda9c"
+    },
+    "events/capture.collect-alarm@1": {
+      "implementationDigest": "sha256:14be817dfbc74e2a83f61f09b53db5c176e368ae644cb56a9c4d01fbe3418cad",
+      "inputSchemaDigest": "sha256:14ec1ea16f88b9d3bfa9ff67dd6065514bd2d43d7411ae46d85585029ecdeb9f",
+      "outputSchemaDigest": "sha256:b13301fbd978595c4ff943f5e6a2da3d8a59203d8cdcebe911d19ca1c5d5ccd6",
+      "capabilityDigest": "sha256:7764ccfeaffd1798feaaada7f814b22fe435649d71e1c7ac77fc65c2fdc8e3ef"
+    },
+    "events/capture.open@1": {
+      "implementationDigest": "sha256:e8713789d1e5012d13fd53294b913cff408f8d583c83e46beca258d4ed97b25d",
+      "inputSchemaDigest": "sha256:8a7b2121b0ed151ee26d1c985321961dd2ea1adc16bc32cfe5659fc04dd12073",
+      "outputSchemaDigest": "sha256:dcc62945d10446450685adcca42cdb4865ad7f80c949fcb04377b438ddb43fa4",
+      "capabilityDigest": "sha256:031668ac071d974bf4bdfa1bb104ffe77d6a1c5c4972b7ff8e474b0187ebd6b5"
+    }
+  },
+  "digest": "sha256:95ca9ceda54a845b9e7dc2696be47d82b97cd9dabdb9d8f7d7a0a92432d2a5c7"
+}

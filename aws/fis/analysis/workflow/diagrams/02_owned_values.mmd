@@ -1,0 +1,40 @@
+classDiagram
+direction TB
+class ScenarioRevision
+class StepDefinition {
+  +stepKey : Key
+  +phase : MainOrFinalizer
+  +uses : OperationAlias
+  +checkRole : CheckRole
+}
+class OperationLock {
+  +implementationDigest : Digest
+  +inputSchemaDigest : Digest
+  +outputSchemaDigest : Digest
+}
+class Run
+class AdmissionSnapshot {
+  +revisionDigest : Digest
+  +requiredCriteria : KeySet
+  +bindingsObservedAt : Instant
+}
+class StepAttempt
+class CheckResult {
+  +verdict : Verdict
+  +evidenceIds : IdSet
+  +evaluatedThrough : Instant
+}
+class ExternalOperationRef {
+  +provider : Namespace
+  +nativeId : String
+  +observedAt : Instant
+}
+class Evidence
+ScenarioRevision "1" *-- "1..*" StepDefinition : defines
+ScenarioRevision "1" *-- "1..*" OperationLock : pins
+StepDefinition "0..*" --> "1" OperationLock : invokes
+StepDefinition "0..*" --> "0..*" StepDefinition : needs
+Run "1" *-- "1" AdmissionSnapshot : binds
+StepAttempt "1" *-- "0..1" CheckResult : evaluates
+StepAttempt "1" *-- "0..*" ExternalOperationRef : tracks
+CheckResult "0..*" --> "0..*" Evidence : cites

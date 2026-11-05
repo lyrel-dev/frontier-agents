@@ -17,15 +17,18 @@ report's Markdown subset, not a general Mermaid or Markdown implementation.
 from __future__ import annotations
 
 import argparse
+import datetime as dt
 import hashlib
 import json
 import math
+import platform
 import re
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 from xml.sax.saxutils import escape
 
+import reportlab
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import ParagraphStyle
@@ -33,7 +36,7 @@ from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfgen import canvas
 from reportlab.platypus import (
-    Flowable, KeepTogether, PageBreak, Paragraph, SimpleDocTemplate, Spacer,
+    CondPageBreak, Flowable, KeepTogether, PageBreak, Paragraph, SimpleDocTemplate, Spacer,
     Table, TableStyle,
 )
 
@@ -55,10 +58,11 @@ REPO_PATH = 'aws/fis/analysis'
 FONT = 'Helvetica'
 BOLD = 'Helvetica-Bold'
 MONO = 'Courier'
+FONT_FILES: dict[str, str] = {}
 
 
 def register_fonts() -> None:
-    global FONT, BOLD, MONO
+    global FONT, BOLD, MONO, FONT_FILES
     candidates = [
         Path('/usr/share/fonts/truetype/dejavu'),
         Path('/opt/codex/runtimes/codex-primary-runtime/dependencies/native/'
@@ -74,6 +78,9 @@ def register_fonts() -> None:
             pdfmetrics.registerFontFamily('FISBody', normal='FISBody', bold='FISBold',
                                           italic='FISBody', boldItalic='FISBold')
             FONT, BOLD, MONO = 'FISBody', 'FISBold', 'FISMono'
+            FONT_FILES = {name: digest(directory / name) for name in (
+                'DejaVuSans.ttf', 'DejaVuSans-Bold.ttf', 'DejaVuSansMono.ttf'
+            )}
             return
 
 
@@ -371,7 +378,7 @@ LAYOUTS = {
             r('METRIC_BINDING','supplies','METRIC_OBSERVATION'): ([(1025,207),(1025,675)],(1025,447)),
             r('EXPERIMENT_RUN','assessed_by','RESILIENCE_ASSESSMENT'): ([(150,207),(150,570),(420,570),(420,805),(470,805)],(280,554)),
             r('ASSESSMENT_CRITERION','evaluates','RESILIENCE_ASSESSMENT'): ([(370,716),(470,716)],(420,698)),
-            r('RESILIENCE_ASSESSMENT','cites','ASSESSMENT_EVIDENCE'): ([(645,953),(645,1075)],(645,1022)),
+            r('RESILIENCE_ASSESSMENT','cites','ASSESSMENT_EVIDENCE'): ([(645,1009),(645,1075)],(740,1045)),
             r('METRIC_OBSERVATION','supports','ASSESSMENT_EVIDENCE'): ([(1025,757),(1025,1116),(820,1116)],(1025,950)),
         },
     },
@@ -460,7 +467,8 @@ class SceneFlowable(Flowable):
 
 
 def styles() -> dict[str, ParagraphStyle]:
-    common = dict(fontName=FONT, textColor=colors.HexColor(INK), splitLongWords=True)
+    common = dict(fontName=FONT, textColor=colors.HexColor(INK), splitLongWords=True,
+                  allowWidows=False, allowOrphans=False)
     def style(name: str, **kwargs: Any) -> ParagraphStyle:
         return ParagraphStyle(name, **(common | kwargs))
     return {
@@ -510,21 +518,108 @@ class ReportDoc(SimpleDocTemplate):
             self.canv.addOutlineEntry(title, key, level=0, closed=False)
 
 
-def make_pdf(report: Path, scenes: dict[str, Scene], output: Path) -> dict[str, Any]:
+def digest(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def validate_sources(report: Path) -> tuple[str, dict[str, str], dict[str, str]]:
+    """Validate canonical inputs before any rendering or output mutation."""
     text = report.read_text()
     if re.search(r'\{\{(?:DIAGRAM:|SOURCE_REGISTER)', text):
         raise ValueError('The canonical report must not contain unexpanded placeholders')
-    refs = dict(re.findall(r'^\[(S\d+)\]:\s+(\S+)\s*$', text, re.M))
+    front_matter = re.match(r'^---\n(.*?)\n---\n', text, re.S)
+    if not front_matter:
+        raise ValueError('Report metadata is missing')
+    metadata: dict[str, str] = {}
+    for line in front_matter.group(1).splitlines():
+        key, separator, value = line.partition(':')
+        if not separator or key in metadata:
+            raise ValueError(f'Unsupported or duplicate report metadata: {line}')
+        metadata[key] = value.strip().strip('"')
+    if any(not metadata.get(key) for key in ('title', 'version', 'review_date')):
+        raise ValueError('Report metadata requires title, version, and review_date')
+    dt.date.fromisoformat(metadata['review_date'])
+    reference_items = re.findall(r'^\[(S\d+)\]:\s+(\S+)\s*$', text, re.M)
+    refs = dict(reference_items)
+    if len(refs) != len(reference_items):
+        raise ValueError('Markdown source IDs must be unique')
     source_records = json.loads((BASE / 'sources.json').read_text())['sources']
     source_refs = {source['id']: source['url'] for source in source_records}
     if len(source_refs) != len(source_records) or refs != source_refs:
         raise ValueError('Markdown references must exactly match the source register')
+    if len(set(source_refs.values())) != len(source_refs):
+        raise ValueError('Source URLs must be unique')
+    for token in re.findall(r'\[(S\d+(?:-S\d+)?)\]', text):
+        if '-' in token:
+            start, end = (int(part[1:]) for part in token.split('-'))
+            if start > end or end - start > len(refs):
+                raise ValueError(f'Invalid source range: {token}')
+            ids = [f'S{number:02d}' for number in range(start, end + 1)]
+        else:
+            ids = [token]
+        if any(source_id not in refs for source_id in ids):
+            raise ValueError(f'Unknown source citation: {token}')
     diagram_blocks = re.findall(r'<!-- diagram-source: diagrams/(\S+) -->\n```mermaid\n(.*?)\n```', text, re.S)
-    if len(diagram_blocks) != 5:
-        raise ValueError('Expected exactly five canonical embedded diagrams')
+    expected_files = {f'{stem}.mmd' for stem in LAYOUTS}
+    if (len(diagram_blocks) != len(expected_files)
+            or {filename for filename, _ in diagram_blocks} != expected_files
+            or len(re.findall(r'^```mermaid$', text, re.M)) != len(expected_files)):
+        raise ValueError('Expected each canonical embedded diagram exactly once')
     for filename, block in diagram_blocks:
         if block + '\n' != (BASE / 'diagrams' / filename).read_text():
             raise ValueError(f'Markdown/Mermaid content mismatch: {filename}')
+    return text, refs, metadata
+
+
+def input_hashes() -> dict[str, str]:
+    paths = ['report.md', 'sources.json', 'tools/render_report.py']
+    paths += [f'diagrams/{stem}.mmd' for stem in LAYOUTS]
+    return {path: digest(BASE / path) for path in paths}
+
+
+def report_is_current(report: dict[str, Any], inputs: dict[str, str]) -> bool:
+    output = BASE / 'aws_fis_experiment_action_model.pdf'
+    return bool(report and report.get('inputHashes') == inputs
+                and report.get('output') == output.name and output.is_file()
+                and report.get('bytes') == output.stat().st_size
+                and report.get('sha256') == digest(output))
+
+
+def check_artifacts(manifest: dict[str, Any], scenes: dict[str, Scene],
+                    inputs: dict[str, str], metadata: dict[str, str]) -> None:
+    """Check existing artifacts; never regenerate or update their attestations."""
+    if manifest.get('schema') != 'frontier-fis-render/v2':
+        raise ValueError('Render manifest requires a full build with schema v2')
+    if manifest.get('inputHashes') != inputs:
+        raise ValueError('Manifest inputs are stale; regenerate the complete report')
+    records = manifest.get('diagrams', [])
+    if len(records) != len(scenes):
+        raise ValueError('Manifest diagram count does not match the canonical model')
+    by_source = {record['source']: record for record in records}
+    if len(by_source) != len(records):
+        raise ValueError('Manifest contains duplicate diagram records')
+    for stem, scene in scenes.items():
+        source_path = f'diagrams/{stem}.mmd'
+        output_path = f'diagrams/{stem}.svg'
+        record = by_source.get(source_path, {})
+        output = BASE / output_path
+        if not output.is_file() or output.read_text() != scene.svg():
+            raise ValueError(f'SVG is stale or missing: {output_path}')
+        if (record.get('output') != output_path
+                or record.get('sourceSha256') != inputs[source_path]
+                or record.get('outputSha256') != digest(output)):
+            raise ValueError(f'Diagram manifest mismatch: {output_path}')
+    report = manifest.get('report', {})
+    if report.get('status') != 'current' or not report_is_current(report, inputs):
+        raise ValueError('PDF is stale or missing; --svg-only does not rebuild or validate the PDF')
+    if report.get('version') != metadata['version'] or report.get('reviewDate') != metadata['review_date']:
+        raise ValueError('PDF metadata differs from the canonical report')
+
+
+def make_pdf(report: Path, scenes: dict[str, Scene], output: Path) -> dict[str, Any]:
+    text, refs, metadata = validate_sources(report)
+    reviewed = dt.date.fromisoformat(metadata['review_date'])
+    review_label = f'{reviewed.day} {reviewed:%B %Y}'
     text = re.sub(r'^---\n.*?\n---\n', '', text, count=1, flags=re.S)
     lines = text.splitlines()
     st = styles()
@@ -559,6 +654,15 @@ def make_pdf(report: Path, scenes: dict[str, Scene], output: Path) -> dict[str, 
             items: list[Flowable] = []
             if story and isinstance(story[-1], Paragraph) and story[-1].style.name == 'h3':
                 items.append(story.pop())
+            if story and isinstance(story[-1], Paragraph) and story[-1].style.name == 'h2':
+                items.insert(0, story.pop())
+                # A section that opens with a diagram belongs to the same block.
+                # Leaving a conditional break/spacer before it can create a blank
+                # page when the grouped figure nearly fills a fresh frame.
+                if story and isinstance(story[-1], Spacer):
+                    story.pop()
+                if story and isinstance(story[-1], CondPageBreak):
+                    story.pop()
             items.append(SceneFlowable(scenes[pending_diagram]))
             while i < len(lines) and not lines[i].strip():
                 i += 1
@@ -572,13 +676,16 @@ def make_pdf(report: Path, scenes: dict[str, Scene], output: Path) -> dict[str, 
             continue
         if line.startswith('# '):
             story.append(p(line[2:], 'title'))
-            story.append(p('Reviewed edition 1.1 | 5 November 2026 | AWS primary documentation', 'small'))
+            story.append(p(f'Reviewed edition {metadata["version"]} | {review_label} | AWS primary documentation', 'small'))
             i += 1
             continue
         if line.startswith('## '):
             title = line[3:]
             if section_count:
-                story.append(PageBreak())
+                if title == '14. Official sources':
+                    story.append(PageBreak())
+                else:
+                    story.extend([CondPageBreak(150), Spacer(1, 15)])
             section_count += 1
             section_titles.append(title)
             story.append(p(title, 'h2'))
@@ -646,7 +753,7 @@ def make_pdf(report: Path, scenes: dict[str, Scene], output: Path) -> dict[str, 
         c.setStrokeColor(colors.HexColor(BORDER));c.setLineWidth(.5)
         c.line(MARGIN,38,PAGE_W-MARGIN,38)
         c.setFont(FONT,7.1);c.setFillColor(colors.HexColor(MUTED))
-        c.drawString(MARGIN,25,'AWS FIS | Reviewed experiment and action model | 5 Nov 2026')
+        c.drawString(MARGIN,25,f'AWS FIS | Reviewed experiment and action model | {reviewed.day} {reviewed:%b %Y}')
         c.drawRightString(PAGE_W-MARGIN,25,str(doc.page))
         if doc.page > 1:
             c.setFillColor(colors.HexColor(TEAL));c.rect(MARGIN,PAGE_H-23,25,3,fill=1,stroke=0)
@@ -655,35 +762,58 @@ def make_pdf(report: Path, scenes: dict[str, Scene], output: Path) -> dict[str, 
                     author='Frontier Agents',subject='Reviewed API model, ER diagrams, derived data and operator UI')
     doc.build(story,onFirstPage=footer,onLaterPages=footer,
               canvasmaker=lambda *a,**k: canvas.Canvas(*a,**(k | {'invariant':1})))
-    return dict(reportSha256=source_hash, sections=section_titles, figures=figure_names)
+    return dict(reportSha256=source_hash, version=metadata['version'],
+                reviewDate=metadata['review_date'], sections=section_titles, figures=figure_names)
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--svg-only', action='store_true', help='Regenerate diagrams without the PDF')
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument('--svg-only', action='store_true', help='Regenerate diagrams; preserve the PDF build record and mark it stale when needed')
+    mode.add_argument('--check', action='store_true', help='Validate existing sources, SVGs, manifest and PDF hashes without changing files')
     args = parser.parse_args()
+    _, _, metadata = validate_sources(BASE / 'report.md')
     register_fonts()
     scenes = {}
-    manifest: dict[str, Any] = {'schema':'frontier-fis-render/v1','source':'report.md','diagrams':[]}
+    inputs = input_hashes()
+    manifest: dict[str, Any] = {'schema':'frontier-fis-render/v2','source':'report.md',
+                                'inputHashes':inputs,'diagrams':[]}
     for stem in LAYOUTS:
         source = BASE / 'diagrams' / f'{stem}.mmd'
         entities, relations = parse_mermaid(source)
         scene = make_scene(stem,entities,relations)
         scenes[stem] = scene
         target = source.with_suffix('.svg')
-        target.write_text(scene.svg())
         manifest['diagrams'].append(dict(source=str(source.relative_to(BASE)),
                                         output=str(target.relative_to(BASE)),entities=len(entities),
                                         relationships=len(relations),sourceSha256=hashlib.sha256(source.read_bytes()).hexdigest(),
-                                        outputSha256=hashlib.sha256(target.read_bytes()).hexdigest()))
+                                        outputSha256=hashlib.sha256(scene.svg().encode()).hexdigest()))
+    manifest_path = BASE / 'tools/render-manifest.json'
+    if args.check:
+        check_artifacts(json.loads(manifest_path.read_text()), scenes, inputs, metadata)
+        print(json.dumps({'status':'valid','svgFiles':len(scenes),
+                          'reportVersion':metadata['version'],'filesChanged':0}))
+        return
+    for stem, scene in scenes.items():
+        (BASE / 'diagrams' / f'{stem}.svg').write_text(scene.svg())
     if not args.svg_only:
         output = BASE / 'aws_fis_experiment_action_model.pdf'
         manifest['report'] = make_pdf(BASE/'report.md',scenes,output)
         manifest['report'].update(output=output.name,bytes=output.stat().st_size,
-                                  sha256=hashlib.sha256(output.read_bytes()).hexdigest())
-    (BASE/'tools/render-manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
+                                  sha256=digest(output),inputHashes=inputs,status='current',
+                                  buildEnvironment={'python':platform.python_version(),
+                                                    'reportlab':reportlab.Version,
+                                                    'fontFiles':FONT_FILES})
+    elif manifest_path.is_file():
+        previous = json.loads(manifest_path.read_text()).get('report')
+        if previous:
+            manifest['report'] = previous
+            previous['status'] = 'current' if report_is_current(previous, inputs) else 'stale'
+    manifest_path.write_text(json.dumps(manifest,indent=2)+'\n')
     print(json.dumps({'svgFiles':len(scenes),'pdf':manifest.get('report',{}).get('output'),
-                      'pdfBytes':manifest.get('report',{}).get('bytes'),'manifest':'tools/render-manifest.json'}))
+                      'pdfBytes':manifest.get('report',{}).get('bytes'),
+                      'pdfStatus':manifest.get('report',{}).get('status','not_built'),
+                      'manifest':'tools/render-manifest.json'}))
 
 
 if __name__ == '__main__':

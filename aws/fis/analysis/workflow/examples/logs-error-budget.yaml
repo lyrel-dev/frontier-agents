@@ -1,0 +1,55 @@
+apiVersion: assessment/v0.2
+name: Checkout logged error count
+description: Assess a declared application log scope and fixed event-time window, subject to evidence coverage.
+inputs:
+  type: object
+  additionalProperties: false
+  required: [logGroups, windowStart, windowEnd, maximumErrors]
+  properties:
+    logGroups:
+      type: array
+      minItems: 1
+      uniqueItems: true
+      items: {type: string, minLength: 1}
+    windowStart: {type: string, format: date-time}
+    windowEnd: {type: string, format: date-time}
+    maximumErrors: {type: integer, minimum: 0}
+bindings:
+  aws: {kind: connection, capability: cloudwatch_logs_query_scope}
+policies:
+  timeoutSeconds: 300
+  finalizationTimeoutSeconds: 60
+  concurrency: queue_per_deployment
+steps:
+  query_errors:
+    uses: aws/cloudwatch.logs.query@1
+    timeoutSeconds: 240
+    with:
+      connection: "${{ bindings.aws }}"
+      logGroups: "${{ inputs.logGroups }}"
+      windowStart: "${{ inputs.windowStart }}"
+      windowEnd: "${{ inputs.windowEnd }}"
+      language: CWLI
+      resultShape: single_numeric_count
+      query: |
+        fields @timestamp, level
+        | filter level = "ERROR"
+        | stats count(*) as count
+  error_budget:
+    needs: [query_errors]
+    after: settled
+    uses: core/assert@1
+    assessmentRole: criterion
+    timeoutSeconds: 5
+    with:
+      observation: "${{ steps.query_errors.outputs.observation }}"
+      proof: complete
+      expect: value.count <= inputs.maximumErrors
+finally:
+  stop_query:
+    uses: aws/cloudwatch.logs.ensure-stopped@1
+    after: settled
+    timeoutSeconds: 45
+    with:
+      connection: "${{ bindings.aws }}"
+      step: "${{ steps.query_errors.ref }}"

@@ -142,18 +142,94 @@
     return getRunAt(input, cursor);
   }
 
+  function applyStopIntervention(projectedRun, intervention) {
+    if (!intervention) return projectedRun;
+    const stoppedAt = intervention.at;
+    const captured = intervention.snapshot;
+    if (!finite(stoppedAt) || !captured?.experiment || captured.cursorSeconds !== stoppedAt || instant(captured.now) === null) {
+      throw new TypeError('A stop intervention requires its captured as-of snapshot and replay offset.');
+    }
+    if (projectedRun.experiment.id !== captured.experiment.id) throw new TypeError('The stop snapshot belongs to another experiment.');
+    if (projectedRun.cursorSeconds < stoppedAt) return projectedRun;
+    if (TERMINAL_EXPERIMENT_STATES.has(captured.experiment.state?.status) || captured.experiment.experimentOptions?.actionsMode === 'skip-all') {
+      throw new TypeError('Only an active non-preview mock experiment can be stopped.');
+    }
+
+    // Start from the observations captured at the intervention. Projecting the
+    // original scenario and replacing selected fields would leak future data
+    // and falsely advance its successful-fetch timestamp.
+    const run = clone(captured);
+    run.now = projectedRun.now;
+    run.cursorSeconds = projectedRun.cursorSeconds;
+    run._isProjection = true;
+    const completed = run.cursorSeconds >= stoppedAt + 30;
+    const completedAt = iso(captured.now, 30);
+    run.simulation = {
+      kind: 'operator-stop', source: 'local replay', requestedAt: captured.now,
+      asOf: run.now, cleanupDurationSeconds: 30,
+      reportUnavailableReason: 'The original report does not describe this simulated interruption. No replacement report has been observed.'
+    };
+    if (completed) run.simulation.completedAt = completedAt;
+    run.experiment.state = {
+      status: completed ? 'stopped' : 'stopping',
+      reason: completed ? 'Mock operator stop completed after outstanding cleanup.' : 'Mock operator stop requested. Outstanding post actions are completing.'
+    };
+    delete run.experiment.endTime;
+    if (completed) run.experiment.endTime = completedAt;
+    Object.values(run.experiment.actions || {}).forEach(action => {
+      const status = action.state?.status;
+      if (TERMINAL_ACTION_STATES.has(status)) return;
+      if (!action.startTime || status === 'pending') {
+        action.state = { status: 'cancelled', reason: 'The mock experiment stopped before this action started.' };
+        delete action.startTime;
+        delete action.endTime;
+      } else {
+        action.state = {
+          status: completed ? 'stopped' : 'stopping',
+          reason: completed ? 'Mock post-action cleanup completed.' : 'Waiting for mock post-action cleanup.'
+        };
+        delete action.endTime;
+        if (completed) action.endTime = completedAt;
+      }
+    });
+    delete run.experiment.experimentReport;
+    delete run.stopCause;
+    run.assessment = {
+      status: 'inconclusive', summary: 'This intervention changes the scenario. No recovery conclusion is available.',
+      rule: 'New post-intervention telemetry is required.', evidence: []
+    };
+    if (run.telemetry) run.telemetry.interrupted = true;
+    run.evidence = (run.evidence || []).concat({
+      id: `${run.key}-mock-stop-request-${stoppedAt}`, source: 'mock_control', type: 'stop-requested',
+      occurredAt: captured.now, observedAt: captured.now,
+      message: 'Operator requested a simulated stop. No AWS request was made.'
+    });
+    if (completed) run.evidence.push({
+      id: `${run.key}-mock-stop-completed-${stoppedAt}`, source: 'mock_control', type: 'stop-completed',
+      occurredAt: completedAt, observedAt: completedAt,
+      message: 'Mock cleanup completed. Experiment stopped; workload recovery remains unassessed.'
+    });
+    return run;
+  }
+
   function identity(record, index) {
     const info = record.targetInformation || {};
     const resourceArn = info.arn || info.resourceArn || info.resource_arn;
     let resourceKey = null; let accountId = null; let region = null; let displayName = null;
+    let identityMethod = null; let identityScope = null;
     if (typeof resourceArn === 'string' && /^arn:[^:]+:[^:]+:[^:]*:[^:]*:.+/.test(resourceArn)) {
       resourceKey = resourceArn;
+      identityMethod = 'arn'; identityScope = 'resource';
       const parts = resourceArn.split(':');
       region = parts[3] || null; accountId = parts[4] || null;
       const suffix = parts.slice(5).join(':');
       displayName = suffix.includes('/') ? suffix.slice(suffix.lastIndexOf('/') + 1) : suffix.slice(suffix.lastIndexOf(':') + 1);
     } else if (record.resourceType === 'aws:eks:pod' && info.cluster_arn && info.namespace && info.pod_name) {
-      resourceKey = [info.cluster_arn, info.namespace, info.pod_name, info.target_container_name || ''].join('|');
+      // Container choice belongs to the membership, not the pod identity. The
+      // documented record has no pod UID, so this name key is scoped to a run;
+      // it must not imply an identical pod incarnation across separate runs.
+      resourceKey = [info.cluster_arn, info.namespace, info.pod_name].join('|');
+      identityMethod = 'eks-pod-name'; identityScope = 'run';
       const parts = info.cluster_arn.split(':');
       region = parts[3] || null; accountId = parts[4] || null;
       displayName = `${info.namespace}/${info.pod_name}`;
@@ -162,7 +238,8 @@
       key: resourceKey || `unidentified:${record.targetName}:${index}`, resourceKey,
       id: resourceKey ? displayName : null, arn: resourceArn || null,
       displayName: displayName || `Unidentified ${record.resourceType || 'resource'}`,
-      accountId, region, resourceType: record.resourceType || null, identityKnown: Boolean(resourceKey)
+      accountId, region, resourceType: record.resourceType || null, identityKnown: Boolean(resourceKey),
+      identityMethod, identityScope
     };
   }
 
@@ -197,6 +274,32 @@
     return last !== null && first !== null && last >= first ? (last - first) / 1000 : null;
   }
 
+  function metricSeries(input) {
+    const run = projection(input);
+    const points = (run.telemetry?.points || []).filter(point => finite(point.offsetSeconds)).slice().sort((a, b) => a.offsetSeconds - b.offsetSeconds);
+    const period = run.telemetry?.metricBinding?.period;
+    const segments = [];
+    let segment = []; let previous = null; let hasGaps = false;
+    points.forEach(point => {
+      const missing = !finite(point.value);
+      const gap = previous && finite(period) && period > 0 && point.offsetSeconds - previous.offsetSeconds > period;
+      if (missing || gap) {
+        if (segment.length) segments.push(segment);
+        segment = []; hasGaps = true;
+      }
+      if (!missing) segment.push(point);
+      previous = point;
+    });
+    if (segment.length) segments.push(segment);
+    const latestPoint = points.length && finite(points.at(-1).value) ? points.at(-1) : null;
+    const measured = points.filter(point => point.offsetSeconds >= 0 && finite(point.value));
+    return {
+      segments, hasGaps, latestPoint,
+      latestMetric: latestPoint ? latestPoint.value : null,
+      peakMetric: measured.length ? Math.max(...measured.map(point => point.value)) : null
+    };
+  }
+
   function actionRows(input, cursor) {
     const run = projection(input, cursor);
     const schedule = new Map((run.schedule || []).map(item => [item.name, item]));
@@ -207,6 +310,7 @@
       const noTargets = Object.keys(action.targets || {}).length === 0;
       const complete = noTargets || Boolean(run.resolution && run.resolution.complete && resources.every(resource => resource.identityKnown));
       const item = schedule.get(name) || {};
+      const observationTime = run.simulation?.asOf || run.observation?.snapshotAsOf || run.observation?.lastSuccessfulFetchAt;
       return {
         name, actionName: name, actionId: action.actionId, description: action.description || '',
         parameters: action.parameters || {}, targets: action.targets || {},
@@ -215,10 +319,14 @@
         dependencies: action.startAfter || [], startAfter: action.startAfter || [],
         dependencyStates: (action.startAfter || []).map(predecessor => ({ name: predecessor, status: run.experiment.actions[predecessor]?.state?.status || 'unknown' })),
         bindings: Object.entries(action.targets || {}).map(([slotName, targetName]) => ({ slotName, targetName })),
-        resources, selectedResourceCount: complete ? resources.length : null, observedResourceCount: resources.length, resourceCountComplete: complete,
+        resources, selectedResourceCount: complete ? resources.length : null,
+        observedResourceCount: resources.filter(resource => resource.identityKnown).length,
+        unidentifiedMembershipCount: resources.filter(resource => !resource.identityKnown).length, resourceCountComplete: complete,
         terminal, active: ACTIVE_ACTION_STATES.has(status),
         durationSeconds: secondsBetween(action.endTime, action.startTime),
         elapsedSeconds: action.endTime ? secondsBetween(action.endTime, action.startTime) : terminal ? null : secondsBetween(run.now, action.startTime),
+        observedThroughTime: action.endTime || (terminal ? null : observationTime || null),
+        observedElapsedSeconds: action.endTime ? secondsBetween(action.endTime, action.startTime) : terminal ? null : secondsBetween(observationTime, action.startTime),
         scheduledStartSeconds: finite(item.start) ? item.start : null,
         scheduledEndSeconds: finite(item.plannedEnd) ? item.plannedEnd : finite(item.end) ? item.end : null
       };
@@ -228,7 +336,7 @@
   function summarize(input, cursor) {
     const run = projection(input, cursor);
     const rows = actionRows(run);
-    const status = run.experiment.state ? run.experiment.state.status : 'unknown';
+    const status = run.experiment.state?.status || 'unknown';
     const counts = Object.fromEntries(ACTION_STATES.concat('unknown').map(state => [state, 0]));
     rows.forEach(row => { counts[ACTION_STATES.includes(row.status) ? row.status : 'unknown']++; });
     const hydrated = Boolean(run.observation && run.observation.hydrated && run.experiment.actions && typeof run.experiment.actions === 'object');
@@ -240,11 +348,11 @@
     const membershipCount = (run.resolvedTargets || []).length;
     const report = run.experiment.experimentReport;
     const isPreview = run.experiment.experimentOptions?.actionsMode === 'skip-all';
-    const reportStatus = report?.state?.status || (isPreview ? 'not_generated' : 'not_configured');
+    const reportConfigured = Boolean(run.experiment.experimentReportConfiguration || report);
+    const reportStatus = report?.state?.status || (isPreview ? 'not_generated' : reportConfigured ? 'unknown' : 'not_configured');
     const dependencyEdges = rows.flatMap(row => row.dependencies.map(from => ({ from, to: row.name, predecessor: from, successor: row.name })));
     const terminal = TERMINAL_EXPERIMENT_STATES.has(status);
-    const latestPoint = run.telemetry?.points?.at(-1) || null;
-    const measuredPoints = (run.telemetry?.points || []).filter(point => point.offsetSeconds >= 0);
+    const metric = metricSeries(run);
     return {
       status, reason: run.experiment.state?.reason || '', isTerminal: terminal,
       totalActions, terminalActions, finishedActions: terminalActions,
@@ -257,9 +365,11 @@
       elapsedSeconds: run.experiment.endTime ? secondsBetween(run.experiment.endTime, run.experiment.startTime) : terminal ? null : secondsBetween(run.now, run.experiment.startTime),
       preparationSeconds: secondsBetween(run.experiment.startTime, run.experiment.creationTime),
       selectedResourceCount: complete ? resources.length : null, uniqueResourceCount: complete ? resources.length : null,
-      observedResourceCount: resources.length, membershipCount, resourceCountComplete: complete,
-      actionResourceAssociations: rows.reduce((sum, row) => sum + row.resources.length, 0),
+      observedResourceCount: resources.filter(resource => resource.identityKnown).length, membershipCount, resourceCountComplete: complete,
+      actionResourceAssociations: hydrated && rows.every(row => row.resourceCountComplete) ? rows.reduce((sum, row) => sum + row.resources.length, 0) : null,
+      observedActionResourceAssociations: rows.reduce((sum, row) => sum + row.observedResourceCount, 0),
       unknownIdentityCount: resources.filter(resource => !resource.identityKnown).length,
+      unidentifiedMembershipCount: resources.filter(resource => !resource.identityKnown).length,
       overlapResources: resources.filter(resource => resource.actionNames.length > 1),
       observedAccountCount: unique(resources.map(resource => resource.accountId).filter(Boolean)).length,
       configuredAccountCount: run.experiment.targetAccountConfigurationsCount ?? null,
@@ -268,8 +378,8 @@
       reportStatus, reportArtifacts: report?.s3Reports || [],
       assessmentStatus: run.assessment?.status || 'not_assessed',
       freshnessSeconds: secondsBetween(run.now, run.observation?.lastSuccessfulFetchAt),
-      latestMetric: latestPoint ? latestPoint.value : null,
-      peakMetric: measuredPoints.length ? Math.max(...measuredPoints.map(point => point.value)) : null,
+      latestMetric: metric.latestMetric,
+      peakMetric: metric.peakMetric,
       evidenceCount: run.evidence.length, dependencyEdges, resources, rows, now: run.now
     };
   }
@@ -341,6 +451,12 @@
       const actions = run.experiment.actions || {};
       const targets = run.experiment.targets || {};
       const schedule = new Map((run.schedule || []).map(item => [item.name, item]));
+      const multiAccount = run.experiment.experimentOptions?.accountTargeting === 'multi-account';
+      const configuredAccounts = new Set((run.accounts || []).map(account => account.accountId));
+      const owningAccount = run.experiment.arn?.split(':')[4];
+      const eligibleAccounts = multiAccount ? configuredAccounts : new Set([owningAccount]);
+      check(schedule.size === (run.schedule || []).length, `${run.key}: duplicate replay schedule name`);
+      check(run.experiment.targetAccountConfigurationsCount === (multiAccount ? configuredAccounts.size : 0), `${run.key}: target account configuration count mismatch`);
       const visiting = new Set(); const visited = new Set();
       function visit(name) {
         if (visiting.has(name)) { errors.push(`${run.key}: dependency cycle at ${name}`); return; }
@@ -352,6 +468,10 @@
       Object.entries(actions).forEach(([name, action]) => {
         check(schedule.has(name), `${run.key}/${name}: no replay schedule`);
         if (fixtures.catalog) check(Boolean(fixtures.catalog[action.actionId]), `${run.key}/${name}: unknown catalog action`);
+        Object.entries(action.parameters || {}).forEach(([parameter, value]) => check(typeof value === 'string', `${run.key}/${name}: parameter ${parameter} must be a string`));
+        Object.entries(fixtures.catalog?.[action.actionId]?.parameters || {}).forEach(([parameter, definition]) => {
+          if (definition.required) check(typeof action.parameters?.[parameter] === 'string' && action.parameters[parameter].length > 0, `${run.key}/${name}: missing required parameter ${parameter}`);
+        });
         (action.startAfter || []).forEach(predecessor => check(Boolean(actions[predecessor]), `${run.key}/${name}: missing predecessor ${predecessor}`));
         Object.entries(action.targets || {}).forEach(([slot, targetName]) => {
           check(Boolean(targets[targetName]), `${run.key}/${name}: missing target ${targetName}`);
@@ -370,11 +490,18 @@
         }
         visit(name);
       });
-      (run.resolvedTargets || []).forEach(record => check(Boolean(targets[record.targetName]), `${run.key}: orphan membership ${record.targetName}`));
+      (run.resolvedTargets || []).forEach((record, index) => {
+        check(Boolean(targets[record.targetName]), `${run.key}: orphan membership ${record.targetName}`);
+        if (targets[record.targetName]) check(record.resourceType === targets[record.targetName].resourceType, `${run.key}: membership resource type mismatch for ${record.targetName}`);
+        const accountId = identity(record, index).accountId;
+        if (accountId) check(eligibleAccounts.has(accountId), `${run.key}: selected account ${accountId} is not configured`);
+      });
       const eventIds = new Set();
       (run.evidence || []).forEach(event => {
         check(!eventIds.has(event.id), `${run.key}: duplicate evidence id ${event.id}`); eventIds.add(event.id);
-        check(instant(event.observedAt) >= instant(event.occurredAt), `${run.key}: evidence observed before occurrence`);
+        const occurredAt = instant(event.occurredAt); const observedAt = instant(event.observedAt);
+        check(occurredAt !== null && observedAt !== null, `${run.key}: invalid evidence timestamp for ${event.id}`);
+        if (occurredAt !== null && observedAt !== null) check(observedAt >= occurredAt, `${run.key}: evidence observed before occurrence`);
         if (event.actionName) check(Boolean(actions[event.actionName]), `${run.key}: orphan evidence action ${event.actionName}`);
       });
       if (run.experiment.experimentOptions.actionsMode === 'skip-all') check(run.schedule.every(item => item.outcome === 'skipped'), `${run.key}: preview contains non-skipped actions`);
@@ -383,5 +510,5 @@
     return { valid: errors.length === 0, errors, warnings, assertions, runCount: runs.length };
   }
 
-  return { getRunAt, summarize, actionRows, selectedResources, filterEvidence, exportSnapshot, validateFixtures, ACTION_STATES, TERMINAL_ACTION_STATES: [...TERMINAL_ACTION_STATES], TERMINAL_EXPERIMENT_STATES: [...TERMINAL_EXPERIMENT_STATES] };
+  return { getRunAt, applyStopIntervention, summarize, actionRows, selectedResources, metricSeries, filterEvidence, exportSnapshot, validateFixtures, ACTION_STATES, TERMINAL_ACTION_STATES: [...TERMINAL_ACTION_STATES], TERMINAL_EXPERIMENT_STATES: [...TERMINAL_EXPERIMENT_STATES] };
 }));

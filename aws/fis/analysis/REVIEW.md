@@ -2,17 +2,21 @@
 
 **Reviewed:** 5 November 2026
 
-**Status:** complete; suitable as the initial logical model for a mock operator UI
+**Status:** second review completed; FIS prototype corrected, report edition 1.2, generalized proposal version 0.2. Production integration remains outside the delivered implementation.
 
-**Reviewed source:** the original 21-page analysis, its five Mermaid sources, current official AWS response/operation documentation, and repository authoring guidance
+**Reviewed source:** the original analysis, committed report/diagrams/PDF, application/model/fixtures/tests, renderer and manifests, current official AWS documentation, and the generalized model/API proposed in the conversation
 
 **Maintained repository source:** [report.md](report.md) and [diagrams/](diagrams/)
 
 ## Review conclusion
 
-The initial model correctly separates catalog Action, named template step, and named action execution. It preserves the run configuration snapshot and differentiates selected resources, execution state, workload assessment, and report readiness. No blocking API-semantic defect was found in those core choices.
+The initial model correctly separates catalog Action, named template step, and named action execution. It preserves the run configuration snapshot and differentiates selected resources, execution state, workload assessment, and report readiness. No additional incorrect AWS field or lifecycle claim was found in those core choices during the targeted second source review.
 
-The reviewed source makes the following refinements explicit. These are model/provenance clarifications, not claims that AWS changed its service behavior.
+The overall package did have consequential defects. The prototype could claim fresh source observations after a simulated intervention, classify missing reports incorrectly, treat missing telemetry as zero and miscount resource identities. The generalized proposal had no complete execution contract for immutable dependencies, gates, missing evidence, cancellation races or cleanup. Those issues were corrected rather than accepted as documentation polish.
+
+The detailed second-review findings and remaining boundaries are in [QUALITY_REVIEW.md](QUALITY_REVIEW.md). The generalized design is now a maintained [proposal](workflow/README.md) with schemas, examples, class diagrams and contract checks. Its HTTP interface, adapters, CEL expressions, scheduler and source-coverage mechanisms are **not implemented services**.
+
+The first review made the following refinements explicit. They remain applicable; these are model/provenance clarifications, not claims that AWS changed its service behavior.
 
 | ID | Finding | Resolution |
 | --- | --- | --- |
@@ -58,6 +62,6 @@ These checks establish documentation/model consistency. Browser interactions and
 
 ## Rendered report and diagrams
 
-The reviewed report is delivered as self-contained Markdown and a matching 27-page PDF. All five diagrams are embedded in both forms and have standalone Mermaid and accessible SVG sources. The SVG/PDF renderer parses the canonical entity attributes, relationships, and cardinalities; the rendered multiplicities use `1`, `0..1`, `1..N`, and `0..N` labels.
+The reviewed report is delivered as self-contained Markdown and a matching 24-page PDF, edition 1.2. All five provider ER diagrams are embedded in both forms and have standalone Mermaid and SVG sources with titles/descriptions. The PDF is not tagged and has no accessibility certification. The SVG/PDF renderer parses the canonical entity attributes, relationships, and cardinalities; the rendered multiplicities use `1`, `0..1`, `1..N`, and `0..N` labels.
 
-All 27 PDF pages were rendered for layout review. Detailed inspection covered every diagram and the Experiment field inventory, including the revised CloudWatchAlarm relationship and the scope's one SafetyLever. Checks verified diagram parity, source-reference resolution, SVG XML validity, and PDF text extraction. [`tools/README.md`](tools/README.md) documents regeneration and validation, and [`tools/render-manifest.json`](tools/render-manifest.json) records input/output hashes. The renderer fails on stale embedded diagram content or a divergent source register.
+All 24 final PDF pages were rendered for layout review. Detailed inspection covered every diagram and the Experiment field inventory, including the historical assessment input snapshot and evidence cutoff. Checks verified diagram parity, source-reference resolution, SVG XML validity, and PDF text extraction. [`tools/README.md`](tools/README.md) documents regeneration and validation, and [`tools/render-manifest.json`](tools/render-manifest.json) records input/output hashes and the original PDF build provenance. The non-mutating `--check` rejects stale inputs or outputs. Diagram-only generation preserves and exposes a stale PDF record instead of making it appear current.

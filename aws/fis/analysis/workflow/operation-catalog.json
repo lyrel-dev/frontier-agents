@@ -1,0 +1,1738 @@
+{
+  "schemaVersion": "assessment-catalogue-fixture/0.2",
+  "synthetic": true,
+  "notice": "Design-only catalogue. Implementation digests identify synthetic unimplemented adapter labels, not executable packages. Input/output schemas are draft contracts. No code is loaded or executed.",
+  "aliases": {
+    "events/capture.open@1": "sha256:e8713789d1e5012d13fd53294b913cff408f8d583c83e46beca258d4ed97b25d",
+    "aws/cloudwatch.alarm.read@1": "sha256:15aeee396852b974ec89e28b8be11cb2684a9bbf58364b8e7b35b49d095d919a",
+    "core/assert@1": "sha256:98a28efdafe544e3ce570380013c87094829fbd67bf9bd59c64d6b68c478eeeb",
+    "aws/fis.start@1": "sha256:c9da508312034cf67c78f808e0d8cd1142710c340e725dd3f5bea8fbd34af962",
+    "events/capture.collect-alarm@1": "sha256:14be817dfbc74e2a83f61f09b53db5c176e368ae644cb56a9c4d01fbe3418cad",
+    "aws/fis.ensure-stopped@1": "sha256:19c4397346bd16bb1ad3079d293c9e4fa4afaa1ecf216bd240b7f63b720bb749",
+    "events/capture.close@1": "sha256:e18024914b8b2a0ba7903beb20b6a175d0e47415a3ee34fe106c6ea88878c5d8",
+    "aws/cloudwatch.logs.query@1": "sha256:36895dedff9ffaf2876e407b66f37f526f74f3f8aa19f7c250255ae372c91156",
+    "aws/cloudwatch.logs.ensure-stopped@1": "sha256:9ec71d5c6593270faeda036f9f243765a6a71c3fbe4a58dd0d44ccb9f1f2745b"
+  },
+  "revisions": {
+    "sha256:e8713789d1e5012d13fd53294b913cff408f8d583c83e46beca258d4ed97b25d": {
+      "operationAlias": "events/capture.open@1",
+      "effect": "observe",
+      "isCheck": false,
+      "safeNewAttemptRetry": false,
+      "sideEffects": [
+        "creates durable observation session",
+        "may consume only a dedicated receiver queue"
+      ],
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "connection": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "connectionId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "capabilities": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "required": [
+              "connectionId",
+              "capabilities"
+            ]
+          },
+          "receiverId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "topicArn": {
+            "type": "string",
+            "minLength": 1
+          },
+          "leaseSeconds": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 86400
+          }
+        },
+        "required": [
+          "connection",
+          "receiverId",
+          "topicArn",
+          "leaseSeconds"
+        ]
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "capture": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "captureId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "readyAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "leaseExpiresAt": {
+                "type": "string",
+                "format": "date-time"
+              }
+            },
+            "required": [
+              "captureId",
+              "readyAt",
+              "leaseExpiresAt"
+            ]
+          }
+        },
+        "required": [
+          "capture"
+        ]
+      },
+      "implementationDigest": "sha256:e8713789d1e5012d13fd53294b913cff408f8d583c83e46beca258d4ed97b25d"
+    },
+    "sha256:15aeee396852b974ec89e28b8be11cb2684a9bbf58364b8e7b35b49d095d919a": {
+      "operationAlias": "aws/cloudwatch.alarm.read@1",
+      "effect": "observe",
+      "isCheck": false,
+      "safeNewAttemptRetry": false,
+      "sideEffects": [],
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "connection": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "connectionId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "capabilities": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "required": [
+              "connectionId",
+              "capabilities"
+            ]
+          },
+          "alarmArn": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "connection",
+          "alarmArn"
+        ]
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "observation": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "state": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "alarmArn": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "state",
+                  "alarmArn"
+                ]
+              },
+              "evidenceIds": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "uniqueItems": true
+              },
+              "collection": {
+                "enum": [
+                  "complete",
+                  "partial",
+                  "unavailable"
+                ]
+              },
+              "coverage": {
+                "enum": [
+                  "sufficient",
+                  "insufficient",
+                  "unknown"
+                ]
+              },
+              "windowClosed": {
+                "type": "boolean"
+              },
+              "scope": {
+                "type": "string",
+                "minLength": 1
+              },
+              "window": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "start": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "end": {
+                    "type": "string",
+                    "format": "date-time"
+                  }
+                },
+                "required": [
+                  "start",
+                  "end"
+                ]
+              },
+              "observedAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "source": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "namespace": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "identity": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "authenticated": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "namespace",
+                  "identity",
+                  "authenticated"
+                ]
+              },
+              "reasonCode": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "evidenceIds",
+              "collection",
+              "coverage",
+              "windowClosed",
+              "scope",
+              "observedAt",
+              "source"
+            ],
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "collection": {
+                      "const": "unavailable"
+                    }
+                  }
+                },
+                "then": {
+                  "not": {
+                    "required": [
+                      "value"
+                    ]
+                  }
+                },
+                "else": {
+                  "required": [
+                    "value"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        "required": [
+          "observation"
+        ]
+      },
+      "implementationDigest": "sha256:15aeee396852b974ec89e28b8be11cb2684a9bbf58364b8e7b35b49d095d919a"
+    },
+    "sha256:98a28efdafe544e3ce570380013c87094829fbd67bf9bd59c64d6b68c478eeeb": {
+      "operationAlias": "core/assert@1",
+      "effect": "observe",
+      "isCheck": true,
+      "safeNewAttemptRetry": false,
+      "sideEffects": [],
+      "inputSchema": {
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "observation": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "value": {
+                    "type": "object"
+                  },
+                  "evidenceIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "uniqueItems": true
+                  },
+                  "collection": {
+                    "enum": [
+                      "complete",
+                      "partial",
+                      "unavailable"
+                    ]
+                  },
+                  "coverage": {
+                    "enum": [
+                      "sufficient",
+                      "insufficient",
+                      "unknown"
+                    ]
+                  },
+                  "windowClosed": {
+                    "type": "boolean"
+                  },
+                  "scope": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "window": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "start": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "end": {
+                        "type": "string",
+                        "format": "date-time"
+                      }
+                    },
+                    "required": [
+                      "start",
+                      "end"
+                    ]
+                  },
+                  "observedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "source": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "namespace": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "identity": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "authenticated": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "namespace",
+                      "identity",
+                      "authenticated"
+                    ]
+                  },
+                  "reasonCode": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "evidenceIds",
+                  "collection",
+                  "coverage",
+                  "windowClosed",
+                  "scope",
+                  "observedAt",
+                  "source"
+                ],
+                "allOf": [
+                  {
+                    "if": {
+                      "properties": {
+                        "collection": {
+                          "const": "unavailable"
+                        }
+                      }
+                    },
+                    "then": {
+                      "not": {
+                        "required": [
+                          "value"
+                        ]
+                      }
+                    },
+                    "else": {
+                      "required": [
+                        "value"
+                      ]
+                    }
+                  }
+                ]
+              },
+              "proof": {
+                "const": "complete"
+              },
+              "expect": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "observation",
+              "proof",
+              "expect"
+            ]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "observation": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "value": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "records": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "properties": {
+                            "sourceRecordId": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "occurredAt": {
+                              "type": "string",
+                              "format": "date-time"
+                            },
+                            "receivedAt": {
+                              "type": "string",
+                              "format": "date-time"
+                            }
+                          },
+                          "required": [
+                            "sourceRecordId",
+                            "occurredAt"
+                          ]
+                        }
+                      }
+                    },
+                    "required": [
+                      "records"
+                    ]
+                  },
+                  "evidenceIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "uniqueItems": true
+                  },
+                  "collection": {
+                    "enum": [
+                      "complete",
+                      "partial",
+                      "unavailable"
+                    ]
+                  },
+                  "coverage": {
+                    "enum": [
+                      "sufficient",
+                      "insufficient",
+                      "unknown"
+                    ]
+                  },
+                  "windowClosed": {
+                    "type": "boolean"
+                  },
+                  "scope": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "window": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "start": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "end": {
+                        "type": "string",
+                        "format": "date-time"
+                      }
+                    },
+                    "required": [
+                      "start",
+                      "end"
+                    ]
+                  },
+                  "observedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "source": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "namespace": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "identity": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "authenticated": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "namespace",
+                      "identity",
+                      "authenticated"
+                    ]
+                  },
+                  "reasonCode": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "evidenceIds",
+                  "collection",
+                  "coverage",
+                  "windowClosed",
+                  "scope",
+                  "observedAt",
+                  "source"
+                ],
+                "allOf": [
+                  {
+                    "if": {
+                      "properties": {
+                        "collection": {
+                          "const": "unavailable"
+                        }
+                      }
+                    },
+                    "then": {
+                      "not": {
+                        "required": [
+                          "value"
+                        ]
+                      }
+                    },
+                    "else": {
+                      "required": [
+                        "value"
+                      ]
+                    }
+                  }
+                ]
+              },
+              "proof": {
+                "const": "witness"
+              },
+              "operator": {
+                "const": "exists"
+              }
+            },
+            "required": [
+              "observation",
+              "proof",
+              "operator"
+            ]
+          }
+        ]
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "check": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "verdict": {
+                "enum": [
+                  "passed",
+                  "failed",
+                  "inconclusive"
+                ]
+              },
+              "reasonCode": {
+                "type": "string",
+                "minLength": 1
+              },
+              "evidenceIds": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "evaluatedThrough": {
+                "type": "string",
+                "format": "date-time"
+              }
+            },
+            "required": [
+              "verdict",
+              "reasonCode",
+              "evidenceIds",
+              "evaluatedThrough"
+            ]
+          }
+        },
+        "required": [
+          "check"
+        ]
+      },
+      "implementationDigest": "sha256:98a28efdafe544e3ce570380013c87094829fbd67bf9bd59c64d6b68c478eeeb"
+    },
+    "sha256:c9da508312034cf67c78f808e0d8cd1142710c340e725dd3f5bea8fbd34af962": {
+      "operationAlias": "aws/fis.start@1",
+      "effect": "mutate",
+      "isCheck": false,
+      "safeNewAttemptRetry": false,
+      "sideEffects": [
+        "starts a fault experiment within authorized scope"
+      ],
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "connection": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "connectionId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "capabilities": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "required": [
+              "connectionId",
+              "capabilities"
+            ]
+          },
+          "templateId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "connection",
+          "templateId"
+        ]
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "experiment": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "provider": {
+                "const": "aws/fis"
+              },
+              "accountId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "region": {
+                "type": "string",
+                "minLength": 1
+              },
+              "nativeId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "originEffectKey": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "provider",
+              "accountId",
+              "region",
+              "nativeId",
+              "originEffectKey"
+            ]
+          },
+          "submittedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "providerStartedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "experiment",
+          "submittedAt"
+        ]
+      },
+      "implementationDigest": "sha256:c9da508312034cf67c78f808e0d8cd1142710c340e725dd3f5bea8fbd34af962"
+    },
+    "sha256:14be817dfbc74e2a83f61f09b53db5c176e368ae644cb56a9c4d01fbe3418cad": {
+      "operationAlias": "events/capture.collect-alarm@1",
+      "effect": "observe",
+      "isCheck": false,
+      "safeNewAttemptRetry": false,
+      "sideEffects": [
+        "reads retained receiver session",
+        "may consume only a dedicated receiver queue"
+      ],
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "captureStep": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "runId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "stepKey": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_]{0,63}$"
+              }
+            },
+            "required": [
+              "runId",
+              "stepKey"
+            ]
+          },
+          "injectionStep": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "runId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "stepKey": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_]{0,63}$"
+              }
+            },
+            "required": [
+              "runId",
+              "stepKey"
+            ]
+          },
+          "alarmArn": {
+            "type": "string",
+            "minLength": 1
+          },
+          "topicArn": {
+            "type": "string",
+            "minLength": 1
+          },
+          "receiverId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "transitionWindowSeconds": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 86400
+          },
+          "receiptDeadlineSeconds": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 86400
+          },
+          "collectionGraceSeconds": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 86400
+          }
+        },
+        "required": [
+          "captureStep",
+          "injectionStep",
+          "alarmArn",
+          "topicArn",
+          "receiverId",
+          "transitionWindowSeconds",
+          "receiptDeadlineSeconds",
+          "collectionGraceSeconds"
+        ]
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "transition": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "records": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "sourceRecordId": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "occurredAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "receivedAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        }
+                      },
+                      "required": [
+                        "sourceRecordId",
+                        "occurredAt"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "records"
+                ]
+              },
+              "evidenceIds": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "uniqueItems": true
+              },
+              "collection": {
+                "enum": [
+                  "complete",
+                  "partial",
+                  "unavailable"
+                ]
+              },
+              "coverage": {
+                "enum": [
+                  "sufficient",
+                  "insufficient",
+                  "unknown"
+                ]
+              },
+              "windowClosed": {
+                "type": "boolean"
+              },
+              "scope": {
+                "type": "string",
+                "minLength": 1
+              },
+              "window": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "start": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "end": {
+                    "type": "string",
+                    "format": "date-time"
+                  }
+                },
+                "required": [
+                  "start",
+                  "end"
+                ]
+              },
+              "observedAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "source": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "namespace": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "identity": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "authenticated": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "namespace",
+                  "identity",
+                  "authenticated"
+                ]
+              },
+              "reasonCode": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "evidenceIds",
+              "collection",
+              "coverage",
+              "windowClosed",
+              "scope",
+              "observedAt",
+              "source"
+            ],
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "collection": {
+                      "const": "unavailable"
+                    }
+                  }
+                },
+                "then": {
+                  "not": {
+                    "required": [
+                      "value"
+                    ]
+                  }
+                },
+                "else": {
+                  "required": [
+                    "value"
+                  ]
+                }
+              }
+            ]
+          },
+          "receipt": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "records": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "sourceRecordId": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "occurredAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "receivedAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        }
+                      },
+                      "required": [
+                        "sourceRecordId",
+                        "occurredAt"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "records"
+                ]
+              },
+              "evidenceIds": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "uniqueItems": true
+              },
+              "collection": {
+                "enum": [
+                  "complete",
+                  "partial",
+                  "unavailable"
+                ]
+              },
+              "coverage": {
+                "enum": [
+                  "sufficient",
+                  "insufficient",
+                  "unknown"
+                ]
+              },
+              "windowClosed": {
+                "type": "boolean"
+              },
+              "scope": {
+                "type": "string",
+                "minLength": 1
+              },
+              "window": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "start": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "end": {
+                    "type": "string",
+                    "format": "date-time"
+                  }
+                },
+                "required": [
+                  "start",
+                  "end"
+                ]
+              },
+              "observedAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "source": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "namespace": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "identity": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "authenticated": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "namespace",
+                  "identity",
+                  "authenticated"
+                ]
+              },
+              "reasonCode": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "evidenceIds",
+              "collection",
+              "coverage",
+              "windowClosed",
+              "scope",
+              "observedAt",
+              "source"
+            ],
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "collection": {
+                      "const": "unavailable"
+                    }
+                  }
+                },
+                "then": {
+                  "not": {
+                    "required": [
+                      "value"
+                    ]
+                  }
+                },
+                "else": {
+                  "required": [
+                    "value"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        "required": [
+          "transition",
+          "receipt"
+        ]
+      },
+      "implementationDigest": "sha256:14be817dfbc74e2a83f61f09b53db5c176e368ae644cb56a9c4d01fbe3418cad"
+    },
+    "sha256:19c4397346bd16bb1ad3079d293c9e4fa4afaa1ecf216bd240b7f63b720bb749": {
+      "operationAlias": "aws/fis.ensure-stopped@1",
+      "effect": "compensate",
+      "isCheck": false,
+      "safeNewAttemptRetry": false,
+      "sideEffects": [
+        "requests stop of original FIS experiment",
+        "never creates an experiment during reconciliation"
+      ],
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "connection": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "connectionId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "capabilities": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "required": [
+              "connectionId",
+              "capabilities"
+            ]
+          },
+          "step": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "runId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "stepKey": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_]{0,63}$"
+              }
+            },
+            "required": [
+              "runId",
+              "stepKey"
+            ]
+          }
+        },
+        "required": [
+          "connection",
+          "step"
+        ]
+      },
+      "outputSchema": {
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "remoteDisposition": {
+                "const": "none"
+              },
+              "step": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "runId": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "stepKey": {
+                    "type": "string",
+                    "pattern": "^[a-z][a-z0-9_]{0,63}$"
+                  }
+                },
+                "required": [
+                  "runId",
+                  "stepKey"
+                ]
+              },
+              "reasonCode": {
+                "const": "NOT_DISPATCHED"
+              },
+              "evidenceIds": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "required": [
+              "remoteDisposition",
+              "step",
+              "reasonCode",
+              "evidenceIds"
+            ]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "remoteDisposition": {
+                "enum": [
+                  "terminal",
+                  "unknown"
+                ]
+              },
+              "evidenceIds": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "originEffectKey": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "remoteDisposition",
+              "evidenceIds",
+              "originEffectKey"
+            ]
+          }
+        ]
+      },
+      "implementationDigest": "sha256:19c4397346bd16bb1ad3079d293c9e4fa4afaa1ecf216bd240b7f63b720bb749"
+    },
+    "sha256:e18024914b8b2a0ba7903beb20b6a175d0e47415a3ee34fe106c6ea88878c5d8": {
+      "operationAlias": "events/capture.close@1",
+      "effect": "compensate",
+      "isCheck": false,
+      "safeNewAttemptRetry": false,
+      "sideEffects": [
+        "closes original capture session"
+      ],
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "step": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "runId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "stepKey": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_]{0,63}$"
+              }
+            },
+            "required": [
+              "runId",
+              "stepKey"
+            ]
+          }
+        },
+        "required": [
+          "step"
+        ]
+      },
+      "outputSchema": {
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "remoteDisposition": {
+                "const": "none"
+              },
+              "step": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "runId": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "stepKey": {
+                    "type": "string",
+                    "pattern": "^[a-z][a-z0-9_]{0,63}$"
+                  }
+                },
+                "required": [
+                  "runId",
+                  "stepKey"
+                ]
+              },
+              "reasonCode": {
+                "const": "NOT_DISPATCHED"
+              },
+              "evidenceIds": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "required": [
+              "remoteDisposition",
+              "step",
+              "reasonCode",
+              "evidenceIds"
+            ]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "remoteDisposition": {
+                "enum": [
+                  "terminal",
+                  "unknown"
+                ]
+              },
+              "evidenceIds": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "originEffectKey": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "remoteDisposition",
+              "evidenceIds",
+              "originEffectKey"
+            ]
+          }
+        ]
+      },
+      "implementationDigest": "sha256:e18024914b8b2a0ba7903beb20b6a175d0e47415a3ee34fe106c6ea88878c5d8"
+    },
+    "sha256:36895dedff9ffaf2876e407b66f37f526f74f3f8aa19f7c250255ae372c91156": {
+      "operationAlias": "aws/cloudwatch.logs.query@1",
+      "effect": "observe",
+      "isCheck": false,
+      "safeNewAttemptRetry": false,
+      "sideEffects": [
+        "starts a bounded billed query"
+      ],
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "connection": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "connectionId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "capabilities": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "required": [
+              "connectionId",
+              "capabilities"
+            ]
+          },
+          "logGroups": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true
+          },
+          "windowStart": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "windowEnd": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "language": {
+            "enum": [
+              "CWLI",
+              "SQL",
+              "PPL"
+            ]
+          },
+          "resultShape": {
+            "const": "single_numeric_count"
+          },
+          "query": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "connection",
+          "logGroups",
+          "windowStart",
+          "windowEnd",
+          "language",
+          "resultShape",
+          "query"
+        ]
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "observation": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "count": {
+                    "type": "integer",
+                    "minimum": 0
+                  }
+                },
+                "required": [
+                  "count"
+                ]
+              },
+              "evidenceIds": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "uniqueItems": true
+              },
+              "collection": {
+                "enum": [
+                  "complete",
+                  "partial",
+                  "unavailable"
+                ]
+              },
+              "coverage": {
+                "enum": [
+                  "sufficient",
+                  "insufficient",
+                  "unknown"
+                ]
+              },
+              "windowClosed": {
+                "type": "boolean"
+              },
+              "scope": {
+                "type": "string",
+                "minLength": 1
+              },
+              "window": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "start": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "end": {
+                    "type": "string",
+                    "format": "date-time"
+                  }
+                },
+                "required": [
+                  "start",
+                  "end"
+                ]
+              },
+              "observedAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "source": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "namespace": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "identity": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "authenticated": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "namespace",
+                  "identity",
+                  "authenticated"
+                ]
+              },
+              "reasonCode": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "evidenceIds",
+              "collection",
+              "coverage",
+              "windowClosed",
+              "scope",
+              "observedAt",
+              "source"
+            ],
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "collection": {
+                      "const": "unavailable"
+                    }
+                  }
+                },
+                "then": {
+                  "not": {
+                    "required": [
+                      "value"
+                    ]
+                  }
+                },
+                "else": {
+                  "required": [
+                    "value"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        "required": [
+          "observation"
+        ]
+      },
+      "implementationDigest": "sha256:36895dedff9ffaf2876e407b66f37f526f74f3f8aa19f7c250255ae372c91156"
+    },
+    "sha256:9ec71d5c6593270faeda036f9f243765a6a71c3fbe4a58dd0d44ccb9f1f2745b": {
+      "operationAlias": "aws/cloudwatch.logs.ensure-stopped@1",
+      "effect": "compensate",
+      "isCheck": false,
+      "safeNewAttemptRetry": false,
+      "sideEffects": [
+        "requests cancellation of original query if still active"
+      ],
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "connection": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "connectionId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "capabilities": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "required": [
+              "connectionId",
+              "capabilities"
+            ]
+          },
+          "step": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "runId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "stepKey": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_]{0,63}$"
+              }
+            },
+            "required": [
+              "runId",
+              "stepKey"
+            ]
+          }
+        },
+        "required": [
+          "connection",
+          "step"
+        ]
+      },
+      "outputSchema": {
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "remoteDisposition": {
+                "const": "none"
+              },
+              "step": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "runId": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "stepKey": {
+                    "type": "string",
+                    "pattern": "^[a-z][a-z0-9_]{0,63}$"
+                  }
+                },
+                "required": [
+                  "runId",
+                  "stepKey"
+                ]
+              },
+              "reasonCode": {
+                "const": "NOT_DISPATCHED"
+              },
+              "evidenceIds": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "required": [
+              "remoteDisposition",
+              "step",
+              "reasonCode",
+              "evidenceIds"
+            ]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "remoteDisposition": {
+                "enum": [
+                  "terminal",
+                  "unknown"
+                ]
+              },
+              "evidenceIds": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "originEffectKey": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "remoteDisposition",
+              "evidenceIds",
+              "originEffectKey"
+            ]
+          }
+        ]
+      },
+      "implementationDigest": "sha256:9ec71d5c6593270faeda036f9f243765a6a71c3fbe4a58dd0d44ccb9f1f2745b"
+    }
+  },
+  "revokedDigests": []
+}

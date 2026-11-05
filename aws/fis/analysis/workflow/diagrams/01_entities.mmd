@@ -1,0 +1,46 @@
+classDiagram
+direction TB
+class Scenario {
+  +scenarioId : Id
+  +version : Integer
+  +defaultRevisionId : Id
+}
+class ScenarioRevision {
+  +scenarioRevisionId : Id
+  +scenarioId : Id
+  +digest : Digest
+  +publishedAt : Instant
+}
+class Run {
+  +runId : Id
+  +scenarioRevisionId : Id
+  +projectionVersion : Integer
+  +phase : RunPhase
+  +outcome : RunOutcome
+}
+class StepRun {
+  +runId : Id
+  +stepKey : Key
+  +selectedAttemptNo : Integer
+  +skipReason : Code
+}
+class StepAttempt {
+  +attemptNo : Integer
+  +dispatchKey : Id
+  +outcome : AttemptOutcome
+  +remoteDisposition : Disposition
+}
+class Evidence {
+  +evidenceId : Id
+  +runId : Id
+  +schemaRef : Digest
+  +observedAt : Instant
+  +contentDigest : Digest
+}
+Scenario "1" *-- "0..*" ScenarioRevision : publishes
+ScenarioRevision "1" <-- "0..*" Run : executes
+Run "1" *-- "1..*" StepRun : owns
+StepRun "1" *-- "0..*" StepAttempt : records
+Run "1" o-- "0..*" Evidence : retains
+Evidence "0..*" --> "0..1" StepAttempt : produced by
+Evidence "0..*" <-- "0..*" StepAttempt : consumes

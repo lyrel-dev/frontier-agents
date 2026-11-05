@@ -1,0 +1,11 @@
+stateDiagram-v2
+[*] --> Queued
+Queued --> Running : admitted and eligible
+Queued --> Finalizing : cancel or admission expiry
+Running --> Finalizing : settled, cancel, or deadline
+Finalizing --> Finished : cleanup settled or deadline
+Finished --> [*]
+note right of Finalizing
+Remote disposition is tracked separately.
+An accepted stop is not proof of cleanup.
+end note

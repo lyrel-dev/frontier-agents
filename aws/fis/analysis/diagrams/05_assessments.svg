@@ -17,8 +17,8 @@
 <polyline points="150,207 150,570 420,570 420,805 470,805" fill="none" stroke="#8A9CA8" stroke-width="2" stroke-linejoin="round"/>
 <polyline points="370,716 470,716" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linejoin="round"/>
 <polyline points="370,716 470,716" fill="none" stroke="#8A9CA8" stroke-width="2" stroke-linejoin="round"/>
-<polyline points="645,953 645,1075" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linejoin="round"/>
-<polyline points="645,953 645,1075" fill="none" stroke="#8A9CA8" stroke-width="2" stroke-linejoin="round"/>
+<polyline points="645,1009 645,1075" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linejoin="round"/>
+<polyline points="645,1009 645,1075" fill="none" stroke="#8A9CA8" stroke-width="2" stroke-linejoin="round"/>
 <polyline points="1025,757 1025,1116 820,1116" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linejoin="round"/>
 <polyline points="1025,757 1025,1116 820,1116" fill="none" stroke="#8A9CA8" stroke-width="2" stroke-linejoin="round"/>
 <rect x="60" y="125" width="350" height="82" rx="8" fill="#FFFFFF" stroke="#CCD9E0" stroke-width="1.3"/>
@@ -41,7 +41,7 @@
 <rect x="850" y="703" width="350" height="14" rx="0" fill="#2A6B9B" stroke="none" stroke-width="1"/>
 <text x="866" y="704" font-size="23" font-weight="bold" text-anchor="start" fill="#FFFFFF">Metric observation</text>
 <text x="866" y="740" font-size="14" font-weight="normal" text-anchor="start" fill="#586E7C">External evidence / resource</text>
-<rect x="470" y="675" width="350" height="278" rx="8" fill="#FFFFFF" stroke="#CCD9E0" stroke-width="1.3"/>
+<rect x="470" y="675" width="350" height="334" rx="8" fill="#FFFFFF" stroke="#CCD9E0" stroke-width="1.3"/>
 <rect x="470" y="675" width="350" height="42" rx="8" fill="#A66B1B" stroke="none" stroke-width="1"/>
 <rect x="470" y="703" width="350" height="14" rx="0" fill="#A66B1B" stroke="none" stroke-width="1"/>
 <text x="486" y="704" font-size="23" font-weight="bold" text-anchor="start" fill="#FFFFFF">Resilience assessment</text>
@@ -67,6 +67,11 @@
 <rect x="471" y="920" width="348" height="28" rx="0" fill="#F4F7F9" stroke="none" stroke-width="1"/>
 <text x="550" y="941" font-size="19.5" font-weight="normal" text-anchor="start" fill="#183346">evidenceWindow</text>
 <text x="806" y="941" font-size="12.5" font-weight="normal" text-anchor="end" fill="#586E7C" class="mono">json</text>
+<text x="550" y="969" font-size="19.5" font-weight="normal" text-anchor="start" fill="#183346">evidenceCutoffAt</text>
+<text x="806" y="969" font-size="12.5" font-weight="normal" text-anchor="end" fill="#586E7C" class="mono">datetime</text>
+<rect x="471" y="976" width="348" height="28" rx="0" fill="#F4F7F9" stroke="none" stroke-width="1"/>
+<text x="550" y="997" font-size="19.5" font-weight="normal" text-anchor="start" fill="#183346">inputSnapshot</text>
+<text x="806" y="997" font-size="12.5" font-weight="normal" text-anchor="end" fill="#586E7C" class="mono">json</text>
 <rect x="60" y="675" width="310" height="82" rx="8" fill="#FFFFFF" stroke="#CCD9E0" stroke-width="1.3"/>
 <rect x="60" y="675" width="310" height="42" rx="8" fill="#A66B1B" stroke="none" stroke-width="1"/>
 <rect x="60" y="703" width="310" height="14" rx="0" fill="#A66B1B" stroke="none" stroke-width="1"/>
@@ -107,10 +112,10 @@
 <text x="394" y="734" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">1</text>
 <rect x="424.85" y="720" width="42.3003" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
 <text x="446" y="734" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">0..N</text>
-<rect x="618.974" y="1006" width="52.0513" height="23" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
-<text x="645" y="1022" font-size="17" font-weight="normal" text-anchor="middle" fill="#586E7C">cites</text>
-<rect x="663.228" y="967" width="21.5435" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
-<text x="674" y="981" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">1</text>
+<rect x="713.974" y="1029" width="52.0513" height="23" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="740" y="1045" font-size="17" font-weight="normal" text-anchor="middle" fill="#586E7C">cites</text>
+<rect x="663.228" y="1023" width="21.5435" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<text x="674" y="1037" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">1</text>
 <rect x="652.85" y="1043" width="42.3003" height="21" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>
 <text x="674" y="1057" font-size="15" font-weight="normal" text-anchor="middle" fill="#586E7C">0..N</text>
 <rect x="981.937" y="934" width="86.126" height="23" rx="3" fill="#FFFFFF" stroke="none" stroke-width="1"/>

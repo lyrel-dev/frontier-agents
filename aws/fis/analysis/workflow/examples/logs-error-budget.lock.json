@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "assessment-lock/0.2",
+  "synthetic": true,
+  "programDigest": "sha256:c786e65326cd76184bffa5bebcdbbe056a0570cd40d4c5219fdc5e83049fcc90",
+  "expressionContract": "cel/assessment-v0.2",
+  "reducerVersion": "assessment-reducer/0.2",
+  "operations": {
+    "aws/cloudwatch.logs.ensure-stopped@1": {
+      "implementationDigest": "sha256:9ec71d5c6593270faeda036f9f243765a6a71c3fbe4a58dd0d44ccb9f1f2745b",
+      "inputSchemaDigest": "sha256:5af9b48250df00e8be6af6e80e9af8a5f3d042a6d30e7ac2be784eb607949080",
+      "outputSchemaDigest": "sha256:c7891f2b30439e590722d5b1f6fd21af5ac20092c9fdd38e7bae83ac1b4fe12b",
+      "capabilityDigest": "sha256:00ecf9eaab85c3dd5258792b628afb706f758a169de64b563c6a8acbf418e1bf"
+    },
+    "aws/cloudwatch.logs.query@1": {
+      "implementationDigest": "sha256:36895dedff9ffaf2876e407b66f37f526f74f3f8aa19f7c250255ae372c91156",
+      "inputSchemaDigest": "sha256:5b82f30420638c3bb79183d859eed5d9dc8b5279d7131ec76fab14596b4a45b4",
+      "outputSchemaDigest": "sha256:78319cbba7f27e627eaa7727cccc24a2c04b901e2812de79f675a9b4c89f07aa",
+      "capabilityDigest": "sha256:896aae071e8331c82e44963aed678c000dc187ab82f03324c632178336b78854"
+    },
+    "core/assert@1": {
+      "implementationDigest": "sha256:98a28efdafe544e3ce570380013c87094829fbd67bf9bd59c64d6b68c478eeeb",
+      "inputSchemaDigest": "sha256:eaf72e914af5b51d6f6876884f5125a297877262e06287419440d271e66fa6eb",
+      "outputSchemaDigest": "sha256:83b8884d26c9f61f6c5e9367d0b538d8b76c5131831751febb4be36be61f4360",
+      "capabilityDigest": "sha256:37d19947ad488d900870d0b6af60bfd78f76deb8d0eb92c9a9bb634a5e6e6357"
+    }
+  },
+  "digest": "sha256:ce0f0a5721384a2c242f283d7e19c6e8ee14be75b54e51c246018f56d4709211"
+}

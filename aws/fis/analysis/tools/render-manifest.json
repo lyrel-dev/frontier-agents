@@ -1,6 +1,16 @@
 {
-  "schema": "frontier-fis-render/v1",
+  "schema": "frontier-fis-render/v2",
   "source": "report.md",
+  "inputHashes": {
+    "report.md": "97b93fa00692d353641e0b84535053a4ffe4c21624c1781d52c6323cfce79917",
+    "sources.json": "52bd19fad58094459a8fa1018ce94694a5e613c72ac9c5587fb39b6c4d2f70d4",
+    "tools/render_report.py": "56be77470145a796ed93d17ec6e857cc60f6d9337d4fa61efa0caa9a1e8aaa8e",
+    "diagrams/01_execution.mmd": "4bf200418711e9ebde0fb23422a3950268f95a2f3dcaa50fd6e95b864ba8c7a2",
+    "diagrams/02_catalog_templates.mmd": "d879b54afd169d5ebc9d26d2b6e29f21c73fa0d508de03dbd8e7760b45b0f868",
+    "diagrams/03_targeting.mmd": "380fbb8c085a1919a12fea021346af7519db4882a1b2bdfde701b1b8767bdef1",
+    "diagrams/04_evidence_reports.mmd": "e79b65a4720baf4316b2a28bc206175593d8def416daf19b720dda7f17dfaa70",
+    "diagrams/05_assessments.mmd": "7a2add98566b27d1d0f375e180f44247b4382debeb6baa8ec631fa04c5711dd3"
+  },
   "diagrams": [
     {
       "source": "diagrams/01_execution.mmd",
@@ -39,12 +49,14 @@
       "output": "diagrams/05_assessments.svg",
       "entities": 7,
       "relationships": 7,
-      "sourceSha256": "87fac175e40c1138d20485e4cb14f1ee0293769b76cd0eacec148c8775e3e462",
-      "outputSha256": "b4d89357fe06599ebc77b515bb13e1c53db002abf128c19d211675d4b3a597b4"
+      "sourceSha256": "7a2add98566b27d1d0f375e180f44247b4382debeb6baa8ec631fa04c5711dd3",
+      "outputSha256": "c9f3be5d1554f6b8547431d35bb806e9a665b158ef33b64f33248a52a0cbe9cb"
     }
   ],
   "report": {
-    "reportSha256": "3d208ed6c53bbab25aa41ee79bacad2034556cbe7c1ca8c50b0fc61b172414d9",
+    "reportSha256": "97b93fa00692d353641e0b84535053a4ffe4c21624c1781d52c6323cfce79917",
+    "version": "1.2",
+    "reviewDate": "2026-11-05",
     "sections": [
       "1. Purpose and recommended design",
       "2. Core execution model",
@@ -69,7 +81,27 @@
       "05_assessments"
     ],
     "output": "aws_fis_experiment_action_model.pdf",
-    "bytes": 185466,
-    "sha256": "7cd49c6043d7250f30241ce54f6498c723a00cb709718733cf0ce01b9348d47c"
+    "bytes": 185463,
+    "sha256": "afb7bbe99a0b140cd0859c8c615944df6cd0f8c0d6f4ba63d223f394908560df",
+    "inputHashes": {
+      "report.md": "97b93fa00692d353641e0b84535053a4ffe4c21624c1781d52c6323cfce79917",
+      "sources.json": "52bd19fad58094459a8fa1018ce94694a5e613c72ac9c5587fb39b6c4d2f70d4",
+      "tools/render_report.py": "56be77470145a796ed93d17ec6e857cc60f6d9337d4fa61efa0caa9a1e8aaa8e",
+      "diagrams/01_execution.mmd": "4bf200418711e9ebde0fb23422a3950268f95a2f3dcaa50fd6e95b864ba8c7a2",
+      "diagrams/02_catalog_templates.mmd": "d879b54afd169d5ebc9d26d2b6e29f21c73fa0d508de03dbd8e7760b45b0f868",
+      "diagrams/03_targeting.mmd": "380fbb8c085a1919a12fea021346af7519db4882a1b2bdfde701b1b8767bdef1",
+      "diagrams/04_evidence_reports.mmd": "e79b65a4720baf4316b2a28bc206175593d8def416daf19b720dda7f17dfaa70",
+      "diagrams/05_assessments.mmd": "7a2add98566b27d1d0f375e180f44247b4382debeb6baa8ec631fa04c5711dd3"
+    },
+    "status": "current",
+    "buildEnvironment": {
+      "python": "3.12.14",
+      "reportlab": "4.4.9",
+      "fontFiles": {
+        "DejaVuSans.ttf": "57f73e11f51999432bf7ab22ce55b6f945d5eca1bf824404cfa9ec2e3718c84e",
+        "DejaVuSans-Bold.ttf": "a4c5bc453ca281d90ea079e596da7ae0dfeb5777497c29ec254e76d97ff6f890",
+        "DejaVuSansMono.ttf": "54bf827eb99404e8f430c330ad30f063334f637eba0109b6a18d4f566a8e9dd8"
+      }
+    }
   }
 }

@@ -2,7 +2,7 @@
 id: aws-fis-experiment-action-analysis
 title: AWS FIS experiment and action model
 status: reviewed
-version: "1.1"
+version: "1.2"
 research_date: "2026-11-05"
 review_date: "2026-11-05"
 service: AWS Fault Injection Service
@@ -109,6 +109,8 @@ erDiagram
 
 These keys are application normalization choices. Use surrogate keys if useful, but enforce the scoped uniqueness constraints and preserve original identifiers.
 
+Within a hydrated run, dependency endpoints and target bindings must resolve to children of that same run. The dependency graph must be acyclic, with no self-edge or duplicate edge. A partial collection cannot establish that a reference is invalid; record its validation as incomplete until the required children are loaded. These are application integrity rules, not additional AWS response fields.
+
 ### Runtime configuration snapshot
 
 AWS takes a template snapshot at start. Later template changes or deletion do not alter the experiment. Render a historical run from its own returned action and target configuration, not from current template children. [S08]
@@ -151,6 +153,8 @@ erDiagram
 The complete ExperimentTemplate top-level field set is `id`, `arn`, `creationTime`, `lastUpdateTime`, `description`, `actions`, `targets`, `stopConditions`, `roleArn`, `tags`, `logConfiguration`, `experimentOptions`, `targetAccountConfigurationsCount`, and `experimentReportConfiguration`. The template options describe account targeting and empty-target behavior; run action mode is chosen at start. [S07] [S15]
 
 Keep raw parameter strings. A UI can add typed adapters for known action IDs, but it should preserve their raw values and adapter version. Action-specific duration or rollback semantics should come from the corresponding official action documentation. [S48]
+
+Catalog metadata has no returned revision identifier. Capture the catalog lookup and its observation time when historical rendering depends on its descriptions or parameter interpretation. The run's original values remain authoritative; a later catalog lookup must not silently reinterpret a recorded action. [S04] [S05]
 
 ## 4. ExperimentRun and ActionExecution field inventory
 
@@ -259,6 +263,8 @@ Resource identifiers cannot be combined with tags or filters for the same target
 ### Availability and completeness
 
 Resolved target information is available after resolution has ended. `ListExperimentResolvedTargets` accepts optional `targetName`, `maxResults`, and `nextToken`. Its page result contains no total-count or resolution-complete flag. Exhaust pagination, retain ingestion status, and distinguish unavailable, partially loaded, and confirmed complete membership data. [S19] [S20]
+
+Keep resolution progress separate from collection progress. A TargetResolutionObservation records the selector, resolution-ended evidence or supported inference, collection identity, query scope, pages fetched, observation interval, and collection status. An exhausted page sequence establishes completeness only for that collection's scope after resolution has ended. A successful empty response without that context is not proof that no resources were selected. Log resolution records carry their own paging and completion information; retain that source-specific evidence rather than inventing equivalent fields on the list API. [S31]
 
 A membership key can be an ingestion ID with source provenance. Deduplicate ResourceIdentity when reliable; retain every `(run, selector, resource)` membership and every action binding. A common resource can legitimately occur under several named target sets.
 
@@ -406,12 +412,16 @@ erDiagram
         string missingDataPolicy
         datetime evaluatedAt
         json evidenceWindow
+        datetime evidenceCutoffAt
+        json inputSnapshot
     }
 ```
 
-**Caption:** these are proposed application evaluation entities. A run can bind several telemetry queries and assessments. Every assessment retains its criterion revision and evidence; changing a policy later does not silently rewrite a historical verdict.
+**Caption:** these are proposed application evaluation entities. A run can bind several telemetry queries and assessments. Every assessment retains its criterion revision, immutable input snapshot, evidence window, and observation cutoff; changing a policy or query later does not silently rewrite a historical verdict.
 
 MetricBinding should identify provider, account/Region where applicable, query or metric identity, dimensions, statistic, unit, period, and observation windows. AssessmentCriterion should identify threshold/recovery rules, stable-window requirements, timing anchor, and missing-data policy. ResilienceAssessment should retain verdict, evaluation time, evidence window, policy revision, and evidence references.
+
+The assessment's inputSnapshot pins the query/metric binding, normalization and evaluator versions, resolved threshold parameters, units, timing anchor, and accepted evidence identities. References to immutable revisioned records can replace duplicated values. EvidenceCutoffAt limits which observations were known to the evaluator; it is distinct from the event-time evidenceWindow. Late samples or changed policies produce a new assessment linked to the prior result. They do not mutate the evidence or silently overwrite a historical verdict. This is a proposed persistence contract; this telemetry-oriented model is specific to the FIS UI study, while general query and assertion evidence belongs in the generalized workflow model.
 
 Suggested verdicts are `not_assessed`, `in_progress`, `passed`, `failed`, and `inconclusive`. They are application classifications. Preserve a four-part result summary:
 

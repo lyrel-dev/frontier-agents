@@ -2,6 +2,8 @@
 
 This package contains an analysis of the official AWS Fault Injection Service (FIS) API, five entity relationship diagrams, a review record, and **FIS Observatory**, a static single-page application that makes the model explorable. The UI focuses on understanding an experiment while it runs and after it finishes: action execution, selected scope, workload response, and available evidence.
 
+The second review also delivers a separate [generalized assessment workflow proposal](workflow/README.md): six core entities, class diagrams, precise execution/assessment rules, an API contract, adapter contracts, two complete scenarios and executable contract checks. **The proposal is not a workflow engine or a new AWS API.** The application continues to demonstrate the initial FIS model. The 24-page PDF covers the FIS report; the generalized proposal and its three diagrams are maintained in `workflow/`.
+
 **The application uses synthetic data only.** It does not call AWS, request credentials, run fault actions, retrieve CloudWatch data, or download S3 report objects. The accounts, workloads, resources, events, alarm observations, telemetry, and report references are fictional. “Simulate stop” changes the browser's local replay only.
 
 ![FIS Observatory operator overview](preview.jpg)
@@ -23,19 +25,19 @@ All displayed times are UTC. Replay timestamps come from a fixed synthetic clock
 
 ## Explore the model
 
-The sidebar selects one of five experiments and supports text search and Active/Finalized filters. A scenario opens at a useful point in its replay. The replay controls can play or pause, change speed to 1×/5×/15×, advance 30 seconds, or scrub to any point. **Reset returns to the beginning and clears that scenario's simulated stop.**
+The sidebar selects one of five experiments and supports text search and Active/Finalized filters. A scenario initially opens at a useful point in its replay; later navigation preserves its cursor and intervention. The replay controls can play or pause, change speed to 1×/5×/15×, advance 30 seconds, or scrub to any point. **Reset returns to the beginning and clears that scenario's simulated stop.**
 
 | View or control | What it demonstrates |
 | --- | --- |
 | **Overview** | Named action timeline or dependency layout, workload telemetry with an explicit criterion, selected scope, alarm observations, report state, and recent evidence. |
 | **Actions** | Separate executions even when catalog `actionId` values repeat. Select an action to inspect state, reason, parameters, timing, predecessors, successors, target-slot bindings, and selected memberships. Dependency links open the related action; “Related evidence” filters the evidence view. |
 | **Selected resources** | Deduplicated identities with every target membership retained. Filter by selector or search for a resource, account, or action. Selector snapshots remain inspectable. An incomplete collection is distinguished from a confirmed empty result. |
-| **Evidence** | Source and text filters, account/action context, and separate event occurrence and observation timestamps. A record appears only after its observation time. |
+| **Evidence** | Source and text filters, an explicit exact-action filter, account/action context, and separate event occurrence and observation timestamps. A record appears only after its observation time. Mentioning an action in message text does not make it that action's evidence. |
 | **Data model** | Entity identity rules, the five diagrams, Mermaid sources, the reviewed report, the review record, and the official source register. |
 | **Report artifact reference** | Inspect the separate report lifecycle and fictional S3 artifact references after a report is ready. The references are not downloadable AWS objects. |
 | **Export snapshot** | Download observed data as of the replay time, static configuration, and derived values as JSON, marked with its schema and synthetic provenance. Future simulator schedules and outcomes are excluded. The export is an application snapshot, not a raw AWS API response. |
 | **Copy experiment ID** | Copy the selected synthetic experiment ID when the browser allows clipboard access; otherwise show it in a notification. |
-| **Simulate stop** | Request a local interruption for an active, non-preview run. Active steps enter `stopping`, unstarted steps become `cancelled`, and the mock experiment becomes `stopped` after 30 replay seconds. The prior workload conclusion and report are invalidated. This timing is a scenario script, not an AWS guarantee. |
+| **Simulate stop** | Request a local interruption for an active, non-preview run. Active steps enter `stopping`, unstarted steps become `cancelled`, and the mock experiment becomes `stopped` after 30 replay seconds. Source observations and their freshness remain frozen at the intervention; only clearly labelled local simulation advances. The prior workload conclusion and report are invalidated, and no replacement report is invented. This timing is a scenario script, not an AWS guarantee. |
 
 Changes are held in browser memory. Reloading restores the original fixtures. Use Reset before replaying a scenario without an earlier local intervention. Opening action or report details pauses the replay for inspection. Keyboard arrow keys, Home, and End navigate the main view tabs; dialogs can be closed with their buttons or the browser's standard dialog behavior.
 
@@ -77,9 +79,12 @@ Selected-resource scope is a separate fact throughout the views. A selected reso
 | [`sources.json`](sources.json) | Official AWS source register used by the reviewed report. |
 | [`VALIDATION.md`](VALIDATION.md) | Automated checks, browser scenarios, corrections, and validation limits. |
 | [`tools/README.md`](tools/README.md) | Reproducible SVG/PDF generation instructions and dependency details. |
+| [`tools/test_render_report.py`](tools/test_render_report.py) | Negative/regression checks for source drift, stale PDF provenance and non-mutating artifact validation. |
 | [`preview.jpg`](preview.jpg) | Screenshot of the operator overview. |
+| [`qa/stop-intervention.jpg`](qa/stop-intervention.jpg) | Verified late-replay interruption state with frozen source freshness and unknown replacement report. |
 | [`diagrams/`](diagrams/) | Paired editable `.mmd` sources and rendered `.svg` diagrams: execution; templates/catalog; targeting; evidence/reports; workload assessments. |
 | [`aws_fis_experiment_action_model.pdf`](aws_fis_experiment_action_model.pdf) | Portable reviewed report with the rendered diagrams. |
+| [`workflow/`](workflow/README.md) | Generalized model/API proposal, class diagrams, typed synthetic adapter contracts, scenarios, locks and reference decision tests. |
 
 The replay's `schedule` and `_mock` fields, display labels, application assessment, observation metadata, and telemetry are explicitly application/demo data. Dates are normalized ISO 8601 strings for the app; a real adapter must normalize the API/SDK timestamp representation it receives. `experiment` is an AWS-shaped aggregate, not a promise that the surrounding fixture envelope is an AWS response schema.
 
@@ -93,7 +98,9 @@ node --test app/tests/model.test.cjs
 
 The suite covers duplicate catalogue IDs under distinct action names; dependencies and overlapping memberships; preview terminal counts; incomplete target collections and unknown identities; snapshot polling versus event occurrence/observation; future evidence, telemetry, and verdict suppression; stopping/post-action semantics; completed execution with a failed workload criterion; experiment-level errors; immutable replay; unknown action states; UI-supplied snapshot overrides; and stale polling.
 
-The current model suite contains **19 tests**, including as-of export filtering and preservation of observed errors, report artifacts, and local interventions. Passing it verifies those data-model invariants; it does not establish live AWS integration, service-side permissions, browser rendering, or fault behavior. Documentation review checks are recorded separately in [`REVIEW.md`](REVIEW.md).
+The current model suite contains **27 tests**, including as-of export filtering, interrupted-source freshness, missing telemetry, pod/container identity, unknown-resource counts, exact action evidence and malformed fixtures. Passing it verifies those data-model invariants; it does not establish live AWS integration, service-side permissions, browser rendering, or fault behavior. Documentation review checks are recorded separately in [`REVIEW.md`](REVIEW.md).
+
+To check committed report artifacts without rebuilding them, run `python3 tools/render_report.py --check`. The separate renderer suite contains seven tests. The workflow proposal contains 68 contract tests, including 39 independently authored behavioral cases. [VALIDATION.md](VALIDATION.md) gives the commands and distinguishes these checks from implemented runtime behavior.
 
 ## Intended use and next integration step
 

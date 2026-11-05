@@ -66,6 +66,23 @@ test('unknown resource identity remains raw and does not count as a canonical re
   assert.equal(result.unknownIdentityCount, 1);
   assert.equal(result.resources[0].resourceKey, null);
   assert.equal(result.resources[0].targetInformation.opaqueFutureIdentifier, 'unknown-to-adapter');
+  assert.equal(result.observedResourceCount, 0, 'An unidentified membership is not an observed resource identity');
+  assert.equal(result.unidentifiedMembershipCount, 1);
+});
+
+test('pod container selections share one run-scoped pod identity and retain each membership', () => {
+  const run = copy(model.getRunAt(find('checkout-az'), 230));
+  const pod = { cluster_arn: 'arn:aws:eks:eu-central-1:444455556666:cluster/checkout', namespace: 'payments', pod_name: 'api-7fbd9c' };
+  run.resolvedTargets = [
+    { targetName: 'checkoutAz', resourceType: 'aws:eks:pod', targetInformation: { ...pod, target_container_name: 'api' } },
+    { targetName: 'inventoryAz', resourceType: 'aws:eks:pod', targetInformation: { ...pod, target_container_name: 'proxy' } }
+  ];
+  const result = model.summarize(run);
+  assert.equal(result.selectedResourceCount, 1);
+  assert.equal(result.membershipCount, 2);
+  assert.equal(result.resources[0].identityMethod, 'eks-pod-name');
+  assert.equal(result.resources[0].identityScope, 'run', 'The name does not prove pod incarnation across runs');
+  assert.deepEqual(result.resources[0].memberships.map(record => record.targetInformation.target_container_name), ['api', 'proxy']);
 });
 
 test('snapshot polling timestamps, event occurrence and event observation remain separate', () => {
@@ -110,6 +127,15 @@ test('completed execution can have a failed workload criterion and a later repor
   assert.equal(result.completedActions, 3);
   assert.equal(result.assessmentStatus, 'failed');
   assert.equal(result.reportStatus, 'completed');
+});
+
+test('a configured report with no state observation stays unknown in summaries and exports', () => {
+  const run = copy(model.getRunAt(find('rds-failover'), 500));
+  delete run.experiment.experimentReport;
+  assert.equal(model.summarize(run).reportStatus, 'unknown');
+  assert.equal(model.exportSnapshot(run).derived.reportStatus, 'unknown');
+  delete run.experiment.experimentReportConfiguration;
+  assert.equal(model.summarize(run).reportStatus, 'not_configured');
 });
 
 test('failed execution preserves structured experiment error and account-scoped evidence', () => {
@@ -164,6 +190,38 @@ test('a stale poll preserves the old execution snapshot and displays its observa
   assert.equal(model.summarize(projected).freshnessSeconds, 180);
   assert.equal(projected.experiment.actions.isolatePayments.state.status, 'initiating');
   assert.ok(projected.evidence.some(event => event.actionName === 'isolatePayments'));
+});
+
+test('an active timeline interval ends at the last observation rather than extending stale evidence', () => {
+  const run = copy(find('checkout-az'));
+  run.observation.freezeAtSeconds = 100;
+  const projected = model.getRunAt(run, 230);
+  const payment = model.actionRows(projected).find(row => row.name === 'isolatePayments');
+  assert.equal(payment.observedThroughTime, '2026-11-05T09:01:40.000Z');
+  assert.equal(payment.observedElapsedSeconds, 45);
+  assert.equal(payment.elapsedSeconds, 175, 'Wall-clock elapsed time remains a different measure');
+});
+
+test('missing telemetry stays unknown and chart segments do not bridge missing samples', () => {
+  const run = copy(model.getRunAt(find('checkout-az'), 230));
+  run.telemetry.points = [
+    { offsetSeconds: 0, value: null },
+    { offsetSeconds: 15, value: null }
+  ];
+  assert.equal(model.summarize(run).latestMetric, null);
+  assert.equal(model.summarize(run).peakMetric, null);
+  assert.deepEqual(model.metricSeries(run).segments, []);
+  // Out-of-order observation arrival must not make an older sample the latest.
+  run.telemetry.points = [
+    { offsetSeconds: 45, value: 160 }, { offsetSeconds: 0, value: 120 },
+    { offsetSeconds: 15, value: null }, { offsetSeconds: 30, value: 150 },
+    { offsetSeconds: 90, value: 170 }
+  ];
+  const series = model.metricSeries(run);
+  assert.equal(series.latestMetric, 170);
+  assert.equal(series.hasGaps, true);
+  assert.deepEqual(series.segments.map(segment => segment.map(point => point.offsetSeconds)), [[0], [30, 45], [90]]);
+  assert.equal(model.summarize(run).peakMetric, 170);
 });
 
 test('an initial export preserves observed configuration without future failures or simulator schedules', () => {
@@ -236,4 +294,80 @@ test('export derives from supplied local intervention snapshots without replayin
   assert.equal(packet.derived.stoppingActions, 2);
   assert.equal(packet.derived.assessmentStatus, 'inconclusive');
   assert.throws(() => model.exportSnapshot(find('checkout-az')), /as-of projected run/);
+});
+
+test('simulated stop keeps source observations frozen while its local lifecycle advances', () => {
+  const source = find('checkout-az');
+  const at = 230;
+  const intervention = { at, snapshot: model.getRunAt(source, at) };
+  const before = JSON.stringify(intervention);
+  const requested = model.applyStopIntervention(model.getRunAt(source, at), intervention);
+  assert.equal(requested.experiment.state.status, 'stopping');
+  assert.equal(requested.experiment.actions.observeRecovery.state.status, 'cancelled');
+  assert.equal(model.summarize(requested).stoppingActions, 2);
+  const completing = model.applyStopIntervention(model.getRunAt(source, at + 29), intervention);
+  assert.equal(completing.experiment.state.status, 'stopping');
+  assert.ok(!completing.experiment.endTime);
+  const completed = model.applyStopIntervention(model.getRunAt(source, 700), intervention);
+  assert.equal(completed.experiment.state.status, 'stopped');
+  assert.equal(completed.experiment.endTime, '2026-11-05T09:04:20.000Z');
+  assert.equal(completed.experiment.actions.establishBaseline.state.status, 'completed');
+  assert.equal(model.summarize(completed).stoppedActions, 2);
+  assert.equal(completed.observation.lastSuccessfulFetchAt, intervention.snapshot.observation.lastSuccessfulFetchAt);
+  assert.equal(completed.observation.snapshotAsOf, intervention.snapshot.observation.snapshotAsOf);
+  assert.equal(model.summarize(completed).freshnessSeconds, 470);
+  assert.deepEqual(completed.telemetry.points, intervention.snapshot.telemetry.points);
+  assert.deepEqual(completed.resolvedTargets, intervention.snapshot.resolvedTargets);
+  assert.deepEqual(completed.safety, intervention.snapshot.safety);
+  assert.equal(completed.assessment.status, 'inconclusive');
+  assert.equal(model.summarize(completed).reportStatus, 'unknown');
+  assert.equal(completed.simulation.kind, 'operator-stop');
+  assert.equal(completed.simulation.completedAt, '2026-11-05T09:04:20.000Z');
+  const packet = model.exportSnapshot(completed);
+  assert.equal(packet.run.simulation.kind, 'operator-stop');
+  assert.equal(packet.derived.freshnessSeconds, 470);
+  assert.doesNotMatch(JSON.stringify(packet), /criterion-evaluated|reportType/);
+  assert.ok(packet.run.evidence.every(event => event.source === 'mock_control' || Date.parse(event.observedAt) <= Date.parse(intervention.snapshot.now)));
+  const rewind = model.applyStopIntervention(model.getRunAt(source, at - 1), intervention);
+  assert.equal(rewind.experiment.state.status, 'running');
+  assert.equal(rewind.simulation, undefined);
+  assert.equal(JSON.stringify(intervention), before, 'Local intervention projection must be immutable');
+});
+
+test('stop before target resolution does not acquire later memberships, alarms or source freshness', () => {
+  const source = find('alarm-stop');
+  const intervention = { at: 0, snapshot: model.getRunAt(source, 0) };
+  const run = model.applyStopIntervention(model.getRunAt(source, 350), intervention);
+  assert.equal(run.experiment.state.status, 'stopped');
+  assert.equal(model.summarize(run).selectedResourceCount, null);
+  assert.equal(model.summarize(run).observedResourceCount, 0);
+  assert.equal(run.resolution.complete, false);
+  assert.equal(run.safety.alarmState, 'OK');
+  assert.equal(run.safety.history.length, 1);
+  assert.equal(run.stopCause, undefined);
+  assert.equal(model.summarize(run).freshnessSeconds, 350);
+  assert.ok(Object.values(run.experiment.actions).every(action => action.state.status === 'cancelled'));
+  assert.ok(run.evidence.every(event => event.source === 'mock_control'));
+});
+
+test('fixture validation rejects malformed event timestamps instead of comparing nulls', () => {
+  const invalid = copy(fixtures);
+  invalid.runs[0].evidence[0].occurredAt = 'not a timestamp';
+  invalid.runs[0].evidence[0].observedAt = 'not a timestamp';
+  const result = model.validateFixtures(invalid);
+  assert.equal(result.valid, false);
+  assert.ok(result.errors.some(error => /invalid evidence timestamp/.test(error)));
+});
+
+test('fixture validation enforces parameter strings and selected account and resource-type coverage', () => {
+  const invalid = copy(fixtures);
+  const run = invalid.runs[0];
+  run.experiment.actions.isolatePayments.parameters.duration = 300;
+  run.resolvedTargets[0].resourceType = 'aws:ec2:instance';
+  run.resolvedTargets[1].targetInformation.arn = 'arn:aws:ec2:eu-central-1:000000000000:subnet/subnet-unknown';
+  const result = model.validateFixtures(invalid);
+  assert.equal(result.valid, false);
+  assert.ok(result.errors.some(error => /parameter duration must be a string/.test(error)));
+  assert.ok(result.errors.some(error => /membership resource type mismatch/.test(error)));
+  assert.ok(result.errors.some(error => /selected account .* is not configured/.test(error)));
 });
