@@ -48,7 +48,9 @@
     "LIFECYCLE_EXPOSURE": "LifecycleExposure",
     "INVESTIGATION_RESULT": "InvestigationResult",
     "SERVICE_STATUS": "ServiceStatus",
-    "WORKSPACE_SUMMARY": "WorkspaceSummary"
+    "WORKSPACE_SUMMARY": "WorkspaceSummary",
+    "INVESTIGATION_TIMELINE": "InvestigationTimeline",
+    "INVESTIGATION_ASSERTIONS": "InvestigationAssertions"
   },
   "x-relationships": [
     {
@@ -915,6 +917,10 @@
         "rationale": {
           "type": "string",
           "maxLength": 16384
+        },
+        "evaluationPolicy": {
+          "$ref": "#/$defs/ProcessingIdentity",
+          "description": "Exact retained processing identity. Absence on historical records means unrecorded/unknown, not the current implementation or policy."
         }
       },
       "required": [
@@ -989,6 +995,9 @@
         },
         "requestDigest": {
           "$ref": "#/$defs/Digest"
+        },
+        "assessmentCorrelation": {
+          "$ref": "#/$defs/AssessmentCorrelation"
         }
       },
       "required": [
@@ -1104,6 +1113,17 @@
             "$ref": "#/$defs/EvidenceRef"
           },
           "maxItems": 100
+        },
+        "matchMethod": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "matchConfidence": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096,
+          "description": "Source/application confidence label, preserved as an open value; never invent a numeric probability."
         }
       },
       "required": [
@@ -1359,6 +1379,16 @@
             "$ref": "#/$defs/EvidenceRef"
           },
           "maxItems": 100
+        },
+        "error": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/WorkflowExecutionError"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       },
       "required": [
@@ -1444,14 +1474,33 @@
         "text": {
           "type": "string",
           "maxLength": 16384
+        },
+        "source": {
+          "$ref": "#/$defs/EntityRef",
+          "properties": {
+            "kind": {
+              "const": "Source"
+            }
+          },
+          "x-targetEntity": "Source",
+          "x-referenceMode": "VERSION"
+        },
+        "localeBasis": {
+          "type": "string",
+          "enum": [
+            "REQUEST",
+            "STREAM_LANGUAGE"
+          ]
         }
       },
       "required": [
         "locale",
-        "text"
+        "text",
+        "source",
+        "localeBasis"
       ],
       "additionalProperties": false,
-      "description": "Localized text belongs to an event revision, not a mutable global event field."
+      "description": "Localized text owned by an EventContext version. source pins the exact contextual detail/stream representation; localeBasis distinguishes request locale from an explicit stream language. Omission of the owning descriptions field means unobserved, not an empty description."
     },
     "CommunicationPage": {
       "type": "object",
@@ -1580,6 +1629,9 @@
               "type": "null"
             }
           ]
+        },
+        "normalized": {
+          "$ref": "#/$defs/NormalizedPolicyComponent"
         }
       },
       "required": [
@@ -1588,7 +1640,101 @@
         "units"
       ],
       "additionalProperties": false,
-      "description": "Only reviewed native component families; optional configured components determine the assessment denominator."
+      "description": "Reviewed native component families. Existing target/unit maps and raw disasterRecoveryApproach remain read-tolerant. Optional normalized validates the known metric/unit subset without replacing raw values; missing means no validated view, and unknown native values remain retained.",
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "kind"
+            ],
+            "properties": {
+              "kind": {
+                "const": "AVAILABILITY"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "normalized": {
+                "properties": {
+                  "kind": {
+                    "const": "AVAILABILITY"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "kind"
+            ],
+            "properties": {
+              "kind": {
+                "const": "DATA_RECOVERY"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "normalized": {
+                "properties": {
+                  "kind": {
+                    "const": "DATA_RECOVERY"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "kind"
+            ],
+            "properties": {
+              "kind": {
+                "const": "MULTI_AZ"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "normalized": {
+                "properties": {
+                  "kind": {
+                    "const": "MULTI_AZ"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "kind"
+            ],
+            "properties": {
+              "kind": {
+                "const": "MULTI_REGION"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "normalized": {
+                "properties": {
+                  "kind": {
+                    "const": "MULTI_REGION"
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
     },
     "PolicyContext": {
       "type": "object",
@@ -1959,6 +2105,35 @@
             "$ref": "#/$defs/EvidenceRef"
           },
           "maxItems": 100
+        },
+        "nodeKind": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "resolution": {
+          "type": "string",
+          "enum": [
+            "RESOLVED",
+            "UNRESOLVED",
+            "PARTIAL",
+            "UNKNOWN"
+          ]
+        },
+        "resolutionReason": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "assertion": {
+          "$ref": "#/$defs/AssertionMetadata"
         }
       },
       "required": [
@@ -1969,7 +2144,50 @@
         "evidenceRefs"
       ],
       "additionalProperties": false,
-      "description": "Snapshot-owned node; unknown/inferred identity remains qualified."
+      "description": "Snapshot-owned node; unknown/inferred identity remains qualified.",
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "resolution"
+            ],
+            "properties": {
+              "resolution": {
+                "const": "UNRESOLVED"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "entityRef": {
+                "type": "null"
+              },
+              "resolutionReason": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+              }
+            },
+            "required": [
+              "resolutionReason"
+            ]
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "assertion"
+            ]
+          },
+          "then": {
+            "required": [
+              "nodeKind",
+              "resolution",
+              "resolutionReason"
+            ]
+          }
+        }
+      ]
     },
     "GraphEdge": {
       "type": "object",
@@ -1993,7 +2211,9 @@
           "enum": [
             "PROVIDER",
             "DERIVED",
-            "HYPOTHESIS"
+            "HYPOTHESIS",
+            "OPERATOR_ASSERTED",
+            "INDEPENDENTLY_OBSERVED"
           ]
         },
         "evidenceRefs": {
@@ -2002,6 +2222,17 @@
             "$ref": "#/$defs/EvidenceRef"
           },
           "maxItems": 100
+        },
+        "nativeProperties": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/NativeTopologyProperty"
+          },
+          "maxItems": 1000,
+          "description": "Lossless ordered property collection from one native edge; source grouping is preserved by this GraphEdge and snapshot-local endpoints. Omitted means not supplied; empty means observed empty. relationKind remains an independent application relation, never defaulted from a missing native type."
+        },
+        "assertion": {
+          "$ref": "#/$defs/AssertionMetadata"
         }
       },
       "required": [
@@ -2013,7 +2244,97 @@
         "evidenceRefs"
       ],
       "additionalProperties": false,
-      "description": "Snapshot-owned typed edge. Causal claim, dependency, provider topology and sequence are different meanings."
+      "description": "Snapshot-owned typed edge. Causal claim, dependency, provider topology and sequence are different meanings.",
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "claimKind": {
+                "const": "OPERATOR_ASSERTED"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "assertion"
+            ],
+            "properties": {
+              "assertion": {
+                "properties": {
+                  "origin": {
+                    "type": "string",
+                    "enum": [
+                      "OPERATOR_STATEMENT",
+                      "OPERATOR_CONFIRMED"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "claimKind": {
+                "const": "INDEPENDENTLY_OBSERVED"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "assertion"
+            ],
+            "properties": {
+              "assertion": {
+                "properties": {
+                  "origin": {
+                    "type": "string",
+                    "enum": [
+                      "INDEPENDENTLY_OBSERVED"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "claimKind": {
+                "const": "PROVIDER"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "assertion": {
+                "properties": {
+                  "origin": {
+                    "not": {
+                      "const": "APPLICATION_INFERENCE"
+                    }
+                  },
+                  "derivation": {
+                    "not": {
+                      "type": "object",
+                      "required": [
+                        "method"
+                      ],
+                      "properties": {
+                        "method": {
+                          "const": "APPLICATION_INFERENCE"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
     },
     "GraphContents": {
       "type": "object",
@@ -2024,7 +2345,12 @@
             "RESOURCE_TOPOLOGY",
             "DEPENDENCY",
             "CAUSAL",
-            "INVESTIGATION"
+            "INVESTIGATION",
+            "EXECUTION_HIERARCHY",
+            "STREAM_BLOCK_HIERARCHY",
+            "TASK_LINK",
+            "EVIDENCE_ARGUMENT",
+            "KNOWLEDGE_CONFIGURATION"
           ]
         },
         "nodes": {
@@ -2040,6 +2366,9 @@
             "$ref": "#/$defs/GraphEdge"
           },
           "maxItems": 30000
+        },
+        "derivation": {
+          "$ref": "#/$defs/DerivationContext"
         }
       },
       "required": [
@@ -2048,7 +2377,7 @@
         "edges"
       ],
       "additionalProperties": false,
-      "description": "Nodes/edges belong to one immutable capture. Unresolved endpoints use explicitly marked nodes, never fabricated resources."
+      "description": "Nodes/edges belong to one immutable capture. Unresolved endpoints use explicitly marked nodes, never fabricated resources. Named view kinds preserve execution, stream, linked-task, evidence and configuration meaning. New normalized graph ingestion supplies nodeKind, resolution and assertion metadata; absent metadata in legacy captures remains unknown."
     },
     "OperationLock": {
       "type": "object",
@@ -2087,6 +2416,16 @@
         },
         "canReconcileWithoutCreate": {
           "type": "boolean"
+        },
+        "checkpointSchemaDigest": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Digest"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       },
       "required": [
@@ -2409,6 +2748,15 @@
         },
         "coverage": {
           "$ref": "#/$defs/Coverage"
+        },
+        "actualSummary": {
+          "$ref": "#/$defs/JsonValue"
+        },
+        "expectedSummary": {
+          "$ref": "#/$defs/JsonValue"
+        },
+        "evaluatorDigest": {
+          "$ref": "#/$defs/Digest"
         }
       },
       "required": [
@@ -2588,6 +2936,26 @@
               "type": "null"
             }
           ]
+        },
+        "matchMethod": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "matchConfidence": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096,
+          "description": "Source/application confidence label, preserved as an open value; never invent a numeric probability."
+        },
+        "sourceApplicability": {
+          "type": "string",
+          "enum": [
+            "CONFIRMED",
+            "CANDIDATE",
+            "EXCLUDED",
+            "UNKNOWN"
+          ]
         }
       },
       "required": [
@@ -2601,7 +2969,85 @@
         "policySnapshot"
       ],
       "additionalProperties": false,
-      "description": "Derived applicability with exact deployment, catalog revision, milestone and matching rule."
+      "description": "Derived applicability with exact deployment, catalog revision, milestone and matching rule. Source confirmed maps to APPLIES, excluded to DOES_NOT_APPLY, and candidate/unknown to UNKNOWN; optional sourceApplicability preserves CANDIDATE separately from UNKNOWN. Missing qualification remains unrecorded, never a confirmed match.",
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "sourceApplicability"
+            ],
+            "properties": {
+              "sourceApplicability": {
+                "const": "CONFIRMED"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "applicability": {
+                "const": "APPLIES"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "sourceApplicability"
+            ],
+            "properties": {
+              "sourceApplicability": {
+                "const": "CANDIDATE"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "applicability": {
+                "const": "UNKNOWN"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "sourceApplicability"
+            ],
+            "properties": {
+              "sourceApplicability": {
+                "const": "EXCLUDED"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "applicability": {
+                "const": "DOES_NOT_APPLY"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "sourceApplicability"
+            ],
+            "properties": {
+              "sourceApplicability": {
+                "const": "UNKNOWN"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "applicability": {
+                "const": "UNKNOWN"
+              }
+            }
+          }
+        }
+      ]
     },
     "InvestigationResult": {
       "type": "object",
@@ -2943,7 +3389,8 @@
             "minLength": 1,
             "maxLength": 4096
           },
-          "maxItems": 100
+          "maxItems": 100,
+          "uniqueItems": true
         },
         "targetBindings": {
           "$ref": "#/$defs/StringMap"
@@ -2983,7 +3430,8 @@
         "selectionKey": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 4096
+          "maxLength": 4096,
+          "description": "Opaque membership identity within the Experiment. Use targetName for the selector join; no delimiter encoding is defined."
         },
         "sourceIdentity": {
           "anyOf": [
@@ -3030,6 +3478,11 @@
             "maxLength": 4096
           },
           "maxItems": 100
+        },
+        "targetName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
         }
       },
       "required": [
@@ -3410,6 +3863,14 @@
             "$ref": "#/$defs/Coverage"
           },
           "maxItems": 1000
+        },
+        "collector": {
+          "$ref": "#/$defs/ProcessingIdentity",
+          "description": "Exact retained processing identity. Absence on historical records means unrecorded/unknown, not the current implementation or policy."
+        },
+        "selectionPolicy": {
+          "$ref": "#/$defs/ProcessingIdentity",
+          "description": "Exact retained processing identity. Absence on historical records means unrecorded/unknown, not the current implementation or policy."
         }
       },
       "required": [
@@ -3563,6 +4024,23 @@
               "type": "null"
             }
           ]
+        },
+        "itemErrors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CollectionItemError"
+          },
+          "maxItems": 1000
+        },
+        "itemOutcome": {
+          "type": "string",
+          "enum": [
+            "COMPLETE",
+            "PARTIAL",
+            "FAILED",
+            "NOT_APPLICABLE",
+            "UNKNOWN"
+          ]
         }
       },
       "required": [
@@ -3595,7 +4073,128 @@
       "x-versioning": "APPEND_ONLY",
       "x-writeAuthority": "COLLECTOR",
       "x-sealingRule": "Lifecycle changes append versions. A settled/terminal record cannot be reopened; late reconciliation is new evidence and does not rewrite settled facts.",
-      "x-recordIdentity": "workspaceId + readAttemptId + version"
+      "x-recordIdentity": "workspaceId + readAttemptId + version",
+      "dependentRequired": {
+        "itemErrors": [
+          "itemOutcome"
+        ],
+        "itemOutcome": [
+          "itemErrors"
+        ]
+      },
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "itemOutcome"
+            ],
+            "properties": {
+              "itemOutcome": {
+                "enum": [
+                  "PARTIAL",
+                  "FAILED"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "state": {
+                "const": "SUCCEEDED"
+              },
+              "error": {
+                "type": "null"
+              },
+              "itemErrors": {
+                "minItems": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "itemOutcome"
+            ],
+            "properties": {
+              "itemOutcome": {
+                "enum": [
+                  "COMPLETE",
+                  "NOT_APPLICABLE"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "itemErrors": {
+                "maxItems": 0
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "itemErrors"
+            ],
+            "properties": {
+              "itemErrors": {
+                "minItems": 1
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "itemOutcome": {
+                "enum": [
+                  "PARTIAL",
+                  "FAILED"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "itemOutcome"
+            ],
+            "properties": {
+              "itemOutcome": {
+                "const": "PARTIAL"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "returnedCount": {
+                "type": "integer",
+                "minimum": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "itemOutcome"
+            ],
+            "properties": {
+              "itemOutcome": {
+                "const": "FAILED"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "returnedCount": {
+                "const": 0
+              }
+            }
+          }
+        }
+      ]
     },
     "Source": {
       "type": "object",
@@ -3703,6 +4302,28 @@
             "INLINE",
             "ARTIFACT"
           ]
+        },
+        "effectiveTargets": {
+          "$ref": "#/$defs/EffectiveTargets"
+        },
+        "eventSubjects": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EventSubject"
+          },
+          "maxItems": 1000
+        },
+        "subjectState": {
+          "$ref": "#/$defs/SubjectStateObservation"
+        },
+        "healthSignal": {
+          "$ref": "#/$defs/HealthSignalEvidence"
+        },
+        "postureEvidence": {
+          "$ref": "#/$defs/PostureEvidence"
+        },
+        "normalization": {
+          "$ref": "#/$defs/SourceNormalization"
         }
       },
       "required": [
@@ -3726,7 +4347,7 @@
         "payloadStorage"
       ],
       "additionalProperties": false,
-      "description": "Versioned retained source representation. Stable sourceId is scoped by native identity, representation, profile and source operation, independently of payload digest or provider version. Changed accepted content appends a version; an unchanged poll observes the current version again.",
+      "description": "Versioned retained source representation. Stable sourceId is scoped by native identity, representation, profile and source operation, independently of payload digest or provider version. Changed accepted content appends a version; an unchanged poll observes the current version again. Optional normalized views and their normalization provenance are immutable members of this Source version. contentDigest hashes only the retained raw payload/artifact. A changed view or normalization rule appends a Source version even if raw bytes and contentDigest are unchanged; a repeated receipt reuses a version only when raw content, views and rule all agree.",
       "x-entity": true,
       "x-module": "foundation",
       "x-owner": "retained evidence",
@@ -3750,6 +4371,291 @@
               }
             }
           }
+        },
+        {
+          "if": {
+            "required": [
+              "effectiveTargets"
+            ],
+            "properties": {}
+          },
+          "then": {
+            "properties": {
+              "profile": {
+                "enum": [
+                  "aws.resilience-hub.effective-targets/v1"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "eventSubjects"
+            ],
+            "properties": {}
+          },
+          "then": {
+            "properties": {
+              "profile": {
+                "enum": [
+                  "aws.resilience-hub.event/v1"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "healthSignal"
+            ],
+            "properties": {}
+          },
+          "then": {
+            "properties": {
+              "profile": {
+                "enum": [
+                  "console.monitoring.health/v1"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "postureEvidence"
+            ],
+            "properties": {}
+          },
+          "then": {
+            "properties": {
+              "profile": {
+                "enum": [
+                  "aws.resilience-hub.posture/v1",
+                  "console.resilience.status/v1"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "postureEvidence"
+            ],
+            "properties": {
+              "postureEvidence": {
+                "properties": {
+                  "kind": {
+                    "const": "AWS_SERVICE"
+                  }
+                },
+                "required": [
+                  "kind"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "profile": {
+                "const": "aws.resilience-hub.posture/v1"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "postureEvidence"
+            ],
+            "properties": {
+              "postureEvidence": {
+                "properties": {
+                  "kind": {
+                    "const": "DERIVED_ATTENTION"
+                  }
+                },
+                "required": [
+                  "kind"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "profile": {
+                "const": "console.resilience.status/v1"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "profile": {
+                "const": "console.telemetry.metric-query/v1"
+              }
+            },
+            "required": [
+              "profile"
+            ]
+          },
+          "then": {
+            "properties": {
+              "profileVersion": {
+                "const": "1"
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "payloadStorage": {
+                      "const": "INLINE"
+                    }
+                  },
+                  "required": [
+                    "payloadStorage"
+                  ]
+                },
+                "then": {
+                  "properties": {
+                    "payload": {
+                      "$ref": "#/$defs/MetricQueryDefinition"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "x-reviewRule": "console.telemetry.metric-query/v1"
+        },
+        {
+          "if": {
+            "properties": {
+              "profile": {
+                "const": "console.telemetry.metric-observation/v1"
+              }
+            },
+            "required": [
+              "profile"
+            ]
+          },
+          "then": {
+            "properties": {
+              "profileVersion": {
+                "const": "1"
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "payloadStorage": {
+                      "const": "INLINE"
+                    }
+                  },
+                  "required": [
+                    "payloadStorage"
+                  ]
+                },
+                "then": {
+                  "properties": {
+                    "payload": {
+                      "$ref": "#/$defs/MetricObservationValue"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "x-reviewRule": "console.telemetry.metric-observation/v1"
+        },
+        {
+          "if": {
+            "properties": {
+              "profile": {
+                "const": "console.telemetry.criterion/v1"
+              }
+            },
+            "required": [
+              "profile"
+            ]
+          },
+          "then": {
+            "properties": {
+              "profileVersion": {
+                "const": "1"
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "payloadStorage": {
+                      "const": "INLINE"
+                    }
+                  },
+                  "required": [
+                    "payloadStorage"
+                  ]
+                },
+                "then": {
+                  "properties": {
+                    "payload": {
+                      "$ref": "#/$defs/MetricCriterionDefinition"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "x-reviewRule": "console.telemetry.criterion/v1"
+        },
+        {
+          "if": {
+            "properties": {
+              "profile": {
+                "const": "console.workflow.observation/v1"
+              }
+            },
+            "required": [
+              "profile"
+            ]
+          },
+          "then": {
+            "properties": {
+              "profileVersion": {
+                "const": "1"
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "payloadStorage": {
+                      "const": "INLINE"
+                    }
+                  },
+                  "required": [
+                    "payloadStorage"
+                  ]
+                },
+                "then": {
+                  "properties": {
+                    "payload": {
+                      "$ref": "#/$defs/WorkflowObservationValue"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "x-reviewRule": "console.workflow.observation/v1"
         }
       ],
       "x-versioning": "APPEND_ONLY",
@@ -3762,7 +4668,24 @@
         "representation",
         "profile",
         "sourceOperation"
-      ]
+      ],
+      "dependentRequired": {
+        "effectiveTargets": [
+          "normalization"
+        ],
+        "eventSubjects": [
+          "normalization"
+        ],
+        "subjectState": [
+          "normalization"
+        ],
+        "healthSignal": [
+          "normalization"
+        ],
+        "postureEvidence": [
+          "normalization"
+        ]
+      }
     },
     "Observation": {
       "type": "object",
@@ -4005,7 +4928,9 @@
             "LIFECYCLE_EXPOSURE",
             "INVESTIGATION_RESULT",
             "SERVICE_STATUS",
-            "WORKSPACE_SUMMARY"
+            "WORKSPACE_SUMMARY",
+            "INVESTIGATION_TIMELINE",
+            "INVESTIGATION_ASSERTIONS"
           ]
         },
         "profileVersion": {
@@ -4045,6 +4970,12 @@
         },
         "value": {
           "$ref": "#/$defs/JsonValue"
+        },
+        "derivation": {
+          "$ref": "#/$defs/DerivationContext"
+        },
+        "outputDigest": {
+          "$ref": "#/$defs/Digest"
         }
       },
       "required": [
@@ -4149,6 +5080,76 @@
                 "$ref": "#/$defs/WorkspaceSummary"
               }
             }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "profile": {
+                "const": "INVESTIGATION_TIMELINE"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "$ref": "#/$defs/InvestigationTimeline"
+              },
+              "subjectRefs": {
+                "contains": {
+                  "type": "object",
+                  "required": [
+                    "kind"
+                  ],
+                  "properties": {
+                    "kind": {
+                      "const": "Investigation"
+                    }
+                  }
+                },
+                "minContains": 1,
+                "maxContains": 1
+              }
+            },
+            "required": [
+              "derivation",
+              "outputDigest"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "profile": {
+                "const": "INVESTIGATION_ASSERTIONS"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "$ref": "#/$defs/InvestigationAssertions"
+              },
+              "subjectRefs": {
+                "contains": {
+                  "type": "object",
+                  "required": [
+                    "kind"
+                  ],
+                  "properties": {
+                    "kind": {
+                      "const": "Investigation"
+                    }
+                  }
+                },
+                "minContains": 1,
+                "maxContains": 1
+              }
+            },
+            "required": [
+              "derivation",
+              "outputDigest"
+            ]
           }
         }
       ],
@@ -4301,6 +5302,34 @@
               }
             }
           }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "EVALUATION_INPUT"
+              },
+              "contents": {
+                "type": "object",
+                "properties": {
+                  "contractProfile": {
+                    "const": "console.telemetry.evaluation-input/v1"
+                  }
+                },
+                "required": [
+                  "contractProfile"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "contents": {
+                "$ref": "#/$defs/TelemetryEvaluationInput"
+              }
+            }
+          },
+          "x-reviewRule": "TELEMETRY_EVALUATION_INPUT"
         }
       ],
       "x-versioning": "APPEND_ONLY",
@@ -4533,6 +5562,23 @@
         },
         "replayExpiresAt": {
           "$ref": "#/$defs/Timestamp"
+        },
+        "requestSource": {
+          "$ref": "#/$defs/EntityRef",
+          "properties": {
+            "kind": {
+              "const": "Source"
+            }
+          },
+          "x-targetEntity": "Source",
+          "x-referenceMode": "VERSION",
+          "description": "Exact authorized retained request content for audit reconstruction; never substitute current input for an old digest. Legacy absence is explicitly unreconstructable."
+        },
+        "approvalDecision": {
+          "$ref": "#/$defs/ApprovalDecisionIntent"
+        },
+        "approvalResume": {
+          "$ref": "#/$defs/ApprovalResumeIntent"
         }
       },
       "required": [
@@ -4563,7 +5609,43 @@
       "x-versioning": "APPEND_ONLY",
       "x-writeAuthority": "APPLICATION",
       "x-sealingRule": "Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.",
-      "x-recordIdentity": "workspaceId + commandId + version"
+      "x-recordIdentity": "workspaceId + commandId + version",
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "approvalDecision"
+            ]
+          },
+          "then": {
+            "properties": {
+              "operation": {
+                "const": "DecideApproval"
+              },
+              "expectedVersion": {
+                "$ref": "#/$defs/Version"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "approvalResume"
+            ]
+          },
+          "then": {
+            "properties": {
+              "operation": {
+                "const": "ResumeExecution"
+              },
+              "expectedVersion": {
+                "$ref": "#/$defs/Version"
+              }
+            }
+          }
+        }
+      ]
     },
     "System": {
       "type": "object",
@@ -5037,6 +6119,14 @@
               "type": "null"
             }
           ]
+        },
+        "descriptions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EventDescription"
+          },
+          "maxItems": 100,
+          "description": "Optional observed localized descriptions. Preserve richer earlier detail through its exact Source reference; a later summary cannot erase it. At most one current description per locale."
         }
       },
       "required": [
@@ -5884,6 +6974,10 @@
         },
         "enrichment": {
           "$ref": "#/$defs/RecommendationEnrichment"
+        },
+        "normalizedSuggestion": {
+          "$ref": "#/$defs/RecommendationContent",
+          "description": "Optional validated native category and ordered content. Preserve raw suggestion, including unfamiliar category/content, unchanged. Omission means not normalized and does not erase retained content."
         }
       },
       "required": [
@@ -6072,6 +7166,14 @@
               "type": "null"
             }
           ]
+        },
+        "artifactReferences": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/InvestigationArtifactReference"
+          },
+          "minItems": 0,
+          "maxItems": 1000
         }
       },
       "required": [
@@ -6232,6 +7334,17 @@
           },
           "x-targetEntity": "Observation",
           "x-referenceMode": "VERSION"
+        },
+        "nativeAttribution": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/NativeUserAttribution"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Present only when normalized from selectedSource.userReference. Missing/null is unknown, never inferred from the collection connection or command actor."
         }
       },
       "required": [
@@ -6328,6 +7441,9 @@
             "$ref": "#/$defs/Id"
           },
           "maxItems": 100
+        },
+        "invocation": {
+          "$ref": "#/$defs/ApprovalInvocation"
         }
       },
       "required": [
@@ -6713,6 +7829,13 @@
           },
           "maxItems": 100,
           "description": "Exact step representations selected by this Run version; historical reads never join current steps."
+        },
+        "evidenceCitations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/RunEvidenceCitation"
+          },
+          "maxItems": 10000
         }
       },
       "required": [
@@ -6946,6 +8069,9 @@
             "$ref": "#/$defs/EvidenceRef"
           },
           "maxItems": 1000
+        },
+        "recovery": {
+          "$ref": "#/$defs/AttemptRecovery"
         }
       },
       "required": [
@@ -7048,6 +8174,30 @@
         },
         "report": {
           "$ref": "#/$defs/FISReport"
+        },
+        "targetSelections": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/FISTargetSelection"
+          },
+          "maxItems": 1000
+        },
+        "targetSelectionCompleteness": {
+          "type": "string",
+          "enum": [
+            "COMPLETE",
+            "PARTIAL",
+            "UNKNOWN"
+          ]
+        },
+        "actionCompleteness": {
+          "type": "string",
+          "enum": [
+            "COMPLETE",
+            "PARTIAL",
+            "UNKNOWN"
+          ],
+          "description": "Completeness of the captured named action map, independently of target selection or execution state. Explicit PARTIAL or UNKNOWN permits unloaded dependency endpoints. COMPLETE requires owner-local endpoints. Omission preserves the legacy closed-reference validation contract without certifying provider hydration. Known cycles, self-edges and duplicate edges are invalid in every mode."
         }
       },
       "required": [
@@ -7074,7 +8224,36 @@
       "x-versioning": "APPEND_ONLY",
       "x-writeAuthority": "COLLECTOR",
       "x-sealingRule": "Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.",
-      "x-recordIdentity": "workspaceId + experimentId + version"
+      "x-recordIdentity": "workspaceId + experimentId + version",
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "targetSelections"
+            ]
+          },
+          "then": {
+            "required": [
+              "targetSelectionCompleteness"
+            ],
+            "properties": {
+              "targetMemberships": {
+                "items": {
+                  "required": [
+                    "targetName"
+                  ]
+                }
+              }
+            }
+          },
+          "x-reviewRule": "FIS_SELECTOR_JOIN"
+        }
+      ],
+      "dependentRequired": {
+        "targetSelectionCompleteness": [
+          "targetSelections"
+        ]
+      }
     },
     "WorkflowPolicies": {
       "type": "object",
@@ -7441,6 +8620,3566 @@
       "minimum": 1,
       "maximum": 9007199254740991,
       "description": "A positive domain count or ordinal. It is not an entity version or concurrency token."
+    },
+    "CollectionItemError": {
+      "type": "object",
+      "properties": {
+        "eventArn": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "accountId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "code": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "message": {
+          "type": "string",
+          "maxLength": 16384
+        },
+        "retryState": {
+          "type": "string",
+          "enum": [
+            "NOT_RETRIED",
+            "RETRY_PENDING",
+            "RETRIED",
+            "EXHAUSTED",
+            "UNKNOWN"
+          ]
+        }
+      },
+      "required": [
+        "eventArn",
+        "accountId",
+        "code",
+        "message",
+        "retryState"
+      ],
+      "additionalProperties": false,
+      "description": "Owned Health failedSet entry scoped by event ARN and optional affected account. The containing ReadAttempt remains the one native HTTP request; transport failure is ReadAttempt.error."
+    },
+    "EffectiveTargetProvenance": {
+      "type": "object",
+      "properties": {
+        "policyName": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "ownershipSource": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "SELF",
+                "CROSS_ACCOUNT"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "resolvedPolicy": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/EntityRef",
+              "properties": {
+                "kind": {
+                  "const": "ResiliencePolicy"
+                }
+              },
+              "x-targetEntity": "ResiliencePolicy",
+              "x-referenceMode": "VERSION"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "resolutionEvidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EvidenceRef"
+          },
+          "maxItems": 100,
+          "minItems": 0
+        }
+      },
+      "required": [],
+      "additionalProperties": false,
+      "description": "Native source is account ownership, not direct/inherited assignment. A policy name is not an ARN. Resolved identity requires independently retained evidence; absent provenance stays absent.",
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "resolvedPolicy"
+            ],
+            "properties": {
+              "resolvedPolicy": {
+                "type": "object"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "resolutionEvidence"
+            ],
+            "properties": {
+              "resolutionEvidence": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "EffectiveAvailabilityTarget": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "unit": {
+          "const": "Percent"
+        },
+        "provenance": {
+          "$ref": "#/$defs/EffectiveTargetProvenance"
+        }
+      },
+      "required": [
+        "value",
+        "unit"
+      ],
+      "additionalProperties": false,
+      "description": "One returned effective target. The value is observed, not defaulted; optional provenance preserves only evidence actually supplied."
+    },
+    "EffectiveDurationTarget": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "unit": {
+          "const": "Minutes"
+        },
+        "provenance": {
+          "$ref": "#/$defs/EffectiveTargetProvenance"
+        }
+      },
+      "required": [
+        "value",
+        "unit"
+      ],
+      "additionalProperties": false,
+      "description": "One returned effective target. The value is observed, not defaulted; optional provenance preserves only evidence actually supplied."
+    },
+    "EffectiveRecoveryApproach": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "enum": [
+            "ACTIVE_ACTIVE",
+            "HOT_STANDBY",
+            "WARM_STANDBY",
+            "PILOT_LIGHT",
+            "BACKUP_AND_RESTORE"
+          ]
+        },
+        "unit": {
+          "const": "Approach"
+        },
+        "provenance": {
+          "$ref": "#/$defs/EffectiveTargetProvenance"
+        }
+      },
+      "required": [
+        "value",
+        "unit"
+      ],
+      "additionalProperties": false,
+      "description": "One returned effective target. The value is observed, not defaulted; optional provenance preserves only evidence actually supplied."
+    },
+    "EffectiveTargets": {
+      "type": "object",
+      "properties": {
+        "service": {
+          "$ref": "#/$defs/EntityRef",
+          "properties": {
+            "kind": {
+              "const": "Service"
+            }
+          },
+          "x-targetEntity": "Service",
+          "x-referenceMode": "VERSION"
+        },
+        "values": {
+          "type": "object",
+          "properties": {
+            "availabilitySlo": {
+              "$ref": "#/$defs/EffectiveAvailabilityTarget"
+            },
+            "dataRecoveryTimeBetweenBackups": {
+              "$ref": "#/$defs/EffectiveDurationTarget"
+            },
+            "multiAzDrApproach": {
+              "$ref": "#/$defs/EffectiveRecoveryApproach"
+            },
+            "multiAzRpo": {
+              "$ref": "#/$defs/EffectiveDurationTarget"
+            },
+            "multiAzRto": {
+              "$ref": "#/$defs/EffectiveDurationTarget"
+            },
+            "multiRegionDrApproach": {
+              "$ref": "#/$defs/EffectiveRecoveryApproach"
+            },
+            "multiRegionRpo": {
+              "$ref": "#/$defs/EffectiveDurationTarget"
+            },
+            "multiRegionRto": {
+              "$ref": "#/$defs/EffectiveDurationTarget"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "service",
+        "values"
+      ],
+      "additionalProperties": false,
+      "description": "Service-scoped effectivePolicyValues normalized from the exact containing Source. Eight optional metric keys; missing is not zero. Recovery approaches are strings, durations integers in minutes and availability a percentage."
+    },
+    "NormalizedPolicyComponent": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "AVAILABILITY",
+            "DATA_RECOVERY",
+            "MULTI_AZ",
+            "MULTI_REGION"
+          ]
+        },
+        "targets": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "number"
+          },
+          "maxProperties": 16
+        },
+        "units": {
+          "$ref": "#/$defs/StringMap"
+        },
+        "disasterRecoveryApproach": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "ACTIVE_ACTIVE",
+                "HOT_STANDBY",
+                "WARM_STANDBY",
+                "PILOT_LIGHT",
+                "BACKUP_AND_RESTORE"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "kind",
+        "targets",
+        "units"
+      ],
+      "additionalProperties": false,
+      "description": "Optional validated known-metric view of one PolicyComponent. Preserve unfamiliar native target keys and DR values in the owner/raw Source; omission of this view does not assert normalization.",
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "kind"
+            ],
+            "properties": {
+              "kind": {
+                "const": "AVAILABILITY"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "targets": {
+                "type": "object",
+                "properties": {
+                  "availabilitySloPercent": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 100
+                  }
+                },
+                "required": [
+                  "availabilitySloPercent"
+                ],
+                "additionalProperties": false
+              },
+              "units": {
+                "type": "object",
+                "properties": {
+                  "availabilitySloPercent": {
+                    "const": "Percent"
+                  }
+                },
+                "required": [
+                  "availabilitySloPercent"
+                ],
+                "additionalProperties": false
+              },
+              "disasterRecoveryApproach": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "kind"
+            ],
+            "properties": {
+              "kind": {
+                "const": "DATA_RECOVERY"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "targets": {
+                "type": "object",
+                "properties": {
+                  "timeBetweenBackupsInMinutes": {
+                    "type": "integer",
+                    "minimum": 0
+                  }
+                },
+                "required": [
+                  "timeBetweenBackupsInMinutes"
+                ],
+                "additionalProperties": false
+              },
+              "units": {
+                "type": "object",
+                "properties": {
+                  "timeBetweenBackupsInMinutes": {
+                    "const": "Minutes"
+                  }
+                },
+                "required": [
+                  "timeBetweenBackupsInMinutes"
+                ],
+                "additionalProperties": false
+              },
+              "disasterRecoveryApproach": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "kind"
+            ],
+            "properties": {
+              "kind": {
+                "const": "MULTI_AZ"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "targets": {
+                "type": "object",
+                "properties": {
+                  "rtoInMinutes": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rpoInMinutes": {
+                    "type": "integer",
+                    "minimum": 0
+                  }
+                },
+                "required": [],
+                "additionalProperties": false
+              },
+              "units": {
+                "type": "object",
+                "properties": {
+                  "rtoInMinutes": {
+                    "const": "Minutes"
+                  },
+                  "rpoInMinutes": {
+                    "const": "Minutes"
+                  }
+                },
+                "required": [],
+                "additionalProperties": false
+              }
+            },
+            "anyOf": [
+              {
+                "properties": {
+                  "targets": {
+                    "minProperties": 1
+                  }
+                }
+              },
+              {
+                "required": [
+                  "disasterRecoveryApproach"
+                ],
+                "properties": {
+                  "disasterRecoveryApproach": {
+                    "type": "string",
+                    "enum": [
+                      "ACTIVE_ACTIVE",
+                      "HOT_STANDBY",
+                      "WARM_STANDBY",
+                      "PILOT_LIGHT",
+                      "BACKUP_AND_RESTORE"
+                    ]
+                  }
+                }
+              }
+            ],
+            "allOf": [
+              {
+                "if": {
+                  "required": [
+                    "targets"
+                  ],
+                  "properties": {
+                    "targets": {
+                      "required": [
+                        "rtoInMinutes"
+                      ]
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "units": {
+                      "required": [
+                        "rtoInMinutes"
+                      ]
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "required": [
+                    "units"
+                  ],
+                  "properties": {
+                    "units": {
+                      "required": [
+                        "rtoInMinutes"
+                      ]
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "targets": {
+                      "required": [
+                        "rtoInMinutes"
+                      ]
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "required": [
+                    "targets"
+                  ],
+                  "properties": {
+                    "targets": {
+                      "required": [
+                        "rpoInMinutes"
+                      ]
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "units": {
+                      "required": [
+                        "rpoInMinutes"
+                      ]
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "required": [
+                    "units"
+                  ],
+                  "properties": {
+                    "units": {
+                      "required": [
+                        "rpoInMinutes"
+                      ]
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "targets": {
+                      "required": [
+                        "rpoInMinutes"
+                      ]
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "kind"
+            ],
+            "properties": {
+              "kind": {
+                "const": "MULTI_REGION"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "targets": {
+                "type": "object",
+                "properties": {
+                  "rtoInMinutes": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rpoInMinutes": {
+                    "type": "integer",
+                    "minimum": 0
+                  }
+                },
+                "required": [],
+                "additionalProperties": false
+              },
+              "units": {
+                "type": "object",
+                "properties": {
+                  "rtoInMinutes": {
+                    "const": "Minutes"
+                  },
+                  "rpoInMinutes": {
+                    "const": "Minutes"
+                  }
+                },
+                "required": [],
+                "additionalProperties": false
+              }
+            },
+            "anyOf": [
+              {
+                "properties": {
+                  "targets": {
+                    "minProperties": 1
+                  }
+                }
+              },
+              {
+                "required": [
+                  "disasterRecoveryApproach"
+                ],
+                "properties": {
+                  "disasterRecoveryApproach": {
+                    "type": "string",
+                    "enum": [
+                      "ACTIVE_ACTIVE",
+                      "HOT_STANDBY",
+                      "WARM_STANDBY",
+                      "PILOT_LIGHT",
+                      "BACKUP_AND_RESTORE"
+                    ]
+                  }
+                }
+              }
+            ],
+            "allOf": [
+              {
+                "if": {
+                  "required": [
+                    "targets"
+                  ],
+                  "properties": {
+                    "targets": {
+                      "required": [
+                        "rtoInMinutes"
+                      ]
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "units": {
+                      "required": [
+                        "rtoInMinutes"
+                      ]
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "required": [
+                    "units"
+                  ],
+                  "properties": {
+                    "units": {
+                      "required": [
+                        "rtoInMinutes"
+                      ]
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "targets": {
+                      "required": [
+                        "rtoInMinutes"
+                      ]
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "required": [
+                    "targets"
+                  ],
+                  "properties": {
+                    "targets": {
+                      "required": [
+                        "rpoInMinutes"
+                      ]
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "units": {
+                      "required": [
+                        "rpoInMinutes"
+                      ]
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "required": [
+                    "units"
+                  ],
+                  "properties": {
+                    "units": {
+                      "required": [
+                        "rpoInMinutes"
+                      ]
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "targets": {
+                      "required": [
+                        "rpoInMinutes"
+                      ]
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "AssessmentCorrelation": {
+      "type": "object",
+      "properties": {
+        "service": {
+          "$ref": "#/$defs/EntityRef",
+          "properties": {
+            "kind": {
+              "const": "Service"
+            }
+          },
+          "x-targetEntity": "Service",
+          "x-referenceMode": "VERSION"
+        },
+        "assessment": {
+          "$ref": "#/$defs/EntityRef",
+          "properties": {
+            "kind": {
+              "const": "ResilienceAssessment"
+            }
+          },
+          "x-targetEntity": "ResilienceAssessment",
+          "x-referenceMode": "VERSION"
+        },
+        "relationship": {
+          "const": "TEMPORAL_CORRELATION"
+        },
+        "basis": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 16384
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EvidenceRef"
+          },
+          "maxItems": 100,
+          "minItems": 1
+        }
+      },
+      "required": [
+        "service",
+        "assessment",
+        "relationship",
+        "basis",
+        "evidenceRefs"
+      ],
+      "additionalProperties": false,
+      "description": "Optional observed same-service association. It is local temporal correlation and never asserts that the assessment owns a finding or evaluated the current policy."
+    },
+    "RecommendationContent": {
+      "type": "object",
+      "properties": {
+        "category": {
+          "type": "string",
+          "enum": [
+            "INFRASTRUCTURE_AND_CODE",
+            "OBSERVABILITY",
+            "TESTING"
+          ]
+        },
+        "suggestedChanges": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 16384
+          },
+          "maxItems": 10
+        }
+      },
+      "required": [
+        "category"
+      ],
+      "additionalProperties": false,
+      "description": "One native nested recommendation item. Category identifies its source array; owner groupKey and ordinal preserve grouping and order. Absent suggestedChanges differs from an observed empty array. No provider ID, cost or title is invented."
+    },
+    "NativeTopologyProperty": {
+      "type": "object",
+      "properties": {
+        "topologyType": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [],
+      "additionalProperties": false,
+      "description": "One returned Resilience Hub EdgeProperty. Known topology types are CONTAINMENT, DATA_FLOW, OBSERVABILITY and PERMISSIONS; unknown native values remain open. An absent topologyType is unknown. Optional label is LLM-inferred provenance, not measured traffic."
+    },
+    "SubjectReference": {
+      "type": "object",
+      "properties": {
+        "entity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/EntityRef"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "sourceIdentity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SourceIdentity"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "entity",
+        "sourceIdentity"
+      ],
+      "additionalProperties": false,
+      "description": "Exact historical console entity and/or scoped native identity. Unresolved source identity is valid. Names alone are never identifiers.",
+      "anyOf": [
+        {
+          "properties": {
+            "entity": {
+              "type": "object"
+            }
+          }
+        },
+        {
+          "properties": {
+            "sourceIdentity": {
+              "type": "object"
+            }
+          }
+        }
+      ]
+    },
+    "EventSubject": {
+      "type": "object",
+      "properties": {
+        "subject": {
+          "$ref": "#/$defs/SubjectReference"
+        },
+        "role": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "linkage": {
+          "type": "string",
+          "enum": [
+            "ASSERTED",
+            "INFERRED"
+          ]
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EvidenceRef"
+          },
+          "maxItems": 100,
+          "minItems": 1
+        }
+      },
+      "required": [
+        "subject",
+        "role",
+        "linkage",
+        "evidenceRefs"
+      ],
+      "additionalProperties": false,
+      "description": "Owned event-to-subject relationship with explicit asserted/inferred provenance. Envelope resources alone do not prove a normalized link."
+    },
+    "SubjectStateObservation": {
+      "type": "object",
+      "properties": {
+        "subject": {
+          "$ref": "#/$defs/SubjectReference"
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "PRESENT",
+            "DELETED",
+            "NOT_VISIBLE",
+            "UNKNOWN"
+          ]
+        },
+        "observedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EvidenceRef"
+          },
+          "maxItems": 100,
+          "minItems": 1
+        },
+        "basis": {
+          "type": "string",
+          "enum": [
+            "EXPLICIT_PROVIDER_DELETION",
+            "EXPLICIT_PRESENT",
+            "ACCESS_DENIED",
+            "NOT_RETURNED",
+            "UNRESOLVED"
+          ]
+        }
+      },
+      "required": [
+        "subject",
+        "state",
+        "observedAt",
+        "evidenceRefs",
+        "basis"
+      ],
+      "additionalProperties": false,
+      "description": "Observed subject visibility/lifecycle evidence, retained without deleting historical entity versions. DELETED requires positive deletion evidence; a missing list row or authorization failure is NOT_VISIBLE or UNKNOWN. A historical reference keeps selecting its exact version.",
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "state"
+            ],
+            "properties": {
+              "state": {
+                "const": "DELETED"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "basis": {
+                "const": "EXPLICIT_PROVIDER_DELETION"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "state"
+            ],
+            "properties": {
+              "state": {
+                "const": "PRESENT"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "basis": {
+                "const": "EXPLICIT_PRESENT"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "SignalMeasurement": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "value": {
+          "type": "number"
+        },
+        "unit": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "name",
+        "value",
+        "unit"
+      ],
+      "additionalProperties": false,
+      "description": "A named measured signal with an explicit unit; no metric value is inferred from a badge."
+    },
+    "HealthSignalEvidence": {
+      "type": "object",
+      "properties": {
+        "subject": {
+          "$ref": "#/$defs/SubjectReference"
+        },
+        "telemetrySource": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "signalId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "windowStart": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "windowEnd": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "measuredAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "receivedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "expiresAt": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "state": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "reason": {
+          "type": "string",
+          "maxLength": 16384
+        },
+        "measurements": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SignalMeasurement"
+          },
+          "maxItems": 1000
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EvidenceRef"
+          },
+          "maxItems": 100,
+          "minItems": 1
+        },
+        "aggregationRuleDigest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "subject",
+        "telemetrySource",
+        "signalId",
+        "windowStart",
+        "windowEnd",
+        "measuredAt",
+        "receivedAt",
+        "expiresAt",
+        "state",
+        "reason",
+        "measurements",
+        "evidenceRefs",
+        "aggregationRuleDigest"
+      ],
+      "additionalProperties": false,
+      "description": "Owned external runtime-health observation. Windows, measurement/receipt/expiry times, signal identity and aggregation rule remain explicit. Recomputing a projection never renews this evidence."
+    },
+    "PostureComponentOutcome": {
+      "type": "object",
+      "properties": {
+        "component": {
+          "type": "string",
+          "enum": [
+            "AVAILABILITY",
+            "DATA_RECOVERY",
+            "MULTI_AZ",
+            "MULTI_REGION"
+          ]
+        },
+        "rawAchievability": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "component",
+        "rawAchievability"
+      ],
+      "additionalProperties": false,
+      "description": "Native component outcome with open provider status vocabulary; never convert a missing outcome into success."
+    },
+    "NativePostureEvidence": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "AWS_SERVICE"
+        },
+        "service": {
+          "$ref": "#/$defs/EntityRef",
+          "properties": {
+            "kind": {
+              "const": "Service"
+            }
+          },
+          "x-targetEntity": "Service",
+          "x-referenceMode": "VERSION"
+        },
+        "componentOutcomes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/PostureComponentOutcome"
+          },
+          "maxItems": 4
+        },
+        "policyContext": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/EntityRef",
+              "properties": {
+                "kind": {
+                  "const": "Snapshot"
+                }
+              },
+              "x-targetEntity": "Snapshot",
+              "x-referenceMode": "VERSION"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "assessmentCorrelation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AssessmentCorrelation"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "captureStartedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "captureEndedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "coverage": {
+          "$ref": "#/$defs/Coverage"
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EvidenceRef"
+          },
+          "maxItems": 100,
+          "minItems": 1
+        }
+      },
+      "required": [
+        "kind",
+        "service",
+        "componentOutcomes",
+        "policyContext",
+        "assessmentCorrelation",
+        "captureStartedAt",
+        "captureEndedAt",
+        "coverage",
+        "evidenceRefs"
+      ],
+      "additionalProperties": false,
+      "description": "Native service achievability with component outcomes, observed context and optional qualified assessment correlation. A captured context is not proof of the policy revision evaluated by AWS."
+    },
+    "DerivedPostureEvidence": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "DERIVED_ATTENTION"
+        },
+        "subject": {
+          "$ref": "#/$defs/EntityRef",
+          "properties": {
+            "kind": {
+              "enum": [
+                "System",
+                "UserJourney"
+              ]
+            }
+          }
+        },
+        "contributorServices": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EntityRef",
+            "properties": {
+              "kind": {
+                "const": "Service"
+              }
+            },
+            "x-targetEntity": "Service",
+            "x-referenceMode": "VERSION"
+          },
+          "maxItems": 1000
+        },
+        "contributorFindings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EntityRef",
+            "properties": {
+              "kind": {
+                "const": "Finding"
+              }
+            },
+            "x-targetEntity": "Finding",
+            "x-referenceMode": "VERSION"
+          },
+          "maxItems": 1000
+        },
+        "membershipEvidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EvidenceRef"
+          },
+          "maxItems": 100,
+          "minItems": 1
+        },
+        "aggregationRuleDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "captureStartedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "captureEndedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "coverage": {
+          "$ref": "#/$defs/Coverage"
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EvidenceRef"
+          },
+          "maxItems": 100,
+          "minItems": 1
+        }
+      },
+      "required": [
+        "kind",
+        "subject",
+        "contributorServices",
+        "contributorFindings",
+        "membershipEvidence",
+        "aggregationRuleDigest",
+        "captureStartedAt",
+        "captureEndedAt",
+        "coverage",
+        "evidenceRefs"
+      ],
+      "additionalProperties": false,
+      "description": "Derived system/journey attention with distinct contributing services/findings and captured membership evidence. It has no native achievability field; counts derive from distinct referenced identities under the recorded coverage."
+    },
+    "PostureEvidence": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/NativePostureEvidence"
+        },
+        {
+          "$ref": "#/$defs/DerivedPostureEvidence"
+        }
+      ]
+    },
+    "SourceNormalization": {
+      "type": "object",
+      "properties": {
+        "inputContentDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "ruleDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "normalizedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "diagnostics": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/NormalizationDiagnostic"
+          },
+          "maxItems": 1000,
+          "description": "Optional diagnostics for this exact raw input and normalization rule. Missing means unrecorded; an empty list means no reported diagnostics for that rule, not complete AWS coverage. Unknown/invalid content remains retained."
+        }
+      },
+      "required": [
+        "inputContentDigest",
+        "ruleDigest",
+        "normalizedAt"
+      ],
+      "additionalProperties": false,
+      "description": "Provenance for optional normalized Source views. inputContentDigest equals the containing raw contentDigest; ruleDigest pins the normalization rule. These members and their outputs belong to the immutable Source version. Raw payload digest does not hash the normalized view; changing a view/rule appends a version even when raw bytes are unchanged."
+    },
+    "FISTargetSelection": {
+      "type": "object",
+      "properties": {
+        "targetName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "resourceType": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "selectionMode": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "selectorObservation": {
+          "$ref": "#/$defs/EntityRef",
+          "properties": {
+            "kind": {
+              "const": "Observation"
+            }
+          },
+          "x-targetEntity": "Observation",
+          "x-referenceMode": "VERSION"
+        },
+        "resolutionCoverage": {
+          "$ref": "#/$defs/Coverage"
+        }
+      },
+      "required": [
+        "targetName",
+        "resourceType",
+        "selectionMode",
+        "selectorObservation",
+        "resolutionCoverage"
+      ],
+      "additionalProperties": false,
+      "description": "Experiment-owned native target-map member. A selector with zero resolved resources still exists. Exact configuration remains in selectorObservation → Source; targetName is opaque, never parsed from a membership ID."
+    },
+    "EvidenceWindow": {
+      "type": "object",
+      "properties": {
+        "start": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "end": {
+          "$ref": "#/$defs/Timestamp"
+        }
+      },
+      "required": [
+        "start",
+        "end"
+      ],
+      "additionalProperties": false,
+      "description": "Event-time half-open interval [start,end). Collection cutoff and observation time are separate; semantic validation enforces start <= end."
+    },
+    "TelemetryMetricIdentity": {
+      "type": "object",
+      "properties": {
+        "namespace": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "metricName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "dimensions": {
+          "$ref": "#/$defs/StringMap"
+        },
+        "statistic": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "namespace",
+        "metricName",
+        "dimensions",
+        "statistic"
+      ],
+      "additionalProperties": false
+    },
+    "TelemetryQuery": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "METRIC",
+            "EXPRESSION"
+          ]
+        },
+        "metric": {
+          "$ref": "#/$defs/TelemetryMetricIdentity"
+        },
+        "expression": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "language": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "inputs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/TelemetryMetricIdentity"
+          },
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "additionalProperties": false,
+      "oneOf": [
+        {
+          "properties": {
+            "kind": {
+              "const": "METRIC"
+            }
+          },
+          "required": [
+            "metric"
+          ],
+          "not": {
+            "anyOf": [
+              {
+                "required": [
+                  "expression"
+                ]
+              },
+              {
+                "required": [
+                  "language"
+                ]
+              },
+              {
+                "required": [
+                  "inputs"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "properties": {
+            "kind": {
+              "const": "EXPRESSION"
+            }
+          },
+          "required": [
+            "expression",
+            "language",
+            "inputs"
+          ],
+          "not": {
+            "required": [
+              "metric"
+            ]
+          }
+        }
+      ]
+    },
+    "MetricQueryDefinition": {
+      "type": "object",
+      "properties": {
+        "provider": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "scope": {
+          "$ref": "#/$defs/OwningScope"
+        },
+        "query": {
+          "$ref": "#/$defs/TelemetryQuery"
+        },
+        "unit": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "periodSeconds": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "normalizationDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "nativeEvidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EvidenceRef"
+          },
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "provider",
+        "scope",
+        "query",
+        "unit",
+        "periodSeconds",
+        "normalizationDigest",
+        "nativeEvidence"
+      ],
+      "additionalProperties": false,
+      "description": "Application query configuration stored as a versioned Source. Its Source identity/version is the binding identity. The intended event-time window is captured separately for each experiment association; nativeEvidence preserves raw provider context."
+    },
+    "MetricSample": {
+      "type": "object",
+      "properties": {
+        "timestamp": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "value": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "timestamp",
+        "value"
+      ],
+      "additionalProperties": false,
+      "description": "A measured numeric value. Missing samples are absent; they are never silently converted to zero."
+    },
+    "MetricObservationValue": {
+      "type": "object",
+      "properties": {
+        "querySource": {
+          "$ref": "#/$defs/EntityRef",
+          "properties": {
+            "kind": {
+              "const": "Source"
+            }
+          },
+          "x-targetEntity": "Source",
+          "x-referenceMode": "VERSION"
+        },
+        "unit": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "periodSeconds": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "window": {
+          "$ref": "#/$defs/EvidenceWindow"
+        },
+        "samples": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/MetricSample"
+          },
+          "maxItems": 100000
+        },
+        "collectionState": {
+          "type": "string",
+          "enum": [
+            "COMPLETE",
+            "PARTIAL",
+            "UNAVAILABLE"
+          ]
+        },
+        "coverage": {
+          "$ref": "#/$defs/Coverage"
+        },
+        "observedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "normalizationDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "nativeEvidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EvidenceRef"
+          },
+          "maxItems": 1000
+        }
+      },
+      "required": [
+        "querySource",
+        "unit",
+        "periodSeconds",
+        "window",
+        "samples",
+        "collectionState",
+        "coverage",
+        "observedAt",
+        "normalizationDigest",
+        "nativeEvidence"
+      ],
+      "additionalProperties": false,
+      "description": "Normalized metric samples bound to an exact query Source version. COMPLETE describes collection, not proof of sufficient source coverage. Query units, period, normalization and event window must agree before numeric assessment.",
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "collectionState": {
+                "const": "UNAVAILABLE"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "samples": {
+                "maxItems": 0
+              }
+            }
+          }
+        }
+      ]
+    },
+    "MetricRecoveryRule": {
+      "type": "object",
+      "properties": {
+        "comparison": {
+          "type": "string",
+          "enum": [
+            "LT",
+            "LTE",
+            "GT",
+            "GTE",
+            "EQ"
+          ]
+        },
+        "threshold": {
+          "type": "number"
+        },
+        "stableWindowSeconds": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "deadlineSeconds": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "comparison",
+        "threshold",
+        "stableWindowSeconds",
+        "deadlineSeconds"
+      ],
+      "additionalProperties": false
+    },
+    "MetricCriterionDefinition": {
+      "type": "object",
+      "properties": {
+        "criterionKey": {
+          "$ref": "#/$defs/Id"
+        },
+        "predicateDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "evaluatorDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "comparison": {
+          "type": "string",
+          "enum": [
+            "LT",
+            "LTE",
+            "GT",
+            "GTE",
+            "EQ"
+          ]
+        },
+        "threshold": {
+          "type": "number"
+        },
+        "unit": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "missingDataPolicy": {
+          "type": "string",
+          "enum": [
+            "INCONCLUSIVE",
+            "FAIL"
+          ]
+        },
+        "stableWindowSeconds": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "timingAnchor": {
+          "type": "string",
+          "enum": [
+            "EXPERIMENT_START",
+            "ACTION_START",
+            "ABSOLUTE"
+          ]
+        },
+        "actionName": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "recovery": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/MetricRecoveryRule"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "criterionKey",
+        "predicateDigest",
+        "evaluatorDigest",
+        "comparison",
+        "threshold",
+        "unit",
+        "missingDataPolicy",
+        "stableWindowSeconds",
+        "timingAnchor",
+        "actionName",
+        "recovery"
+      ],
+      "additionalProperties": false,
+      "description": "Pinned numeric criterion, including optional recovery/stability rule. FAIL on missing data is an explicit criterion policy and still requires its declared coverage assumptions; absence is never numeric zero.",
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "timingAnchor": {
+                "const": "ACTION_START"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "actionName": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "actionName": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "ExperimentMetricBinding": {
+      "type": "object",
+      "properties": {
+        "experiment": {
+          "$ref": "#/$defs/EntityRef",
+          "properties": {
+            "kind": {
+              "const": "Experiment"
+            }
+          },
+          "x-targetEntity": "Experiment",
+          "x-referenceMode": "VERSION"
+        },
+        "querySource": {
+          "$ref": "#/$defs/EntityRef",
+          "properties": {
+            "kind": {
+              "const": "Source"
+            }
+          },
+          "x-targetEntity": "Source",
+          "x-referenceMode": "VERSION"
+        },
+        "criterionSource": {
+          "$ref": "#/$defs/EntityRef",
+          "properties": {
+            "kind": {
+              "const": "Source"
+            }
+          },
+          "x-targetEntity": "Source",
+          "x-referenceMode": "VERSION"
+        },
+        "window": {
+          "$ref": "#/$defs/EvidenceWindow"
+        },
+        "anchorTime": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "anchorEvidence": {
+          "$ref": "#/$defs/EvidenceRef"
+        },
+        "acceptedEvidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EvidenceRef"
+          },
+          "maxItems": 10000
+        }
+      },
+      "required": [
+        "experiment",
+        "querySource",
+        "criterionSource",
+        "window",
+        "anchorTime",
+        "anchorEvidence",
+        "acceptedEvidence"
+      ],
+      "additionalProperties": false,
+      "description": "Owned association in an evaluation input capture: exact Experiment, query and criterion Source versions plus event window, timing evidence and accepted observations. It can exist without any Run."
+    },
+    "TelemetryEvaluationInput": {
+      "type": "object",
+      "properties": {
+        "contractProfile": {
+          "const": "console.telemetry.evaluation-input/v1"
+        },
+        "subject": {
+          "$ref": "#/$defs/EntityRef",
+          "properties": {
+            "kind": {
+              "const": "Experiment"
+            }
+          },
+          "x-targetEntity": "Experiment",
+          "x-referenceMode": "VERSION"
+        },
+        "evidenceCutoffAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "telemetryBindings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ExperimentMetricBinding"
+          },
+          "maxItems": 1000,
+          "minItems": 1
+        }
+      },
+      "required": [
+        "contractProfile",
+        "subject",
+        "evidenceCutoffAt",
+        "telemetryBindings"
+      ],
+      "additionalProperties": false,
+      "description": "Typed captured input for a standalone experiment evaluation. Every referenced record is included in Snapshot.members. Legacy generic evaluation contents remain retained input; they do not establish normalized telemetry bindings."
+    },
+    "SealedAttemptValue": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "$ref": "#/$defs/EntityRef",
+          "properties": {
+            "kind": {
+              "const": "Source"
+            }
+          },
+          "x-targetEntity": "Source",
+          "x-referenceMode": "VERSION"
+        },
+        "schemaDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "contentDigest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "source",
+        "schemaDigest",
+        "contentDigest"
+      ],
+      "additionalProperties": false,
+      "description": "Exact retained resolved-input or checkpoint value and the immutable schema used to validate it. Content is not a scheduler lease, credential or editable input expression."
+    },
+    "WorkflowCheckpoint": {
+      "type": "object",
+      "properties": {
+        "sequence": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "recordedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "value": {
+          "$ref": "#/$defs/SealedAttemptValue"
+        }
+      },
+      "required": [
+        "sequence",
+        "recordedAt",
+        "value"
+      ],
+      "additionalProperties": false,
+      "description": "Resume checkpoint published in the existing attempt identity/version. Resume does not create a retry attempt."
+    },
+    "WorkflowExecutionError": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "VALIDATION",
+            "AUTHORIZATION",
+            "TRANSPORT",
+            "PROVIDER",
+            "TIMEOUT",
+            "CANCELED",
+            "INTERNAL",
+            "UNKNOWN"
+          ]
+        },
+        "retryEligible": {
+          "type": "boolean"
+        },
+        "safeMessage": {
+          "type": "string",
+          "maxLength": 4096
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EvidenceRef"
+          },
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "code",
+        "category",
+        "retryEligible",
+        "safeMessage",
+        "evidenceRefs"
+      ],
+      "additionalProperties": false,
+      "description": "Technical failure only. A false assessment predicate belongs in CheckResult. Retry eligibility does not authorize replaying a potentially applied effect."
+    },
+    "AttemptRecovery": {
+      "type": "object",
+      "properties": {
+        "resolvedInputs": {
+          "$ref": "#/$defs/SealedAttemptValue"
+        },
+        "checkpoint": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/WorkflowCheckpoint"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "error": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/WorkflowExecutionError"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "resolvedInputs",
+        "checkpoint",
+        "error"
+      ],
+      "additionalProperties": false,
+      "description": "Durable input/checkpoint/error envelope, owned and versioned by StepAttempt. Absent on legacy captures means not recorded; it does not establish resumability."
+    },
+    "RunEvidenceCitation": {
+      "type": "object",
+      "properties": {
+        "evidence": {
+          "$ref": "#/$defs/EvidenceRef"
+        },
+        "role": {
+          "type": "string",
+          "enum": [
+            "PRODUCED",
+            "CONSUMED",
+            "IMPORTED"
+          ]
+        },
+        "producerAttempt": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/EntityRef",
+              "properties": {
+                "kind": {
+                  "const": "StepAttempt"
+                }
+              },
+              "x-targetEntity": "StepAttempt",
+              "x-referenceMode": "VERSION"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "consumerAttempts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EntityRef",
+            "properties": {
+              "kind": {
+                "const": "StepAttempt"
+              }
+            },
+            "x-targetEntity": "StepAttempt",
+            "x-referenceMode": "VERSION"
+          },
+          "maxItems": 100
+        },
+        "importedFrom": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SourceIdentity"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "evidence",
+        "role",
+        "producerAttempt",
+        "consumerAttempts",
+        "importedFrom"
+      ],
+      "additionalProperties": false,
+      "description": "Run-owned evidence citation. Evidence stays on the shared Source/Observation spine; exact producer/consumer attempts belong to the same Run. Imported evidence declares origin explicitly and does not invent a producing attempt.",
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "role": {
+                "const": "PRODUCED"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "producerAttempt": {
+                "$ref": "#/$defs/EntityRef",
+                "properties": {
+                  "kind": {
+                    "const": "StepAttempt"
+                  }
+                },
+                "x-targetEntity": "StepAttempt",
+                "x-referenceMode": "VERSION"
+              },
+              "importedFrom": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "role": {
+                "const": "IMPORTED"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "producerAttempt": {
+                "type": "null"
+              },
+              "importedFrom": {
+                "$ref": "#/$defs/SourceIdentity"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "role": {
+                "const": "CONSUMED"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "consumerAttempts": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "WorkflowObservationValue": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "$ref": "#/$defs/JsonValue"
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EvidenceRef"
+          },
+          "maxItems": 1000
+        },
+        "collection": {
+          "type": "string",
+          "enum": [
+            "COMPLETE",
+            "PARTIAL",
+            "UNAVAILABLE"
+          ]
+        },
+        "coverage": {
+          "$ref": "#/$defs/Coverage"
+        },
+        "scope": {
+          "$ref": "#/$defs/OwningScope"
+        },
+        "window": {
+          "$ref": "#/$defs/EvidenceWindow"
+        },
+        "observedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "source": {
+          "$ref": "#/$defs/SourceIdentity"
+        },
+        "valueSchemaDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "normalizationDigest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "evidenceRefs",
+        "collection",
+        "coverage",
+        "scope",
+        "window",
+        "observedAt",
+        "source",
+        "valueSchemaDigest",
+        "normalizationDigest"
+      ],
+      "additionalProperties": false,
+      "description": "Typed adapter observation result, distinct from the Observation receipt entity. An unavailable value is absent; a completed empty result is explicit. valueSchemaDigest and normalizationDigest pin adapter conversion contracts.",
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "collection": {
+                "const": "UNAVAILABLE"
+              }
+            }
+          },
+          "then": {
+            "not": {
+              "required": [
+                "value"
+              ]
+            }
+          },
+          "else": {
+            "required": [
+              "value"
+            ]
+          }
+        }
+      ]
+    },
+    "ProcessingIdentity": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "digest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "digest"
+      ],
+      "additionalProperties": false,
+      "description": "Exact application processing implementation or policy identity. Version is the source implementation version, not an entity version; the digest pins its immutable definition."
+    },
+    "DerivationContext": {
+      "type": "object",
+      "properties": {
+        "method": {
+          "type": "string",
+          "enum": [
+            "DIRECT_FIELD_MAPPING",
+            "DOCUMENTED_PROFILE",
+            "DETERMINISTIC_PARSE",
+            "OPERATOR_STATEMENT",
+            "APPLICATION_INFERENCE"
+          ]
+        },
+        "parser": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ProcessingIdentity"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "rule": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ProcessingIdentity"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "model": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ProcessingIdentity"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "parametersDigest": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Digest"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "method",
+        "parser",
+        "rule",
+        "model",
+        "parametersDigest"
+      ],
+      "additionalProperties": false,
+      "description": "Reviewed derivation method and independently pinned parser/rule/model identities. Null means that component was not used; never attribute application confidence to AWS.",
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "enum": [
+                  "DETERMINISTIC_PARSE",
+                  "APPLICATION_INFERENCE"
+                ]
+              }
+            }
+          },
+          "then": {
+            "anyOf": [
+              {
+                "properties": {
+                  "parser": {
+                    "$ref": "#/$defs/ProcessingIdentity"
+                  }
+                }
+              },
+              {
+                "properties": {
+                  "rule": {
+                    "$ref": "#/$defs/ProcessingIdentity"
+                  }
+                }
+              },
+              {
+                "properties": {
+                  "model": {
+                    "$ref": "#/$defs/ProcessingIdentity"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "NativeUserAttribution": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "userType": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "userId",
+        "userType"
+      ],
+      "additionalProperties": false,
+      "description": "Observed native userReference. Preserve the supplied userId and userType, including future provider values. It is not a trusted ActorRef or proof of application authorization."
+    },
+    "PublishedConfidence": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "scale": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "evidence": {
+          "$ref": "#/$defs/EvidenceRef"
+        }
+      },
+      "required": [
+        "value",
+        "scale",
+        "evidence"
+      ],
+      "additionalProperties": false,
+      "description": "Only a confidence value actually published by the cited source; no assumed scale and no conversion to an AWS confidence score."
+    },
+    "AssertionMetadata": {
+      "type": "object",
+      "properties": {
+        "origin": {
+          "type": "string",
+          "enum": [
+            "NATIVE_FIELD",
+            "DOCUMENTED_PROFILE",
+            "DETERMINISTIC_PARSE",
+            "AGENT_REPORTED",
+            "OPERATOR_STATEMENT",
+            "OPERATOR_CONFIRMED",
+            "INDEPENDENTLY_OBSERVED",
+            "APPLICATION_INFERENCE",
+            "UNKNOWN"
+          ]
+        },
+        "derivation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/DerivationContext"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "observedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "validFrom": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "validUntil": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "publishedConfidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PublishedConfidence"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "publishedDisposition": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "explanation": {
+          "type": "string",
+          "maxLength": 16384
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EvidenceRef"
+          },
+          "minItems": 1,
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "origin",
+        "derivation",
+        "observedAt",
+        "validFrom",
+        "validUntil",
+        "publishedConfidence",
+        "publishedDisposition",
+        "explanation",
+        "evidenceRefs"
+      ],
+      "additionalProperties": false,
+      "description": "Assertion provenance, independent observation and validity clocks, and source-qualified uncertainty. Every explicit assertion cites exact retained evidence, including operator/application-origin evidence.",
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "origin": {
+                "enum": [
+                  "DETERMINISTIC_PARSE",
+                  "APPLICATION_INFERENCE"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "derivation": {
+                "$ref": "#/$defs/DerivationContext"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "ApprovalPattern": {
+      "type": "object",
+      "properties": {
+        "tool": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "argumentPins": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "maxProperties": 20
+        }
+      },
+      "required": [
+        "tool",
+        "argumentPins"
+      ],
+      "additionalProperties": false,
+      "description": "Native tool and argument pin value; preserved exactly without guessing wildcard or case-normalization semantics."
+    },
+    "ApprovalAction": {
+      "type": "object",
+      "properties": {
+        "toolUseId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "interruptId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "approvalId": {
+          "type": "string",
+          "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-7[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+        },
+        "buttonText": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "action": {
+          "type": "string",
+          "enum": [
+            "APPROVED",
+            "REJECTED"
+          ]
+        }
+      },
+      "required": [],
+      "additionalProperties": false,
+      "description": "Native ApprovalAction wire value; its members are optional in the pinned AWS model. A validated invocation contract separately requires the identifiers actually necessary for dispatch."
+    },
+    "ApprovalInvocation": {
+      "type": "object",
+      "properties": {
+        "validation": {
+          "type": "string",
+          "enum": [
+            "VALIDATED",
+            "UNSUPPORTED",
+            "MISSING_IDENTIFIERS"
+          ]
+        },
+        "interruptId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "toolUseId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "requestedPattern": {
+          "$ref": "#/$defs/ApprovalPattern"
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EvidenceRef"
+          },
+          "minItems": 1,
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "validation",
+        "evidenceRefs"
+      ],
+      "additionalProperties": false,
+      "description": "Normalized observed chat request profile. It is not a universal AWS ApprovalRequest entity. Preserve omitted fields on unsupported requests; only validated invocations can authorize decision/resume dispatch.",
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "validation": {
+                "const": "VALIDATED"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "interruptId",
+              "toolUseId",
+              "requestedPattern"
+            ]
+          }
+        }
+      ]
+    },
+    "ApprovalDecisionIntent": {
+      "type": "object",
+      "properties": {
+        "approvalRequest": {
+          "$ref": "#/$defs/EntityRef",
+          "properties": {
+            "kind": {
+              "const": "ApprovalRequest"
+            }
+          },
+          "x-targetEntity": "ApprovalRequest",
+          "x-referenceMode": "VERSION"
+        },
+        "requestSource": {
+          "$ref": "#/$defs/EntityRef",
+          "properties": {
+            "kind": {
+              "const": "Source"
+            }
+          },
+          "x-targetEntity": "Source",
+          "x-referenceMode": "VERSION"
+        },
+        "expectedActionDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "decision": {
+          "type": "string",
+          "enum": [
+            "APPROVED",
+            "REJECTED"
+          ]
+        },
+        "singleUse": {
+          "anyOf": [
+            {
+              "const": true
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "finalPattern": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ApprovalPattern"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "scopeMode": {
+          "const": "EXACT_REQUESTED_PATTERN"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 1024
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "approvalRequest",
+        "requestSource",
+        "expectedActionDigest",
+        "decision",
+        "singleUse",
+        "finalPattern",
+        "scopeMode",
+        "reason"
+      ],
+      "additionalProperties": false,
+      "description": "Reconstructable single-use decision input. The finalPattern must exactly equal the validated requestedPattern selected by the pinned approvalRequest; reusable approvals and widened/narrowed patterns are outside this console operation. Command subjects pin the request, observed Source, Execution and AgentSpace; expectedVersion guards the exact ApprovalRequest. Decision acceptance is not resume or action success.",
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "decision": {
+                "const": "APPROVED"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "singleUse": {
+                "const": true
+              },
+              "finalPattern": {
+                "$ref": "#/$defs/ApprovalPattern"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "decision": {
+                "const": "REJECTED"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "singleUse": {
+                "type": "null"
+              },
+              "finalPattern": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "ApprovalResumeIntent": {
+      "type": "object",
+      "properties": {
+        "approvalRequest": {
+          "$ref": "#/$defs/EntityRef",
+          "properties": {
+            "kind": {
+              "const": "ApprovalRequest"
+            }
+          },
+          "x-targetEntity": "ApprovalRequest",
+          "x-referenceMode": "VERSION"
+        },
+        "decisionCommand": {
+          "$ref": "#/$defs/EntityRef",
+          "properties": {
+            "kind": {
+              "const": "Command"
+            }
+          },
+          "x-targetEntity": "Command",
+          "x-referenceMode": "VERSION"
+        },
+        "action": {
+          "$ref": "#/$defs/ApprovalAction"
+        }
+      },
+      "required": [
+        "approvalRequest",
+        "decisionCommand",
+        "action"
+      ],
+      "additionalProperties": false,
+      "description": "Exact decision and request context used for resume. Command subjects pin the request, decision, Execution and AgentSpace; expectedVersion guards that Execution. Decision, resume acceptance, and an observed action outcome are independent."
+    },
+    "InvestigationArtifactReference": {
+      "type": "object",
+      "properties": {
+        "referenceKey": {
+          "$ref": "#/$defs/Id"
+        },
+        "sourceChannel": {
+          "type": "string",
+          "enum": [
+            "JOURNAL",
+            "CHAT_STREAM",
+            "A2A",
+            "NATIVE_ASSET",
+            "EXTERNAL",
+            "LOCAL"
+          ]
+        },
+        "source": {
+          "$ref": "#/$defs/EvidenceRef"
+        },
+        "nativeId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "uri": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "asset": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/EntityRef",
+              "properties": {
+                "kind": {
+                  "const": "Asset"
+                }
+              },
+              "x-targetEntity": "Asset",
+              "x-referenceMode": "VERSION"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "nativeAssetIdentity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SourceIdentity"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "nativeAssetVersion": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PositiveInteger"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "versionBasis": {
+          "type": "string",
+          "enum": [
+            "CONSUMED",
+            "OBSERVED",
+            "UNVERSIONED",
+            "NOT_APPLICABLE",
+            "UNKNOWN"
+          ]
+        },
+        "resolutionEvidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/EvidenceRef"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "mediaType": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "contentDigest": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Digest"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "availability": {
+          "type": "string",
+          "enum": [
+            "AVAILABLE",
+            "PENDING",
+            "NOT_PUBLISHED",
+            "ACCESS_DENIED",
+            "UNSUPPORTED",
+            "DELETED",
+            "MISSING",
+            "UNKNOWN"
+          ]
+        },
+        "retrievalAuthorization": {
+          "type": "string",
+          "enum": [
+            "AUTHORIZED",
+            "DENIED",
+            "UNKNOWN",
+            "NOT_REQUIRED"
+          ]
+        }
+      },
+      "required": [
+        "referenceKey",
+        "sourceChannel",
+        "source",
+        "nativeId",
+        "uri",
+        "asset",
+        "nativeAssetIdentity",
+        "nativeAssetVersion",
+        "versionBasis",
+        "resolutionEvidence",
+        "mediaType",
+        "contentDigest",
+        "availability",
+        "retrievalAuthorization"
+      ],
+      "additionalProperties": false,
+      "description": "Channel-aware source reference; an A2A or journal nativeId is not an Asset ID. Optional asset resolution must be supported by retained evidence. A nearby fetched version is OBSERVED unless consumed-version evidence exists. Unknown media types and distinct absence reasons are preserved.",
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "versionBasis": {
+                "const": "CONSUMED"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "resolutionEvidence": {
+                "$ref": "#/$defs/EvidenceRef"
+              },
+              "nativeAssetVersion": {
+                "$ref": "#/$defs/PositiveInteger"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "asset": {
+                "type": "object"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "resolutionEvidence": {
+                "$ref": "#/$defs/EvidenceRef"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "ActionStageObservation": {
+      "type": "object",
+      "properties": {
+        "stage": {
+          "type": "string",
+          "enum": [
+            "REQUEST",
+            "DECISION",
+            "RESUME",
+            "EXECUTION",
+            "OUTCOME"
+          ]
+        },
+        "command": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/EntityRef",
+              "properties": {
+                "kind": {
+                  "const": "Command"
+                }
+              },
+              "x-targetEntity": "Command",
+              "x-referenceMode": "VERSION"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "approvalRequest": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/EntityRef",
+              "properties": {
+                "kind": {
+                  "const": "ApprovalRequest"
+                }
+              },
+              "x-targetEntity": "ApprovalRequest",
+              "x-referenceMode": "VERSION"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "rawState": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "effectOutcome": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "SUCCEEDED",
+                "FAILED",
+                "UNKNOWN"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "stage",
+        "command",
+        "approvalRequest",
+        "rawState",
+        "effectOutcome"
+      ],
+      "additionalProperties": false,
+      "description": "One observed stage with its own exact source at the assertion owner. Decision/resume acceptance cannot be relabeled as an effect outcome.",
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "stage": {
+                "enum": [
+                  "REQUEST",
+                  "DECISION",
+                  "RESUME",
+                  "EXECUTION"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "effectOutcome": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "InvestigationAssertion": {
+      "type": "object",
+      "properties": {
+        "itemId": {
+          "$ref": "#/$defs/Id"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "FINDING",
+            "EVIDENCE",
+            "HYPOTHESIS",
+            "ROOT_CAUSE_ASSESSMENT",
+            "MITIGATION_PROPOSAL",
+            "ACTION_OBSERVATION",
+            "REVIEW_RESULT"
+          ]
+        },
+        "subjectRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EntityRef"
+          },
+          "minItems": 1,
+          "maxItems": 100
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "publishedContent": {
+          "$ref": "#/$defs/JsonValue"
+        },
+        "assertion": {
+          "$ref": "#/$defs/AssertionMetadata"
+        },
+        "actionObservation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ActionStageObservation"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "artifactReferences": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/InvestigationArtifactReference"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "supersedesItemId": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "itemId",
+        "kind",
+        "subjectRefs",
+        "title",
+        "publishedContent",
+        "assertion",
+        "actionObservation",
+        "artifactReferences",
+        "supersedesItemId"
+      ],
+      "additionalProperties": false,
+      "description": "Attributed published assertion in an application vocabulary. It neither invents AWS Finding/Hypothesis fields nor reconstructs private reasoning. Content remains faithful to its source; kind, subjects, provenance, disposition and action stage are typed.",
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "ACTION_OBSERVATION"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "actionObservation": {
+                "$ref": "#/$defs/ActionStageObservation"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "not": {
+                  "const": "ACTION_OBSERVATION"
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "actionObservation": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "InvestigationAssertions": {
+      "type": "object",
+      "properties": {
+        "investigationId": {
+          "$ref": "#/$defs/Id"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/InvestigationAssertion"
+          },
+          "minItems": 0,
+          "maxItems": 10000
+        }
+      },
+      "required": [
+        "investigationId",
+        "items"
+      ],
+      "additionalProperties": false,
+      "description": "Typed published-assertion projection. Owner Projection.version and outputDigest pin one immutable rendition; per-item IDs remain stable across renditions. supersedesItemId links a different item in this rendition or an explicitly cited earlier version of the same logical Projection; self-links, dangling targets and cycles reject."
+    },
+    "InvestigationTimelineItem": {
+      "type": "object",
+      "properties": {
+        "itemId": {
+          "$ref": "#/$defs/Id"
+        },
+        "execution": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/EntityRef",
+              "properties": {
+                "kind": {
+                  "const": "Execution"
+                }
+              },
+              "x-targetEntity": "Execution",
+              "x-referenceMode": "VERSION"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "parentItemId": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "category": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "phase": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "body": {
+          "$ref": "#/$defs/JsonValue"
+        },
+        "occurredAt": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "occurredAtBasis": {
+          "type": "string",
+          "enum": [
+            "NATIVE_EVENT",
+            "SOURCE_EVIDENCE",
+            "JOURNAL_CREATED",
+            "APPLICATION_EVENT",
+            "UNKNOWN"
+          ]
+        },
+        "recordedAt": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "observedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "sourceRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EvidenceRef"
+          },
+          "minItems": 1,
+          "maxItems": 100
+        },
+        "derivation": {
+          "$ref": "#/$defs/DerivationContext"
+        },
+        "assertionOrigin": {
+          "type": "string",
+          "enum": [
+            "NATIVE_FIELD",
+            "DOCUMENTED_PROFILE",
+            "DETERMINISTIC_PARSE",
+            "OPERATOR_STATEMENT",
+            "APPLICATION_INFERENCE"
+          ]
+        },
+        "availability": {
+          "type": "string",
+          "enum": [
+            "AVAILABLE",
+            "PENDING",
+            "UNSUPPORTED",
+            "INACCESSIBLE",
+            "UNKNOWN"
+          ]
+        },
+        "completeness": {
+          "type": "string",
+          "enum": [
+            "COMPLETE_FOR_SOURCE",
+            "PARTIAL",
+            "UNKNOWN"
+          ]
+        },
+        "relatedResourceRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EntityRef",
+            "properties": {
+              "kind": {
+                "const": "Resource"
+              }
+            },
+            "x-targetEntity": "Resource",
+            "x-referenceMode": "VERSION"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "artifactReferences": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/InvestigationArtifactReference"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "supersedesItemId": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "itemId",
+        "execution",
+        "parentItemId",
+        "category",
+        "phase",
+        "title",
+        "body",
+        "occurredAt",
+        "occurredAtBasis",
+        "recordedAt",
+        "observedAt",
+        "sourceRefs",
+        "derivation",
+        "assertionOrigin",
+        "availability",
+        "completeness",
+        "relatedResourceRefs",
+        "artifactReferences",
+        "supersedesItemId"
+      ],
+      "additionalProperties": false,
+      "description": "A timeline item keeps source/evidence/receipt clocks separate. Parent/group links need explicit evidence and a same-rendition target, with no self-links or cycles; timestamps alone do not establish causality. supersedesItemId may target a different item in this rendition or an explicitly cited earlier version of the same logical Projection. Immutable rendition identity comes from the owning Projection version.",
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "occurredAtBasis": {
+                "const": "UNKNOWN"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "occurredAt": {
+                "type": "null"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "occurredAt": {
+                "$ref": "#/$defs/Timestamp"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "InvestigationTimeline": {
+      "type": "object",
+      "properties": {
+        "investigationId": {
+          "$ref": "#/$defs/Id"
+        },
+        "orderingPolicy": {
+          "$ref": "#/$defs/ProcessingIdentity"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/InvestigationTimelineItem"
+          },
+          "minItems": 0,
+          "maxItems": 10000
+        }
+      },
+      "required": [
+        "investigationId",
+        "orderingPolicy",
+        "items"
+      ],
+      "additionalProperties": false,
+      "description": "Typed application timeline. Deterministic same-time ordering is explicitly a local presentation policy, not a provider total-order guarantee."
+    },
+    "NormalizationDiagnostic": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2048,
+          "description": "Original diagnostic field path; preserve its syntax rather than guessing a different JSON path."
+        },
+        "rawValue": {
+          "$ref": "#/$defs/JsonValue",
+          "description": "Opaque raw diagnostic/source value. Preserve strings as strings and structured JSON as structured JSON; never interpret native keys as console identities."
+        },
+        "normalizedValue": {
+          "$ref": "#/$defs/JsonValue",
+          "description": "Opaque fallback/normalized value produced by the identified rule. Recording it does not overwrite the retained raw source."
+        },
+        "reason": {
+          "type": "string",
+          "enum": [
+            "MISSING",
+            "UNKNOWN_ENUM",
+            "INVALID_VALUE"
+          ]
+        }
+      },
+      "required": [
+        "path",
+        "rawValue",
+        "normalizedValue",
+        "reason"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "reason": {
+                "const": "MISSING"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "rawValue": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ],
+      "description": "Owned normalization diagnostic with raw and fallback values. MISSING means no usable value for that rule; Source.fieldPresence separately preserves absent versus present-null. It is not an entity or proof of complete native-schema validation."
     }
   },
   "oneOf": [

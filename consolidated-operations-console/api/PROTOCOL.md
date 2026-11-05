@@ -261,3 +261,10 @@ The current checks establish schemas, examples and selected invariants. They do 
 - [Workflow model](../../aws/fis/analysis/workflow/model.md), [prior HTTP binding](../../aws/fis/analysis/workflow/api.md), [adapter semantics](../../aws/fis/analysis/workflow/adapters.md).
 - [DevOps approval/UI contract](../../aws/devops-agent/analysis/annexes/Investigation_UI_Contract.md), [native API catalogue](../../aws/devops-agent/analysis/annexes/Investigation_API_Catalog.md).
 - [Smithy AWS JSON 1.1](https://smithy.io/2.0/aws/protocols/aws-json-1_1-protocol.html), [AWS Builders' Library: safe idempotent APIs](https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/).
+
+
+## Optional traversal cardinality
+
+`Page.totalResults`, when supplied, is the exact count of the authorized, filtered result set at the traversal's retained `asOfSequence`. It shares the scope and lifetime of `traversalId`, `createdAt` and `expiresAt`; it must not change between pages of that traversal. A new authorization/filter/publication scope requires a new traversal.
+
+Omit the member when the count was not computed. Zero asserts an established empty result set. Never substitute the current page length, an upstream provider aggregate, or an incomplete collection count. Finishing a local traversal still does not establish complete AWS collection coverage. Existing responses without this optional member remain valid.

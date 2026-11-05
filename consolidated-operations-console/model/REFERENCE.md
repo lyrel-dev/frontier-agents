@@ -144,6 +144,8 @@ One finite collection with immutable query definitions and changing lifecycle re
 | `startedAt` | `Timestamp` | Yes |
 | `endedAt` | `Timestamp or null` | Yes |
 | `coverage` | `List[Coverage]` | Yes |
+| `collector` | `ProcessingIdentity` | No |
+| `selectionPolicy` | `ProcessingIdentity` | No |
 
 ### ReadAttempt
 
@@ -174,10 +176,12 @@ A single request attempt exists even if it returned zero objects or failed. It i
 | `authorizationContextKey` | `string` | Yes |
 | `requestSource` | `EntityRef` | Yes |
 | `responseSource` | `EntityRef or null` | Yes |
+| `itemErrors` | `List[CollectionItemError]` | No |
+| `itemOutcome` | `enum` | No |
 
 ### Source
 
-Versioned retained source representation. Stable sourceId is scoped by native identity, representation, profile and source operation, independently of payload digest or provider version. Changed accepted content appends a version; an unchanged poll observes the current version again.
+Versioned retained source representation. Stable sourceId is scoped by native identity, representation, profile and source operation, independently of payload digest or provider version. Changed accepted content appends a version; an unchanged poll observes the current version again. Optional normalized views and their normalization provenance are immutable members of this Source version. contentDigest hashes only the retained raw payload/artifact. A changed view or normalization rule appends a Source version even if raw bytes and contentDigest are unchanged; a repeated receipt reuses a version only when raw content, views and rule all agree.
 
 **Owner:** retained evidence. **Module:** foundation. **Identity:** `workspaceId + sourceId`.
 
@@ -203,6 +207,12 @@ Versioned retained source representation. Stable sourceId is scoped by native id
 | `artifact` | `ArtifactRef or null` | Yes |
 | `digestProfile` | `enum` | Yes |
 | `payloadStorage` | `enum` | Yes |
+| `effectiveTargets` | `EffectiveTargets` | No |
+| `eventSubjects` | `List[EventSubject]` | No |
+| `subjectState` | `SubjectStateObservation` | No |
+| `healthSignal` | `HealthSignalEvidence` | No |
+| `postureEvidence` | `PostureEvidence` | No |
+| `normalization` | `SourceNormalization` | No |
 
 ### Observation
 
@@ -255,6 +265,8 @@ Versioned named derived view with exact input references, coverage and rule iden
 | `generatedAt` | `Timestamp` | Yes |
 | `coverage` | `List[Coverage]` | Yes |
 | `value` | `JsonValue` | Yes |
+| `derivation` | `DerivationContext` | No |
+| `outputDigest` | `Digest` | No |
 
 ### Snapshot
 
@@ -335,6 +347,9 @@ Durable intent and receipt; conditional local admission is not an AWS transactio
 | `effects` | `List[ExternalOperationRef]` | Yes |
 | `resultRefs` | `List[EntityRef]` | Yes |
 | `replayExpiresAt` | `Timestamp` | Yes |
+| `requestSource` | `EntityRef` | No |
+| `approvalDecision` | `ApprovalDecisionIntent` | No |
+| `approvalResume` | `ApprovalResumeIntent` | No |
 
 ### System
 
@@ -463,6 +478,7 @@ Public/account/organization-summary evidence partition. Context-specific state n
 | `organizationId` | `string or null` | Yes |
 | `selectedObservation` | `EntityRef or null` | Yes |
 | `rawProviderStatus` | `string or null` | Yes |
+| `descriptions` | `List[EventDescription]` | No |
 
 ### EntityImpact
 
@@ -642,6 +658,7 @@ Captured suggestion with stable identity across repeated observations of the sam
 | `ordinal` | `integer` | Yes |
 | `suggestion` | `JsonValue` | Yes |
 | `enrichment` | `RecommendationEnrichment` | Yes |
+| `normalizedSuggestion` | `RecommendationContent` | No |
 
 ### AgentSpace
 
@@ -688,6 +705,7 @@ Native Task with taskType INVESTIGATION plus observed execution memberships and 
 | `executionMemberships` | `List[TaskExecutionMembership]` | Yes |
 | `externalReference` | `ExternalReference or null` | Yes |
 | `primaryTaskIdentity` | `SourceIdentity or null` | Yes |
+| `artifactReferences` | `List[InvestigationArtifactReference]` | No |
 
 ### Execution
 
@@ -732,6 +750,7 @@ Stable journal envelope identity with retained source revisions. Content stays a
 | `recordType` | `string` | Yes |
 | `selectedSource` | `EntityRef` | Yes |
 | `selectedObservation` | `EntityRef` | Yes |
+| `nativeAttribution` | `NativeUserAttribution or null` | No |
 
 ### ApprovalRequest
 
@@ -757,6 +776,7 @@ Approval decision and resume are separate commands; neither is evidence of tool 
 | `actionDigest` | `Digest` | Yes |
 | `decisionCommandIds` | `List[Id]` | Yes |
 | `resumeCommandIds` | `List[Id]` | Yes |
+| `invocation` | `ApprovalInvocation` | No |
 
 ### Asset
 
@@ -832,6 +852,7 @@ Versioned admitted workflow execution pinning one exact published Scenario and i
 | `reducerVersion` | `string` | Yes |
 | `asOfSequence` | `integer` | Yes |
 | `steps` | `List[EntityRef]` | Yes |
+| `evidenceCitations` | `List[RunEvidenceCitation]` | No |
 
 ### StepRun
 
@@ -881,6 +902,7 @@ Immutable settled execution facts; late reconciliation adds observations without
 | `checkResult` | `CheckResult or null` | Yes |
 | `externalOperations` | `List[ExternalOperationRef]` | Yes |
 | `evidenceRefs` | `List[EvidenceRef]` | Yes |
+| `recovery` | `AttemptRecovery` | No |
 
 ### Experiment
 
@@ -905,6 +927,9 @@ Native AWS FIS experiment, possibly linked to a workflow attempt but independent
 | `targetMemberships` | `List[TargetMembership]` | Yes |
 | `resolutionCoverage` | `Coverage` | Yes |
 | `report` | `FISReport` | Yes |
+| `targetSelections` | `List[FISTargetSelection]` | No |
+| `targetSelectionCompleteness` | `enum` | No |
+| `actionCompleteness` | `enum` | No |
 
 ## Owned values and scalar contracts
 
@@ -937,10 +962,10 @@ Owned values have no independent lifecycle or version stream. `EntityRef` is an 
 | `WorkAction` | Immutable append-only operator action owned by a WorkItem; no standalone CRUD root. |
 | `CommandAttempt` | Owned dispatch/reconciliation attempt. Acceptance, remote effect and local completion are independent. |
 | `ExternalOperationRef` | Provider effect identity may be unknown after a lost response. originEffectKey exists before dispatch and remains stable. |
-| `EventDescription` | Localized text belongs to an event revision, not a mutable global event field. |
+| `EventDescription` | Localized text owned by an EventContext version. source pins the exact contextual detail/stream representation; localeBasis distinguishes request locale from an explicit stream language. Omission of the owning descriptions field means unobserved, not an empty description. |
 | `CommunicationPage` | An immutable candidate page, not an independently writable entity. Conflicting candidates are retained, not overwritten. |
 | `LifecycleMilestone` | Identity is milestoneKey within a pinned catalog revision. Raw provider date preserves date precision. |
-| `PolicyComponent` | Only reviewed native component families; optional configured components determine the assessment denominator. |
+| `PolicyComponent` | Reviewed native component families. Existing target/unit maps and raw disasterRecoveryApproach remain read-tolerant. Optional normalized validates the known metric/unit subset without replacing raw values; missing means no validated view, and unknown native values remain retained. |
 | `PolicyContext` | Frozen selection of assignment and effective-target evidence. Captured context is not proof of the exact AWS-evaluated policy revision. |
 | `RecommendationEnrichment` | Owned local explanatory metadata and estimate. Changes advance Recommendation.version. Assignment and work state belong to WorkItem only. |
 | `AgentAssociation` | Provider-owned scoped association, never a business Service or product Connection. Built-in serviceId aws need not resolve to a registered provider. |
@@ -949,7 +974,7 @@ Owned values have no independent lifecycle or version stream. `EntityRef` is an 
 | `AssetFile` | A file is identified by owning asset version and exact path, including case. |
 | `GraphNode` | Snapshot-owned node; unknown/inferred identity remains qualified. |
 | `GraphEdge` | Snapshot-owned typed edge. Causal claim, dependency, provider topology and sequence are different meanings. |
-| `GraphContents` | Nodes/edges belong to one immutable capture. Unresolved endpoints use explicitly marked nodes, never fabricated resources. |
+| `GraphContents` | Nodes/edges belong to one immutable capture. Unresolved endpoints use explicitly marked nodes, never fabricated resources. Named view kinds preserve execution, stream, linked-task, evidence and configuration meaning. New normalized graph ingestion supplies nodeKind, resolution and assertion metadata; absent metadata in legacy captures remains unknown. |
 | `OperationLock` | Publish resolves exact implementation and schema digests; execution never re-resolves a mutable alias. |
 | `StepDefinition` | Owned scenario-revision step with stable stepKey. Native FIS actions are not these workflow steps. |
 | `ScenarioDefinition` | Bounded main and finalizer DAGs; language/operation contracts are pinned at publication. |
@@ -958,7 +983,7 @@ Owned values have no independent lifecycle or version stream. `EntityRef` is an 
 | `CancellationIntent` | First accepted intent is monotonic. Local cancellation cannot prove remote cessation. |
 | `CriterionResult` | Assessment denominator is frozen; missing/skipped/error checks remain INCONCLUSIVE. |
 | `Evaluation` | A new evaluation never overwrites the sealed run/experiment result it re-examines. |
-| `LifecycleExposure` | Derived applicability with exact deployment, catalog revision, milestone and matching rule. |
+| `LifecycleExposure` | Derived applicability with exact deployment, catalog revision, milestone and matching rule. Source confirmed maps to APPLIES, excluded to DOES_NOT_APPLY, and candidate/unknown to UNKNOWN; optional sourceApplicability preserves CANDIDATE separately from UNKNOWN. Missing qualification remains unrecorded, never a confirmed match. |
 | `InvestigationResult` | Phase-scoped selected result; completion events from another phase cannot replace it. |
 | `StateDimension` | One independently meaningful status backed by explicit evidence. |
 | `ServiceStatus` | Separate dimensions, selected policy context and explicit reasons. No universal healthy/successful flag. |
@@ -976,6 +1001,60 @@ Owned values have no independent lifecycle or version stream. `EntityRef` is an 
 | `AssigneeRef` | Resolved directory identity assigned to local work. A team/group is an assignee, never an authenticated audit actor. |
 | `EntityIdentity` | A logical entity identity for explicitly live navigation or work targeting. It does not select a historical representation or authorize a lookup. |
 | `PositiveInteger` | A positive domain count or ordinal. It is not an entity version or concurrency token. |
+| `CollectionItemError` | Owned Health failedSet entry scoped by event ARN and optional affected account. The containing ReadAttempt remains the one native HTTP request; transport failure is ReadAttempt.error. |
+| `EffectiveTargetProvenance` | Native source is account ownership, not direct/inherited assignment. A policy name is not an ARN. Resolved identity requires independently retained evidence; absent provenance stays absent. |
+| `EffectiveAvailabilityTarget` | One returned effective target. The value is observed, not defaulted; optional provenance preserves only evidence actually supplied. |
+| `EffectiveDurationTarget` | One returned effective target. The value is observed, not defaulted; optional provenance preserves only evidence actually supplied. |
+| `EffectiveRecoveryApproach` | One returned effective target. The value is observed, not defaulted; optional provenance preserves only evidence actually supplied. |
+| `EffectiveTargets` | Service-scoped effectivePolicyValues normalized from the exact containing Source. Eight optional metric keys; missing is not zero. Recovery approaches are strings, durations integers in minutes and availability a percentage. |
+| `NormalizedPolicyComponent` | Optional validated known-metric view of one PolicyComponent. Preserve unfamiliar native target keys and DR values in the owner/raw Source; omission of this view does not assert normalization. |
+| `AssessmentCorrelation` | Optional observed same-service association. It is local temporal correlation and never asserts that the assessment owns a finding or evaluated the current policy. |
+| `RecommendationContent` | One native nested recommendation item. Category identifies its source array; owner groupKey and ordinal preserve grouping and order. Absent suggestedChanges differs from an observed empty array. No provider ID, cost or title is invented. |
+| `NativeTopologyProperty` | One returned Resilience Hub EdgeProperty. Known topology types are CONTAINMENT, DATA_FLOW, OBSERVABILITY and PERMISSIONS; unknown native values remain open. An absent topologyType is unknown. Optional label is LLM-inferred provenance, not measured traffic. |
+| `SubjectReference` | Exact historical console entity and/or scoped native identity. Unresolved source identity is valid. Names alone are never identifiers. |
+| `EventSubject` | Owned event-to-subject relationship with explicit asserted/inferred provenance. Envelope resources alone do not prove a normalized link. |
+| `SubjectStateObservation` | Observed subject visibility/lifecycle evidence, retained without deleting historical entity versions. DELETED requires positive deletion evidence; a missing list row or authorization failure is NOT_VISIBLE or UNKNOWN. A historical reference keeps selecting its exact version. |
+| `SignalMeasurement` | A named measured signal with an explicit unit; no metric value is inferred from a badge. |
+| `HealthSignalEvidence` | Owned external runtime-health observation. Windows, measurement/receipt/expiry times, signal identity and aggregation rule remain explicit. Recomputing a projection never renews this evidence. |
+| `PostureComponentOutcome` | Native component outcome with open provider status vocabulary; never convert a missing outcome into success. |
+| `NativePostureEvidence` | Native service achievability with component outcomes, observed context and optional qualified assessment correlation. A captured context is not proof of the policy revision evaluated by AWS. |
+| `DerivedPostureEvidence` | Derived system/journey attention with distinct contributing services/findings and captured membership evidence. It has no native achievability field; counts derive from distinct referenced identities under the recorded coverage. |
+| `PostureEvidence` | NativePostureEvidence / DerivedPostureEvidence |
+| `SourceNormalization` | Provenance for optional normalized Source views. inputContentDigest equals the containing raw contentDigest; ruleDigest pins the normalization rule. These members and their outputs belong to the immutable Source version. Raw payload digest does not hash the normalized view; changing a view/rule appends a version even when raw bytes are unchanged. |
+| `FISTargetSelection` | Experiment-owned native target-map member. A selector with zero resolved resources still exists. Exact configuration remains in selectorObservation → Source; targetName is opaque, never parsed from a membership ID. |
+| `EvidenceWindow` | Event-time half-open interval [start,end). Collection cutoff and observation time are separate; semantic validation enforces start <= end. |
+| `TelemetryMetricIdentity` | object |
+| `TelemetryQuery` | JsonValue / JsonValue |
+| `MetricQueryDefinition` | Application query configuration stored as a versioned Source. Its Source identity/version is the binding identity. The intended event-time window is captured separately for each experiment association; nativeEvidence preserves raw provider context. |
+| `MetricSample` | A measured numeric value. Missing samples are absent; they are never silently converted to zero. |
+| `MetricObservationValue` | Normalized metric samples bound to an exact query Source version. COMPLETE describes collection, not proof of sufficient source coverage. Query units, period, normalization and event window must agree before numeric assessment. |
+| `MetricRecoveryRule` | object |
+| `MetricCriterionDefinition` | Pinned numeric criterion, including optional recovery/stability rule. FAIL on missing data is an explicit criterion policy and still requires its declared coverage assumptions; absence is never numeric zero. |
+| `ExperimentMetricBinding` | Owned association in an evaluation input capture: exact Experiment, query and criterion Source versions plus event window, timing evidence and accepted observations. It can exist without any Run. |
+| `TelemetryEvaluationInput` | Typed captured input for a standalone experiment evaluation. Every referenced record is included in Snapshot.members. Legacy generic evaluation contents remain retained input; they do not establish normalized telemetry bindings. |
+| `SealedAttemptValue` | Exact retained resolved-input or checkpoint value and the immutable schema used to validate it. Content is not a scheduler lease, credential or editable input expression. |
+| `WorkflowCheckpoint` | Resume checkpoint published in the existing attempt identity/version. Resume does not create a retry attempt. |
+| `WorkflowExecutionError` | Technical failure only. A false assessment predicate belongs in CheckResult. Retry eligibility does not authorize replaying a potentially applied effect. |
+| `AttemptRecovery` | Durable input/checkpoint/error envelope, owned and versioned by StepAttempt. Absent on legacy captures means not recorded; it does not establish resumability. |
+| `RunEvidenceCitation` | Run-owned evidence citation. Evidence stays on the shared Source/Observation spine; exact producer/consumer attempts belong to the same Run. Imported evidence declares origin explicitly and does not invent a producing attempt. |
+| `WorkflowObservationValue` | Typed adapter observation result, distinct from the Observation receipt entity. An unavailable value is absent; a completed empty result is explicit. valueSchemaDigest and normalizationDigest pin adapter conversion contracts. |
+| `ProcessingIdentity` | Exact application processing implementation or policy identity. Version is the source implementation version, not an entity version; the digest pins its immutable definition. |
+| `DerivationContext` | Reviewed derivation method and independently pinned parser/rule/model identities. Null means that component was not used; never attribute application confidence to AWS. |
+| `NativeUserAttribution` | Observed native userReference. Preserve the supplied userId and userType, including future provider values. It is not a trusted ActorRef or proof of application authorization. |
+| `PublishedConfidence` | Only a confidence value actually published by the cited source; no assumed scale and no conversion to an AWS confidence score. |
+| `AssertionMetadata` | Assertion provenance, independent observation and validity clocks, and source-qualified uncertainty. Every explicit assertion cites exact retained evidence, including operator/application-origin evidence. |
+| `ApprovalPattern` | Native tool and argument pin value; preserved exactly without guessing wildcard or case-normalization semantics. |
+| `ApprovalAction` | Native ApprovalAction wire value; its members are optional in the pinned AWS model. A validated invocation contract separately requires the identifiers actually necessary for dispatch. |
+| `ApprovalInvocation` | Normalized observed chat request profile. It is not a universal AWS ApprovalRequest entity. Preserve omitted fields on unsupported requests; only validated invocations can authorize decision/resume dispatch. |
+| `ApprovalDecisionIntent` | Reconstructable single-use decision input. The finalPattern must exactly equal the validated requestedPattern selected by the pinned approvalRequest; reusable approvals and widened/narrowed patterns are outside this console operation. Command subjects pin the request, observed Source, Execution and AgentSpace; expectedVersion guards the exact ApprovalRequest. Decision acceptance is not resume or action success. |
+| `ApprovalResumeIntent` | Exact decision and request context used for resume. Command subjects pin the request, decision, Execution and AgentSpace; expectedVersion guards that Execution. Decision, resume acceptance, and an observed action outcome are independent. |
+| `InvestigationArtifactReference` | Channel-aware source reference; an A2A or journal nativeId is not an Asset ID. Optional asset resolution must be supported by retained evidence. A nearby fetched version is OBSERVED unless consumed-version evidence exists. Unknown media types and distinct absence reasons are preserved. |
+| `ActionStageObservation` | One observed stage with its own exact source at the assertion owner. Decision/resume acceptance cannot be relabeled as an effect outcome. |
+| `InvestigationAssertion` | Attributed published assertion in an application vocabulary. It neither invents AWS Finding/Hypothesis fields nor reconstructs private reasoning. Content remains faithful to its source; kind, subjects, provenance, disposition and action stage are typed. |
+| `InvestigationAssertions` | Typed published-assertion projection. Owner Projection.version and outputDigest pin one immutable rendition; per-item IDs remain stable across renditions. supersedesItemId links a different item in this rendition or an explicitly cited earlier version of the same logical Projection; self-links, dangling targets and cycles reject. |
+| `InvestigationTimelineItem` | A timeline item keeps source/evidence/receipt clocks separate. Parent/group links need explicit evidence and a same-rendition target, with no self-links or cycles; timestamps alone do not establish causality. supersedesItemId may target a different item in this rendition or an explicitly cited earlier version of the same logical Projection. Immutable rendition identity comes from the owning Projection version. |
+| `InvestigationTimeline` | Typed application timeline. Deterministic same-time ordering is explicitly a local presentation policy, not a provider total-order guarantee. |
+| `NormalizationDiagnostic` | Owned normalization diagnostic with raw and fallback values. MISSING means no usable value for that rule; Source.fieldPresence separately preserves absent versus present-null. It is not an entity or proof of complete native-schema validation. |
 
 ## Relationship register
 

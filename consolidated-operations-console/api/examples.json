@@ -8075,7 +8075,6 @@
           "profileVersion": "1",
           "sourceOperation": "ec2:DescribeInstances",
           "contentDigest": "sha256:09104dc7db115e9aec77038dc55493fd214b03c8b3734e656f1d5ecc9e4f460c",
-          "digestProfile": "RFC8785_SHA256",
           "providerUpdatedAt": 1793869200,
           "providerVersion": null,
           "fieldPresence": [
@@ -8084,13 +8083,14 @@
               "state": "PRESENT"
             }
           ],
-          "payloadStorage": "INLINE",
           "payload": {
             "instanceId": "i-00000000000000001",
             "state": "running",
             "synthetic": true
           },
-          "artifact": null
+          "artifact": null,
+          "digestProfile": "RFC8785_SHA256",
+          "payloadStorage": "INLINE"
         },
         "clientToken": "ingest-observation-demo-0001"
       },

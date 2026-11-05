@@ -96,21 +96,25 @@ Service.memberships is the sole writable catalogue membership. Reverse journey l
 
 | Concept | Identity and content | Version behavior |
 | --- | --- | --- |
-| Source | One retained source document/representation with native identity, profile, source operation and payload | Changed retained content publishes a new Source version under the same sourceId. |
+| Source | One retained source document/representation with native identity, profile, source operation, payload and optional normalized views | Changed retained content, normalized content or normalization rule publishes a new Source version under the same sourceId. |
 | Observation | One genuine read/receipt occurrence, with Connection, clocks and source reference | Repeated reads are different occurrences. Each Observation has the common version metadata and pins the Source version it saw. |
 | Projection | One named interpretation in a registered profile and subject scope | New selected inputs or rules produce another Projection version; older results stay available. |
 
 Source identity excludes content digest and provider version. Representation/profile scope distinguishes a summary from detail and a request envelope from a response. The exact source profile defines the identity tuple. Identical bodies from distinct native messages do not merge because their source identities differ.
 
-The document's digest describes its declared bytes or canonical JSON representation. It is neither an entity ID nor a version number. `payloadStorage=INLINE` preserves arbitrary native JSON, including a real JSON null. `payloadStorage=ARTIFACT` requires an exact artifact reference and a null inline placeholder. FieldPresence distinguishes absent, unrequested, unavailable and redacted fields. Raw provider payloads do not become writable extension maps.
+The document's digest describes its declared bytes or canonical JSON representation. It is neither an entity ID nor a version number. Native `payloadStorage=INLINE` preserves arbitrary JSON, including a real JSON null. Explicit application normalization profiles bind their INLINE payload to a typed value contract. `payloadStorage=ARTIFACT` requires an exact artifact reference and a null inline placeholder; typed content must be materialized and validated before claiming normalized coverage. FieldPresence distinguishes absent, unrequested, unavailable and redacted fields. Raw provider payloads do not become writable extension maps.
+
+Optional Source views record effective targets, event subjects, subject visibility/deletion state, runtime health and posture evidence. `Source.normalization` pins the input content digest, rule digest and normalization time, with optional typed diagnostics. Raw and normalized content have separate provenance: reprocessing identical raw bytes may publish a new Source version, while `contentDigest` continues to describe the original payload. An unavailable object is not a deletion tombstone. Only explicit provider deletion evidence supports `DELETED`.
 
 `digestProfile` declares raw-byte SHA-256 or canonical JSON hashing. Raw-byte mode requires retention of those bytes. Canonical JSON follows [RFC 8785](https://www.rfc-editor.org/rfc/rfc8785). Hashes detect content disagreement; they do not authenticate the provider or establish access rights.
 
-Projection holds a typed result under one of five profiles: `EVALUATION`, `LIFECYCLE_EXPOSURE`, `INVESTIGATION_RESULT`, `SERVICE_STATUS` and `WORKSPACE_SUMMARY`. It pins subject versions, exact input versions, rule identity, cutoff, generation time and coverage. Its identity and version are independent of the source entity's version. Recalculation cannot renew old source evidence.
+Projection holds a typed result under one of seven profiles: `EVALUATION`, `LIFECYCLE_EXPOSURE`, `INVESTIGATION_RESULT`, `SERVICE_STATUS`, `WORKSPACE_SUMMARY`, `INVESTIGATION_TIMELINE` and `INVESTIGATION_ASSERTIONS`. It pins subject versions, exact input versions, rule identity, cutoff, generation time and coverage. Its identity and version are independent of the source entity's version. Recalculation cannot renew old source evidence.
 
 ### Collection and coverage
 
 Collection is one finite pass over a declared query set. Its query definitions remain fixed for that collection identity; state and coverage publish later versions. ReadAttempt represents an actual request, including unsuccessful and empty requests, and pins request/response Source versions. A missing response stays unavailable rather than becoming an empty success.
+
+HTTP/transport outcome and per-item outcome are independent. A successful Health batch can contain per-event/account errors; `ReadAttempt.itemErrors` and `itemOutcome` retain that scope without declaring the transport failed. Collection collector/selection-policy identities and Coverage evaluation-policy identity preserve which implementation made each choice. Historical absence of those optional identities remains unknown.
 
 API observations identify a ReadAttempt and pinned Connection. Event/stream/local observations retain the actual receipt channel and context without inventing a native read. An ingestion replay and a second genuine delivery are distinct cases.
 
@@ -128,6 +132,10 @@ PolicyContext pins the exact observed assignment and effective-target evidence, 
 
 Graph keys and endpoints belong to the capture. Every referenced endpoint resolves within that graph; unresolved native objects retain qualified identity/evidence. Provider topology, dependency, sequence and causal hypotheses remain distinct relationship meanings.
 
+Graph assertion metadata distinguishes provider claims, application inference, operator statements and independent observations. A provider edge cannot disguise application inference. Execution hierarchy does not prove causality. Native edge property lists preserve their original order and unknown provider vocabulary; graph derivation records the exact processing identity where the new normalized contract is used.
+
+An `EVALUATION_INPUT` Snapshot with `contents.contractProfile=console.telemetry.evaluation-input/v1` binds an Experiment to exact query and criterion Source versions. Metric observations retain numeric samples, units, period, window and evidence. Evaluation closes over the retained members available at the cutoff; a late sample cannot rewrite a sealed historical conclusion. This contract supports standalone experiments without inventing a workflow Run.
+
 Independent state dimensions remain explicit: provider status, coverage, technical execution, assessment verdict/finality, cleanup/effect state and local disposition. A completed WorkItem cannot clear Health impact. A successful execution can fail acceptance. A passed assessment does not prove remote effects are quiescent. Counts name their population and deduplication rule; an empty denominator does not yield automatic 100 percent.
 
 ## 6. Domain modules
@@ -137,6 +145,8 @@ Independent state dimensions remain explicit: provider status, coverage, technic
 System, UserJourney and Service supply the local workload catalogue. Resource is inventory identity; an affected-entity record or selected target is not automatically a Resource. ResourceMatch retains the matching rule and evidence. A captured pod name may identify a run-scoped selection without proving a stable incarnation across runs.
 
 HealthEvent is native event identity. EventContext partitions PUBLIC, ACCOUNT and ORG_SUMMARY evidence. PUBLIC has no affected-account owner. ACCOUNT has one account. ORG_SUMMARY has organization scope and no EntityImpact children. A notification recipient does not create provider-reported account impact. EntityImpact retains its context and explicit inventory matches.
+
+Localized descriptions belong to EventContext and cite the exact description Source. Requested locale and stream language are recorded as distinct locale bases. ResourceMatch retains method and confidence where available. LifecycleExposure preserves the original application's `CANDIDATE` applicability qualifier separately from the application's conservative `UNKNOWN` conclusion.
 
 Communication groups validated logical pages while retaining conflicting candidates and delivery references. LifecycleEntry retains catalogue identity/matching limits and milestone content; ComponentDeployment retains observed inventory context. LifecycleExposure is a versioned Projection with exact deployment/catalogue inputs. Local acknowledgement, assignment and verification are WorkItem state. These boundaries preserve the [Health analysis](../aws/health/analysis/report.md).
 
@@ -148,15 +158,23 @@ Recommendation preserves one captured suggestion and its allowed local enrichmen
 
 Policy components, assessment execution, retained posture and runtime health remain distinct. A failed new assessment does not delete prior posture; its freshness/context may change. Findings distinguish summary, detail, unknown suggestion availability and known empty suggestions. Native disposition/classification commands remain separate from local governance or work. See the [Resilience analysis](../aws/resilience-hub/analysis/report.md) and [source API contracts](../aws/resilience-hub/analysis/api/entities.md).
 
+Effective targets use typed percentages, integer-minute durations and string DR approaches with per-metric provenance. Source ownership (`SELF` or `CROSS_ACCOUNT`) does not imply policy inheritance. Optional normalized PolicyComponent content enforces family/target/unit combinations while preserving unknown raw provider values. Recommendation normalized content retains category and ordered changes. Finding-capture assessment correlation records an exact same-service reference and temporal basis; it does not create an assessment ownership relationship. Provider posture and derived attention remain separately attributable.
+
 ### Investigations
 
 AgentSpace is the native provider scope. Investigation is the aggregate over a native Task of type INVESTIGATION. Execution membership is an observed relation; an Execution does not acquire a fictional single investigation parent. Task's execution pointer remains optional and does not imply latest/root/only membership.
 
 JournalRecord preserves its envelope, arbitrary native content and pinned Source/Observation references. InvestigationResult distinguishes phase, selected evidence, expected-but-unavailable content, pending hydration, explicit no-summary and ambiguous candidates. A mitigation completion cannot replace investigation-phase evidence.
 
+Native journal attribution is separate from a trusted application actor. Timeline and assertion projections pin exactly one Investigation owner, scoped subjects and exact evidence inputs. Published findings, hypotheses, root-cause assessments, mitigation proposals, review results and observed action stages retain attribution, confidence evidence and supersession. Published content remains opaque; this is not access to private model reasoning. Parent grouping is acyclic but does not impose causal or timestamp order on independent provider clocks. Supersession may cite the current rendition or an explicitly selected older version of the same logical Projection.
+
 ApprovalRequest pins the observed request and action digest. Decision and resume are separate Commands. Their acceptance, later observed action execution and operational recovery remain distinct. Every Command has its own entity history.
 
+Typed invocation context distinguishes validated, unsupported and missing-identifier requests. A decision receipt pins its exact request Source, ApprovalRequest, Execution, AgentSpace and action pattern; its `expectedVersion` guards the ApprovalRequest. A resume receipt additionally pins the successful decision Command and guards the selected Execution version. Accepted approval, resumed execution, observed action and operational recovery remain separate facts.
+
 Asset has the common entity version and captures an exact `nativeVersion`, source and files in that representation. It does not contain an embedded array of independent AssetVersion records. Application and native versions remain different fields. An asset link still does not prove a historical execution consumed it. See the [investigation data model](../aws/devops-agent/analysis/annexes/Investigation_Data_Model.md).
+
+Investigation artifact references preserve their channel and exact Asset version when resolved. Known absence in one channel does not establish absence in another, and current artifact availability does not establish historical consumption.
 
 ### Workflow and FIS
 
@@ -168,9 +186,13 @@ Admission also pins subject and Connection versions, validated inputs, allowed s
 
 Run, StepRun and StepAttempt use the same `version` field as other entities. `Run.steps` pins exact StepRun versions, and `StepRun.selectedAttempt` pins an exact StepAttempt version. A historical Run cannot derive its verdict by joining current children. Attempt number identifies a distinct execution attempt. Transport retry/polling retains that attempt; an intentional new operation attempt needs the required prior-effect reconciliation. Dispatch identity is persisted before the external call. Previously sealed conclusions and pinned evidence remain immutable.
 
+Optional StepAttempt recovery content retains once-resolved inputs, exact schema/content pins, ordered checkpoints and technical execution errors. Existing inputs and checkpoints cannot be silently rewritten by later versions. Run evidence citations distinguish produced, consumed and imported evidence and keep producer/consumer attempts within the Run. Typed workflow observations preserve availability and schema identity while leaving their declared value opaque. CheckResult retains evaluator identity and optional actual/expected summaries; a false criterion remains distinct from technical failure.
+
 Cancellation records monotonic intent, fences new main dispatch and permits required finalization under its own budget. A response-lost start is reconciled through non-creating reads. Unknown effects remain explicit, with the required protective hold. A later observation or Evaluation Projection can explain later knowledge without rewriting a pinned historical Run outcome. The [source workflow](../aws/fis/analysis/workflow/model.md) supplies the execution/evaluation distinctions.
 
 Experiment is native FIS execution and remains independently observable from Run. Actions, selected targets and report details are owned values. Target selection is not proof of fault application; report readiness is separate from execution and acceptance. Native control remains at the experiment boundary. The [FIS review](../aws/fis/analysis/QUALITY_REVIEW.md) records these constraints.
+
+Target selectors are retained even when they select no members. Memberships join the explicit target name; opaque selection keys are never parsed to infer identity. Selector and action-map completeness are independent. Observed action names/edges must be unique and acyclic; missing dependency endpoints are rejected for an explicitly complete action map and for unmarked legacy captures. Explicit PARTIAL/UNKNOWN permits unloaded endpoints; legacy closed-reference validation does not certify provider hydration. An incomplete map cannot establish that the complete provider DAG is valid. ActionExecution has source identity and lifecycle, so it counts as a substantive source entity concept even though the consolidated representation is the owned `Experiment.actions` value.
 
 ## 7. API and storage consequences
 
@@ -189,3 +211,5 @@ A new module supplies typed entities, values, source profiles, operations and re
 Unknown provider output vocabulary is retained conservatively. Writable inputs remain deliberate and closed. Identity, version selection, reference shape, state meaning, null/absence, replay and pagination semantics are compatibility boundaries.
 
 This revision changes those contracts and uses the **`ConsolidatedOperationsConsole_20261105V2`** namespace. [CONSOLIDATION_PLAN.md](CONSOLIDATION_PLAN.md) maps the old revision-oriented surface to the uniform model; [REVIEW.md](REVIEW.md) records why the first consolidation required correction.
+
+The [coverage review](COVERAGE_REVIEW.md) adds optional owner fields and explicitly selected profiles within V2. Original records and operation examples remain accepted. This is contract capacity, not a claim that historical records contain the new normalization or that adapters have reprocessed them. Native administration and unknown provider fields remain retained evidence until a concrete normalized workflow is specified.

@@ -400,7 +400,7 @@ In the field tables, **required** members are marked with `*`. Every operation-s
 | Request member | Type |
 | --- | --- |
 | `subject` | `EntityRef` |
-| `profile` | `EVALUATION/LIFECYCLE_EXPOSURE/INVESTIGATION_RESULT/SERVICE_STATUS/WORKSPACE_SUMMARY` |
+| `profile` | `EVALUATION/LIFECYCLE_EXPOSURE/INVESTIGATION_RESULT/SERVICE_STATUS/WORKSPACE_SUMMARY/INVESTIGATION_TIMELINE/INVESTIGATION_ASSERTIONS` |
 | `maxResults` | `integer` |
 | `nextToken` | `string` |
 
@@ -486,6 +486,7 @@ In the field tables, **required** members are marked with `*`. Every operation-s
 - Admits a finite exact query set from the registered read-only adapter catalog; unknown operations or unauthorized scope fail admission.
 - queryKey uniqueness, canonical requestDigest, filter types and operation-specific bounds are validated against that registered adapter.
 - Completion, pagination, hydration, resolution and claim coverage remain independent facts.
+- Trusted collection admission records exact collector and selectionPolicy implementation identities on the Collection; caller input cannot forge these processing identities.
 
 **Errors:** `ValidationException`, `UnauthenticatedException`, `AccessDeniedException`, `ResourceNotFoundException`, `ThrottlingException`, `InternalServerException`, `ServiceUnavailableException`, `IdempotencyConflictException`, `CommandInProgressException`, `InvalidStateException`.
 
@@ -505,6 +506,8 @@ In the field tables, **required** members are marked with `*`. Every operation-s
 | `error` * | `ReadError or null` |
 | `requestSource` * | `EntityRef` |
 | `responseSource` * | `EntityRef or null` |
+| `itemErrors` | `List<CollectionItemError>` |
+| `itemOutcome` | `COMPLETE/PARTIAL/FAILED/NOT_APPLICABLE/UNKNOWN` |
 | `clientToken` * | `string` |
 | `expectedVersion` * | `Version` |
 
@@ -516,6 +519,7 @@ In the field tables, **required** members are marked with `*`. Every operation-s
 - requestSource must equal the exact already retained request envelope for this attempt. Response references must belong to this exact request and scope, including empty responses.
 - IngestObservation may retain response/object observations while the attempt is STARTED; settlement then references those revisions. A response-lost failure has an explicit null response reference, not a fabricated empty response.
 - A settled attempt is immutable. Exact replay returns the original result; conflicting terminal facts reject. Query identity, attemptNo, requestDigest, startedAt and authorization provenance are server-owned.
+- Optional itemErrors and itemOutcome preserve event/account failedSet entries. A successful HTTP response can have PARTIAL or FAILED item outcome while transport state remains SUCCEEDED; transport failures remain error. Omitting these fields means item outcome was not recorded, never complete success.
 
 **Errors:** `ValidationException`, `UnauthenticatedException`, `AccessDeniedException`, `ResourceNotFoundException`, `ThrottlingException`, `InternalServerException`, `ServiceUnavailableException`, `IdempotencyConflictException`, `CommandInProgressException`, `InvalidStateException`, `VersionConflictException`.
 
@@ -539,9 +543,10 @@ In the field tables, **required** members are marked with `*`. Every operation-s
 **Response:** `source: Source`; `observation: Observation`; `command: Command`.
 
 - Atomically resolves the stable Source identity independently of content digest, retains a new Source version when its accepted representation changes, and records a distinct Observation with an exact Source reference.
-- An unchanged consecutive receipt reuses the current Source version. A→B→A publishes versions 1→2→3; byte deduplication cannot relabel the last observation as the old version 1.
+- An unchanged consecutive receipt reuses the current Source version only when raw content, optional normalized views and their rule provenance all agree. Changed normalization appends a version even with the same raw contentDigest. A→B→A publishes versions 1→2→3; byte deduplication cannot relabel the last observation as the old version 1.
 - The registered versioned profile validates typed known members, source identity, representation and digest; raw unknown provider output remains retained evidence.
 - payload is the intentionally opaque provider document, bounded by the body cap and adapter schema; it cannot patch canonical state or set a verdict.
+- Optional normalized Source fields require their registered profile and normalization input/rule provenance. contentDigest remains the raw payload/artifact digest; inputContentDigest must agree with it. Unknown native content remains retained in payload and must not be rejected solely because it cannot populate a normalized view. Existing records without those optional fields are not claimed to be normalized.
 - The adapter reconciles canonical entity indexes through verified mappings. Digest equality alone is not event identity; receipt dedupe includes the authenticated channel/scope.
 
 **Errors:** `ValidationException`, `UnauthenticatedException`, `AccessDeniedException`, `ResourceNotFoundException`, `ThrottlingException`, `InternalServerException`, `ServiceUnavailableException`, `IdempotencyConflictException`, `CommandInProgressException`, `InvalidStateException`, `EvidenceUnavailableException`.
@@ -561,6 +566,7 @@ In the field tables, **required** members are marked with `*`. Every operation-s
 
 - Seals collection coverage after every declared query has a settled or explicitly unresolved outcome; referenced attempts must belong to this collection.
 - A coverage conclusion must be justified by registered collector rules. Successful or exhausted pages cannot alone claim source sufficiency.
+- New coverage conclusions record the exact evaluationPolicy identity. Historical absence remains unknown; it cannot be assigned the current policy retroactively.
 - expectedVersion guards the Collection head; completion publishes its next ordinary entity version. There is no second projectionVersion clock.
 
 **Errors:** `ValidationException`, `UnauthenticatedException`, `AccessDeniedException`, `ResourceNotFoundException`, `ThrottlingException`, `InternalServerException`, `ServiceUnavailableException`, `IdempotencyConflictException`, `CommandInProgressException`, `InvalidStateException`, `VersionConflictException`.
@@ -572,7 +578,7 @@ In the field tables, **required** members are marked with `*`. Every operation-s
 | Request member | Type |
 | --- | --- |
 | `projectionKey` * | `string` |
-| `profile` * | `EVALUATION/LIFECYCLE_EXPOSURE/INVESTIGATION_RESULT/SERVICE_STATUS/WORKSPACE_SUMMARY` |
+| `profile` * | `EVALUATION/LIFECYCLE_EXPOSURE/INVESTIGATION_RESULT/SERVICE_STATUS/WORKSPACE_SUMMARY/INVESTIGATION_TIMELINE/INVESTIGATION_ASSERTIONS` |
 | `profileVersion` * | `string` |
 | `subjectRefs` * | `List<EntityRef>` |
 | `inputRefs` * | `List<EvidenceRef>` |
@@ -586,6 +592,7 @@ In the field tables, **required** members are marked with `*`. Every operation-s
 - Executes an authorized registered rule over exact entity-version inputs and publishes the next version of the same logical Projection.
 - expectedVersion=null requires that the named projection identity does not exist; a positive value guards its current head. The first publication is version 1. Concurrent incompatible publication returns VersionConflictException.
 - The request cannot supply value, generatedAt, coverage or a desired verdict. The trusted projector derives them from the selected evidence.
+- INVESTIGATION_TIMELINE and INVESTIGATION_ASSERTIONS use their typed value contracts. The trusted projector records DerivationContext and outputDigest; every source citation is among inputRefs. Published claims preserve attribution and do not expose private model reasoning.
 - Every reference must be authorized, same-workspace and available. Missing evidence produces a qualified result or explicit failure; it never becomes success.
 - A new projection version does not change its source subjects or any earlier entity representation. Current-view selection never rewrites a sealed Run.
 
@@ -1811,6 +1818,7 @@ In the field tables, **required** members are marked with `*`. Every operation-s
 - expectedVersion guards ApprovalRequest; expectedRequestSource selects its exact retained request content. A version from another request or source object is rejected.
 - APPROVED requires singleUse=true. REJECTED omits singleUse; the adapter also omits native pattern and TTL fields for rejection.
 - Validates a complete authenticated chat request context and exact action digest, then invokes UpdateApprovalAction. It neither resumes the execution nor claims the tool ran.
+- Admission records reconstructable Command.approvalDecision with the exact ApprovalRequest version, request Source, action digest, decision, singleUse and copied requested pattern. Only VALIDATED observed invocation context is dispatchable; missing or unsupported context is rejected.
 - Native UpdateApprovalAction has no modeled idempotency token. A lost response is OUTCOME_UNKNOWN; local replay returns the receipt and must not repeat the remote mutation blindly.
 - A successful rejection is a successful decision command, not a provider API failure.
 
@@ -1835,6 +1843,7 @@ In the field tables, **required** members are marked with `*`. Every operation-s
 **Native adapter basis:** `SendMessage`. These are mapped operations, not identical wire payloads.
 
 - Requires a definitively successful matching decision Command, valid current authorization and a validated approval/interrupt/tool-use context.
+- Records Command.approvalResume with the exact request, successful decision Command, and native action identifiers. This dispatch receipt does not establish tool execution or action effect.
 - expectedVersion guards Execution; approvalRequest and decisionCommand are exact retained representations. An ACCEPTED decision version is insufficient even if a later command version has succeeded.
 - Constructs the native SendMessage APPROVAL_ACTION context from that retained request; the caller cannot substitute interrupt/tool IDs or widen approved scope.
 - Decision, resume submission, credential redemption and actual tool outcome remain separate. Opening or completing a stream does not prove the tool succeeded.

@@ -21,6 +21,12 @@
         },
         "expiresAt": {
           "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/v2/model.json#/$defs/Timestamp"
+        },
+        "totalResults": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991,
+          "description": "Optional exact cardinality of the authorized, filtered result set for this retained traversal publication. Omit when not computed; zero requires an established empty result set. It is not current-page length or upstream AWS coverage."
         }
       },
       "required": [
@@ -29,7 +35,8 @@
         "createdAt",
         "expiresAt"
       ],
-      "additionalProperties": false
+      "additionalProperties": false,
+      "description": "Response-owned traversal metadata. A supplied totalResults is stable across pages of the same authorization/filter/publication scope; omitted means unknown. It does not create an entity or make pagination exhaustion proof of upstream completeness."
     },
     "FieldViolation": {
       "type": "object",
@@ -936,7 +943,9 @@
             "LIFECYCLE_EXPOSURE",
             "INVESTIGATION_RESULT",
             "SERVICE_STATUS",
-            "WORKSPACE_SUMMARY"
+            "WORKSPACE_SUMMARY",
+            "INVESTIGATION_TIMELINE",
+            "INVESTIGATION_ASSERTIONS"
           ]
         },
         "maxResults": {
@@ -1299,6 +1308,23 @@
             }
           ]
         },
+        "itemErrors": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/v2/model.json#/$defs/CollectionItemError"
+          },
+          "maxItems": 1000
+        },
+        "itemOutcome": {
+          "type": "string",
+          "enum": [
+            "COMPLETE",
+            "PARTIAL",
+            "FAILED",
+            "NOT_APPLICABLE",
+            "UNKNOWN"
+          ]
+        },
         "clientToken": {
           "type": "string",
           "minLength": 16,
@@ -1356,8 +1382,127 @@
               }
             }
           }
+        },
+        {
+          "if": {
+            "required": [
+              "itemOutcome"
+            ],
+            "properties": {
+              "itemOutcome": {
+                "enum": [
+                  "PARTIAL",
+                  "FAILED"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "state": {
+                "const": "SUCCEEDED"
+              },
+              "error": {
+                "type": "null"
+              },
+              "itemErrors": {
+                "minItems": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "itemOutcome"
+            ],
+            "properties": {
+              "itemOutcome": {
+                "enum": [
+                  "COMPLETE",
+                  "NOT_APPLICABLE"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "itemErrors": {
+                "maxItems": 0
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "itemErrors"
+            ],
+            "properties": {
+              "itemErrors": {
+                "minItems": 1
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "itemOutcome": {
+                "enum": [
+                  "PARTIAL",
+                  "FAILED"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "itemOutcome"
+            ],
+            "properties": {
+              "itemOutcome": {
+                "const": "PARTIAL"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "returnedCount": {
+                "type": "integer",
+                "minimum": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "itemOutcome"
+            ],
+            "properties": {
+              "itemOutcome": {
+                "const": "FAILED"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "returnedCount": {
+                "const": 0
+              }
+            }
+          }
         }
-      ]
+      ],
+      "dependentRequired": {
+        "itemErrors": [
+          "itemOutcome"
+        ],
+        "itemOutcome": [
+          "itemErrors"
+        ]
+      }
     },
     "RecordReadAttemptResponse": {
       "type": "object",
@@ -1411,13 +1556,6 @@
         "contentDigest": {
           "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/v2/model.json#/$defs/Digest"
         },
-        "digestProfile": {
-          "type": "string",
-          "enum": [
-            "RAW_BYTES_SHA256",
-            "RFC8785_SHA256"
-          ]
-        },
         "providerUpdatedAt": {
           "anyOf": [
             {
@@ -1447,13 +1585,6 @@
           },
           "maxItems": 1000
         },
-        "payloadStorage": {
-          "type": "string",
-          "enum": [
-            "INLINE",
-            "ARTIFACT"
-          ]
-        },
         "payload": {
           "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/v2/model.json#/$defs/JsonValue"
         },
@@ -1466,6 +1597,42 @@
               "type": "null"
             }
           ]
+        },
+        "digestProfile": {
+          "type": "string",
+          "enum": [
+            "RAW_BYTES_SHA256",
+            "RFC8785_SHA256"
+          ]
+        },
+        "payloadStorage": {
+          "type": "string",
+          "enum": [
+            "INLINE",
+            "ARTIFACT"
+          ]
+        },
+        "effectiveTargets": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/v2/model.json#/$defs/EffectiveTargets"
+        },
+        "eventSubjects": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/v2/model.json#/$defs/EventSubject"
+          },
+          "maxItems": 1000
+        },
+        "subjectState": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/v2/model.json#/$defs/SubjectStateObservation"
+        },
+        "healthSignal": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/v2/model.json#/$defs/HealthSignalEvidence"
+        },
+        "postureEvidence": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/v2/model.json#/$defs/PostureEvidence"
+        },
+        "normalization": {
+          "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/v2/model.json#/$defs/SourceNormalization"
         }
       },
       "required": [
@@ -1475,13 +1642,13 @@
         "profileVersion",
         "sourceOperation",
         "contentDigest",
-        "digestProfile",
         "providerUpdatedAt",
         "providerVersion",
         "fieldPresence",
-        "payloadStorage",
         "payload",
-        "artifact"
+        "artifact",
+        "digestProfile",
+        "payloadStorage"
       ],
       "additionalProperties": false,
       "allOf": [
@@ -1503,8 +1670,310 @@
               }
             }
           }
+        },
+        {
+          "if": {
+            "required": [
+              "effectiveTargets"
+            ],
+            "properties": {}
+          },
+          "then": {
+            "properties": {
+              "profile": {
+                "enum": [
+                  "aws.resilience-hub.effective-targets/v1"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "eventSubjects"
+            ],
+            "properties": {}
+          },
+          "then": {
+            "properties": {
+              "profile": {
+                "enum": [
+                  "aws.resilience-hub.event/v1"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "healthSignal"
+            ],
+            "properties": {}
+          },
+          "then": {
+            "properties": {
+              "profile": {
+                "enum": [
+                  "console.monitoring.health/v1"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "postureEvidence"
+            ],
+            "properties": {}
+          },
+          "then": {
+            "properties": {
+              "profile": {
+                "enum": [
+                  "aws.resilience-hub.posture/v1",
+                  "console.resilience.status/v1"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "postureEvidence"
+            ],
+            "properties": {
+              "postureEvidence": {
+                "properties": {
+                  "kind": {
+                    "const": "AWS_SERVICE"
+                  }
+                },
+                "required": [
+                  "kind"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "profile": {
+                "const": "aws.resilience-hub.posture/v1"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "postureEvidence"
+            ],
+            "properties": {
+              "postureEvidence": {
+                "properties": {
+                  "kind": {
+                    "const": "DERIVED_ATTENTION"
+                  }
+                },
+                "required": [
+                  "kind"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "profile": {
+                "const": "console.resilience.status/v1"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "profile": {
+                "const": "console.telemetry.metric-query/v1"
+              }
+            },
+            "required": [
+              "profile"
+            ]
+          },
+          "then": {
+            "properties": {
+              "profileVersion": {
+                "const": "1"
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "payloadStorage": {
+                      "const": "INLINE"
+                    }
+                  },
+                  "required": [
+                    "payloadStorage"
+                  ]
+                },
+                "then": {
+                  "properties": {
+                    "payload": {
+                      "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/v2/model.json#/$defs/MetricQueryDefinition"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "x-reviewRule": "console.telemetry.metric-query/v1"
+        },
+        {
+          "if": {
+            "properties": {
+              "profile": {
+                "const": "console.telemetry.metric-observation/v1"
+              }
+            },
+            "required": [
+              "profile"
+            ]
+          },
+          "then": {
+            "properties": {
+              "profileVersion": {
+                "const": "1"
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "payloadStorage": {
+                      "const": "INLINE"
+                    }
+                  },
+                  "required": [
+                    "payloadStorage"
+                  ]
+                },
+                "then": {
+                  "properties": {
+                    "payload": {
+                      "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/v2/model.json#/$defs/MetricObservationValue"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "x-reviewRule": "console.telemetry.metric-observation/v1"
+        },
+        {
+          "if": {
+            "properties": {
+              "profile": {
+                "const": "console.telemetry.criterion/v1"
+              }
+            },
+            "required": [
+              "profile"
+            ]
+          },
+          "then": {
+            "properties": {
+              "profileVersion": {
+                "const": "1"
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "payloadStorage": {
+                      "const": "INLINE"
+                    }
+                  },
+                  "required": [
+                    "payloadStorage"
+                  ]
+                },
+                "then": {
+                  "properties": {
+                    "payload": {
+                      "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/v2/model.json#/$defs/MetricCriterionDefinition"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "x-reviewRule": "console.telemetry.criterion/v1"
+        },
+        {
+          "if": {
+            "properties": {
+              "profile": {
+                "const": "console.workflow.observation/v1"
+              }
+            },
+            "required": [
+              "profile"
+            ]
+          },
+          "then": {
+            "properties": {
+              "profileVersion": {
+                "const": "1"
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "payloadStorage": {
+                      "const": "INLINE"
+                    }
+                  },
+                  "required": [
+                    "payloadStorage"
+                  ]
+                },
+                "then": {
+                  "properties": {
+                    "payload": {
+                      "$ref": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/v2/model.json#/$defs/WorkflowObservationValue"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "x-reviewRule": "console.workflow.observation/v1"
         }
-      ]
+      ],
+      "dependentRequired": {
+        "effectiveTargets": [
+          "normalization"
+        ],
+        "eventSubjects": [
+          "normalization"
+        ],
+        "subjectState": [
+          "normalization"
+        ],
+        "healthSignal": [
+          "normalization"
+        ],
+        "postureEvidence": [
+          "normalization"
+        ]
+      }
     },
     "IngestObservationRequest": {
       "type": "object",
@@ -1765,7 +2234,9 @@
             "LIFECYCLE_EXPOSURE",
             "INVESTIGATION_RESULT",
             "SERVICE_STATUS",
-            "WORKSPACE_SUMMARY"
+            "WORKSPACE_SUMMARY",
+            "INVESTIGATION_TIMELINE",
+            "INVESTIGATION_ASSERTIONS"
           ]
         },
         "profileVersion": {

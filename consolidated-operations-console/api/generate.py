@@ -173,7 +173,9 @@ GUARDED = {**MUT, "expectedVersion": VERSION}
 
 DEFS["Page"] = obj({
     "traversalId": ID, "asOfSequence": integer(0), "createdAt": TIME, "expiresAt": TIME,
-}, ["traversalId", "asOfSequence", "createdAt", "expiresAt"])
+    "totalResults": {**integer(0), "description": "Optional exact cardinality of the authorized, filtered result set for this retained traversal publication. Omit when not computed; zero requires an established empty result set. It is not current-page length or upstream AWS coverage."},
+}, ["traversalId", "asOfSequence", "createdAt", "expiresAt"],
+    description="Response-owned traversal metadata. A supplied totalResults is stable across pages of the same authorization/filter/publication scope; omitted means unknown. It does not create an entity or make pagination exhaustion proof of upstream completeness.")
 DEFS["FieldViolation"] = obj({"path": string(1, 1024), "code": string(1, 128), "message": string(1, 2048)})
 ERRORS = {
     "ValidationException": (400, False, "Invalid syntax, field, union, scalar or semantic input; no accepted mutation."),
@@ -360,36 +362,48 @@ def add_foundation():
                  "clientToken": "start-collection-demo-0001"},
         ["Admits a finite exact query set from the registered read-only adapter catalog; unknown operations or unauthorized scope fail admission.",
          "queryKey uniqueness, canonical requestDigest, filter types and operation-specific bounds are validated against that registered adapter.",
-         "Completion, pagination, hydration, resolution and claim coverage remain independent facts."])
+         "Completion, pagination, hydration, resolution and claim coverage remain independent facts.",
+         "Trusted collection admission records exact collector and selectionPolicy implementation identities on the Collection; caller input cannot forge these processing identities."])
     attempt_fields = properties_of("ReadAttempt", ["collectionId", "readAttemptId", "state", "endedAt", "providerRequestId", "returnedCount", "nextTokenPresent", "error", "requestSource", "responseSource"])
+    # Optional item outcomes retain failedSet without changing legacy settlement inputs.
+    attempt_required = list(attempt_fields) + list(GUARDED)
+    attempt_fields.update(properties_of("ReadAttempt", ["itemErrors", "itemOutcome"]))
     attempt_fields["state"] = enum("SUCCEEDED", "FAILED")
     attempt_fields["endedAt"] = TIME
     attempt_fields.update(GUARDED)
     add("RecordReadAttempt", "foundation", "INGEST", "console:IngestEvidence", ["ReadAttempt", "Command"],
-        obj(attempt_fields, allOf=[
+        obj(attempt_fields, attempt_required, allOf=[
             {"if": {"properties": {"state": {"const": "SUCCEEDED"}}}, "then": {"properties": {"error": {"type": "null"}}}},
             {"if": {"properties": {"state": {"const": "FAILED"}}}, "then": {"properties": {"error": model("ReadError")}}},
-        ]), command_response("ReadAttempt"),
-        lambda: {**{k: record("ReadAttempt")[k] for k in attempt_fields if k not in ("clientToken", "expectedVersion")},
+        ] + model_shape(MODEL["$defs"]["ReadAttempt"].get("allOf", [])),
+            dependentRequired=copy.deepcopy(MODEL["$defs"]["ReadAttempt"].get("dependentRequired", {}))), command_response("ReadAttempt"),
+        lambda: {**{k: record("ReadAttempt")[k] for k in attempt_fields if k not in ("clientToken", "expectedVersion") and k in record("ReadAttempt")},
                  "expectedVersion": max(1, record("ReadAttempt")["version"] - 1), "clientToken": "record-read-attempt-demo-0001"},
         ["Settles the same existing STARTED ReadAttempt created by the trusted collector dispatch transaction before the actual read; does not append a second attempt or fabricate a pre-call record after the fact.",
          "Trusted context assigns authorizationContextKey; a caller cannot forge its acting principal or provenance.",
          "expectedVersion guards the existing STARTED ReadAttempt head. Settlement creates the next version of that same identity; prior STARTED representations remain intact.",
          "requestSource must equal the exact already retained request envelope for this attempt. Response references must belong to this exact request and scope, including empty responses.",
          "IngestObservation may retain response/object observations while the attempt is STARTED; settlement then references those revisions. A response-lost failure has an explicit null response reference, not a fabricated empty response.",
-         "A settled attempt is immutable. Exact replay returns the original result; conflicting terminal facts reject. Query identity, attemptNo, requestDigest, startedAt and authorization provenance are server-owned."])
-    source_fields = properties_of("Source", ["identity", "representation", "profile", "profileVersion", "sourceOperation", "contentDigest", "digestProfile", "providerUpdatedAt", "providerVersion", "fieldPresence", "payloadStorage", "payload", "artifact"])
-    DEFS["SourceInput"] = obj(source_fields, allOf=model_shape(MODEL["$defs"]["Source"].get("allOf", [])))
+         "A settled attempt is immutable. Exact replay returns the original result; conflicting terminal facts reject. Query identity, attemptNo, requestDigest, startedAt and authorization provenance are server-owned.",
+         "Optional itemErrors and itemOutcome preserve event/account failedSet entries. A successful HTTP response can have PARTIAL or FAILED item outcome while transport state remains SUCCEEDED; transport failures remain error. Omitting these fields means item outcome was not recorded, never complete success."])
+    # Source identity/version metadata remains server-owned; optional typed views are writable only through trusted ingestion.
+    source_server_fields = {"sourceId", "workspaceId", "version", "createdAt", "updatedAt"}
+    source_fields = properties_of("Source", [name for name in MODEL["$defs"]["Source"]["properties"] if name not in source_server_fields])
+    source_required = [name for name in MODEL["$defs"]["Source"]["required"] if name in source_fields]
+    DEFS["SourceInput"] = obj(source_fields, source_required,
+        allOf=model_shape(MODEL["$defs"]["Source"].get("allOf", [])),
+        dependentRequired=copy.deepcopy(MODEL["$defs"]["Source"].get("dependentRequired", {})))
     observation_fields = properties_of("Observation", ["channel", "readAttempt", "connection", "observedAt", "sourceTime", "transportTime", "expiresAt", "receiptKey"])
     observation_fields.update({"source": local("SourceInput"), **MUT})
     add("IngestObservation", "foundation", "INGEST", "console:IngestEvidence", ["Source", "Observation", "Command"],
         obj(observation_fields, allOf=model_shape(MODEL["$defs"]["Observation"].get("allOf", []))), obj({"source": model("Source"), "observation": model("Observation"), "command": model("Command")}),
         lambda: {**{k: record("Observation")[k] for k in observation_fields if k not in ("source", "clientToken")},
-                 "source": {k: resolve(record("Observation")["source"])[k] for k in source_fields}, "clientToken": "ingest-observation-demo-0001"},
+                 "source": {k: resolve(record("Observation")["source"])[k] for k in source_fields if k in resolve(record("Observation")["source"])}, "clientToken": "ingest-observation-demo-0001"},
         ["Atomically resolves the stable Source identity independently of content digest, retains a new Source version when its accepted representation changes, and records a distinct Observation with an exact Source reference.",
-         "An unchanged consecutive receipt reuses the current Source version. A→B→A publishes versions 1→2→3; byte deduplication cannot relabel the last observation as the old version 1.",
+         "An unchanged consecutive receipt reuses the current Source version only when raw content, optional normalized views and their rule provenance all agree. Changed normalization appends a version even with the same raw contentDigest. A→B→A publishes versions 1→2→3; byte deduplication cannot relabel the last observation as the old version 1.",
          "The registered versioned profile validates typed known members, source identity, representation and digest; raw unknown provider output remains retained evidence.",
          "payload is the intentionally opaque provider document, bounded by the body cap and adapter schema; it cannot patch canonical state or set a verdict.",
+         "Optional normalized Source fields require their registered profile and normalization input/rule provenance. contentDigest remains the raw payload/artifact digest; inputContentDigest must agree with it. Unknown native content remains retained in payload and must not be rejected solely because it cannot populate a normalized view. Existing records without those optional fields are not claimed to be normalized.",
          "The adapter reconciles canonical entity indexes through verified mappings. Digest equality alone is not event identity; receipt dedupe includes the authenticated channel/scope."])
     add("CompleteCollection", "foundation", "INGEST", "console:IngestEvidence", ["Collection", "Command"],
         obj({"collectionId": ID, "coverage": array(model("Coverage"), 1, 100), **GUARDED}),
@@ -398,6 +412,7 @@ def add_foundation():
                  "coverage": record("Collection")["coverage"], "clientToken": "complete-collection-demo-0001"},
         ["Seals collection coverage after every declared query has a settled or explicitly unresolved outcome; referenced attempts must belong to this collection.",
          "A coverage conclusion must be justified by registered collector rules. Successful or exhausted pages cannot alone claim source sufficiency.",
+         "New coverage conclusions record the exact evaluationPolicy identity. Historical absence remains unknown; it cannot be assigned the current policy retroactively.",
          "expectedVersion guards the Collection head; completion publishes its next ordinary entity version. There is no second projectionVersion clock."])
     projection_input = properties_of("Projection", ["projectionKey", "profile", "profileVersion", "subjectRefs", "inputRefs", "ruleDigest", "asOf"])
     projection_input.update({"expectedVersion": nullable(VERSION), **MUT})
@@ -408,6 +423,7 @@ def add_foundation():
         ["Executes an authorized registered rule over exact entity-version inputs and publishes the next version of the same logical Projection.",
          "expectedVersion=null requires that the named projection identity does not exist; a positive value guards its current head. The first publication is version 1. Concurrent incompatible publication returns VersionConflictException.",
          "The request cannot supply value, generatedAt, coverage or a desired verdict. The trusted projector derives them from the selected evidence.",
+         "INVESTIGATION_TIMELINE and INVESTIGATION_ASSERTIONS use their typed value contracts. The trusted projector records DerivationContext and outputDigest; every source citation is among inputRefs. Published claims preserve attribution and do not expose private model reasoning.",
          "Every reference must be authorized, same-workspace and available. Missing evidence produces a qualified result or explicit failure; it never becomes success.",
          "A new projection version does not change its source subjects or any earlier entity representation. Current-view selection never rewrites a sealed Run."],
         response_selector={"Projection": {"profile": "SERVICE_STATUS"}})
@@ -672,6 +688,7 @@ def add_investigation():
          "expectedVersion guards ApprovalRequest; expectedRequestSource selects its exact retained request content. A version from another request or source object is rejected.",
          "APPROVED requires singleUse=true. REJECTED omits singleUse; the adapter also omits native pattern and TTL fields for rejection.",
          "Validates a complete authenticated chat request context and exact action digest, then invokes UpdateApprovalAction. It neither resumes the execution nor claims the tool ran.",
+         "Admission records reconstructable Command.approvalDecision with the exact ApprovalRequest version, request Source, action digest, decision, singleUse and copied requested pattern. Only VALIDATED observed invocation context is dispatchable; missing or unsupported context is rejected.",
          "Native UpdateApprovalAction has no modeled idempotency token. A lost response is OUTCOME_UNKNOWN; local replay returns the receipt and must not repeat the remote mutation blindly.",
          "A successful rejection is a successful decision command, not a provider API failure."], native=("UpdateApprovalAction",))
     add("ResumeExecution", "investigation", "PROVIDER_COMMAND", "console:ResumeExecution", ["Execution", "ApprovalRequest", "Command"],
@@ -680,6 +697,7 @@ def add_investigation():
                  "expectedVersion": record("Execution", executionId=record("ApprovalRequest")["executionId"])["version"], "approvalRequest": eref("ApprovalRequest"),
                  "decisionCommand": {"kind": "Command", "id": "cmd-decideapproval-demo", "version": 2}, "connection": eref("Connection"), "clientToken": "resume-execution-demo-0001"},
         ["Requires a definitively successful matching decision Command, valid current authorization and a validated approval/interrupt/tool-use context.",
+         "Records Command.approvalResume with the exact request, successful decision Command, and native action identifiers. This dispatch receipt does not establish tool execution or action effect.",
          "expectedVersion guards Execution; approvalRequest and decisionCommand are exact retained representations. An ACCEPTED decision version is insufficient even if a later command version has succeeded.",
          "Constructs the native SendMessage APPROVAL_ACTION context from that retained request; the caller cannot substitute interrupt/tool IDs or widen approved scope.",
          "Decision, resume submission, credential redemption and actual tool outcome remain separate. Opening or completing a stream does not prove the tool succeeded.",
