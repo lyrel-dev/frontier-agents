@@ -273,6 +273,8 @@ For the first release, distinguish **read capability** from **action capability*
 
 ### Documented approval protocol
 
+AWS surfaces directed-action approval requests **only in chat**. A mutating tool call outside chat, such as during an autonomous investigation, fails instead of presenting an approval request. The investigation view should display the published failure and offer the supported chat workflow where authorized; it must not manufacture an approval from a failed tool call or a task status. [Directed-action approval boundary](https://docs.aws.amazon.com/devopsagent/latest/userguide/working-with-devops-agent-working-with-directed-actions.html)
+
 The directed-actions guide documents two stages:
 
 1. `UpdateApprovalAction` records the scoped approval/rejection.
