@@ -1,0 +1,49 @@
+%% title: Version catalog and derived lifecycle exposure
+%% description: AWS service-version catalog entries contain milestones. Independently collected inventory records describe deployed components. A locally derived lifecycle exposure joins one deployment to one milestone with applicability and matching evidence. Catalog milestone identity and exposure are local constructs; the API supplies no direct resource or Health-event linkage.
+%% ownership: SERVICE_LIFECYCLE_ENTRY=aws LIFECYCLE_MILESTONE=aws INVENTORY_RESOURCE=external COMPONENT_DEPLOYMENT=external LIFECYCLE_EXPOSURE=local
+erDiagram
+    direction TB
+    SERVICE_LIFECYCLE_ENTRY ||--o{ LIFECYCLE_MILESTONE : contains
+    INVENTORY_RESOURCE ||--o{ COMPONENT_DEPLOYMENT : hosts
+    COMPONENT_DEPLOYMENT ||--o{ LIFECYCLE_EXPOSURE : has
+    LIFECYCLE_MILESTONE ||--o{ LIFECYCLE_EXPOSURE : establishes
+
+    SERVICE_LIFECYCLE_ENTRY {
+        string lifecycleEntryId PK
+        string service
+        string version
+        string title
+        string recommendedVersion
+        string sourceObservationId FK
+    }
+    LIFECYCLE_MILESTONE {
+        string milestoneId PK
+        string lifecycleEntryId FK
+        string milestoneType
+        datetime milestoneDate
+        string_array impactRisks
+        string_array regions
+    }
+    INVENTORY_RESOURCE {
+        string resourceId PK
+        string accountId FK
+        string service
+        string region
+        string ownerId
+    }
+    COMPONENT_DEPLOYMENT {
+        string deploymentId PK
+        string resourceId FK
+        string componentKind
+        string observedVersion
+        datetime observedAt
+    }
+    LIFECYCLE_EXPOSURE {
+        string exposureId PK
+        string deploymentId FK
+        string milestoneId FK
+        string applicability
+        string matchEvidence
+        string policyVersion
+        datetime evaluatedAt
+    }

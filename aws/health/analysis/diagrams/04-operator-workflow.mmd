@@ -1,0 +1,43 @@
+%% title: Operator workflow and immutable action history
+%% description: Work items contain application-owned workflow, ownership, and priority. Each work-item target references exactly one event context, entity impact, or lifecycle exposure; multiple targets support coordinated work. Operator actions record authorship and evidence without modifying AWS provider statuses.
+%% ownership: WORK_ITEM=local OPERATOR_ACTION=local WORK_ITEM_TARGET=local EVENT_CONTEXT=local ENTITY_IMPACT=local LIFECYCLE_EXPOSURE=local
+erDiagram
+    direction TB
+    WORK_ITEM ||--o{ OPERATOR_ACTION : records
+    WORK_ITEM ||--o{ WORK_ITEM_TARGET : concerns
+    WORK_ITEM_TARGET }o--o| EVENT_CONTEXT : references
+    WORK_ITEM_TARGET }o--o| ENTITY_IMPACT : references
+    WORK_ITEM_TARGET }o--o| LIFECYCLE_EXPOSURE : references
+
+    WORK_ITEM {
+        string workItemId PK
+        string workflowState
+        string ownerId
+        string priority
+        datetime dueAt
+        integer version
+    }
+    OPERATOR_ACTION {
+        string actionId PK
+        string workItemId FK
+        string actorId
+        string actionType
+        datetime occurredAt
+        string evidence
+    }
+    WORK_ITEM_TARGET {
+        string targetId PK
+        string workItemId FK
+        string contextId FK
+        string impactId FK
+        string exposureId FK
+    }
+    EVENT_CONTEXT {
+        string contextId PK
+    }
+    ENTITY_IMPACT {
+        string impactId PK
+    }
+    LIFECYCLE_EXPOSURE {
+        string exposureId PK
+    }

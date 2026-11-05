@@ -1,0 +1,157 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="920" viewBox="0 0 980 920" role="img" aria-labelledby="02-history-delivery-title 02-history-delivery-desc">
+<title id="02-history-delivery-title">AWS evidence history and notification delivery</title>
+<desc id="02-history-delivery-desc">Event and entity revisions retain independent provider update clocks and reference immutable source observations. AWS communications are grouped locally, split into logical pages, and delivered one or more times. The local communicationRecordId is distinct from AWS rawCommunicationId. API observations can exist without a message delivery. Teal means AWS facts, blue means application model, and amber means external context. Labels 1, 0..1, 0..n, and 1..n give cardinality. Source observations are immutable. A later collection time does not make the underlying provider evidence newer.</desc>
+<rect x="0" y="0" width="980" height="920" fill="#FFFFFF"/>
+<text x="30" y="29" font-family="DejaVu Sans, Arial, sans-serif" font-size="22" font-weight="700" fill="#23364A">AWS evidence history and notification delivery</text>
+<text x="30" y="53" font-family="DejaVu Sans, Arial, sans-serif" font-size="12.5" fill="#53677B">Local communication grouping, raw AWS identity, and independent event/entity clocks.</text>
+<rect x="30" y="76" width="13" height="13" rx="3" fill="#EAF5F6" stroke="#087884"/>
+<text x="50" y="87" font-family="DejaVu Sans, Arial, sans-serif" font-size="11.5" fill="#23364A">AWS facts</text>
+<rect x="250" y="76" width="13" height="13" rx="3" fill="#EDF2FA" stroke="#2456A1"/>
+<text x="270" y="87" font-family="DejaVu Sans, Arial, sans-serif" font-size="11.5" fill="#23364A">Application model</text>
+<rect x="505" y="76" width="13" height="13" rx="3" fill="#FAF5E9" stroke="#936209"/>
+<text x="525" y="87" font-family="DejaVu Sans, Arial, sans-serif" font-size="11.5" fill="#23364A">External context</text>
+<text x="744" y="87" font-family="DejaVu Sans, Arial, sans-serif" font-size="11" fill="#53677B">Cardinality: minimum..maximum</text>
+<g aria-label="Entity relationships">
+<g role="group" aria-label="EVENT_CONTEXT: 1; observed as; EVENT_REVISION: 0..n"><title>EVENT_CONTEXT: 1; observed as; EVENT_REVISION: 0..n</title>
+<polyline points="487.5,227 487.5,390" fill="none" stroke="#687B90" stroke-width="1.5"/>
+<text x="493.5" y="242" text-anchor="start" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="700" fill="#4B6075">1</text>
+<text x="493.5" y="382" text-anchor="start" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="700" fill="#4B6075">0..n</text>
+</g>
+<g role="group" aria-label="EVENT_REVISION: 1; contains; EVENT_DESCRIPTION: 0..n"><title>EVENT_REVISION: 1; contains; EVENT_DESCRIPTION: 0..n</title>
+<polyline points="487.5,546 487.5,660" fill="none" stroke="#687B90" stroke-width="1.5"/>
+<text x="493.5" y="561" text-anchor="start" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="700" fill="#4B6075">1</text>
+<text x="493.5" y="652" text-anchor="start" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="700" fill="#4B6075">0..n</text>
+</g>
+<g role="group" aria-label="EVENT_CONTEXT: 1; receives; COMMUNICATION: 0..n"><title>EVENT_CONTEXT: 1; receives; COMMUNICATION: 0..n</title>
+<polyline points="620,194.36 680,194" fill="none" stroke="#687B90" stroke-width="1.5"/>
+<text x="627" y="187.36" text-anchor="start" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="700" fill="#4B6075">1</text>
+<text x="673" y="210" text-anchor="end" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="700" fill="#4B6075">0..n</text>
+</g>
+<g role="group" aria-label="COMMUNICATION: 1; comprises; COMMUNICATION_PAGE: 1..n"><title>COMMUNICATION: 1; comprises; COMMUNICATION_PAGE: 1..n</title>
+<polyline points="812.5,263 812.5,390" fill="none" stroke="#687B90" stroke-width="1.5"/>
+<text x="818.5" y="278" text-anchor="start" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="700" fill="#4B6075">1</text>
+<text x="818.5" y="382" text-anchor="start" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="700" fill="#4B6075">1..n</text>
+</g>
+<g role="group" aria-label="COMMUNICATION_PAGE: 1; arrives as; MESSAGE_DELIVERY: 0..n"><title>COMMUNICATION_PAGE: 1; arrives as; MESSAGE_DELIVERY: 0..n</title>
+<polyline points="812.5,528 812.5,660" fill="none" stroke="#687B90" stroke-width="1.5"/>
+<text x="818.5" y="543" text-anchor="start" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="700" fill="#4B6075">1</text>
+<text x="818.5" y="652" text-anchor="start" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="700" fill="#4B6075">0..n</text>
+</g>
+<g role="group" aria-label="ENTITY_IMPACT: 1; observed as; ENTITY_REVISION: 0..n"><title>ENTITY_IMPACT: 1; observed as; ENTITY_REVISION: 0..n</title>
+<polyline points="162.5,660 162.5,528" fill="none" stroke="#687B90" stroke-width="1.5"/>
+<text x="168.5" y="652" text-anchor="start" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="700" fill="#4B6075">1</text>
+<text x="168.5" y="543" text-anchor="start" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="700" fill="#4B6075">0..n</text>
+</g>
+<g role="group" aria-label="SOURCE_OBSERVATION: 1; supports; EVENT_REVISION: 0..n"><title>SOURCE_OBSERVATION: 1; supports; EVENT_REVISION: 0..n</title>
+<polyline points="295,194 322,194 322,468 355,468" fill="none" stroke="#687B90" stroke-width="1.5"/>
+<text x="302" y="187" text-anchor="start" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="700" fill="#4B6075">1</text>
+<text x="348" y="461" text-anchor="end" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="700" fill="#4B6075">0..n</text>
+</g>
+<g role="group" aria-label="SOURCE_OBSERVATION: 1; supports; ENTITY_REVISION: 0..n"><title>SOURCE_OBSERVATION: 1; supports; ENTITY_REVISION: 0..n</title>
+<polyline points="162.5,263 162.5,390" fill="none" stroke="#687B90" stroke-width="1.5"/>
+<text x="168.5" y="278" text-anchor="start" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="700" fill="#4B6075">1</text>
+<text x="168.5" y="382" text-anchor="start" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="700" fill="#4B6075">0..n</text>
+</g>
+<g role="group" aria-label="SOURCE_OBSERVATION: 1; captures; MESSAGE_DELIVERY: 0..1"><title>SOURCE_OBSERVATION: 1; captures; MESSAGE_DELIVERY: 0..1</title>
+<polyline points="162.5,125 162.5,108 966,108 966,747 945,747" fill="none" stroke="#687B90" stroke-width="1.5"/>
+<text x="168.5" y="117" text-anchor="start" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="700" fill="#4B6075">1</text>
+<text x="952" y="740" text-anchor="start" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="700" fill="#4B6075">0..1</text>
+</g>
+</g>
+<g id="02-history-delivery-event_context" role="group" aria-label="EVENT_CONTEXT, local"><title>EVENT_CONTEXT, local</title>
+<rect x="355" y="125" width="265" height="102" rx="7" fill="#FFFFFF" stroke="#CBD6E0" stroke-width="1.2"/>
+<rect x="355" y="125" width="265" height="34" rx="7" fill="#EDF2FA"/>
+<rect x="355" y="147" width="265" height="12" fill="#EDF2FA"/>
+<text x="366" y="147" font-family="DejaVu Sans, Arial, sans-serif" font-size="13.5" font-weight="700" fill="#2456A1">EVENT_CONTEXT</text>
+<text x="367" y="178" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">contextId [PK]</text>
+<text x="367" y="196" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">contextKind</text>
+<text x="367" y="214" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">contextKey</text>
+</g>
+<g id="02-history-delivery-source_observation" role="group" aria-label="SOURCE_OBSERVATION, local"><title>SOURCE_OBSERVATION, local</title>
+<rect x="30" y="125" width="265" height="138" rx="7" fill="#FFFFFF" stroke="#CBD6E0" stroke-width="1.2"/>
+<rect x="30" y="125" width="265" height="34" rx="7" fill="#EDF2FA"/>
+<rect x="30" y="147" width="265" height="12" fill="#EDF2FA"/>
+<text x="41" y="147" font-family="DejaVu Sans, Arial, sans-serif" font-size="13.5" font-weight="700" fill="#2456A1">SOURCE_OBSERVATION</text>
+<text x="42" y="178" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">observationId [PK]</text>
+<text x="42" y="196" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">channel</text>
+<text x="42" y="214" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">payloadKind</text>
+<text x="42" y="232" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">observedAt</text>
+<text x="42" y="250" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">payloadDigest</text>
+</g>
+<g id="02-history-delivery-event_revision" role="group" aria-label="EVENT_REVISION, local"><title>EVENT_REVISION, local</title>
+<rect x="355" y="390" width="265" height="156" rx="7" fill="#FFFFFF" stroke="#CBD6E0" stroke-width="1.2"/>
+<rect x="355" y="390" width="265" height="34" rx="7" fill="#EDF2FA"/>
+<rect x="355" y="412" width="265" height="12" fill="#EDF2FA"/>
+<text x="366" y="412" font-family="DejaVu Sans, Arial, sans-serif" font-size="13.5" font-weight="700" fill="#2456A1">EVENT_REVISION</text>
+<text x="367" y="443" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">eventRevisionId [PK]</text>
+<text x="367" y="461" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">contextId [FK]</text>
+<text x="367" y="479" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">sourceObservationId [FK]</text>
+<text x="367" y="497" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">providerStatus</text>
+<text x="367" y="515" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">providerUpdatedAt</text>
+<text x="367" y="533" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">presentFields</text>
+</g>
+<g id="02-history-delivery-event_description" role="group" aria-label="EVENT_DESCRIPTION, local"><title>EVENT_DESCRIPTION, local</title>
+<rect x="355" y="660" width="265" height="102" rx="7" fill="#FFFFFF" stroke="#CBD6E0" stroke-width="1.2"/>
+<rect x="355" y="660" width="265" height="34" rx="7" fill="#EDF2FA"/>
+<rect x="355" y="682" width="265" height="12" fill="#EDF2FA"/>
+<text x="366" y="682" font-family="DejaVu Sans, Arial, sans-serif" font-size="13.5" font-weight="700" fill="#2456A1">EVENT_DESCRIPTION</text>
+<text x="367" y="713" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">eventRevisionId [PK,FK]</text>
+<text x="367" y="731" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">locale [PK]</text>
+<text x="367" y="749" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">latestDescription</text>
+</g>
+<g id="02-history-delivery-entity_impact" role="group" aria-label="ENTITY_IMPACT, local"><title>ENTITY_IMPACT, local</title>
+<rect x="30" y="660" width="265" height="84" rx="7" fill="#FFFFFF" stroke="#CBD6E0" stroke-width="1.2"/>
+<rect x="30" y="660" width="265" height="34" rx="7" fill="#EDF2FA"/>
+<rect x="30" y="682" width="265" height="12" fill="#EDF2FA"/>
+<text x="41" y="682" font-family="DejaVu Sans, Arial, sans-serif" font-size="13.5" font-weight="700" fill="#2456A1">ENTITY_IMPACT</text>
+<text x="42" y="713" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">impactId [PK]</text>
+<text x="42" y="731" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">contextId [FK]</text>
+</g>
+<g id="02-history-delivery-entity_revision" role="group" aria-label="ENTITY_REVISION, local"><title>ENTITY_REVISION, local</title>
+<rect x="30" y="390" width="265" height="138" rx="7" fill="#FFFFFF" stroke="#CBD6E0" stroke-width="1.2"/>
+<rect x="30" y="390" width="265" height="34" rx="7" fill="#EDF2FA"/>
+<rect x="30" y="412" width="265" height="12" fill="#EDF2FA"/>
+<text x="41" y="412" font-family="DejaVu Sans, Arial, sans-serif" font-size="13.5" font-weight="700" fill="#2456A1">ENTITY_REVISION</text>
+<text x="42" y="443" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">entityRevisionId [PK]</text>
+<text x="42" y="461" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">impactId [FK]</text>
+<text x="42" y="479" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">sourceObservationId [FK]</text>
+<text x="42" y="497" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">providerStatus</text>
+<text x="42" y="515" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">providerUpdatedAt</text>
+</g>
+<g id="02-history-delivery-communication" role="group" aria-label="COMMUNICATION, local"><title>COMMUNICATION, local</title>
+<rect x="680" y="125" width="265" height="138" rx="7" fill="#FFFFFF" stroke="#CBD6E0" stroke-width="1.2"/>
+<rect x="680" y="125" width="265" height="34" rx="7" fill="#EDF2FA"/>
+<rect x="680" y="147" width="265" height="12" fill="#EDF2FA"/>
+<text x="691" y="147" font-family="DejaVu Sans, Arial, sans-serif" font-size="13.5" font-weight="700" fill="#2456A1">COMMUNICATION</text>
+<text x="692" y="178" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">communicationRecordId [PK]</text>
+<text x="692" y="196" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">contextId [FK]</text>
+<text x="692" y="214" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">notificationAccountContext</text>
+<text x="692" y="232" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">validatedBaseId</text>
+<text x="692" y="250" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">assemblyState</text>
+</g>
+<g id="02-history-delivery-communication_page" role="group" aria-label="COMMUNICATION_PAGE, local"><title>COMMUNICATION_PAGE, local</title>
+<rect x="680" y="390" width="265" height="138" rx="7" fill="#FFFFFF" stroke="#CBD6E0" stroke-width="1.2"/>
+<rect x="680" y="390" width="265" height="34" rx="7" fill="#EDF2FA"/>
+<rect x="680" y="412" width="265" height="12" fill="#EDF2FA"/>
+<text x="691" y="412" font-family="DejaVu Sans, Arial, sans-serif" font-size="13.5" font-weight="700" fill="#2456A1">COMMUNICATION_PAGE</text>
+<text x="692" y="443" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">pageId [PK]</text>
+<text x="692" y="461" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">communicationRecordId [FK]</text>
+<text x="692" y="479" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">rawCommunicationId</text>
+<text x="692" y="497" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">page</text>
+<text x="692" y="515" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">totalPages</text>
+</g>
+<g id="02-history-delivery-message_delivery" role="group" aria-label="MESSAGE_DELIVERY, local"><title>MESSAGE_DELIVERY, local</title>
+<rect x="680" y="660" width="265" height="174" rx="7" fill="#FFFFFF" stroke="#CBD6E0" stroke-width="1.2"/>
+<rect x="680" y="660" width="265" height="34" rx="7" fill="#EDF2FA"/>
+<rect x="680" y="682" width="265" height="12" fill="#EDF2FA"/>
+<text x="691" y="682" font-family="DejaVu Sans, Arial, sans-serif" font-size="13.5" font-weight="700" fill="#2456A1">MESSAGE_DELIVERY</text>
+<text x="692" y="713" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">deliveryId [PK]</text>
+<text x="692" y="731" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">pageId [FK]</text>
+<text x="692" y="749" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">sourceObservationId [FK]</text>
+<text x="692" y="767" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">envelopeId</text>
+<text x="692" y="785" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">recipientAccount</text>
+<text x="692" y="803" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">deliveryRegion</text>
+<text x="692" y="821" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">transportTime</text>
+</g>
+<text x="30" y="898" font-family="DejaVu Sans, Arial, sans-serif" font-size="11.1" fill="#53677B">Source observations are immutable. A later collection time does not make the underlying provider evidence newer.</text>
+</svg>

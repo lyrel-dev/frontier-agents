@@ -1,0 +1,63 @@
+%% title: AWS Health event and account impact
+%% description: A shared event identity has public, account, or organization-summary evidence contexts. Account and organization references are conditional. Entity impacts belong to the applicable context; organization summaries own no impacts. Organization membership is external and time-bounded. Cardinalities describe the proposed normalized application model.
+%% ownership: EVENT_TYPE=aws HEALTH_EVENT=aws ACCOUNT=external ORGANIZATION=external ORGANIZATION_MEMBERSHIP=external ORG_HEALTH_ACCESS=aws EVENT_CONTEXT=local ENTITY_IMPACT=local
+erDiagram
+    direction TB
+    EVENT_TYPE |o--o{ HEALTH_EVENT : classifies
+    HEALTH_EVENT ||--o{ EVENT_CONTEXT : has
+    EVENT_CONTEXT }o--o| ACCOUNT : references
+    EVENT_CONTEXT }o--o| ORGANIZATION : references
+    ORGANIZATION ||--o{ ORGANIZATION_MEMBERSHIP : records
+    ACCOUNT ||--o{ ORGANIZATION_MEMBERSHIP : participates
+    ORGANIZATION ||--o| ORG_HEALTH_ACCESS : configures
+    EVENT_CONTEXT ||--o{ ENTITY_IMPACT : reports
+
+    EVENT_TYPE {
+        string typeCode PK
+        string service
+        string category
+        string actionability
+        string_array personas
+    }
+    HEALTH_EVENT {
+        string eventArn PK
+        string eventTypeCode FK
+        string eventScopeCode
+        string service
+        string impactedRegion
+    }
+    ACCOUNT {
+        string accountId PK
+        string name
+    }
+    ORGANIZATION {
+        string organizationId PK
+        string name
+    }
+    ORGANIZATION_MEMBERSHIP {
+        string organizationId FK
+        string accountId FK
+        datetime validFrom
+        datetime validTo
+    }
+    ORG_HEALTH_ACCESS {
+        string organizationId PK,FK
+        string observedStatus
+        datetime observedAt
+    }
+    EVENT_CONTEXT {
+        string contextId PK
+        string eventArn FK
+        string contextKind
+        string contextKey
+        string accountId FK
+        string organizationId FK
+    }
+    ENTITY_IMPACT {
+        string impactId PK
+        string contextId FK
+        string healthEntityArn
+        string entityValue
+        string providerStatus
+        datetime providerUpdatedAt
+    }

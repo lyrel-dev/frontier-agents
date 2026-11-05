@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="935" viewBox="0 0 980 935" role="img" aria-labelledby="03-lifecycle-posture-title 03-lifecycle-posture-desc">
+<title id="03-lifecycle-posture-title">Version catalog and derived lifecycle exposure</title>
+<desc id="03-lifecycle-posture-desc">AWS service-version catalog entries contain milestones. Independently collected inventory records describe deployed components. A locally derived lifecycle exposure joins one deployment to one milestone with applicability and matching evidence. Catalog milestone identity and exposure are local constructs; the API supplies no direct resource or Health-event linkage. Teal means AWS facts, blue means application model, and amber means external context. Labels 1, 0..1, 0..n, and 1..n give cardinality. Catalog IDs are local. AWS supplies no direct catalog-to-resource or catalog-to-Health-event foreign key.</desc>
+<rect x="0" y="0" width="980" height="935" fill="#FFFFFF"/>
+<text x="30" y="29" font-family="DejaVu Sans, Arial, sans-serif" font-size="22" font-weight="700" fill="#23364A">Version catalog and derived lifecycle exposure</text>
+<text x="30" y="53" font-family="DejaVu Sans, Arial, sans-serif" font-size="12.5" fill="#53677B">Provider lifecycle facts meet independently observed deployments through an explicit assessment.</text>
+<rect x="30" y="76" width="13" height="13" rx="3" fill="#EAF5F6" stroke="#087884"/>
+<text x="50" y="87" font-family="DejaVu Sans, Arial, sans-serif" font-size="11.5" fill="#23364A">AWS facts</text>
+<rect x="250" y="76" width="13" height="13" rx="3" fill="#EDF2FA" stroke="#2456A1"/>
+<text x="270" y="87" font-family="DejaVu Sans, Arial, sans-serif" font-size="11.5" fill="#23364A">Application model</text>
+<rect x="505" y="76" width="13" height="13" rx="3" fill="#FAF5E9" stroke="#936209"/>
+<text x="525" y="87" font-family="DejaVu Sans, Arial, sans-serif" font-size="11.5" fill="#23364A">External context</text>
+<text x="744" y="87" font-family="DejaVu Sans, Arial, sans-serif" font-size="11" fill="#53677B">Cardinality: minimum..maximum</text>
+<g aria-label="Entity relationships">
+<g role="group" aria-label="SERVICE_LIFECYCLE_ENTRY: 1; contains; LIFECYCLE_MILESTONE: 0..n"><title>SERVICE_LIFECYCLE_ENTRY: 1; contains; LIFECYCLE_MILESTONE: 0..n</title>
+<polyline points="235,281 235,400" fill="none" stroke="#687B90" stroke-width="1.5"/>
+<text x="241" y="296" text-anchor="start" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="700" fill="#4B6075">1</text>
+<text x="241" y="392" text-anchor="start" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="700" fill="#4B6075">0..n</text>
+</g>
+<g role="group" aria-label="INVENTORY_RESOURCE: 1; hosts; COMPONENT_DEPLOYMENT: 0..n"><title>INVENTORY_RESOURCE: 1; hosts; COMPONENT_DEPLOYMENT: 0..n</title>
+<polyline points="735,263 735,400" fill="none" stroke="#687B90" stroke-width="1.5"/>
+<text x="741" y="278" text-anchor="start" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="700" fill="#4B6075">1</text>
+<text x="741" y="392" text-anchor="start" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="700" fill="#4B6075">0..n</text>
+</g>
+<g role="group" aria-label="COMPONENT_DEPLOYMENT: 1; has; LIFECYCLE_EXPOSURE: 0..n"><title>COMPONENT_DEPLOYMENT: 1; has; LIFECYCLE_EXPOSURE: 0..n</title>
+<polyline points="735,538 735,615 580,615 580,690" fill="none" stroke="#687B90" stroke-width="1.5"/>
+<text x="741" y="553" text-anchor="start" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="700" fill="#4B6075">1</text>
+<text x="586" y="682" text-anchor="start" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="700" fill="#4B6075">0..n</text>
+</g>
+<g role="group" aria-label="LIFECYCLE_MILESTONE: 1; establishes; LIFECYCLE_EXPOSURE: 0..n"><title>LIFECYCLE_MILESTONE: 1; establishes; LIFECYCLE_EXPOSURE: 0..n</title>
+<polyline points="235,556 235,615 400,615 400,690" fill="none" stroke="#687B90" stroke-width="1.5"/>
+<text x="241" y="571" text-anchor="start" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="700" fill="#4B6075">1</text>
+<text x="406" y="682" text-anchor="start" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="700" fill="#4B6075">0..n</text>
+</g>
+</g>
+<g id="03-lifecycle-posture-service_lifecycle_entry" role="group" aria-label="SERVICE_LIFECYCLE_ENTRY, aws"><title>SERVICE_LIFECYCLE_ENTRY, aws</title>
+<rect x="60" y="125" width="350" height="156" rx="7" fill="#FFFFFF" stroke="#CBD6E0" stroke-width="1.2"/>
+<rect x="60" y="125" width="350" height="34" rx="7" fill="#EAF5F6"/>
+<rect x="60" y="147" width="350" height="12" fill="#EAF5F6"/>
+<text x="71" y="147" font-family="DejaVu Sans, Arial, sans-serif" font-size="13.5" font-weight="700" fill="#087884">SERVICE_LIFECYCLE_ENTRY</text>
+<text x="72" y="178" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">lifecycleEntryId [PK]</text>
+<text x="72" y="196" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">service</text>
+<text x="72" y="214" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">version</text>
+<text x="72" y="232" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">title</text>
+<text x="72" y="250" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">recommendedVersion</text>
+<text x="72" y="268" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">sourceObservationId [FK]</text>
+</g>
+<g id="03-lifecycle-posture-lifecycle_milestone" role="group" aria-label="LIFECYCLE_MILESTONE, aws"><title>LIFECYCLE_MILESTONE, aws</title>
+<rect x="60" y="400" width="350" height="156" rx="7" fill="#FFFFFF" stroke="#CBD6E0" stroke-width="1.2"/>
+<rect x="60" y="400" width="350" height="34" rx="7" fill="#EAF5F6"/>
+<rect x="60" y="422" width="350" height="12" fill="#EAF5F6"/>
+<text x="71" y="422" font-family="DejaVu Sans, Arial, sans-serif" font-size="13.5" font-weight="700" fill="#087884">LIFECYCLE_MILESTONE</text>
+<text x="72" y="453" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">milestoneId [PK]</text>
+<text x="72" y="471" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">lifecycleEntryId [FK]</text>
+<text x="72" y="489" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">milestoneType</text>
+<text x="72" y="507" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">milestoneDate</text>
+<text x="72" y="525" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">impactRisks</text>
+<text x="72" y="543" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">regions</text>
+</g>
+<g id="03-lifecycle-posture-inventory_resource" role="group" aria-label="INVENTORY_RESOURCE, external"><title>INVENTORY_RESOURCE, external</title>
+<rect x="560" y="125" width="350" height="138" rx="7" fill="#FFFFFF" stroke="#CBD6E0" stroke-width="1.2"/>
+<rect x="560" y="125" width="350" height="34" rx="7" fill="#FAF5E9"/>
+<rect x="560" y="147" width="350" height="12" fill="#FAF5E9"/>
+<text x="571" y="147" font-family="DejaVu Sans, Arial, sans-serif" font-size="13.5" font-weight="700" fill="#936209">INVENTORY_RESOURCE</text>
+<text x="572" y="178" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">resourceId [PK]</text>
+<text x="572" y="196" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">accountId [FK]</text>
+<text x="572" y="214" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">service</text>
+<text x="572" y="232" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">region</text>
+<text x="572" y="250" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">ownerId</text>
+</g>
+<g id="03-lifecycle-posture-component_deployment" role="group" aria-label="COMPONENT_DEPLOYMENT, external"><title>COMPONENT_DEPLOYMENT, external</title>
+<rect x="560" y="400" width="350" height="138" rx="7" fill="#FFFFFF" stroke="#CBD6E0" stroke-width="1.2"/>
+<rect x="560" y="400" width="350" height="34" rx="7" fill="#FAF5E9"/>
+<rect x="560" y="422" width="350" height="12" fill="#FAF5E9"/>
+<text x="571" y="422" font-family="DejaVu Sans, Arial, sans-serif" font-size="13.5" font-weight="700" fill="#936209">COMPONENT_DEPLOYMENT</text>
+<text x="572" y="453" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">deploymentId [PK]</text>
+<text x="572" y="471" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">resourceId [FK]</text>
+<text x="572" y="489" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">componentKind</text>
+<text x="572" y="507" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">observedVersion</text>
+<text x="572" y="525" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">observedAt</text>
+</g>
+<g id="03-lifecycle-posture-lifecycle_exposure" role="group" aria-label="LIFECYCLE_EXPOSURE, local"><title>LIFECYCLE_EXPOSURE, local</title>
+<rect x="310" y="690" width="360" height="174" rx="7" fill="#FFFFFF" stroke="#CBD6E0" stroke-width="1.2"/>
+<rect x="310" y="690" width="360" height="34" rx="7" fill="#EDF2FA"/>
+<rect x="310" y="712" width="360" height="12" fill="#EDF2FA"/>
+<text x="321" y="712" font-family="DejaVu Sans, Arial, sans-serif" font-size="13.5" font-weight="700" fill="#2456A1">LIFECYCLE_EXPOSURE</text>
+<text x="322" y="743" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">exposureId [PK]</text>
+<text x="322" y="761" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">deploymentId [FK]</text>
+<text x="322" y="779" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">milestoneId [FK]</text>
+<text x="322" y="797" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">applicability</text>
+<text x="322" y="815" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">matchEvidence</text>
+<text x="322" y="833" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">policyVersion</text>
+<text x="322" y="851" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">evaluatedAt</text>
+</g>
+<text x="30" y="913" font-family="DejaVu Sans, Arial, sans-serif" font-size="11.1" fill="#53677B">Catalog IDs are local. AWS supplies no direct catalog-to-resource or catalog-to-Health-event foreign key.</text>
+</svg>

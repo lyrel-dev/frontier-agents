@@ -1,0 +1,138 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="870" viewBox="0 0 980 870" role="img" aria-labelledby="01-core-model-title 01-core-model-desc">
+<title id="01-core-model-title">AWS Health event and account impact</title>
+<desc id="01-core-model-desc">A shared event identity has public, account, or organization-summary evidence contexts. Account and organization references are conditional. Entity impacts belong to the applicable context; organization summaries own no impacts. Organization membership is external and time-bounded. Cardinalities describe the proposed normalized application model. Teal means AWS facts, blue means application model, and amber means external context. Labels 1, 0..1, 0..n, and 1..n give cardinality. PUBLIC has no account. ACCOUNT has one account. ORG_SUMMARY has one organization and owns no impacts.</desc>
+<rect x="0" y="0" width="980" height="870" fill="#FFFFFF"/>
+<text x="30" y="29" font-family="DejaVu Sans, Arial, sans-serif" font-size="22" font-weight="700" fill="#23364A">AWS Health event and account impact</text>
+<text x="30" y="53" font-family="DejaVu Sans, Arial, sans-serif" font-size="12.5" fill="#53677B">Provider identity, conditional evidence contexts, and event-relative impact.</text>
+<rect x="30" y="76" width="13" height="13" rx="3" fill="#EAF5F6" stroke="#087884"/>
+<text x="50" y="87" font-family="DejaVu Sans, Arial, sans-serif" font-size="11.5" fill="#23364A">AWS facts</text>
+<rect x="250" y="76" width="13" height="13" rx="3" fill="#EDF2FA" stroke="#2456A1"/>
+<text x="270" y="87" font-family="DejaVu Sans, Arial, sans-serif" font-size="11.5" fill="#23364A">Application model</text>
+<rect x="505" y="76" width="13" height="13" rx="3" fill="#FAF5E9" stroke="#936209"/>
+<text x="525" y="87" font-family="DejaVu Sans, Arial, sans-serif" font-size="11.5" fill="#23364A">External context</text>
+<text x="744" y="87" font-family="DejaVu Sans, Arial, sans-serif" font-size="11" fill="#53677B">Cardinality: minimum..maximum</text>
+<g aria-label="Entity relationships">
+<g role="group" aria-label="EVENT_TYPE: 0..1; classifies; HEALTH_EVENT: 0..n"><title>EVENT_TYPE: 0..1; classifies; HEALTH_EVENT: 0..n</title>
+<polyline points="295,194 355,194" fill="none" stroke="#687B90" stroke-width="1.5"/>
+<text x="302" y="187" text-anchor="start" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="700" fill="#4B6075">0..1</text>
+<text x="348" y="210" text-anchor="end" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="700" fill="#4B6075">0..n</text>
+</g>
+<g role="group" aria-label="HEALTH_EVENT: 1; has; EVENT_CONTEXT: 0..n"><title>HEALTH_EVENT: 1; has; EVENT_CONTEXT: 0..n</title>
+<polyline points="487.5,263 487.5,345" fill="none" stroke="#687B90" stroke-width="1.5"/>
+<text x="493.5" y="278" text-anchor="start" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="700" fill="#4B6075">1</text>
+<text x="493.5" y="337" text-anchor="start" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="700" fill="#4B6075">0..n</text>
+</g>
+<g role="group" aria-label="EVENT_CONTEXT: 0..n; references; ACCOUNT: 0..1"><title>EVENT_CONTEXT: 0..n; references; ACCOUNT: 0..1</title>
+<polyline points="355,387.12 295,387" fill="none" stroke="#687B90" stroke-width="1.5"/>
+<text x="348" y="380.12" text-anchor="end" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="700" fill="#4B6075">0..n</text>
+<text x="302" y="403" text-anchor="start" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="700" fill="#4B6075">0..1</text>
+</g>
+<g role="group" aria-label="EVENT_CONTEXT: 0..n; references; ORGANIZATION: 0..1"><title>EVENT_CONTEXT: 0..n; references; ORGANIZATION: 0..1</title>
+<polyline points="620,387.12 680,387" fill="none" stroke="#687B90" stroke-width="1.5"/>
+<text x="627" y="380.12" text-anchor="start" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="700" fill="#4B6075">0..n</text>
+<text x="673" y="403" text-anchor="end" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="700" fill="#4B6075">0..1</text>
+</g>
+<g role="group" aria-label="ORGANIZATION: 1; records; ORGANIZATION_MEMBERSHIP: 0..n"><title>ORGANIZATION: 1; records; ORGANIZATION_MEMBERSHIP: 0..n</title>
+<polyline points="812.5,429 812.5,805 162.5,805 162.5,710" fill="none" stroke="#687B90" stroke-width="1.5"/>
+<text x="818.5" y="444" text-anchor="start" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="700" fill="#4B6075">1</text>
+<text x="168.5" y="725" text-anchor="start" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="700" fill="#4B6075">0..n</text>
+</g>
+<g role="group" aria-label="ACCOUNT: 1; participates; ORGANIZATION_MEMBERSHIP: 0..n"><title>ACCOUNT: 1; participates; ORGANIZATION_MEMBERSHIP: 0..n</title>
+<polyline points="162.5,429 162.5,590" fill="none" stroke="#687B90" stroke-width="1.5"/>
+<text x="168.5" y="444" text-anchor="start" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="700" fill="#4B6075">1</text>
+<text x="168.5" y="582" text-anchor="start" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="700" fill="#4B6075">0..n</text>
+</g>
+<g role="group" aria-label="ORGANIZATION: 1; configures; ORG_HEALTH_ACCESS: 0..1"><title>ORGANIZATION: 1; configures; ORG_HEALTH_ACCESS: 0..1</title>
+<polyline points="812.5,345 812.5,227" fill="none" stroke="#687B90" stroke-width="1.5"/>
+<text x="818.5" y="337" text-anchor="start" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="700" fill="#4B6075">1</text>
+<text x="818.5" y="242" text-anchor="start" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="700" fill="#4B6075">0..1</text>
+</g>
+<g role="group" aria-label="EVENT_CONTEXT: 1; reports; ENTITY_IMPACT: 0..n"><title>EVENT_CONTEXT: 1; reports; ENTITY_IMPACT: 0..n</title>
+<polyline points="487.5,501 487.5,590" fill="none" stroke="#687B90" stroke-width="1.5"/>
+<text x="493.5" y="516" text-anchor="start" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="700" fill="#4B6075">1</text>
+<text x="493.5" y="582" text-anchor="start" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="700" fill="#4B6075">0..n</text>
+</g>
+</g>
+<g id="01-core-model-event_type" role="group" aria-label="EVENT_TYPE, aws"><title>EVENT_TYPE, aws</title>
+<rect x="30" y="125" width="265" height="138" rx="7" fill="#FFFFFF" stroke="#CBD6E0" stroke-width="1.2"/>
+<rect x="30" y="125" width="265" height="34" rx="7" fill="#EAF5F6"/>
+<rect x="30" y="147" width="265" height="12" fill="#EAF5F6"/>
+<text x="41" y="147" font-family="DejaVu Sans, Arial, sans-serif" font-size="13.5" font-weight="700" fill="#087884">EVENT_TYPE</text>
+<text x="42" y="178" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">typeCode [PK]</text>
+<text x="42" y="196" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">service</text>
+<text x="42" y="214" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">category</text>
+<text x="42" y="232" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">actionability</text>
+<text x="42" y="250" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">personas</text>
+</g>
+<g id="01-core-model-health_event" role="group" aria-label="HEALTH_EVENT, aws"><title>HEALTH_EVENT, aws</title>
+<rect x="355" y="125" width="265" height="138" rx="7" fill="#FFFFFF" stroke="#CBD6E0" stroke-width="1.2"/>
+<rect x="355" y="125" width="265" height="34" rx="7" fill="#EAF5F6"/>
+<rect x="355" y="147" width="265" height="12" fill="#EAF5F6"/>
+<text x="366" y="147" font-family="DejaVu Sans, Arial, sans-serif" font-size="13.5" font-weight="700" fill="#087884">HEALTH_EVENT</text>
+<text x="367" y="178" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">eventArn [PK]</text>
+<text x="367" y="196" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">eventTypeCode [FK]</text>
+<text x="367" y="214" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">eventScopeCode</text>
+<text x="367" y="232" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">service</text>
+<text x="367" y="250" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">impactedRegion</text>
+</g>
+<g id="01-core-model-account" role="group" aria-label="ACCOUNT, external"><title>ACCOUNT, external</title>
+<rect x="30" y="345" width="265" height="84" rx="7" fill="#FFFFFF" stroke="#CBD6E0" stroke-width="1.2"/>
+<rect x="30" y="345" width="265" height="34" rx="7" fill="#FAF5E9"/>
+<rect x="30" y="367" width="265" height="12" fill="#FAF5E9"/>
+<text x="41" y="367" font-family="DejaVu Sans, Arial, sans-serif" font-size="13.5" font-weight="700" fill="#936209">ACCOUNT</text>
+<text x="42" y="398" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">accountId [PK]</text>
+<text x="42" y="416" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">name</text>
+</g>
+<g id="01-core-model-organization" role="group" aria-label="ORGANIZATION, external"><title>ORGANIZATION, external</title>
+<rect x="680" y="345" width="265" height="84" rx="7" fill="#FFFFFF" stroke="#CBD6E0" stroke-width="1.2"/>
+<rect x="680" y="345" width="265" height="34" rx="7" fill="#FAF5E9"/>
+<rect x="680" y="367" width="265" height="12" fill="#FAF5E9"/>
+<text x="691" y="367" font-family="DejaVu Sans, Arial, sans-serif" font-size="13.5" font-weight="700" fill="#936209">ORGANIZATION</text>
+<text x="692" y="398" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">organizationId [PK]</text>
+<text x="692" y="416" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">name</text>
+</g>
+<g id="01-core-model-organization_membership" role="group" aria-label="ORGANIZATION_MEMBERSHIP, external"><title>ORGANIZATION_MEMBERSHIP, external</title>
+<rect x="30" y="590" width="265" height="120" rx="7" fill="#FFFFFF" stroke="#CBD6E0" stroke-width="1.2"/>
+<rect x="30" y="590" width="265" height="34" rx="7" fill="#FAF5E9"/>
+<rect x="30" y="612" width="265" height="12" fill="#FAF5E9"/>
+<text x="41" y="612" font-family="DejaVu Sans, Arial, sans-serif" font-size="13.5" font-weight="700" fill="#936209">ORGANIZATION_MEMBERSHIP</text>
+<text x="42" y="643" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">organizationId [FK]</text>
+<text x="42" y="661" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">accountId [FK]</text>
+<text x="42" y="679" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">validFrom</text>
+<text x="42" y="697" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">validTo</text>
+</g>
+<g id="01-core-model-org_health_access" role="group" aria-label="ORG_HEALTH_ACCESS, aws"><title>ORG_HEALTH_ACCESS, aws</title>
+<rect x="680" y="125" width="265" height="102" rx="7" fill="#FFFFFF" stroke="#CBD6E0" stroke-width="1.2"/>
+<rect x="680" y="125" width="265" height="34" rx="7" fill="#EAF5F6"/>
+<rect x="680" y="147" width="265" height="12" fill="#EAF5F6"/>
+<text x="691" y="147" font-family="DejaVu Sans, Arial, sans-serif" font-size="13.5" font-weight="700" fill="#087884">ORG_HEALTH_ACCESS</text>
+<text x="692" y="178" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">organizationId [PK,FK]</text>
+<text x="692" y="196" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">observedStatus</text>
+<text x="692" y="214" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">observedAt</text>
+</g>
+<g id="01-core-model-event_context" role="group" aria-label="EVENT_CONTEXT, local"><title>EVENT_CONTEXT, local</title>
+<rect x="355" y="345" width="265" height="156" rx="7" fill="#FFFFFF" stroke="#CBD6E0" stroke-width="1.2"/>
+<rect x="355" y="345" width="265" height="34" rx="7" fill="#EDF2FA"/>
+<rect x="355" y="367" width="265" height="12" fill="#EDF2FA"/>
+<text x="366" y="367" font-family="DejaVu Sans, Arial, sans-serif" font-size="13.5" font-weight="700" fill="#2456A1">EVENT_CONTEXT</text>
+<text x="367" y="398" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">contextId [PK]</text>
+<text x="367" y="416" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">eventArn [FK]</text>
+<text x="367" y="434" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">contextKind</text>
+<text x="367" y="452" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">contextKey</text>
+<text x="367" y="470" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">accountId [FK]</text>
+<text x="367" y="488" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">organizationId [FK]</text>
+</g>
+<g id="01-core-model-entity_impact" role="group" aria-label="ENTITY_IMPACT, local"><title>ENTITY_IMPACT, local</title>
+<rect x="355" y="590" width="265" height="156" rx="7" fill="#FFFFFF" stroke="#CBD6E0" stroke-width="1.2"/>
+<rect x="355" y="590" width="265" height="34" rx="7" fill="#EDF2FA"/>
+<rect x="355" y="612" width="265" height="12" fill="#EDF2FA"/>
+<text x="366" y="612" font-family="DejaVu Sans, Arial, sans-serif" font-size="13.5" font-weight="700" fill="#2456A1">ENTITY_IMPACT</text>
+<text x="367" y="643" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">impactId [PK]</text>
+<text x="367" y="661" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">contextId [FK]</text>
+<text x="367" y="679" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">healthEntityArn</text>
+<text x="367" y="697" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">entityValue</text>
+<text x="367" y="715" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">providerStatus</text>
+<text x="367" y="733" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">providerUpdatedAt</text>
+</g>
+<text x="30" y="848" font-family="DejaVu Sans, Arial, sans-serif" font-size="11.1" fill="#53677B">PUBLIC has no account. ACCOUNT has one account. ORG_SUMMARY has one organization and owns no impacts.</text>
+</svg>

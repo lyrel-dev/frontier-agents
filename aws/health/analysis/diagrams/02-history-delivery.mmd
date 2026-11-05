@@ -1,0 +1,74 @@
+%% title: AWS evidence history and notification delivery
+%% description: Event and entity revisions retain independent provider update clocks and reference immutable source observations. AWS communications are grouped locally, split into logical pages, and delivered one or more times. The local communicationRecordId is distinct from AWS rawCommunicationId. API observations can exist without a message delivery.
+%% ownership: EVENT_CONTEXT=local SOURCE_OBSERVATION=local EVENT_REVISION=local EVENT_DESCRIPTION=local ENTITY_IMPACT=local ENTITY_REVISION=local COMMUNICATION=local COMMUNICATION_PAGE=local MESSAGE_DELIVERY=local
+erDiagram
+    direction TB
+    EVENT_CONTEXT ||--o{ EVENT_REVISION : observed_as
+    EVENT_REVISION ||--o{ EVENT_DESCRIPTION : contains
+    EVENT_CONTEXT ||--o{ COMMUNICATION : receives
+    COMMUNICATION ||--|{ COMMUNICATION_PAGE : comprises
+    COMMUNICATION_PAGE ||--o{ MESSAGE_DELIVERY : arrives_as
+    ENTITY_IMPACT ||--o{ ENTITY_REVISION : observed_as
+    SOURCE_OBSERVATION ||--o{ EVENT_REVISION : supports
+    SOURCE_OBSERVATION ||--o{ ENTITY_REVISION : supports
+    SOURCE_OBSERVATION ||--o| MESSAGE_DELIVERY : captures
+
+    EVENT_CONTEXT {
+        string contextId PK
+        string contextKind
+        string contextKey
+    }
+    SOURCE_OBSERVATION {
+        string observationId PK
+        string channel
+        string payloadKind
+        datetime observedAt
+        string payloadDigest
+    }
+    EVENT_REVISION {
+        string eventRevisionId PK
+        string contextId FK
+        string sourceObservationId FK
+        string providerStatus
+        datetime providerUpdatedAt
+        string_array presentFields
+    }
+    EVENT_DESCRIPTION {
+        string eventRevisionId PK,FK
+        string locale PK
+        string latestDescription
+    }
+    ENTITY_IMPACT {
+        string impactId PK
+        string contextId FK
+    }
+    ENTITY_REVISION {
+        string entityRevisionId PK
+        string impactId FK
+        string sourceObservationId FK
+        string providerStatus
+        datetime providerUpdatedAt
+    }
+    COMMUNICATION {
+        string communicationRecordId PK
+        string contextId FK
+        string notificationAccountContext
+        string validatedBaseId
+        string assemblyState
+    }
+    COMMUNICATION_PAGE {
+        string pageId PK
+        string communicationRecordId FK
+        string rawCommunicationId
+        integer page
+        integer totalPages
+    }
+    MESSAGE_DELIVERY {
+        string deliveryId PK
+        string pageId FK
+        string sourceObservationId FK
+        string envelopeId
+        string recipientAccount
+        string deliveryRegion
+        datetime transportTime
+    }

@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="860" viewBox="0 0 980 860" role="img" aria-labelledby="04-operator-workflow-title 04-operator-workflow-desc">
+<title id="04-operator-workflow-title">Operator workflow and immutable action history</title>
+<desc id="04-operator-workflow-desc">Work items contain application-owned workflow, ownership, and priority. Each work-item target references exactly one event context, entity impact, or lifecycle exposure; multiple targets support coordinated work. Operator actions record authorship and evidence without modifying AWS provider statuses. Teal means AWS facts, blue means application model, and amber means external context. Labels 1, 0..1, 0..n, and 1..n give cardinality. Exactly one target FK is set per WorkItemTarget. Completing work never rewrites an AWS provider status.</desc>
+<rect x="0" y="0" width="980" height="860" fill="#FFFFFF"/>
+<text x="30" y="29" font-family="DejaVu Sans, Arial, sans-serif" font-size="22" font-weight="700" fill="#23364A">Operator workflow and immutable action history</text>
+<text x="30" y="53" font-family="DejaVu Sans, Arial, sans-serif" font-size="12.5" fill="#53677B">Application-owned response work and auditable actions retain their own state.</text>
+<rect x="30" y="76" width="13" height="13" rx="3" fill="#EAF5F6" stroke="#087884"/>
+<text x="50" y="87" font-family="DejaVu Sans, Arial, sans-serif" font-size="11.5" fill="#23364A">AWS facts</text>
+<rect x="250" y="76" width="13" height="13" rx="3" fill="#EDF2FA" stroke="#2456A1"/>
+<text x="270" y="87" font-family="DejaVu Sans, Arial, sans-serif" font-size="11.5" fill="#23364A">Application model</text>
+<rect x="505" y="76" width="13" height="13" rx="3" fill="#FAF5E9" stroke="#936209"/>
+<text x="525" y="87" font-family="DejaVu Sans, Arial, sans-serif" font-size="11.5" fill="#23364A">External context</text>
+<text x="744" y="87" font-family="DejaVu Sans, Arial, sans-serif" font-size="11" fill="#53677B">Cardinality: minimum..maximum</text>
+<g aria-label="Entity relationships">
+<g role="group" aria-label="WORK_ITEM: 1; records; OPERATOR_ACTION: 0..n"><title>WORK_ITEM: 1; records; OPERATOR_ACTION: 0..n</title>
+<polyline points="410,203 560,203" fill="none" stroke="#687B90" stroke-width="1.5"/>
+<text x="417" y="196" text-anchor="start" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="700" fill="#4B6075">1</text>
+<text x="553" y="219" text-anchor="end" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="700" fill="#4B6075">0..n</text>
+</g>
+<g role="group" aria-label="WORK_ITEM: 1; concerns; WORK_ITEM_TARGET: 0..n"><title>WORK_ITEM: 1; concerns; WORK_ITEM_TARGET: 0..n</title>
+<polyline points="235,281 235,455" fill="none" stroke="#687B90" stroke-width="1.5"/>
+<text x="241" y="296" text-anchor="start" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="700" fill="#4B6075">1</text>
+<text x="241" y="447" text-anchor="start" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="700" fill="#4B6075">0..n</text>
+</g>
+<g role="group" aria-label="WORK_ITEM_TARGET: 0..n; references; EVENT_CONTEXT: 0..1"><title>WORK_ITEM_TARGET: 0..n; references; EVENT_CONTEXT: 0..1</title>
+<polyline points="410,524 470,524 470,383 560,383" fill="none" stroke="#687B90" stroke-width="1.5"/>
+<text x="417" y="517" text-anchor="start" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="700" fill="#4B6075">0..n</text>
+<text x="553" y="376" text-anchor="end" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="700" fill="#4B6075">0..1</text>
+</g>
+<g role="group" aria-label="WORK_ITEM_TARGET: 0..n; references; ENTITY_IMPACT: 0..1"><title>WORK_ITEM_TARGET: 0..n; references; ENTITY_IMPACT: 0..1</title>
+<polyline points="410,524 470,524 470,568 560,568" fill="none" stroke="#687B90" stroke-width="1.5"/>
+<text x="417" y="517" text-anchor="start" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="700" fill="#4B6075">0..n</text>
+<text x="553" y="561" text-anchor="end" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="700" fill="#4B6075">0..1</text>
+</g>
+<g role="group" aria-label="WORK_ITEM_TARGET: 0..n; references; LIFECYCLE_EXPOSURE: 0..1"><title>WORK_ITEM_TARGET: 0..n; references; LIFECYCLE_EXPOSURE: 0..1</title>
+<polyline points="235,593 235,753 560,753" fill="none" stroke="#687B90" stroke-width="1.5"/>
+<text x="241" y="608" text-anchor="start" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="700" fill="#4B6075">0..n</text>
+<text x="553" y="746" text-anchor="end" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="700" fill="#4B6075">0..1</text>
+</g>
+</g>
+<g id="04-operator-workflow-work_item" role="group" aria-label="WORK_ITEM, local"><title>WORK_ITEM, local</title>
+<rect x="60" y="125" width="350" height="156" rx="7" fill="#FFFFFF" stroke="#CBD6E0" stroke-width="1.2"/>
+<rect x="60" y="125" width="350" height="34" rx="7" fill="#EDF2FA"/>
+<rect x="60" y="147" width="350" height="12" fill="#EDF2FA"/>
+<text x="71" y="147" font-family="DejaVu Sans, Arial, sans-serif" font-size="13.5" font-weight="700" fill="#2456A1">WORK_ITEM</text>
+<text x="72" y="178" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">workItemId [PK]</text>
+<text x="72" y="196" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">workflowState</text>
+<text x="72" y="214" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">ownerId</text>
+<text x="72" y="232" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">priority</text>
+<text x="72" y="250" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">dueAt</text>
+<text x="72" y="268" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">version</text>
+</g>
+<g id="04-operator-workflow-operator_action" role="group" aria-label="OPERATOR_ACTION, local"><title>OPERATOR_ACTION, local</title>
+<rect x="560" y="125" width="350" height="156" rx="7" fill="#FFFFFF" stroke="#CBD6E0" stroke-width="1.2"/>
+<rect x="560" y="125" width="350" height="34" rx="7" fill="#EDF2FA"/>
+<rect x="560" y="147" width="350" height="12" fill="#EDF2FA"/>
+<text x="571" y="147" font-family="DejaVu Sans, Arial, sans-serif" font-size="13.5" font-weight="700" fill="#2456A1">OPERATOR_ACTION</text>
+<text x="572" y="178" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">actionId [PK]</text>
+<text x="572" y="196" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">workItemId [FK]</text>
+<text x="572" y="214" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">actorId</text>
+<text x="572" y="232" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">actionType</text>
+<text x="572" y="250" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">occurredAt</text>
+<text x="572" y="268" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">evidence</text>
+</g>
+<g id="04-operator-workflow-work_item_target" role="group" aria-label="WORK_ITEM_TARGET, local"><title>WORK_ITEM_TARGET, local</title>
+<rect x="60" y="455" width="350" height="138" rx="7" fill="#FFFFFF" stroke="#CBD6E0" stroke-width="1.2"/>
+<rect x="60" y="455" width="350" height="34" rx="7" fill="#EDF2FA"/>
+<rect x="60" y="477" width="350" height="12" fill="#EDF2FA"/>
+<text x="71" y="477" font-family="DejaVu Sans, Arial, sans-serif" font-size="13.5" font-weight="700" fill="#2456A1">WORK_ITEM_TARGET</text>
+<text x="72" y="508" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">targetId [PK]</text>
+<text x="72" y="526" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">workItemId [FK]</text>
+<text x="72" y="544" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">contextId [FK]</text>
+<text x="72" y="562" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">impactId [FK]</text>
+<text x="72" y="580" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">exposureId [FK]</text>
+</g>
+<g id="04-operator-workflow-event_context" role="group" aria-label="EVENT_CONTEXT, local"><title>EVENT_CONTEXT, local</title>
+<rect x="560" y="350" width="350" height="66" rx="7" fill="#FFFFFF" stroke="#CBD6E0" stroke-width="1.2"/>
+<rect x="560" y="350" width="350" height="34" rx="7" fill="#EDF2FA"/>
+<rect x="560" y="372" width="350" height="12" fill="#EDF2FA"/>
+<text x="571" y="372" font-family="DejaVu Sans, Arial, sans-serif" font-size="13.5" font-weight="700" fill="#2456A1">EVENT_CONTEXT</text>
+<text x="572" y="403" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">contextId [PK]</text>
+</g>
+<g id="04-operator-workflow-entity_impact" role="group" aria-label="ENTITY_IMPACT, local"><title>ENTITY_IMPACT, local</title>
+<rect x="560" y="535" width="350" height="66" rx="7" fill="#FFFFFF" stroke="#CBD6E0" stroke-width="1.2"/>
+<rect x="560" y="535" width="350" height="34" rx="7" fill="#EDF2FA"/>
+<rect x="560" y="557" width="350" height="12" fill="#EDF2FA"/>
+<text x="571" y="557" font-family="DejaVu Sans, Arial, sans-serif" font-size="13.5" font-weight="700" fill="#2456A1">ENTITY_IMPACT</text>
+<text x="572" y="588" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">impactId [PK]</text>
+</g>
+<g id="04-operator-workflow-lifecycle_exposure" role="group" aria-label="LIFECYCLE_EXPOSURE, local"><title>LIFECYCLE_EXPOSURE, local</title>
+<rect x="560" y="720" width="350" height="66" rx="7" fill="#FFFFFF" stroke="#CBD6E0" stroke-width="1.2"/>
+<rect x="560" y="720" width="350" height="34" rx="7" fill="#EDF2FA"/>
+<rect x="560" y="742" width="350" height="12" fill="#EDF2FA"/>
+<text x="571" y="742" font-family="DejaVu Sans, Arial, sans-serif" font-size="13.5" font-weight="700" fill="#2456A1">LIFECYCLE_EXPOSURE</text>
+<text x="572" y="773" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#23364A">exposureId [PK]</text>
+</g>
+<text x="30" y="838" font-family="DejaVu Sans, Arial, sans-serif" font-size="11.1" fill="#53677B">Exactly one target FK is set per WorkItemTarget. Completing work never rewrites an AWS provider status.</text>
+</svg>
