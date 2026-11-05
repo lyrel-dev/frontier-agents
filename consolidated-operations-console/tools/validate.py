@@ -28,35 +28,35 @@ except ImportError:
 
 ROOT = Path(__file__).resolve().parents[1]
 REPO = ROOT.parent
-EVIDENCE_KINDS = {'SOURCE_REVISION': 'SourceRevision', 'OBSERVATION': 'Observation',
-                  'PROJECTION_REVISION': 'ProjectionRevision', 'SNAPSHOT': 'Snapshot'}
+EVIDENCE_KINDS = {'Source': 'Source', 'Observation': 'Observation',
+                  'Projection': 'Projection', 'Snapshot': 'Snapshot'}
 REF_FIELDS = {
-    'connectionId': 'Connection', 'collectionId': 'Collection', 'readAttemptId': 'ReadAttempt',
-    'sourceRevisionId': 'SourceRevision', 'requestSourceRevisionId': 'SourceRevision',
-    'responseSourceRevisionId': 'SourceRevision', 'selectedSourceRevisionId': 'SourceRevision',
-    'templateSourceRevisionId': 'SourceRevision', 'effectiveTargetSourceRevisionId': 'SourceRevision',
-    'catalogSourceRevisionId': 'SourceRevision', 'observationId': 'Observation',
-    'selectedObservationId': 'Observation', 'selectedTaskObservationId': 'Observation',
-    'selectedSummaryObservationId': 'Observation', 'selectedDetailObservationId': 'Observation',
-    'findingDetailObservationId': 'Observation', 'deploymentObservationId': 'Observation',
-    'effectiveTargetObservationId': 'Observation', 'completionObservationId': 'Observation',
-    'selectionObservationId': 'Observation', 'selectedPostureProjectionId': 'ProjectionRevision',
+    'connection': 'Connection', 'collectionId': 'Collection', 'readAttempt': 'ReadAttempt',
+    'source': 'Source', 'requestSource': 'Source',
+    'responseSource': 'Source', 'selectedSource': 'Source',
+    'templateSource': 'Source', 'effectiveTargetSource': 'Source',
+    'catalogSource': 'Source', 'observation': 'Observation',
+    'selectedObservation': 'Observation', 'selectedTaskObservation': 'Observation',
+    'selectedSummaryObservation': 'Observation', 'selectedDetailObservation': 'Observation',
+    'findingDetailObservation': 'Observation', 'deploymentObservation': 'Observation',
+    'effectiveTargetObservation': 'Observation', 'completionObservation': 'Observation',
+    'selectionObservation': 'Observation', 'selectedPostureProjection': 'Projection',
     'systemId': 'System', 'userJourneyId': 'UserJourney', 'serviceId': 'Service',
     'targetServiceId': 'Service', 'resourceId': 'Resource', 'targetResourceId': 'Resource',
     'eventContextId': 'EventContext', 'healthEventId': 'HealthEvent',
     'componentDeploymentId': 'ComponentDeployment', 'findingId': 'Finding',
     'agentSpaceId': 'AgentSpace', 'investigationId': 'Investigation', 'executionId': 'Execution',
-    'scenarioId': 'Scenario', 'scenarioRevisionId': 'ScenarioRevision',
-    'defaultRevisionId': 'ScenarioRevision', 'runId': 'Run', 'stepRunId': 'StepRun',
-    'commandId': 'Command', 'catalogSnapshotId': 'Snapshot', 'policyContextSnapshotId': 'Snapshot',
-    'policySnapshotId': 'Snapshot', 'inputSnapshotId': 'Snapshot',
+    'scenarioId': 'Scenario', 'scenario': 'Scenario',
+    'runId': 'Run', 'stepRunId': 'StepRun',
+    'commandId': 'Command', 'catalogSnapshot': 'Snapshot', 'policyContextSnapshot': 'Snapshot',
+    'policySnapshot': 'Snapshot', 'inputSnapshot': 'Snapshot',
 }
 ARRAY_REFS = {
     'resourceIds': 'Resource', 'userJourneyIds': 'UserJourney', 'recommendationIds': 'Recommendation',
-    'sourceRevisionIds': 'SourceRevision', 'assignmentSourceRevisionIds': 'SourceRevision',
-    'candidateSourceRevisionIds': 'SourceRevision', 'observationIds': 'Observation',
-    'deliveryObservationIds': 'Observation', 'projectionRevisionIds': 'ProjectionRevision',
-    'readAttemptIds': 'ReadAttempt', 'decisionCommandIds': 'Command', 'resumeCommandIds': 'Command',
+    'sources': 'Source', 'assignmentSources': 'Source',
+    'candidateSources': 'Source', 'observations': 'Observation',
+    'deliveryObservations': 'Observation', 'projections': 'Projection',
+    'readAttempts': 'ReadAttempt', 'decisionCommandIds': 'Command', 'resumeCommandIds': 'Command',
     'serviceIds': 'Service', 'attentionServiceIds': 'Service',
     'currentCoverageServiceIds': 'Service', 'retainedEvidenceServiceIds': 'Service',
 }
@@ -158,17 +158,59 @@ def semantic_errors(examples, schema):
     errors = []
     records, ws = examples['records'], examples['workspaceId']
     idx = {kind: {} for kind in records}
+    history = {kind: {} for kind in records}
+    groups = {}
     for kind, rows in records.items():
+        shape = schema['$defs'][kind]
+        if not {'version', 'createdAt', 'updatedAt'} <= set(shape['required']):
+            errors.append(issue('UNIFORM_VERSION_CONTRACT', kind, 'Every entity requires the same version metadata.'))
+        if kind.endswith(('Revision', 'Version')) or any(k in shape['properties'] for k in ('projectionVersion', 'localUpdatedAt')):
+            errors.append(issue('VERSION_ENTITY', kind, 'History must not create another entity type or a competing version clock.'))
         for row in rows:
-            ident = row.get(primary(kind))
-            loc = f'{kind}:{ident}'
+            ident, version = row.get(primary(kind)), row.get('version')
+            loc = f'{kind}:{ident}@{version}'
             if row.get('workspaceId') != ws:
                 errors.append(issue('WORKSPACE_MISMATCH', loc, 'Record escapes the containing workspace.'))
-            if ident in idx[kind]:
-                errors.append(issue('DUPLICATE_ID', loc, 'Canonical entity identity is duplicated.'))
-            idx[kind][ident] = row
+            key = (ident, version)
+            if key in history[kind]:
+                errors.append(issue('DUPLICATE_ENTITY_VERSION', loc, 'The same entity version occurs more than once; versions are immutable.'))
+            history[kind][key] = row
+            if ident not in idx[kind] or version > idx[kind][ident]['version']:
+                idx[kind][ident] = row
+            groups.setdefault((kind, ident), []).append(row)
+            if row['updatedAt'] < row['createdAt']:
+                errors.append(issue('VERSION_TIME_ORDER', loc, 'A version cannot predate entity creation.'))
+    for (kind, ident), rows in groups.items():
+        ordered = sorted(rows, key=lambda x: x['version'])
+        if len({r['createdAt'] for r in ordered}) != 1:
+            errors.append(issue('ENTITY_CREATION_STABLE', f'{kind}:{ident}', 'Entity creation time must remain stable across versions.'))
+        if any(a['updatedAt'] > b['updatedAt'] for a, b in zip(ordered, ordered[1:])):
+            errors.append(issue('VERSION_TIME_ORDER', f'{kind}:{ident}', 'Later versions cannot have earlier publication time.'))
+        def sealed(row):
+            return ((kind == 'ReadAttempt' and row['state'] != 'STARTED') or
+                    (kind == 'StepAttempt' and row['settledAt'] is not None) or
+                    (kind == 'Run' and row['phase'] == 'TERMINAL'))
+        if any(sealed(row) for row in ordered[:-1]):
+            errors.append(issue('SEALED_ENTITY_VERSION', f'{kind}:{ident}', 'A settled execution fact cannot acquire a later reopened representation; reconciliation is new evidence.'))
+        fixed_fields = {'Run': ('scenario', 'inputSnapshot', 'admittedAt'),
+                        'Collection': ('connection', 'queries', 'startedAt'),
+                        'ReadAttempt': ('collectionId', 'queryKey', 'attemptNo', 'requestDigest', 'requestSource', 'startedAt'),
+                        'StepRun': ('runId', 'stepKey'),
+                        'StepAttempt': ('runId', 'stepRunId', 'attemptNo', 'dispatchKey', 'startedAt')}.get(kind, ())
+        for field in fixed_fields:
+            if any(r.get(field) != ordered[0].get(field) for r in ordered):
+                errors.append(issue('EXECUTION_IDENTITY_STABLE', f'{kind}:{ident}', f'Immutable {field} cannot change across lifecycle versions.'))
+        for field in ('workspaceId', 'agentSpaceId', 'eventContextId', 'healthEventId', 'runId', 'stepRunId'):
+            if field in ordered[0] and any(r.get(field) != ordered[0][field] for r in ordered):
+                errors.append(issue('IDENTITY_SCOPE_STABLE', f'{kind}:{ident}', 'An entity cannot move to another ownership scope through a new version.'))
 
     def get(kind, ident):
+        if ident is None:
+            return None
+        if isinstance(ident, dict):
+            if ident.get('kind') != kind or 'version' not in ident:
+                return None
+            return history.get(kind, {}).get((ident['id'], ident['version']))
         return idx.get(kind, {}).get(ident)
 
     def err(code, loc, msg):
@@ -177,12 +219,20 @@ def semantic_errors(examples, schema):
     def resolve(kind, ident, loc):
         found = get(kind, ident)
         if found is None or found.get('workspaceId') != ws:
-            err('REFERENCE_SCOPE', loc, f'{kind}:{ident} is absent from this workspace.')
+            err('REFERENCE_SCOPE', loc, f'{kind}:{ident} is absent from this workspace; exact references never fall back to latest.')
         return found
+
+    def ref_key(value):
+        return value['kind'], value['id'], value['version']
+
+    def exact_refs(value):
+        for _, item in walk(value):
+            if {'kind', 'id', 'version'} <= set(item) and item['kind'] in history:
+                yield {'kind': item['kind'], 'id': item['id'], 'version': item['version']}
 
     def observation_source(oid):
         o = get('Observation', oid)
-        return get('SourceRevision', o['sourceRevisionId']) if o else None
+        return get('Source', o['source']) if o else None
 
     def identity_key(ident):
         return canonical_fixture({k: v for k, v in ident.items() if k != 'aliases'})
@@ -203,7 +253,10 @@ def semantic_errors(examples, schema):
                 if 'kind' in value and 'id' in value:
                     target = EVIDENCE_KINDS.get(value['kind'], value['kind'])
                     if target in idx:
-                        resolve(target, value['id'], where)
+                        resolve(target, value if 'version' in value else value['id'], where)
+                        selected = get(target, value) if 'version' in value else None
+                        if selected and selected['updatedAt'] > row['updatedAt']:
+                            err('REFERENCE_FUTURE_VERSION', where, 'A retained representation cannot reference an entity version published after it.')
                 for key, target in REF_FIELDS.items():
                     if key in value and value[key] is not None:
                         if key == 'serviceId' and path and path[0] == 'associations':
@@ -214,14 +267,17 @@ def semantic_errors(examples, schema):
                         for ident in value[key]:
                             resolve(target, ident, where + '/' + key)
 
-    seen_revisions = set()
-    for source in records['SourceRevision']:
-        loc = 'SourceRevision:' + source['sourceRevisionId']
-        key = (identity_key(source['identity']), source['representation'], source['profile'],
-               source['profileVersion'], source['providerVersion'], source['contentDigest'])
-        if key in seen_revisions:
-            err('DUPLICATE_SOURCE_REVISION', loc, 'The same identity/representation/profile/version/content is retained twice.')
-        seen_revisions.add(key)
+    seen_sources = {}
+    source_keys = {}
+    for source in records['Source']:
+        loc = 'Source:' + source['sourceId'] + '@' + str(source['version'])
+        key = (identity_key(source['identity']), source['representation'], source['profile'], source['sourceOperation'])
+        if source['sourceId'] in source_keys and source_keys[source['sourceId']] != key:
+            err('SOURCE_IDENTITY_STABLE', loc, 'Versions of one Source must preserve the same logical source identity.')
+        source_keys[source['sourceId']] = key
+        if key in seen_sources and seen_sources[key] != source['sourceId']:
+            err('SOURCE_LOGICAL_IDENTITY', loc, 'Content changes must append versions under the same logical source identity.')
+        seen_sources[key] = source['sourceId']
         if source['digestProfile'] == 'RFC8785_SHA256':
             if not safe_source_subset(source['payload']):
                 err('FIXTURE_DIGEST_SUBSET', loc, 'Fixture JSON digest checking intentionally supports only the documented safe subset.')
@@ -236,22 +292,37 @@ def semantic_errors(examples, schema):
             if source['artifact'] and (source['artifact']['digest'] != actual or source['artifact']['byteLength'] != len(source['payload'].encode())):
                 err('ARTIFACT_DIGEST', loc, 'Artifact length/digest must cover the same exact UTF-8 bytes.')
 
+    for kind, key_fields, code in (
+        ('Projection', ('projectionKey', 'profile'), 'PROJECTION_LOGICAL_IDENTITY'),
+        ('Recommendation', ('serviceId', 'findingId', 'source', 'groupKey', 'ordinal'), 'RECOMMENDATION_LOGICAL_IDENTITY'),
+    ):
+        seen_keys, seen_ids = {}, {}
+        for row in records[kind]:
+            ident = row[primary(kind)]
+            values = [row[field] for field in key_fields]
+            if kind == 'Projection':
+                values.append(sorted({(ref['kind'], ref['id']) for ref in row['subjectRefs']}))
+            key = canonical_fixture(values)
+            if (key in seen_keys and seen_keys[key] != ident) or (ident in seen_ids and seen_ids[ident] != key):
+                err(code, kind + ':' + ident, 'Versions must preserve one logical identity; repeated capture cannot create duplicate identities.')
+            seen_keys[key], seen_ids[ident] = ident, key
+
     for collection in records['Collection']:
         keys = [q['queryKey'] for q in collection['queries']]
         if len(keys) != len(set(keys)):
             err('QUERY_IDENTITY', collection['collectionId'], 'Query keys must be unique within a collection.')
-    attempts = set()
+    attempts = {}
     for read in records['ReadAttempt']:
         loc = 'ReadAttempt:' + read['readAttemptId']
         parent = get('Collection', read['collectionId'])
         query = next((q for q in parent['queries'] if q['queryKey'] == read['queryKey']), None) if parent else None
         key = (read['collectionId'], read['queryKey'], read['attemptNo'])
-        if key in attempts:
+        if key in attempts and attempts[key] != read['readAttemptId']:
             err('READ_ATTEMPT_IDENTITY', loc, 'Collection/query/attempt number is duplicated.')
-        attempts.add(key)
+        attempts[key] = read['readAttemptId']
         if not query or query['requestDigest'] != read['requestDigest']:
             err('READ_QUERY_SCOPE', loc, 'Read must resolve its reserved query and exact request digest.')
-        request = get('SourceRevision', read['requestSourceRevisionId'])
+        request = get('Source', read['requestSource'])
         if request and request['contentDigest'] != read['requestDigest']:
             err('REQUEST_EVIDENCE', loc, 'Request digest must match retained request evidence.')
         if read['state'] == 'FAILED' and read['error'] is None:
@@ -264,13 +335,13 @@ def semantic_errors(examples, schema):
             err('READ_STATE', loc, 'A settled read must retain its end time.')
     for observation in records['Observation']:
         loc = 'Observation:' + observation['observationId']
-        read = get('ReadAttempt', observation['readAttemptId']) if observation['readAttemptId'] else None
+        read = get('ReadAttempt', observation['readAttempt']) if observation['readAttempt'] else None
         if read:
             collection = get('Collection', read['collectionId'])
-            if collection and collection['connectionId'] != observation['connectionId']:
-                err('OBSERVATION_SCOPE', loc, 'Read and observation use different connection scopes.')
+            if collection and collection['connection'] != observation['connection']:
+                err('Observation_SCOPE', loc, 'Read and observation use different connection scopes.')
             if read['authorizationContextKey'] != observation['authorizationContextKey']:
-                err('OBSERVATION_SCOPE', loc, 'Read and observation must pin the same authorization context.')
+                err('Observation_SCOPE', loc, 'Read and observation must pin the same authorization context.')
             if observation['observedAt'] < read['startedAt'] or (read['endedAt'] is not None and observation['observedAt'] > read['endedAt']):
                 err('TIME_ORDER', loc, 'Observed response falls outside its read attempt.')
 
@@ -280,18 +351,18 @@ def semantic_errors(examples, schema):
                 journey = get('UserJourney', jid)
                 if journey and journey['systemId'] != membership['systemId']:
                     err('MEMBERSHIP_PARENT', service['serviceId'], 'A journey must belong to the selected system.')
-    contexts = set()
+    contexts = {}
     for context in records['EventContext']:
         key = (context['healthEventId'], context['kind'], context['contextKey'])
-        if key in contexts:
+        if key in contexts and contexts[key] != context['eventContextId']:
             err('CONTEXT_IDENTITY', context['eventContextId'], 'Health context identity is duplicated.')
-        contexts.add(key)
+        contexts[key] = context['eventContextId']
         expected = context['accountId'] if context['kind'] == 'ACCOUNT' else context['organizationId']
         if context['kind'] != 'PUBLIC' and context['contextKey'] != expected:
             err('CONTEXT_KEY', context['eventContextId'], 'Non-null context key must equal its actual account/organization identity.')
     for impact in records['EntityImpact']:
         context = get('EventContext', impact['eventContextId'])
-        source = observation_source(impact['selectedObservationId'])
+        source = observation_source(impact['selectedObservation'])
         if context and context['kind'] == 'ORG_SUMMARY':
             err('ORG_SUMMARY_IMPACT', impact['entityImpactId'], 'Organization summaries cannot own entity impacts.')
         if context and source and context['kind'] == 'ACCOUNT':
@@ -317,15 +388,16 @@ def semantic_errors(examples, schema):
             err('RECOMMENDATION_PRESENCE', loc, 'Present suggestions require retained identities.')
         for rid in finding['recommendationIds'] or []:
             recommendation = get('Recommendation', rid)
-            if recommendation and recommendation['findingDetailObservationId'] != finding['selectedDetailObservationId']:
-                err('CURRENT_DETAIL_SCOPE', loc, 'Current suggestions must come from the selected detail observation.')
+            detail = get('Observation', finding['selectedDetailObservation'])
+            if recommendation and (not detail or recommendation['source'] != detail['source']):
+                err('CURRENT_DETAIL_SCOPE', loc, 'Current suggestions must come from the exact selected detail Source version; a repeated receipt may reuse that suggestion identity.')
     for recommendation in records['Recommendation']:
         finding = get('Finding', recommendation['findingId'])
-        observation = get('Observation', recommendation['findingDetailObservationId'])
-        source = get('SourceRevision', recommendation['sourceRevisionId'])
+        observation = get('Observation', recommendation['findingDetailObservation'])
+        source = get('Source', recommendation['source'])
         if finding and finding['serviceId'] != recommendation['serviceId']:
             err('RECOMMENDATION_PARENT', recommendation['recommendationId'], 'Finding and suggestion must share service scope.')
-        if observation and observation['sourceRevisionId'] != recommendation['sourceRevisionId']:
+        if observation and observation['source'] != recommendation['source']:
             err('RECOMMENDATION_PROVENANCE', recommendation['recommendationId'], 'Suggestion pins a different payload from its detail observation.')
         if source and source['representation'] != 'DETAIL':
             err('RECOMMENDATION_PROVENANCE', recommendation['recommendationId'], 'Suggestion must originate in retained detail, not a summary.')
@@ -345,24 +417,24 @@ def semantic_errors(examples, schema):
         seen = set()
         for membership in investigation['executionMemberships']:
             execution = get('Execution', membership['executionId'])
-            observation = get('Observation', membership['observationId'])
-            source = observation_source(membership['observationId'])
+            observation = get('Observation', membership['observation'])
+            source = observation_source(membership['observation'])
             if membership['investigationId'] != investigation['investigationId'] or (execution and execution['agentSpaceId'] != investigation['agentSpaceId']):
                 err('EXECUTION_MEMBERSHIP_SCOPE', investigation['investigationId'], 'Observed execution membership crosses task/Agent Space scope.')
             if execution and source and identity_key(source['identity']) != identity_key(execution['identity']):
                 err('EXECUTION_MEMBERSHIP_EVIDENCE', investigation['investigationId'], 'Membership must cite the observed execution identity.')
-            if observation and observation['readAttemptId']:
-                read = get('ReadAttempt', observation['readAttemptId'])
+            if observation and observation['readAttempt']:
+                read = get('ReadAttempt', observation['readAttempt'])
                 collection = get('Collection', read['collectionId']) if read else None
                 query = next((q for q in collection['queries'] if q['queryKey'] == read['queryKey']), None) if collection else None
-                if query and query['subject'] != {'kind': 'Investigation', 'id': investigation['investigationId']}:
+                if query and {k:v for k,v in query['subject'].items() if k != 'version'} != {'kind': 'Investigation', 'id': investigation['investigationId']}:
                     err('EXECUTION_MEMBERSHIP_EVIDENCE', investigation['investigationId'], 'Task relationship must retain the ListExecutions request association.')
             if membership['executionId'] in seen:
                 err('DUPLICATE_MEMBERSHIP', investigation['investigationId'], 'Current execution memberships must be deduplicated.')
             seen.add(membership['executionId'])
     for journal in records['JournalRecord']:
-        observation = get('Observation', journal['selectedObservationId'])
-        if observation and observation['sourceRevisionId'] != journal['selectedSourceRevisionId']:
+        observation = get('Observation', journal['selectedObservation'])
+        if observation and observation['source'] != journal['selectedSource']:
             err('SELECTED_REVISION', journal['journalRecordId'], 'Inspector must use the exact selected source revision.')
 
     # The only modeled assertion reducer here checks declared evidence/coverage
@@ -387,9 +459,9 @@ def semantic_errors(examples, schema):
             check_result(attempt['checkResult'], attempt['stepAttemptId'])
         for _, value in walk(attempt):
             evidence = []
-            if value.get('kind') == 'OBSERVATION' and 'id' in value:
-                evidence.append(value['id'])
-            evidence.extend(value.get('observationIds', []))
+            if value.get('kind') == 'Observation' and 'id' in value:
+                evidence.append(value)
+            evidence.extend(value.get('observations', []))
             for oid in evidence:
                 obs = get('Observation', oid)
                 if obs and attempt['settledAt'] is not None and obs['observedAt'] > attempt['settledAt']:
@@ -421,11 +493,15 @@ def semantic_errors(examples, schema):
         for key in lookup:
             visit(key)
 
-    for revision in records['ScenarioRevision']:
-        definition = revision['definition']; loc = revision['scenarioRevisionId']
+    for scenario in records['Scenario']:
+        definition = scenario['definition']; loc = scenario['scenarioId'] + '@' + str(scenario['version'])
         dag(definition['steps'], loc)
-        if digest(definition) != revision['digest'] or digest(definition['inputSchema']) != definition['inputSchemaDigest']:
-            err('REVISION_DIGEST', loc, 'Published definition/input schema digest is inconsistent.')
+        if scenario['state'] == 'DRAFT':
+            continue
+        if 'operationLocks' not in definition:
+            continue  # An archived draft has no invented publication locks.
+        if digest(definition) != scenario['digest'] or digest(definition['inputSchema']) != definition['inputSchemaDigest']:
+            err('SCENARIO_DIGEST', loc, 'Published definition/input schema digest is inconsistent.')
         try:
             Draft202012Validator.check_schema(definition['inputSchema'])
         except Exception as exc:
@@ -435,17 +511,15 @@ def semantic_errors(examples, schema):
         locks = {x['alias']: x for x in definition['operationLocks']}
         if len(locks) != len(definition['operationLocks']) or any(s['operationAlias'] not in locks for s in definition['steps']):
             err('OPERATION_LOCK', loc, 'Each step must have one resolved immutable operation lock.')
-    for scenario in records['Scenario']:
-        revision = get('ScenarioRevision', scenario['defaultRevisionId'])
-        if revision and revision['scenarioId'] != scenario['scenarioId']:
-            err('DEFAULT_REVISION_PARENT', scenario['scenarioId'], 'Default revision belongs to another Scenario.')
     for run in records['Run']:
-        revision = get('ScenarioRevision', run['scenarioRevisionId'])
-        snapshot_record = get('Snapshot', run['inputSnapshotId'])
+        revision = get('Scenario', run['scenario'])
+        snapshot_record = get('Snapshot', run['inputSnapshot'])
         if not revision or not snapshot_record:
             continue
+        if revision['state'] != 'PUBLISHED':
+            err('RUN_SCENARIO_PUBLICATION', run['runId'], 'A Run must pin an exact published Scenario version.'); continue
         admission = snapshot_record['contents']
-        if snapshot_record['kind'] != 'RUN_INPUT' or admission.get('scenarioRevisionId') != run['scenarioRevisionId'] or admission.get('revisionDigest') != revision['digest']:
+        if snapshot_record['kind'] != 'RUN_INPUT' or admission.get('scenario') != run['scenario'] or admission.get('scenarioDigest') != revision['digest']:
             err('RUN_ADMISSION', run['runId'], 'Run must pin its exact admitted revision and digest.'); continue
         definition = revision['definition']; enabled = set(admission['enabledStepKeys'])
         definitions = {s['stepKey']: s for s in definition['steps']}
@@ -460,39 +534,54 @@ def semantic_errors(examples, schema):
             err('BINDING_CLOSURE', run['runId'], 'Admission must resolve each declared binding exactly once.')
         for error in Draft202012Validator(definition['inputSchema']).iter_errors(admission['inputValues']):
             err('ADMISSION_INPUT', run['runId'], error.message)
-        step_rows = [s for s in records['StepRun'] if s['runId'] == run['runId']]
+        step_rows = [get('StepRun', ref) for ref in run['steps']]
+        step_rows = [s for s in step_rows if s is not None]
+        if len(step_rows) != len(run['steps']) or len({s['stepRunId'] for s in step_rows}) != len(step_rows) or any(s['runId'] != run['runId'] for s in step_rows):
+            err('STEP_RUN_REFERENCE', run['runId'], 'Run must select exact versions of its own distinct steps.')
         if {s['stepKey'] for s in step_rows} != set(definitions):
             err('STEP_RUN_COVERAGE', run['runId'], 'All declared steps, including zero-attempt/skipped ones, need a retained StepRun.')
         values = {}
         for step in step_rows:
-            selected = [a for a in records['StepAttempt'] if a['stepRunId'] == step['stepRunId'] and a['attemptNo'] == step['selectedAttemptNo']]
-            if step['selectedAttemptNo'] is not None and len(selected) != 1:
-                err('ATTEMPT_SELECTION', step['stepRunId'], 'Selected attempt must resolve exactly once.')
-            if step['stepKey'] in required:
-                values[step['stepKey']] = selected[0]['checkResult']['verdict'] if selected and selected[0]['checkResult'] else 'INCONCLUSIVE'
-        if run['assessmentVerdict'] != verdict(admission['requiredCriterionKeys'], values):
-            err('RUN_VERDICT', run['runId'], 'Verdict must retain failed/missing/skipped required checks in its denominator.')
+            selected = get('StepAttempt', step['selectedAttempt']) if step['selectedAttempt'] else None
+            if step['selectedAttempt'] and (not selected or step['selectedAttempt'] not in step['attempts'] or selected['stepRunId'] != step['stepRunId']):
+                err('ATTEMPT_SELECTION', step['stepRunId'], 'Selected attempt must be one exact known version owned by this step.')
+            if step['stepKey'] in required and selected and selected['checkResult']:
+                values[step['stepKey']] = selected['checkResult']['verdict']
+        expected_verdict = verdict(admission['requiredCriterionKeys'], values)
+        if run['phase'] != 'TERMINAL' and not values:
+            expected_verdict = 'NOT_EVALUATED'
+        if run['assessmentVerdict'] != expected_verdict:
+            err('RUN_VERDICT', run['runId'], 'Verdict must use pinned child versions and retain missing/skipped required criteria.')
         if run['phase'] == 'TERMINAL' and run['terminalAt'] is None:
             err('RUN_STATE', run['runId'], 'Terminal Run requires a terminal timestamp.')
         latest = {}
-        for attempt in sorted((a for a in records['StepAttempt'] if a['runId'] == run['runId']), key=lambda a: a['settledAt'] or a['startedAt']):
+        for attempt in sorted((get('StepAttempt', r) for step in step_rows for r in step['attempts'] if get('StepAttempt', r)), key=lambda a: a['settledAt'] or a['startedAt']):
             for effect in attempt['externalOperations']:
                 latest[effect['originEffectKey']] = effect['remoteDisposition']
         if run['finalizationState'] == 'COMPLETE' and any(s in ('ACTIVE', 'UNKNOWN') for s in latest.values()):
             err('UNRESOLVED_FINALIZATION', run['runId'], 'Complete finalization cannot hide an active or unknown tracked effect.')
 
-    for projection in records['ProjectionRevision']:
-        value, loc, profile = projection['value'], projection['projectionRevisionId'], projection['profile']
+    for projection in records['Projection']:
+        value, loc, profile = projection['value'], projection['projectionId'], projection['profile']
+        def subject_version(kind, ident):
+            selected = [r for r in projection['subjectRefs'] if r['kind'] == kind and r['id'] == ident]
+            if len(selected) != 1:
+                err('PROJECTION_SUBJECT', loc, 'Profile subject must select one exact entity representation.')
+                return None
+            return get(kind, selected[0])
         if projection['generatedAt'] < projection['asOf']:
             err('TIME_ORDER', loc, 'Projection generation precedes its as-of cutoff.')
         if profile == 'EVALUATION':
+            if value['subject'] not in projection['subjectRefs']:
+                err('PROJECTION_SUBJECT', loc, 'Evaluation subject must match its exact published subject reference.')
             results = {c['criterionKey']: c['result']['verdict'] for c in value['criteria']}
             for criterion in value['criteria']:
                 check_result(criterion['result'], loc + '/' + criterion['criterionKey'])
             if len(results) != len(value['criteria']) or value['verdict'] != verdict(value['requiredCriterionKeys'], results):
                 err('EVALUATION_VERDICT', loc, 'Evaluation must preserve its required criterion denominator.')
         elif profile == 'SERVICE_STATUS':
-            context = get('Snapshot', value['policyContextSnapshotId'])
+            subject_version('Service', value['serviceId'])
+            context = get('Snapshot', value['policyContextSnapshot'])
             if context and (context['kind'] != 'POLICY_CONTEXT' or context['contents']['serviceId'] != value['serviceId']):
                 err('POLICY_CONTEXT_SCOPE', loc, 'Status must use the retained policy context of the same service.')
             for dimension in ('runtimeHealth', 'resiliencePosture', 'assessmentExecution'):
@@ -502,8 +591,9 @@ def semantic_errors(examples, schema):
                 if expiry is not None and expiry <= projection['asOf'] and value[dimension]['state'] not in ('UNKNOWN', 'STALE', 'UNAVAILABLE', 'NOT_OBSERVED'):
                     err('EXPIRED_CURRENT_STATUS', loc, f'{dimension} has expired; retained raw evidence cannot remain a current known state.')
         elif profile == 'INVESTIGATION_RESULT':
-            source = get('SourceRevision', value['selectedSourceRevisionId'])
-            completion = observation_source(value['completionObservationId'])
+            subject_version('Investigation', value['investigationId'])
+            source = get('Source', value['selectedSource'])
+            completion = observation_source(value['completionObservation'])
             if value['availability'] == 'AVAILABLE' and source is None:
                 err('RESULT_SELECTION', loc, 'Available result requires a retained source revision.')
             if value['selectionBasis'] == 'EXPLICIT_COMPLETION_REFERENCE' and (not completion or not value['expectedSummaryIdentity']):
@@ -515,10 +605,10 @@ def semantic_errors(examples, schema):
             if completion and isinstance(completion['payload'], dict) and completion['payload'].get('phase') not in (None, value['phase']):
                 err('RESULT_PHASE', loc, 'A different result phase cannot replace this phase selection.')
         elif profile == 'LIFECYCLE_EXPOSURE':
-            deployment = get('ComponentDeployment', value['componentDeploymentId'])
-            if deployment and deployment['observationId'] != value['deploymentObservationId']:
+            deployment = subject_version('ComponentDeployment', value['componentDeploymentId'])
+            if deployment and deployment['observation'] != value['deploymentObservation']:
                 err('DEPLOYMENT_PROVENANCE', loc, 'Exposure must use the exact observed component deployment.')
-            entries = [e for e in records['LifecycleEntry'] if e['sourceRevisionId'] == value['catalogSourceRevisionId']]
+            entries = [e for e in records['LifecycleEntry'] if e['source'] == value['catalogSource']]
             if not any(value['milestoneKey'] in {m['milestoneKey'] for m in entry['milestones']} for entry in entries):
                 err('MILESTONE_SCOPE', loc, 'Milestone must resolve in the selected catalogue revision.')
         elif profile == 'WORKSPACE_SUMMARY':
@@ -531,47 +621,47 @@ def semantic_errors(examples, schema):
                 err('SUMMARY_DENOMINATOR', loc, 'Coverage percentage must use the distinct service population; empty denominator is null.')
 
     for assessment in records['ResilienceAssessment']:
-        snapshot_record = get('Snapshot', assessment['policyContextSnapshotId'])
-        posture = get('ProjectionRevision', assessment['selectedPostureProjectionId'])
+        snapshot_record = get('Snapshot', assessment['policyContextSnapshot'])
+        posture = get('Projection', assessment['selectedPostureProjection'])
         if snapshot_record and (snapshot_record['kind'] != 'POLICY_CONTEXT' or snapshot_record['contents']['serviceId'] != assessment['serviceId']):
             err('ASSESSMENT_POLICY_SCOPE', assessment['resilienceAssessmentId'], 'Assessment context must stay within its service.')
-        if posture and (posture['profile'] != 'SERVICE_STATUS' or posture['value']['serviceId'] != assessment['serviceId'] or (snapshot_record and posture['value']['policyContextSnapshotId'] != snapshot_record['snapshotId'])):
+        if posture and (posture['profile'] != 'SERVICE_STATUS' or posture['value']['serviceId'] != assessment['serviceId'] or (snapshot_record and posture['value']['policyContextSnapshot'] != {'kind':'Snapshot','id':snapshot_record['snapshotId'],'version':snapshot_record['version']})):
             err('ASSESSMENT_POLICY_SCOPE', assessment['resilienceAssessmentId'], 'Selected posture must resolve the same captured policy context.')
 
     for snapshot_record in records['Snapshot']:
-        loc = snapshot_record['snapshotId']; source_ids = set(snapshot_record['sourceRevisionIds']); obs_ids = set(snapshot_record['observationIds'])
-        read_ids = {r['readAttemptId'] for r in snapshot_record['readAttempts']}
+        loc = snapshot_record['snapshotId'] + '@' + str(snapshot_record['version'])
+        own = ('Snapshot', snapshot_record['snapshotId'], snapshot_record['version'])
+        members = {ref_key(r) for r in snapshot_record['members']}
+        if len(members) != len(snapshot_record['members']):
+            err('SNAPSHOT_MEMBER_UNIQUENESS', loc, 'An exact entity representation can occur only once in a manifest.')
         if digest({k: v for k, v in snapshot_record.items() if k != 'manifestDigest'}) != snapshot_record['manifestDigest']:
             err('SNAPSHOT_DIGEST', loc, 'Snapshot manifest does not match its retained content.')
-        for read in snapshot_record['readAttempts']:
-            if get('ReadAttempt', read['readAttemptId']) != read:
-                err('SNAPSHOT_READ_COPY', loc, 'Snapshot must retain the exact immutable read attempt, not a reconstructed current version.')
-            for key in ('requestSourceRevisionId', 'responseSourceRevisionId'):
-                if read[key] is not None and read[key] not in source_ids:
-                    err('SNAPSHOT_CLOSURE', loc, 'Retained read request/response revision is missing from the manifest.')
-        for oid in obs_ids:
-            observation = get('Observation', oid)
-            if observation and (observation['sourceRevisionId'] not in source_ids or (observation['readAttemptId'] and observation['readAttemptId'] not in read_ids)):
-                err('SNAPSHOT_CLOSURE', loc, 'Observed source/read provenance is not closed within the capture.')
-            if observation and observation['observedAt'] > snapshot_record['capturedAt']:
-                err('SNAPSHOT_FUTURE_EVIDENCE', loc, 'Capture cannot include a future observation.')
-        for pid in snapshot_record['projectionRevisionIds']:
-            projection_record = get('ProjectionRevision', pid)
-            if not projection_record:
+        modeled = {k:v for k,v in snapshot_record.items() if k not in ('members', 'contents')}
+        if snapshot_record['kind'] in ('TOPOLOGY', 'POLICY_CONTEXT', 'RUN_INPUT'):
+            modeled['contents'] = snapshot_record['contents']
+        required = list(exact_refs(modeled))
+        for ref in snapshot_record['members']:
+            row = get(ref['kind'], ref)
+            if row is None:
                 continue
-            for evidence in projection_record['inputRefs']:
-                if (evidence['kind'] == 'SOURCE_REVISION' and evidence['id'] not in source_ids) or (evidence['kind'] == 'OBSERVATION' and evidence['id'] not in obs_ids):
-                    err('SNAPSHOT_CLOSURE', loc, 'A retained projection depends on unpinned source/observation input.')
-            if projection_record['generatedAt'] > snapshot_record['capturedAt']:
-                err('SNAPSHOT_FUTURE_EVIDENCE', loc, 'Capture cannot include a future projection.')
+            if row['updatedAt'] > snapshot_record['capturedAt']:
+                err('SNAPSHOT_FUTURE_EVIDENCE', loc, 'Capture cannot pin an entity version published after its cutoff.')
+            item = row
+            if ref['kind'] == 'Snapshot' and row['kind'] not in ('TOPOLOGY','POLICY_CONTEXT','RUN_INPUT'):
+                item = {k:v for k,v in row.items() if k != 'contents'}
+            required.extend(exact_refs(item))
+        if any(ref_key(r) not in members and ref_key(r) != own for r in required):
+            err('SNAPSHOT_CLOSURE', loc, 'Capture lacks an exact transitive entity reference; latest substitution is prohibited.')
         if snapshot_record['captureStartedAt'] > snapshot_record['capturedAt'] or (snapshot_record['captureFinishedAt'] is not None and not snapshot_record['captureStartedAt'] <= snapshot_record['captureFinishedAt'] <= snapshot_record['capturedAt']):
             err('TIME_ORDER', loc, 'Capture start/finish/assembly times are inconsistent.')
+        if snapshot_record['kind'] == 'RUN_INPUT' and any(r['kind'] in ('Run','StepRun','StepAttempt') for r in snapshot_record['members']):
+            err('ADMISSION_FUTURE_STATE', loc, 'Admission captures inputs, not its own later execution state.')
         if snapshot_record['kind'] == 'POLICY_CONTEXT':
-            context = snapshot_record['contents']; observation = get('Observation', context['effectiveTargetObservationId'])
-            if observation and observation['sourceRevisionId'] != context['effectiveTargetSourceRevisionId']:
-                err('POLICY_TARGET_SELECTION', loc, 'Captured effective target revision and observation do not match.')
-            if context['effectiveTargetSourceRevisionId'] not in source_ids or context['effectiveTargetObservationId'] not in obs_ids:
-                err('POLICY_TARGET_SELECTION', loc, 'Effective targets must be pinned in this same policy capture.')
+            context = snapshot_record['contents']; observation = get('Observation', context['effectiveTargetObservation'])
+            if observation and observation['source'] != context['effectiveTargetSource']:
+                err('POLICY_TARGET_SELECTION', loc, 'Captured effective target Source and Observation versions do not match.')
+            if ref_key(context['effectiveTargetSource']) not in members or ref_key(context['effectiveTargetObservation']) not in members:
+                err('POLICY_TARGET_SELECTION', loc, 'Effective targets must be pinned in this policy capture.')
         elif snapshot_record['kind'] == 'TOPOLOGY':
             graph = snapshot_record['contents']; nodes = {n['nodeKey'] for n in graph['nodes']}
             if len(nodes) != len(graph['nodes']):
@@ -637,9 +727,9 @@ def check_crosswalk(model, inventory, examples):
             assert shape in model['$defs'], f'Unknown normalized profile shape: {shape}'
             if binding.get('projectionProfile'):
                 assert model['x-projectionProfiles'][binding['projectionProfile']] == shape, 'Projection profile shape drift.'
-    for row in examples['records']['SourceRevision']:
+    for row in examples['records']['Source']:
         assert row['profile'] in profiles, f'Unregistered fixture source profile: {row["profile"]}'
-        assert row['profileVersion'] == profiles[row['profile']]['sourceRevisionBinding']['profileVersion'], 'Source profile version drift.'
+        assert row['profileVersion'] == profiles[row['profile']]['sourceBinding']['profileVersion'], 'Source profile version drift.'
     sha = inventory['sourceCommit']; concepts = set()
     for file in inventory['files']:
         path = file['path']
@@ -667,16 +757,56 @@ def check_crosswalk(model, inventory, examples):
 
 
 def check_diagrams(model):
-    complete = (ROOT / 'diagrams/complete-model.mmd').read_text()
-    names = re.findall(r'^class (\w+)\s*\{', complete, re.M)
-    assert len(names) == len(set(names)) and set(names) == set(model['x-entities']), 'Complete class diagram entity coverage mismatch.'
     manifest = load(ROOT / 'diagrams/manifest.json')
+    assert manifest['format'] == 'drawio-atlas/1', 'All maintained diagrams must use the Draw.io atlas.'
     assert manifest['schemaSha256'] == hashlib.sha256((ROOT / 'model/schema.json').read_bytes()).hexdigest(), 'Diagram schema provenance is stale.'
+    atlas = ROOT / manifest['drawio']['path']
+    assert hashlib.sha256(atlas.read_bytes()).hexdigest() == manifest['drawio']['sha256'], 'Draw.io source hash mismatch.'
+    document = ET.parse(atlas).getroot()
+    assert document.tag == 'mxfile', 'Diagram source is not an editable Draw.io document.'
+    pages = {p.attrib['id']: p for p in document.findall('diagram')}
+    assert len(pages) == len(manifest['diagrams']), 'Diagram page count mismatch.'
+    entities = set(model['x-entities']); detailed_entities = set(); detailed_edges = set()
     for diagram in manifest['diagrams']:
-        for kind in ('mmd', 'dot', 'svg'):
+        page = pages[diagram['id']]
+        root = page.find('mxGraphModel/root')
+        assert root is not None, 'Draw.io page lacks native editable cells.'
+        classes = {o.attrib['entity']: o for o in root.findall('object') if 'entity' in o.attrib}
+        assert set(classes) == set(diagram['entities']) <= entities, 'Draw.io class coverage mismatch.'
+        boxes = []
+        for name, obj in classes.items():
+            cell = obj.find('mxCell'); geom = cell.find('mxGeometry')
+            field_cell = root.find(f"mxCell[@id='{obj.attrib['id']}-fields']")
+            assert field_cell is not None and 'version: Version' in field_cell.attrib['value'], 'Every displayed entity needs its uniform version.'
+            assert set(obj.attrib['displayFields'].split(',')) <= set(model['$defs'][name]['properties']), 'Diagram shows an obsolete field.'
+            x,y,w,h = (float(geom.attrib[k]) for k in ('x','y','width','height'))
+            boxes.append((name,x,y,x+w,y+h))
+        for i,a in enumerate(boxes):
+            for b in boxes[i+1:]:
+                assert not (max(a[1],b[1]) < min(a[3],b[3]) and max(a[2],b[2]) < min(a[4],b[4])), 'Overlapping Draw.io classes: ' + repr((a[0],b[0]))
+        edge_ids = set()
+        for obj in root.findall('object'):
+            if 'relationshipIndex' not in obj.attrib:
+                continue
+            index = int(obj.attrib['relationshipIndex']); edge_ids.add(index)
+            relation = model['x-relationships'][index]; cell = obj.find('mxCell')
+            assert obj.attrib['fromEntity'] == relation['from'] and obj.attrib['toEntity'] == relation['to'], 'Draw.io relationship direction drift.'
+            assert cell.attrib['source'] == classes[relation['from']].attrib['id'] and cell.attrib['target'] == classes[relation['to']].attrib['id'], 'Draw.io edge is attached to the wrong class.'
+            for suffix, cardinality in (('from','fromCardinality'),('to','toCardinality')):
+                label = root.find(f"mxCell[@id='{obj.attrib['id']}-{suffix}']")
+                assert label is not None and label.attrib['value'] == relation[cardinality], 'Draw.io cardinality drift.'
+        assert edge_ids == set(diagram['relationshipIds']), 'Draw.io relationship manifest differs from actual edges.'
+        if diagram['kind'] == 'overview':
+            assert set(classes) == entities, 'Overview must include every entity.'
+        else:
+            detailed_entities.update(diagram['primaryEntities']); detailed_edges.update(edge_ids)
+        for kind in ('svg', 'png'):
             item = diagram[kind]; path = ROOT / item['path']
             assert hashlib.sha256(path.read_bytes()).hexdigest() == item['sha256'], 'Stale diagram hash: ' + item['path']
         ET.parse(ROOT / diagram['svg']['path'])
+    assert detailed_entities == entities, 'Detailed sheets must cover every entity.'
+    assert detailed_edges == set(range(len(model['x-relationships']))), 'Detailed sheets must cover every relationship.'
+    assert not list((ROOT/'diagrams').glob('*.mmd')) and not list((ROOT/'diagrams').glob('*.dot')), 'Obsolete diagram pipelines remain in the maintained package.'
     return len(manifest['diagrams'])
 
 
@@ -732,13 +862,20 @@ def check_links():
     return checked
 
 
+def select_case_record(rows, entity, selector):
+    matches = [r for r in rows if r[primary(entity)] == selector['id'] and ('version' not in selector or r['version'] == selector['version'])]
+    if not matches:
+        raise AssertionError('Case references an unavailable exact entity version: ' + repr(selector))
+    return max(matches, key=lambda x: x['version'])
+
+
 def apply_cases(base, schema):
     cases = load(ROOT / 'examples/semantic-cases.json')['cases']
     for case in cases:
         candidate = copy.deepcopy(base)
         for mutation in case.get('mutations', []):
             rows = candidate['records'][mutation['entity']]
-            record = next(r for r in rows if r[primary(mutation['entity'])] == mutation['id'])
+            record = select_case_record(rows, mutation['entity'], mutation)
             parts = [p.replace('~1', '/').replace('~0', '~') for p in mutation['path'].split('/')[1:]]
             parent = record
             for part in parts[:-1]:
@@ -751,10 +888,10 @@ def apply_cases(base, schema):
         for addition in case.get('appendRecords', []):
             candidate['records'][addition['entity']].append(copy.deepcopy(addition['record']))
         for target in case.get('rehash', []):
-            row = next(r for r in candidate['records'][target['entity']] if r[primary(target['entity'])] == target['id'])
+            row = select_case_record(candidate['records'][target['entity']], target['entity'], target)
             if target['entity'] == 'Snapshot':
                 row['manifestDigest'] = digest({k: v for k, v in row.items() if k != 'manifestDigest'})
-            elif target['entity'] == 'SourceRevision':
+            elif target['entity'] == 'Source':
                 row['contentDigest'] = digest(row['payload'])
         result = schema_errors(schema, candidate)
         if not result:
@@ -765,7 +902,7 @@ def apply_cases(base, schema):
         else:
             assert set(case['expectedCodes']) <= codes, f'Case {case["id"]} missed expected violations {case["expectedCodes"]}; got {sorted(codes)}'
         for assertion in case.get('assertions', []):
-            row = next(r for r in candidate['records'][assertion['entity']] if r[primary(assertion['entity'])] == assertion['id'])
+            row = select_case_record(candidate['records'][assertion['entity']], assertion['entity'], assertion)
             value = row
             for part in assertion['path'].split('/')[1:]:
                 value = value[int(part)] if isinstance(value, list) else value[part]
@@ -783,7 +920,7 @@ def main():
         'Semantic checks cover declared invariants and adversarial examples, not all possible domain behavior.',
         'Fixture digest checking is a restricted subset, not a complete RFC 8785 conformance implementation.',
         'Source/profile coverage checks verify named inventories and mappings, not full native SDK payload conformance.',
-        'Diagram checks establish entity coverage, XML validity and provenance; visual review and Mermaid syntax are separate gates.',
+        'Diagram checks establish Draw.io entity/relationship coverage and export provenance; visual review is a separate recorded gate.',
     ]}
     try:
         schema = load(ROOT / 'model/schema.json'); examples = load(ROOT / 'model/examples.json')

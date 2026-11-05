@@ -1,104 +1,458 @@
 {
-  "schemaSha256": "c3b6b768bc4be456d9e83d52f5471298c46b98336d3debc4f3cdf1cfd2ec6161",
-  "renderer": "dot - graphviz version 2.42.4 (0)",
-  "mermaid": "Editable sources; SVG is rendered from the same schema via Graphviz, not claimed to be Mermaid render parity.",
+  "format": "drawio-atlas/1",
+  "schemaSha256": "5ed58f736388fffa7fd5d816be4797aa6ff419c86d00647022b2f75f2ef67011",
+  "drawio": {
+    "path": "diagrams/model.drawio",
+    "sha256": "26a307484ae7b5d78d1ca6c171409700fb0c59c601af339d43dbe32ad4553162",
+    "bytes": 270320
+  },
+  "reference": {
+    "path": "model/REFERENCE.md",
+    "sha256": "37dd4ab2b17510c8b967e2c24eb5bfc2670fcfda780c8cfffcf9c5900e0cf427",
+    "bytes": 51745
+  },
+  "renderer": {
+    "name": "Draw.io SVG engine",
+    "version": "32.6.10",
+    "sourceRepository": "https://github.com/jgraph/drawio",
+    "sourceCommit": "c72c9a98b7a6ce392556ed04c05e0ff19f43f5c3",
+    "runtime": "JSDOM 26.1.0; @napi-rs/canvas 0.1.100",
+    "entryPoint": "export.js render + Graph.getSvg",
+    "network": "No network used during rendering"
+  },
+  "rasterizer": "Inkscape 1.4 (e7c3feb100, 2024-10-09)",
+  "renderReport": {
+    "path": "diagrams/render-report.json",
+    "sha256": "d01bb24b00ceb55c9280ec63b82482e0ce0d03f269bb5c9d8ad5ef71a410addb",
+    "bytes": 52555
+  },
+  "summary": {
+    "entities": 36,
+    "relationships": 45,
+    "pages": 8,
+    "allEntitiesOnOverview": true,
+    "allEntitiesOnDetailedSheets": true,
+    "allRelationshipsOnDetailedSheets": true
+  },
   "diagrams": [
     {
-      "mmd": {
-        "path": "diagrams/complete-model.mmd",
-        "sha256": "5e2eb587f0ae109b5b3fc9318a072c77e65889f9e1e6143b2064597494192c86"
-      },
-      "dot": {
-        "path": "diagrams/complete-model.dot",
-        "sha256": "69e0fb65a2b5b2c9ec3cfcb2797b9f34d9831de187fd544540e22ff18b38066f"
+      "id": "complete-model",
+      "title": "01 \u00b7 Complete model",
+      "kind": "overview",
+      "entities": [
+        "Workspace",
+        "Connection",
+        "Resource",
+        "Collection",
+        "Source",
+        "ReadAttempt",
+        "Observation",
+        "Projection",
+        "Snapshot",
+        "WorkItem",
+        "Command",
+        "System",
+        "UserJourney",
+        "Service",
+        "Dependency",
+        "HealthEvent",
+        "EventContext",
+        "EntityImpact",
+        "Communication",
+        "LifecycleEntry",
+        "ComponentDeployment",
+        "ResiliencePolicy",
+        "ResilienceAssessment",
+        "Finding",
+        "Recommendation",
+        "AgentSpace",
+        "Investigation",
+        "Execution",
+        "JournalRecord",
+        "ApprovalRequest",
+        "Asset",
+        "Scenario",
+        "Run",
+        "StepRun",
+        "StepAttempt",
+        "Experiment"
+      ],
+      "primaryEntities": [
+        "Workspace",
+        "Connection",
+        "Resource",
+        "Collection",
+        "Source",
+        "ReadAttempt",
+        "Observation",
+        "Projection",
+        "Snapshot",
+        "WorkItem",
+        "Command",
+        "System",
+        "UserJourney",
+        "Service",
+        "Dependency",
+        "HealthEvent",
+        "EventContext",
+        "EntityImpact",
+        "Communication",
+        "LifecycleEntry",
+        "ComponentDeployment",
+        "ResiliencePolicy",
+        "ResilienceAssessment",
+        "Finding",
+        "Recommendation",
+        "AgentSpace",
+        "Investigation",
+        "Execution",
+        "JournalRecord",
+        "ApprovalRequest",
+        "Asset",
+        "Scenario",
+        "Run",
+        "StepRun",
+        "StepAttempt",
+        "Experiment"
+      ],
+      "relationshipIds": [
+        0,
+        7,
+        13,
+        17,
+        18,
+        27,
+        30,
+        33,
+        38,
+        40,
+        41,
+        42,
+        3,
+        4,
+        6,
+        14,
+        31,
+        34
+      ],
+      "pageSize": {
+        "width": 2060,
+        "height": 1640
       },
       "svg": {
         "path": "diagrams/complete-model.svg",
-        "sha256": "feddbb35182818be77b53c37973ba87b48c63074e406ef855071015ccba922c8"
+        "sha256": "d3011f843d29f2ba4dc1b2698dc6dcb37ab55d91dabf6d41071f4efedf9983cc",
+        "bytes": 81995
+      },
+      "png": {
+        "path": "diagrams/complete-model.png",
+        "sha256": "98a125e976d032c7dfb2d6d2ca4e6811c8b12790daf08fd8b023c836053553cf",
+        "bytes": 308707
       }
     },
     {
-      "mmd": {
-        "path": "diagrams/foundation.mmd",
-        "sha256": "39f275a9a1d935c8e04dc0c9bad0321dd9f81343bc8060592be1af520d1a47dd"
-      },
-      "dot": {
-        "path": "diagrams/foundation.dot",
-        "sha256": "993763e53a4f585f7d353c4f339d4ca2f78510f1f54e08ee9f97f98a42c82a0d"
+      "id": "foundation",
+      "title": "02 \u00b7 Scope and operator work",
+      "kind": "detail",
+      "entities": [
+        "Workspace",
+        "Connection",
+        "Resource",
+        "WorkItem",
+        "Command",
+        "System",
+        "Collection"
+      ],
+      "primaryEntities": [
+        "Workspace",
+        "Connection",
+        "Resource",
+        "WorkItem",
+        "Command"
+      ],
+      "relationshipIds": [
+        0,
+        1,
+        2,
+        3,
+        44
+      ],
+      "pageSize": {
+        "width": 1720,
+        "height": 1200
       },
       "svg": {
         "path": "diagrams/foundation.svg",
-        "sha256": "e5cc869a0a0194cdf96f2c6090f5209e36e3cb69eed2fea0d228b046bdc7a15a"
+        "sha256": "ef716577cd31915713101edb24829cba3d821ed683f0ed4047778f2a2351ddeb",
+        "bytes": 23235
+      },
+      "png": {
+        "path": "diagrams/foundation.png",
+        "sha256": "3afed4242b32b083114369d5c6b74e4c91bc285f1a671c7bd345932cff5a55f9",
+        "bytes": 181024
       }
     },
     {
-      "mmd": {
-        "path": "diagrams/workload.mmd",
-        "sha256": "9afd8933170269cf96eb56b9406e1272e369dc5c64089485dd07e55323166cac"
+      "id": "evidence",
+      "title": "03 \u00b7 Collection, evidence and history",
+      "kind": "detail",
+      "entities": [
+        "Collection",
+        "ReadAttempt",
+        "Observation",
+        "Source",
+        "Projection",
+        "Snapshot",
+        "Command"
+      ],
+      "primaryEntities": [
+        "Collection",
+        "ReadAttempt",
+        "Observation",
+        "Source",
+        "Projection",
+        "Snapshot"
+      ],
+      "relationshipIds": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "pageSize": {
+        "width": 1720,
+        "height": 1200
       },
-      "dot": {
-        "path": "diagrams/workload.dot",
-        "sha256": "739772db1afa00adf2f2b966a7987b48dd5e35e9096e0b34ca6976e32c6d7e40"
+      "svg": {
+        "path": "diagrams/evidence.svg",
+        "sha256": "e97536f0a1a76ccd04b815f86d512927cd31b3cb10ff383ffd3f59e85a26e072",
+        "bytes": 29281
+      },
+      "png": {
+        "path": "diagrams/evidence.png",
+        "sha256": "353deb12e3478f012b212e8a6c244aae66fd580083f2b4bdf930690b61d352a0",
+        "bytes": 216000
+      }
+    },
+    {
+      "id": "workload",
+      "title": "04 \u00b7 Workload catalogue",
+      "kind": "detail",
+      "entities": [
+        "System",
+        "UserJourney",
+        "Service",
+        "Dependency",
+        "Resource"
+      ],
+      "primaryEntities": [
+        "System",
+        "UserJourney",
+        "Service",
+        "Dependency"
+      ],
+      "relationshipIds": [
+        13,
+        14,
+        15,
+        17,
+        16
+      ],
+      "pageSize": {
+        "width": 1720,
+        "height": 1200
       },
       "svg": {
         "path": "diagrams/workload.svg",
-        "sha256": "707c72b92bcbcb7a0854dae534ab35290a77d221e8dbcc34dc143ad62e630fe0"
+        "sha256": "c1204ba4ff0fa54493d42d3acc6431cd1913b94478f79ec9ba1d7932028299d0",
+        "bytes": 20213
+      },
+      "png": {
+        "path": "diagrams/workload.png",
+        "sha256": "d3764d5e84fa6127642f5cc58c0ca11ea04c28cbbd03fbd3599f4614188e0b60",
+        "bytes": 180904
       }
     },
     {
-      "mmd": {
-        "path": "diagrams/health.mmd",
-        "sha256": "6945b56b0bf175e7de9d90492fa128d2afe7dc7dde2245fc714a3ab745fb82f2"
-      },
-      "dot": {
-        "path": "diagrams/health.dot",
-        "sha256": "6304ceeb8211f0fc31618616293c866d1d2aefcc3e6fd7875c7901eec2de5f5c"
+      "id": "health",
+      "title": "05 \u00b7 Health events and lifecycle",
+      "kind": "detail",
+      "entities": [
+        "HealthEvent",
+        "EventContext",
+        "Communication",
+        "EntityImpact",
+        "LifecycleEntry",
+        "ComponentDeployment",
+        "Snapshot",
+        "Resource",
+        "Projection"
+      ],
+      "primaryEntities": [
+        "HealthEvent",
+        "EventContext",
+        "Communication",
+        "EntityImpact",
+        "LifecycleEntry",
+        "ComponentDeployment"
+      ],
+      "relationshipIds": [
+        18,
+        20,
+        19,
+        21,
+        12,
+        22,
+        23,
+        24
+      ],
+      "pageSize": {
+        "width": 1720,
+        "height": 1200
       },
       "svg": {
         "path": "diagrams/health.svg",
-        "sha256": "795aba10a22c6c1999cae86227e4fe88ab625c76afbf775661264b6875865336"
+        "sha256": "5e251c8de593d0b6f3133cae548da2e3e9cbc8b1d7f5575a0803509c3421a293",
+        "bytes": 31741
+      },
+      "png": {
+        "path": "diagrams/health.png",
+        "sha256": "b0950a4fb61844644bd9cc7f64fb2cb5d91196d8b6e537ab49a2893d87398aba",
+        "bytes": 234343
       }
     },
     {
-      "mmd": {
-        "path": "diagrams/resilience.mmd",
-        "sha256": "90832d4d98a7cb0ef14108c455db73c982c99f9b51d1a8a4edef3b1ed744cbf3"
-      },
-      "dot": {
-        "path": "diagrams/resilience.dot",
-        "sha256": "8ba14f47f8947ee46201185b4df4feaa02ff735d1735a275782b807e42a14aa7"
+      "id": "resilience",
+      "title": "06 \u00b7 Resilience context and findings",
+      "kind": "detail",
+      "entities": [
+        "Service",
+        "ResiliencePolicy",
+        "ResilienceAssessment",
+        "Finding",
+        "Recommendation",
+        "Snapshot"
+      ],
+      "primaryEntities": [
+        "ResiliencePolicy",
+        "ResilienceAssessment",
+        "Finding",
+        "Recommendation"
+      ],
+      "relationshipIds": [
+        25,
+        26,
+        28,
+        29,
+        27
+      ],
+      "pageSize": {
+        "width": 1720,
+        "height": 1200
       },
       "svg": {
         "path": "diagrams/resilience.svg",
-        "sha256": "98cb92a1b5e51def0a51da92311f5b9161c47d79529db4946e94f44c199cb4e5"
+        "sha256": "366613ea74ae3f9f886d38061dadec1660dc450a8b6e35343d2fbc7587f1af2c",
+        "bytes": 24354
+      },
+      "png": {
+        "path": "diagrams/resilience.png",
+        "sha256": "31488066150f8c6530ba721849c05d93e41c25d54bd13a9cd4d7380c2f7136f3",
+        "bytes": 219725
       }
     },
     {
-      "mmd": {
-        "path": "diagrams/investigation.mmd",
-        "sha256": "248fdc005511b15d79aba56c693b2180c929b31ff7ba8b3f37d5325f558b343a"
-      },
-      "dot": {
-        "path": "diagrams/investigation.dot",
-        "sha256": "9d67b29d55f4b2f81295c1672f8e183c507aac7a916093d430061dbb91a20f89"
+      "id": "investigation",
+      "title": "07 \u00b7 Investigation and execution",
+      "kind": "detail",
+      "entities": [
+        "AgentSpace",
+        "Asset",
+        "Investigation",
+        "Execution",
+        "JournalRecord",
+        "ApprovalRequest",
+        "Snapshot",
+        "Command"
+      ],
+      "primaryEntities": [
+        "AgentSpace",
+        "Asset",
+        "Investigation",
+        "Execution",
+        "JournalRecord",
+        "ApprovalRequest"
+      ],
+      "relationshipIds": [
+        30,
+        31,
+        36,
+        32,
+        33,
+        34,
+        35,
+        37
+      ],
+      "pageSize": {
+        "width": 1720,
+        "height": 1200
       },
       "svg": {
         "path": "diagrams/investigation.svg",
-        "sha256": "7c765e394b445fb9c602b32f2b1b1dcb80661929fccf32cc97be451b667306d5"
+        "sha256": "29d68081738f158e3e33b70c48e66c35fcad912cd062e5f31778fd32ac2eddf2",
+        "bytes": 29987
+      },
+      "png": {
+        "path": "diagrams/investigation.png",
+        "sha256": "bac87b190f493b64f5bc40d28c21dfdc615924849d0d5f63e641ace23b58f176",
+        "bytes": 225561
       }
     },
     {
-      "mmd": {
-        "path": "diagrams/workflow.mmd",
-        "sha256": "3a687dda2d97ad093b2afdf493d9b10166e83e40ad44b2c534594fbe0c0d8023"
-      },
-      "dot": {
-        "path": "diagrams/workflow.dot",
-        "sha256": "825f061b69157546c553bfb00087b6946b6857e5d2dbf3e259bc6ef018b43b59"
+      "id": "workflow",
+      "title": "08 \u00b7 Published scenarios and execution",
+      "kind": "detail",
+      "entities": [
+        "Scenario",
+        "Run",
+        "StepRun",
+        "StepAttempt",
+        "Experiment",
+        "Snapshot",
+        "ResilienceAssessment"
+      ],
+      "primaryEntities": [
+        "Scenario",
+        "Run",
+        "StepRun",
+        "StepAttempt",
+        "Experiment"
+      ],
+      "relationshipIds": [
+        38,
+        40,
+        41,
+        39,
+        42,
+        43
+      ],
+      "pageSize": {
+        "width": 1720,
+        "height": 1200
       },
       "svg": {
         "path": "diagrams/workflow.svg",
-        "sha256": "4674f6a42028fe783c2a5b0a4451175eaf59803da88c5dca8100d46ebcad670f"
+        "sha256": "caa78d53d46776329237aac7910b2ec58c2298de353ebc6a280f755815df6ca7",
+        "bytes": 26798
+      },
+      "png": {
+        "path": "diagrams/workflow.png",
+        "sha256": "c581c95555830c939ff7755742f557ac49d6375b5098e7868303463e44261916",
+        "bytes": 238455
       }
     }
   ]

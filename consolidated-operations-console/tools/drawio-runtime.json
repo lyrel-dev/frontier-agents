@@ -1,0 +1,11 @@
+{
+  "version": "32.6.10",
+  "sourceRepository": "https://github.com/jgraph/drawio",
+  "sourceCommit": "c72c9a98b7a6ce392556ed04c05e0ff19f43f5c3",
+  "engineFiles": {
+    "js/export-init.js": "cf9b6518b7f34c62ff0cc3f1f049fae340d2e7f8b486b3261ee5bff211a73d58",
+    "js/app.min.js": "db039f8314e86388da61e7ebf4472ebdcfe63b58e92bffd1f2daac961932626c",
+    "js/extensions.min.js": "81d4016892fb3486268301efe0c6a68e8c00d76233b2cabae8b21850728a3b5a",
+    "js/export.js": "308264b2411d7197cc03e0d43a83df770da7b12832f3dc7bb0c00cf1e6ea94e3"
+  }
+}

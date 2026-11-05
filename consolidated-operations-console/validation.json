@@ -2,25 +2,25 @@
   "status": "PASS",
   "scope": "OFFLINE_CONTRACTS_ONLY",
   "checks": {
-    "entities": 37,
-    "modelRecords": 173,
-    "semanticCases": 45,
+    "entities": 36,
+    "modelRecords": 215,
+    "semanticCases": 79,
     "inventoryFiles": 226,
     "mappings": 174,
     "sourceAliases": 340,
     "sourceConceptsChecked": 182,
     "adapterProfiles": 65,
-    "classDiagrams": 7,
-    "operations": 101,
-    "requestResponseExamples": 202,
+    "classDiagrams": 8,
+    "operations": 108,
+    "requestResponseExamples": 216,
     "errorExamples": 3,
-    "relativeLinks": 117
+    "relativeLinks": 137
   },
   "limitations": [
     "No API server, authentication, persistence, scheduler, provider call, expression evaluation or adapter is executed.",
     "Semantic checks cover declared invariants and adversarial examples, not all possible domain behavior.",
     "Fixture digest checking is a restricted subset, not a complete RFC 8785 conformance implementation.",
     "Source/profile coverage checks verify named inventories and mappings, not full native SDK payload conformance.",
-    "Diagram checks establish entity coverage, XML validity and provenance; visual review and Mermaid syntax are separate gates."
+    "Diagram checks establish Draw.io entity/relationship coverage and export provenance; visual review is a separate recorded gate."
   ]
 }

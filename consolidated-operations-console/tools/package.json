@@ -3,10 +3,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "check": "node check_mermaid.mjs"
+    "render": "node render_drawio.mjs",
+    "check": "python render_model.py --check"
   },
   "devDependencies": {
     "jsdom": "26.1.0",
-    "mermaid": "11.12.2"
+    "@napi-rs/canvas": "0.1.100"
   }
 }

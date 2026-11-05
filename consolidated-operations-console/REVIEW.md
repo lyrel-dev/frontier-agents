@@ -1,58 +1,101 @@
-# Consolidation design review
+# Consolidation model and diagram review
 
-**Review date:** 5 November 2026. **Baseline:** the source analysis inventory on `main` at `d926a81c584b6b69f41bfb9641532c4f8f2d7cb3`. **Scope:** the consolidated model, source crosswalk, AWS RPC style operation contract and worked examples. This is a design and artifact consistency review; it does not certify an implemented service, authentication system, adapter or workflow runtime.
+**Review date:** 5 November 2026. **Reviewed package:** first consolidation at [`db142c8`](https://github.com/lyrel-dev/frontier-agents/commit/db142c84bcfd691d5c71071681731cac81a52c7b). **Source-analysis baseline:** `d926a81c584b6b69f41bfb9641532c4f8f2d7cb3`. **Current contract:** revision 2.
 
-The review concentrates on preserving meaning when four service models and the assessment workflow are brought together: identity and parent scope, immutable evidence, local versus provider authority, authorization, versioning, replay and uncertain remote effects. The [model](MODEL.md), [protocol](api/PROTOCOL.md) and [operation catalog](api/OPERATIONS.md) are the normative deliverables. The [validator](tools/validate.py) checks structural and selected semantic invariants; source adapter acceptance and runtime concurrency remain delivery gates.
+The user's review identified a governing model defect: all entities must be versioned, and version records do not warrant separate entities. It also rejected the diagram format and layout. This review addresses those defects across schemas, references, operations, examples, source mappings and diagrams.
 
-**Outcome:** the concrete findings below are closed in the final design artifacts. No unresolved P1 or P2 contradiction remains from this review. Implementation behavior is still subject to the delivery gates at the end of this document.
+The earlier review's claim that no material contradiction remained was too broad. Schema-valid examples and diagram entity counts did not test whether the chosen entity boundaries and versioning mechanism met the intended design. Revision 2 adds those explicit acceptance criteria. Personal Context was disabled; the current user instruction and repository evidence supply the recorded basis.
 
-## Findings and disposition
+## Findings in the first consolidation
 
-`P1` identifies a contradiction that could lose evidence or create unsafe operational meaning. `P2` identifies a narrower model, contract or example mismatch. “Closed” means the design now expresses the required boundary; it does not mean a future implementation has proved the behavior.
+P1 denotes a structural/history contradiction that can change the meaning of retained state. P2 denotes a narrower consistency or presentation defect. Correction below describes the delivered contract; implementation proof remains a later gate.
 
-| ID | Priority | Finding | Resolution and evidence | Status |
-| --- | --- | --- | --- | --- |
-| R01 | P1 | A read attempt without its exact request and response references cannot establish query membership, cursor history or an empty successful response. A settlement operation that appends a second attempt also conflicts with recording intent before dispatch. | `ReadAttempt.requestSourceRevisionId` and nullable `responseSourceRevisionId` retain the capture. `RecordReadAttempt` settles the same server-created `STARTED` identity; query, start time and authorization provenance are server-owned. Response/object ingestion can occur while that attempt is open. Lost response remains explicit rather than becoming an empty success. See [model schema](model/schema.json) and [operation definitions](api/operations.json). | Closed |
-| R02 | P1 | Referencing a mutable collection or current graph cannot reproduce a historical snapshot, and a single capture time cannot describe a collection window. | `Snapshot` owns frozen coverage and settled read-attempt facts, exact evidence/projection references, graph contents and `captureStartedAt`/`captureFinishedAt`. `CaptureSnapshot` closes over retained evidence and cannot replace a Run's admission snapshot. Exact source time remains separate from capture time. | Closed |
-| R03 | P2 | A source citation that identifies only a payload revision loses the distinction between two passages or structured locations inside that payload. | `EvidenceRef` supports a typed `EvidenceLocator`; the DevOps `ProjectionSource` crosswalk preserves the locator with its exact revision. See [source mapping](MAPPING.md). | Closed |
-| R04 | P2 | Local work completion, verification, assignment and recommendation estimates were modeled but lacked corresponding narrow write paths. Using an authenticated audit identity as the only owner type also lost team assignments present in the Health prototype. | WorkItem keeps completion and verification separately; `RecordWorkItemVerification` requires rationale/evidence. Work and recommendation commands resolve an assignee through the trusted directory. `AssigneeRef` allows human, group and service owners; `ActorRef` remains the server-attributed audit principal. Recommendation estimates use their own typed local enrichment and revision. | Closed |
-| R05 | P2 | Requiring `singleUse` on a rejected approval would conflict with the reviewed native rejection shape. | `DecideApproval` requires `singleUse=true` only for approval, forbids it for rejection, and explicitly omits the native pattern/TTL fields on rejection. Decision and resume remain separate commands with independently uncertain outcomes. No reusable grant or editable scope pattern is implied. | Closed |
-| R06 | P2 | A pagination `snapshotId` could be mistaken for an immutable business Snapshot; specialized version preconditions were missing their conflict error family. | Page metadata uses `traversalId`. The operation generator includes `VersionConflictException` for all `expected*Version` inputs, including collection completion and assessment admission. Local traversal completion still says nothing about upstream completeness. | Closed |
-| R07 | P2 | The create-scenario example returned a default published revision even though creation only authors a draft. | `CreateScenario` now returns `defaultRevisionId=null` and `archived=false`; publication is a distinct operation. Examples are independent synthetic contract illustrations, not an execution log. | Closed |
-| R08 | P2 | Retained normalized request examples needed a declared profile, and source payload storage needed to distinguish a real JSON null from bytes held outside the inline payload. | `console.collection.request/v1` declares the request capture boundary and digest meaning. `SourceRevision.payloadStorage` distinguishes inline JSON, including null, from artifact-backed content. The ingestion DTO requires the same discriminator and copies its conditional artifact-reference/null-payload rule. All worked-fixture source profile IDs resolve to registered descriptors. | Closed |
-| R09 | P1 | Generic retained-evidence reads and lists must not expose broader source scopes or derived counts merely because the caller knows a local ID. | The protocol rechecks current authorization on reads, replay, pagination, artifact access and dispatch. Generic projection/snapshot getters require access to the entire returned retained closure and deny incomplete access in this contract. Lists return only authorized complete records and no hidden aggregate count; cursors bind the authorization epoch. Snapshots preserve evidence rather than historical entitlement. | Closed |
+| ID | Priority | Observed defect | Correction and review evidence |
+| --- | --- | --- | --- |
+| V01 | P1 | Only seven of 37 entities had a top-level version. Collection and Run used projectionVersion, while many changing entities had no equivalent. | All 36 current entities require version, createdAt and updatedAt. The schema identifies logical identity, exact record identity and write authority. The validator checks the common contract for every entity. |
+| V02 | P1 | SourceRevision and ProjectionRevision identified renditions; Scenario and ScenarioRevision split one concept into a root and a version-only entity. | Source and Projection have stable IDs with ordinary entity versions. Scenario owns draft, publication and archive states. There are no revision-only domain classes. Changed and reverted source content demonstrates stable identity with advancing versions. |
+| V03 | P1 | Evidence and entity references used IDs alone. Collapsing revision entities without changing references would make history follow current state. | EntityRef/EvidenceRef require kind, ID and version. EntityIdentity is reserved for deliberate live navigation. Exact retrieval rejects a missing/unavailable version rather than falling back to the current head. |
+| V04 | P1 | x-mutable=false labeled Collection, ReadAttempt, Command, Run and StepRun despite their state transitions. It conflated user write access with lifecycle change. | Write authority and sealing rules replace the mutable flag. Authorized publishers append versions; client editability is a separate operation contract. Settled/published content is never reopened. |
+| V05 | P1 | Dependency governance and Recommendation enrichment maintained separate nested version counters, alongside local and projection counters elsewhere. | Owned values inherit their entity version. expectedVersion addresses Dependency or Recommendation. Narrow field authority remains explicit; a newer provider representation may correctly conflict with a stale local edit. |
+| V06 | P1 | Snapshot copied ReadAttempt entities while those records also existed as canonical roots, creating competing historical representations. | Snapshot.members pins canonical entity versions, including failed/empty ReadAttempts and complete retained evidence closure. Owned capture values remain inside Snapshot; independently authoritative entities are referenced. |
+| V07 | P1 | Run and StepRun could resolve current child state through parent identity/attempt number when reconstructing a historical result. | Each Run version pins its StepRun versions through steps. StepRun.selectedAttempt pins one exact StepAttempt version. attemptNo identifies a retry attempt and does not substitute for version. |
+| V08 | P2 | Asset embedded an array of AssetVersion values, creating another special history mechanism beside the main entity model. | Each Asset version captures nativeVersion, source and files. Native version remains a provider fact, while application history uses Asset's common version contract. |
+| V09 | P2 | Recommendation enrichment duplicated WorkItem assignment and workState, allowing competing operator workflows. Recommendation identity also depended on each observation occurrence. | WorkItem owns assignment/state. Recommendation enrichment keeps estimates/notes under Recommendation.version. A captured suggestion uses Finding + exact Source version + group/ordinal when a native key is absent; repeated observations cannot multiply it. |
+| V10 | P2 | Mermaid/Graphviz artifacts and a tall all-edge layout did not satisfy the requested authoring format or provide an acceptable reading layout. Entity coverage was used as a proxy for diagram usability. | The editable source is an eight-page Draw.io atlas. The overview includes all entities with a selected connector set; focused pages cover relationships using boundary references. Native rendered exports, page-level visual review and structural coverage are separate evidence. |
 
-## Boundaries confirmed
+The rejected representation choices are visible in the original [model](https://github.com/lyrel-dev/frontier-agents/blob/db142c84bcfd691d5c71071681731cac81a52c7b/consolidated-operations-console/MODEL.md), [schema](https://github.com/lyrel-dev/frontier-agents/blob/db142c84bcfd691d5c71071681731cac81a52c7b/consolidated-operations-console/model/schema.json), [protocol](https://github.com/lyrel-dev/frontier-agents/blob/db142c84bcfd691d5c71071681731cac81a52c7b/consolidated-operations-console/api/PROTOCOL.md) and [diagram sources](https://github.com/lyrel-dev/frontier-agents/tree/db142c84bcfd691d5c71071681731cac81a52c7b/consolidated-operations-console/diagrams). They remain in Git history for comparison; they are not current contracts.
 
-### Identity and ownership
+## Corrected design boundaries
 
-- All 37 canonical entities carry a Workspace boundary and an opaque local identity. The source identity retains provider partition, owning account, Region, service-specific parents and native key independently of the connection used to observe it.
-- Investigation and Execution are scoped to AgentSpace. Task membership is evidence, so Execution has no invented single-investigation parent. Journal and approval reads require their execution scope. Finding and assessment reads require Service; a Finding does not acquire a mandatory assessment owner through temporal proximity.
-- Health public, account and organization-summary contexts stay distinct. Delivery account is not impact attribution, and organization-summary contexts cannot own affected-entity children. Lifecycle entry lists require a lifecycle catalog Snapshot.
-- Workload names and membership are local metadata. Native aliases/import facts need verified bindings. Local `UpdateService` does not write provider configuration; the native Resilience write subset has explicit operation names and separate provenance.
+### Identity and history
 
-### Evidence and interpretation
+The common metadata belongs to every entity, including Observation, Source, Projection and Snapshot. A fact can stay at version 1. A changing record appends a version under its owning authority. No public update operation is implied by the existence of versions.
 
-- SourceRevision is immutable payload identity; Observation is a receipt; ReadAttempt is a request attempt, including failures and empty reads. Repeated identical polling need not create another payload revision or native object.
-- The five declared ProjectionRevision variants are the only normalized projection variants. Earlier timeline, hypothesis, assertion and other rich application renditions remain explicitly typed retained profiles. The mapping does not silently force them into unrelated entities or an undeclared projection enum.
-- DevOps native Recommendation remains a typed retained provider DTO. Canonical Recommendation refers to Resilience suggested changes scoped to the exact detail Observation and group/category/ordinal; equal text or an equal payload does not manufacture continuity.
-- Investigation results retain phase, exact completion pointer, selection basis, candidates and availability. A mitigation completion cannot replace an investigation result. Unknown, missing, empty and unavailable content remain distinguishable.
-- Reevaluation publishes a new `EVALUATION` projection over frozen inputs. It cannot rewrite a historical Run conclusion. The option to reevaluate without a new orchestration Run is labeled as a consolidation extension to the prior workflow proposal.
+Source logical identity excludes content digest. A repeated read observes the current unchanged Source version; changed content advances the version; A→B→A does not reuse an earlier version number. Provider versions, profile versions and attempt numbers remain separate meanings.
 
-### API and execution meaning
+Exact references include version. Ordinary parent IDs establish ownership but cannot load current content into a historical result. Snapshot closes over exact retained inputs. Run's child selection is similarly pinned, so a historical verdict cannot drift when a current attempt changes.
 
-- Read records are not update DTOs. Local writes use explicit writable fields, clearing rules and the correct local ownership version. Provider preconditions compare retained source context and do not claim an AWS compare-and-swap feature.
-- Mutations bind tokens to authenticated workspace/principal, operation and canonical intent. Authorization precedes replay; an exact completed replay precedes current-version checks. Reused tokens with different preconditions conflict. Provider operations without native idempotency retain an unknown outcome after response loss instead of being repeated blindly.
-- Snapshot capture and projection publication use trusted assemblers/rules. A caller cannot upload an arbitrary successful verdict, claim coverage, replace Run admission inputs or submit trusted operation locks through a scenario draft.
-- Approval, resume, native tool execution and recovery are distinct facts. Native FIS actions remain experiment-owned values; no individual action stop, pause or retry operation is fabricated. Workflow cancellation fences new main dispatch and preserves independent cleanup and unresolved-effect states.
-- Response getters and full-record lists resolve to the canonical schema. Native peripheral management families remain enumerated in the [adapter registry](model/adapter-profiles.json), with explicit deferred commands and reasons; phase-one specifications do not imply live support for those services.
+### Ownership and operation contracts
 
-## Artifact verification
+Local writes compare the owning entity's version and update only declared fields. Provider commands retain their native authority/effect boundary. Trusted collector or runtime writes can publish observed/lifecycle state without granting clients arbitrary state setters.
 
-The final crosswalk has 174 mapping rows covering 340 distinct service/concept aliases and 65 declared source or projection profiles. Its normalized bindings reference the canonical model; source profile IDs in the worked fixture resolve to the registry. The diagrams and source-operation mapping remain tied to the pinned `main` inventory.
+WorkItem owns operator workflow; Recommendation enrichment and Dependency governance are owned local values. The universal version serializes the owning representation. The design deliberately accepts conservative stale-version conflicts instead of inventing another overlay version mechanism.
 
-An independent `python consolidated-operations-console/api/generate.py --check` run confirms the four generated API artifacts match the 101-operation generator. The final-file review also confirmed the required storage discriminator and artifact conditional, distinct group-capable assignee type, full evidence-closure authorization and authorized list semantics. The API artifact validation covers all 101 synthetic request/response pairs and three typed error examples. Repository-wide structural and semantic checks are recorded by [tools/validate.py](tools/validate.py); these are contract checks, not live AWS integration tests.
+Scenario publication creates a PUBLISHED version of the same entity. New authoring creates a later DRAFT. Run pins an exact PUBLISHED version and separately checks current admission policy: an ARCHIVED current head blocks a new run, while a current DRAFT does not mutate an earlier publication. Replay of a previously admitted intent remains governed by idempotency ordering.
 
-## Remaining delivery gates
+### Source meaning preserved
 
-The artifacts specify required semantics and provide structural checks. Production delivery must still prove authenticated source capture, lossless adapter translation, durable receipt/version transactions, evidence-authorized reads, provider-specific outcome reconciliation and workflow fencing/finalization. The [consolidation plan](CONSOLIDATION_PLAN.md) and [protocol delivery gates](api/PROTOCOL.md) make these implementation boundaries explicit. No source prototype's existing tests are represented as tests of a newly implemented consolidated service.
+The common history mechanism does not collapse domain distinctions. PUBLIC Health visibility does not imply account impact; Finding remains service-scoped; Investigation/Execution membership remains observed; native FIS actions remain owned values; local completion cannot establish provider recovery. Source, receipt and derivation remain distinct substantive concepts.
+
+The crosswalk preserves source names and provider profiles while changing current target representations. Earlier SourceRevision, ScenarioRevision and AssetVersion names occur only as source aliases, migration descriptions or review evidence.
+
+## Earlier findings retained under the new model
+
+The first review addressed useful narrower issues. Their semantics remain, with the common version/reference contract replacing the earlier representation choices.
+
+| Earlier ID | Preserved requirement in revision 2 |
+| --- | --- |
+| R01 | ReadAttempt pins exact requestSource/responseSource and settles the same attempt identity. A lost response is not an empty success. |
+| R02 | Snapshot pins a closed retained closure and capture interval, including ReadAttempt versions. Capture time does not replace source time. |
+| R03 | EvidenceLocator distinguishes passages/fields within an exact Source version. |
+| R04 | Local work completion, verification, assignment and estimates have narrow commands; WorkItem now owns all operator assignment/state. |
+| R05 | Approval requires singleUse only for approval, with rejection fields constrained; decision and resume remain separate effects. |
+| R06 | Pagination traversalId is distinct from a domain Snapshot. Version preconditions have typed conflict errors. |
+| R07 | Scenario creation yields a DRAFT version. Publication is a distinct command that creates a later PUBLISHED version. |
+| R08 | Declared request-capture profiles and payloadStorage distinguish native JSON null from artifact-held bytes. |
+| R09 | Historical reads, replay, lists and artifacts recheck current authorization; a snapshot does not freeze entitlement. |
+
+## Verification required for closure
+
+### Independent integration findings
+
+The following defects were found while exercising the corrected contracts and were closed before final validation.
+
+| Finding | Correction and regression evidence |
+| --- | --- |
+| Adding a later version could reopen a settled ReadAttempt, StepAttempt or Run. | Sealing is checked across each entity history. The three sealed-record cases reject the reopened representation. |
+| A Projection or captured Recommendation could gain a second ID for the same logical object. | Stable logical-key and uniqueness checks complement the common record key. Duplicate captures are rejected; repeated Finding observations of the same Source remain valid. |
+| Run admission references or Collection query definitions could change between lifecycle versions. | Identity-defining fields are immutable across the history. New query definitions require another Collection identity; a Run keeps its admitted Scenario and input Snapshot. |
+| A reference could point to a version published after the referring representation, and an admission snapshot could close over later terminal Run facts. | Publication-time and capture-cutoff checks reject future versions. RUN_INPUT captures the admitted workload and configuration, not its own future execution state. |
+| Recommendation selection still compared Observation occurrence IDs. | Current Finding detail is compared by exact Source version, preserving the captured Recommendation across repeated receipts. The positive repeated-observation case verifies this. |
+| A historical lifecycle projection selected the current ComponentDeployment during validation. | The validator resolves the exact subject from Projection.subjectRefs. A positive case adds a later deployment version while retaining the original projection. |
+| API examples chose unrelated first parent records, understated list completeness, reopened a resolved WorkItem and initialized an unexecuted Run verdict inconsistently. | Examples follow actual parent scope, select exact versions, include bounded list continuation, use a note-only WorkItem edit and start with NOT_EVALUATED. Composed StartRun output passes model semantics. |
+
+### Final gates
+
+[VALIDATION.md](VALIDATION.md) records executed checks and counts. Review requires both positive and adversarial evidence for these invariants:
+
+- All entity schemas and records have the common metadata; versions are unique and ordered within stable identities.
+- Same-content repeat observation, changed content and content reversion preserve the correct Source identity/version behavior.
+- Pinned references resolve exact records; absent versions, cross-scope links and current-head fallback are rejected.
+- A later entity change cannot change an older Snapshot, Run, selected child or policy context.
+- Scenario draft/publication/archive selection follows the explicit admission rule.
+- Removed revision classes, nested history arrays and overlay/projection version counters do not remain in current contracts.
+- API requests/responses, source-profile mappings, generated reference and Draw.io class/relationship coverage agree with the schema.
+- Draw.io renders are visually inspected at reading scale for clipping, overlap, label ambiguity and routing, independently of XML validity and entity counts.
+
+The examples are synthetic. These checks establish design consistency and selected invariants; they do not establish a running service, authorization implementation, persistence durability, provider effects or scheduler behavior.
+
+## Implementation gates
+
+Production delivery still requires atomic version publication/current-head selection, authorized historical access, retention integrity, lossless source adapters, durable replay, provider-specific reconciliation and workflow race/fencing checks. [CONSOLIDATION_PLAN.md](CONSOLIDATION_PLAN.md) and [api/PROTOCOL.md](api/PROTOCOL.md) define those gates. Prior prototype tests remain evidence about their own packages.

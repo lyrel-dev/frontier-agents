@@ -1,99 +1,89 @@
 # Model and API design principles
 
-The consolidation should preserve the repository's strongest design decisions while reducing repeated infrastructure concepts. A smaller model is useful only if it still tells the truth about identity, ownership, missing evidence and the effects of an operation.
+## Authority and provenance
 
-**Provenance:** these principles are recovered from `main` at `d926a81c584b6b69f41bfb9641532c4f8f2d7cb3`, inspected on **5 November 2026**. Personal Context was disabled, so earlier chats could not be retrieved. This document does not claim unobserved user preferences. The sources below record earlier decisions and corrections; the current request supplies the new consolidation objective and AWS RPC style requirement. The [inventory](INVENTORY.md) identifies the complete source boundary.
+The user's correction on **5 November 2026** governs this revision: **all entities are versioned; an entity is not created merely to represent a version; every diagram uses Draw.io and a reviewed layout**. These requirements supersede the incompatible choices in the first consolidation.
 
-## Recorded model conventions
+Personal Context was disabled when earlier interactions were requested. This document therefore uses the visible instruction and repository evidence. It does not attribute unseen preferences or approval to the user. The earlier model/API conventions below are supported by the source analyses, reviews and [editorial standard][E] at `d926a81c584b6b69f41bfb9641532c4f8f2d7cb3`. New choices made during consolidation are identified as such.
 
-### Identify the concept before offering operations
+| Governing rule | Concrete consequence |
+| --- | --- |
+| Every entity is versioned | Every schema requires stable identity, `version`, `createdAt` and `updatedAt`, regardless of whether its owner is a user command, collector, derivation or runtime. |
+| Versioning is a common entity property | Source and Projection keep their identities across versions. Scenario owns draft/publication/archive versions. There are no SourceRevision, ProjectionRevision or ScenarioRevision entities. |
+| History references exact versions | EntityRef includes kind, ID and version. ID-only EntityIdentity is reserved for explicit live navigation. Historical reads never fall back to latest. |
+| Owned values inherit their owner's version | Governance, enrichment, steps, criteria and files do not acquire competing version counters or CRUD identities merely because they appear in a screen. |
+| Draw.io is the diagram format | The editable atlas and its rendered pages use deliberate page composition, readable routing, consistent class notation and linked source sections. Entity coverage and visual quality are separate checks. |
 
-Every concept needs an explicit kind and owner: provider resource, owned configuration member, execution record, retained evidence, local workflow or derived view. A source shape does not automatically become an entity with its own CRUD lifecycle. A logical class diagram describes relationships and selected attributes; it does not claim to expose AWS's internal physical schema. [E] [F]
+## Identity, ownership and simplicity
 
-Native behavior, application behavior and synthetic examples need separate labels. For example, the DevOps investigation view is an application aggregate over a native Task of type `INVESTIGATION`; a proposed `GetInvestigation` facade must not be described as a native AWS operation. A Health acknowledgement is local workflow because Health does not expose that mutation. [D] [DR] [H]
+An entity names a domain concept with identity and lifecycle: a service, an observation, a command, a run. A version names one representation of that same concept. An attribute collection, serialization artifact or display panel does not automatically create another entity. The original reviews already required the concept and owner to be identified before offering operations. [E] [F] [FM]
 
-| Convention | Consequence for consolidation | Repository evidence |
+The first consolidation violated this distinction by making version-only classes and mixing local edit tokens, projection counters and unversioned records. Revision 2 corrects the model rather than hiding those differences behind renamed IDs. All stored versions are immutable; the owning authority can publish a successor under the same identity. An immutable fact may remain at version 1. Versioning does not imply public mutability.
+
+| Principle | Application to the model | Evidence |
 | --- | --- | --- |
-| **Give an entity independent identity only when its lifecycle requires it.** | Keep simple values within their owner. A query, alarm reference, assertion or report configuration does not need an independent CRUD resource merely because it appears in a UI. Clearly list owned values and external references alongside identity-bearing entities. | [F], especially “Model decisions kept deliberately small”; [FM] |
-| **Keep product namespace and full scope in identity.** | Preserve partition, account, Region, service/provider space, parent and native ID wherever the source contract requires them. Friendly names, array positions and unqualified IDs are not stable joins. Encode composite keys unambiguously rather than concatenating opaque components with an unsafe delimiter. | [D] Q04; [RP] “Identities, references and field presence”; [H] |
-| **Qualify relationships and cardinalities.** | Define same-run, same-context, same-service and same-snapshot foreign-key constraints. Retain explicit unresolved references. A missing cached object is not proof that the domain relation is absent. | [FR] R01; [RR] corrections; [DR] R05/R08 |
-| **Consolidate common meaning, preserve domain meaning.** | Reuse identity, provenance, collection, retention and local workflow contracts. Keep provider state vocabularies, result selection, ownership and control limits in their modules. Similar names alone do not establish equivalent entities. | [E] “Outcomes and implementation relationships”; all four reports |
+| Full identity scope is explicit | Keep provider namespace, owning account/Region, parent scope and native key. A Connection is an access path, not native identity. Friendly names and unsafe concatenation are not joins. | [D] Q04; [RP]; [H] |
+| Relationship claims are qualified | Same-workspace, same-service, same-context and same-run rules remain explicit. An unresolved object is not proof that a relationship is absent. | [FR] R01; [RR]; [DR] |
+| Common meaning is consolidated | Reuse versions, references, collection, evidence and command intent. Preserve domain-specific state, attribution and control boundaries. | [E]; [F]; [H]; [R] |
+| One owner writes one value | Service owns catalogue membership. WorkItem owns operator assignment and work state. Native provider configuration is changed only through the corresponding command boundary. | Current correction; [RP]; [HR] |
+| Open native content has a bounded location | Arbitrary JSON stays in retained native/source documents or explicit schema/content contracts. Ordinary application writes use closed typed inputs. | [D]; [RP] |
 
-### Separate source facts, observations and projections
+The current request favors a simple, extensible model. Entity count alone does not establish simplicity. A consistent identity/version/reference mechanism removes special cases while allowing typed module ownership.
 
-A logical object, a distinct payload revision, a collection observation and a derived projection revision answer different questions. The same source payload can be observed repeatedly without becoming a new logical object or a different source revision. An empty response or failed read is still relevant to collection coverage even when it yields no resource payload. A current projection must reference the exact source revisions used to compute it. [D] Q01/Q03/Q15; [DR]
+## Evidence and time
 
-| Convention | Consequence for consolidation | Repository evidence |
+Source, Observation and Projection answer different questions: what document was retained, when it was seen, and what a rule concluded. Their distinction remains useful; each now has the same entity-version mechanism. Repeated reads can observe the same Source version. A changed source payload or derivation publishes a successor without rewriting history. Failed and empty reads remain ReadAttempt facts. [D] Q01/Q03/Q15; [DR]
+
+| Principle | Consequence | Evidence |
 | --- | --- | --- |
-| **Unknown remains unknown.** | Preserve absent fields, explicit null, known empty collections, known zero, unknown provider values, inaccessible evidence, stale observations and unconfigured features as distinct conditions. Open provider enums retain their raw value. Read normalization must not manufacture a safe state. | [E]; [F] A02/A03; [H]; [RP] |
-| **A refresh does not rewrite source time.** | Keep source creation/update/occurrence/measurement time, receipt time, successful observation time, local edit time and projection computation time distinct. Recomputing a view cannot make old source evidence fresh; collecting an event cannot freshen its entities. | [DR] R06; [F] A01/A07; [H]; [RP] |
-| **Coverage names its exact scope.** | Retain the requested query/scope/window, pagination status, per-item failures, detail hydration and known gaps. A complete list traversal is not a complete external history, resolved resource selection or atomic multi-API snapshot. | [D] Q08/Q15; [F] D02; [RR] |
-| **Absence needs sufficient evidence.** | An empty page, timeout or silence cannot establish a negative assertion. Require a closed scope with adequate collection coverage. A restricted existential witness may prove presence from a valid matching record; it does not prove universal completeness. | [F] W05–W07; [FM] |
-| **Source evidence is inspectable.** | Return the exact source revision, policy context, result phase, representation and field-presence metadata behind the selected value. Retained detail cannot silently make a newer summary complete. | [D] Q01/Q07; [R]; [RP] “Evidence behind a status” |
-| **History pins meaning as well as bytes.** | Freeze the input/context, definition or policy, operation dependencies, parser/normalizer/evaluator versions, evidence references and accepted cutoff that produced a historical result. Later evidence or changed meaning creates a new result. | [F] D01/W01; [D] Q05; [RR] policy-context corrections |
-| **Hashes have a bounded meaning.** | Declare which bytes or canonical representation are hashed. A digest detects content disagreement; it does not authenticate an AWS response or make browser storage tamper-proof. Historical access still obeys current authorization and retention rules. | [D] “Model decisions strengthened by the review”; [DR] F05/F06 |
+| Unknown stays unknown | Preserve absence, null, empty collections, zero, unavailable evidence, stale observations and unconfigured features. Preserve unfamiliar provider values rather than defaulting to success. | [E]; [F] A02/A03; [H]; [RP] |
+| Entity time and source time differ | `createdAt`/`updatedAt` describe application identity/publication. Source creation/update/measurement time, observation time and projection computation remain separate. | Current versioning rule; [DR] R06; [H]; [RP] |
+| Coverage identifies its scope | Record query/window, page completion, failures, hydration and unresolved identity. A complete local traversal is not complete provider history or an atomic multi-API snapshot. | [D] Q08/Q15; [F] D02; [RR] |
+| Absence needs adequate evidence | Silence, an empty page or a timeout cannot establish universal absence. A valid presence witness does not establish full coverage. | [F] W05–W07; [FM] |
+| Conclusions expose their inputs | Pin the exact Source, Observation, Projection and subject versions, plus policy/result phase and field presence. Retained detail cannot make a new summary complete. | [D] Q01/Q07; [R]; [RP] |
+| History pins meaning | Retain exact inputs, definitions, rule/evaluator/adapter contracts, accepted cutoff and coverage. Later interpretation creates a later version or a new evaluation. | [F] D01/W01; [D] Q05; [RR] |
+| Digests have a stated meaning | Declare raw bytes or canonical representation. Hash equality does not establish native identity, observation occurrence, authenticity or current access. | [D]; [DR] F05/F06 |
 
-### Preserve independent states and counting units
+Snapshot retains a deliberately captured, closed manifest of exact entity versions. It is not a replacement for ordinary entity history. Failed and empty ReadAttempts are members of that manifest rather than duplicated entity copies.
 
-The existing reviews repeatedly found that one convenient status can conceal several different facts. The common model should expose these dimensions explicitly and allow them to disagree. [F] W04; [H]; [R]
+## Independent state and counting
 
-| Dimension | What it establishes | What it cannot establish by itself |
+Provider resource state, collection coverage, technical execution, acceptance verdict, cleanup/effect state, artifact availability and operator disposition answer different questions. The model permits these dimensions to disagree. A completed local review cannot clear a Health impact; a resolved finding cannot manufacture successful posture; a successful experiment may fail acceptance; a passed criterion may coexist with uncertain cleanup. [H] [R] [F]
+
+Counts identify their population and deduplication rule. Event, delivery, account context, impact, service, finding and criterion are different units. Public notification delivery does not add an affected account. Shared services count once in a rollup. Required workflow criteria are fixed at admission so skipping cannot improve the denominator. An empty denominator is not automatic 100 percent. [H] [R] [F] W03; [D] Q03
+
+## API design
+
+The existing Resilience facade supplies repository evidence for root POST, an AWS JSON media type, X-Amz-Target, PascalCase operations and lowerCamelCase JSON. The FIS workflow used REST bindings. A unified RPC facade follows the current request; it is not presented as a universal earlier preference. [RP] [FA]
+
+| Principle | Consequence for revision 2 | Evidence |
 | --- | --- | --- |
-| Provider resource state | What a source reported for a scoped object at its source time | Current observation freshness, local work completion or recovery |
-| Collection coverage | What the collector observed within a named query and time scope | Universal absence, exact atomic provider state or healthy workloads |
-| Execution state/outcome | Whether execution is queued, active or technically settled | Whether acceptance criteria passed |
-| Assessment verdict | Evaluation of declared criteria against pinned evidence and rules | Successful cleanup, stopped remote effects or workload recovery outside those criteria |
-| Finalization/effect state | What is known about cleanup and outstanding effects | Satisfaction of business or resilience objectives |
-| Artifact availability | Whether a particular report/content can be retrieved | Execution success or completeness of the underlying evidence |
-| Operational health/posture | A qualified observation or derivation within its evidence and policy context | Exact present health after expiry, or end-to-end journey compliance from membership alone |
-| Local operator disposition | Assignment, acknowledgement, suppression, completion or a claimed repair | A provider state transition or independently verified remediation |
+| Version the entity being changed | Use its common version for expectedVersion. Owned governance/enrichment inherits that version. This intentionally replaces the earlier package's independent overlay/projection counters. | Current user correction; earlier alternatives recorded in [RP] and [FA] |
+| Reads select a representation explicitly | A typed getter can request a version. Current lists retain entity/version pairs for the traversal. Exact historical references reject a missing or unavailable version. | Current correction; history requirements in [D] and [FA] |
+| Commands have narrow inputs | A read record is not an update DTO. Specify clearing, omission, null, collection replacement and permitted state transitions for the named operation. | [RP]; [FA] §§ 1/6 |
+| Read tolerance differs from write validation | Preserve unfamiliar provider output and diagnostics. Reject unsupported writable members and invalid unions before admitting a mutation. | [RP] |
+| Local concurrency is local | An entity version protects application admission/publication. A pinned source precondition is observed context, not a distributed AWS transaction. | [RP] |
+| Exact replay precedes current-version checks | Reauthorize, compare the complete canonical intent and return the original receipt for exact replay. Different preconditions under the same token conflict. | [FA] § 3; [RP] |
+| Admission and completion are separate | Accepted work has a durable identity and inspectable lifecycle. Accepted cancellation records intent/fencing, not proof of remote cessation. | [FA] §§ 2/4; [RP] |
+| Uncertainty is retained | A lost response is a reconciliation state. Provider replay support is operation-specific. Cancellation cannot justify a creating retry merely to discover an effect. | [F] W08–W10; [FM]; [FA] |
+| Pagination has its own boundary | Bind opaque tokens to identity/scope, operation, filters, order and retained entity/version selection. Define limits, expiration and restart behavior. | [FA] § 5; [RP]; [D] |
+| Typed errors guide recovery | Supply stable exception/code, field paths, request correlation and retry guidance. Clients do not parse human message strings to decide whether an effect occurred. | [FA] § 6; [RE] |
+| Retention preserves reference meaning | Do not cascade-delete history through a friendly-name owner or substitute current data for unavailable retained content. Apply current authorization to historical reads. | [RP]; [FA] § 1; [D] |
+| Trusted context controls authority | Workspace, actor, credentials, source claims, derived outcomes and operation locks are supplied or verified by the relevant authority. | [FA] §§ 2/6; [RP] |
 
-Local completion must not clear an AWS Health pending impact. A finding marked resolved creates a need for verification; it must not manufacture a successful assessment or healthy service. A completed experiment may have a failed acceptance criterion; a passed assessment may coexist with incomplete cleanup. [H] [R] [F]
+Changing entity identity, reference shape, version semantics, state meaning, units, replay or pagination is a breaking contract change. Revision 2 therefore uses `ConsolidatedOperationsConsole_20261105V2`. Additive compatible read fields and future provider values need tolerant consumers; write inputs remain explicit.
 
-Counts need a named population, scoped deduplication rule and qualified denominator. Events, communication deliveries, account contexts, entity impacts, resources, services, findings and required criteria have different units. Public Health visibility does not add an affected account. Shared services and findings count once in an aggregate. Required workflow criteria are frozen at admission so runtime skips cannot disappear from the pass denominator. An empty denominator is not automatic 100 percent coverage. [H] [R] [F] W03; [D] Q03
+## Domain distinctions retained
 
-## Recorded API conventions
-
-### Use explicit contracts at every boundary
-
-The Resilience package provides an existing AWS-style application facade: root `POST`, `application/x-amz-json-1.1`, `X-Amz-Target`, PascalCase operation names and lowerCamelCase JSON. It distinguishes native-backed adapters, composed reads, local commands and trusted ingestion. Those classifications explain an operation's source and effect; reusing a native name does not imply byte-for-byte native payloads. [RP] [RR]
-
-The FIS workflow proposal uses REST bindings and RFC 3339 timestamps. It shares many command semantics with the Resilience facade, but it is not evidence of a prior universal RPC preference. Adopting one AWS RPC style and one timestamp convention in the consolidated API is a **new decision made under the current user instruction**. The consolidation must preserve the stronger semantics when normalizing the transport. [FA] [RP]
-
-| Convention | Consequence for the consolidated API | Repository evidence |
+| Domain | Boundary that survives the common version model | Source |
 | --- | --- | --- |
-| **Use narrow operation-specific command DTOs.** | Accept only the writable fields of the named operation. Do not accept a read model wholesale or provide arbitrary state setters. Define omission, null, empty values and array replacement explicitly. | [RP]; [FA] §§ 1/6 |
-| **Read tolerance differs from write validation.** | Reject unsupported writable fields and invalid input unions before mutation. Preserve unfamiliar provider output values and partial representations with diagnostics instead of rejecting all reads or inventing defaults. | [RP] |
-| **Version the owner being edited.** | A configuration edit token belongs to the configuration owner. Telemetry, source observations and projection recomputation must not consume that edit revision. Local enrichment may have its own version. Immutable evidence and published revisions have no update operation. | [RP] “Mutation lifecycle”; [FA] § 3 |
-| **Local concurrency is not provider atomicity.** | Explain what an expectedVersion comparison protects and what it cannot protect against out-of-band AWS changes. Use durable command/reconciliation state around provider calls; do not promise distributed compare-and-swap. | [RP] |
-| **Resolve exact replay before mutable checks.** | Scope client-token deduplication to authenticated identity, operation and semantic payload, including conditional fields. Reauthorize the caller, then return the original receipt for an exact replay before applying a now-stale edit check. Changed payloads conflict; matching in-flight work has an explicit response. | [FA] § 3; [RP] |
-| **State idempotency retention and uncertainty.** | Document replay lifetime, expiration and recovery. HTTP replay protection alone does not guarantee exactly-once external effects. A lost provider response is a state to reconcile, not permission to infer success or dispatch a second command. | [FA] §§ 3/4; [FM] |
-| **Admission and completion are separate.** | Starting work returns a durable admitted identity and an inspectable lifecycle. Accepting cancellation records monotonic intent and fences new dispatch; it does not prove remote work has stopped. | [FA] §§ 2/4; [RP] |
-| **Finalization covers uncertain side effects.** | Retain origin intents even when a handle was never returned. After cancellation, reconciliation must not create new work. Unresolved effects remain visible and retain the required protective scope hold. | [F] W08–W10; [FM] |
-| **Pagination has its own contract.** | Use opaque tokens tied to authenticated scope, parent, operation, filters, order and a retained projection snapshot. Define page bounds, token expiry and restart behavior. Native pagination tokens are not application stream cursors. | [FA] § 5; [RP]; [D] |
-| **Typed errors guide recovery.** | Provide stable types/codes, field paths, request correlation and operation-aware retry guidance. Do not make clients parse human messages. Retrying the same intent preserves its token; changing intent requires a new one. | [FA] § 6; [RE]; [D] Q09 |
-| **Guard historical integrity when deleting.** | Reject deletion that would orphan active work or required references. Retain historical evidence/audit and an appropriate tombstone, or use archive when destructive deletion has no requirement. Do not cascade-delete history through a friendly-name owner. | [RP]; [FA] § 1 |
-| **Keep scope and credentials server-controlled.** | Authorize connection references at admission and dispatch; do not accept arbitrary credentials, provider URLs, caller-selected roles or claimed successful outcomes. Reading evidence and executing work can require distinct permissions. | [FA] §§ 2/6; [RP] |
+| Investigation | Native Task/Execution/Journal scope; observed membership; phase-specific results and exact content selection; asset native-version meaning; approval, resume, action observation and recovery. | [DR], [D] |
+| FIS | Catalogue action, template member and action execution remain different provider concepts; selected resources do not prove fault application; only documented experiment-level control is exposed. | [FR], [F] |
+| Workflow | Locked published Scenario version; admitted inputs and criteria; distinct Run/attempt identities; cancellation fencing, finalization and non-creating reconciliation. | [FM], [FA], [F]; current revision correction |
+| Health | PUBLIC/ACCOUNT/ORG_SUMMARY context; page versus delivery identity; impact versus inventory matching; catalogue facts versus observed deployments; local work versus native state. | [H], [HR] |
+| Resilience | Configured policy components and captured targets; assignment versus account ownership; service-scoped findings; captured recommendation versus local enrichment/work; topology and qualified rollups. | [RR], [R], [RP] |
 
-Compatibility includes meaning, not just JSON shape. Changing identity scope, units, state/verdict semantics, required inputs, pagination or replay guarantees is a breaking change. Additive read fields and unfamiliar provider values need tolerant consumers; request contracts remain deliberate and closed. [FA] § 6; [RP]
-
-## Domain boundaries the common model must retain
-
-| Source domain | Distinction that must survive consolidation | Source |
-| --- | --- | --- |
-| DevOps investigations | Task/Execution/Journal identity; observed task-to-execution association; phase-specific completion and exact summary reference; absent notification versus explicit no-summary versus pending hydration; arbitrary journal JSON; graph relationship meaning and scoped endpoints; asset/version/attachment/consumption distinctions; decision, resume, action observation and recovery. | [DR], [D] |
-| FIS experiments | Catalog Action versus template member versus ActionExecution; run configuration capture versus later selected resource membership; experiment-level control boundaries; independent report availability; scope lever and alarm evidence; no fictional individual action retry/stop API. | [FR], [F] |
-| General assessment workflow | Six identity-bearing concepts with owned step definitions, locks, criteria and effect references; pinned immutable dependencies; technical outcome versus verdict versus finalization; admission-frozen requirements; bounded evidence and non-creating reconciliation. | [FM], [FA], [F] |
-| Health | Event/context/impact routing for PUBLIC, ACCOUNT and ORG_SUMMARY; logical communication page versus delivery identity; impact identity versus matched resource identity; catalogue facts versus observed deployments and evidence-based applicability; operator workflow separate from native Health state. | [H], [HR] |
-| Resilience Hub | v2 contract; optional policy components and captured applicable targets; account ownership versus policy inheritance; no invented native assessment-owned finding set; recommendation values versus local enrichment; topology endpoints scoped to a capture; discovery versus health; attention rollups versus end-to-end journey compliance. | [RR], [R], [RP] |
-
-## What is new in this consolidation
-
-The current request establishes the new encasing application, a modular yet consolidated first-step data model, a class diagram covering all entities and an AWS RPC style operation surface. The source packages do not prescribe a final shared namespace, common entity count, module registry, retention schedule, database, runtime framework or deployment topology.
-
-The new specification should therefore explain its choices rather than attribute them to earlier user approval. Each source concept needs a traceable outcome: shared entity, typed module extension, owned value, external reference, derived view or explicitly deferred capability. Preserve source identities and old terminology in the crosswalk. A small core is a design goal; a reduced entity count alone is not evidence that the full source meaning was retained. [E] [F]
-
-The immediate implementation boundary is the **data model and API contract**. UI composition, durable scheduling, live provider collectors, authentication enforcement and production adapters can be added in subsequent steps. Contract checks can establish structural consistency and selected semantic invariants; they cannot establish those future runtime guarantees. Each earlier quality review makes this distinction and records failures that nominal fixture tests missed. [D] [F] [R]
+The contract and diagram checks establish consistency of the delivered artifacts and selected invariants. Runtime behavior remains subject to the phased implementation gates. Source prototype tests are evidence about those prototypes, not proof of a consolidated production application.
 
 ## Source register
 

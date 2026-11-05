@@ -1,66 +1,66 @@
 # Consolidated Operations Console
 
-**Phase 1: a modular consolidated data model and AWS RPC style API contracts.**
+**Phase 1 · contract revision 2 · uniformly versioned entities and Draw.io diagrams.**
 
-This package consolidates the work under `aws/<service-name>/analysis/**` on `main`, pinned to `d926a81c584b6b69f41bfb9641532c4f8f2d7cb3` on 5 November 2026. It introduces a common model for scope, evidence, collection, projections, snapshots, local work and commands, with typed workload, Health, resilience, investigation, workflow and FIS modules.
+This package consolidates the work under `aws/<service-name>/analysis/**` on `main`, pinned to `d926a81c584b6b69f41bfb9641532c4f8f2d7cb3` on 5 November 2026. The source inventory contains **226 active files**. The application model contains **36 entities**: 11 in the foundation and 25 in the workload, Health, resilience, investigation, workflow and FIS modules.
 
-The source inventory contains **226 active files**. The proposed model contains **37 entities**: 11 in the shared foundation and 26 in the domain modules, exposed through **101 typed RPC operations**. It is a model/contract package with offline validation; a live application, scheduler, persistence layer and AWS adapters belong to later phases.
+Every entity carries **`version`, `createdAt` and `updatedAt`**. Identity stays stable across versions; history is another representation of the same entity. A Source, Projection or Scenario has versions without a separate revision class. Exact historical references identify the entity and its version. This revision applies the user's correction to the first consolidation, published at [`db142c8`](https://github.com/lyrel-dev/frontier-agents/commit/db142c84bcfd691d5c71071681731cac81a52c7b).
+
+The deliverable is a data model and **108 typed AWS RPC style operation contracts: 74 reads and 34 mutations**, with offline checks. Collectors, persistence, authorization enforcement, command dispatch, workflow execution and the console UI are subsequent implementation phases.
 
 ## Start here
 
 | Question | Document |
 | --- | --- |
-| What previous work exists on main? | [Complete inventory](INVENTORY.md) · [Machine-readable file manifest](inventory.json) |
-| What application are we defining, and what is in this first step? | [Context and scope](CONTEXT_AND_SCOPE.md) |
-| Which earlier design conventions are retained? | [Design principles and repository evidence](DESIGN_PRINCIPLES.md) |
-| What is the consolidated model? | [Model decisions and invariants](MODEL.md) · [Every entity/field/value](model/REFERENCE.md) |
-| Where does every source-model concept go? | [Source-to-target crosswalk](MAPPING.md) · [Typed adapter/profile registry](model/adapter-profiles.json) |
-| What does the full class diagram look like? | [All 37 entities, SVG](diagrams/complete-model.svg) · [Editable Mermaid](diagrams/complete-model.mmd) |
-| How do the API operations work? | [Wire and command protocol](api/PROTOCOL.md) · [Operation catalog](api/OPERATIONS.md) |
-| What are the machine-readable contracts? | [Data model](model/schema.json) · [RPC inputs/outputs](api/rpc.schema.json) · [Operation metadata](api/operations.json) |
-| Can I inspect a connected example? | [Worked model records](model/examples.json) · [Per-operation requests/responses](api/examples.json) |
-| How do we consolidate incrementally? | [Consolidation path and acceptance gates](CONSOLIDATION_PLAN.md) |
-| What was reviewed and checked? | [Review](REVIEW.md) · [Validation evidence and limits](VALIDATION.md) |
+| What previous work exists on main? | [Complete inventory](INVENTORY.md) · [File manifest](inventory.json) |
+| What is the application and this phase's scope? | [Context and scope](CONTEXT_AND_SCOPE.md) |
+| Which design rules govern this revision? | [Design principles and their provenance](DESIGN_PRINCIPLES.md) |
+| How are all entities versioned? | [Model and invariants](MODEL.md) · [Every entity, field and value](model/REFERENCE.md) |
+| Where does each earlier concept go? | [Consolidation map](MAPPING.md) · [Adapter/profile registry](model/adapter-profiles.json) |
+| Where are the editable diagrams? | [Draw.io model atlas](diagrams/model.drawio) · [All-entity overview](diagrams/complete-model.svg) |
+| How do the API operations work? | [RPC protocol](api/PROTOCOL.md) · [Operation catalog](api/OPERATIONS.md) |
+| What are the machine-readable contracts? | [Model schema](model/schema.json) · [RPC schemas](api/rpc.schema.json) · [Operation metadata](api/operations.json) |
+| What do connected examples look like? | [Model examples](model/examples.json) · [RPC examples](api/examples.json) |
+| How does implementation proceed? | [Consolidation path and acceptance gates](CONSOLIDATION_PLAN.md) |
+| What changed and what was verified? | [Review findings and corrections](REVIEW.md) · [Validation evidence](VALIDATION.md) |
 
 ## Model at a glance
 
-| Module | Entity count | Responsibility |
+| Module | Entities | Responsibility |
 | --- | ---: | --- |
-| Foundation | 11 | Workspace/access scope, resource identity, reads, immutable evidence/interpretation, capture, work and command intent |
-| Workload | 4 | System, UserJourney, Service and service-scoped Dependency |
-| Health | 6 | Event/context/impact, communication assembly, lifecycle catalog and observed component deployment |
-| Resilience | 4 | Policy, native assessment, service finding and observation-scoped recommendation |
-| Investigation | 6 | AgentSpace, Task-based investigation, execution, journal, approval and versioned assets |
-| Workflow | 5 | Scenario/draft, immutable revision, admitted run, step lifecycle and attempt facts |
-| FIS | 1 | Native experiment with owned action/target/report detail |
+| Foundation | 11 | Workspace/access, resource identity, collection, source evidence, observation, derivation, capture, operator work and command intent |
+| Workload | 4 | System, UserJourney, Service and Dependency |
+| Health | 6 | Event/context/impact, communication, lifecycle catalogue and component deployment |
+| Resilience | 4 | Policy, assessment, finding and recommendation |
+| Investigation | 6 | AgentSpace, Investigation, Execution, JournalRecord, ApprovalRequest and Asset |
+| Workflow | 4 | Scenario, Run, StepRun and StepAttempt |
+| FIS | 1 | Experiment, with owned actions, selected targets and report values |
 
-The repeated evidence infrastructure is consolidated. Provider state, execution outcome, acceptance verdict, cleanup, current coverage and local operator disposition retain their independent meaning. A source payload revision is different from seeing that payload again; a projection is different from either. These boundaries are the basis for a trustworthy common console.
+Source evidence, observing that evidence and deriving a conclusion remain different concepts. They now use the same entity-version mechanism. Provider state, collection coverage, technical execution, acceptance, cleanup and local operator disposition retain their own meanings.
+
+## Draw.io diagrams
+
+Open [model.drawio](diagrams/model.drawio) in Draw.io to edit the eight-page atlas. The overview shows all 36 entities. Focused pages show foundation identity/commands, evidence/history, workload, Health, resilience, investigation, and workflow/FIS relationships with readable spacing and explicit boundary references. SVG exports are available in [diagrams/](diagrams/).
+
+The all-entity overview intentionally shows a selected relationship set; the detailed pages cover the model's relationships. The class fields are selected for reading. [The generated reference](model/REFERENCE.md) is the complete field contract.
 
 ## API style
 
 ```http
 POST / HTTP/1.1
-Host: console.example
+Host: console.example.invalid
 Content-Type: application/x-amz-json-1.1
-X-Amz-Target: ConsolidatedOperationsConsole_20261105.GetService
+X-Amz-Target: ConsolidatedOperationsConsole_20261105V2.GetService
 
-{"serviceId":"svc-checkout"}
+{"serviceId":"svc-checkout","version":1}
 ```
 
-Operation names use PascalCase and JSON fields use lowerCamelCase. The authenticated session supplies Workspace and acting-principal scope; request bodies cannot choose them. Lists use bounded `maxResults`/`nextToken`. Mutations use `clientToken`; edits use the version of the local owner, and provider changes use explicit durable command contracts. The namespace and operations belong to this application. Native AWS calls keep their own documented transports behind adapters.
+A typed getter can select an exact `version`; omitting it selects the current authorized representation. Responses contain the entity's actual version. Writes use the owning entity's `expectedVersion` and an idempotency `clientToken`. Trusted ingestion and lifecycle transitions publish entity versions under their owning authority. A native provider version remains separate metadata and does not substitute for the application version.
 
-## Regenerate and validate
+The authenticated context supplies Workspace and actor scope. Provider commands use explicit contracts and durable receipts. [The protocol](api/PROTOCOL.md) defines historical reads, reference resolution, pagination, concurrency, replay, errors and the compatibility break from revision 1.
 
-From this directory:
+## Regeneration and validation
 
-```sh
-python tools/render_model.py
-python api/generate.py
-python tools/validate.py
-python tools/render_model.py --check
-python api/generate.py --check
-```
+`model/schema.json` is the authoritative logical contract. The reference, diagram atlas and API artifacts are kept consistent with it. [VALIDATION.md](VALIDATION.md) records the exact reproduction commands, renderer versions, executed checks and evidence limits.
 
-`model/schema.json` is the authoritative model. The renderer derives `model/REFERENCE.md` and seven complete/focused class-diagram sources and SVGs from it. It uses Graphviz for SVG output; the accompanying Mermaid is editable, and no identical rendering across engines is claimed. `api/generate.py` authors the operation registry and schemas from its explicit definitions plus the model, and derives documented/examples output. The validator checks offline contracts and selected semantic risks; it is not a service runtime.
-
-See [VALIDATION.md](VALIDATION.md) for dependencies, actual check results, reproducibility and the remaining production gates. Existing source packages and root documentation are left as their original work products.
+The revision preserves the original service analyses and frozen source inventory. Changes are confined to `consolidated-operations-console/`.

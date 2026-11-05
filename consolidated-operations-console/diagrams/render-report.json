@@ -1,0 +1,2363 @@
+{
+  "renderer": {
+    "name": "Draw.io SVG engine",
+    "version": "32.6.10",
+    "sourceRepository": "https://github.com/jgraph/drawio",
+    "sourceCommit": "c72c9a98b7a6ce392556ed04c05e0ff19f43f5c3",
+    "runtime": "JSDOM 26.1.0; @napi-rs/canvas 0.1.100",
+    "entryPoint": "export.js render + Graph.getSvg",
+    "network": "No network used during rendering"
+  },
+  "pages": [
+    {
+      "id": "complete-model",
+      "title": "01 · Complete model",
+      "kind": "overview",
+      "pageSize": {
+        "width": 2060,
+        "height": 1640
+      },
+      "nodes": [
+        {
+          "id": "class-Workspace",
+          "entity": "Workspace",
+          "boundary": false,
+          "x": 90,
+          "y": 246,
+          "width": 250,
+          "height": 104
+        },
+        {
+          "id": "class-Connection",
+          "entity": "Connection",
+          "boundary": false,
+          "x": 400,
+          "y": 246,
+          "width": 250,
+          "height": 104
+        },
+        {
+          "id": "class-Resource",
+          "entity": "Resource",
+          "boundary": false,
+          "x": 90,
+          "y": 412,
+          "width": 250,
+          "height": 104
+        },
+        {
+          "id": "class-Collection",
+          "entity": "Collection",
+          "boundary": false,
+          "x": 400,
+          "y": 412,
+          "width": 250,
+          "height": 104
+        },
+        {
+          "id": "class-Source",
+          "entity": "Source",
+          "boundary": false,
+          "x": 90,
+          "y": 578,
+          "width": 250,
+          "height": 104
+        },
+        {
+          "id": "class-ReadAttempt",
+          "entity": "ReadAttempt",
+          "boundary": false,
+          "x": 400,
+          "y": 578,
+          "width": 250,
+          "height": 104
+        },
+        {
+          "id": "class-Observation",
+          "entity": "Observation",
+          "boundary": false,
+          "x": 90,
+          "y": 744,
+          "width": 250,
+          "height": 104
+        },
+        {
+          "id": "class-Projection",
+          "entity": "Projection",
+          "boundary": false,
+          "x": 400,
+          "y": 744,
+          "width": 250,
+          "height": 104
+        },
+        {
+          "id": "class-Snapshot",
+          "entity": "Snapshot",
+          "boundary": false,
+          "x": 90,
+          "y": 910,
+          "width": 250,
+          "height": 104
+        },
+        {
+          "id": "class-WorkItem",
+          "entity": "WorkItem",
+          "boundary": false,
+          "x": 400,
+          "y": 910,
+          "width": 250,
+          "height": 104
+        },
+        {
+          "id": "class-Command",
+          "entity": "Command",
+          "boundary": false,
+          "x": 90,
+          "y": 1076,
+          "width": 250,
+          "height": 104
+        },
+        {
+          "id": "class-System",
+          "entity": "System",
+          "boundary": false,
+          "x": 750,
+          "y": 246,
+          "width": 250,
+          "height": 104
+        },
+        {
+          "id": "class-UserJourney",
+          "entity": "UserJourney",
+          "boundary": false,
+          "x": 1060,
+          "y": 246,
+          "width": 250,
+          "height": 104
+        },
+        {
+          "id": "class-Service",
+          "entity": "Service",
+          "boundary": false,
+          "x": 750,
+          "y": 412,
+          "width": 250,
+          "height": 104
+        },
+        {
+          "id": "class-Dependency",
+          "entity": "Dependency",
+          "boundary": false,
+          "x": 1060,
+          "y": 412,
+          "width": 250,
+          "height": 104
+        },
+        {
+          "id": "class-HealthEvent",
+          "entity": "HealthEvent",
+          "boundary": false,
+          "x": 750,
+          "y": 656,
+          "width": 250,
+          "height": 104
+        },
+        {
+          "id": "class-EventContext",
+          "entity": "EventContext",
+          "boundary": false,
+          "x": 1060,
+          "y": 656,
+          "width": 250,
+          "height": 104
+        },
+        {
+          "id": "class-EntityImpact",
+          "entity": "EntityImpact",
+          "boundary": false,
+          "x": 750,
+          "y": 822,
+          "width": 250,
+          "height": 104
+        },
+        {
+          "id": "class-Communication",
+          "entity": "Communication",
+          "boundary": false,
+          "x": 1060,
+          "y": 822,
+          "width": 250,
+          "height": 104
+        },
+        {
+          "id": "class-LifecycleEntry",
+          "entity": "LifecycleEntry",
+          "boundary": false,
+          "x": 750,
+          "y": 988,
+          "width": 250,
+          "height": 104
+        },
+        {
+          "id": "class-ComponentDeployment",
+          "entity": "ComponentDeployment",
+          "boundary": false,
+          "x": 1060,
+          "y": 988,
+          "width": 250,
+          "height": 104
+        },
+        {
+          "id": "class-ResiliencePolicy",
+          "entity": "ResiliencePolicy",
+          "boundary": false,
+          "x": 1410,
+          "y": 246,
+          "width": 250,
+          "height": 104
+        },
+        {
+          "id": "class-ResilienceAssessment",
+          "entity": "ResilienceAssessment",
+          "boundary": false,
+          "x": 1720,
+          "y": 246,
+          "width": 250,
+          "height": 104
+        },
+        {
+          "id": "class-Finding",
+          "entity": "Finding",
+          "boundary": false,
+          "x": 1410,
+          "y": 412,
+          "width": 250,
+          "height": 104
+        },
+        {
+          "id": "class-Recommendation",
+          "entity": "Recommendation",
+          "boundary": false,
+          "x": 1720,
+          "y": 412,
+          "width": 250,
+          "height": 104
+        },
+        {
+          "id": "class-AgentSpace",
+          "entity": "AgentSpace",
+          "boundary": false,
+          "x": 1410,
+          "y": 656,
+          "width": 250,
+          "height": 104
+        },
+        {
+          "id": "class-Investigation",
+          "entity": "Investigation",
+          "boundary": false,
+          "x": 1720,
+          "y": 656,
+          "width": 250,
+          "height": 104
+        },
+        {
+          "id": "class-Execution",
+          "entity": "Execution",
+          "boundary": false,
+          "x": 1410,
+          "y": 822,
+          "width": 250,
+          "height": 104
+        },
+        {
+          "id": "class-JournalRecord",
+          "entity": "JournalRecord",
+          "boundary": false,
+          "x": 1720,
+          "y": 822,
+          "width": 250,
+          "height": 104
+        },
+        {
+          "id": "class-ApprovalRequest",
+          "entity": "ApprovalRequest",
+          "boundary": false,
+          "x": 1410,
+          "y": 988,
+          "width": 250,
+          "height": 104
+        },
+        {
+          "id": "class-Asset",
+          "entity": "Asset",
+          "boundary": false,
+          "x": 1720,
+          "y": 988,
+          "width": 250,
+          "height": 104
+        },
+        {
+          "id": "class-Scenario",
+          "entity": "Scenario",
+          "boundary": false,
+          "x": 90,
+          "y": 1336,
+          "width": 320,
+          "height": 104
+        },
+        {
+          "id": "class-Run",
+          "entity": "Run",
+          "boundary": false,
+          "x": 480,
+          "y": 1336,
+          "width": 320,
+          "height": 104
+        },
+        {
+          "id": "class-StepRun",
+          "entity": "StepRun",
+          "boundary": false,
+          "x": 870,
+          "y": 1336,
+          "width": 320,
+          "height": 104
+        },
+        {
+          "id": "class-StepAttempt",
+          "entity": "StepAttempt",
+          "boundary": false,
+          "x": 1260,
+          "y": 1336,
+          "width": 320,
+          "height": 104
+        },
+        {
+          "id": "class-Experiment",
+          "entity": "Experiment",
+          "boundary": false,
+          "x": 1650,
+          "y": 1336,
+          "width": 320,
+          "height": 104
+        }
+      ],
+      "edges": [
+        {
+          "id": "edge-0",
+          "relationshipIndex": 0,
+          "from": "class-Workspace",
+          "to": "class-Connection",
+          "points": [
+            {
+              "x": 340,
+              "y": 298
+            },
+            {
+              "x": 400,
+              "y": 298
+            }
+          ],
+          "label": null
+        },
+        {
+          "id": "edge-7",
+          "relationshipIndex": 7,
+          "from": "class-Observation",
+          "to": "class-Projection",
+          "points": [
+            {
+              "x": 340,
+              "y": 796
+            },
+            {
+              "x": 400,
+              "y": 796
+            }
+          ],
+          "label": null
+        },
+        {
+          "id": "edge-13",
+          "relationshipIndex": 13,
+          "from": "class-System",
+          "to": "class-UserJourney",
+          "points": [
+            {
+              "x": 1000,
+              "y": 298
+            },
+            {
+              "x": 1060,
+              "y": 298
+            }
+          ],
+          "label": null
+        },
+        {
+          "id": "edge-17",
+          "relationshipIndex": 17,
+          "from": "class-Service",
+          "to": "class-Dependency",
+          "points": [
+            {
+              "x": 1000,
+              "y": 464
+            },
+            {
+              "x": 1060,
+              "y": 464
+            }
+          ],
+          "label": null
+        },
+        {
+          "id": "edge-18",
+          "relationshipIndex": 18,
+          "from": "class-HealthEvent",
+          "to": "class-EventContext",
+          "points": [
+            {
+              "x": 1000,
+              "y": 708
+            },
+            {
+              "x": 1060,
+              "y": 708
+            }
+          ],
+          "label": null
+        },
+        {
+          "id": "edge-27",
+          "relationshipIndex": 27,
+          "from": "class-Finding",
+          "to": "class-Recommendation",
+          "points": [
+            {
+              "x": 1660,
+              "y": 464
+            },
+            {
+              "x": 1720,
+              "y": 464
+            }
+          ],
+          "label": null
+        },
+        {
+          "id": "edge-30",
+          "relationshipIndex": 30,
+          "from": "class-AgentSpace",
+          "to": "class-Investigation",
+          "points": [
+            {
+              "x": 1660,
+              "y": 708
+            },
+            {
+              "x": 1720,
+              "y": 708
+            }
+          ],
+          "label": null
+        },
+        {
+          "id": "edge-33",
+          "relationshipIndex": 33,
+          "from": "class-Execution",
+          "to": "class-JournalRecord",
+          "points": [
+            {
+              "x": 1660,
+              "y": 874
+            },
+            {
+              "x": 1720,
+              "y": 874
+            }
+          ],
+          "label": null
+        },
+        {
+          "id": "edge-38",
+          "relationshipIndex": 38,
+          "from": "class-Scenario",
+          "to": "class-Run",
+          "points": [
+            {
+              "x": 410,
+              "y": 1388
+            },
+            {
+              "x": 480,
+              "y": 1388
+            }
+          ],
+          "label": null
+        },
+        {
+          "id": "edge-40",
+          "relationshipIndex": 40,
+          "from": "class-Run",
+          "to": "class-StepRun",
+          "points": [
+            {
+              "x": 800,
+              "y": 1388
+            },
+            {
+              "x": 870,
+              "y": 1388
+            }
+          ],
+          "label": null
+        },
+        {
+          "id": "edge-41",
+          "relationshipIndex": 41,
+          "from": "class-StepRun",
+          "to": "class-StepAttempt",
+          "points": [
+            {
+              "x": 1190,
+              "y": 1388
+            },
+            {
+              "x": 1260,
+              "y": 1388
+            }
+          ],
+          "label": null
+        },
+        {
+          "id": "edge-42",
+          "relationshipIndex": 42,
+          "from": "class-StepAttempt",
+          "to": "class-Experiment",
+          "points": [
+            {
+              "x": 1580,
+              "y": 1388
+            },
+            {
+              "x": 1650,
+              "y": 1388
+            }
+          ],
+          "label": null
+        },
+        {
+          "id": "edge-3",
+          "relationshipIndex": 3,
+          "from": "class-Connection",
+          "to": "class-Collection",
+          "points": [
+            {
+              "x": 525,
+              "y": 350
+            },
+            {
+              "x": 525,
+              "y": 412
+            }
+          ],
+          "label": null
+        },
+        {
+          "id": "edge-4",
+          "relationshipIndex": 4,
+          "from": "class-Collection",
+          "to": "class-ReadAttempt",
+          "points": [
+            {
+              "x": 525,
+              "y": 516
+            },
+            {
+              "x": 525,
+              "y": 578
+            }
+          ],
+          "label": null
+        },
+        {
+          "id": "edge-6",
+          "relationshipIndex": 6,
+          "from": "class-Source",
+          "to": "class-Observation",
+          "points": [
+            {
+              "x": 215,
+              "y": 682
+            },
+            {
+              "x": 215,
+              "y": 744
+            }
+          ],
+          "label": null
+        },
+        {
+          "id": "edge-14",
+          "relationshipIndex": 14,
+          "from": "class-System",
+          "to": "class-Service",
+          "points": [
+            {
+              "x": 875,
+              "y": 350
+            },
+            {
+              "x": 875,
+              "y": 412
+            }
+          ],
+          "label": null
+        },
+        {
+          "id": "edge-31",
+          "relationshipIndex": 31,
+          "from": "class-AgentSpace",
+          "to": "class-Execution",
+          "points": [
+            {
+              "x": 1535,
+              "y": 760
+            },
+            {
+              "x": 1535,
+              "y": 822
+            }
+          ],
+          "label": null
+        },
+        {
+          "id": "edge-34",
+          "relationshipIndex": 34,
+          "from": "class-Execution",
+          "to": "class-ApprovalRequest",
+          "points": [
+            {
+              "x": 1535,
+              "y": 926
+            },
+            {
+              "x": 1535,
+              "y": 988
+            }
+          ],
+          "label": null
+        }
+      ],
+      "classOverlaps": [],
+      "connectorIntrusions": [],
+      "labelIntrusions": [],
+      "textOverflows": [],
+      "nativeCodecRoundTrip": {
+        "entities": 36,
+        "relationships": 18,
+        "metadataPreserved": true
+      },
+      "svgSha256": "d3011f843d29f2ba4dc1b2698dc6dcb37ab55d91dabf6d41071f4efedf9983cc",
+      "svgBytes": 81995
+    },
+    {
+      "id": "foundation",
+      "title": "02 · Scope and operator work",
+      "kind": "detail",
+      "pageSize": {
+        "width": 1720,
+        "height": 1200
+      },
+      "nodes": [
+        {
+          "id": "class-Workspace",
+          "entity": "Workspace",
+          "boundary": false,
+          "x": 690,
+          "y": 190,
+          "width": 340,
+          "height": 180
+        },
+        {
+          "id": "class-Connection",
+          "entity": "Connection",
+          "boundary": false,
+          "x": 100,
+          "y": 490,
+          "width": 340,
+          "height": 180
+        },
+        {
+          "id": "class-Resource",
+          "entity": "Resource",
+          "boundary": false,
+          "x": 1280,
+          "y": 490,
+          "width": 340,
+          "height": 180
+        },
+        {
+          "id": "class-WorkItem",
+          "entity": "WorkItem",
+          "boundary": false,
+          "x": 690,
+          "y": 790,
+          "width": 340,
+          "height": 180
+        },
+        {
+          "id": "class-Command",
+          "entity": "Command",
+          "boundary": false,
+          "x": 1280,
+          "y": 790,
+          "width": 340,
+          "height": 180
+        },
+        {
+          "id": "class-System",
+          "entity": "System",
+          "boundary": true,
+          "x": 720,
+          "y": 490,
+          "width": 280,
+          "height": 136
+        },
+        {
+          "id": "class-Collection",
+          "entity": "Collection",
+          "boundary": true,
+          "x": 130,
+          "y": 790,
+          "width": 280,
+          "height": 136
+        }
+      ],
+      "edges": [
+        {
+          "id": "edge-0",
+          "relationshipIndex": 0,
+          "from": "class-Workspace",
+          "to": "class-Connection",
+          "points": [
+            {
+              "x": 690,
+              "y": 280
+            },
+            {
+              "x": 270,
+              "y": 280
+            },
+            {
+              "x": 270,
+              "y": 490
+            }
+          ],
+          "label": {
+            "x": 353,
+            "y": 263,
+            "width": 44,
+            "height": 10
+          }
+        },
+        {
+          "id": "edge-1",
+          "relationshipIndex": 1,
+          "from": "class-Workspace",
+          "to": "class-System",
+          "points": [
+            {
+              "x": 860,
+              "y": 370
+            },
+            {
+              "x": 860,
+              "y": 490
+            }
+          ],
+          "label": {
+            "x": 778,
+            "y": 425,
+            "width": 68,
+            "height": 13
+          }
+        },
+        {
+          "id": "edge-2",
+          "relationshipIndex": 2,
+          "from": "class-Workspace",
+          "to": "class-WorkItem",
+          "points": [
+            {
+              "x": 1030,
+              "y": 280
+            },
+            {
+              "x": 1130,
+              "y": 280
+            },
+            {
+              "x": 1130,
+              "y": 700
+            },
+            {
+              "x": 860,
+              "y": 700
+            },
+            {
+              "x": 860,
+              "y": 790
+            }
+          ],
+          "label": {
+            "x": 1077,
+            "y": 615,
+            "width": 39,
+            "height": 13
+          }
+        },
+        {
+          "id": "edge-3",
+          "relationshipIndex": 3,
+          "from": "class-Connection",
+          "to": "class-Collection",
+          "points": [
+            {
+              "x": 270,
+              "y": 670
+            },
+            {
+              "x": 270,
+              "y": 790
+            }
+          ],
+          "label": {
+            "x": 182,
+            "y": 725,
+            "width": 74,
+            "height": 13
+          }
+        },
+        {
+          "id": "edge-44",
+          "relationshipIndex": 44,
+          "from": "class-WorkItem",
+          "to": "class-Command",
+          "points": [
+            {
+              "x": 1030,
+              "y": 880
+            },
+            {
+              "x": 1280,
+              "y": 880
+            }
+          ],
+          "label": {
+            "x": 1110,
+            "y": 860,
+            "width": 90,
+            "height": 13
+          }
+        }
+      ],
+      "classOverlaps": [],
+      "connectorIntrusions": [],
+      "labelIntrusions": [],
+      "textOverflows": [],
+      "nativeCodecRoundTrip": {
+        "entities": 7,
+        "relationships": 5,
+        "metadataPreserved": true
+      },
+      "svgSha256": "ef716577cd31915713101edb24829cba3d821ed683f0ed4047778f2a2351ddeb",
+      "svgBytes": 23235
+    },
+    {
+      "id": "evidence",
+      "title": "03 · Collection, evidence and history",
+      "kind": "detail",
+      "pageSize": {
+        "width": 1720,
+        "height": 1200
+      },
+      "nodes": [
+        {
+          "id": "class-Collection",
+          "entity": "Collection",
+          "boundary": false,
+          "x": 100,
+          "y": 190,
+          "width": 340,
+          "height": 180
+        },
+        {
+          "id": "class-ReadAttempt",
+          "entity": "ReadAttempt",
+          "boundary": false,
+          "x": 690,
+          "y": 190,
+          "width": 340,
+          "height": 180
+        },
+        {
+          "id": "class-Observation",
+          "entity": "Observation",
+          "boundary": false,
+          "x": 1280,
+          "y": 190,
+          "width": 340,
+          "height": 180
+        },
+        {
+          "id": "class-Source",
+          "entity": "Source",
+          "boundary": false,
+          "x": 690,
+          "y": 490,
+          "width": 340,
+          "height": 180
+        },
+        {
+          "id": "class-Projection",
+          "entity": "Projection",
+          "boundary": false,
+          "x": 1280,
+          "y": 490,
+          "width": 340,
+          "height": 180
+        },
+        {
+          "id": "class-Snapshot",
+          "entity": "Snapshot",
+          "boundary": false,
+          "x": 1280,
+          "y": 790,
+          "width": 340,
+          "height": 180
+        },
+        {
+          "id": "class-Command",
+          "entity": "Command",
+          "boundary": true,
+          "x": 130,
+          "y": 490,
+          "width": 280,
+          "height": 136
+        }
+      ],
+      "edges": [
+        {
+          "id": "edge-4",
+          "relationshipIndex": 4,
+          "from": "class-Collection",
+          "to": "class-ReadAttempt",
+          "points": [
+            {
+              "x": 440,
+              "y": 280
+            },
+            {
+              "x": 690,
+              "y": 280
+            }
+          ],
+          "label": {
+            "x": 548,
+            "y": 263,
+            "width": 34,
+            "height": 10
+          }
+        },
+        {
+          "id": "edge-5",
+          "relationshipIndex": 5,
+          "from": "class-ReadAttempt",
+          "to": "class-Observation",
+          "points": [
+            {
+              "x": 1030,
+              "y": 280
+            },
+            {
+              "x": 1280,
+              "y": 280
+            }
+          ],
+          "label": {
+            "x": 1131,
+            "y": 260,
+            "width": 47,
+            "height": 13
+          }
+        },
+        {
+          "id": "edge-6",
+          "relationshipIndex": 6,
+          "from": "class-Source",
+          "to": "class-Observation",
+          "points": [
+            {
+              "x": 860,
+              "y": 490
+            },
+            {
+              "x": 860,
+              "y": 430
+            },
+            {
+              "x": 1190,
+              "y": 430
+            },
+            {
+              "x": 1190,
+              "y": 339.4
+            },
+            {
+              "x": 1280,
+              "y": 339.4
+            }
+          ],
+          "label": {
+            "x": 1047,
+            "y": 410,
+            "width": 76,
+            "height": 13
+          }
+        },
+        {
+          "id": "edge-7",
+          "relationshipIndex": 7,
+          "from": "class-Observation",
+          "to": "class-Projection",
+          "points": [
+            {
+              "x": 1450,
+              "y": 370
+            },
+            {
+              "x": 1450,
+              "y": 490
+            }
+          ],
+          "label": {
+            "x": 1284,
+            "y": 425,
+            "width": 152,
+            "height": 13
+          }
+        },
+        {
+          "id": "edge-8",
+          "relationshipIndex": 8,
+          "from": "class-Source",
+          "to": "class-Projection",
+          "points": [
+            {
+              "x": 1030,
+              "y": 580
+            },
+            {
+              "x": 1280,
+              "y": 580
+            }
+          ],
+          "label": {
+            "x": 1079,
+            "y": 560,
+            "width": 152,
+            "height": 13
+          }
+        },
+        {
+          "id": "edge-9",
+          "relationshipIndex": 9,
+          "from": "class-Projection",
+          "to": "class-Snapshot",
+          "points": [
+            {
+              "x": 1450,
+              "y": 670
+            },
+            {
+              "x": 1450,
+              "y": 790
+            }
+          ],
+          "label": {
+            "x": 1365,
+            "y": 725,
+            "width": 71,
+            "height": 13
+          }
+        },
+        {
+          "id": "edge-10",
+          "relationshipIndex": 10,
+          "from": "class-Source",
+          "to": "class-Snapshot",
+          "points": [
+            {
+              "x": 860,
+              "y": 670
+            },
+            {
+              "x": 860,
+              "y": 880
+            },
+            {
+              "x": 1280,
+              "y": 880
+            }
+          ],
+          "label": {
+            "x": 929,
+            "y": 860,
+            "width": 71,
+            "height": 13
+          }
+        },
+        {
+          "id": "edge-11",
+          "relationshipIndex": 11,
+          "from": "class-Command",
+          "to": "class-Observation",
+          "points": [
+            {
+              "x": 130,
+              "y": 558
+            },
+            {
+              "x": 82,
+              "y": 558
+            },
+            {
+              "x": 82,
+              "y": 165
+            },
+            {
+              "x": 1644,
+              "y": 165
+            },
+            {
+              "x": 1644,
+              "y": 280
+            },
+            {
+              "x": 1620,
+              "y": 280
+            }
+          ],
+          "label": {
+            "x": 670,
+            "y": 172,
+            "width": 83,
+            "height": 13
+          }
+        }
+      ],
+      "classOverlaps": [],
+      "connectorIntrusions": [],
+      "labelIntrusions": [],
+      "textOverflows": [],
+      "nativeCodecRoundTrip": {
+        "entities": 7,
+        "relationships": 8,
+        "metadataPreserved": true
+      },
+      "svgSha256": "e97536f0a1a76ccd04b815f86d512927cd31b3cb10ff383ffd3f59e85a26e072",
+      "svgBytes": 29281
+    },
+    {
+      "id": "workload",
+      "title": "04 · Workload catalogue",
+      "kind": "detail",
+      "pageSize": {
+        "width": 1720,
+        "height": 1200
+      },
+      "nodes": [
+        {
+          "id": "class-System",
+          "entity": "System",
+          "boundary": false,
+          "x": 100,
+          "y": 190,
+          "width": 340,
+          "height": 180
+        },
+        {
+          "id": "class-UserJourney",
+          "entity": "UserJourney",
+          "boundary": false,
+          "x": 1280,
+          "y": 190,
+          "width": 340,
+          "height": 180
+        },
+        {
+          "id": "class-Service",
+          "entity": "Service",
+          "boundary": false,
+          "x": 690,
+          "y": 490,
+          "width": 340,
+          "height": 180
+        },
+        {
+          "id": "class-Dependency",
+          "entity": "Dependency",
+          "boundary": false,
+          "x": 100,
+          "y": 790,
+          "width": 340,
+          "height": 180
+        },
+        {
+          "id": "class-Resource",
+          "entity": "Resource",
+          "boundary": true,
+          "x": 1310,
+          "y": 812,
+          "width": 280,
+          "height": 136
+        }
+      ],
+      "edges": [
+        {
+          "id": "edge-13",
+          "relationshipIndex": 13,
+          "from": "class-System",
+          "to": "class-UserJourney",
+          "points": [
+            {
+              "x": 440,
+              "y": 280
+            },
+            {
+              "x": 1280,
+              "y": 280
+            }
+          ],
+          "label": {
+            "x": 833,
+            "y": 260,
+            "width": 53,
+            "height": 13
+          }
+        },
+        {
+          "id": "edge-14",
+          "relationshipIndex": 14,
+          "from": "class-System",
+          "to": "class-Service",
+          "points": [
+            {
+              "x": 270,
+              "y": 370
+            },
+            {
+              "x": 270,
+              "y": 580
+            },
+            {
+              "x": 690,
+              "y": 580
+            }
+          ],
+          "label": {
+            "x": 317,
+            "y": 560,
+            "width": 115,
+            "height": 13
+          }
+        },
+        {
+          "id": "edge-15",
+          "relationshipIndex": 15,
+          "from": "class-UserJourney",
+          "to": "class-Service",
+          "points": [
+            {
+              "x": 1450,
+              "y": 370
+            },
+            {
+              "x": 1450,
+              "y": 580
+            },
+            {
+              "x": 1030,
+              "y": 580
+            }
+          ],
+          "label": {
+            "x": 1287,
+            "y": 560,
+            "width": 115,
+            "height": 13
+          }
+        },
+        {
+          "id": "edge-17",
+          "relationshipIndex": 17,
+          "from": "class-Service",
+          "to": "class-Dependency",
+          "points": [
+            {
+              "x": 775,
+              "y": 670
+            },
+            {
+              "x": 775,
+              "y": 880
+            },
+            {
+              "x": 440,
+              "y": 880
+            }
+          ],
+          "label": {
+            "x": 690,
+            "y": 863,
+            "width": 44,
+            "height": 10
+          }
+        },
+        {
+          "id": "edge-16",
+          "relationshipIndex": 16,
+          "from": "class-Service",
+          "to": "class-Resource",
+          "points": [
+            {
+              "x": 945,
+              "y": 670
+            },
+            {
+              "x": 945,
+              "y": 880
+            },
+            {
+              "x": 1310,
+              "y": 880
+            }
+          ],
+          "label": {
+            "x": 979,
+            "y": 860,
+            "width": 87,
+            "height": 13
+          }
+        }
+      ],
+      "classOverlaps": [],
+      "connectorIntrusions": [],
+      "labelIntrusions": [],
+      "textOverflows": [],
+      "nativeCodecRoundTrip": {
+        "entities": 5,
+        "relationships": 5,
+        "metadataPreserved": true
+      },
+      "svgSha256": "c1204ba4ff0fa54493d42d3acc6431cd1913b94478f79ec9ba1d7932028299d0",
+      "svgBytes": 20213
+    },
+    {
+      "id": "health",
+      "title": "05 · Health events and lifecycle",
+      "kind": "detail",
+      "pageSize": {
+        "width": 1720,
+        "height": 1200
+      },
+      "nodes": [
+        {
+          "id": "class-HealthEvent",
+          "entity": "HealthEvent",
+          "boundary": false,
+          "x": 100,
+          "y": 190,
+          "width": 340,
+          "height": 180
+        },
+        {
+          "id": "class-EventContext",
+          "entity": "EventContext",
+          "boundary": false,
+          "x": 690,
+          "y": 190,
+          "width": 340,
+          "height": 180
+        },
+        {
+          "id": "class-Communication",
+          "entity": "Communication",
+          "boundary": false,
+          "x": 1280,
+          "y": 190,
+          "width": 340,
+          "height": 180
+        },
+        {
+          "id": "class-EntityImpact",
+          "entity": "EntityImpact",
+          "boundary": false,
+          "x": 690,
+          "y": 490,
+          "width": 340,
+          "height": 180
+        },
+        {
+          "id": "class-LifecycleEntry",
+          "entity": "LifecycleEntry",
+          "boundary": false,
+          "x": 100,
+          "y": 790,
+          "width": 340,
+          "height": 180
+        },
+        {
+          "id": "class-ComponentDeployment",
+          "entity": "ComponentDeployment",
+          "boundary": false,
+          "x": 1280,
+          "y": 790,
+          "width": 340,
+          "height": 180
+        },
+        {
+          "id": "class-Snapshot",
+          "entity": "Snapshot",
+          "boundary": true,
+          "x": 130,
+          "y": 512,
+          "width": 280,
+          "height": 136
+        },
+        {
+          "id": "class-Resource",
+          "entity": "Resource",
+          "boundary": true,
+          "x": 1310,
+          "y": 512,
+          "width": 280,
+          "height": 136
+        },
+        {
+          "id": "class-Projection",
+          "entity": "Projection",
+          "boundary": true,
+          "x": 720,
+          "y": 812,
+          "width": 280,
+          "height": 136
+        }
+      ],
+      "edges": [
+        {
+          "id": "edge-18",
+          "relationshipIndex": 18,
+          "from": "class-HealthEvent",
+          "to": "class-EventContext",
+          "points": [
+            {
+              "x": 440,
+              "y": 280
+            },
+            {
+              "x": 690,
+              "y": 280
+            }
+          ],
+          "label": {
+            "x": 511,
+            "y": 260,
+            "width": 108,
+            "height": 13
+          }
+        },
+        {
+          "id": "edge-20",
+          "relationshipIndex": 20,
+          "from": "class-EventContext",
+          "to": "class-Communication",
+          "points": [
+            {
+              "x": 1030,
+              "y": 280
+            },
+            {
+              "x": 1280,
+              "y": 280
+            }
+          ],
+          "label": {
+            "x": 1128,
+            "y": 260,
+            "width": 53,
+            "height": 13
+          }
+        },
+        {
+          "id": "edge-19",
+          "relationshipIndex": 19,
+          "from": "class-EventContext",
+          "to": "class-EntityImpact",
+          "points": [
+            {
+              "x": 860,
+              "y": 370
+            },
+            {
+              "x": 860,
+              "y": 490
+            }
+          ],
+          "label": {
+            "x": 740,
+            "y": 425,
+            "width": 106,
+            "height": 13
+          }
+        },
+        {
+          "id": "edge-21",
+          "relationshipIndex": 21,
+          "from": "class-EntityImpact",
+          "to": "class-Resource",
+          "points": [
+            {
+              "x": 1030,
+              "y": 580
+            },
+            {
+              "x": 1310,
+              "y": 580
+            }
+          ],
+          "label": {
+            "x": 1126,
+            "y": 560,
+            "width": 87,
+            "height": 13
+          }
+        },
+        {
+          "id": "edge-12",
+          "relationshipIndex": 12,
+          "from": "class-Resource",
+          "to": "class-ComponentDeployment",
+          "points": [
+            {
+              "x": 1450,
+              "y": 648
+            },
+            {
+              "x": 1450,
+              "y": 790
+            }
+          ],
+          "label": {
+            "x": 1401,
+            "y": 714,
+            "width": 35,
+            "height": 13
+          }
+        },
+        {
+          "id": "edge-22",
+          "relationshipIndex": 22,
+          "from": "class-Snapshot",
+          "to": "class-LifecycleEntry",
+          "points": [
+            {
+              "x": 270,
+              "y": 648
+            },
+            {
+              "x": 270,
+              "y": 790
+            }
+          ],
+          "label": {
+            "x": 144,
+            "y": 714,
+            "width": 112,
+            "height": 13
+          }
+        },
+        {
+          "id": "edge-23",
+          "relationshipIndex": 23,
+          "from": "class-LifecycleEntry",
+          "to": "class-Projection",
+          "points": [
+            {
+              "x": 440,
+              "y": 880
+            },
+            {
+              "x": 720,
+              "y": 880
+            }
+          ],
+          "label": {
+            "x": 534,
+            "y": 860,
+            "width": 92,
+            "height": 13
+          }
+        },
+        {
+          "id": "edge-24",
+          "relationshipIndex": 24,
+          "from": "class-ComponentDeployment",
+          "to": "class-Projection",
+          "points": [
+            {
+              "x": 1280,
+              "y": 880
+            },
+            {
+              "x": 1000,
+              "y": 880
+            }
+          ],
+          "label": {
+            "x": 1094,
+            "y": 860,
+            "width": 92,
+            "height": 13
+          }
+        }
+      ],
+      "classOverlaps": [],
+      "connectorIntrusions": [],
+      "labelIntrusions": [],
+      "textOverflows": [],
+      "nativeCodecRoundTrip": {
+        "entities": 9,
+        "relationships": 8,
+        "metadataPreserved": true
+      },
+      "svgSha256": "5e251c8de593d0b6f3133cae548da2e3e9cbc8b1d7f5575a0803509c3421a293",
+      "svgBytes": 31741
+    },
+    {
+      "id": "resilience",
+      "title": "06 · Resilience context and findings",
+      "kind": "detail",
+      "pageSize": {
+        "width": 1720,
+        "height": 1200
+      },
+      "nodes": [
+        {
+          "id": "class-Service",
+          "entity": "Service",
+          "boundary": true,
+          "x": 720,
+          "y": 190,
+          "width": 280,
+          "height": 136
+        },
+        {
+          "id": "class-ResiliencePolicy",
+          "entity": "ResiliencePolicy",
+          "boundary": false,
+          "x": 100,
+          "y": 490,
+          "width": 340,
+          "height": 180
+        },
+        {
+          "id": "class-ResilienceAssessment",
+          "entity": "ResilienceAssessment",
+          "boundary": false,
+          "x": 690,
+          "y": 490,
+          "width": 340,
+          "height": 180
+        },
+        {
+          "id": "class-Finding",
+          "entity": "Finding",
+          "boundary": false,
+          "x": 1280,
+          "y": 490,
+          "width": 340,
+          "height": 180
+        },
+        {
+          "id": "class-Recommendation",
+          "entity": "Recommendation",
+          "boundary": false,
+          "x": 1280,
+          "y": 790,
+          "width": 340,
+          "height": 180
+        },
+        {
+          "id": "class-Snapshot",
+          "entity": "Snapshot",
+          "boundary": true,
+          "x": 130,
+          "y": 790,
+          "width": 280,
+          "height": 136
+        }
+      ],
+      "edges": [
+        {
+          "id": "edge-25",
+          "relationshipIndex": 25,
+          "from": "class-Service",
+          "to": "class-ResilienceAssessment",
+          "points": [
+            {
+              "x": 860,
+              "y": 326
+            },
+            {
+              "x": 860,
+              "y": 490
+            }
+          ],
+          "label": {
+            "x": 770,
+            "y": 403,
+            "width": 76,
+            "height": 13
+          }
+        },
+        {
+          "id": "edge-26",
+          "relationshipIndex": 26,
+          "from": "class-Service",
+          "to": "class-Finding",
+          "points": [
+            {
+              "x": 1000,
+              "y": 258
+            },
+            {
+              "x": 1450,
+              "y": 258
+            },
+            {
+              "x": 1450,
+              "y": 490
+            }
+          ],
+          "label": {
+            "x": 1319,
+            "y": 241,
+            "width": 44,
+            "height": 10
+          }
+        },
+        {
+          "id": "edge-28",
+          "relationshipIndex": 28,
+          "from": "class-ResiliencePolicy",
+          "to": "class-Snapshot",
+          "points": [
+            {
+              "x": 270,
+              "y": 670
+            },
+            {
+              "x": 270,
+              "y": 790
+            }
+          ],
+          "label": {
+            "x": 151,
+            "y": 725,
+            "width": 105,
+            "height": 13
+          }
+        },
+        {
+          "id": "edge-29",
+          "relationshipIndex": 29,
+          "from": "class-Snapshot",
+          "to": "class-ResilienceAssessment",
+          "points": [
+            {
+              "x": 410,
+              "y": 858
+            },
+            {
+              "x": 570,
+              "y": 858
+            },
+            {
+              "x": 570,
+              "y": 580
+            },
+            {
+              "x": 690,
+              "y": 580
+            }
+          ],
+          "label": {
+            "x": 450,
+            "y": 734,
+            "width": 106,
+            "height": 13
+          }
+        },
+        {
+          "id": "edge-27",
+          "relationshipIndex": 27,
+          "from": "class-Finding",
+          "to": "class-Recommendation",
+          "points": [
+            {
+              "x": 1450,
+              "y": 670
+            },
+            {
+              "x": 1450,
+              "y": 790
+            }
+          ],
+          "label": {
+            "x": 1324,
+            "y": 725,
+            "width": 112,
+            "height": 13
+          }
+        }
+      ],
+      "classOverlaps": [],
+      "connectorIntrusions": [],
+      "labelIntrusions": [],
+      "textOverflows": [],
+      "nativeCodecRoundTrip": {
+        "entities": 6,
+        "relationships": 5,
+        "metadataPreserved": true
+      },
+      "svgSha256": "366613ea74ae3f9f886d38061dadec1660dc450a8b6e35343d2fbc7587f1af2c",
+      "svgBytes": 24354
+    },
+    {
+      "id": "investigation",
+      "title": "07 · Investigation and execution",
+      "kind": "detail",
+      "pageSize": {
+        "width": 1720,
+        "height": 1200
+      },
+      "nodes": [
+        {
+          "id": "class-AgentSpace",
+          "entity": "AgentSpace",
+          "boundary": false,
+          "x": 690,
+          "y": 190,
+          "width": 340,
+          "height": 180
+        },
+        {
+          "id": "class-Asset",
+          "entity": "Asset",
+          "boundary": false,
+          "x": 1280,
+          "y": 190,
+          "width": 340,
+          "height": 180
+        },
+        {
+          "id": "class-Investigation",
+          "entity": "Investigation",
+          "boundary": false,
+          "x": 100,
+          "y": 490,
+          "width": 340,
+          "height": 180
+        },
+        {
+          "id": "class-Execution",
+          "entity": "Execution",
+          "boundary": false,
+          "x": 690,
+          "y": 490,
+          "width": 340,
+          "height": 180
+        },
+        {
+          "id": "class-JournalRecord",
+          "entity": "JournalRecord",
+          "boundary": false,
+          "x": 1280,
+          "y": 490,
+          "width": 340,
+          "height": 180
+        },
+        {
+          "id": "class-ApprovalRequest",
+          "entity": "ApprovalRequest",
+          "boundary": false,
+          "x": 690,
+          "y": 790,
+          "width": 340,
+          "height": 180
+        },
+        {
+          "id": "class-Snapshot",
+          "entity": "Snapshot",
+          "boundary": true,
+          "x": 130,
+          "y": 790,
+          "width": 280,
+          "height": 136
+        },
+        {
+          "id": "class-Command",
+          "entity": "Command",
+          "boundary": true,
+          "x": 1310,
+          "y": 812,
+          "width": 280,
+          "height": 136
+        }
+      ],
+      "edges": [
+        {
+          "id": "edge-30",
+          "relationshipIndex": 30,
+          "from": "class-AgentSpace",
+          "to": "class-Investigation",
+          "points": [
+            {
+              "x": 690,
+              "y": 280
+            },
+            {
+              "x": 270,
+              "y": 280
+            },
+            {
+              "x": 270,
+              "y": 490
+            }
+          ],
+          "label": {
+            "x": 353,
+            "y": 263,
+            "width": 44,
+            "height": 10
+          }
+        },
+        {
+          "id": "edge-31",
+          "relationshipIndex": 31,
+          "from": "class-AgentSpace",
+          "to": "class-Execution",
+          "points": [
+            {
+              "x": 860,
+              "y": 370
+            },
+            {
+              "x": 860,
+              "y": 490
+            }
+          ],
+          "label": {
+            "x": 802,
+            "y": 428,
+            "width": 44,
+            "height": 10
+          }
+        },
+        {
+          "id": "edge-36",
+          "relationshipIndex": 36,
+          "from": "class-AgentSpace",
+          "to": "class-Asset",
+          "points": [
+            {
+              "x": 1030,
+              "y": 280
+            },
+            {
+              "x": 1280,
+              "y": 280
+            }
+          ],
+          "label": {
+            "x": 1138,
+            "y": 263,
+            "width": 34,
+            "height": 10
+          }
+        },
+        {
+          "id": "edge-32",
+          "relationshipIndex": 32,
+          "from": "class-Investigation",
+          "to": "class-Execution",
+          "points": [
+            {
+              "x": 440,
+              "y": 580
+            },
+            {
+              "x": 690,
+              "y": 580
+            }
+          ],
+          "label": {
+            "x": 493,
+            "y": 560,
+            "width": 144,
+            "height": 13
+          }
+        },
+        {
+          "id": "edge-33",
+          "relationshipIndex": 33,
+          "from": "class-Execution",
+          "to": "class-JournalRecord",
+          "points": [
+            {
+              "x": 1030,
+              "y": 580
+            },
+            {
+              "x": 1280,
+              "y": 580
+            }
+          ],
+          "label": {
+            "x": 1125,
+            "y": 560,
+            "width": 59,
+            "height": 13
+          }
+        },
+        {
+          "id": "edge-34",
+          "relationshipIndex": 34,
+          "from": "class-Execution",
+          "to": "class-ApprovalRequest",
+          "points": [
+            {
+              "x": 860,
+              "y": 670
+            },
+            {
+              "x": 860,
+              "y": 790
+            }
+          ],
+          "label": {
+            "x": 792,
+            "y": 726,
+            "width": 54,
+            "height": 12
+          }
+        },
+        {
+          "id": "edge-35",
+          "relationshipIndex": 35,
+          "from": "class-ApprovalRequest",
+          "to": "class-Command",
+          "points": [
+            {
+              "x": 1030,
+              "y": 880
+            },
+            {
+              "x": 1310,
+              "y": 880
+            }
+          ],
+          "label": {
+            "x": 1111,
+            "y": 860,
+            "width": 117,
+            "height": 13
+          }
+        },
+        {
+          "id": "edge-37",
+          "relationshipIndex": 37,
+          "from": "class-Investigation",
+          "to": "class-Snapshot",
+          "points": [
+            {
+              "x": 270,
+              "y": 670
+            },
+            {
+              "x": 270,
+              "y": 790
+            }
+          ],
+          "label": {
+            "x": 145,
+            "y": 725,
+            "width": 111,
+            "height": 13
+          }
+        }
+      ],
+      "classOverlaps": [],
+      "connectorIntrusions": [],
+      "labelIntrusions": [],
+      "textOverflows": [],
+      "nativeCodecRoundTrip": {
+        "entities": 8,
+        "relationships": 8,
+        "metadataPreserved": true
+      },
+      "svgSha256": "29d68081738f158e3e33b70c48e66c35fcad912cd062e5f31778fd32ac2eddf2",
+      "svgBytes": 29987
+    },
+    {
+      "id": "workflow",
+      "title": "08 · Published scenarios and execution",
+      "kind": "detail",
+      "pageSize": {
+        "width": 1720,
+        "height": 1200
+      },
+      "nodes": [
+        {
+          "id": "class-Scenario",
+          "entity": "Scenario",
+          "boundary": false,
+          "x": 100,
+          "y": 190,
+          "width": 340,
+          "height": 180
+        },
+        {
+          "id": "class-Run",
+          "entity": "Run",
+          "boundary": false,
+          "x": 690,
+          "y": 190,
+          "width": 340,
+          "height": 180
+        },
+        {
+          "id": "class-StepRun",
+          "entity": "StepRun",
+          "boundary": false,
+          "x": 1280,
+          "y": 190,
+          "width": 340,
+          "height": 180
+        },
+        {
+          "id": "class-StepAttempt",
+          "entity": "StepAttempt",
+          "boundary": false,
+          "x": 1280,
+          "y": 490,
+          "width": 340,
+          "height": 180
+        },
+        {
+          "id": "class-Experiment",
+          "entity": "Experiment",
+          "boundary": false,
+          "x": 690,
+          "y": 790,
+          "width": 340,
+          "height": 180
+        },
+        {
+          "id": "class-Snapshot",
+          "entity": "Snapshot",
+          "boundary": true,
+          "x": 130,
+          "y": 490,
+          "width": 280,
+          "height": 136
+        },
+        {
+          "id": "class-ResilienceAssessment",
+          "entity": "ResilienceAssessment",
+          "boundary": true,
+          "x": 1310,
+          "y": 790,
+          "width": 280,
+          "height": 136
+        }
+      ],
+      "edges": [
+        {
+          "id": "edge-38",
+          "relationshipIndex": 38,
+          "from": "class-Scenario",
+          "to": "class-Run",
+          "points": [
+            {
+              "x": 440,
+              "y": 280
+            },
+            {
+              "x": 690,
+              "y": 280
+            }
+          ],
+          "label": {
+            "x": 485,
+            "y": 260,
+            "width": 160,
+            "height": 13
+          }
+        },
+        {
+          "id": "edge-40",
+          "relationshipIndex": 40,
+          "from": "class-Run",
+          "to": "class-StepRun",
+          "points": [
+            {
+              "x": 1030,
+              "y": 280
+            },
+            {
+              "x": 1280,
+              "y": 280
+            }
+          ],
+          "label": {
+            "x": 1138,
+            "y": 263,
+            "width": 34,
+            "height": 10
+          }
+        },
+        {
+          "id": "edge-41",
+          "relationshipIndex": 41,
+          "from": "class-StepRun",
+          "to": "class-StepAttempt",
+          "points": [
+            {
+              "x": 1450,
+              "y": 370
+            },
+            {
+              "x": 1450,
+              "y": 490
+            }
+          ],
+          "label": {
+            "x": 1379,
+            "y": 426,
+            "width": 57,
+            "height": 12
+          }
+        },
+        {
+          "id": "edge-39",
+          "relationshipIndex": 39,
+          "from": "class-Snapshot",
+          "to": "class-Run",
+          "points": [
+            {
+              "x": 270,
+              "y": 490
+            },
+            {
+              "x": 270,
+              "y": 430
+            },
+            {
+              "x": 860,
+              "y": 430
+            },
+            {
+              "x": 860,
+              "y": 370
+            }
+          ],
+          "label": {
+            "x": 511,
+            "y": 410,
+            "width": 108,
+            "height": 13
+          }
+        },
+        {
+          "id": "edge-42",
+          "relationshipIndex": 42,
+          "from": "class-StepAttempt",
+          "to": "class-Experiment",
+          "points": [
+            {
+              "x": 1280,
+              "y": 580
+            },
+            {
+              "x": 860,
+              "y": 580
+            },
+            {
+              "x": 860,
+              "y": 790
+            }
+          ],
+          "label": {
+            "x": 889,
+            "y": 560,
+            "width": 151,
+            "height": 13
+          }
+        },
+        {
+          "id": "edge-43",
+          "relationshipIndex": 43,
+          "from": "class-StepAttempt",
+          "to": "class-ResilienceAssessment",
+          "points": [
+            {
+              "x": 1450,
+              "y": 670
+            },
+            {
+              "x": 1450,
+              "y": 790
+            }
+          ],
+          "label": {
+            "x": 1285,
+            "y": 725,
+            "width": 151,
+            "height": 13
+          }
+        }
+      ],
+      "classOverlaps": [],
+      "connectorIntrusions": [],
+      "labelIntrusions": [],
+      "textOverflows": [],
+      "nativeCodecRoundTrip": {
+        "entities": 7,
+        "relationships": 6,
+        "metadataPreserved": true
+      },
+      "svgSha256": "caa78d53d46776329237aac7910b2ec58c2298de353ebc6a280f755815df6ca7",
+      "svgBytes": 26798
+    }
+  ],
+  "geometryControls": {
+    "overlappingClassesRejected": true,
+    "connectorThroughClassRejected": true,
+    "separatedGeometryAccepted": true
+  }
+}

@@ -1,50 +1,62 @@
 # Entity and value reference
 
-Generated from [schema.json](schema.json). Edit the schema, then run `python tools/render_model.py` from this package. [MODEL.md](../MODEL.md) defines the invariants and ownership rules that JSON Schema cannot express.
+Generated from [schema.json](schema.json). Edit the schema, then run `python tools/render_model.py` from this package. The editable layout is [model.drawio](../diagrams/model.drawio); generation preserves its geometry and waypoints. [MODEL.md](../MODEL.md) defines the invariants and ownership rules that JSON Schema cannot express.
 
-The model contains **37 entities**. Every entity except Workspace includes `workspaceId`. Foreign references must resolve in that workspace and satisfy the documented parent scope. Provider identifiers are retained separately from application IDs.
+The model contains **36 entities**. Every entity carries `version`, `createdAt` and `updatedAt`. Every entity except Workspace also carries `workspaceId`. A stable entity identity and its retained versions belong to the same entity type.
+
+## Common version contract
+
+| Property | Contract |
+| --- | --- |
+| First version | `1` |
+| Next version | Current version plus `1` |
+| Writes | Append next version under an atomic expectedVersion check; stored versions never change. |
+| Exact historical reference | `EntityRef(kind,id,version)` |
+| Live identity reference | `EntityIdentity(kind,id), explicitly live and never a historical pin` |
+| Provider version | Separate domain fact; never substitutes for version. |
+
+Write authority determines who may append the next version. Sealing rules constrain an entity lifecycle; they do not create an exception to immutable retained versions. An entity remains versioned even when it is normally created once or has already reached a terminal state.
 
 ## Entity index
 
-| Module | Entity | Owner | Identity |
+| Module | Entity | Write authority | Identity |
 | --- | --- | --- | --- |
-| foundation | [Workspace](#workspace) | application | `workspaceId` |
-| foundation | [Connection](#connection) | application | `workspaceId + connectionId` |
-| foundation | [Resource](#resource) | observed | `workspaceId + resourceId` |
-| foundation | [Collection](#collection) | collector | `workspaceId + collectionId` |
-| foundation | [ReadAttempt](#readattempt) | collector | `workspaceId + collectionId + readAttemptId` |
-| foundation | [SourceRevision](#sourcerevision) | retained evidence | `workspaceId + sourceRevisionId` |
-| foundation | [Observation](#observation) | collector | `workspaceId + observationId` |
-| foundation | [ProjectionRevision](#projectionrevision) | derived | `workspaceId + projectionRevisionId` |
-| foundation | [Snapshot](#snapshot) | application retained capture | `workspaceId + snapshotId` |
-| foundation | [WorkItem](#workitem) | application | `workspaceId + workItemId` |
-| foundation | [Command](#command) | application | `workspaceId + commandId` |
-| workload | [System](#system) | application | `workspaceId + systemId` |
-| workload | [UserJourney](#userjourney) | application | `workspaceId + userJourneyId` |
-| workload | [Service](#service) | application | `workspaceId + serviceId` |
-| workload | [Dependency](#dependency) | observed plus local governance | `workspaceId + serviceId + dependencyId` |
-| health | [HealthEvent](#healthevent) | observed | `workspaceId + healthEventId` |
-| health | [EventContext](#eventcontext) | observed | `workspaceId + healthEventId + kind + contextKey` |
-| health | [EntityImpact](#entityimpact) | observed | `workspaceId + eventContextId + scoped provider entity key` |
-| health | [Communication](#communication) | derived grouping | `workspaceId + communicationId` |
-| health | [LifecycleEntry](#lifecycleentry) | observed local identity | `workspaceId + lifecycleEntryId` |
-| health | [ComponentDeployment](#componentdeployment) | observed inventory | `workspaceId + componentDeploymentId` |
-| resilience | [ResiliencePolicy](#resiliencepolicy) | observed | `workspaceId + resiliencePolicyId` |
-| resilience | [ResilienceAssessment](#resilienceassessment) | observed | `workspaceId + serviceId + resilienceAssessmentId` |
-| resilience | [Finding](#finding) | observed | `workspaceId + serviceId + findingId` |
-| resilience | [Recommendation](#recommendation) | immutable evidence plus local enrichment | `workspaceId + serviceId + findingId + detail observation + group + ordinal` |
-| investigation | [AgentSpace](#agentspace) | observed | `workspaceId + agentSpaceId` |
-| investigation | [Investigation](#investigation) | observed aggregate | `workspaceId + agentSpaceId + native taskId` |
-| investigation | [Execution](#execution) | observed | `workspaceId + agentSpaceId + native executionId` |
-| investigation | [JournalRecord](#journalrecord) | observed | `workspaceId + agentSpaceId + executionId + native recordId` |
-| investigation | [ApprovalRequest](#approvalrequest) | observed control request | `workspaceId + approvalRequestId` |
-| investigation | [Asset](#asset) | observed | `workspaceId + assetId` |
-| workflow | [Scenario](#scenario) | application | `workspaceId + scenarioId` |
-| workflow | [ScenarioRevision](#scenariorevision) | application immutable publication | `workspaceId + scenarioId + scenarioRevisionId` |
-| workflow | [Run](#run) | application execution | `workspaceId + runId` |
-| workflow | [StepRun](#steprun) | application execution | `workspaceId + runId + stepKey` |
-| workflow | [StepAttempt](#stepattempt) | application execution facts | `workspaceId + runId + stepRunId + attemptNo` |
-| fis | [Experiment](#experiment) | observed | `workspaceId + experimentId` |
+| foundation | [Workspace](#workspace) | `APPLICATION` | `workspaceId` |
+| foundation | [Connection](#connection) | `APPLICATION` | `workspaceId + connectionId` |
+| foundation | [Resource](#resource) | `COLLECTOR` | `workspaceId + resourceId` |
+| foundation | [Collection](#collection) | `COLLECTOR` | `workspaceId + collectionId` |
+| foundation | [ReadAttempt](#readattempt) | `COLLECTOR` | `workspaceId + collectionId + readAttemptId` |
+| foundation | [Source](#source) | `COLLECTOR` | `workspaceId + sourceId` |
+| foundation | [Observation](#observation) | `COLLECTOR` | `workspaceId + observationId` |
+| foundation | [Projection](#projection) | `DERIVATION` | `workspaceId + projectionId` |
+| foundation | [Snapshot](#snapshot) | `APPLICATION` | `workspaceId + snapshotId` |
+| foundation | [WorkItem](#workitem) | `APPLICATION` | `workspaceId + workItemId` |
+| foundation | [Command](#command) | `APPLICATION` | `workspaceId + commandId` |
+| workload | [System](#system) | `APPLICATION` | `workspaceId + systemId` |
+| workload | [UserJourney](#userjourney) | `APPLICATION` | `workspaceId + userJourneyId` |
+| workload | [Service](#service) | `APPLICATION` | `workspaceId + serviceId` |
+| workload | [Dependency](#dependency) | `MIXED` | `workspaceId + serviceId + dependencyId` |
+| health | [HealthEvent](#healthevent) | `COLLECTOR` | `workspaceId + healthEventId` |
+| health | [EventContext](#eventcontext) | `COLLECTOR` | `workspaceId + healthEventId + kind + contextKey` |
+| health | [EntityImpact](#entityimpact) | `COLLECTOR` | `workspaceId + eventContextId + scoped provider entity key` |
+| health | [Communication](#communication) | `DERIVATION` | `workspaceId + communicationId` |
+| health | [LifecycleEntry](#lifecycleentry) | `COLLECTOR` | `workspaceId + lifecycleEntryId` |
+| health | [ComponentDeployment](#componentdeployment) | `COLLECTOR` | `workspaceId + componentDeploymentId` |
+| resilience | [ResiliencePolicy](#resiliencepolicy) | `COLLECTOR` | `workspaceId + resiliencePolicyId` |
+| resilience | [ResilienceAssessment](#resilienceassessment) | `COLLECTOR` | `workspaceId + serviceId + resilienceAssessmentId` |
+| resilience | [Finding](#finding) | `COLLECTOR` | `workspaceId + serviceId + findingId` |
+| resilience | [Recommendation](#recommendation) | `MIXED` | `workspaceId + serviceId + findingId + exact source reference + groupKey + ordinal (unless a stable native key is available)` |
+| investigation | [AgentSpace](#agentspace) | `COLLECTOR` | `workspaceId + agentSpaceId` |
+| investigation | [Investigation](#investigation) | `COLLECTOR` | `workspaceId + agentSpaceId + native taskId` |
+| investigation | [Execution](#execution) | `COLLECTOR` | `workspaceId + agentSpaceId + native executionId` |
+| investigation | [JournalRecord](#journalrecord) | `COLLECTOR` | `workspaceId + agentSpaceId + executionId + native recordId` |
+| investigation | [ApprovalRequest](#approvalrequest) | `COLLECTOR` | `workspaceId + approvalRequestId` |
+| investigation | [Asset](#asset) | `COLLECTOR` | `workspaceId + assetId` |
+| workflow | [Scenario](#scenario) | `APPLICATION` | `workspaceId + scenarioId` |
+| workflow | [Run](#run) | `WORKFLOW` | `workspaceId + runId` |
+| workflow | [StepRun](#steprun) | `WORKFLOW` | `workspaceId + runId + stepKey` |
+| workflow | [StepAttempt](#stepattempt) | `WORKFLOW` | `workspaceId + runId + stepRunId + attemptNo` |
+| fis | [Experiment](#experiment) | `COLLECTOR` | `workspaceId + experimentId` |
 
 ## Entities
 
@@ -54,11 +66,14 @@ Application authorization and configuration boundary, distinct from AWS AgentSpa
 
 **Owner:** application. **Module:** foundation. **Identity:** `workspaceId`.
 
+**Write authority:** `APPLICATION`. **Sealing rule:** Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.
+
 | Field | Type | Required |
 | --- | --- | --- |
 | `workspaceId` | `Id` | Yes |
 | `version` | `Version` | Yes |
-| `localUpdatedAt` | `Timestamp` | Yes |
+| `createdAt` | `Timestamp` | Yes |
+| `updatedAt` | `Timestamp` | Yes |
 | `name` | `string` | Yes |
 | `enabledModules` | `List[enum]` | Yes |
 | `organizationMemberships` | `List[OrganizationMembership]` | Yes |
@@ -70,12 +85,15 @@ Access path/credential reference, not native owner identity. Secrets remain outs
 
 **Owner:** application. **Module:** foundation. **Identity:** `workspaceId + connectionId`.
 
+**Write authority:** `APPLICATION`. **Sealing rule:** Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.
+
 | Field | Type | Required |
 | --- | --- | --- |
 | `connectionId` | `Id` | Yes |
 | `workspaceId` | `Id` | Yes |
 | `version` | `Version` | Yes |
-| `localUpdatedAt` | `Timestamp` | Yes |
+| `createdAt` | `Timestamp` | Yes |
+| `updatedAt` | `Timestamp` | Yes |
 | `name` | `string` | Yes |
 | `provider` | `string` | Yes |
 | `credentialRef` | `string` | Yes |
@@ -89,34 +107,43 @@ Canonical inventory identity with explicit stable or run-scoped boundary; does n
 
 **Owner:** observed. **Module:** foundation. **Identity:** `workspaceId + resourceId`.
 
+**Write authority:** `COLLECTOR`. **Sealing rule:** Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.
+
 | Field | Type | Required |
 | --- | --- | --- |
 | `resourceId` | `Id` | Yes |
 | `workspaceId` | `Id` | Yes |
+| `version` | `Version` | Yes |
+| `createdAt` | `Timestamp` | Yes |
+| `updatedAt` | `Timestamp` | Yes |
 | `identity` | `SourceIdentity` | Yes |
 | `identityStability` | `enum` | Yes |
 | `incarnationKey` | `string or null` | Yes |
-| `selectedObservationId` | `Id or null` | Yes |
+| `selectedObservation` | `EntityRef or null` | Yes |
 | `displayName` | `string or null` | Yes |
 | `matches` | `List[ResourceMatch]` | Yes |
 
 ### Collection
 
-A finite collection pass records its exact query set, including empty and failed reads.
+One finite collection with immutable query definitions and changing lifecycle represented by ordinary entity versions. New query definitions require a new collection identity.
 
 **Owner:** collector. **Module:** foundation. **Identity:** `workspaceId + collectionId`.
+
+**Write authority:** `COLLECTOR`. **Sealing rule:** Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.
 
 | Field | Type | Required |
 | --- | --- | --- |
 | `collectionId` | `Id` | Yes |
 | `workspaceId` | `Id` | Yes |
-| `connectionId` | `Id` | Yes |
+| `version` | `Version` | Yes |
+| `createdAt` | `Timestamp` | Yes |
+| `updatedAt` | `Timestamp` | Yes |
+| `connection` | `EntityRef` | Yes |
 | `queries` | `List[CollectionQuery]` | Yes |
 | `state` | `enum` | Yes |
 | `startedAt` | `Timestamp` | Yes |
 | `endedAt` | `Timestamp or null` | Yes |
 | `coverage` | `List[Coverage]` | Yes |
-| `projectionVersion` | `Version` | Yes |
 
 ### ReadAttempt
 
@@ -124,13 +151,18 @@ A single request attempt exists even if it returned zero objects or failed. It i
 
 **Owner:** collector. **Module:** foundation. **Identity:** `workspaceId + collectionId + readAttemptId`.
 
+**Write authority:** `COLLECTOR`. **Sealing rule:** Lifecycle changes append versions. A settled/terminal record cannot be reopened; late reconciliation is new evidence and does not rewrite settled facts.
+
 | Field | Type | Required |
 | --- | --- | --- |
 | `readAttemptId` | `Id` | Yes |
 | `workspaceId` | `Id` | Yes |
+| `version` | `Version` | Yes |
+| `createdAt` | `Timestamp` | Yes |
+| `updatedAt` | `Timestamp` | Yes |
 | `collectionId` | `Id` | Yes |
 | `queryKey` | `string` | Yes |
-| `attemptNo` | `Version` | Yes |
+| `attemptNo` | `PositiveInteger` | Yes |
 | `requestDigest` | `Digest` | Yes |
 | `state` | `enum` | Yes |
 | `startedAt` | `Timestamp` | Yes |
@@ -140,19 +172,24 @@ A single request attempt exists even if it returned zero objects or failed. It i
 | `nextTokenPresent` | `boolean or null` | Yes |
 | `error` | `ReadError or null` | Yes |
 | `authorizationContextKey` | `string` | Yes |
-| `requestSourceRevisionId` | `Id` | Yes |
-| `responseSourceRevisionId` | `Id or null` | Yes |
+| `requestSource` | `EntityRef` | Yes |
+| `responseSource` | `EntityRef or null` | Yes |
 
-### SourceRevision
+### Source
 
-Immutable distinct source payload/envelope for one identity, representation and content digest. Observation time is recorded separately.
+Versioned retained source representation. Stable sourceId is scoped by native identity, representation, profile and source operation, independently of payload digest or provider version. Changed accepted content appends a version; an unchanged poll observes the current version again.
 
-**Owner:** retained evidence. **Module:** foundation. **Identity:** `workspaceId + sourceRevisionId`.
+**Owner:** retained evidence. **Module:** foundation. **Identity:** `workspaceId + sourceId`.
+
+**Write authority:** `COLLECTOR`. **Sealing rule:** Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.
 
 | Field | Type | Required |
 | --- | --- | --- |
-| `sourceRevisionId` | `Id` | Yes |
+| `sourceId` | `Id` | Yes |
 | `workspaceId` | `Id` | Yes |
+| `version` | `Version` | Yes |
+| `createdAt` | `Timestamp` | Yes |
+| `updatedAt` | `Timestamp` | Yes |
 | `identity` | `SourceIdentity` | Yes |
 | `representation` | `enum` | Yes |
 | `profile` | `string` | Yes |
@@ -173,13 +210,18 @@ Immutable receipt/read observation of one revision. Repeated polls do not create
 
 **Owner:** collector. **Module:** foundation. **Identity:** `workspaceId + observationId`.
 
+**Write authority:** `COLLECTOR`. **Sealing rule:** Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.
+
 | Field | Type | Required |
 | --- | --- | --- |
 | `observationId` | `Id` | Yes |
 | `workspaceId` | `Id` | Yes |
-| `sourceRevisionId` | `Id` | Yes |
-| `readAttemptId` | `Id or null` | Yes |
-| `connectionId` | `Id or null` | Yes |
+| `version` | `Version` | Yes |
+| `createdAt` | `Timestamp` | Yes |
+| `updatedAt` | `Timestamp` | Yes |
+| `source` | `EntityRef` | Yes |
+| `readAttempt` | `EntityRef or null` | Yes |
+| `connection` | `EntityRef or null` | Yes |
 | `observedAt` | `Timestamp` | Yes |
 | `sourceTime` | `Timestamp or null` | Yes |
 | `transportTime` | `Timestamp or null` | Yes |
@@ -188,16 +230,21 @@ Immutable receipt/read observation of one revision. Repeated polls do not create
 | `receiptKey` | `string or null` | Yes |
 | `channel` | `enum` | Yes |
 
-### ProjectionRevision
+### Projection
 
-Immutable versioned derivation with retained inputs, coverage and rule digest. Current selection is a read view.
+Versioned named derived view with exact input references, coverage and rule identity. New inputs or rule versions append an immutable version under the same projectionId.
 
-**Owner:** derived. **Module:** foundation. **Identity:** `workspaceId + projectionRevisionId`.
+**Owner:** derived. **Module:** foundation. **Identity:** `workspaceId + projectionId`.
+
+**Write authority:** `DERIVATION`. **Sealing rule:** Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.
 
 | Field | Type | Required |
 | --- | --- | --- |
-| `projectionRevisionId` | `Id` | Yes |
+| `projectionId` | `Id` | Yes |
 | `workspaceId` | `Id` | Yes |
+| `version` | `Version` | Yes |
+| `createdAt` | `Timestamp` | Yes |
+| `updatedAt` | `Timestamp` | Yes |
 | `projectionKey` | `string` | Yes |
 | `profile` | `enum` | Yes |
 | `profileVersion` | `string` | Yes |
@@ -211,26 +258,28 @@ Immutable versioned derivation with retained inputs, coverage and rule digest. C
 
 ### Snapshot
 
-Immutable closed manifest and contents. CapturedAt never replaces provider/source time. Access remains checked on reads/exports.
+A deliberate retained capture with a closed set of exact entity references and captured contents. Snapshot is a business capture, not a substitute for ordinary entity versioning. A corrected capture appends a Snapshot version; older captures stay unchanged.
 
 **Owner:** application retained capture. **Module:** foundation. **Identity:** `workspaceId + snapshotId`.
+
+**Write authority:** `APPLICATION`. **Sealing rule:** Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.
 
 | Field | Type | Required |
 | --- | --- | --- |
 | `snapshotId` | `Id` | Yes |
 | `workspaceId` | `Id` | Yes |
+| `version` | `Version` | Yes |
+| `createdAt` | `Timestamp` | Yes |
+| `updatedAt` | `Timestamp` | Yes |
 | `kind` | `enum` | Yes |
 | `subjectRefs` | `List[EntityRef]` | Yes |
 | `capturedAt` | `Timestamp` | Yes |
 | `manifestDigest` | `Digest` | Yes |
-| `sourceRevisionIds` | `List[Id]` | Yes |
-| `observationIds` | `List[Id]` | Yes |
-| `projectionRevisionIds` | `List[Id]` | Yes |
-| `readAttempts` | `List[ReadAttempt]` | Yes |
 | `coverage` | `List[Coverage]` | Yes |
 | `contents` | `JsonValue` | Yes |
 | `captureStartedAt` | `Timestamp` | Yes |
 | `captureFinishedAt` | `Timestamp` | Yes |
+| `members` | `List[EntityRef]` | Yes |
 
 ### WorkItem
 
@@ -238,14 +287,17 @@ Local operator workflow over typed domain targets; completion does not establish
 
 **Owner:** application. **Module:** foundation. **Identity:** `workspaceId + workItemId`.
 
+**Write authority:** `APPLICATION`. **Sealing rule:** Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.
+
 | Field | Type | Required |
 | --- | --- | --- |
 | `workItemId` | `Id` | Yes |
 | `workspaceId` | `Id` | Yes |
 | `version` | `Version` | Yes |
-| `localUpdatedAt` | `Timestamp` | Yes |
+| `createdAt` | `Timestamp` | Yes |
+| `updatedAt` | `Timestamp` | Yes |
 | `title` | `string` | Yes |
-| `targets` | `List[EntityRef]` | Yes |
+| `targets` | `List[EntityIdentity]` | Yes |
 | `state` | `enum` | Yes |
 | `owner` | `AssigneeRef or null` | Yes |
 | `snoozedUntil` | `Timestamp or null` | Yes |
@@ -262,10 +314,15 @@ Durable intent and receipt; conditional local admission is not an AWS transactio
 
 **Owner:** application. **Module:** foundation. **Identity:** `workspaceId + commandId`.
 
+**Write authority:** `APPLICATION`. **Sealing rule:** Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.
+
 | Field | Type | Required |
 | --- | --- | --- |
 | `commandId` | `Id` | Yes |
 | `workspaceId` | `Id` | Yes |
+| `version` | `Version` | Yes |
+| `createdAt` | `Timestamp` | Yes |
+| `updatedAt` | `Timestamp` | Yes |
 | `operation` | `string` | Yes |
 | `subjectRefs` | `List[EntityRef]` | Yes |
 | `actor` | `ActorRef` | Yes |
@@ -285,12 +342,15 @@ Business system. Provider system aliases are explicit; local metadata changes do
 
 **Owner:** application. **Module:** workload. **Identity:** `workspaceId + systemId`.
 
+**Write authority:** `APPLICATION`. **Sealing rule:** Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.
+
 | Field | Type | Required |
 | --- | --- | --- |
 | `systemId` | `Id` | Yes |
 | `workspaceId` | `Id` | Yes |
 | `version` | `Version` | Yes |
-| `localUpdatedAt` | `Timestamp` | Yes |
+| `createdAt` | `Timestamp` | Yes |
+| `updatedAt` | `Timestamp` | Yes |
 | `name` | `string` | Yes |
 | `description` | `string` | Yes |
 | `providerBindings` | `List[ProviderBinding]` | Yes |
@@ -301,12 +361,15 @@ A user journey belongs to one system; its service set is derived from Service.me
 
 **Owner:** application. **Module:** workload. **Identity:** `workspaceId + userJourneyId`.
 
+**Write authority:** `APPLICATION`. **Sealing rule:** Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.
+
 | Field | Type | Required |
 | --- | --- | --- |
 | `userJourneyId` | `Id` | Yes |
 | `workspaceId` | `Id` | Yes |
 | `version` | `Version` | Yes |
-| `localUpdatedAt` | `Timestamp` | Yes |
+| `createdAt` | `Timestamp` | Yes |
+| `updatedAt` | `Timestamp` | Yes |
 | `systemId` | `Id` | Yes |
 | `name` | `string` | Yes |
 | `description` | `string` | Yes |
@@ -318,12 +381,15 @@ Business workload boundary, distinct from an AWS service family and a Registered
 
 **Owner:** application. **Module:** workload. **Identity:** `workspaceId + serviceId`.
 
+**Write authority:** `APPLICATION`. **Sealing rule:** Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.
+
 | Field | Type | Required |
 | --- | --- | --- |
 | `serviceId` | `Id` | Yes |
 | `workspaceId` | `Id` | Yes |
 | `version` | `Version` | Yes |
-| `localUpdatedAt` | `Timestamp` | Yes |
+| `createdAt` | `Timestamp` | Yes |
+| `updatedAt` | `Timestamp` | Yes |
 | `name` | `string` | Yes |
 | `description` | `string` | Yes |
 | `memberships` | `List[ServiceMembership]` | Yes |
@@ -336,16 +402,21 @@ Scoped service dependency. Provider classification and local governance have sep
 
 **Owner:** observed plus local governance. **Module:** workload. **Identity:** `workspaceId + serviceId + dependencyId`.
 
+**Write authority:** `MIXED`. **Sealing rule:** Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.
+
 | Field | Type | Required |
 | --- | --- | --- |
 | `dependencyId` | `Id` | Yes |
 | `workspaceId` | `Id` | Yes |
+| `version` | `Version` | Yes |
+| `createdAt` | `Timestamp` | Yes |
+| `updatedAt` | `Timestamp` | Yes |
 | `serviceId` | `Id` | Yes |
 | `identity` | `SourceIdentity` | Yes |
 | `targetResourceId` | `Id or null` | Yes |
 | `targetServiceId` | `Id or null` | Yes |
 | `rawClassification` | `string or null` | Yes |
-| `selectedObservationId` | `Id or null` | Yes |
+| `selectedObservation` | `EntityRef or null` | Yes |
 | `governance` | `LocalDecision` | Yes |
 
 ### HealthEvent
@@ -354,16 +425,21 @@ Shared provider Health event identity. EventBridge envelope IDs and recipient ac
 
 **Owner:** observed. **Module:** health. **Identity:** `workspaceId + healthEventId`.
 
+**Write authority:** `COLLECTOR`. **Sealing rule:** Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.
+
 | Field | Type | Required |
 | --- | --- | --- |
 | `healthEventId` | `Id` | Yes |
 | `workspaceId` | `Id` | Yes |
+| `version` | `Version` | Yes |
+| `createdAt` | `Timestamp` | Yes |
+| `updatedAt` | `Timestamp` | Yes |
 | `eventArn` | `string` | Yes |
 | `eventTypeCode` | `string` | Yes |
 | `serviceCode` | `string` | Yes |
 | `impactedRegion` | `string or null` | Yes |
 | `rawScopeCode` | `string or null` | Yes |
-| `selectedSourceRevisionId` | `Id` | Yes |
+| `selectedSource` | `EntityRef` | Yes |
 
 ### EventContext
 
@@ -371,16 +447,21 @@ Public/account/organization-summary evidence partition. Context-specific state n
 
 **Owner:** observed. **Module:** health. **Identity:** `workspaceId + healthEventId + kind + contextKey`.
 
+**Write authority:** `COLLECTOR`. **Sealing rule:** Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.
+
 | Field | Type | Required |
 | --- | --- | --- |
 | `eventContextId` | `Id` | Yes |
 | `workspaceId` | `Id` | Yes |
+| `version` | `Version` | Yes |
+| `createdAt` | `Timestamp` | Yes |
+| `updatedAt` | `Timestamp` | Yes |
 | `healthEventId` | `Id` | Yes |
 | `kind` | `enum` | Yes |
 | `contextKey` | `string` | Yes |
 | `accountId` | `string or null` | Yes |
 | `organizationId` | `string or null` | Yes |
-| `selectedObservationId` | `Id or null` | Yes |
+| `selectedObservation` | `EntityRef or null` | Yes |
 | `rawProviderStatus` | `string or null` | Yes |
 
 ### EntityImpact
@@ -389,14 +470,19 @@ Event-relative affected-entity record, not an inventory Resource or a global hea
 
 **Owner:** observed. **Module:** health. **Identity:** `workspaceId + eventContextId + scoped provider entity key`.
 
+**Write authority:** `COLLECTOR`. **Sealing rule:** Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.
+
 | Field | Type | Required |
 | --- | --- | --- |
 | `entityImpactId` | `Id` | Yes |
 | `workspaceId` | `Id` | Yes |
+| `version` | `Version` | Yes |
+| `createdAt` | `Timestamp` | Yes |
+| `updatedAt` | `Timestamp` | Yes |
 | `eventContextId` | `Id` | Yes |
 | `healthEntityArn` | `string or null` | Yes |
 | `entityValue` | `string or null` | Yes |
-| `selectedObservationId` | `Id` | Yes |
+| `selectedObservation` | `EntityRef` | Yes |
 | `rawProviderStatus` | `string or null` | Yes |
 | `resourceMatches` | `List[ResourceMatch]` | Yes |
 
@@ -406,10 +492,15 @@ Validated logical Health communication grouping, preserving conflicting pages an
 
 **Owner:** derived grouping. **Module:** health. **Identity:** `workspaceId + communicationId`.
 
+**Write authority:** `DERIVATION`. **Sealing rule:** Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.
+
 | Field | Type | Required |
 | --- | --- | --- |
 | `communicationId` | `Id` | Yes |
 | `workspaceId` | `Id` | Yes |
+| `version` | `Version` | Yes |
+| `createdAt` | `Timestamp` | Yes |
+| `updatedAt` | `Timestamp` | Yes |
 | `eventContextId` | `Id` | Yes |
 | `notificationAccountContext` | `string or null` | Yes |
 | `validatedBaseId` | `string or null` | Yes |
@@ -423,12 +514,17 @@ Provider lifecycle catalog entry has no established stable provider ID; retain s
 
 **Owner:** observed local identity. **Module:** health. **Identity:** `workspaceId + lifecycleEntryId`.
 
+**Write authority:** `COLLECTOR`. **Sealing rule:** Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.
+
 | Field | Type | Required |
 | --- | --- | --- |
 | `lifecycleEntryId` | `Id` | Yes |
 | `workspaceId` | `Id` | Yes |
-| `catalogSnapshotId` | `Id` | Yes |
-| `sourceRevisionId` | `Id` | Yes |
+| `version` | `Version` | Yes |
+| `createdAt` | `Timestamp` | Yes |
+| `updatedAt` | `Timestamp` | Yes |
+| `catalogSnapshot` | `EntityRef` | Yes |
+| `source` | `EntityRef` | Yes |
 | `serviceCode` | `string` | Yes |
 | `title` | `string` | Yes |
 | `versionLabel` | `string or null` | Yes |
@@ -441,14 +537,19 @@ An observed installed component/version on a resource, with explicit inventory p
 
 **Owner:** observed inventory. **Module:** health. **Identity:** `workspaceId + componentDeploymentId`.
 
+**Write authority:** `COLLECTOR`. **Sealing rule:** Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.
+
 | Field | Type | Required |
 | --- | --- | --- |
 | `componentDeploymentId` | `Id` | Yes |
 | `workspaceId` | `Id` | Yes |
+| `version` | `Version` | Yes |
+| `createdAt` | `Timestamp` | Yes |
+| `updatedAt` | `Timestamp` | Yes |
 | `resourceId` | `Id` | Yes |
 | `componentKind` | `string` | Yes |
 | `versionLabel` | `string` | Yes |
-| `observationId` | `Id` | Yes |
+| `observation` | `EntityRef` | Yes |
 
 ### ResiliencePolicy
 
@@ -456,13 +557,18 @@ Provider resilience policy. Configured components stay optional; latency is not 
 
 **Owner:** observed. **Module:** resilience. **Identity:** `workspaceId + resiliencePolicyId`.
 
+**Write authority:** `COLLECTOR`. **Sealing rule:** Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.
+
 | Field | Type | Required |
 | --- | --- | --- |
 | `resiliencePolicyId` | `Id` | Yes |
 | `workspaceId` | `Id` | Yes |
+| `version` | `Version` | Yes |
+| `createdAt` | `Timestamp` | Yes |
+| `updatedAt` | `Timestamp` | Yes |
 | `identity` | `SourceIdentity` | Yes |
 | `name` | `string` | Yes |
-| `selectedObservationId` | `Id` | Yes |
+| `selectedObservation` | `EntityRef` | Yes |
 | `components` | `List[PolicyComponent]` | Yes |
 | `providerUpdatedAt` | `Timestamp or null` | Yes |
 
@@ -472,16 +578,21 @@ Native service-scoped assessment execution; execution success, posture and runti
 
 **Owner:** observed. **Module:** resilience. **Identity:** `workspaceId + serviceId + resilienceAssessmentId`.
 
+**Write authority:** `COLLECTOR`. **Sealing rule:** Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.
+
 | Field | Type | Required |
 | --- | --- | --- |
 | `resilienceAssessmentId` | `Id` | Yes |
 | `workspaceId` | `Id` | Yes |
+| `version` | `Version` | Yes |
+| `createdAt` | `Timestamp` | Yes |
+| `updatedAt` | `Timestamp` | Yes |
 | `serviceId` | `Id` | Yes |
 | `identity` | `SourceIdentity` | Yes |
 | `rawExecutionStatus` | `string or null` | Yes |
-| `selectedObservationId` | `Id or null` | Yes |
-| `policyContextSnapshotId` | `Id or null` | Yes |
-| `selectedPostureProjectionId` | `Id or null` | Yes |
+| `selectedObservation` | `EntityRef or null` | Yes |
+| `policyContextSnapshot` | `EntityRef or null` | Yes |
+| `selectedPostureProjection` | `EntityRef or null` | Yes |
 
 ### Finding
 
@@ -489,15 +600,20 @@ Service-scoped finding with no mandatory assessment foreign key. Detail absence 
 
 **Owner:** observed. **Module:** resilience. **Identity:** `workspaceId + serviceId + findingId`.
 
+**Write authority:** `COLLECTOR`. **Sealing rule:** Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.
+
 | Field | Type | Required |
 | --- | --- | --- |
 | `findingId` | `Id` | Yes |
 | `workspaceId` | `Id` | Yes |
+| `version` | `Version` | Yes |
+| `createdAt` | `Timestamp` | Yes |
+| `updatedAt` | `Timestamp` | Yes |
 | `serviceId` | `Id` | Yes |
 | `identity` | `SourceIdentity` | Yes |
-| `selectedSummaryObservationId` | `Id or null` | Yes |
-| `selectedDetailObservationId` | `Id or null` | Yes |
-| `currentCaptureCollectionId` | `Id or null` | Yes |
+| `selectedSummaryObservation` | `EntityRef or null` | Yes |
+| `selectedDetailObservation` | `EntityRef or null` | Yes |
+| `currentCaptureCollection` | `EntityRef or null` | Yes |
 | `rawDisposition` | `string or null` | Yes |
 | `rawSeverity` | `string or null` | Yes |
 | `recommendationPresence` | `enum` | Yes |
@@ -505,18 +621,23 @@ Service-scoped finding with no mandatory assessment foreign key. Detail absence 
 
 ### Recommendation
 
-Immutable suggested change anchored to one finding detail observation, group and ordinal. Later changed source content is a new recommendation.
+Captured suggestion with stable identity across repeated observations of the same Source version and normal versions for local enrichment. Without a native stable key, ordinal is not a join across changed source versions; operator workflow belongs to WorkItem.
 
-**Owner:** immutable evidence plus local enrichment. **Module:** resilience. **Identity:** `workspaceId + serviceId + findingId + detail observation + group + ordinal`.
+**Owner:** immutable evidence plus local enrichment. **Module:** resilience. **Identity:** `workspaceId + serviceId + findingId + exact source reference + groupKey + ordinal (unless a stable native key is available)`.
+
+**Write authority:** `MIXED`. **Sealing rule:** Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.
 
 | Field | Type | Required |
 | --- | --- | --- |
 | `recommendationId` | `Id` | Yes |
 | `workspaceId` | `Id` | Yes |
+| `version` | `Version` | Yes |
+| `createdAt` | `Timestamp` | Yes |
+| `updatedAt` | `Timestamp` | Yes |
 | `serviceId` | `Id` | Yes |
 | `findingId` | `Id` | Yes |
-| `findingDetailObservationId` | `Id` | Yes |
-| `sourceRevisionId` | `Id` | Yes |
+| `findingDetailObservation` | `EntityRef` | Yes |
+| `source` | `EntityRef` | Yes |
 | `groupKey` | `string` | Yes |
 | `ordinal` | `integer` | Yes |
 | `suggestion` | `JsonValue` | Yes |
@@ -528,13 +649,18 @@ AWS workspace resource inside the application Workspace. Never merge it with the
 
 **Owner:** observed. **Module:** investigation. **Identity:** `workspaceId + agentSpaceId`.
 
+**Write authority:** `COLLECTOR`. **Sealing rule:** Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.
+
 | Field | Type | Required |
 | --- | --- | --- |
 | `agentSpaceId` | `Id` | Yes |
 | `workspaceId` | `Id` | Yes |
+| `version` | `Version` | Yes |
+| `createdAt` | `Timestamp` | Yes |
+| `updatedAt` | `Timestamp` | Yes |
 | `identity` | `SourceIdentity` | Yes |
 | `name` | `string` | Yes |
-| `selectedObservationId` | `Id` | Yes |
+| `selectedObservation` | `EntityRef` | Yes |
 | `associations` | `List[AgentAssociation]` | Yes |
 
 ### Investigation
@@ -543,16 +669,21 @@ Native Task with taskType INVESTIGATION plus observed execution memberships and 
 
 **Owner:** observed aggregate. **Module:** investigation. **Identity:** `workspaceId + agentSpaceId + native taskId`.
 
+**Write authority:** `COLLECTOR`. **Sealing rule:** Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.
+
 | Field | Type | Required |
 | --- | --- | --- |
 | `investigationId` | `Id` | Yes |
 | `workspaceId` | `Id` | Yes |
+| `version` | `Version` | Yes |
+| `createdAt` | `Timestamp` | Yes |
+| `updatedAt` | `Timestamp` | Yes |
 | `agentSpaceId` | `Id` | Yes |
 | `identity` | `SourceIdentity` | Yes |
 | `title` | `string` | Yes |
 | `rawTaskStatus` | `string` | Yes |
-| `nativeTaskVersion` | `Version or null` | Yes |
-| `selectedTaskObservationId` | `Id` | Yes |
+| `nativeTaskVersion` | `PositiveInteger or null` | Yes |
+| `selectedTaskObservation` | `EntityRef` | Yes |
 | `executionPointerIdentity` | `SourceIdentity or null` | Yes |
 | `executionMemberships` | `List[TaskExecutionMembership]` | Yes |
 | `externalReference` | `ExternalReference or null` | Yes |
@@ -564,16 +695,21 @@ Native DevOps execution in an AgentSpace; task membership is an observed relatio
 
 **Owner:** observed. **Module:** investigation. **Identity:** `workspaceId + agentSpaceId + native executionId`.
 
+**Write authority:** `COLLECTOR`. **Sealing rule:** Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.
+
 | Field | Type | Required |
 | --- | --- | --- |
 | `executionId` | `Id` | Yes |
 | `workspaceId` | `Id` | Yes |
+| `version` | `Version` | Yes |
+| `createdAt` | `Timestamp` | Yes |
+| `updatedAt` | `Timestamp` | Yes |
 | `agentSpaceId` | `Id` | Yes |
 | `identity` | `SourceIdentity` | Yes |
 | `parentExecutionIdentity` | `SourceIdentity or null` | Yes |
 | `rawExecutionStatus` | `string` | Yes |
 | `agentSubTask` | `string` | Yes |
-| `selectedObservationId` | `Id` | Yes |
+| `selectedObservation` | `EntityRef` | Yes |
 
 ### JournalRecord
 
@@ -581,16 +717,21 @@ Stable journal envelope identity with retained source revisions. Content stays a
 
 **Owner:** observed. **Module:** investigation. **Identity:** `workspaceId + agentSpaceId + executionId + native recordId`.
 
+**Write authority:** `COLLECTOR`. **Sealing rule:** Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.
+
 | Field | Type | Required |
 | --- | --- | --- |
 | `journalRecordId` | `Id` | Yes |
 | `workspaceId` | `Id` | Yes |
+| `version` | `Version` | Yes |
+| `createdAt` | `Timestamp` | Yes |
+| `updatedAt` | `Timestamp` | Yes |
 | `agentSpaceId` | `Id` | Yes |
 | `executionId` | `Id` | Yes |
 | `identity` | `SourceIdentity` | Yes |
 | `recordType` | `string` | Yes |
-| `selectedSourceRevisionId` | `Id` | Yes |
-| `selectedObservationId` | `Id` | Yes |
+| `selectedSource` | `EntityRef` | Yes |
+| `selectedObservation` | `EntityRef` | Yes |
 
 ### ApprovalRequest
 
@@ -598,15 +739,20 @@ Approval decision and resume are separate commands; neither is evidence of tool 
 
 **Owner:** observed control request. **Module:** investigation. **Identity:** `workspaceId + approvalRequestId`.
 
+**Write authority:** `COLLECTOR`. **Sealing rule:** Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.
+
 | Field | Type | Required |
 | --- | --- | --- |
 | `approvalRequestId` | `Id` | Yes |
 | `workspaceId` | `Id` | Yes |
+| `version` | `Version` | Yes |
+| `createdAt` | `Timestamp` | Yes |
+| `updatedAt` | `Timestamp` | Yes |
 | `agentSpaceId` | `Id` | Yes |
 | `executionId` | `Id` | Yes |
 | `nativeApprovalId` | `string` | Yes |
-| `requestSourceRevisionId` | `Id` | Yes |
-| `selectedObservationId` | `Id` | Yes |
+| `requestSource` | `EntityRef` | Yes |
+| `selectedObservation` | `EntityRef` | Yes |
 | `rawState` | `string` | Yes |
 | `actionDigest` | `Digest` | Yes |
 | `decisionCommandIds` | `List[Id]` | Yes |
@@ -614,66 +760,66 @@ Approval decision and resume are separate commands; neither is evidence of tool 
 
 ### Asset
 
-Native asset root; exact versions and files retain immutable source/content references and availability.
+A versioned asset whose selected native version and exact files are ordinary fields. Asset history uses the same id/version contract as every entity.
 
 **Owner:** observed. **Module:** investigation. **Identity:** `workspaceId + assetId`.
+
+**Write authority:** `COLLECTOR`. **Sealing rule:** Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.
 
 | Field | Type | Required |
 | --- | --- | --- |
 | `assetId` | `Id` | Yes |
 | `workspaceId` | `Id` | Yes |
+| `version` | `Version` | Yes |
+| `createdAt` | `Timestamp` | Yes |
+| `updatedAt` | `Timestamp` | Yes |
 | `agentSpaceId` | `Id` | Yes |
 | `identity` | `SourceIdentity` | Yes |
 | `assetType` | `string` | Yes |
 | `name` | `string` | Yes |
-| `versions` | `List[AssetVersion]` | Yes |
+| `nativeVersion` | `string` | Yes |
+| `source` | `EntityRef` | Yes |
+| `files` | `List[AssetFile]` | Yes |
 
 ### Scenario
 
-Editable scenario metadata and draft; executions reference a published immutable ScenarioRevision.
+One versioned scenario entity. Draft editing, publication and archival append versions with the same scenarioId. A Run pins an exact PUBLISHED version; current ARCHIVED head blocks new admissions.
 
 **Owner:** application. **Module:** workflow. **Identity:** `workspaceId + scenarioId`.
+
+**Write authority:** `APPLICATION`. **Sealing rule:** Published version content and locks are immutable. Editing opens a later DRAFT version; publishing or archiving appends another version. History is never reopened.
 
 | Field | Type | Required |
 | --- | --- | --- |
 | `scenarioId` | `Id` | Yes |
 | `workspaceId` | `Id` | Yes |
 | `version` | `Version` | Yes |
-| `localUpdatedAt` | `Timestamp` | Yes |
+| `createdAt` | `Timestamp` | Yes |
+| `updatedAt` | `Timestamp` | Yes |
 | `name` | `string` | Yes |
 | `description` | `string` | Yes |
-| `draftDefinition` | `ScenarioDraft` | Yes |
-| `defaultRevisionId` | `Id or null` | Yes |
-| `archived` | `boolean` | Yes |
-
-### ScenarioRevision
-
-Validated immutable definition with complete operation/schema locks. Alias changes cannot change published meaning.
-
-**Owner:** application immutable publication. **Module:** workflow. **Identity:** `workspaceId + scenarioId + scenarioRevisionId`.
-
-| Field | Type | Required |
-| --- | --- | --- |
-| `scenarioRevisionId` | `Id` | Yes |
-| `workspaceId` | `Id` | Yes |
-| `scenarioId` | `Id` | Yes |
-| `revisionNumber` | `Version` | Yes |
-| `publishedAt` | `Timestamp` | Yes |
-| `digest` | `Digest` | Yes |
-| `definition` | `ScenarioDefinition` | Yes |
+| `state` | `enum` | Yes |
+| `definition` | `ScenarioDraft or ScenarioDefinition` | Yes |
+| `publishedAt` | `Timestamp or null` | Yes |
+| `digest` | `Digest or null` | Yes |
 
 ### Run
 
-An admitted workflow execution; its phase, technical outcome, verdict and finalization remain separate.
+Versioned admitted workflow execution pinning one exact published Scenario and input Snapshot. Phase, outcome, verdict and finalization remain independent; every state change appends Run.version.
 
 **Owner:** application execution. **Module:** workflow. **Identity:** `workspaceId + runId`.
+
+**Write authority:** `WORKFLOW`. **Sealing rule:** Lifecycle changes append versions. A settled/terminal record cannot be reopened; late reconciliation is new evidence and does not rewrite settled facts.
 
 | Field | Type | Required |
 | --- | --- | --- |
 | `runId` | `Id` | Yes |
 | `workspaceId` | `Id` | Yes |
-| `scenarioRevisionId` | `Id` | Yes |
-| `inputSnapshotId` | `Id` | Yes |
+| `version` | `Version` | Yes |
+| `createdAt` | `Timestamp` | Yes |
+| `updatedAt` | `Timestamp` | Yes |
+| `scenario` | `EntityRef` | Yes |
+| `inputSnapshot` | `EntityRef` | Yes |
 | `phase` | `enum` | Yes |
 | `executionOutcome` | `enum` | Yes |
 | `assessmentVerdict` | `enum` | Yes |
@@ -681,11 +827,11 @@ An admitted workflow execution; its phase, technical outcome, verdict and finali
 | `finalizationState` | `enum` | Yes |
 | `effectState` | `enum` | Yes |
 | `cancellationIntent` | `CancellationIntent or null` | Yes |
-| `projectionVersion` | `Version` | Yes |
 | `admittedAt` | `Timestamp` | Yes |
 | `terminalAt` | `Timestamp or null` | Yes |
 | `reducerVersion` | `string` | Yes |
 | `asOfSequence` | `integer` | Yes |
+| `steps` | `List[EntityRef]` | Yes |
 
 ### StepRun
 
@@ -693,16 +839,22 @@ Run-owned step lifecycle. Selection of an attempt is explicit; retry history is 
 
 **Owner:** application execution. **Module:** workflow. **Identity:** `workspaceId + runId + stepKey`.
 
+**Write authority:** `WORKFLOW`. **Sealing rule:** Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.
+
 | Field | Type | Required |
 | --- | --- | --- |
 | `stepRunId` | `Id` | Yes |
 | `workspaceId` | `Id` | Yes |
+| `version` | `Version` | Yes |
+| `createdAt` | `Timestamp` | Yes |
+| `updatedAt` | `Timestamp` | Yes |
 | `runId` | `Id` | Yes |
 | `stepKey` | `Id` | Yes |
-| `selectedAttemptNo` | `Version or null` | Yes |
 | `skipReason` | `string or null` | Yes |
 | `phase` | `enum` | Yes |
 | `outcome` | `enum or null` | Yes |
+| `selectedAttempt` | `EntityRef or null` | Yes |
+| `attempts` | `List[EntityRef]` | Yes |
 
 ### StepAttempt
 
@@ -710,13 +862,18 @@ Immutable settled execution facts; late reconciliation adds observations without
 
 **Owner:** application execution facts. **Module:** workflow. **Identity:** `workspaceId + runId + stepRunId + attemptNo`.
 
+**Write authority:** `WORKFLOW`. **Sealing rule:** Lifecycle changes append versions. A settled/terminal record cannot be reopened; late reconciliation is new evidence and does not rewrite settled facts.
+
 | Field | Type | Required |
 | --- | --- | --- |
 | `stepAttemptId` | `Id` | Yes |
 | `workspaceId` | `Id` | Yes |
+| `version` | `Version` | Yes |
+| `createdAt` | `Timestamp` | Yes |
+| `updatedAt` | `Timestamp` | Yes |
 | `runId` | `Id` | Yes |
 | `stepRunId` | `Id` | Yes |
-| `attemptNo` | `Version` | Yes |
+| `attemptNo` | `PositiveInteger` | Yes |
 | `dispatchKey` | `Id` | Yes |
 | `outcome` | `enum` | Yes |
 | `startedAt` | `Timestamp` | Yes |
@@ -731,13 +888,18 @@ Native AWS FIS experiment, possibly linked to a workflow attempt but independent
 
 **Owner:** observed. **Module:** fis. **Identity:** `workspaceId + experimentId`.
 
+**Write authority:** `COLLECTOR`. **Sealing rule:** Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.
+
 | Field | Type | Required |
 | --- | --- | --- |
 | `experimentId` | `Id` | Yes |
 | `workspaceId` | `Id` | Yes |
+| `version` | `Version` | Yes |
+| `createdAt` | `Timestamp` | Yes |
+| `updatedAt` | `Timestamp` | Yes |
 | `identity` | `SourceIdentity` | Yes |
-| `templateSourceRevisionId` | `Id or null` | Yes |
-| `selectedObservationId` | `Id` | Yes |
+| `templateSource` | `EntityRef or null` | Yes |
+| `selectedObservation` | `EntityRef` | Yes |
 | `rawExperimentState` | `string` | Yes |
 | `actions` | `List[FISAction]` | Yes |
 | `targetMemberships` | `List[TargetMembership]` | Yes |
@@ -746,22 +908,22 @@ Native AWS FIS experiment, possibly linked to a workflow attempt but independent
 
 ## Owned values and scalar contracts
 
-Owned values have identity only within their owner or their pinned revision. Naming a shape does not create another CRUD resource. ReadAttempt, StepRun and StepAttempt remain explicit entities because their lifecycle and references require independent tracking.
+Owned values have no independent lifecycle or version stream. `EntityRef` is an exact reference value, not an entity. `EntityIdentity` explicitly means a live identity. A field carrying a historical input uses the exact reference contract.
 
 | Shape | Meaning |
 | --- | --- |
 | `Id` | string |
 | `Timestamp` | Epoch seconds, millisecond precision. Validators must use decimal arithmetic before ordering; reject higher precision. |
-| `Version` | integer |
+| `Version` | Application entity version, monotonically increasing within one stable entity identity. |
 | `Digest` | string |
 | `StringMap` | object |
 | `JsonValue` | Retained native document content may be any JSON value; strict write DTOs never reuse this as their entire request. |
-| `EntityRef` | An application identity in the containing workspace. Resolution must enforce the workspace, entity kind and parent ownership. |
+| `EntityRef` | Exact immutable representation of an entity in the containing workspace. Missing version is invalid; resolution never falls back to a current head. This is an owned reference value, not an entity. |
 | `OwningScope` | Resource owner, independent of the principal/connection used to observe it. Null is explicit global/not-applicable, never inferred from delivery recipient. |
 | `SourceIdentity` | Stable native identity or explicit provisional source identity. Encode the complete tuple, never delimiter-join opaque components. Provider ARN aliases are preserved separately. |
 | `ActorRef` | Authenticated human/service identity supplied by trusted runtime, not selected by request body. |
 | `ArtifactRef` | Durable content locator with version and digest. A signed download URL is resolved separately and is never identity. |
-| `EvidenceRef` | Immutable evidence reference with explicit type, in the same workspace. |
+| `EvidenceRef` | Exact versioned evidence reference, optionally narrowed by a locator. This value never resolves to latest. |
 | `FieldPresence` | Presence is independent of value. Omitted detail cannot be converted into an empty collection. |
 | `Coverage` | A bounded claim about a named query and time window; dimensions remain independent. |
 | `CollectionQuery` | Exact request scope and declared question; pagination is not a universal proof of completeness. |
@@ -771,7 +933,7 @@ Owned values have identity only within their owner or their pinned revision. Nam
 | `OrganizationMembership` | External, time-bounded organization membership; unrelated to notification recipients. |
 | `OrganizationAccess` | Observed AWS Health organization integration status. Configuration, access and collection coverage are distinct. |
 | `ServiceMembership` | Sole writable workload membership authority is Service.memberships. Reverse journey/system service lists are projections. |
-| `LocalDecision` | Independently versioned operator metadata; cannot rewrite provider evidence. |
+| `LocalDecision` | Owned local classification decision with actor and decision time. Changes advance the owning Dependency.version; it has no separate version lifecycle. |
 | `WorkAction` | Immutable append-only operator action owned by a WorkItem; no standalone CRUD root. |
 | `CommandAttempt` | Owned dispatch/reconciliation attempt. Acceptance, remote effect and local completion are independent. |
 | `ExternalOperationRef` | Provider effect identity may be unknown after a lost response. originEffectKey exists before dispatch and remains stable. |
@@ -780,11 +942,10 @@ Owned values have identity only within their owner or their pinned revision. Nam
 | `LifecycleMilestone` | Identity is milestoneKey within a pinned catalog revision. Raw provider date preserves date precision. |
 | `PolicyComponent` | Only reviewed native component families; optional configured components determine the assessment denominator. |
 | `PolicyContext` | Frozen selection of assignment and effective-target evidence. Captured context is not proof of the exact AWS-evaluated policy revision. |
-| `RecommendationEnrichment` | Local estimate/owner/workflow with its own revision, independent of immutable suggestion evidence. |
+| `RecommendationEnrichment` | Owned local explanatory metadata and estimate. Changes advance Recommendation.version. Assignment and work state belong to WorkItem only. |
 | `AgentAssociation` | Provider-owned scoped association, never a business Service or product Connection. Built-in serviceId aws need not resolve to a registered provider. |
 | `TaskExecutionMembership` | Observed request/response association, not inferred ownership. An Execution has no single investigationId. |
 | `ExternalReference` | Native linked-incident reference; may remain unresolved after its integration disappears. |
-| `AssetVersion` | Exact provider asset version with retained source revision. latest is never an archival reference. |
 | `AssetFile` | A file is identified by owning asset version and exact path, including case. |
 | `GraphNode` | Snapshot-owned node; unknown/inferred identity remains qualified. |
 | `GraphEdge` | Snapshot-owned typed edge. Causal claim, dependency, provider topology and sequence are different meanings. |
@@ -813,10 +974,12 @@ Owned values have identity only within their owner or their pinned revision. Nam
 | `EvidenceLocator` | Optional exact fragment attribution: JSON Pointer, asset path, or half-open Unicode code-point text offsets. Omitted locator means the entire retained value. |
 | `RecommendationEstimate` | Local estimate with declared amount/currency/basis, complexity, source, time and confidence; separate from provider suggested-change evidence. |
 | `AssigneeRef` | Resolved directory identity assigned to local work. A team/group is an assignee, never an authenticated audit actor. |
+| `EntityIdentity` | A logical entity identity for explicitly live navigation or work targeting. It does not select a historical representation or authorize a lookup. |
+| `PositiveInteger` | A positive domain count or ordinal. It is not an entity version or concurrency token. |
 
 ## Relationship register
 
-All multiplicities describe the logical model; a partial cache can contain unresolved references. The full diagram is [complete-model.svg](../diagrams/complete-model.svg).
+All multiplicities describe the logical model; a partial cache can contain unresolved references. The [complete Draw.io atlas](../diagrams/model.drawio) distributes every association over readable detailed sheets. The [overview](../diagrams/complete-model.svg) contains all entities and a selected subset of associations.
 
 | From | Cardinality | To | Cardinality | Meaning |
 | --- | --- | --- | --- | --- |
@@ -826,11 +989,11 @@ All multiplicities describe the logical model; a partial cache can contain unres
 | Connection | 1 | Collection | 0..* | access path |
 | Collection | 1 | ReadAttempt | 0..* | owns |
 | ReadAttempt | 0..1 | Observation | 0..* | records |
-| SourceRevision | 1 | Observation | 0..* | observed as |
-| Observation | 0..* | ProjectionRevision | 0..* | immutable inputs |
-| SourceRevision | 0..* | ProjectionRevision | 0..* | immutable inputs |
-| ProjectionRevision | 0..* | Snapshot | 0..* | pins |
-| SourceRevision | 0..* | Snapshot | 0..* | pins |
+| Source | 1 | Observation | 0..* | observed as |
+| Observation | 0..* | Projection | 0..* | used as immutable input |
+| Source | 0..* | Projection | 0..* | used as immutable input |
+| Projection | 0..* | Snapshot | 0..* | captured in |
+| Source | 0..* | Snapshot | 0..* | captured in |
 | Command | 0..* | Observation | 0..* | reconciled by |
 | Resource | 1 | ComponentDeployment | 0..* | hosts |
 | System | 1 | UserJourney | 0..* | contains |
@@ -843,8 +1006,8 @@ All multiplicities describe the logical model; a partial cache can contain unres
 | EventContext | 1 | Communication | 0..* | receives |
 | EntityImpact | 0..* | Resource | 0..* | explicit match |
 | Snapshot | 1 | LifecycleEntry | 0..* | catalogue capture |
-| LifecycleEntry | 0..* | ProjectionRevision | 0..* | exposure input |
-| ComponentDeployment | 0..* | ProjectionRevision | 0..* | exposure input |
+| LifecycleEntry | 0..* | Projection | 0..* | exposure input |
+| ComponentDeployment | 0..* | Projection | 0..* | exposure input |
 | Service | 1 | ResilienceAssessment | 0..* | assessed by |
 | Service | 1 | Finding | 0..* | scopes |
 | Finding | 1 | Recommendation | 0..* | detail suggestions |
@@ -858,8 +1021,7 @@ All multiplicities describe the logical model; a partial cache can contain unres
 | ApprovalRequest | 0..1 | Command | 0..* | decision or resume |
 | AgentSpace | 1 | Asset | 0..* | owns |
 | Investigation | 0..* | Snapshot | 0..* | historical subjects |
-| Scenario | 1 | ScenarioRevision | 0..* | publishes |
-| ScenarioRevision | 1 | Run | 0..* | executed as |
+| Scenario | 1 | Run | 0..* | published version used by |
 | Snapshot | 1 | Run | 0..* | pinned admission |
 | Run | 1 | StepRun | 1..* | owns |
 | StepRun | 1 | StepAttempt | 0..* | attempts |

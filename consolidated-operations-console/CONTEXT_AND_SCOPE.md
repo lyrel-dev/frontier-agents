@@ -1,68 +1,75 @@
 # Context and scope
 
-## The application being defined
+## Application context
 
-**Consolidated Operations Console** is an application that brings operational evidence and work for the same systems, services, resources and incidents into one workspace. Its modules cover AWS Health, resilience assessments, DevOps investigations and fault-injection/assessment workflows. A common application shell will eventually provide navigation, search, evidence inspection, historical review and operator work tracking.
+**Consolidated Operations Console** brings operational evidence and work for the same systems, services, resources and incidents into one workspace. Its modules cover AWS Health, resilience assessments, DevOps investigations and fault-injection/assessment workflows. A future common shell supplies navigation, search, source inspection, historical comparison and operator work tracking.
 
-This first step defines the **modular consolidated data model and its application API contracts**. It establishes the vocabulary, identity, ownership, references and invariants that future collectors, storage, orchestration and UI modules will share. It delivers reviewable schemas and examples, not a running console or a service connected to AWS.
+The first step defines a **modular consolidated data model and application API contracts**. It establishes identity, ownership, lifecycle, versioning and references before selecting collectors, storage, orchestration or UI implementation.
 
-The source boundary is `main` at **`d926a81c584b6b69f41bfb9641532c4f8f2d7cb3`**, inspected on **5 November 2026**. [INVENTORY.md](INVENTORY.md) lists all **226 active files** under the exact recursive pattern `aws/<service-name>/analysis/**`; [inventory.json](inventory.json) records their Git blob hashes, sizes and last commits. Earlier retired paths are listed separately. No source-package files are changed by this proposal.
+The source baseline remains `main` at **`d926a81c584b6b69f41bfb9641532c4f8f2d7cb3`**. [INVENTORY.md](INVENTORY.md) lists all **226 active files** recursively under `aws/<service-name>/analysis/**`, with hashes, sizes and last commits in [inventory.json](inventory.json). Retired paths are listed separately. The review of the first consolidated package starts from [`db142c8`](https://github.com/lyrel-dev/frontier-agents/commit/db142c84bcfd691d5c71071681731cac81a52c7b); that newer commit does not silently expand the frozen AWS source inventory.
 
-## Existing work and what it contributes
+## Governing correction
 
-| Source package | Existing work | Contribution to the new model |
+The user's current instruction establishes three requirements: **every entity is versioned; versions do not become separate domain entities; all diagrams use Draw.io with reviewed layouts**. Contract revision 2 applies these requirements to the schema, references, operations, examples, mappings and diagrams together.
+
+The earlier package gave seven entities a local `version`, used `projectionVersion` elsewhere, left many changing records unversioned, and introduced separate SourceRevision, ProjectionRevision and ScenarioRevision classes. Those choices were made in the consolidation and are corrected here. They are not attributed to an earlier user preference. Personal Context was disabled, so unobserved earlier conversations are not evidence. [DESIGN_PRINCIPLES.md](DESIGN_PRINCIPLES.md) distinguishes this explicit instruction from guidance recovered in repository documents.
+
+## Existing work and its contribution
+
+| Source package | Existing work | Contribution retained in the new model |
 | --- | --- | --- |
-| [DevOps Agent](../aws/devops-agent/analysis/README.md) | Investigation analysis, native API catalog, ten diagrams, prototype, source audits and corrected evidence/history contracts | Scoped Task/Execution/Journal identities, observed membership, arbitrary journal content, phase-specific result selection, historical snapshots and independent approval/resume outcomes |
-| [FIS](../aws/fis/analysis/README.md) | Native experiment/action analysis, five provider diagrams, report, prototype and quality review | Experiment/action control boundary, captured configuration, selected resource evidence, safety/report distinctions and frozen acceptance meaning |
-| [General workflow under FIS](../aws/fis/analysis/workflow/README.md) | Six-entity workflow proposal, three diagrams, schemas, adapter catalog, API contract, examples and reference semantic checks | Scenario publication, immutable locks, admission snapshots, step attempts, criterion denominators, cancellation and reconciliation of uncertain effects |
-| [Health](../aws/health/analysis/README.md) | Event/impact/lifecycle analysis, four diagrams, report and prototype | Public/account/organization context, communication-page/delivery separation, lifecycle catalog applicability and local work tracking |
-| [Resilience Hub](../aws/resilience-hub/analysis/README.md) | v2 model, five diagrams, operator prototype, 44-operation RPC mock and reviewed contracts | Business structure, effective policy context, service-scoped findings, recommendation enrichment, discovery/topology and qualified status rollups |
+| [DevOps Agent](../aws/devops-agent/analysis/README.md) | Investigation analysis, native API catalogue, ten diagrams, prototype and reviews | Scoped Task/Execution/Journal identities, observed membership, arbitrary journal content, phase-specific result selection, history and independent approval/resume outcomes |
+| [FIS](../aws/fis/analysis/README.md) | Native experiment/action analysis, five diagrams, report, prototype and quality review | Experiment/action control boundary, captured configuration, selected-resource evidence and independent report/safety/acceptance meanings |
+| [General workflow under FIS](../aws/fis/analysis/workflow/README.md) | Workflow proposal, schemas, three diagrams, adapter/API contracts and semantic cases | Published definition locks, admission inputs, attempt identity, criterion denominator, cancellation and uncertain-effect reconciliation |
+| [Health](../aws/health/analysis/README.md) | Event/impact/lifecycle analysis, four diagrams, report and prototype | Public/account/organization context, communication and delivery distinction, catalogue applicability and local operator work |
+| [Resilience Hub](../aws/resilience-hub/analysis/README.md) | Model, five diagrams, operator prototype, 44-operation RPC mock and reviews | Workload structure, policy context, service-scoped findings, recommendation content, topology and qualified status rollups |
 
-There are four AWS service directories and six practical work packages: FIS has a separate generalized workflow, and Resilience has a separate RPC facade. These distinctions matter when planning reuse. The older source packages have different maturity levels; their presence is not evidence of a shared production backend.
+There are four service directories and six practical packages: FIS includes a generalized workflow package and Resilience includes a separate RPC facade. Their maturity ranges from analysis to executable demonstrations; they do not establish a shared production backend.
 
 ## First-step deliverables
 
-| Included now | Acceptance boundary |
+| Included | Acceptance boundary |
 | --- | --- |
-| Complete source inventory and recovery of recorded design principles | Every source path and named model concept has a traceable disposition. Prior-chat retrieval was disabled; the recovered principles cite repository evidence. |
-| Shared kernel and typed module entities | 37 entity definitions, their owned values, scoped identities, cardinalities, mutability and source ownership are explicit. |
-| Machine-readable logical model | [model/schema.json](model/schema.json) is the canonical JSON Schema document; generated references and diagrams derive from it. It describes the normalized application contract, with raw native payloads retained separately. |
-| Class diagrams for every entity | One complete class diagram plus focused module views, editable Mermaid and rendered SVG. |
-| AWS RPC style application operations | Operation-specific inputs/outputs, errors, pagination, idempotency, concurrency and command boundaries; all operations are proposed contracts. |
-| Source-to-target mapping and examples | Provider DTOs, local entities, owned values and derived projections are identified explicitly. No generic JSON fallback is used to claim full native semantic normalization. |
-| Offline structural and semantic verification | Schema/example checks, cross-artifact coverage, source-inventory integrity and selected adversarial invariant cases. Runtime claims remain separate. |
-| A staged consolidation path | Migration order, compatibility changes, preservation gates and the first implementation slice are stated. |
+| Source inventory and crosswalk | Preserve every source path and named source concept's disposition, including older revision terminology as aliases. |
+| Uniform entity model | All 36 entities require stable identity, `version`, `createdAt` and `updatedAt`. Write authority is explicit. Owned values inherit their owner's version. |
+| Historical reference contract | Exact references carry entity kind, ID and version. Current navigation is separately identified. A historical read never substitutes the latest version. |
+| Machine-readable schema | [model/schema.json](model/schema.json) defines normalized entities and typed values; retained native payloads remain inspectable. |
+| Draw.io class diagrams | An editable multi-page [atlas](diagrams/model.drawio), complete entity coverage, focused relationship views and rendered exports. |
+| AWS RPC style operations | Typed requests/responses, version selection and preconditions, errors, pagination, replay and explicit command boundaries. |
+| Connected examples and checks | Verify schema consistency and selected cross-record/history invariants using synthetic data. |
+| Consolidation path | Stage collection, persistence, commands, execution and UI with concrete acceptance gates. |
 
-## Deferred implementation
+## Scope boundaries
 
-The next stages will select and implement storage, authentication/authorization enforcement, collectors, durable command/replay persistence, the provider adapters, a workflow scheduler, expression evaluation, effect reconciliation, retention/export enforcement and the user interface. Those components are prerequisites for production guarantees; this package defines their contracts and acceptance gates.
+Implementation of storage, authentication/authorization enforcement, collectors, durable replay, provider adapters, scheduling, expression evaluation, effect reconciliation, retention/export enforcement and UI follows model review. Those capabilities have acceptance gates in [CONSOLIDATION_PLAN.md](CONSOLIDATION_PLAN.md).
 
-This phase does not design a second IAM, organization directory, credential vault, notification service or general project-management system. It stores references to those owners. Deployment, regional architecture, database product and hosting choices remain open until workload and access requirements are established.
+The model references existing credential, identity and organization owners. It does not prescribe a new IAM, credential vault, notification platform or general project-management product. Deployment topology and database selection depend on the later operating requirements.
 
-Native administrative breadth is deferred deliberately. For example, the DevOps API's Goal, Trigger, registered integration, private connection and operator-app configuration families remain explicitly typed retained adapter profiles. Their source identities and payloads are retained; they do not become speculative CRUD entities in the first shared model. The [crosswalk](MAPPING.md) and [adapter registry](model/adapter-profiles.json) enumerate those decisions.
+Native administrative breadth remains in named adapter profiles until a concrete workflow needs an operation. DevOps Goals, Triggers, integration registrations, private connections and operator-app configuration retain their provider identity and payloads. Their presence in an SDK does not create a speculative CRUD root in the console.
 
-## Users and key questions
+## User questions the model must answer
 
-The intended users are operators investigating incidents, service owners reviewing resilience and lifecycle exposure, and engineers authoring/reviewing assessment scenarios. The shared model should let them answer:
+1. Which service, resource and native owning scope does this item concern, and what establishes that relationship?
+2. Which version am I reading, who may publish its successor, and which exact versions supported a past decision?
+3. What did the source report, through which access path, and at which source and observation times?
+4. What was collected, what is missing, and what evidence supports the displayed conclusion?
+5. Which work or effect was requested, accepted, observed and completed?
+6. What did an earlier assessment mean at its cutoff when the current source or definition has changed?
 
-1. Which logical service, account/Region and resource does this item concern, and how was that relationship established?
-2. What did the provider say, through which access path, and at what source and observation times?
-3. What was actually collected, what is missing, and which exact evidence supports the displayed conclusion?
-4. Which work or external effect was requested, accepted, observed and completed?
-5. What did an earlier view or assessment mean at its recorded cutoff, even if current collection fails?
+These questions keep identity, history and authority in the common contract while preserving domain-specific meaning.
 
-These questions explain why a few common evidence and command entities are necessary. Service-specific states remain in their modules because the questions they answer differ.
-
-## Decisions and assumptions
+## Decisions
 
 | Decision | Rationale and limit |
 | --- | --- |
-| Workspace is the application authorization boundary | Every application record is workspace-scoped. AWS AgentSpace and provider owner scopes are separate concepts. The initial schema does not prescribe how identity federation realizes that boundary. |
-| System, UserJourney and Service form a local workload catalog | They provide a common business context across modules. Existing Resilience native identities become explicit bindings; a local metadata edit has no implied AWS side effect. Native configuration changes use explicit provider commands. |
-| A shared SourceIdentity value replaces a separate universal SourceObject entity | The exact native tuple plus immutable SourceRevision preserves identity/history without another mutable CRUD root. |
-| SourceRevision, Observation and ProjectionRevision remain separate | They preserve payload changes, repeated collection and changing interpretation independently. |
-| Composition is the extension mechanism | Modules own entity types, source profiles, projection rules and operations. There is no universal mutable entity with an untyped extensions map. Raw JSON is restricted to retained native documents and explicitly versioned schema/content boundaries. |
-| Independent reevaluation can create an EVALUATION projection | This extends the earlier workflow's new-read-only-Run convention. The projection pins its inputs and evaluator; it never rewrites the original sealed run. A Run remains available when reevaluation needs orchestration. |
-| One application RPC namespace is adopted | This follows the current request and the existing Resilience facade's conventions. Native AWS transports remain behind adapters. |
+| One versioning rule for every entity | Versioning records the complete representation. It does not grant user edit access or alter provider semantics. |
+| Source, Observation and Projection are distinct concepts | They model a retained source document, an occurrence of observing it, and an interpreted result. Each has stable identity and its own versions; none is a version-only class. |
+| Scenario owns authoring and publication | A published Scenario version contains locked definitions. Run pins that version. Drafting and archiving create later versions of the same Scenario. |
+| Workspace is the application boundary | Provider AgentSpace, owning accounts and access paths keep their separate meanings. |
+| System, UserJourney and Service form a local catalogue | Native identities are evidence-backed bindings. Local edits have no implied provider side effect. |
+| WorkItem owns operator work | Recommendation enrichment supplies estimates/notes; assignment and work lifecycle belong to WorkItem. |
+| Snapshot pins entity versions | Its manifest closes over retained evidence, including failed/empty ReadAttempts, without copying independently authoritative entities. |
+| Composition supports extension | New typed modules/profiles reuse common versions, references, evidence and command contracts. There is no universal mutable extension bag. |
+| RPC contract revision 2 is explicit | Identity and reference changes are breaking changes. The namespace is `ConsolidatedOperationsConsole_20261105V2`. |
 
-The [model](MODEL.md), [API protocol](api/PROTOCOL.md) and [plan](CONSOLIDATION_PLAN.md) make these decisions concrete. A future requirement should change the smallest owning module and preserve the shared evidence and compatibility rules.
+The [model](MODEL.md), [protocol](api/PROTOCOL.md), [mapping](MAPPING.md) and [review](REVIEW.md) specify the consequences of these choices.

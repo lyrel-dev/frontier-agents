@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/model.json",
+  "$id": "https://schemas.frontier-agents.example/consolidated-operations-console/2026-11-05/v2/model.json",
   "title": "Consolidated Operations Console logical data model",
-  "description": "Phase 1 proposed normalized contracts. Source payloads are retained, not claimed to be complete native SDK schemas. Entity schemas describe one current publication; provider observations and immutable revisions remain separate.",
+  "description": "Phase 1, contract revision 2. Every entity has stable identity and uniform append-only versions. Versioning is metadata and history of an entity, never a separate domain entity. Source payloads are retained without claiming complete native SDK conformance.",
   "x-apiVersion": "2026-11-05",
   "x-sourceCommit": "d926a81c584b6b69f41bfb9641532c4f8f2d7cb3",
   "x-entities": [
@@ -11,9 +11,9 @@
     "Resource",
     "Collection",
     "ReadAttempt",
-    "SourceRevision",
+    "Source",
     "Observation",
-    "ProjectionRevision",
+    "Projection",
     "Snapshot",
     "WorkItem",
     "Command",
@@ -38,7 +38,6 @@
     "ApprovalRequest",
     "Asset",
     "Scenario",
-    "ScenarioRevision",
     "Run",
     "StepRun",
     "StepAttempt",
@@ -95,7 +94,7 @@
       "label": "records"
     },
     {
-      "from": "SourceRevision",
+      "from": "Source",
       "to": "Observation",
       "fromCardinality": "1",
       "toCardinality": "0..*",
@@ -103,31 +102,31 @@
     },
     {
       "from": "Observation",
-      "to": "ProjectionRevision",
+      "to": "Projection",
       "fromCardinality": "0..*",
       "toCardinality": "0..*",
-      "label": "immutable inputs"
+      "label": "used as immutable input"
     },
     {
-      "from": "SourceRevision",
-      "to": "ProjectionRevision",
+      "from": "Source",
+      "to": "Projection",
       "fromCardinality": "0..*",
       "toCardinality": "0..*",
-      "label": "immutable inputs"
+      "label": "used as immutable input"
     },
     {
-      "from": "ProjectionRevision",
+      "from": "Projection",
       "to": "Snapshot",
       "fromCardinality": "0..*",
       "toCardinality": "0..*",
-      "label": "pins"
+      "label": "captured in"
     },
     {
-      "from": "SourceRevision",
+      "from": "Source",
       "to": "Snapshot",
       "fromCardinality": "0..*",
       "toCardinality": "0..*",
-      "label": "pins"
+      "label": "captured in"
     },
     {
       "from": "Command",
@@ -215,14 +214,14 @@
     },
     {
       "from": "LifecycleEntry",
-      "to": "ProjectionRevision",
+      "to": "Projection",
       "fromCardinality": "0..*",
       "toCardinality": "0..*",
       "label": "exposure input"
     },
     {
       "from": "ComponentDeployment",
-      "to": "ProjectionRevision",
+      "to": "Projection",
       "fromCardinality": "0..*",
       "toCardinality": "0..*",
       "label": "exposure input"
@@ -320,17 +319,10 @@
     },
     {
       "from": "Scenario",
-      "to": "ScenarioRevision",
-      "fromCardinality": "1",
-      "toCardinality": "0..*",
-      "label": "publishes"
-    },
-    {
-      "from": "ScenarioRevision",
       "to": "Run",
       "fromCardinality": "1",
       "toCardinality": "0..*",
-      "label": "executed as"
+      "label": "published version used by"
     },
     {
       "from": "Snapshot",
@@ -392,7 +384,8 @@
     "Version": {
       "type": "integer",
       "minimum": 1,
-      "maximum": 9007199254740991
+      "maximum": 9007199254740991,
+      "description": "Application entity version, monotonically increasing within one stable entity identity."
     },
     "Digest": {
       "type": "string",
@@ -420,9 +413,9 @@
             "Resource",
             "Collection",
             "ReadAttempt",
-            "SourceRevision",
+            "Source",
             "Observation",
-            "ProjectionRevision",
+            "Projection",
             "Snapshot",
             "WorkItem",
             "Command",
@@ -447,7 +440,6 @@
             "ApprovalRequest",
             "Asset",
             "Scenario",
-            "ScenarioRevision",
             "Run",
             "StepRun",
             "StepAttempt",
@@ -456,14 +448,18 @@
         },
         "id": {
           "$ref": "#/$defs/Id"
+        },
+        "version": {
+          "$ref": "#/$defs/Version"
         }
       },
       "required": [
         "kind",
-        "id"
+        "id",
+        "version"
       ],
       "additionalProperties": false,
-      "description": "An application identity in the containing workspace. Resolution must enforce the workspace, entity kind and parent ownership."
+      "description": "Exact immutable representation of an entity in the containing workspace. Missing version is invalid; resolution never falls back to a current head. This is an owned reference value, not an entity."
     },
     "OwningScope": {
       "type": "object",
@@ -757,14 +753,17 @@
         "kind": {
           "type": "string",
           "enum": [
-            "SOURCE_REVISION",
-            "OBSERVATION",
-            "PROJECTION_REVISION",
-            "SNAPSHOT"
+            "Source",
+            "Observation",
+            "Projection",
+            "Snapshot"
           ]
         },
         "id": {
           "$ref": "#/$defs/Id"
+        },
+        "version": {
+          "$ref": "#/$defs/Version"
         },
         "locator": {
           "$ref": "#/$defs/EvidenceLocator"
@@ -772,10 +771,11 @@
       },
       "required": [
         "kind",
-        "id"
+        "id",
+        "version"
       ],
       "additionalProperties": false,
-      "description": "Immutable evidence reference with explicit type, in the same workspace."
+      "description": "Exact versioned evidence reference, optionally narrowed by a locator. This value never resolves to latest."
     },
     "FieldPresence": {
       "type": "object",
@@ -889,10 +889,17 @@
         "evaluatedAt": {
           "$ref": "#/$defs/Timestamp"
         },
-        "readAttemptIds": {
+        "readAttempts": {
           "type": "array",
           "items": {
-            "$ref": "#/$defs/Id"
+            "$ref": "#/$defs/EntityRef",
+            "properties": {
+              "kind": {
+                "const": "ReadAttempt"
+              }
+            },
+            "x-targetEntity": "ReadAttempt",
+            "x-referenceMode": "VERSION"
           },
           "maxItems": 1000
         },
@@ -922,7 +929,7 @@
         "claim",
         "knownGaps",
         "evaluatedAt",
-        "readAttemptIds",
+        "readAttempts",
         "windowState",
         "rationale"
       ],
@@ -1039,8 +1046,15 @@
         "identity": {
           "$ref": "#/$defs/SourceIdentity"
         },
-        "sourceRevisionId": {
-          "$ref": "#/$defs/Id"
+        "source": {
+          "$ref": "#/$defs/EntityRef",
+          "properties": {
+            "kind": {
+              "const": "Source"
+            }
+          },
+          "x-targetEntity": "Source",
+          "x-referenceMode": "VERSION"
         },
         "bindingRule": {
           "type": "string",
@@ -1053,7 +1067,7 @@
       },
       "required": [
         "identity",
-        "sourceRevisionId",
+        "source",
         "bindingRule",
         "observedAt"
       ],
@@ -1127,8 +1141,15 @@
             }
           ]
         },
-        "sourceRevisionId": {
-          "$ref": "#/$defs/Id"
+        "source": {
+          "$ref": "#/$defs/EntityRef",
+          "properties": {
+            "kind": {
+              "const": "Source"
+            }
+          },
+          "x-targetEntity": "Source",
+          "x-referenceMode": "VERSION"
         }
       },
       "required": [
@@ -1136,7 +1157,7 @@
         "accountId",
         "validFrom",
         "validTo",
-        "sourceRevisionId"
+        "source"
       ],
       "additionalProperties": false,
       "description": "External, time-bounded organization membership; unrelated to notification recipients."
@@ -1161,14 +1182,21 @@
             }
           ]
         },
-        "observationId": {
-          "$ref": "#/$defs/Id"
+        "observation": {
+          "$ref": "#/$defs/EntityRef",
+          "properties": {
+            "kind": {
+              "const": "Observation"
+            }
+          },
+          "x-targetEntity": "Observation",
+          "x-referenceMode": "VERSION"
         }
       },
       "required": [
         "organizationId",
         "rawStatus",
-        "observationId"
+        "observation"
       ],
       "additionalProperties": false,
       "description": "Observed AWS Health organization integration status. Configuration, access and collection coverage are distinct."
@@ -1193,10 +1221,17 @@
             "IMPORTED"
           ]
         },
-        "sourceRevisionId": {
+        "source": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Id"
+              "$ref": "#/$defs/EntityRef",
+              "properties": {
+                "kind": {
+                  "const": "Source"
+                }
+              },
+              "x-targetEntity": "Source",
+              "x-referenceMode": "VERSION"
             },
             {
               "type": "null"
@@ -1208,7 +1243,7 @@
         "systemId",
         "userJourneyIds",
         "origin",
-        "sourceRevisionId"
+        "source"
       ],
       "additionalProperties": false,
       "description": "Sole writable workload membership authority is Service.memberships. Reverse journey/system service lists are projections."
@@ -1216,9 +1251,6 @@
     "LocalDecision": {
       "type": "object",
       "properties": {
-        "version": {
-          "$ref": "#/$defs/Version"
-        },
         "decision": {
           "type": "string",
           "minLength": 1,
@@ -1236,14 +1268,13 @@
         }
       },
       "required": [
-        "version",
         "decision",
         "reason",
         "actor",
         "updatedAt"
       ],
       "additionalProperties": false,
-      "description": "Independently versioned operator metadata; cannot rewrite provider evidence."
+      "description": "Owned local classification decision with actor and decision time. Changes advance the owning Dependency.version; it has no separate version lifecycle."
     },
     "WorkAction": {
       "type": "object",
@@ -1289,7 +1320,7 @@
       "type": "object",
       "properties": {
         "attemptNo": {
-          "$ref": "#/$defs/Version"
+          "$ref": "#/$defs/PositiveInteger"
         },
         "at": {
           "$ref": "#/$defs/Timestamp"
@@ -1377,10 +1408,17 @@
             "UNKNOWN"
           ]
         },
-        "observationIds": {
+        "observations": {
           "type": "array",
           "items": {
-            "$ref": "#/$defs/Id"
+            "$ref": "#/$defs/EntityRef",
+            "properties": {
+              "kind": {
+                "const": "Observation"
+              }
+            },
+            "x-targetEntity": "Observation",
+            "x-referenceMode": "VERSION"
           },
           "maxItems": 100
         }
@@ -1390,7 +1428,7 @@
         "providerIdentity",
         "entityRef",
         "remoteDisposition",
-        "observationIds"
+        "observations"
       ],
       "additionalProperties": false,
       "description": "Provider effect identity may be unknown after a lost response. originEffectKey exists before dispatch and remains stable."
@@ -1434,10 +1472,17 @@
         "payloadDigest": {
           "$ref": "#/$defs/Digest"
         },
-        "deliveryObservationIds": {
+        "deliveryObservations": {
           "type": "array",
           "items": {
-            "$ref": "#/$defs/Id"
+            "$ref": "#/$defs/EntityRef",
+            "properties": {
+              "kind": {
+                "const": "Observation"
+              }
+            },
+            "x-targetEntity": "Observation",
+            "x-referenceMode": "VERSION"
           },
           "maxItems": 1000
         }
@@ -1447,7 +1492,7 @@
         "pageNumber",
         "totalPages",
         "payloadDigest",
-        "deliveryObservationIds"
+        "deliveryObservations"
       ],
       "additionalProperties": false,
       "description": "An immutable candidate page, not an independently writable entity. Conflicting candidates are retained, not overwritten."
@@ -1551,18 +1596,39 @@
         "serviceId": {
           "$ref": "#/$defs/Id"
         },
-        "assignmentSourceRevisionIds": {
+        "assignmentSources": {
           "type": "array",
           "items": {
-            "$ref": "#/$defs/Id"
+            "$ref": "#/$defs/EntityRef",
+            "properties": {
+              "kind": {
+                "const": "Source"
+              }
+            },
+            "x-targetEntity": "Source",
+            "x-referenceMode": "VERSION"
           },
           "maxItems": 100
         },
-        "effectiveTargetObservationId": {
-          "$ref": "#/$defs/Id"
+        "effectiveTargetObservation": {
+          "$ref": "#/$defs/EntityRef",
+          "properties": {
+            "kind": {
+              "const": "Observation"
+            }
+          },
+          "x-targetEntity": "Observation",
+          "x-referenceMode": "VERSION"
         },
-        "effectiveTargetSourceRevisionId": {
-          "$ref": "#/$defs/Id"
+        "effectiveTargetSource": {
+          "$ref": "#/$defs/EntityRef",
+          "properties": {
+            "kind": {
+              "const": "Source"
+            }
+          },
+          "x-targetEntity": "Source",
+          "x-referenceMode": "VERSION"
         },
         "expectedComponents": {
           "type": "array",
@@ -1595,9 +1661,9 @@
       },
       "required": [
         "serviceId",
-        "assignmentSourceRevisionIds",
-        "effectiveTargetObservationId",
-        "effectiveTargetSourceRevisionId",
+        "assignmentSources",
+        "effectiveTargetObservation",
+        "effectiveTargetSource",
         "expectedComponents",
         "providerEvaluatedRevisionKnown",
         "providerEvaluatedRevision"
@@ -1644,9 +1710,6 @@
     "RecommendationEnrichment": {
       "type": "object",
       "properties": {
-        "version": {
-          "$ref": "#/$defs/Version"
-        },
         "title": {
           "anyOf": [
             {
@@ -1671,26 +1734,6 @@
             }
           ]
         },
-        "owner": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/AssigneeRef"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "workState": {
-          "type": "string",
-          "enum": [
-            "OPEN",
-            "PLANNED",
-            "IN_PROGRESS",
-            "DONE",
-            "DISMISSED"
-          ]
-        },
         "note": {
           "type": "string",
           "maxLength": 16384
@@ -1699,16 +1742,6 @@
           "anyOf": [
             {
               "$ref": "#/$defs/RecommendationEstimate"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "updatedAt": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/Timestamp"
             },
             {
               "type": "null"
@@ -1729,15 +1762,12 @@
         }
       },
       "required": [
-        "version",
         "title",
         "effort",
-        "owner",
-        "workState",
         "note"
       ],
       "additionalProperties": false,
-      "description": "Local estimate/owner/workflow with its own revision, independent of immutable suggestion evidence."
+      "description": "Owned local explanatory metadata and estimate. Changes advance Recommendation.version. Assignment and work state belong to WorkItem only."
     },
     "AgentAssociation": {
       "type": "object",
@@ -1767,8 +1797,15 @@
             }
           ]
         },
-        "sourceRevisionId": {
-          "$ref": "#/$defs/Id"
+        "source": {
+          "$ref": "#/$defs/EntityRef",
+          "properties": {
+            "kind": {
+              "const": "Source"
+            }
+          },
+          "x-targetEntity": "Source",
+          "x-referenceMode": "VERSION"
         }
       },
       "required": [
@@ -1776,7 +1813,7 @@
         "serviceId",
         "configurationKind",
         "registeredServiceIdentity",
-        "sourceRevisionId"
+        "source"
       ],
       "additionalProperties": false,
       "description": "Provider-owned scoped association, never a business Service or product Connection. Built-in serviceId aws need not resolve to a registered provider."
@@ -1790,14 +1827,21 @@
         "executionId": {
           "$ref": "#/$defs/Id"
         },
-        "observationId": {
-          "$ref": "#/$defs/Id"
+        "observation": {
+          "$ref": "#/$defs/EntityRef",
+          "properties": {
+            "kind": {
+              "const": "Observation"
+            }
+          },
+          "x-targetEntity": "Observation",
+          "x-referenceMode": "VERSION"
         }
       },
       "required": [
         "investigationId",
         "executionId",
-        "observationId"
+        "observation"
       ],
       "additionalProperties": false,
       "description": "Observed request/response association, not inferred ownership. An Execution has no single investigationId."
@@ -1848,33 +1892,6 @@
       "additionalProperties": false,
       "description": "Native linked-incident reference; may remain unresolved after its integration disappears."
     },
-    "AssetVersion": {
-      "type": "object",
-      "properties": {
-        "nativeVersion": {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 4096
-        },
-        "sourceRevisionId": {
-          "$ref": "#/$defs/Id"
-        },
-        "files": {
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/AssetFile"
-          },
-          "maxItems": 1000
-        }
-      },
-      "required": [
-        "nativeVersion",
-        "sourceRevisionId",
-        "files"
-      ],
-      "additionalProperties": false,
-      "description": "Exact provider asset version with retained source revision. latest is never an archival reference."
-    },
     "AssetFile": {
       "type": "object",
       "properties": {
@@ -1883,8 +1900,15 @@
           "minLength": 1,
           "maxLength": 4096
         },
-        "sourceRevisionId": {
-          "$ref": "#/$defs/Id"
+        "source": {
+          "$ref": "#/$defs/EntityRef",
+          "properties": {
+            "kind": {
+              "const": "Source"
+            }
+          },
+          "x-targetEntity": "Source",
+          "x-referenceMode": "VERSION"
         },
         "artifact": {
           "$ref": "#/$defs/ArtifactRef"
@@ -1892,7 +1916,7 @@
       },
       "required": [
         "path",
-        "sourceRevisionId",
+        "source",
         "artifact"
       ],
       "additionalProperties": false,
@@ -2265,11 +2289,15 @@
     "Admission": {
       "type": "object",
       "properties": {
-        "scenarioRevisionId": {
-          "$ref": "#/$defs/Id"
-        },
-        "revisionDigest": {
-          "$ref": "#/$defs/Digest"
+        "scenario": {
+          "$ref": "#/$defs/EntityRef",
+          "properties": {
+            "kind": {
+              "const": "Scenario"
+            }
+          },
+          "x-targetEntity": "Scenario",
+          "x-referenceMode": "VERSION"
         },
         "resolvedBindings": {
           "type": "array",
@@ -2320,11 +2348,14 @@
         },
         "concurrencyKey": {
           "$ref": "#/$defs/Digest"
+        },
+        "scenarioDigest": {
+          "$ref": "#/$defs/Digest"
         }
       },
       "required": [
-        "scenarioRevisionId",
-        "revisionDigest",
+        "scenario",
+        "scenarioDigest",
         "resolvedBindings",
         "inputValues",
         "requiredCriterionKeys",
@@ -2441,8 +2472,15 @@
         "subject": {
           "$ref": "#/$defs/EntityRef"
         },
-        "inputSnapshotId": {
-          "$ref": "#/$defs/Id"
+        "inputSnapshot": {
+          "$ref": "#/$defs/EntityRef",
+          "properties": {
+            "kind": {
+              "const": "Snapshot"
+            }
+          },
+          "x-targetEntity": "Snapshot",
+          "x-referenceMode": "VERSION"
         },
         "evidenceCutoffAt": {
           "$ref": "#/$defs/Timestamp"
@@ -2480,7 +2518,7 @@
       },
       "required": [
         "subject",
-        "inputSnapshotId",
+        "inputSnapshot",
         "evidenceCutoffAt",
         "verdict",
         "finality",
@@ -2496,11 +2534,25 @@
         "componentDeploymentId": {
           "$ref": "#/$defs/Id"
         },
-        "deploymentObservationId": {
-          "$ref": "#/$defs/Id"
+        "deploymentObservation": {
+          "$ref": "#/$defs/EntityRef",
+          "properties": {
+            "kind": {
+              "const": "Observation"
+            }
+          },
+          "x-targetEntity": "Observation",
+          "x-referenceMode": "VERSION"
         },
-        "catalogSourceRevisionId": {
-          "$ref": "#/$defs/Id"
+        "catalogSource": {
+          "$ref": "#/$defs/EntityRef",
+          "properties": {
+            "kind": {
+              "const": "Source"
+            }
+          },
+          "x-targetEntity": "Source",
+          "x-referenceMode": "VERSION"
         },
         "milestoneKey": {
           "$ref": "#/$defs/Id"
@@ -2520,10 +2572,17 @@
         "matchingRuleDigest": {
           "$ref": "#/$defs/Digest"
         },
-        "policySnapshotId": {
+        "policySnapshot": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Id"
+              "$ref": "#/$defs/EntityRef",
+              "properties": {
+                "kind": {
+                  "const": "Snapshot"
+                }
+              },
+              "x-targetEntity": "Snapshot",
+              "x-referenceMode": "VERSION"
             },
             {
               "type": "null"
@@ -2533,13 +2592,13 @@
       },
       "required": [
         "componentDeploymentId",
-        "deploymentObservationId",
-        "catalogSourceRevisionId",
+        "deploymentObservation",
+        "catalogSource",
         "milestoneKey",
         "applicability",
         "reason",
         "matchingRuleDigest",
-        "policySnapshotId"
+        "policySnapshot"
       ],
       "additionalProperties": false,
       "description": "Derived applicability with exact deployment, catalog revision, milestone and matching rule."
@@ -2569,20 +2628,34 @@
             "UNKNOWN"
           ]
         },
-        "selectedSourceRevisionId": {
+        "selectedSource": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Id"
+              "$ref": "#/$defs/EntityRef",
+              "properties": {
+                "kind": {
+                  "const": "Source"
+                }
+              },
+              "x-targetEntity": "Source",
+              "x-referenceMode": "VERSION"
             },
             {
               "type": "null"
             }
           ]
         },
-        "completionObservationId": {
+        "completionObservation": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Id"
+              "$ref": "#/$defs/EntityRef",
+              "properties": {
+                "kind": {
+                  "const": "Observation"
+                }
+              },
+              "x-targetEntity": "Observation",
+              "x-referenceMode": "VERSION"
             },
             {
               "type": "null"
@@ -2618,10 +2691,17 @@
             }
           ]
         },
-        "candidateSourceRevisionIds": {
+        "candidateSources": {
           "type": "array",
           "items": {
-            "$ref": "#/$defs/Id"
+            "$ref": "#/$defs/EntityRef",
+            "properties": {
+              "kind": {
+                "const": "Source"
+              }
+            },
+            "x-targetEntity": "Source",
+            "x-referenceMode": "VERSION"
           },
           "maxItems": 1000
         }
@@ -2630,12 +2710,12 @@
         "investigationId",
         "phase",
         "availability",
-        "selectedSourceRevisionId",
-        "completionObservationId",
+        "selectedSource",
+        "completionObservation",
         "knownGaps",
         "selectionBasis",
         "expectedSummaryIdentity",
-        "candidateSourceRevisionIds"
+        "candidateSources"
       ],
       "additionalProperties": false,
       "description": "Phase-scoped selected result; completion events from another phase cannot replace it."
@@ -2708,10 +2788,17 @@
         "findingCoverage": {
           "$ref": "#/$defs/Coverage"
         },
-        "policyContextSnapshotId": {
+        "policyContextSnapshot": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Id"
+              "$ref": "#/$defs/EntityRef",
+              "properties": {
+                "kind": {
+                  "const": "Snapshot"
+                }
+              },
+              "x-targetEntity": "Snapshot",
+              "x-referenceMode": "VERSION"
             },
             {
               "type": "null"
@@ -2751,7 +2838,7 @@
         "assessmentExecution",
         "discovery",
         "findingCoverage",
-        "policyContextSnapshotId",
+        "policyContextSnapshot",
         "attentionReasons",
         "reassessmentRequired",
         "policyContextRefreshRequired",
@@ -2861,10 +2948,17 @@
         "targetBindings": {
           "$ref": "#/$defs/StringMap"
         },
-        "selectedObservationId": {
+        "selectedObservation": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Id"
+              "$ref": "#/$defs/EntityRef",
+              "properties": {
+                "kind": {
+                  "const": "Observation"
+                }
+              },
+              "x-targetEntity": "Observation",
+              "x-referenceMode": "VERSION"
             },
             {
               "type": "null"
@@ -2878,7 +2972,7 @@
         "rawState",
         "startAfter",
         "targetBindings",
-        "selectedObservationId"
+        "selectedObservation"
       ],
       "additionalProperties": false,
       "description": "Native named action owned by an Experiment. Its state is read-only and cannot be stopped/restarted individually."
@@ -2918,8 +3012,15 @@
             "UNIDENTIFIED"
           ]
         },
-        "selectionObservationId": {
-          "$ref": "#/$defs/Id"
+        "selectionObservation": {
+          "$ref": "#/$defs/EntityRef",
+          "properties": {
+            "kind": {
+              "const": "Observation"
+            }
+          },
+          "x-targetEntity": "Observation",
+          "x-referenceMode": "VERSION"
         },
         "containerNames": {
           "type": "array",
@@ -2936,7 +3037,7 @@
         "sourceIdentity",
         "resourceId",
         "identityCompleteness",
-        "selectionObservationId",
+        "selectionObservation",
         "containerNames"
       ],
       "additionalProperties": false,
@@ -2965,10 +3066,17 @@
             }
           ]
         },
-        "selectedObservationId": {
+        "selectedObservation": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Id"
+              "$ref": "#/$defs/EntityRef",
+              "properties": {
+                "kind": {
+                  "const": "Observation"
+                }
+              },
+              "x-targetEntity": "Observation",
+              "x-referenceMode": "VERSION"
             },
             {
               "type": "null"
@@ -2986,7 +3094,7 @@
       "required": [
         "configurationState",
         "rawState",
-        "selectedObservationId",
+        "selectedObservation",
         "artifacts"
       ],
       "additionalProperties": false,
@@ -3001,7 +3109,10 @@
         "version": {
           "$ref": "#/$defs/Version"
         },
-        "localUpdatedAt": {
+        "createdAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updatedAt": {
           "$ref": "#/$defs/Timestamp"
         },
         "name": {
@@ -3042,7 +3153,8 @@
       "required": [
         "workspaceId",
         "version",
-        "localUpdatedAt",
+        "createdAt",
+        "updatedAt",
         "name",
         "enabledModules",
         "organizationMemberships",
@@ -3054,7 +3166,10 @@
       "x-module": "foundation",
       "x-owner": "application",
       "x-identity": "workspaceId",
-      "x-mutable": true
+      "x-versioning": "APPEND_ONLY",
+      "x-writeAuthority": "APPLICATION",
+      "x-sealingRule": "Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.",
+      "x-recordIdentity": "workspaceId + version"
     },
     "Connection": {
       "type": "object",
@@ -3068,7 +3183,10 @@
         "version": {
           "$ref": "#/$defs/Version"
         },
-        "localUpdatedAt": {
+        "createdAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updatedAt": {
           "$ref": "#/$defs/Timestamp"
         },
         "name": {
@@ -3106,7 +3224,8 @@
         "connectionId",
         "workspaceId",
         "version",
-        "localUpdatedAt",
+        "createdAt",
+        "updatedAt",
         "name",
         "provider",
         "credentialRef",
@@ -3120,7 +3239,10 @@
       "x-module": "foundation",
       "x-owner": "application",
       "x-identity": "workspaceId + connectionId",
-      "x-mutable": true
+      "x-versioning": "APPEND_ONLY",
+      "x-writeAuthority": "APPLICATION",
+      "x-sealingRule": "Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.",
+      "x-recordIdentity": "workspaceId + connectionId + version"
     },
     "Resource": {
       "type": "object",
@@ -3130,6 +3252,15 @@
         },
         "workspaceId": {
           "$ref": "#/$defs/Id"
+        },
+        "version": {
+          "$ref": "#/$defs/Version"
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Timestamp"
         },
         "identity": {
           "$ref": "#/$defs/SourceIdentity"
@@ -3154,10 +3285,17 @@
             }
           ]
         },
-        "selectedObservationId": {
+        "selectedObservation": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Id"
+              "$ref": "#/$defs/EntityRef",
+              "properties": {
+                "kind": {
+                  "const": "Observation"
+                }
+              },
+              "x-targetEntity": "Observation",
+              "x-referenceMode": "VERSION"
             },
             {
               "type": "null"
@@ -3187,10 +3325,13 @@
       "required": [
         "resourceId",
         "workspaceId",
+        "version",
+        "createdAt",
+        "updatedAt",
         "identity",
         "identityStability",
         "incarnationKey",
-        "selectedObservationId",
+        "selectedObservation",
         "displayName",
         "matches"
       ],
@@ -3200,7 +3341,10 @@
       "x-module": "foundation",
       "x-owner": "observed",
       "x-identity": "workspaceId + resourceId",
-      "x-mutable": false
+      "x-versioning": "APPEND_ONLY",
+      "x-writeAuthority": "COLLECTOR",
+      "x-sealingRule": "Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.",
+      "x-recordIdentity": "workspaceId + resourceId + version"
     },
     "Collection": {
       "type": "object",
@@ -3211,8 +3355,24 @@
         "workspaceId": {
           "$ref": "#/$defs/Id"
         },
-        "connectionId": {
-          "$ref": "#/$defs/Id"
+        "version": {
+          "$ref": "#/$defs/Version"
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "connection": {
+          "$ref": "#/$defs/EntityRef",
+          "properties": {
+            "kind": {
+              "const": "Connection"
+            }
+          },
+          "x-targetEntity": "Connection",
+          "x-referenceMode": "VERSION"
         },
         "queries": {
           "type": "array",
@@ -3250,29 +3410,31 @@
             "$ref": "#/$defs/Coverage"
           },
           "maxItems": 1000
-        },
-        "projectionVersion": {
-          "$ref": "#/$defs/Version"
         }
       },
       "required": [
         "collectionId",
         "workspaceId",
-        "connectionId",
+        "version",
+        "createdAt",
+        "updatedAt",
+        "connection",
         "queries",
         "state",
         "startedAt",
         "endedAt",
-        "coverage",
-        "projectionVersion"
+        "coverage"
       ],
       "additionalProperties": false,
-      "description": "A finite collection pass records its exact query set, including empty and failed reads.",
+      "description": "One finite collection with immutable query definitions and changing lifecycle represented by ordinary entity versions. New query definitions require a new collection identity.",
       "x-entity": true,
       "x-module": "foundation",
       "x-owner": "collector",
       "x-identity": "workspaceId + collectionId",
-      "x-mutable": false
+      "x-versioning": "APPEND_ONLY",
+      "x-writeAuthority": "COLLECTOR",
+      "x-sealingRule": "Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.",
+      "x-recordIdentity": "workspaceId + collectionId + version"
     },
     "ReadAttempt": {
       "type": "object",
@@ -3283,6 +3445,15 @@
         "workspaceId": {
           "$ref": "#/$defs/Id"
         },
+        "version": {
+          "$ref": "#/$defs/Version"
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
         "collectionId": {
           "$ref": "#/$defs/Id"
         },
@@ -3292,7 +3463,7 @@
           "maxLength": 4096
         },
         "attemptNo": {
-          "$ref": "#/$defs/Version"
+          "$ref": "#/$defs/PositiveInteger"
         },
         "requestDigest": {
           "$ref": "#/$defs/Digest"
@@ -3366,13 +3537,27 @@
           "minLength": 1,
           "maxLength": 4096
         },
-        "requestSourceRevisionId": {
-          "$ref": "#/$defs/Id"
+        "requestSource": {
+          "$ref": "#/$defs/EntityRef",
+          "properties": {
+            "kind": {
+              "const": "Source"
+            }
+          },
+          "x-targetEntity": "Source",
+          "x-referenceMode": "VERSION"
         },
-        "responseSourceRevisionId": {
+        "responseSource": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Id"
+              "$ref": "#/$defs/EntityRef",
+              "properties": {
+                "kind": {
+                  "const": "Source"
+                }
+              },
+              "x-targetEntity": "Source",
+              "x-referenceMode": "VERSION"
             },
             {
               "type": "null"
@@ -3383,6 +3568,9 @@
       "required": [
         "readAttemptId",
         "workspaceId",
+        "version",
+        "createdAt",
+        "updatedAt",
         "collectionId",
         "queryKey",
         "attemptNo",
@@ -3395,8 +3583,8 @@
         "nextTokenPresent",
         "error",
         "authorizationContextKey",
-        "requestSourceRevisionId",
-        "responseSourceRevisionId"
+        "requestSource",
+        "responseSource"
       ],
       "additionalProperties": false,
       "description": "A single request attempt exists even if it returned zero objects or failed. It is immutable once settled.",
@@ -3404,16 +3592,28 @@
       "x-module": "foundation",
       "x-owner": "collector",
       "x-identity": "workspaceId + collectionId + readAttemptId",
-      "x-mutable": false
+      "x-versioning": "APPEND_ONLY",
+      "x-writeAuthority": "COLLECTOR",
+      "x-sealingRule": "Lifecycle changes append versions. A settled/terminal record cannot be reopened; late reconciliation is new evidence and does not rewrite settled facts.",
+      "x-recordIdentity": "workspaceId + readAttemptId + version"
     },
-    "SourceRevision": {
+    "Source": {
       "type": "object",
       "properties": {
-        "sourceRevisionId": {
+        "sourceId": {
           "$ref": "#/$defs/Id"
         },
         "workspaceId": {
           "$ref": "#/$defs/Id"
+        },
+        "version": {
+          "$ref": "#/$defs/Version"
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Timestamp"
         },
         "identity": {
           "$ref": "#/$defs/SourceIdentity"
@@ -3506,8 +3706,11 @@
         }
       },
       "required": [
-        "sourceRevisionId",
+        "sourceId",
         "workspaceId",
+        "version",
+        "createdAt",
+        "updatedAt",
         "identity",
         "representation",
         "profile",
@@ -3523,12 +3726,11 @@
         "payloadStorage"
       ],
       "additionalProperties": false,
-      "description": "Immutable distinct source payload/envelope for one identity, representation and content digest. Observation time is recorded separately.",
+      "description": "Versioned retained source representation. Stable sourceId is scoped by native identity, representation, profile and source operation, independently of payload digest or provider version. Changed accepted content appends a version; an unchanged poll observes the current version again.",
       "x-entity": true,
       "x-module": "foundation",
       "x-owner": "retained evidence",
-      "x-identity": "workspaceId + sourceRevisionId",
-      "x-mutable": false,
+      "x-identity": "workspaceId + sourceId",
       "allOf": [
         {
           "if": {
@@ -3549,6 +3751,17 @@
             }
           }
         }
+      ],
+      "x-versioning": "APPEND_ONLY",
+      "x-writeAuthority": "COLLECTOR",
+      "x-sealingRule": "Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.",
+      "x-recordIdentity": "workspaceId + sourceId + version",
+      "x-logicalKey": [
+        "workspaceId",
+        "identity",
+        "representation",
+        "profile",
+        "sourceOperation"
       ]
     },
     "Observation": {
@@ -3560,23 +3773,53 @@
         "workspaceId": {
           "$ref": "#/$defs/Id"
         },
-        "sourceRevisionId": {
-          "$ref": "#/$defs/Id"
+        "version": {
+          "$ref": "#/$defs/Version"
         },
-        "readAttemptId": {
+        "createdAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "source": {
+          "$ref": "#/$defs/EntityRef",
+          "properties": {
+            "kind": {
+              "const": "Source"
+            }
+          },
+          "x-targetEntity": "Source",
+          "x-referenceMode": "VERSION"
+        },
+        "readAttempt": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Id"
+              "$ref": "#/$defs/EntityRef",
+              "properties": {
+                "kind": {
+                  "const": "ReadAttempt"
+                }
+              },
+              "x-targetEntity": "ReadAttempt",
+              "x-referenceMode": "VERSION"
             },
             {
               "type": "null"
             }
           ]
         },
-        "connectionId": {
+        "connection": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Id"
+              "$ref": "#/$defs/EntityRef",
+              "properties": {
+                "kind": {
+                  "const": "Connection"
+                }
+              },
+              "x-targetEntity": "Connection",
+              "x-referenceMode": "VERSION"
             },
             {
               "type": "null"
@@ -3646,9 +3889,12 @@
       "required": [
         "observationId",
         "workspaceId",
-        "sourceRevisionId",
-        "readAttemptId",
-        "connectionId",
+        "version",
+        "createdAt",
+        "updatedAt",
+        "source",
+        "readAttempt",
+        "connection",
         "observedAt",
         "sourceTime",
         "transportTime",
@@ -3663,7 +3909,6 @@
       "x-module": "foundation",
       "x-owner": "collector",
       "x-identity": "workspaceId + observationId",
-      "x-mutable": false,
       "allOf": [
         {
           "if": {
@@ -3675,11 +3920,25 @@
           },
           "then": {
             "properties": {
-              "readAttemptId": {
-                "$ref": "#/$defs/Id"
+              "readAttempt": {
+                "$ref": "#/$defs/EntityRef",
+                "properties": {
+                  "kind": {
+                    "const": "ReadAttempt"
+                  }
+                },
+                "x-targetEntity": "ReadAttempt",
+                "x-referenceMode": "VERSION"
               },
-              "connectionId": {
-                "$ref": "#/$defs/Id"
+              "connection": {
+                "$ref": "#/$defs/EntityRef",
+                "properties": {
+                  "kind": {
+                    "const": "Connection"
+                  }
+                },
+                "x-targetEntity": "Connection",
+                "x-referenceMode": "VERSION"
               }
             }
           }
@@ -3697,22 +3956,42 @@
           },
           "then": {
             "properties": {
-              "connectionId": {
-                "$ref": "#/$defs/Id"
+              "connection": {
+                "$ref": "#/$defs/EntityRef",
+                "properties": {
+                  "kind": {
+                    "const": "Connection"
+                  }
+                },
+                "x-targetEntity": "Connection",
+                "x-referenceMode": "VERSION"
               }
             }
           }
         }
-      ]
+      ],
+      "x-versioning": "APPEND_ONLY",
+      "x-writeAuthority": "COLLECTOR",
+      "x-sealingRule": "Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.",
+      "x-recordIdentity": "workspaceId + observationId + version"
     },
-    "ProjectionRevision": {
+    "Projection": {
       "type": "object",
       "properties": {
-        "projectionRevisionId": {
+        "projectionId": {
           "$ref": "#/$defs/Id"
         },
         "workspaceId": {
           "$ref": "#/$defs/Id"
+        },
+        "version": {
+          "$ref": "#/$defs/Version"
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Timestamp"
         },
         "projectionKey": {
           "type": "string",
@@ -3769,8 +4048,11 @@
         }
       },
       "required": [
-        "projectionRevisionId",
+        "projectionId",
         "workspaceId",
+        "version",
+        "createdAt",
+        "updatedAt",
         "projectionKey",
         "profile",
         "profileVersion",
@@ -3783,12 +4065,11 @@
         "value"
       ],
       "additionalProperties": false,
-      "description": "Immutable versioned derivation with retained inputs, coverage and rule digest. Current selection is a read view.",
+      "description": "Versioned named derived view with exact input references, coverage and rule identity. New inputs or rule versions append an immutable version under the same projectionId.",
       "x-entity": true,
       "x-module": "foundation",
       "x-owner": "derived",
-      "x-identity": "workspaceId + projectionRevisionId",
-      "x-mutable": false,
+      "x-identity": "workspaceId + projectionId",
       "allOf": [
         {
           "if": {
@@ -3870,6 +4151,16 @@
             }
           }
         }
+      ],
+      "x-versioning": "APPEND_ONLY",
+      "x-writeAuthority": "DERIVATION",
+      "x-sealingRule": "Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.",
+      "x-recordIdentity": "workspaceId + projectionId + version",
+      "x-logicalKey": [
+        "workspaceId",
+        "projectionKey",
+        "profile",
+        "subject identity set"
       ]
     },
     "Snapshot": {
@@ -3880,6 +4171,15 @@
         },
         "workspaceId": {
           "$ref": "#/$defs/Id"
+        },
+        "version": {
+          "$ref": "#/$defs/Version"
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Timestamp"
         },
         "kind": {
           "type": "string",
@@ -3905,34 +4205,6 @@
         "manifestDigest": {
           "$ref": "#/$defs/Digest"
         },
-        "sourceRevisionIds": {
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/Id"
-          },
-          "maxItems": 10000
-        },
-        "observationIds": {
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/Id"
-          },
-          "maxItems": 10000
-        },
-        "projectionRevisionIds": {
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/Id"
-          },
-          "maxItems": 10000
-        },
-        "readAttempts": {
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/ReadAttempt"
-          },
-          "maxItems": 10000
-        },
         "coverage": {
           "type": "array",
           "items": {
@@ -3948,31 +4220,39 @@
         },
         "captureFinishedAt": {
           "$ref": "#/$defs/Timestamp"
+        },
+        "members": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EntityRef"
+          },
+          "maxItems": 50000,
+          "uniqueItems": true,
+          "description": "Closed set of exact entity representations needed for this capture. Subject and evidence references resolve within these members; embedded authoritative copies are prohibited."
         }
       },
       "required": [
         "snapshotId",
         "workspaceId",
+        "version",
+        "createdAt",
+        "updatedAt",
         "kind",
         "subjectRefs",
         "capturedAt",
         "manifestDigest",
-        "sourceRevisionIds",
-        "observationIds",
-        "projectionRevisionIds",
-        "readAttempts",
         "coverage",
         "contents",
         "captureStartedAt",
-        "captureFinishedAt"
+        "captureFinishedAt",
+        "members"
       ],
       "additionalProperties": false,
-      "description": "Immutable closed manifest and contents. CapturedAt never replaces provider/source time. Access remains checked on reads/exports.",
+      "description": "A deliberate retained capture with a closed set of exact entity references and captured contents. Snapshot is a business capture, not a substitute for ordinary entity versioning. A corrected capture appends a Snapshot version; older captures stay unchanged.",
       "x-entity": true,
       "x-module": "foundation",
       "x-owner": "application retained capture",
       "x-identity": "workspaceId + snapshotId",
-      "x-mutable": false,
       "allOf": [
         {
           "if": {
@@ -4022,7 +4302,11 @@
             }
           }
         }
-      ]
+      ],
+      "x-versioning": "APPEND_ONLY",
+      "x-writeAuthority": "APPLICATION",
+      "x-sealingRule": "Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.",
+      "x-recordIdentity": "workspaceId + snapshotId + version"
     },
     "WorkItem": {
       "type": "object",
@@ -4036,7 +4320,10 @@
         "version": {
           "$ref": "#/$defs/Version"
         },
-        "localUpdatedAt": {
+        "createdAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updatedAt": {
           "$ref": "#/$defs/Timestamp"
         },
         "title": {
@@ -4047,7 +4334,7 @@
         "targets": {
           "type": "array",
           "items": {
-            "$ref": "#/$defs/EntityRef"
+            "$ref": "#/$defs/EntityIdentity"
           },
           "maxItems": 100
         },
@@ -4132,7 +4419,8 @@
         "workItemId",
         "workspaceId",
         "version",
-        "localUpdatedAt",
+        "createdAt",
+        "updatedAt",
         "title",
         "targets",
         "state",
@@ -4151,7 +4439,10 @@
       "x-module": "foundation",
       "x-owner": "application",
       "x-identity": "workspaceId + workItemId",
-      "x-mutable": true
+      "x-versioning": "APPEND_ONLY",
+      "x-writeAuthority": "APPLICATION",
+      "x-sealingRule": "Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.",
+      "x-recordIdentity": "workspaceId + workItemId + version"
     },
     "Command": {
       "type": "object",
@@ -4161,6 +4452,15 @@
         },
         "workspaceId": {
           "$ref": "#/$defs/Id"
+        },
+        "version": {
+          "$ref": "#/$defs/Version"
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Timestamp"
         },
         "operation": {
           "type": "string",
@@ -4238,6 +4538,9 @@
       "required": [
         "commandId",
         "workspaceId",
+        "version",
+        "createdAt",
+        "updatedAt",
         "operation",
         "subjectRefs",
         "actor",
@@ -4257,7 +4560,10 @@
       "x-module": "foundation",
       "x-owner": "application",
       "x-identity": "workspaceId + commandId",
-      "x-mutable": false
+      "x-versioning": "APPEND_ONLY",
+      "x-writeAuthority": "APPLICATION",
+      "x-sealingRule": "Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.",
+      "x-recordIdentity": "workspaceId + commandId + version"
     },
     "System": {
       "type": "object",
@@ -4271,7 +4577,10 @@
         "version": {
           "$ref": "#/$defs/Version"
         },
-        "localUpdatedAt": {
+        "createdAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updatedAt": {
           "$ref": "#/$defs/Timestamp"
         },
         "name": {
@@ -4295,7 +4604,8 @@
         "systemId",
         "workspaceId",
         "version",
-        "localUpdatedAt",
+        "createdAt",
+        "updatedAt",
         "name",
         "description",
         "providerBindings"
@@ -4306,7 +4616,10 @@
       "x-module": "workload",
       "x-owner": "application",
       "x-identity": "workspaceId + systemId",
-      "x-mutable": true
+      "x-versioning": "APPEND_ONLY",
+      "x-writeAuthority": "APPLICATION",
+      "x-sealingRule": "Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.",
+      "x-recordIdentity": "workspaceId + systemId + version"
     },
     "UserJourney": {
       "type": "object",
@@ -4320,7 +4633,10 @@
         "version": {
           "$ref": "#/$defs/Version"
         },
-        "localUpdatedAt": {
+        "createdAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updatedAt": {
           "$ref": "#/$defs/Timestamp"
         },
         "systemId": {
@@ -4347,7 +4663,8 @@
         "userJourneyId",
         "workspaceId",
         "version",
-        "localUpdatedAt",
+        "createdAt",
+        "updatedAt",
         "systemId",
         "name",
         "description",
@@ -4359,7 +4676,10 @@
       "x-module": "workload",
       "x-owner": "application",
       "x-identity": "workspaceId + userJourneyId",
-      "x-mutable": true
+      "x-versioning": "APPEND_ONLY",
+      "x-writeAuthority": "APPLICATION",
+      "x-sealingRule": "Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.",
+      "x-recordIdentity": "workspaceId + userJourneyId + version"
     },
     "Service": {
       "type": "object",
@@ -4373,7 +4693,10 @@
         "version": {
           "$ref": "#/$defs/Version"
         },
-        "localUpdatedAt": {
+        "createdAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updatedAt": {
           "$ref": "#/$defs/Timestamp"
         },
         "name": {
@@ -4411,7 +4734,8 @@
         "serviceId",
         "workspaceId",
         "version",
-        "localUpdatedAt",
+        "createdAt",
+        "updatedAt",
         "name",
         "description",
         "memberships",
@@ -4424,7 +4748,10 @@
       "x-module": "workload",
       "x-owner": "application",
       "x-identity": "workspaceId + serviceId",
-      "x-mutable": true
+      "x-versioning": "APPEND_ONLY",
+      "x-writeAuthority": "APPLICATION",
+      "x-sealingRule": "Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.",
+      "x-recordIdentity": "workspaceId + serviceId + version"
     },
     "Dependency": {
       "type": "object",
@@ -4434,6 +4761,15 @@
         },
         "workspaceId": {
           "$ref": "#/$defs/Id"
+        },
+        "version": {
+          "$ref": "#/$defs/Version"
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Timestamp"
         },
         "serviceId": {
           "$ref": "#/$defs/Id"
@@ -4473,10 +4809,17 @@
             }
           ]
         },
-        "selectedObservationId": {
+        "selectedObservation": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Id"
+              "$ref": "#/$defs/EntityRef",
+              "properties": {
+                "kind": {
+                  "const": "Observation"
+                }
+              },
+              "x-targetEntity": "Observation",
+              "x-referenceMode": "VERSION"
             },
             {
               "type": "null"
@@ -4490,12 +4833,15 @@
       "required": [
         "dependencyId",
         "workspaceId",
+        "version",
+        "createdAt",
+        "updatedAt",
         "serviceId",
         "identity",
         "targetResourceId",
         "targetServiceId",
         "rawClassification",
-        "selectedObservationId",
+        "selectedObservation",
         "governance"
       ],
       "additionalProperties": false,
@@ -4504,7 +4850,14 @@
       "x-module": "workload",
       "x-owner": "observed plus local governance",
       "x-identity": "workspaceId + serviceId + dependencyId",
-      "x-mutable": false
+      "x-versioning": "APPEND_ONLY",
+      "x-writeAuthority": "MIXED",
+      "x-sealingRule": "Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.",
+      "x-recordIdentity": "workspaceId + dependencyId + version",
+      "x-fieldAuthorities": {
+        "governance": "APPLICATION",
+        "observed fields": "COLLECTOR"
+      }
     },
     "HealthEvent": {
       "type": "object",
@@ -4514,6 +4867,15 @@
         },
         "workspaceId": {
           "$ref": "#/$defs/Id"
+        },
+        "version": {
+          "$ref": "#/$defs/Version"
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Timestamp"
         },
         "eventArn": {
           "type": "string",
@@ -4554,19 +4916,29 @@
             }
           ]
         },
-        "selectedSourceRevisionId": {
-          "$ref": "#/$defs/Id"
+        "selectedSource": {
+          "$ref": "#/$defs/EntityRef",
+          "properties": {
+            "kind": {
+              "const": "Source"
+            }
+          },
+          "x-targetEntity": "Source",
+          "x-referenceMode": "VERSION"
         }
       },
       "required": [
         "healthEventId",
         "workspaceId",
+        "version",
+        "createdAt",
+        "updatedAt",
         "eventArn",
         "eventTypeCode",
         "serviceCode",
         "impactedRegion",
         "rawScopeCode",
-        "selectedSourceRevisionId"
+        "selectedSource"
       ],
       "additionalProperties": false,
       "description": "Shared provider Health event identity. EventBridge envelope IDs and recipient accounts are not this identity.",
@@ -4574,7 +4946,10 @@
       "x-module": "health",
       "x-owner": "observed",
       "x-identity": "workspaceId + healthEventId",
-      "x-mutable": false
+      "x-versioning": "APPEND_ONLY",
+      "x-writeAuthority": "COLLECTOR",
+      "x-sealingRule": "Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.",
+      "x-recordIdentity": "workspaceId + healthEventId + version"
     },
     "EventContext": {
       "type": "object",
@@ -4584,6 +4959,15 @@
         },
         "workspaceId": {
           "$ref": "#/$defs/Id"
+        },
+        "version": {
+          "$ref": "#/$defs/Version"
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Timestamp"
         },
         "healthEventId": {
           "$ref": "#/$defs/Id"
@@ -4625,10 +5009,17 @@
             }
           ]
         },
-        "selectedObservationId": {
+        "selectedObservation": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Id"
+              "$ref": "#/$defs/EntityRef",
+              "properties": {
+                "kind": {
+                  "const": "Observation"
+                }
+              },
+              "x-targetEntity": "Observation",
+              "x-referenceMode": "VERSION"
             },
             {
               "type": "null"
@@ -4651,12 +5042,15 @@
       "required": [
         "eventContextId",
         "workspaceId",
+        "version",
+        "createdAt",
+        "updatedAt",
         "healthEventId",
         "kind",
         "contextKey",
         "accountId",
         "organizationId",
-        "selectedObservationId",
+        "selectedObservation",
         "rawProviderStatus"
       ],
       "additionalProperties": false,
@@ -4665,7 +5059,6 @@
       "x-module": "health",
       "x-owner": "observed",
       "x-identity": "workspaceId + healthEventId + kind + contextKey",
-      "x-mutable": false,
       "allOf": [
         {
           "if": {
@@ -4731,7 +5124,11 @@
             }
           }
         }
-      ]
+      ],
+      "x-versioning": "APPEND_ONLY",
+      "x-writeAuthority": "COLLECTOR",
+      "x-sealingRule": "Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.",
+      "x-recordIdentity": "workspaceId + eventContextId + version"
     },
     "EntityImpact": {
       "type": "object",
@@ -4741,6 +5138,15 @@
         },
         "workspaceId": {
           "$ref": "#/$defs/Id"
+        },
+        "version": {
+          "$ref": "#/$defs/Version"
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Timestamp"
         },
         "eventContextId": {
           "$ref": "#/$defs/Id"
@@ -4769,8 +5175,15 @@
             }
           ]
         },
-        "selectedObservationId": {
-          "$ref": "#/$defs/Id"
+        "selectedObservation": {
+          "$ref": "#/$defs/EntityRef",
+          "properties": {
+            "kind": {
+              "const": "Observation"
+            }
+          },
+          "x-targetEntity": "Observation",
+          "x-referenceMode": "VERSION"
         },
         "rawProviderStatus": {
           "anyOf": [
@@ -4795,10 +5208,13 @@
       "required": [
         "entityImpactId",
         "workspaceId",
+        "version",
+        "createdAt",
+        "updatedAt",
         "eventContextId",
         "healthEntityArn",
         "entityValue",
-        "selectedObservationId",
+        "selectedObservation",
         "rawProviderStatus",
         "resourceMatches"
       ],
@@ -4808,7 +5224,10 @@
       "x-module": "health",
       "x-owner": "observed",
       "x-identity": "workspaceId + eventContextId + scoped provider entity key",
-      "x-mutable": false
+      "x-versioning": "APPEND_ONLY",
+      "x-writeAuthority": "COLLECTOR",
+      "x-sealingRule": "Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.",
+      "x-recordIdentity": "workspaceId + entityImpactId + version"
     },
     "Communication": {
       "type": "object",
@@ -4818,6 +5237,15 @@
         },
         "workspaceId": {
           "$ref": "#/$defs/Id"
+        },
+        "version": {
+          "$ref": "#/$defs/Version"
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Timestamp"
         },
         "eventContextId": {
           "$ref": "#/$defs/Id"
@@ -4869,6 +5297,9 @@
       "required": [
         "communicationId",
         "workspaceId",
+        "version",
+        "createdAt",
+        "updatedAt",
         "eventContextId",
         "notificationAccountContext",
         "validatedBaseId",
@@ -4882,7 +5313,10 @@
       "x-module": "health",
       "x-owner": "derived grouping",
       "x-identity": "workspaceId + communicationId",
-      "x-mutable": false
+      "x-versioning": "APPEND_ONLY",
+      "x-writeAuthority": "DERIVATION",
+      "x-sealingRule": "Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.",
+      "x-recordIdentity": "workspaceId + communicationId + version"
     },
     "LifecycleEntry": {
       "type": "object",
@@ -4893,11 +5327,34 @@
         "workspaceId": {
           "$ref": "#/$defs/Id"
         },
-        "catalogSnapshotId": {
-          "$ref": "#/$defs/Id"
+        "version": {
+          "$ref": "#/$defs/Version"
         },
-        "sourceRevisionId": {
-          "$ref": "#/$defs/Id"
+        "createdAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "catalogSnapshot": {
+          "$ref": "#/$defs/EntityRef",
+          "properties": {
+            "kind": {
+              "const": "Snapshot"
+            }
+          },
+          "x-targetEntity": "Snapshot",
+          "x-referenceMode": "VERSION"
+        },
+        "source": {
+          "$ref": "#/$defs/EntityRef",
+          "properties": {
+            "kind": {
+              "const": "Source"
+            }
+          },
+          "x-targetEntity": "Source",
+          "x-referenceMode": "VERSION"
         },
         "serviceCode": {
           "type": "string",
@@ -4944,8 +5401,11 @@
       "required": [
         "lifecycleEntryId",
         "workspaceId",
-        "catalogSnapshotId",
-        "sourceRevisionId",
+        "version",
+        "createdAt",
+        "updatedAt",
+        "catalogSnapshot",
+        "source",
         "serviceCode",
         "title",
         "versionLabel",
@@ -4958,7 +5418,10 @@
       "x-module": "health",
       "x-owner": "observed local identity",
       "x-identity": "workspaceId + lifecycleEntryId",
-      "x-mutable": false
+      "x-versioning": "APPEND_ONLY",
+      "x-writeAuthority": "COLLECTOR",
+      "x-sealingRule": "Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.",
+      "x-recordIdentity": "workspaceId + lifecycleEntryId + version"
     },
     "ComponentDeployment": {
       "type": "object",
@@ -4968,6 +5431,15 @@
         },
         "workspaceId": {
           "$ref": "#/$defs/Id"
+        },
+        "version": {
+          "$ref": "#/$defs/Version"
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Timestamp"
         },
         "resourceId": {
           "$ref": "#/$defs/Id"
@@ -4982,17 +5454,27 @@
           "minLength": 1,
           "maxLength": 4096
         },
-        "observationId": {
-          "$ref": "#/$defs/Id"
+        "observation": {
+          "$ref": "#/$defs/EntityRef",
+          "properties": {
+            "kind": {
+              "const": "Observation"
+            }
+          },
+          "x-targetEntity": "Observation",
+          "x-referenceMode": "VERSION"
         }
       },
       "required": [
         "componentDeploymentId",
         "workspaceId",
+        "version",
+        "createdAt",
+        "updatedAt",
         "resourceId",
         "componentKind",
         "versionLabel",
-        "observationId"
+        "observation"
       ],
       "additionalProperties": false,
       "description": "An observed installed component/version on a resource, with explicit inventory provenance.",
@@ -5000,7 +5482,10 @@
       "x-module": "health",
       "x-owner": "observed inventory",
       "x-identity": "workspaceId + componentDeploymentId",
-      "x-mutable": false
+      "x-versioning": "APPEND_ONLY",
+      "x-writeAuthority": "COLLECTOR",
+      "x-sealingRule": "Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.",
+      "x-recordIdentity": "workspaceId + componentDeploymentId + version"
     },
     "ResiliencePolicy": {
       "type": "object",
@@ -5011,6 +5496,15 @@
         "workspaceId": {
           "$ref": "#/$defs/Id"
         },
+        "version": {
+          "$ref": "#/$defs/Version"
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
         "identity": {
           "$ref": "#/$defs/SourceIdentity"
         },
@@ -5019,8 +5513,15 @@
           "minLength": 1,
           "maxLength": 4096
         },
-        "selectedObservationId": {
-          "$ref": "#/$defs/Id"
+        "selectedObservation": {
+          "$ref": "#/$defs/EntityRef",
+          "properties": {
+            "kind": {
+              "const": "Observation"
+            }
+          },
+          "x-targetEntity": "Observation",
+          "x-referenceMode": "VERSION"
         },
         "components": {
           "type": "array",
@@ -5043,9 +5544,12 @@
       "required": [
         "resiliencePolicyId",
         "workspaceId",
+        "version",
+        "createdAt",
+        "updatedAt",
         "identity",
         "name",
-        "selectedObservationId",
+        "selectedObservation",
         "components",
         "providerUpdatedAt"
       ],
@@ -5055,7 +5559,10 @@
       "x-module": "resilience",
       "x-owner": "observed",
       "x-identity": "workspaceId + resiliencePolicyId",
-      "x-mutable": false
+      "x-versioning": "APPEND_ONLY",
+      "x-writeAuthority": "COLLECTOR",
+      "x-sealingRule": "Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.",
+      "x-recordIdentity": "workspaceId + resiliencePolicyId + version"
     },
     "ResilienceAssessment": {
       "type": "object",
@@ -5065,6 +5572,15 @@
         },
         "workspaceId": {
           "$ref": "#/$defs/Id"
+        },
+        "version": {
+          "$ref": "#/$defs/Version"
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Timestamp"
         },
         "serviceId": {
           "$ref": "#/$defs/Id"
@@ -5084,30 +5600,51 @@
             }
           ]
         },
-        "selectedObservationId": {
+        "selectedObservation": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Id"
+              "$ref": "#/$defs/EntityRef",
+              "properties": {
+                "kind": {
+                  "const": "Observation"
+                }
+              },
+              "x-targetEntity": "Observation",
+              "x-referenceMode": "VERSION"
             },
             {
               "type": "null"
             }
           ]
         },
-        "policyContextSnapshotId": {
+        "policyContextSnapshot": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Id"
+              "$ref": "#/$defs/EntityRef",
+              "properties": {
+                "kind": {
+                  "const": "Snapshot"
+                }
+              },
+              "x-targetEntity": "Snapshot",
+              "x-referenceMode": "VERSION"
             },
             {
               "type": "null"
             }
           ]
         },
-        "selectedPostureProjectionId": {
+        "selectedPostureProjection": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Id"
+              "$ref": "#/$defs/EntityRef",
+              "properties": {
+                "kind": {
+                  "const": "Projection"
+                }
+              },
+              "x-targetEntity": "Projection",
+              "x-referenceMode": "VERSION"
             },
             {
               "type": "null"
@@ -5118,12 +5655,15 @@
       "required": [
         "resilienceAssessmentId",
         "workspaceId",
+        "version",
+        "createdAt",
+        "updatedAt",
         "serviceId",
         "identity",
         "rawExecutionStatus",
-        "selectedObservationId",
-        "policyContextSnapshotId",
-        "selectedPostureProjectionId"
+        "selectedObservation",
+        "policyContextSnapshot",
+        "selectedPostureProjection"
       ],
       "additionalProperties": false,
       "description": "Native service-scoped assessment execution; execution success, posture and runtime health remain independent.",
@@ -5131,7 +5671,10 @@
       "x-module": "resilience",
       "x-owner": "observed",
       "x-identity": "workspaceId + serviceId + resilienceAssessmentId",
-      "x-mutable": false
+      "x-versioning": "APPEND_ONLY",
+      "x-writeAuthority": "COLLECTOR",
+      "x-sealingRule": "Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.",
+      "x-recordIdentity": "workspaceId + resilienceAssessmentId + version"
     },
     "Finding": {
       "type": "object",
@@ -5142,36 +5685,66 @@
         "workspaceId": {
           "$ref": "#/$defs/Id"
         },
+        "version": {
+          "$ref": "#/$defs/Version"
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
         "serviceId": {
           "$ref": "#/$defs/Id"
         },
         "identity": {
           "$ref": "#/$defs/SourceIdentity"
         },
-        "selectedSummaryObservationId": {
+        "selectedSummaryObservation": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Id"
+              "$ref": "#/$defs/EntityRef",
+              "properties": {
+                "kind": {
+                  "const": "Observation"
+                }
+              },
+              "x-targetEntity": "Observation",
+              "x-referenceMode": "VERSION"
             },
             {
               "type": "null"
             }
           ]
         },
-        "selectedDetailObservationId": {
+        "selectedDetailObservation": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Id"
+              "$ref": "#/$defs/EntityRef",
+              "properties": {
+                "kind": {
+                  "const": "Observation"
+                }
+              },
+              "x-targetEntity": "Observation",
+              "x-referenceMode": "VERSION"
             },
             {
               "type": "null"
             }
           ]
         },
-        "currentCaptureCollectionId": {
+        "currentCaptureCollection": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Id"
+              "$ref": "#/$defs/EntityRef",
+              "properties": {
+                "kind": {
+                  "const": "Collection"
+                }
+              },
+              "x-targetEntity": "Collection",
+              "x-referenceMode": "VERSION"
             },
             {
               "type": "null"
@@ -5229,11 +5802,14 @@
       "required": [
         "findingId",
         "workspaceId",
+        "version",
+        "createdAt",
+        "updatedAt",
         "serviceId",
         "identity",
-        "selectedSummaryObservationId",
-        "selectedDetailObservationId",
-        "currentCaptureCollectionId",
+        "selectedSummaryObservation",
+        "selectedDetailObservation",
+        "currentCaptureCollection",
         "rawDisposition",
         "rawSeverity",
         "recommendationPresence",
@@ -5245,7 +5821,10 @@
       "x-module": "resilience",
       "x-owner": "observed",
       "x-identity": "workspaceId + serviceId + findingId",
-      "x-mutable": false
+      "x-versioning": "APPEND_ONLY",
+      "x-writeAuthority": "COLLECTOR",
+      "x-sealingRule": "Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.",
+      "x-recordIdentity": "workspaceId + findingId + version"
     },
     "Recommendation": {
       "type": "object",
@@ -5256,17 +5835,40 @@
         "workspaceId": {
           "$ref": "#/$defs/Id"
         },
+        "version": {
+          "$ref": "#/$defs/Version"
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
         "serviceId": {
           "$ref": "#/$defs/Id"
         },
         "findingId": {
           "$ref": "#/$defs/Id"
         },
-        "findingDetailObservationId": {
-          "$ref": "#/$defs/Id"
+        "findingDetailObservation": {
+          "$ref": "#/$defs/EntityRef",
+          "properties": {
+            "kind": {
+              "const": "Observation"
+            }
+          },
+          "x-targetEntity": "Observation",
+          "x-referenceMode": "VERSION"
         },
-        "sourceRevisionId": {
-          "$ref": "#/$defs/Id"
+        "source": {
+          "$ref": "#/$defs/EntityRef",
+          "properties": {
+            "kind": {
+              "const": "Source"
+            }
+          },
+          "x-targetEntity": "Source",
+          "x-referenceMode": "VERSION"
         },
         "groupKey": {
           "type": "string",
@@ -5287,22 +5889,32 @@
       "required": [
         "recommendationId",
         "workspaceId",
+        "version",
+        "createdAt",
+        "updatedAt",
         "serviceId",
         "findingId",
-        "findingDetailObservationId",
-        "sourceRevisionId",
+        "findingDetailObservation",
+        "source",
         "groupKey",
         "ordinal",
         "suggestion",
         "enrichment"
       ],
       "additionalProperties": false,
-      "description": "Immutable suggested change anchored to one finding detail observation, group and ordinal. Later changed source content is a new recommendation.",
+      "description": "Captured suggestion with stable identity across repeated observations of the same Source version and normal versions for local enrichment. Without a native stable key, ordinal is not a join across changed source versions; operator workflow belongs to WorkItem.",
       "x-entity": true,
       "x-module": "resilience",
       "x-owner": "immutable evidence plus local enrichment",
-      "x-identity": "workspaceId + serviceId + findingId + detail observation + group + ordinal",
-      "x-mutable": false
+      "x-identity": "workspaceId + serviceId + findingId + exact source reference + groupKey + ordinal (unless a stable native key is available)",
+      "x-versioning": "APPEND_ONLY",
+      "x-writeAuthority": "MIXED",
+      "x-sealingRule": "Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.",
+      "x-recordIdentity": "workspaceId + recommendationId + version",
+      "x-fieldAuthorities": {
+        "enrichment": "APPLICATION",
+        "observed fields": "COLLECTOR"
+      }
     },
     "AgentSpace": {
       "type": "object",
@@ -5313,6 +5925,15 @@
         "workspaceId": {
           "$ref": "#/$defs/Id"
         },
+        "version": {
+          "$ref": "#/$defs/Version"
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
         "identity": {
           "$ref": "#/$defs/SourceIdentity"
         },
@@ -5321,8 +5942,15 @@
           "minLength": 1,
           "maxLength": 4096
         },
-        "selectedObservationId": {
-          "$ref": "#/$defs/Id"
+        "selectedObservation": {
+          "$ref": "#/$defs/EntityRef",
+          "properties": {
+            "kind": {
+              "const": "Observation"
+            }
+          },
+          "x-targetEntity": "Observation",
+          "x-referenceMode": "VERSION"
         },
         "associations": {
           "type": "array",
@@ -5335,9 +5963,12 @@
       "required": [
         "agentSpaceId",
         "workspaceId",
+        "version",
+        "createdAt",
+        "updatedAt",
         "identity",
         "name",
-        "selectedObservationId",
+        "selectedObservation",
         "associations"
       ],
       "additionalProperties": false,
@@ -5346,7 +5977,10 @@
       "x-module": "investigation",
       "x-owner": "observed",
       "x-identity": "workspaceId + agentSpaceId",
-      "x-mutable": false
+      "x-versioning": "APPEND_ONLY",
+      "x-writeAuthority": "COLLECTOR",
+      "x-sealingRule": "Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.",
+      "x-recordIdentity": "workspaceId + agentSpaceId + version"
     },
     "Investigation": {
       "type": "object",
@@ -5356,6 +5990,15 @@
         },
         "workspaceId": {
           "$ref": "#/$defs/Id"
+        },
+        "version": {
+          "$ref": "#/$defs/Version"
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Timestamp"
         },
         "agentSpaceId": {
           "$ref": "#/$defs/Id"
@@ -5376,15 +6019,22 @@
         "nativeTaskVersion": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Version"
+              "$ref": "#/$defs/PositiveInteger"
             },
             {
               "type": "null"
             }
           ]
         },
-        "selectedTaskObservationId": {
-          "$ref": "#/$defs/Id"
+        "selectedTaskObservation": {
+          "$ref": "#/$defs/EntityRef",
+          "properties": {
+            "kind": {
+              "const": "Observation"
+            }
+          },
+          "x-targetEntity": "Observation",
+          "x-referenceMode": "VERSION"
         },
         "executionPointerIdentity": {
           "anyOf": [
@@ -5427,12 +6077,15 @@
       "required": [
         "investigationId",
         "workspaceId",
+        "version",
+        "createdAt",
+        "updatedAt",
         "agentSpaceId",
         "identity",
         "title",
         "rawTaskStatus",
         "nativeTaskVersion",
-        "selectedTaskObservationId",
+        "selectedTaskObservation",
         "executionPointerIdentity",
         "executionMemberships",
         "externalReference",
@@ -5444,7 +6097,10 @@
       "x-module": "investigation",
       "x-owner": "observed aggregate",
       "x-identity": "workspaceId + agentSpaceId + native taskId",
-      "x-mutable": false
+      "x-versioning": "APPEND_ONLY",
+      "x-writeAuthority": "COLLECTOR",
+      "x-sealingRule": "Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.",
+      "x-recordIdentity": "workspaceId + investigationId + version"
     },
     "Execution": {
       "type": "object",
@@ -5454,6 +6110,15 @@
         },
         "workspaceId": {
           "$ref": "#/$defs/Id"
+        },
+        "version": {
+          "$ref": "#/$defs/Version"
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Timestamp"
         },
         "agentSpaceId": {
           "$ref": "#/$defs/Id"
@@ -5481,19 +6146,29 @@
           "minLength": 1,
           "maxLength": 4096
         },
-        "selectedObservationId": {
-          "$ref": "#/$defs/Id"
+        "selectedObservation": {
+          "$ref": "#/$defs/EntityRef",
+          "properties": {
+            "kind": {
+              "const": "Observation"
+            }
+          },
+          "x-targetEntity": "Observation",
+          "x-referenceMode": "VERSION"
         }
       },
       "required": [
         "executionId",
         "workspaceId",
+        "version",
+        "createdAt",
+        "updatedAt",
         "agentSpaceId",
         "identity",
         "parentExecutionIdentity",
         "rawExecutionStatus",
         "agentSubTask",
-        "selectedObservationId"
+        "selectedObservation"
       ],
       "additionalProperties": false,
       "description": "Native DevOps execution in an AgentSpace; task membership is an observed relation, not a single foreign key.",
@@ -5501,7 +6176,10 @@
       "x-module": "investigation",
       "x-owner": "observed",
       "x-identity": "workspaceId + agentSpaceId + native executionId",
-      "x-mutable": false
+      "x-versioning": "APPEND_ONLY",
+      "x-writeAuthority": "COLLECTOR",
+      "x-sealingRule": "Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.",
+      "x-recordIdentity": "workspaceId + executionId + version"
     },
     "JournalRecord": {
       "type": "object",
@@ -5511,6 +6189,15 @@
         },
         "workspaceId": {
           "$ref": "#/$defs/Id"
+        },
+        "version": {
+          "$ref": "#/$defs/Version"
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Timestamp"
         },
         "agentSpaceId": {
           "$ref": "#/$defs/Id"
@@ -5526,22 +6213,39 @@
           "minLength": 1,
           "maxLength": 4096
         },
-        "selectedSourceRevisionId": {
-          "$ref": "#/$defs/Id"
+        "selectedSource": {
+          "$ref": "#/$defs/EntityRef",
+          "properties": {
+            "kind": {
+              "const": "Source"
+            }
+          },
+          "x-targetEntity": "Source",
+          "x-referenceMode": "VERSION"
         },
-        "selectedObservationId": {
-          "$ref": "#/$defs/Id"
+        "selectedObservation": {
+          "$ref": "#/$defs/EntityRef",
+          "properties": {
+            "kind": {
+              "const": "Observation"
+            }
+          },
+          "x-targetEntity": "Observation",
+          "x-referenceMode": "VERSION"
         }
       },
       "required": [
         "journalRecordId",
         "workspaceId",
+        "version",
+        "createdAt",
+        "updatedAt",
         "agentSpaceId",
         "executionId",
         "identity",
         "recordType",
-        "selectedSourceRevisionId",
-        "selectedObservationId"
+        "selectedSource",
+        "selectedObservation"
       ],
       "additionalProperties": false,
       "description": "Stable journal envelope identity with retained source revisions. Content stays arbitrary JSON; no assumed root-cause schema.",
@@ -5549,7 +6253,10 @@
       "x-module": "investigation",
       "x-owner": "observed",
       "x-identity": "workspaceId + agentSpaceId + executionId + native recordId",
-      "x-mutable": false
+      "x-versioning": "APPEND_ONLY",
+      "x-writeAuthority": "COLLECTOR",
+      "x-sealingRule": "Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.",
+      "x-recordIdentity": "workspaceId + journalRecordId + version"
     },
     "ApprovalRequest": {
       "type": "object",
@@ -5559,6 +6266,15 @@
         },
         "workspaceId": {
           "$ref": "#/$defs/Id"
+        },
+        "version": {
+          "$ref": "#/$defs/Version"
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Timestamp"
         },
         "agentSpaceId": {
           "$ref": "#/$defs/Id"
@@ -5571,11 +6287,25 @@
           "minLength": 1,
           "maxLength": 4096
         },
-        "requestSourceRevisionId": {
-          "$ref": "#/$defs/Id"
+        "requestSource": {
+          "$ref": "#/$defs/EntityRef",
+          "properties": {
+            "kind": {
+              "const": "Source"
+            }
+          },
+          "x-targetEntity": "Source",
+          "x-referenceMode": "VERSION"
         },
-        "selectedObservationId": {
-          "$ref": "#/$defs/Id"
+        "selectedObservation": {
+          "$ref": "#/$defs/EntityRef",
+          "properties": {
+            "kind": {
+              "const": "Observation"
+            }
+          },
+          "x-targetEntity": "Observation",
+          "x-referenceMode": "VERSION"
         },
         "rawState": {
           "type": "string",
@@ -5603,11 +6333,14 @@
       "required": [
         "approvalRequestId",
         "workspaceId",
+        "version",
+        "createdAt",
+        "updatedAt",
         "agentSpaceId",
         "executionId",
         "nativeApprovalId",
-        "requestSourceRevisionId",
-        "selectedObservationId",
+        "requestSource",
+        "selectedObservation",
         "rawState",
         "actionDigest",
         "decisionCommandIds",
@@ -5619,7 +6352,10 @@
       "x-module": "investigation",
       "x-owner": "observed control request",
       "x-identity": "workspaceId + approvalRequestId",
-      "x-mutable": false
+      "x-versioning": "APPEND_ONLY",
+      "x-writeAuthority": "COLLECTOR",
+      "x-sealingRule": "Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.",
+      "x-recordIdentity": "workspaceId + approvalRequestId + version"
     },
     "Asset": {
       "type": "object",
@@ -5629,6 +6365,15 @@
         },
         "workspaceId": {
           "$ref": "#/$defs/Id"
+        },
+        "version": {
+          "$ref": "#/$defs/Version"
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Timestamp"
         },
         "agentSpaceId": {
           "$ref": "#/$defs/Id"
@@ -5646,10 +6391,24 @@
           "minLength": 1,
           "maxLength": 4096
         },
-        "versions": {
+        "nativeVersion": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source": {
+          "$ref": "#/$defs/EntityRef",
+          "properties": {
+            "kind": {
+              "const": "Source"
+            }
+          },
+          "x-targetEntity": "Source",
+          "x-referenceMode": "VERSION"
+        },
+        "files": {
           "type": "array",
           "items": {
-            "$ref": "#/$defs/AssetVersion"
+            "$ref": "#/$defs/AssetFile"
           },
           "maxItems": 1000
         }
@@ -5657,19 +6416,27 @@
       "required": [
         "assetId",
         "workspaceId",
+        "version",
+        "createdAt",
+        "updatedAt",
         "agentSpaceId",
         "identity",
         "assetType",
         "name",
-        "versions"
+        "nativeVersion",
+        "source",
+        "files"
       ],
       "additionalProperties": false,
-      "description": "Native asset root; exact versions and files retain immutable source/content references and availability.",
+      "description": "A versioned asset whose selected native version and exact files are ordinary fields. Asset history uses the same id/version contract as every entity.",
       "x-entity": true,
       "x-module": "investigation",
       "x-owner": "observed",
       "x-identity": "workspaceId + assetId",
-      "x-mutable": false
+      "x-versioning": "APPEND_ONLY",
+      "x-writeAuthority": "COLLECTOR",
+      "x-sealingRule": "Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.",
+      "x-recordIdentity": "workspaceId + assetId + version"
     },
     "Scenario": {
       "type": "object",
@@ -5683,7 +6450,10 @@
         "version": {
           "$ref": "#/$defs/Version"
         },
-        "localUpdatedAt": {
+        "createdAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updatedAt": {
           "$ref": "#/$defs/Timestamp"
         },
         "name": {
@@ -5695,83 +6465,113 @@
           "type": "string",
           "maxLength": 16384
         },
-        "draftDefinition": {
-          "$ref": "#/$defs/ScenarioDraft"
+        "state": {
+          "enum": [
+            "DRAFT",
+            "PUBLISHED",
+            "ARCHIVED"
+          ]
         },
-        "defaultRevisionId": {
+        "definition": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ScenarioDraft"
+            },
+            {
+              "$ref": "#/$defs/ScenarioDefinition"
+            }
+          ]
+        },
+        "publishedAt": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Id"
+              "$ref": "#/$defs/Timestamp"
             },
             {
               "type": "null"
             }
           ]
         },
-        "archived": {
-          "type": "boolean"
+        "digest": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Digest"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       },
       "required": [
         "scenarioId",
         "workspaceId",
         "version",
-        "localUpdatedAt",
+        "createdAt",
+        "updatedAt",
         "name",
         "description",
-        "draftDefinition",
-        "defaultRevisionId",
-        "archived"
+        "state",
+        "definition",
+        "publishedAt",
+        "digest"
       ],
       "additionalProperties": false,
-      "description": "Editable scenario metadata and draft; executions reference a published immutable ScenarioRevision.",
+      "description": "One versioned scenario entity. Draft editing, publication and archival append versions with the same scenarioId. A Run pins an exact PUBLISHED version; current ARCHIVED head blocks new admissions.",
       "x-entity": true,
       "x-module": "workflow",
       "x-owner": "application",
       "x-identity": "workspaceId + scenarioId",
-      "x-mutable": true
-    },
-    "ScenarioRevision": {
-      "type": "object",
-      "properties": {
-        "scenarioRevisionId": {
-          "$ref": "#/$defs/Id"
+      "x-versioning": "APPEND_ONLY",
+      "x-writeAuthority": "APPLICATION",
+      "x-sealingRule": "Published version content and locks are immutable. Editing opens a later DRAFT version; publishing or archiving appends another version. History is never reopened.",
+      "x-recordIdentity": "workspaceId + scenarioId + version",
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "const": "DRAFT"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "definition": {
+                "$ref": "#/$defs/ScenarioDraft"
+              },
+              "publishedAt": {
+                "type": "null"
+              },
+              "digest": {
+                "type": "null"
+              }
+            }
+          }
         },
-        "workspaceId": {
-          "$ref": "#/$defs/Id"
-        },
-        "scenarioId": {
-          "$ref": "#/$defs/Id"
-        },
-        "revisionNumber": {
-          "$ref": "#/$defs/Version"
-        },
-        "publishedAt": {
-          "$ref": "#/$defs/Timestamp"
-        },
-        "digest": {
-          "$ref": "#/$defs/Digest"
-        },
-        "definition": {
-          "$ref": "#/$defs/ScenarioDefinition"
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "const": "PUBLISHED"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "definition": {
+                "$ref": "#/$defs/ScenarioDefinition"
+              },
+              "publishedAt": {
+                "$ref": "#/$defs/Timestamp"
+              },
+              "digest": {
+                "$ref": "#/$defs/Digest"
+              }
+            }
+          }
         }
-      },
-      "required": [
-        "scenarioRevisionId",
-        "workspaceId",
-        "scenarioId",
-        "revisionNumber",
-        "publishedAt",
-        "digest",
-        "definition"
-      ],
-      "additionalProperties": false,
-      "description": "Validated immutable definition with complete operation/schema locks. Alias changes cannot change published meaning.",
-      "x-entity": true,
-      "x-module": "workflow",
-      "x-owner": "application immutable publication",
-      "x-identity": "workspaceId + scenarioId + scenarioRevisionId",
-      "x-mutable": false
+      ]
     },
     "Run": {
       "type": "object",
@@ -5782,11 +6582,34 @@
         "workspaceId": {
           "$ref": "#/$defs/Id"
         },
-        "scenarioRevisionId": {
-          "$ref": "#/$defs/Id"
+        "version": {
+          "$ref": "#/$defs/Version"
         },
-        "inputSnapshotId": {
-          "$ref": "#/$defs/Id"
+        "createdAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "scenario": {
+          "$ref": "#/$defs/EntityRef",
+          "properties": {
+            "kind": {
+              "const": "Scenario"
+            }
+          },
+          "x-targetEntity": "Scenario",
+          "x-referenceMode": "VERSION"
+        },
+        "inputSnapshot": {
+          "$ref": "#/$defs/EntityRef",
+          "properties": {
+            "kind": {
+              "const": "Snapshot"
+            }
+          },
+          "x-targetEntity": "Snapshot",
+          "x-referenceMode": "VERSION"
         },
         "phase": {
           "type": "string",
@@ -5854,9 +6677,6 @@
             }
           ]
         },
-        "projectionVersion": {
-          "$ref": "#/$defs/Version"
-        },
         "admittedAt": {
           "$ref": "#/$defs/Timestamp"
         },
@@ -5878,13 +6698,31 @@
         "asOfSequence": {
           "type": "integer",
           "minimum": 0
+        },
+        "steps": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EntityRef",
+            "properties": {
+              "kind": {
+                "const": "StepRun"
+              }
+            },
+            "x-targetEntity": "StepRun",
+            "x-referenceMode": "VERSION"
+          },
+          "maxItems": 100,
+          "description": "Exact step representations selected by this Run version; historical reads never join current steps."
         }
       },
       "required": [
         "runId",
         "workspaceId",
-        "scenarioRevisionId",
-        "inputSnapshotId",
+        "version",
+        "createdAt",
+        "updatedAt",
+        "scenario",
+        "inputSnapshot",
         "phase",
         "executionOutcome",
         "assessmentVerdict",
@@ -5892,19 +6730,22 @@
         "finalizationState",
         "effectState",
         "cancellationIntent",
-        "projectionVersion",
         "admittedAt",
         "terminalAt",
         "reducerVersion",
-        "asOfSequence"
+        "asOfSequence",
+        "steps"
       ],
       "additionalProperties": false,
-      "description": "An admitted workflow execution; its phase, technical outcome, verdict and finalization remain separate.",
+      "description": "Versioned admitted workflow execution pinning one exact published Scenario and input Snapshot. Phase, outcome, verdict and finalization remain independent; every state change appends Run.version.",
       "x-entity": true,
       "x-module": "workflow",
       "x-owner": "application execution",
       "x-identity": "workspaceId + runId",
-      "x-mutable": false
+      "x-versioning": "APPEND_ONLY",
+      "x-writeAuthority": "WORKFLOW",
+      "x-sealingRule": "Lifecycle changes append versions. A settled/terminal record cannot be reopened; late reconciliation is new evidence and does not rewrite settled facts.",
+      "x-recordIdentity": "workspaceId + runId + version"
     },
     "StepRun": {
       "type": "object",
@@ -5915,21 +6756,20 @@
         "workspaceId": {
           "$ref": "#/$defs/Id"
         },
+        "version": {
+          "$ref": "#/$defs/Version"
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
         "runId": {
           "$ref": "#/$defs/Id"
         },
         "stepKey": {
           "$ref": "#/$defs/Id"
-        },
-        "selectedAttemptNo": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/Version"
-            },
-            {
-              "type": "null"
-            }
-          ]
         },
         "skipReason": {
           "anyOf": [
@@ -5969,17 +6809,53 @@
               "type": "null"
             }
           ]
+        },
+        "selectedAttempt": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/EntityRef",
+              "properties": {
+                "kind": {
+                  "const": "StepAttempt"
+                }
+              },
+              "x-targetEntity": "StepAttempt",
+              "x-referenceMode": "VERSION"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "attempts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EntityRef",
+            "properties": {
+              "kind": {
+                "const": "StepAttempt"
+              }
+            },
+            "x-targetEntity": "StepAttempt",
+            "x-referenceMode": "VERSION"
+          },
+          "maxItems": 100,
+          "description": "Exact known attempt representations selected by this StepRun version, one per attempt identity."
         }
       },
       "required": [
         "stepRunId",
         "workspaceId",
+        "version",
+        "createdAt",
+        "updatedAt",
         "runId",
         "stepKey",
-        "selectedAttemptNo",
+        "selectedAttempt",
         "skipReason",
         "phase",
-        "outcome"
+        "outcome",
+        "attempts"
       ],
       "additionalProperties": false,
       "description": "Run-owned step lifecycle. Selection of an attempt is explicit; retry history is retained.",
@@ -5987,7 +6863,10 @@
       "x-module": "workflow",
       "x-owner": "application execution",
       "x-identity": "workspaceId + runId + stepKey",
-      "x-mutable": false
+      "x-versioning": "APPEND_ONLY",
+      "x-writeAuthority": "WORKFLOW",
+      "x-sealingRule": "Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.",
+      "x-recordIdentity": "workspaceId + stepRunId + version"
     },
     "StepAttempt": {
       "type": "object",
@@ -5998,6 +6877,15 @@
         "workspaceId": {
           "$ref": "#/$defs/Id"
         },
+        "version": {
+          "$ref": "#/$defs/Version"
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
         "runId": {
           "$ref": "#/$defs/Id"
         },
@@ -6005,7 +6893,7 @@
           "$ref": "#/$defs/Id"
         },
         "attemptNo": {
-          "$ref": "#/$defs/Version"
+          "$ref": "#/$defs/PositiveInteger"
         },
         "dispatchKey": {
           "$ref": "#/$defs/Id"
@@ -6063,6 +6951,9 @@
       "required": [
         "stepAttemptId",
         "workspaceId",
+        "version",
+        "createdAt",
+        "updatedAt",
         "runId",
         "stepRunId",
         "attemptNo",
@@ -6080,7 +6971,10 @@
       "x-module": "workflow",
       "x-owner": "application execution facts",
       "x-identity": "workspaceId + runId + stepRunId + attemptNo",
-      "x-mutable": false
+      "x-versioning": "APPEND_ONLY",
+      "x-writeAuthority": "WORKFLOW",
+      "x-sealingRule": "Lifecycle changes append versions. A settled/terminal record cannot be reopened; late reconciliation is new evidence and does not rewrite settled facts.",
+      "x-recordIdentity": "workspaceId + stepAttemptId + version"
     },
     "Experiment": {
       "type": "object",
@@ -6091,21 +6985,44 @@
         "workspaceId": {
           "$ref": "#/$defs/Id"
         },
+        "version": {
+          "$ref": "#/$defs/Version"
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
         "identity": {
           "$ref": "#/$defs/SourceIdentity"
         },
-        "templateSourceRevisionId": {
+        "templateSource": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Id"
+              "$ref": "#/$defs/EntityRef",
+              "properties": {
+                "kind": {
+                  "const": "Source"
+                }
+              },
+              "x-targetEntity": "Source",
+              "x-referenceMode": "VERSION"
             },
             {
               "type": "null"
             }
           ]
         },
-        "selectedObservationId": {
-          "$ref": "#/$defs/Id"
+        "selectedObservation": {
+          "$ref": "#/$defs/EntityRef",
+          "properties": {
+            "kind": {
+              "const": "Observation"
+            }
+          },
+          "x-targetEntity": "Observation",
+          "x-referenceMode": "VERSION"
         },
         "rawExperimentState": {
           "type": "string",
@@ -6136,9 +7053,12 @@
       "required": [
         "experimentId",
         "workspaceId",
+        "version",
+        "createdAt",
+        "updatedAt",
         "identity",
-        "templateSourceRevisionId",
-        "selectedObservationId",
+        "templateSource",
+        "selectedObservation",
         "rawExperimentState",
         "actions",
         "targetMemberships",
@@ -6151,7 +7071,10 @@
       "x-module": "fis",
       "x-owner": "observed",
       "x-identity": "workspaceId + experimentId",
-      "x-mutable": false
+      "x-versioning": "APPEND_ONLY",
+      "x-writeAuthority": "COLLECTOR",
+      "x-sealingRule": "Every stored version is immutable. Authorized changes append the next version of the same entity; provider state changes do not rewrite prior versions.",
+      "x-recordIdentity": "workspaceId + experimentId + version"
     },
     "WorkflowPolicies": {
       "type": "object",
@@ -6278,8 +7201,15 @@
         "bindingKey": {
           "$ref": "#/$defs/Id"
         },
-        "connectionId": {
-          "$ref": "#/$defs/Id"
+        "connection": {
+          "$ref": "#/$defs/EntityRef",
+          "properties": {
+            "kind": {
+              "const": "Connection"
+            }
+          },
+          "x-targetEntity": "Connection",
+          "x-referenceMode": "VERSION"
         },
         "authorizationContextKey": {
           "type": "string",
@@ -6306,7 +7236,7 @@
       },
       "required": [
         "bindingKey",
-        "connectionId",
+        "connection",
         "authorizationContextKey",
         "scopeDigest",
         "allowedScopes",
@@ -6450,6 +7380,67 @@
       ],
       "additionalProperties": false,
       "description": "Resolved directory identity assigned to local work. A team/group is an assignee, never an authenticated audit actor."
+    },
+    "EntityIdentity": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "Workspace",
+            "Connection",
+            "Resource",
+            "Collection",
+            "ReadAttempt",
+            "Source",
+            "Observation",
+            "Projection",
+            "Snapshot",
+            "WorkItem",
+            "Command",
+            "System",
+            "UserJourney",
+            "Service",
+            "Dependency",
+            "HealthEvent",
+            "EventContext",
+            "EntityImpact",
+            "Communication",
+            "LifecycleEntry",
+            "ComponentDeployment",
+            "ResiliencePolicy",
+            "ResilienceAssessment",
+            "Finding",
+            "Recommendation",
+            "AgentSpace",
+            "Investigation",
+            "Execution",
+            "JournalRecord",
+            "ApprovalRequest",
+            "Asset",
+            "Scenario",
+            "Run",
+            "StepRun",
+            "StepAttempt",
+            "Experiment"
+          ]
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        }
+      },
+      "required": [
+        "kind",
+        "id"
+      ],
+      "additionalProperties": false,
+      "description": "A logical entity identity for explicitly live navigation or work targeting. It does not select a historical representation or authorize a lookup."
+    },
+    "PositiveInteger": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991,
+      "description": "A positive domain count or ordinal. It is not an entity version or concurrency token."
     }
   },
   "oneOf": [
@@ -6469,13 +7460,13 @@
       "$ref": "#/$defs/ReadAttempt"
     },
     {
-      "$ref": "#/$defs/SourceRevision"
+      "$ref": "#/$defs/Source"
     },
     {
       "$ref": "#/$defs/Observation"
     },
     {
-      "$ref": "#/$defs/ProjectionRevision"
+      "$ref": "#/$defs/Projection"
     },
     {
       "$ref": "#/$defs/Snapshot"
@@ -6550,9 +7541,6 @@
       "$ref": "#/$defs/Scenario"
     },
     {
-      "$ref": "#/$defs/ScenarioRevision"
-    },
-    {
       "$ref": "#/$defs/Run"
     },
     {
@@ -6564,5 +7552,25 @@
     {
       "$ref": "#/$defs/Experiment"
     }
-  ]
+  ],
+  "x-contractVersion": 2,
+  "x-versionContract": {
+    "fields": [
+      "version",
+      "createdAt",
+      "updatedAt"
+    ],
+    "historyKey": [
+      "workspaceId",
+      "entity kind",
+      "entity id",
+      "version"
+    ],
+    "versionStart": 1,
+    "increment": 1,
+    "writeRule": "Append next version under an atomic expectedVersion check; stored versions never change.",
+    "exactReference": "EntityRef(kind,id,version)",
+    "identityReference": "EntityIdentity(kind,id), explicitly live and never a historical pin",
+    "nativeVersion": "Separate domain fact; never substitutes for version."
+  }
 }

@@ -1,6 +1,6 @@
 {
   "status": "OFFLINE_NORMATIVE_CASES",
-  "scope": "Alternative fixture datasets exercise structure, identity, evidence prerequisites and cross-artifact invariants. No case executes a predicate, provider call, scheduler, database or authorization system.",
+  "scope": "Alternative complete synthetic fixture datasets test uniform entity versioning, exact historical references, source identity, workflow selection, capture cutoff/closure and preserved domain invariants. No provider call, scheduler, database or authorization engine runs.",
   "cases": [
     {
       "id": "execution-and-acceptance-independent",
@@ -12,13 +12,15 @@
           "entity": "Run",
           "id": "run-checkout",
           "path": "/executionOutcome",
-          "equals": "SUCCEEDED"
+          "equals": "SUCCEEDED",
+          "version": 2
         },
         {
           "entity": "Run",
           "id": "run-checkout",
           "path": "/assessmentVerdict",
-          "equals": "FAIL"
+          "equals": "FAIL",
+          "version": 2
         }
       ]
     },
@@ -32,39 +34,52 @@
           "entity": "WorkItem",
           "id": "workitem-review",
           "path": "/state",
-          "equals": "RESOLVED"
+          "equals": "RESOLVED",
+          "version": 1
         },
         {
           "entity": "Finding",
           "id": "finding-single-node",
           "path": "/rawDisposition",
-          "equals": "OPEN"
+          "equals": "OPEN",
+          "version": 1
         },
         {
           "entity": "EntityImpact",
           "id": "impact-db",
           "path": "/rawProviderStatus",
-          "equals": "PENDING"
+          "equals": "PENDING",
+          "version": 1
         }
       ]
     },
     {
-      "id": "observation-is-not-revision",
-      "description": "Two successful reads of the same payload retain two observations and one source revision.",
+      "id": "repeated-observation-reuses-source-version",
+      "description": "Two distinct successful observations pin the same Source id and version.",
       "expect": "VALID",
       "mutations": [],
       "assertions": [
         {
           "entity": "Observation",
           "id": "obs-health-impact",
-          "path": "/sourceRevisionId",
-          "equals": "src-health-impact"
+          "path": "/source",
+          "equals": {
+            "kind": "Source",
+            "id": "src-health-impact",
+            "version": 1
+          },
+          "version": 1
         },
         {
           "entity": "Observation",
           "id": "obs-health-impact-repeat",
-          "path": "/sourceRevisionId",
-          "equals": "src-health-impact"
+          "path": "/source",
+          "equals": {
+            "kind": "Source",
+            "id": "src-health-impact",
+            "version": 1
+          },
+          "version": 1
         }
       ]
     },
@@ -78,7 +93,8 @@
           "entity": "Finding",
           "id": "finding-single-node",
           "path": "/serviceId",
-          "equals": "svc-checkout"
+          "equals": "svc-checkout",
+          "version": 1
         }
       ]
     },
@@ -92,13 +108,15 @@
           "entity": "ReadAttempt",
           "id": "read-external-traces",
           "path": "/returnedCount",
-          "equals": null
+          "equals": null,
+          "version": 2
         },
         {
           "entity": "ReadAttempt",
           "id": "read-external-traces",
           "path": "/error/code",
-          "equals": "AccessDenied"
+          "equals": "AccessDenied",
+          "version": 2
         }
       ]
     },
@@ -109,22 +127,25 @@
       "mutations": [],
       "assertions": [
         {
-          "entity": "ProjectionRevision",
+          "entity": "Projection",
           "id": "projection-service-status",
           "path": "/value/assessmentExecution/state",
-          "equals": "SUCCEEDED"
+          "equals": "SUCCEEDED",
+          "version": 1
         },
         {
-          "entity": "ProjectionRevision",
+          "entity": "Projection",
           "id": "projection-service-status",
           "path": "/value/resiliencePosture/state",
-          "equals": "NOT_ACHIEVABLE"
+          "equals": "NOT_ACHIEVABLE",
+          "version": 1
         },
         {
-          "entity": "ProjectionRevision",
+          "entity": "Projection",
           "id": "projection-service-status",
           "path": "/value/runtimeHealth/state",
-          "equals": "DEGRADED"
+          "equals": "DEGRADED",
+          "version": 1
         }
       ]
     },
@@ -134,24 +155,27 @@
       "expect": "VALID",
       "mutations": [
         {
-          "entity": "SourceRevision",
+          "entity": "Source",
           "id": "src-journal",
           "path": "/payload",
-          "value": null
+          "value": null,
+          "version": 1
         }
       ],
       "rehash": [
         {
-          "entity": "SourceRevision",
-          "id": "src-journal"
+          "entity": "Source",
+          "id": "src-journal",
+          "version": 1
         }
       ],
       "assertions": [
         {
-          "entity": "SourceRevision",
+          "entity": "Source",
           "id": "src-journal",
           "path": "/payloadStorage",
-          "equals": "INLINE"
+          "equals": "INLINE",
+          "version": 1
         }
       ]
     },
@@ -164,19 +188,22 @@
           "entity": "EventContext",
           "id": "context-account",
           "path": "/rawProviderStatus",
-          "value": "FUTURE_PROVIDER_STATE"
+          "value": "FUTURE_PROVIDER_STATE",
+          "version": 1
         },
         {
-          "entity": "SourceRevision",
+          "entity": "Source",
           "id": "src-health-context",
           "path": "/payload/statusCode",
-          "value": "FUTURE_PROVIDER_STATE"
+          "value": "FUTURE_PROVIDER_STATE",
+          "version": 1
         }
       ],
       "rehash": [
         {
-          "entity": "SourceRevision",
-          "id": "src-health-context"
+          "entity": "Source",
+          "id": "src-health-context",
+          "version": 1
         }
       ]
     },
@@ -186,10 +213,11 @@
       "expect": "INVALID",
       "mutations": [
         {
-          "entity": "SourceRevision",
+          "entity": "Source",
           "id": "src-health-impact",
           "path": "/workspaceId",
-          "value": "ws-other"
+          "value": "ws-other",
+          "version": 1
         }
       ],
       "expectedCodes": [
@@ -208,7 +236,8 @@
           "value": {
             "kind": "Resource",
             "id": "finding-single-node"
-          }
+          },
+          "version": 1
         }
       ],
       "expectedCodes": [
@@ -224,7 +253,8 @@
           "entity": "EntityImpact",
           "id": "impact-db",
           "path": "/eventContextId",
-          "value": "context-organization"
+          "value": "context-organization",
+          "version": 1
         }
       ],
       "expectedCodes": [
@@ -237,16 +267,18 @@
       "expect": "INVALID",
       "mutations": [
         {
-          "entity": "SourceRevision",
+          "entity": "Source",
           "id": "src-health-impact",
           "path": "/payload/awsAccountId",
-          "value": "999900001111"
+          "value": "999900001111",
+          "version": 1
         }
       ],
       "rehash": [
         {
-          "entity": "SourceRevision",
-          "id": "src-health-impact"
+          "entity": "Source",
+          "id": "src-health-impact",
+          "version": 1
         }
       ],
       "expectedCodes": [
@@ -262,13 +294,15 @@
           "entity": "EventContext",
           "id": "context-account",
           "path": "/kind",
-          "value": "PUBLIC"
+          "value": "PUBLIC",
+          "version": 1
         },
         {
           "entity": "EventContext",
           "id": "context-account",
           "path": "/contextKey",
-          "value": "PUBLIC"
+          "value": "PUBLIC",
+          "version": 1
         }
       ],
       "expectedCodes": [
@@ -284,7 +318,8 @@
           "entity": "Communication",
           "id": "communication-maintenance",
           "path": "/assemblyState",
-          "value": "COMPLETE"
+          "value": "COMPLETE",
+          "version": 1
         }
       ],
       "expectedCodes": [
@@ -300,7 +335,8 @@
           "entity": "Execution",
           "id": "execution-investigation",
           "path": "/identity/scope/parentKeys/agentSpaceId",
-          "value": "other-native-space"
+          "value": "other-native-space",
+          "version": 1
         }
       ],
       "expectedCodes": [
@@ -315,8 +351,13 @@
         {
           "entity": "Investigation",
           "id": "investigation-checkout",
-          "path": "/executionMemberships/0/observationId",
-          "value": "obs-task"
+          "path": "/executionMemberships/0/observation",
+          "value": {
+            "kind": "Observation",
+            "id": "obs-task",
+            "version": 1
+          },
+          "version": 1
         }
       ],
       "expectedCodes": [
@@ -331,8 +372,13 @@
         {
           "entity": "JournalRecord",
           "id": "journal-summary",
-          "path": "/selectedSourceRevisionId",
-          "value": "src-task"
+          "path": "/selectedSource",
+          "value": {
+            "kind": "Source",
+            "id": "src-task",
+            "version": 1
+          },
+          "version": 1
         }
       ],
       "expectedCodes": [
@@ -345,16 +391,18 @@
       "expect": "INVALID",
       "mutations": [
         {
-          "entity": "SourceRevision",
+          "entity": "Source",
           "id": "src-completion",
           "path": "/payload/phase",
-          "value": "MITIGATION"
+          "value": "MITIGATION",
+          "version": 1
         }
       ],
       "rehash": [
         {
-          "entity": "SourceRevision",
-          "id": "src-completion"
+          "entity": "Source",
+          "id": "src-completion",
+          "version": 1
         }
       ],
       "expectedCodes": [
@@ -362,16 +410,15 @@
       ]
     },
     {
-      "id": "duplicate-source-revision",
-      "description": "Repeat observations do not justify a second identical immutable revision.",
+      "id": "source-content-change-keeps-identity",
+      "description": "A second logical Source with the same source identity is rejected; content history must use versions of the same entity.",
       "expect": "INVALID",
       "mutations": [],
       "appendRecords": [
         {
-          "entity": "SourceRevision",
+          "entity": "Source",
           "record": {
             "workspaceId": "ws-demo",
-            "sourceRevisionId": "src-duplicate-impact",
             "identity": {
               "provider": "AWS",
               "service": "health",
@@ -411,12 +458,16 @@
             },
             "payloadStorage": "INLINE",
             "artifact": null,
-            "digestProfile": "RFC8785_SHA256"
+            "digestProfile": "RFC8785_SHA256",
+            "sourceId": "src-health-impact-duplicate",
+            "version": 1,
+            "createdAt": 1793869330,
+            "updatedAt": 1793869330
           }
         }
       ],
       "expectedCodes": [
-        "DUPLICATE_SOURCE_REVISION"
+        "SOURCE_LOGICAL_IDENTITY"
       ]
     },
     {
@@ -428,13 +479,15 @@
           "entity": "StepAttempt",
           "id": "attempt-error_budget",
           "path": "/checkResult/verdict",
-          "value": "PASS"
+          "value": "PASS",
+          "version": 2
         },
         {
           "entity": "StepAttempt",
           "id": "attempt-error_budget",
           "path": "/checkResult/evidenceRefs",
-          "value": []
+          "value": [],
+          "version": 2
         }
       ],
       "expectedCodes": [
@@ -450,7 +503,8 @@
           "entity": "StepAttempt",
           "id": "attempt-error_budget",
           "path": "/checkResult/coverage/claim",
-          "value": "INSUFFICIENT"
+          "value": "INSUFFICIENT",
+          "version": 2
         }
       ],
       "expectedCodes": [
@@ -466,13 +520,15 @@
           "entity": "StepAttempt",
           "id": "attempt-error_budget",
           "path": "/checkResult/claimType",
-          "value": "ABSENCE"
+          "value": "ABSENCE",
+          "version": 2
         },
         {
           "entity": "StepAttempt",
           "id": "attempt-error_budget",
           "path": "/checkResult/coverage/windowState",
-          "value": "OPEN"
+          "value": "OPEN",
+          "version": 2
         }
       ],
       "expectedCodes": [
@@ -487,26 +543,30 @@
         {
           "entity": "StepRun",
           "id": "step-error_budget",
-          "path": "/selectedAttemptNo",
-          "value": null
+          "path": "/selectedAttempt",
+          "value": null,
+          "version": 2
         },
         {
           "entity": "StepRun",
           "id": "step-error_budget",
           "path": "/skipReason",
-          "value": "Synthetic runtime condition was false."
+          "value": "Synthetic runtime condition was false.",
+          "version": 2
         },
         {
           "entity": "StepRun",
           "id": "step-error_budget",
           "path": "/outcome",
-          "value": "SKIPPED"
+          "value": "SKIPPED",
+          "version": 2
         },
         {
           "entity": "Run",
           "id": "run-checkout",
           "path": "/assessmentVerdict",
-          "value": "PASS"
+          "value": "PASS",
+          "version": 2
         }
       ],
       "expectedCodes": [
@@ -522,19 +582,22 @@
           "entity": "Snapshot",
           "id": "snap-run-input",
           "path": "/contents/requiredCriterionKeys",
-          "value": []
+          "value": [],
+          "version": 1
         },
         {
           "entity": "Run",
           "id": "run-checkout",
           "path": "/assessmentVerdict",
-          "value": "NOT_EVALUATED"
+          "value": "NOT_EVALUATED",
+          "version": 2
         }
       ],
       "rehash": [
         {
           "entity": "Snapshot",
-          "id": "snap-run-input"
+          "id": "snap-run-input",
+          "version": 1
         }
       ],
       "expectedCodes": [
@@ -550,13 +613,15 @@
           "entity": "Snapshot",
           "id": "snap-run-input",
           "path": "/contents/resolvedBindings",
-          "value": []
+          "value": [],
+          "version": 1
         }
       ],
       "rehash": [
         {
           "entity": "Snapshot",
-          "id": "snap-run-input"
+          "id": "snap-run-input",
+          "version": 1
         }
       ],
       "expectedCodes": [
@@ -569,14 +634,15 @@
       "expect": "INVALID",
       "mutations": [
         {
-          "entity": "ScenarioRevision",
-          "id": "rev-checkout-1",
+          "entity": "Scenario",
+          "id": "scenario-checkout",
           "path": "/definition/steps/0/timeoutSeconds",
-          "value": 301
+          "value": 301,
+          "version": 2
         }
       ],
       "expectedCodes": [
-        "REVISION_DIGEST"
+        "SCENARIO_DIGEST"
       ]
     },
     {
@@ -585,12 +651,13 @@
       "expect": "INVALID",
       "mutations": [
         {
-          "entity": "ScenarioRevision",
-          "id": "rev-checkout-1",
+          "entity": "Scenario",
+          "id": "scenario-checkout",
           "path": "/definition/steps/0/needs",
           "value": [
             "inject"
-          ]
+          ],
+          "version": 2
         }
       ],
       "expectedCodes": [
@@ -606,7 +673,8 @@
           "entity": "StepAttempt",
           "id": "attempt-inject",
           "path": "/evidenceRefs/0/id",
-          "value": "obs-experiment"
+          "value": "obs-experiment",
+          "version": 2
         }
       ],
       "expectedCodes": [
@@ -622,7 +690,8 @@
           "entity": "StepAttempt",
           "id": "attempt-reconcile",
           "path": "/externalOperations/0/remoteDisposition",
-          "value": "UNKNOWN"
+          "value": "UNKNOWN",
+          "version": 2
         }
       ],
       "expectedCodes": [
@@ -637,14 +706,20 @@
         {
           "entity": "Snapshot",
           "id": "snap-policy-context",
-          "path": "/contents/effectiveTargetSourceRevisionId",
-          "value": "src-policy"
+          "path": "/contents/effectiveTargetSource",
+          "value": {
+            "kind": "Source",
+            "id": "src-policy",
+            "version": 1
+          },
+          "version": 1
         }
       ],
       "rehash": [
         {
           "entity": "Snapshot",
-          "id": "snap-policy-context"
+          "id": "snap-policy-context",
+          "version": 1
         }
       ],
       "expectedCodes": [
@@ -660,7 +735,8 @@
           "entity": "Snapshot",
           "id": "snap-policy-context",
           "path": "/contents/providerEvaluatedRevision",
-          "value": "invented-native-version"
+          "value": "invented-native-version",
+          "version": 1
         }
       ],
       "expectedCodes": [
@@ -675,8 +751,13 @@
         {
           "entity": "Recommendation",
           "id": "recommendation-second-node",
-          "path": "/sourceRevisionId",
-          "value": "src-policy"
+          "path": "/source",
+          "value": {
+            "kind": "Source",
+            "id": "src-policy",
+            "version": 1
+          },
+          "version": 1
         }
       ],
       "expectedCodes": [
@@ -692,13 +773,15 @@
           "entity": "Finding",
           "id": "finding-single-node",
           "path": "/recommendationPresence",
-          "value": "UNAVAILABLE"
+          "value": "UNAVAILABLE",
+          "version": 1
         },
         {
           "entity": "Finding",
           "id": "finding-single-node",
           "path": "/recommendationIds",
-          "value": []
+          "value": [],
+          "version": 1
         }
       ],
       "expectedCodes": [
@@ -713,21 +796,117 @@
         {
           "entity": "Snapshot",
           "id": "snap-investigation",
-          "path": "/sourceRevisionIds",
+          "version": 1,
+          "path": "/members",
           "value": [
-            "src-task",
-            "src-execution",
-            "src-completion",
-            "src-request-task",
-            "src-request-execution",
-            "src-request-journal"
+            {
+              "kind": "Connection",
+              "id": "conn-demo",
+              "version": 1
+            },
+            {
+              "kind": "Investigation",
+              "id": "investigation-checkout",
+              "version": 1
+            },
+            {
+              "kind": "Observation",
+              "id": "obs-completion",
+              "version": 1
+            },
+            {
+              "kind": "Observation",
+              "id": "obs-execution",
+              "version": 1
+            },
+            {
+              "kind": "Observation",
+              "id": "obs-journal",
+              "version": 1
+            },
+            {
+              "kind": "Observation",
+              "id": "obs-mitigation",
+              "version": 1
+            },
+            {
+              "kind": "Observation",
+              "id": "obs-task",
+              "version": 1
+            },
+            {
+              "kind": "Projection",
+              "id": "projection-investigation",
+              "version": 1
+            },
+            {
+              "kind": "ReadAttempt",
+              "id": "read-execution",
+              "version": 2
+            },
+            {
+              "kind": "ReadAttempt",
+              "id": "read-journal",
+              "version": 2
+            },
+            {
+              "kind": "ReadAttempt",
+              "id": "read-mitigation",
+              "version": 2
+            },
+            {
+              "kind": "ReadAttempt",
+              "id": "read-task",
+              "version": 2
+            },
+            {
+              "kind": "Source",
+              "id": "src-completion",
+              "version": 1
+            },
+            {
+              "kind": "Source",
+              "id": "src-execution",
+              "version": 1
+            },
+            {
+              "kind": "Source",
+              "id": "src-mitigation",
+              "version": 1
+            },
+            {
+              "kind": "Source",
+              "id": "src-request-execution",
+              "version": 1
+            },
+            {
+              "kind": "Source",
+              "id": "src-request-journal",
+              "version": 1
+            },
+            {
+              "kind": "Source",
+              "id": "src-request-mitigation",
+              "version": 1
+            },
+            {
+              "kind": "Source",
+              "id": "src-request-task",
+              "version": 1
+            },
+            {
+              "kind": "Source",
+              "id": "src-task",
+              "version": 1
+            }
           ]
         }
       ],
       "rehash": [
         {
           "entity": "Snapshot",
-          "id": "snap-investigation"
+          "id": "snap-investigation",
+          "version": 1
         }
       ],
       "expectedCodes": [
@@ -735,25 +914,27 @@
       ]
     },
     {
-      "id": "historical-read-facts",
-      "description": "Captured read attempts cannot be silently reconstructed from different facts.",
+      "id": "historical-read-version-exists",
+      "description": "A captured read pins an existing exact ReadAttempt version; it cannot invent a copied record or resolve latest.",
       "expect": "INVALID",
       "mutations": [
         {
           "entity": "Snapshot",
           "id": "snap-investigation",
-          "path": "/readAttempts/0/returnedCount",
-          "value": 2
+          "version": 1,
+          "path": "/members/8/version",
+          "value": 999
         }
       ],
       "rehash": [
         {
           "entity": "Snapshot",
-          "id": "snap-investigation"
+          "id": "snap-investigation",
+          "version": 1
         }
       ],
       "expectedCodes": [
-        "SNAPSHOT_READ_COPY"
+        "REFERENCE_SCOPE"
       ]
     },
     {
@@ -765,13 +946,15 @@
           "entity": "Snapshot",
           "id": "snap-topology",
           "path": "/contents/edges/0/toNodeKey",
-          "value": "node-from-another-capture"
+          "value": "node-from-another-capture",
+          "version": 1
         }
       ],
       "rehash": [
         {
           "entity": "Snapshot",
-          "id": "snap-topology"
+          "id": "snap-topology",
+          "version": 1
         }
       ],
       "expectedCodes": [
@@ -787,7 +970,8 @@
           "entity": "Experiment",
           "id": "experiment-checkout",
           "path": "/targetMemberships/0/faultApplied",
-          "value": true
+          "value": true,
+          "version": 1
         }
       ],
       "expectedCodes": [
@@ -803,7 +987,8 @@
           "entity": "Experiment",
           "id": "experiment-checkout",
           "path": "/targetMemberships/0/resourceId",
-          "value": "res-db"
+          "value": "res-db",
+          "version": 1
         }
       ],
       "expectedCodes": [
@@ -821,7 +1006,8 @@
           "path": "/actions/0/startAfter",
           "value": [
             "other-run-action"
-          ]
+          ],
+          "version": 1
         }
       ],
       "expectedCodes": [
@@ -834,10 +1020,11 @@
       "expect": "INVALID",
       "mutations": [
         {
-          "entity": "ProjectionRevision",
+          "entity": "Projection",
           "id": "projection-service-status",
           "path": "/value/runtimeHealth/expiresAt",
-          "value": 1793869760
+          "value": 1793869760,
+          "version": 1
         }
       ],
       "expectedCodes": [
@@ -850,14 +1037,15 @@
       "expect": "INVALID",
       "mutations": [
         {
-          "entity": "ProjectionRevision",
+          "entity": "Projection",
           "id": "projection-workspace",
           "path": "/value/serviceIds",
           "value": [
             "svc-checkout",
             "svc-checkout",
             "svc-store"
-          ]
+          ],
+          "version": 1
         }
       ],
       "expectedCodes": [
@@ -870,34 +1058,39 @@
       "expect": "VALID",
       "mutations": [
         {
-          "entity": "ProjectionRevision",
+          "entity": "Projection",
           "id": "projection-workspace",
           "path": "/value/serviceIds",
-          "value": []
+          "value": [],
+          "version": 1
         },
         {
-          "entity": "ProjectionRevision",
+          "entity": "Projection",
           "id": "projection-workspace",
           "path": "/value/attentionServiceIds",
-          "value": []
+          "value": [],
+          "version": 1
         },
         {
-          "entity": "ProjectionRevision",
+          "entity": "Projection",
           "id": "projection-workspace",
           "path": "/value/currentCoverageServiceIds",
-          "value": []
+          "value": [],
+          "version": 1
         },
         {
-          "entity": "ProjectionRevision",
+          "entity": "Projection",
           "id": "projection-workspace",
           "path": "/value/retainedEvidenceServiceIds",
-          "value": []
+          "value": [],
+          "version": 1
         },
         {
-          "entity": "ProjectionRevision",
+          "entity": "Projection",
           "id": "projection-workspace",
           "path": "/value/currentCoveragePercent",
-          "value": null
+          "value": null,
+          "version": 1
         }
       ]
     },
@@ -907,34 +1100,39 @@
       "expect": "INVALID",
       "mutations": [
         {
-          "entity": "ProjectionRevision",
+          "entity": "Projection",
           "id": "projection-workspace",
           "path": "/value/serviceIds",
-          "value": []
+          "value": [],
+          "version": 1
         },
         {
-          "entity": "ProjectionRevision",
+          "entity": "Projection",
           "id": "projection-workspace",
           "path": "/value/attentionServiceIds",
-          "value": []
+          "value": [],
+          "version": 1
         },
         {
-          "entity": "ProjectionRevision",
+          "entity": "Projection",
           "id": "projection-workspace",
           "path": "/value/currentCoverageServiceIds",
-          "value": []
+          "value": [],
+          "version": 1
         },
         {
-          "entity": "ProjectionRevision",
+          "entity": "Projection",
           "id": "projection-workspace",
           "path": "/value/retainedEvidenceServiceIds",
-          "value": []
+          "value": [],
+          "version": 1
         },
         {
-          "entity": "ProjectionRevision",
+          "entity": "Projection",
           "id": "projection-workspace",
           "path": "/value/currentCoveragePercent",
-          "value": 100
+          "value": 100,
+          "version": 1
         }
       ],
       "expectedCodes": [
@@ -950,7 +1148,8 @@
           "entity": "Observation",
           "id": "obs-resource-worker",
           "path": "/observedAt",
-          "value": 1793869300.0001
+          "value": 1793869300.0001,
+          "version": 1
         }
       ],
       "expectedCodes": [
@@ -963,21 +1162,1250 @@
       "expect": "INVALID",
       "mutations": [
         {
-          "entity": "SourceRevision",
+          "entity": "Source",
           "id": "src-journal",
           "path": "/payloadStorage",
-          "value": "ARTIFACT"
+          "value": "ARTIFACT",
+          "version": 1
         },
         {
-          "entity": "SourceRevision",
+          "entity": "Source",
           "id": "src-journal",
           "path": "/payload",
-          "value": null
+          "value": null,
+          "version": 1
         }
       ],
       "expectedCodes": [
         "SCHEMA"
       ]
+    },
+    {
+      "id": "ordinary-entity-history",
+      "description": "An ordinary Service retains the earlier representation after its current version changes.",
+      "expect": "VALID",
+      "mutations": [],
+      "assertions": [
+        {
+          "entity": "Service",
+          "id": "svc-checkout",
+          "version": 1,
+          "path": "/version",
+          "equals": 1
+        },
+        {
+          "entity": "Service",
+          "id": "svc-checkout",
+          "version": 2,
+          "path": "/version",
+          "equals": 2
+        }
+      ]
+    },
+    {
+      "id": "published-scenario-is-the-same-entity",
+      "description": "Draft, published and later draft are versions of one Scenario; the Run keeps published version 2.",
+      "expect": "VALID",
+      "mutations": [],
+      "assertions": [
+        {
+          "entity": "Scenario",
+          "id": "scenario-checkout",
+          "version": 1,
+          "path": "/state",
+          "equals": "DRAFT"
+        },
+        {
+          "entity": "Scenario",
+          "id": "scenario-checkout",
+          "version": 2,
+          "path": "/state",
+          "equals": "PUBLISHED"
+        },
+        {
+          "entity": "Scenario",
+          "id": "scenario-checkout",
+          "version": 3,
+          "path": "/state",
+          "equals": "DRAFT"
+        },
+        {
+          "entity": "Run",
+          "id": "run-checkout",
+          "version": 2,
+          "path": "/scenario",
+          "equals": {
+            "kind": "Scenario",
+            "id": "scenario-checkout",
+            "version": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "source-return-to-earlier-content",
+      "description": "A-to-B-to-A content uses Source versions 1, 2 and 3 under one logical identity.",
+      "expect": "VALID",
+      "mutations": [],
+      "assertions": [
+        {
+          "entity": "Source",
+          "id": "src-health-impact",
+          "version": 1,
+          "path": "/contentDigest",
+          "equals": "sha256:53366c7e3003df8e0ae41d93a9623bc69ebe7920e19848725765a7f362cdfa2c"
+        },
+        {
+          "entity": "Source",
+          "id": "src-health-impact",
+          "version": 2,
+          "path": "/payload/statusCode",
+          "equals": "RESOLVED"
+        },
+        {
+          "entity": "Source",
+          "id": "src-health-impact",
+          "version": 3,
+          "path": "/version",
+          "equals": 3
+        }
+      ]
+    },
+    {
+      "id": "run-history-selects-step-history",
+      "description": "Earlier and later Run representations select different exact versions of the same steps.",
+      "expect": "VALID",
+      "mutations": [],
+      "assertions": [
+        {
+          "entity": "Run",
+          "id": "run-checkout",
+          "version": 1,
+          "path": "/steps/0/version",
+          "equals": 1
+        },
+        {
+          "entity": "Run",
+          "id": "run-checkout",
+          "version": 2,
+          "path": "/steps/0/version",
+          "equals": 2
+        },
+        {
+          "entity": "StepRun",
+          "id": "step-inject",
+          "version": 1,
+          "path": "/attempts",
+          "equals": []
+        }
+      ]
+    },
+    {
+      "id": "immutable-facts-are-still-versioned",
+      "description": "An immutable Observation has ordinary version metadata even when only version 1 exists.",
+      "expect": "VALID",
+      "mutations": [],
+      "assertions": [
+        {
+          "entity": "Observation",
+          "id": "obs-health-impact",
+          "version": 1,
+          "path": "/version",
+          "equals": 1
+        }
+      ]
+    },
+    {
+      "id": "required-version-source",
+      "description": "Every Source representation requires the common version field.",
+      "expect": "INVALID",
+      "mutations": [
+        {
+          "entity": "Source",
+          "id": "src-request-resource-worker",
+          "version": 1,
+          "path": "/version",
+          "op": "remove"
+        }
+      ],
+      "expectedCodes": [
+        "SCHEMA"
+      ]
+    },
+    {
+      "id": "required-version-observation",
+      "description": "Every Observation representation requires the common version field.",
+      "expect": "INVALID",
+      "mutations": [
+        {
+          "entity": "Observation",
+          "id": "obs-resource-worker",
+          "version": 1,
+          "path": "/version",
+          "op": "remove"
+        }
+      ],
+      "expectedCodes": [
+        "SCHEMA"
+      ]
+    },
+    {
+      "id": "required-version-run",
+      "description": "Every Run representation requires the common version field.",
+      "expect": "INVALID",
+      "mutations": [
+        {
+          "entity": "Run",
+          "id": "run-checkout",
+          "version": 1,
+          "path": "/version",
+          "op": "remove"
+        }
+      ],
+      "expectedCodes": [
+        "SCHEMA"
+      ]
+    },
+    {
+      "id": "required-version-readattempt",
+      "description": "Every ReadAttempt representation requires the common version field.",
+      "expect": "INVALID",
+      "mutations": [
+        {
+          "entity": "ReadAttempt",
+          "id": "read-resource-worker",
+          "version": 1,
+          "path": "/version",
+          "op": "remove"
+        }
+      ],
+      "expectedCodes": [
+        "SCHEMA"
+      ]
+    },
+    {
+      "id": "required-version-recommendation",
+      "description": "Every Recommendation representation requires the common version field.",
+      "expect": "INVALID",
+      "mutations": [
+        {
+          "entity": "Recommendation",
+          "id": "recommendation-second-node",
+          "version": 1,
+          "path": "/version",
+          "op": "remove"
+        }
+      ],
+      "expectedCodes": [
+        "SCHEMA"
+      ]
+    },
+    {
+      "id": "positive-integer-version",
+      "description": "Entity versions are positive integers.",
+      "expect": "INVALID",
+      "mutations": [
+        {
+          "entity": "Service",
+          "id": "svc-checkout",
+          "version": 2,
+          "path": "/version",
+          "value": 0
+        }
+      ],
+      "expectedCodes": [
+        "SCHEMA"
+      ]
+    },
+    {
+      "id": "immutable-version-cannot-be-rewritten",
+      "description": "Two representations cannot claim the same entity id and version.",
+      "expect": "INVALID",
+      "mutations": [],
+      "expectedCodes": [
+        "DUPLICATE_ENTITY_VERSION"
+      ],
+      "appendRecords": [
+        {
+          "entity": "Service",
+          "record": {
+            "workspaceId": "ws-demo",
+            "serviceId": "svc-checkout",
+            "version": 1,
+            "name": "Checkout API",
+            "description": "Conflicting rewrite of an already retained version.",
+            "memberships": [
+              {
+                "systemId": "sys-commerce",
+                "userJourneyIds": [
+                  "journey-purchase"
+                ],
+                "origin": "LOCAL",
+                "source": null
+              }
+            ],
+            "resourceIds": [
+              "res-worker"
+            ],
+            "providerBindings": [
+              {
+                "identity": {
+                  "provider": "AWS",
+                  "service": "resiliencehubv2",
+                  "resourceType": "Service",
+                  "scope": {
+                    "partition": "aws",
+                    "accountId": "111122223333",
+                    "region": "eu-central-1",
+                    "organizationId": null,
+                    "parentKeys": {}
+                  },
+                  "nativeId": "arn:aws:resiliencehub:eu-central-1:111122223333:service/checkout-fixture",
+                  "identityKind": "NATIVE",
+                  "provisionalKey": null,
+                  "aliases": []
+                },
+                "source": {
+                  "kind": "Source",
+                  "id": "src-service",
+                  "version": 1
+                },
+                "bindingRule": "fixture-explicit-source-identity/1",
+                "observedAt": 1793869306
+              }
+            ],
+            "createdAt": 1793869240,
+            "updatedAt": 1793869306
+          }
+        }
+      ]
+    },
+    {
+      "id": "creation-time-belongs-to-identity",
+      "description": "Entity creation time remains constant as its version advances.",
+      "expect": "INVALID",
+      "mutations": [
+        {
+          "entity": "Service",
+          "id": "svc-checkout",
+          "version": 2,
+          "path": "/createdAt",
+          "value": 1793869241
+        }
+      ],
+      "expectedCodes": [
+        "ENTITY_CREATION_STABLE"
+      ]
+    },
+    {
+      "id": "version-publication-order",
+      "description": "A later version cannot predate an earlier version publication.",
+      "expect": "INVALID",
+      "mutations": [
+        {
+          "entity": "Source",
+          "id": "src-health-impact",
+          "version": 3,
+          "path": "/updatedAt",
+          "value": 1793869240
+        }
+      ],
+      "expectedCodes": [
+        "VERSION_TIME_ORDER"
+      ]
+    },
+    {
+      "id": "source-scope-cannot-change-by-version",
+      "description": "A stable Source identity cannot switch native resource while keeping its id.",
+      "expect": "INVALID",
+      "mutations": [
+        {
+          "entity": "Source",
+          "id": "src-health-impact",
+          "version": 2,
+          "path": "/identity/nativeId",
+          "value": "another-native-object"
+        }
+      ],
+      "expectedCodes": [
+        "SOURCE_IDENTITY_STABLE"
+      ]
+    },
+    {
+      "id": "exact-evidence-version-is-required",
+      "description": "An evidence reference without version cannot silently mean latest.",
+      "expect": "INVALID",
+      "mutations": [
+        {
+          "entity": "Observation",
+          "id": "obs-health-impact",
+          "version": 1,
+          "path": "/source/version",
+          "op": "remove"
+        }
+      ],
+      "expectedCodes": [
+        "SCHEMA"
+      ]
+    },
+    {
+      "id": "missing-version-never-falls-back",
+      "description": "An unavailable exact Source version is an error even when other versions exist.",
+      "expect": "INVALID",
+      "mutations": [
+        {
+          "entity": "Observation",
+          "id": "obs-health-impact",
+          "version": 1,
+          "path": "/source/version",
+          "value": 999
+        }
+      ],
+      "expectedCodes": [
+        "REFERENCE_SCOPE"
+      ]
+    },
+    {
+      "id": "draft-is-not-runnable",
+      "description": "Run admission must pin a PUBLISHED Scenario version.",
+      "expect": "INVALID",
+      "mutations": [
+        {
+          "entity": "Run",
+          "id": "run-checkout",
+          "version": 2,
+          "path": "/scenario/version",
+          "value": 3
+        }
+      ],
+      "expectedCodes": [
+        "RUN_SCENARIO_PUBLICATION"
+      ]
+    },
+    {
+      "id": "run-cannot-use-current-step-implicitly",
+      "description": "A historical Run verdict must derive from its exact step selection.",
+      "expect": "INVALID",
+      "mutations": [
+        {
+          "entity": "Run",
+          "id": "run-checkout",
+          "version": 2,
+          "path": "/steps/1/version",
+          "value": 1
+        }
+      ],
+      "expectedCodes": [
+        "RUN_VERDICT"
+      ]
+    },
+    {
+      "id": "selected-attempt-is-exact-and-owned",
+      "description": "A step cannot select a different version from its retained attempt list.",
+      "expect": "INVALID",
+      "mutations": [
+        {
+          "entity": "StepRun",
+          "id": "step-error_budget",
+          "version": 2,
+          "path": "/selectedAttempt/version",
+          "value": 1
+        }
+      ],
+      "expectedCodes": [
+        "ATTEMPT_SELECTION"
+      ]
+    },
+    {
+      "id": "snapshot-cutoff-covers-all-entity-versions",
+      "description": "A capture cannot include an entity version published after its cutoff.",
+      "expect": "INVALID",
+      "mutations": [
+        {
+          "entity": "Service",
+          "id": "svc-checkout",
+          "version": 1,
+          "path": "/updatedAt",
+          "value": 1793870500
+        }
+      ],
+      "expectedCodes": [
+        "SNAPSHOT_FUTURE_EVIDENCE"
+      ]
+    },
+    {
+      "id": "snapshot-pins-the-historical-catalogue",
+      "description": "A later Service version does not change an earlier capture.",
+      "expect": "VALID",
+      "mutations": [],
+      "assertions": [
+        {
+          "entity": "Snapshot",
+          "id": "snap-run-input",
+          "version": 1,
+          "path": "/subjectRefs/0",
+          "equals": {
+            "kind": "Service",
+            "id": "svc-checkout",
+            "version": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "no-overlay-version-clock",
+      "description": "Owned enrichment cannot carry a second entity version clock.",
+      "expect": "INVALID",
+      "mutations": [
+        {
+          "entity": "Recommendation",
+          "id": "recommendation-second-node",
+          "version": 1,
+          "path": "/enrichment/version",
+          "value": 2
+        }
+      ],
+      "expectedCodes": [
+        "SCHEMA"
+      ]
+    },
+    {
+      "id": "workitem-owns-operator-state",
+      "description": "Recommendation enrichment cannot duplicate the WorkItem lifecycle.",
+      "expect": "INVALID",
+      "mutations": [
+        {
+          "entity": "Recommendation",
+          "id": "recommendation-second-node",
+          "version": 1,
+          "path": "/enrichment/workState",
+          "value": "DONE"
+        }
+      ],
+      "expectedCodes": [
+        "SCHEMA"
+      ]
+    },
+    {
+      "id": "sealed-readattempt-cannot-reopen",
+      "description": "Versioning cannot reopen settled ReadAttempt facts.",
+      "expect": "INVALID",
+      "expectedCodes": [
+        "SEALED_ENTITY_VERSION"
+      ],
+      "mutations": [],
+      "appendRecords": [
+        {
+          "entity": "ReadAttempt",
+          "record": {
+            "workspaceId": "ws-demo",
+            "readAttemptId": "read-resource-worker",
+            "collectionId": "col-checkout",
+            "queryKey": "query-resource-worker",
+            "attemptNo": 1,
+            "requestDigest": "sha256:3800e9a6775ba4913dd6b9fe1df107a02d263d37f362ea67a03c9f596364a0fa",
+            "state": "STARTED",
+            "startedAt": 1793869299.875,
+            "endedAt": null,
+            "providerRequestId": null,
+            "returnedCount": null,
+            "nextTokenPresent": false,
+            "error": null,
+            "authorizationContextKey": "authz-checkout-fixture-1",
+            "requestSource": {
+              "kind": "Source",
+              "id": "src-request-resource-worker",
+              "version": 1
+            },
+            "responseSource": null,
+            "version": 3,
+            "createdAt": 1793869299.875,
+            "updatedAt": 1793869301.125
+          }
+        }
+      ]
+    },
+    {
+      "id": "sealed-stepattempt-cannot-reopen",
+      "description": "Versioning cannot reopen settled StepAttempt facts.",
+      "expect": "INVALID",
+      "expectedCodes": [
+        "SEALED_ENTITY_VERSION"
+      ],
+      "mutations": [],
+      "appendRecords": [
+        {
+          "entity": "StepAttempt",
+          "record": {
+            "workspaceId": "ws-demo",
+            "stepAttemptId": "attempt-inject",
+            "runId": "run-checkout",
+            "stepRunId": "step-inject",
+            "attemptNo": 1,
+            "dispatchKey": "dispatch-inject",
+            "outcome": "RUNNING",
+            "startedAt": 1793869501,
+            "settledAt": null,
+            "checkResult": null,
+            "externalOperations": [],
+            "evidenceRefs": [],
+            "version": 3,
+            "createdAt": 1793869501,
+            "updatedAt": 1793869821.125
+          }
+        }
+      ]
+    },
+    {
+      "id": "sealed-run-cannot-reopen",
+      "description": "Versioning cannot reopen settled Run facts.",
+      "expect": "INVALID",
+      "expectedCodes": [
+        "SEALED_ENTITY_VERSION"
+      ],
+      "mutations": [],
+      "appendRecords": [
+        {
+          "entity": "Run",
+          "record": {
+            "workspaceId": "ws-demo",
+            "runId": "run-checkout",
+            "scenario": {
+              "kind": "Scenario",
+              "id": "scenario-checkout",
+              "version": 2
+            },
+            "inputSnapshot": {
+              "kind": "Snapshot",
+              "id": "snap-run-input",
+              "version": 1
+            },
+            "phase": "RUNNING",
+            "executionOutcome": "RUNNING",
+            "assessmentVerdict": "FAIL",
+            "assessmentFinality": "PROVISIONAL",
+            "finalizationState": "PENDING",
+            "effectState": "NONE",
+            "cancellationIntent": null,
+            "admittedAt": 1793869500,
+            "terminalAt": null,
+            "reducerVersion": "fixture-reducer/1",
+            "asOfSequence": 12,
+            "version": 3,
+            "createdAt": 1793869500,
+            "updatedAt": 1793869841,
+            "steps": [
+              {
+                "kind": "StepRun",
+                "id": "step-inject",
+                "version": 2
+              },
+              {
+                "kind": "StepRun",
+                "id": "step-error_budget",
+                "version": 2
+              },
+              {
+                "kind": "StepRun",
+                "id": "step-reconcile",
+                "version": 2
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "unique-logical-projection",
+      "description": "The same logical Projection cannot gain another identity during repeated capture.",
+      "expect": "INVALID",
+      "expectedCodes": [
+        "PROJECTION_LOGICAL_IDENTITY"
+      ],
+      "mutations": [],
+      "appendRecords": [
+        {
+          "entity": "Projection",
+          "record": {
+            "workspaceId": "ws-demo",
+            "projectionKey": "service_status:checkout",
+            "profile": "SERVICE_STATUS",
+            "profileVersion": "1",
+            "subjectRefs": [
+              {
+                "kind": "Service",
+                "id": "svc-checkout",
+                "version": 1
+              }
+            ],
+            "inputRefs": [
+              {
+                "kind": "Observation",
+                "id": "obs-runtime-health",
+                "version": 1
+              },
+              {
+                "kind": "Observation",
+                "id": "obs-finding",
+                "version": 1
+              },
+              {
+                "kind": "Observation",
+                "id": "obs-posture",
+                "version": 1
+              },
+              {
+                "kind": "Observation",
+                "id": "obs-assessment",
+                "version": 1
+              },
+              {
+                "kind": "Snapshot",
+                "id": "snap-policy-context",
+                "version": 1
+              }
+            ],
+            "ruleDigest": "sha256:3a6093d6f55077e9704473739e0266caec8bd4250659a63f9c2e365c4d7b5150",
+            "asOf": 1793869850,
+            "generatedAt": 1793869850.125,
+            "coverage": [
+              {
+                "queryKey": "query-finding",
+                "scopeDigest": "sha256:71ad944d67771981ec76a1a902b9ad64046ac6ce8c573232b2c15774b8031689",
+                "windowStart": 1793869200,
+                "windowEnd": 1793869200,
+                "pagination": "EXHAUSTED",
+                "detail": "COMPLETE",
+                "resolution": "NOT_APPLICABLE",
+                "identity": "COMPLETE",
+                "claim": "SUFFICIENT",
+                "knownGaps": [],
+                "evaluatedAt": 1793869850,
+                "readAttempts": [
+                  {
+                    "kind": "ReadAttempt",
+                    "id": "read-finding",
+                    "version": 2
+                  }
+                ],
+                "windowState": "POINT",
+                "rationale": "Synthetic complete response for this named query only."
+              }
+            ],
+            "value": {
+              "serviceId": "svc-checkout",
+              "runtimeHealth": {
+                "state": "DEGRADED",
+                "rawState": null,
+                "evidenceRefs": [
+                  {
+                    "kind": "Observation",
+                    "id": "obs-runtime-health",
+                    "version": 1
+                  }
+                ],
+                "expiresAt": 1793870100
+              },
+              "resiliencePosture": {
+                "state": "NOT_ACHIEVABLE",
+                "rawState": "NOT_ACHIEVABLE",
+                "evidenceRefs": [
+                  {
+                    "kind": "Observation",
+                    "id": "obs-posture",
+                    "version": 1
+                  },
+                  {
+                    "kind": "Snapshot",
+                    "id": "snap-policy-context",
+                    "version": 1
+                  }
+                ],
+                "expiresAt": null
+              },
+              "assessmentExecution": {
+                "state": "SUCCEEDED",
+                "rawState": "SUCCEEDED",
+                "evidenceRefs": [
+                  {
+                    "kind": "Observation",
+                    "id": "obs-assessment",
+                    "version": 1
+                  }
+                ],
+                "expiresAt": null
+              },
+              "discovery": {
+                "state": "UNKNOWN",
+                "rawState": null,
+                "evidenceRefs": [],
+                "expiresAt": null
+              },
+              "findingCoverage": {
+                "queryKey": "query-finding",
+                "scopeDigest": "sha256:71ad944d67771981ec76a1a902b9ad64046ac6ce8c573232b2c15774b8031689",
+                "windowStart": 1793869200,
+                "windowEnd": 1793869200,
+                "pagination": "EXHAUSTED",
+                "detail": "COMPLETE",
+                "resolution": "NOT_APPLICABLE",
+                "identity": "COMPLETE",
+                "claim": "SUFFICIENT",
+                "knownGaps": [],
+                "evaluatedAt": 1793869850,
+                "readAttempts": [
+                  {
+                    "kind": "ReadAttempt",
+                    "id": "read-finding",
+                    "version": 2
+                  }
+                ],
+                "windowState": "POINT",
+                "rationale": "Synthetic complete response for this named query only."
+              },
+              "policyContextSnapshot": {
+                "kind": "Snapshot",
+                "id": "snap-policy-context",
+                "version": 1
+              },
+              "attentionReasons": [
+                "OPEN_FINDING",
+                "RUNTIME_ERROR_RATE",
+                "DISCOVERY_UNOBSERVED"
+              ],
+              "reassessmentRequired": false,
+              "policyContextRefreshRequired": false,
+              "nativeRerunAssessment": null
+            },
+            "projectionId": "projection-service-status-duplicate",
+            "version": 1,
+            "createdAt": 1793869850.125,
+            "updatedAt": 1793869850.125
+          }
+        }
+      ]
+    },
+    {
+      "id": "unique-logical-recommendation",
+      "description": "The same logical Recommendation cannot gain another identity during repeated capture.",
+      "expect": "INVALID",
+      "expectedCodes": [
+        "RECOMMENDATION_LOGICAL_IDENTITY"
+      ],
+      "mutations": [],
+      "appendRecords": [
+        {
+          "entity": "Recommendation",
+          "record": {
+            "workspaceId": "ws-demo",
+            "recommendationId": "recommendation-second-node-duplicate",
+            "serviceId": "svc-checkout",
+            "findingId": "finding-single-node",
+            "findingDetailObservation": {
+              "kind": "Observation",
+              "id": "obs-finding",
+              "version": 1
+            },
+            "source": {
+              "kind": "Source",
+              "id": "src-finding",
+              "version": 1
+            },
+            "groupKey": "infrastructureAndCode",
+            "ordinal": 0,
+            "suggestion": {
+              "action": "Add a second fixture node"
+            },
+            "enrichment": {
+              "title": "Review redundancy",
+              "effort": "Unestimated",
+              "note": "Local planning metadata is not verified remediation."
+            },
+            "version": 1,
+            "createdAt": 1793869240,
+            "updatedAt": 1793869320.125
+          }
+        }
+      ]
+    },
+    {
+      "id": "version-reference-cannot-see-the-future",
+      "description": "An earlier Observation cannot silently select a later Source version.",
+      "expect": "INVALID",
+      "expectedCodes": [
+        "REFERENCE_FUTURE_VERSION"
+      ],
+      "mutations": [
+        {
+          "entity": "Observation",
+          "id": "obs-health-impact",
+          "version": 1,
+          "path": "/source/version",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": "collection-query-identity-is-fixed",
+      "description": "New query definitions need a new Collection identity, not another state version.",
+      "expect": "INVALID",
+      "expectedCodes": [
+        "EXECUTION_IDENTITY_STABLE"
+      ],
+      "mutations": [
+        {
+          "entity": "Collection",
+          "id": "col-checkout",
+          "version": 1,
+          "path": "/queries/0/filters",
+          "value": {
+            "different": "query"
+          }
+        }
+      ]
+    },
+    {
+      "id": "run-admission-is-fixed",
+      "description": "Run versions cannot replace their admitted snapshot.",
+      "expect": "INVALID",
+      "expectedCodes": [
+        "EXECUTION_IDENTITY_STABLE"
+      ],
+      "mutations": [
+        {
+          "entity": "Run",
+          "id": "run-checkout",
+          "version": 1,
+          "path": "/inputSnapshot",
+          "value": {
+            "kind": "Snapshot",
+            "id": "snap-evaluation-input",
+            "version": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "repeated-finding-observation-reuses-captured-recommendation",
+      "description": "A second genuine read observes the same Source version. Finding advances to the new Observation while Recommendation identity and its original Source/Observation provenance remain stable.",
+      "expect": "VALID",
+      "mutations": [],
+      "appendRecords": [
+        {
+          "entity": "ReadAttempt",
+          "record": {
+            "workspaceId": "ws-demo",
+            "readAttemptId": "read-finding-repeat",
+            "collectionId": "col-checkout",
+            "queryKey": "query-finding",
+            "attemptNo": 2,
+            "requestDigest": "sha256:29e7db3f7863ba4b1d54f05279a82f7394062813bcae3b4b9940bbeca360e2c7",
+            "state": "STARTED",
+            "startedAt": 1793869320.875,
+            "endedAt": null,
+            "providerRequestId": null,
+            "returnedCount": null,
+            "nextTokenPresent": null,
+            "error": null,
+            "authorizationContextKey": "authz-checkout-fixture-1",
+            "requestSource": {
+              "kind": "Source",
+              "id": "src-request-finding",
+              "version": 1
+            },
+            "responseSource": null,
+            "version": 1,
+            "createdAt": 1793869320.875,
+            "updatedAt": 1793869320.875
+          }
+        },
+        {
+          "entity": "ReadAttempt",
+          "record": {
+            "workspaceId": "ws-demo",
+            "readAttemptId": "read-finding-repeat",
+            "collectionId": "col-checkout",
+            "queryKey": "query-finding",
+            "attemptNo": 2,
+            "requestDigest": "sha256:29e7db3f7863ba4b1d54f05279a82f7394062813bcae3b4b9940bbeca360e2c7",
+            "state": "SUCCEEDED",
+            "startedAt": 1793869320.875,
+            "endedAt": 1793869321.125,
+            "providerRequestId": "fixture-request-finding-repeat",
+            "returnedCount": 1,
+            "nextTokenPresent": false,
+            "error": null,
+            "authorizationContextKey": "authz-checkout-fixture-1",
+            "requestSource": {
+              "kind": "Source",
+              "id": "src-request-finding",
+              "version": 1
+            },
+            "responseSource": {
+              "kind": "Source",
+              "id": "src-finding",
+              "version": 1
+            },
+            "version": 2,
+            "createdAt": 1793869320.875,
+            "updatedAt": 1793869321.125
+          }
+        },
+        {
+          "entity": "Observation",
+          "record": {
+            "workspaceId": "ws-demo",
+            "observationId": "obs-finding-repeat",
+            "source": {
+              "kind": "Source",
+              "id": "src-finding",
+              "version": 1
+            },
+            "readAttempt": {
+              "kind": "ReadAttempt",
+              "id": "read-finding-repeat",
+              "version": 2
+            },
+            "connection": {
+              "kind": "Connection",
+              "id": "conn-demo",
+              "version": 1
+            },
+            "observedAt": 1793869321,
+            "sourceTime": 1793869200,
+            "transportTime": null,
+            "expiresAt": null,
+            "authorizationContextKey": "authz-checkout-fixture-1",
+            "receiptKey": null,
+            "channel": "API",
+            "version": 1,
+            "createdAt": 1793869321,
+            "updatedAt": 1793869321.125
+          }
+        },
+        {
+          "entity": "Finding",
+          "record": {
+            "workspaceId": "ws-demo",
+            "findingId": "finding-single-node",
+            "serviceId": "svc-checkout",
+            "identity": {
+              "provider": "AWS",
+              "service": "resiliencehubv2",
+              "resourceType": "Finding",
+              "scope": {
+                "partition": "aws",
+                "accountId": "111122223333",
+                "region": "eu-central-1",
+                "organizationId": null,
+                "parentKeys": {
+                  "serviceArn": "arn:aws:resiliencehub:eu-central-1:111122223333:service/checkout-fixture"
+                }
+              },
+              "nativeId": "finding-fixture-1",
+              "identityKind": "NATIVE",
+              "provisionalKey": null,
+              "aliases": []
+            },
+            "selectedSummaryObservation": null,
+            "selectedDetailObservation": {
+              "kind": "Observation",
+              "id": "obs-finding-repeat",
+              "version": 1
+            },
+            "currentCaptureCollection": {
+              "kind": "Collection",
+              "id": "col-checkout",
+              "version": 2
+            },
+            "rawDisposition": "OPEN",
+            "rawSeverity": "HIGH",
+            "recommendationPresence": "PRESENT",
+            "recommendationIds": [
+              "recommendation-second-node"
+            ],
+            "version": 2,
+            "createdAt": 1793869240,
+            "updatedAt": 1793869851.125
+          }
+        }
+      ],
+      "assertions": [
+        {
+          "entity": "Finding",
+          "id": "finding-single-node",
+          "version": 2,
+          "path": "/recommendationIds",
+          "equals": [
+            "recommendation-second-node"
+          ]
+        },
+        {
+          "entity": "Recommendation",
+          "id": "recommendation-second-node",
+          "version": 1,
+          "path": "/source",
+          "equals": {
+            "kind": "Source",
+            "id": "src-finding",
+            "version": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "lifecycle-projection-keeps-exact-deployment-version",
+      "description": "A later ComponentDeployment version selects a new Observation. The older LifecycleExposure Projection keeps its pinned ComponentDeployment v1 and original observation; current-head lookup must not invalidate history.",
+      "expect": "VALID",
+      "mutations": [],
+      "appendRecords": [
+        {
+          "entity": "ReadAttempt",
+          "record": {
+            "workspaceId": "ws-demo",
+            "readAttemptId": "read-resource-db-repeat",
+            "collectionId": "col-checkout",
+            "queryKey": "query-resource-db",
+            "attemptNo": 2,
+            "requestDigest": "sha256:5f67922ca09c2d58aba6220d69c355a0c6e97317859efd21b44867f0f4256692",
+            "state": "STARTED",
+            "startedAt": 1793869302.875,
+            "endedAt": null,
+            "providerRequestId": null,
+            "returnedCount": null,
+            "nextTokenPresent": null,
+            "error": null,
+            "authorizationContextKey": "authz-checkout-fixture-1",
+            "requestSource": {
+              "kind": "Source",
+              "id": "src-request-resource-db",
+              "version": 1
+            },
+            "responseSource": null,
+            "version": 1,
+            "createdAt": 1793869302.875,
+            "updatedAt": 1793869302.875
+          }
+        },
+        {
+          "entity": "ReadAttempt",
+          "record": {
+            "workspaceId": "ws-demo",
+            "readAttemptId": "read-resource-db-repeat",
+            "collectionId": "col-checkout",
+            "queryKey": "query-resource-db",
+            "attemptNo": 2,
+            "requestDigest": "sha256:5f67922ca09c2d58aba6220d69c355a0c6e97317859efd21b44867f0f4256692",
+            "state": "SUCCEEDED",
+            "startedAt": 1793869302.875,
+            "endedAt": 1793869303.125,
+            "providerRequestId": "fixture-request-resource-db-repeat",
+            "returnedCount": 1,
+            "nextTokenPresent": false,
+            "error": null,
+            "authorizationContextKey": "authz-checkout-fixture-1",
+            "requestSource": {
+              "kind": "Source",
+              "id": "src-request-resource-db",
+              "version": 1
+            },
+            "responseSource": {
+              "kind": "Source",
+              "id": "src-resource-db",
+              "version": 1
+            },
+            "version": 2,
+            "createdAt": 1793869302.875,
+            "updatedAt": 1793869303.125
+          }
+        },
+        {
+          "entity": "Observation",
+          "record": {
+            "workspaceId": "ws-demo",
+            "observationId": "obs-resource-db-repeat",
+            "source": {
+              "kind": "Source",
+              "id": "src-resource-db",
+              "version": 1
+            },
+            "readAttempt": {
+              "kind": "ReadAttempt",
+              "id": "read-resource-db-repeat",
+              "version": 2
+            },
+            "connection": {
+              "kind": "Connection",
+              "id": "conn-demo",
+              "version": 1
+            },
+            "observedAt": 1793869303,
+            "sourceTime": 1793869200,
+            "transportTime": null,
+            "expiresAt": null,
+            "authorizationContextKey": "authz-checkout-fixture-1",
+            "receiptKey": null,
+            "channel": "API",
+            "version": 1,
+            "createdAt": 1793869303,
+            "updatedAt": 1793869303.125
+          }
+        },
+        {
+          "entity": "ComponentDeployment",
+          "record": {
+            "workspaceId": "ws-demo",
+            "componentDeploymentId": "deployment-db-engine",
+            "resourceId": "res-db",
+            "componentKind": "database-engine",
+            "versionLabel": "demo-1",
+            "observation": {
+              "kind": "Observation",
+              "id": "obs-resource-db-repeat",
+              "version": 1
+            },
+            "version": 2,
+            "createdAt": 1793869240,
+            "updatedAt": 1793869851.125
+          }
+        }
+      ],
+      "assertions": [
+        {
+          "entity": "Projection",
+          "id": "projection-lifecycle",
+          "version": 1,
+          "path": "/subjectRefs/0",
+          "equals": {
+            "kind": "ComponentDeployment",
+            "id": "deployment-db-engine",
+            "version": 1
+          }
+        },
+        {
+          "entity": "Projection",
+          "id": "projection-lifecycle",
+          "version": 1,
+          "path": "/value/deploymentObservation",
+          "equals": {
+            "kind": "Observation",
+            "id": "obs-resource-db",
+            "version": 1
+          }
+        },
+        {
+          "entity": "ComponentDeployment",
+          "id": "deployment-db-engine",
+          "version": 2,
+          "path": "/observation",
+          "equals": {
+            "kind": "Observation",
+            "id": "obs-resource-db-repeat",
+            "version": 1
+          }
+        }
+      ]
     }
-  ]
+  ],
+  "contractVersion": 2
 }

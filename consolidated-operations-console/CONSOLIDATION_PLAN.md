@@ -2,104 +2,121 @@
 
 ## Target and sequencing
 
-Build one modular application over a common identity/evidence/command contract. Preserve the existing analysis packages as source references and independent prototypes while moving shared concepts into this new contract. Establish correctness in a small read-oriented slice before adding provider mutation and workflow execution.
-
-The current delivery completes **P1: model and operation contract**. Later phases below are implementation plans, with explicit acceptance gates. No phase assumes that an existing browser mock or in-memory RPC server supplies production persistence or authorization.
+Build a modular application over **one identity, version and reference contract**. The current revision corrects the first model before collectors, commands or UI depend on its inconsistent version entities. Source analyses and prototypes remain traceable inputs.
 
 | Phase | Work and deliverable | Exit gate |
 | --- | --- | --- |
-| **P1 — model and contracts (this delivery)** | Pin `main`; inventory every source file; map all source concepts; define shared and module entities; publish class diagrams, JSON schemas, typed RPC operations and examples. | All 226 source files accounted for; every named source concept has a disposition; all 37 entities occur in schema, diagram and API coverage; examples and selected semantic cases validate. |
-| **P2 — retained reads and collection** | Implement Workspace authorization, source-identity mapping, Connection references, append-only SourceRevision/Observation storage, Collection/ReadAttempt, projection publication and Snapshot retrieval. Add one read adapter per domain. | Same object through two connections deduplicates correctly; repeated polls preserve observation history; partial/failed/empty reads stay distinguishable; historical views work during current-source failure; scoped pagination and export access are enforced. |
-| **P3 — durable local and provider commands** | Implement local configuration/WorkItem edits, idempotency reservation, durable command/outbox, independent overlay versions, provider dispatch and non-creating reconciliation. | Replay after a lost response/restart returns the original receipt; changed payload conflicts; out-of-band provider changes remain visible; unknown effects are retained; no local version is advertised as an AWS compare-and-swap. |
-| **P4 — workflow execution** | Implement scenario publication/locks, trusted binding/admission, bounded DAG execution, step attempts, immutable criteria/evidence, cancellation fencing, finalization and protective holds. | Crash/retry/race tests establish persisted dispatch identity, fixed criterion denominator, no creating reconciliation after cancel, bounded cleanup and terminal INDETERMINATE when effects remain unknown. |
-| **P5 — modular console shell** | Compose module navigation, service-centric overview, independent state dimensions, source inspection, historical compare and typed local/provider actions. | UI and API use the same selectors; every shown conclusion opens its exact retained evidence; unauthorized/missing/stale states stay visible; labels never imply stronger coverage or control than the contract. |
-| **P6 — expansion driven by concrete use** | Add additional native administrative operations, more capture profiles, cross-provider inventory, schedules or richer authoring only when a product use case needs them. | New concepts have a defined lifecycle/owner; contract compatibility and source coverage are explicit; the shared foundation remains independent of provider-specific parsers. |
+| **P1 — model and contracts** | Frozen source inventory; 36 uniformly versioned entities; source crosswalk; typed RPC contracts; editable Draw.io atlas and rendered pages. | Every entity requires common metadata; historical references resolve exact versions; no version-only classes; source mappings, examples, semantic cases and diagram layout checks pass. |
+| **P2 — version storage, reads and collection** | Scoped identity mapping, atomic entity-version publication, current-head selection, historical retrieval, Sources/Observations, Collection/ReadAttempt and closed captures. Add one read adapter per domain. | Repeated reads reuse unchanged Source versions; changed and reverted content advances history; failed/partial/empty reads survive; exact historical retrieval works during current-source failure. |
+| **P3 — local and provider commands** | Narrow local edits, expected-version checks, replay reservation, durable Command/outbox, provider dispatch and reconciliation. | Concurrent publishers cannot overwrite a version; replay survives response loss/restart; out-of-band provider state remains observable; uncertain effects are retained. |
+| **P4 — workflow execution** | Scenario publication, pinned admission, typed operation locks, DAG execution, versioned run/step/attempt state, cancellation and finalization. | A historical Run resolves its own child versions; criteria cannot shrink after admission; dispatch identity survives crashes; cancellation cannot trigger creating reconciliation. |
+| **P5 — modular console shell** | Shared navigation, current/history selection, source inspection, service overview, comparison and explicit actions. | Every conclusion opens its exact evidence; version selection is visible; layouts and actions reflect real authority and scope. |
+| **P6 — demand-led extension** | Additional native administration, capture profiles, providers, schedules or authoring capabilities. | Each new entity has substantive identity/lifecycle; owned values remain owned; compatibility and source coverage are explicit. |
+
+The model specifies required behavior. Source mocks and contract fixtures do not establish production persistence, authorization or cloud execution.
 
 ## Module dependencies
 
-The foundation owns Workspace, Connection, source identity, collection, evidence, projections, snapshots, local work and command records. Provider modules register typed payload profiles and select their own source facts. They cannot edit another module's evidence or reuse its state enum solely because a label looks similar.
+Foundation owns Workspace, Connection, Resource, collection, Source, Observation, Projection, Snapshot, WorkItem and Command. The common version/reference rule applies equally to every module. Provider-specific parsers and writable fields stay in their owning module.
 
-The workload catalog supplies System, UserJourney and Service identity for cross-module navigation. Resource inventory supplies explicit resource references. Health can map an impact to inventory; it does not own the resource. Resilience binds native services into the workload catalog; local catalog membership does not alter native policy assignment. Investigation can link service/resource/incident context through evidence. Workflow references published scenarios and typed adapter effects; it does not own the external Experiment or ResilienceAssessment lifecycle.
+The workload catalogue supplies System, UserJourney and Service identity. Health may match an impact to a Resource; it does not own the Resource. Resilience binds native service identity to the catalogue without turning a catalogue edit into a native policy change. Investigation links operational context through evidence. Workflow pins a Scenario version and exact admitted references while native Experiment and ResilienceAssessment retain independent lifecycles.
 
-Cross-module views use typed references and immutable evidence publications. Modules can be disabled for a Workspace without deleting retained history. A disabled module rejects new work admission. Authorized cancellation, cleanup, reconciliation and historical reads remain available; disabling a module cannot abandon an outstanding effect. Retention policy still applies. This is configuration on Workspace, not a new plugin-management entity.
+Disabling a module blocks new work admission but cannot abandon an outstanding effect. Authorized cancellation, cleanup, reconciliation and historical reads remain available under retention and current access policy. Module configuration belongs to Workspace and is versioned with it.
 
-## Migration procedure
+## Migration from the first consolidation
 
-### 1. Freeze and classify the inputs
+The first consolidated contract is retained in Git at [`db142c8`](https://github.com/lyrel-dev/frontier-agents/commit/db142c84bcfd691d5c71071681731cac81a52c7b). Revision 2 changes identity/reference/version semantics and uses `ConsolidatedOperationsConsole_20261105V2`; it must not silently reinterpret a revision-1 client payload.
 
-Use [inventory.json](inventory.json) as the source manifest and its commit as the provenance boundary. Do not import artifacts from an unmerged branch, a stale local checkout or a generated screenshot as if they were additional approved models. Existing reports, contracts and source registers explain semantics; fixtures provide synthetic examples only.
+### 1. Keep the source baseline and vocabulary
 
-Classify each source concept using [MAPPING.md](MAPPING.md): canonical entity, owned value, typed source DTO, derived profile, explicit external reference or deferred command capability. Keep exact old names in the crosswalk. This makes removal, retention and intentional consolidation reviewable.
+The source manifest remains [inventory.json](inventory.json), pinned to `d926a81c584b6b69f41bfb9641532c4f8f2d7cb3`. It accounts for the 226 analysis files independently of changes to the consolidated package. Preserve source names such as ScenarioRevision or AssetVersion as aliases in the [mapping](MAPPING.md), not as current schema entities.
 
-### 2. Establish scope and identity before transforming payloads
+Classify each source concept as an entity, owned value, retained provider DTO, projection profile, external reference or deferred capability. Do not import off-main work or fabricate historical captures to satisfy a new contract.
 
-Create application Workspace boundaries and canonical ID mappings. Preserve the native owner tuple and parent scope on SourceIdentity, independently of Connection/authentication context. Map existing provider IDs to stable application aliases; do not use display names as joins.
+### 2. Establish logical identity and version ownership
 
-Import local System/Journey/Service metadata with source provenance and one explicit membership authority. A native Resilience service ARN becomes a binding to the canonical Service. An AWS DevOps RegisteredService remains integration configuration; AgentSpace remains a provider scope. Unresolved summary IDs and unmatched Health entities stay unresolved until a documented rule and evidence support a match.
+Map each old record to a stable logical identity, then assign versions within that identity. Retain an import manifest containing the old key, new kind/ID/version, source bytes, transformer version and diagnostics. This alias map makes migration replayable and preserves existing links.
 
-For each migration batch, retain an immutable manifest of source bytes/revisions, mappings, transformer version, diagnostics and output identities. An importer can replay the same manifest without creating duplicate domain entities. A revised transformation creates new derived publications while retaining prior provenance.
+| Old representation | New representation | Required migration behavior |
+| --- | --- | --- |
+| SourceRevision | Source ID plus version | Group by native identity, representation, profile and operation. Content digest is content evidence, not logical identity. Preserve ordering evidence; do not invent unknown intervening versions. |
+| ProjectionRevision | Projection ID plus version | Group under the declared interpretation key/profile/subject identity scope. Preserve exact input and rule versions. |
+| Scenario and ScenarioRevision | Scenario versions | Retain draft and published definitions as states of one Scenario. Published content keeps exact locks and digest. Map each old revision ID to its Scenario reference. |
+| Local `version`, `projectionVersion`, overlay counters | Universal entity version | Serialize the complete owning representation. Preserve obsolete counters only as import provenance where needed; they are not the new concurrency authority. |
+| Asset with embedded versions | Asset versions | Each representation captures one exact nativeVersion/source/file set. Keep native version and application version distinct. |
+| ID-only evidence references | Exact EntityRef/EvidenceRef | Resolve the intended historical representation during migration. An ambiguous old reference remains unresolved; do not attach the current head. |
+| Snapshot embedded ReadAttempts | Snapshot.members | Import canonical ReadAttempt versions and pin them in the capture manifest. Do not retain competing authoritative copies. |
+| Recommendation workflow overlay | WorkItem plus owned enrichment | Move assignment/work state to WorkItem; estimates/notes remain on Recommendation under its entity version. |
 
-### 3. Import retained evidence without inventing history
+`createdAt` records application identity creation and `updatedAt` records version publication. A migration timestamp must not masquerade as a missing native creation time or historical observation time. Where source ordering is unavailable, retain that limitation instead of asserting a reconstructed event history.
 
-SourceRevision stores distinct payloads. Existing repeated capture facts become Observation records only if the source actually supplies them. Where earlier prototypes retained only a current fixture or flattened local state, mark original collection time/coverage unavailable and preserve the raw source. Do not manufacture a successful historical read or a complete page chain to satisfy a new field.
+### 3. Build exact history before current views
 
-New ReadAttempt records use the full new contract, including request/response revisions. Older collection histories lacking those facts can be retained as explicitly versioned legacy DTOs; the normalized current view reports the gap. Event/stream receipts use their own channel and do not require invented native reads.
+Implement immutable representations and atomic current-head publication before source refresh or editing can use them. All references needed by evidence, decisions and capture must include versions. Parent IDs used for structural ownership do not implicitly load current parent content into a historical response.
 
-Late summaries must not erase prior detailed finding evidence. Repeated notifications must not become new Health events. Duplicate journal observations must not inflate record counts. Preserve provider clocks, nullable fields, raw enums and separate local edit clocks.
+ReadAttempt retains its fixed collection/query identity and versions through dispatch/settlement. Connection references pin the access configuration used for collection or admission. A Connection's historical version does not preserve an authorization grant after current access has been revoked.
 
-### 4. Rebuild projections in parallel for comparison
+A repeated genuine Observation can point at the same Source version. Changed content creates the next Source version. A→B→A advances version history even if the final bytes match an earlier blob. Source identity and event/receipt identity prevent distinct native objects or deliveries from collapsing solely because their bytes match.
 
-Implement the reviewed rules as versioned projections over the retained data. Compare the existing prototype's result with the new projection, using the exact same source bundle. Differences need an explained source mapping, approved semantic correction or explicitly retained legacy limitation.
+### 4. Rebuild derived views and captures
 
-Compare meaningful dimensions: scope/identity counts; selected revision/observation; phase-specific result; criterion denominator and verdict; policy context; current versus retained assessment coverage; missing/detail states; notification recipients versus affected accounts; local versus native disposition. Pixel matching and a single overall status do not establish semantic parity.
+Recompute declared Projection profiles from exact retained inputs and versioned rules. Compare results using the same source bundle as the earlier prototype. Differences need an explained correction, mapping or retained source limitation.
 
-Do not relabel previously overstated outputs as trustworthy historical results. Preserve their original bytes with a legacy rule/profile label, and publish corrected results with a new identity.
+Check identity counts, selected versions, phase-specific results, required criteria, policy context, field presence, native versus local disposition and coverage. Pixel similarity or one overall status cannot establish semantic parity.
 
-### 5. Add the API adapter layer
+Snapshot.members closes over the exact versions used by its contents, including failures and empty reads. Correcting a capture publishes a new Snapshot version under that capture's identity; a distinct capture occurrence has its own identity. Previous versions and their meaning stay available under retention.
 
-Keep the consolidated namespace distinct from existing prototypes. New operation-specific DTOs use [api/PROTOCOL.md](api/PROTOCOL.md). Route reads to retained publications; route local writes to their owning aggregate; route native writes through a durable Command and the real native SDK operation.
+The initial operation surface supplies capture creation at version 1. A guarded Snapshot correction writer is deferred until a concrete correction workflow requires it; history support does not introduce generic CRUD.
 
-The main compatibility changes are deliberate:
+Recommendation identity uses the stable native suggestion key when supplied. Otherwise it is scoped to Finding, exact Source version, group and ordinal. Repeated observations of that source reuse the same captured suggestion; a matching ordinal in changed content cannot establish continuity.
 
-| Earlier surface | Consolidated disposition |
+### 5. Migrate operation contracts explicitly
+
+Typed getters take an optional version selector. Omission requests current state; a supplied version requests exactly that representation. History listing and pagination retain the selected entity/version pairs. Return the actual entity version to clients.
+
+| Earlier surface | Revision 2 behavior |
 | --- | --- |
-| Resilience `Create/UpdateSystem`, `Create/UpdateUserJourney`, `Create/UpdateService` | New operations author the local workload catalog. Native provider provisioning/configuration is an explicit separate command boundary; do not silently switch old callers to different semantics. |
-| Resilience `Start/Get/ListFailureModeAssessment` | `StartResilienceAssessment`, `GetResilienceAssessment`, `ListResilienceAssessments`; local identity maps to native service/assessment scope. |
-| Resilience `Get/List/UpdateFailureModeFinding` | `GetFinding`, `ListFindings` and explicit `UpdateFindingDisposition`, with service scope and source precondition. |
-| Resilience `UpdateDependency` versus `UpdateDependencyGovernance` | Preserve distinct provider classification and local governance commands. |
-| Resilience `UpdateRecommendationEnrichment` | Preserve local enrichment and estimate, with its own version. |
-| Resilience `CaptureTopologySnapshot` | `CaptureSnapshot` with TOPOLOGY content and closed retained evidence manifest. Existing snapshot IDs require an explicit alias/import map. |
-| Resilience `PutHealthObservation`, `IngestEvent` | Trusted `IngestObservation`, typed source profiles and projection publication; raw events never patch current entity state directly. |
-| FIS workflow resource HTTP API | Normalize to operation names under one RPC namespace, epoch-second timestamps and `expectedVersion`/`clientToken` fields. Preserve the stronger lifecycle, replay, frozen-input and proof semantics. |
-| DevOps proposed HTTP view routes/local functions | Typed consolidated read operations over Investigation, Execution, JournalRecord, Snapshot and evidence; no claim that these facade names exist natively in AWS. |
-| Health local acknowledgement/completion | WorkItem commands; provider Health lifecycle remains observed. |
-| Native administrative breadth | Retain typed source DTOs; add explicit command contracts later with provider-specific permissions and clearing/concurrency behavior. |
+| GetSourceRevision / GetProjectionRevision | GetSource / GetProjection with stable ID and optional exact version. |
+| GetScenarioRevision / ListScenarioRevisions | GetScenario at an exact version and ListEntityVersions for the logical Scenario. |
+| PublishScenarioRevision | PublishScenario creates the next PUBLISHED Scenario version. |
+| UpdateScenario with archive/default revision fields | UpdateScenario creates a later DRAFT; ArchiveScenario changes current admission policy by publishing ARCHIVED. Old publication IDs are replaced by exact Scenario references. |
+| StartRun using scenarioRevisionId | Pin the selected PUBLISHED Scenario and admitted subject/Connection versions. Current ARCHIVED head blocks new admission; an intervening DRAFT does not rewrite older publications. |
+| CompleteCollection using expectedProjectionVersion | Compare the Collection's common expectedVersion. |
+| Governance/enrichment edits using nested counters | Compare the owning Dependency or Recommendation version; update only the operation's allowed fields. |
+| Native configuration preconditions using source revision IDs | Pin the observed Source version and verify native scope; this remains observed context, not provider atomicity. |
+| CaptureSnapshot with revision-ID arrays | Supply/assemble exact entity-version members and validate the retained closure. |
 
-The complete new surface is [api/OPERATIONS.md](api/OPERATIONS.md). Migration is a versioned client change, not an in-place reinterpretation of the existing Resilience mock namespace or FIS REST API.
+Local catalogue operations continue to edit local metadata. Explicit native commands retain separate effect semantics. A local UpdateService cannot be used as a transparent replacement for native provider provisioning/configuration. The complete operation surface and predecessor dispositions are in [api/OPERATIONS.md](api/OPERATIONS.md).
 
 ### 6. Cut over one capability at a time
 
-Start with source inspection and historical read views; then move local work tracking and catalog metadata. Introduce remote writes only after command/reconciliation gates pass. Move assessment execution last, since uncertain side effects and cancellation require stronger guarantees than a read model.
+Move source inspection and historical reads first, then local WorkItem/catalogue operations. Introduce provider writes after durable command/reconciliation gates pass. Introduce workflow execution after versioned run/step/attempt selection, admission, cancellation and effect handling are implemented and tested.
 
-Retain old source packages for traceability. Replacing a prototype later should update its entry point and clearly state the replacement, without erasing its review history. This delivery adds only `consolidated-operations-console/`.
+Keep source analyses available as provenance. Updating a prototype's entry point later should name its successor without erasing review history. This revision changes only `consolidated-operations-console/`.
 
-## Recommended first implementation slice
+## First implementation slice
 
-Use one synthetic checkout service as the initial read-only slice, matching [model/examples.json](model/examples.json). It links a Health event/account impact, a DevOps investigation, a Resilience assessment/finding, an FIS experiment and a completed workflow. Technical execution succeeds while an acceptance criterion fails; an operator can complete local review while provider impact and finding evidence remain open. This exercises the state distinctions with a small data set.
+Use the synthetic checkout-service example to join Health impact, a DevOps investigation, a Resilience finding/assessment, an FIS Experiment and a workflow Run. Exercise these cases together:
 
-Build the foundation plus the typed read mappings for that slice. Demonstrate one repeated read of identical payload, one changed revision, one empty or failed read, one incomplete detail result, one conflicting or unavailable result selection and one historical snapshot that still opens when refresh fails. Add one expired observation and show current coverage falling while retained history remains available.
+1. A source document is read twice unchanged, changes, then returns to earlier bytes without regressing its entity version.
+2. Service configuration changes while an earlier Snapshot and Run continue to resolve the original Service version.
+3. Collection and ReadAttempt progress through lifecycle versions, including empty/failed outcomes.
+4. Scenario is drafted, published and edited again; a Run pins the older published version, while archive policy is checked on the current head.
+5. Run pins its own StepRun versions, and each selected StepAttempt reference is exact. Current child changes cannot alter historical verdicts.
+6. Technical execution succeeds while acceptance fails, and operator review completes while native impact/finding evidence remains open.
+7. Historical evidence still opens during current-source failure; expired evidence qualifies current coverage without rewriting the past.
 
-The first mutation slice should be `Create/UpdateWorkItem` and one local catalog edit, because their ownership is entirely local. The first provider command should be chosen for a documented native idempotency/reconciliation path and bounded effect scope. The live command choice requires the actual environment's capability and permission evidence; no universal exactly-once promise is part of the model.
+The first local mutation slice is WorkItem and one catalogue edit. Choose the first provider command only when actual environment permissions and native replay/reconciliation support are known.
 
-## Decisions required before implementation
+## Implementation decisions left open
 
-| Decision | Why it can wait until after model review |
+| Decision | Required basis |
 | --- | --- |
-| Deployment topology and database | The normalized ownership/identity boundaries are independent of one vendor or table layout; latency, tenancy, scale and recovery objectives determine the implementation. |
-| Authentication and authorization integration | Workspace and trusted principal/Connection scopes are defined. The concrete identity provider and policy engine must match the target environment. |
-| Retention and replay storage | Evidence, snapshots, token reservation and tombstone requirements are explicit. Organization policy determines durable storage and content expiry. |
-| Native adapter support matrix | The registry retains every reviewed family. Production writes require exact current SDK models, permitted roles and observed service behavior. |
-| Expression evaluator and operation artifacts | Published digests and trusted capability checks are specified. Runtime selection and conformance tests come with workflow execution. |
-| Performance and paging limits | Contract bounds prevent unbounded calls. Large artifact payloads need content retrieval and authorization; realistic workload measurements determine tighter limits. |
+| Database and deployment | Tenant scale, latency, recovery and retention objectives; the logical version contract does not prescribe physical layout. |
+| Identity and authorization integration | Trusted Workspace/principal binding, historical evidence closure access and provider permission boundaries. |
+| Version/replay retention | Atomic publication, immutable old representations, tombstone handling, evidence closure and guaranteed replay lifetime. |
+| Native adapter matrix | Current SDK models, declared profiles, permitted roles and observed operation behavior. |
+| Expression/operation runtime | Locked implementation artifacts, typing/capability checks, cancellation and race conformance. |
+| Performance and paging | Realistic record sizes, historical query volume and authorization costs while retaining bounded API behavior. |
 
-The phase gates make these decisions reviewable without prematurely expanding the domain model.
+The phase gates require implementation evidence for each capability before the console claims its behavior.
