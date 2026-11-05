@@ -47,7 +47,7 @@ Native names above identify the intended adapter basis, not HTTP calls made by t
 
 | Member | Required | Type | Constraints |
 | --- | --- | --- | --- |
-| `serviceArn` | Yes | `string` | Length 20–2048; Pattern `^arn:aws[a-z-]*:resiliencehub:[a-z0-9-]+:[0-9]{12}:(system\|service\|policy)/[A-Za-z0-9_-]+$` |
+| `serviceArn` | Yes | `string` | Length 31–2048; Pattern `^arn:(aws\|aws-cn\|aws-iso\|aws-iso-[a-z]\|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system\|service\|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$` |
 | `maxResults` | No | `integer` | Minimum 1; Maximum 100 |
 | `nextToken` | No | `string` | Length 1–8192 |
 
@@ -74,9 +74,9 @@ Schema references resolve through the [shared definitions](../shapes.md).
   "properties": {
     "serviceArn": {
       "type": "string",
-      "minLength": 20,
+      "minLength": 31,
       "maxLength": 2048,
-      "pattern": "^arn:aws[a-z-]*:resiliencehub:[a-z0-9-]+:[0-9]{12}:(system|service|policy)/[A-Za-z0-9_-]+$"
+      "pattern": "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system|service|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$"
     },
     "maxResults": {
       "type": "integer",

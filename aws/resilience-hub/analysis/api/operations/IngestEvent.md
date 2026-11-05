@@ -30,7 +30,7 @@ native_operations: []
 
 # IngestEvent
 
-Records a source event and refresh intent; untrusted payload content cannot replace service state.
+Retains the raw event, typed subjects and correlation IDs as evidence and requests a refresh; no event body patches authoritative state.
 
 | Property | Value |
 | --- | --- |
@@ -47,7 +47,7 @@ Native names above identify the intended adapter basis, not HTTP calls made by t
 
 | Member | Required | Type | Constraints |
 | --- | --- | --- | --- |
-| `serviceArn` | Yes | `string` | Length 20–2048; Pattern `^arn:aws[a-z-]*:resiliencehub:[a-z0-9-]+:[0-9]{12}:(system\|service\|policy)/[A-Za-z0-9_-]+$` |
+| `serviceArn` | Yes | `string` | Length 31–2048; Pattern `^arn:(aws\|aws-cn\|aws-iso\|aws-iso-[a-z]\|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system\|service\|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$` |
 | `sourceEventId` | Yes | `string` | Length 1–256; Pattern `^[A-Za-z0-9][A-Za-z0-9._:-]*$` |
 | `channel` | Yes | `string` | `EVENTBRIDGE`, `ENTITY_TIMELINE` |
 | `streamOwner` | Yes | `string` | Length 1–256 |
@@ -56,7 +56,10 @@ Native names above identify the intended adapter basis, not HTTP calls made by t
 | `title` | Yes | `string` | Length 1–256 |
 | `message` | Yes | `string` | Length 0–2048 |
 | `severity` | No | `string` | `INFO`, `WARNING`, `ERROR` |
-| `occurredAt` | Yes | `number` | Minimum 0; Maximum 253402300799 |
+| `occurredAt` | Yes | `number` | Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.; Minimum 0; Maximum 253402300799; Runtime precision assertion: `milliseconds` |
+| `rawEvent` | No | `object` | See shared shape or field semantics. |
+| `subjects` | No | Array of [EventSubject](../shapes.md#eventsubject) | Items 0–20 |
+| `correlationIds` | No | Array of `string` | Items 0–32 |
 | `clientToken` | Yes | `string` | Length 1–63; Pattern `^[A-Za-z0-9_.-]+$` |
 
 ### HTTP example
@@ -73,10 +76,36 @@ X-Amz-Target: ResilienceWorkspace_20261105.IngestEvent
   "channel": "EVENTBRIDGE",
   "streamOwner": "111122223333/eu-west-1/default",
   "source": "aws.resiliencehub",
-  "type": "Resilience Hub Failure Mode Assessment Completed",
+  "type": "Failure Mode Assessment Completed",
   "title": "Assessment completion notification",
   "message": "A provider notification requests a scoped refresh.",
   "occurredAt": 1793874240,
+  "subjects": [
+    {
+      "entityType": "Assessment",
+      "entityId": "71000000-0000-4000-8000-000000000703",
+      "serviceArn": "arn:aws:resiliencehub:eu-west-1:111122223333:service/71000000-0000-4000-8000-000000000403",
+      "relationship": "SUBJECT"
+    },
+    {
+      "entityType": "Service",
+      "entityId": "arn:aws:resiliencehub:eu-west-1:111122223333:service/71000000-0000-4000-8000-000000000403",
+      "serviceArn": "arn:aws:resiliencehub:eu-west-1:111122223333:service/71000000-0000-4000-8000-000000000403",
+      "relationship": "RELATED"
+    }
+  ],
+  "correlationIds": [
+    "71000000-0000-4000-8000-000000000703"
+  ],
+  "rawEvent": {
+    "source": "aws.resiliencehub",
+    "detail-type": "Failure Mode Assessment Completed",
+    "detail": {
+      "serviceArn": "arn:aws:resiliencehub:eu-west-1:111122223333:service/71000000-0000-4000-8000-000000000403",
+      "assessmentId": "71000000-0000-4000-8000-000000000703",
+      "assessmentStatus": "SUCCESS"
+    }
+  },
   "clientToken": "example-ingest-event"
 }
 ```
@@ -91,9 +120,9 @@ Schema references resolve through the [shared definitions](../shapes.md).
   "properties": {
     "serviceArn": {
       "type": "string",
-      "minLength": 20,
+      "minLength": 31,
       "maxLength": 2048,
-      "pattern": "^arn:aws[a-z-]*:resiliencehub:[a-z0-9-]+:[0-9]{12}:(system|service|policy)/[A-Za-z0-9_-]+$"
+      "pattern": "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system|service|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$"
     },
     "sourceEventId": {
       "type": "string",
@@ -144,7 +173,33 @@ Schema references resolve through the [shared definitions](../shapes.md).
     "occurredAt": {
       "type": "number",
       "minimum": 0,
-      "maximum": 253402300799
+      "maximum": 253402300799,
+      "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+      "x-precision": "milliseconds"
+    },
+    "rawEvent": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "subjects": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/EventSubject"
+      },
+      "minItems": 0,
+      "maxItems": 20,
+      "uniqueItems": false
+    },
+    "correlationIds": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 256
+      },
+      "minItems": 0,
+      "maxItems": 32,
+      "uniqueItems": false
     },
     "clientToken": {
       "type": "string",
@@ -191,13 +246,39 @@ HTTP 200. This body is generated by executing the request above against a fresh 
     "channel": "EVENTBRIDGE",
     "streamOwner": "111122223333/eu-west-1/default",
     "source": "aws.resiliencehub",
-    "type": "Resilience Hub Failure Mode Assessment Completed",
+    "type": "Failure Mode Assessment Completed",
     "title": "Assessment completion notification",
     "message": "A provider notification requests a scoped refresh.",
     "severity": "INFO",
     "serviceArn": "arn:aws:resiliencehub:eu-west-1:111122223333:service/71000000-0000-4000-8000-000000000403",
-    "entityType": "Service",
-    "entityId": "checkout",
+    "entityType": "Assessment",
+    "entityId": "71000000-0000-4000-8000-000000000703",
+    "subjects": [
+      {
+        "entityType": "Assessment",
+        "entityId": "71000000-0000-4000-8000-000000000703",
+        "serviceArn": "arn:aws:resiliencehub:eu-west-1:111122223333:service/71000000-0000-4000-8000-000000000403",
+        "relationship": "SUBJECT"
+      },
+      {
+        "entityType": "Service",
+        "entityId": "arn:aws:resiliencehub:eu-west-1:111122223333:service/71000000-0000-4000-8000-000000000403",
+        "serviceArn": "arn:aws:resiliencehub:eu-west-1:111122223333:service/71000000-0000-4000-8000-000000000403",
+        "relationship": "RELATED"
+      }
+    ],
+    "rawEvent": {
+      "source": "aws.resiliencehub",
+      "detail-type": "Failure Mode Assessment Completed",
+      "detail": {
+        "serviceArn": "arn:aws:resiliencehub:eu-west-1:111122223333:service/71000000-0000-4000-8000-000000000403",
+        "assessmentId": "71000000-0000-4000-8000-000000000703",
+        "assessmentStatus": "SUCCESS"
+      }
+    },
+    "correlationIds": [
+      "71000000-0000-4000-8000-000000000703"
+    ],
     "occurredAt": 1793874240,
     "receivedAt": 1793874240,
     "linkage": "ASSERTED",
@@ -259,8 +340,8 @@ HTTP 200. This body is generated by executing the request above against a fresh 
 
 Supply one stable `clientToken` for the logical command. Identical retries return the prior result within the local idempotency window; a changed body with the same token conflicts. Authorization uses trusted server-side context. No request makes a real AWS mutation.
 
-- Appends a source envelope with a trusted-principal stamp.
-- Marks a service refresh required without replacing its projection.
+- Appends the raw source envelope, typed subjects and correlation IDs with a trusted-principal stamp.
+- Marks a service refresh required without replacing authoritative observations or completing an assessment.
 
 ## Errors
 

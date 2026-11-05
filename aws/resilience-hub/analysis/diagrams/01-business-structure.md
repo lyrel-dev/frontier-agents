@@ -16,6 +16,7 @@ aliases:
 related:
   - "../report.md"
   - "../review.md"
+  - "../quality-review.md"
   - "../api/index.md"
 ---
 
@@ -70,6 +71,12 @@ erDiagram
 
 - JourneyService must reference both (systemKey, serviceArn) and (systemKey, userJourneyId).
 - A service may belong to a system without a journey. Membership does not establish execution order.
+- `systemKey` is local and remains usable when a partial native summary omits `systemArn`. Do not synthesize the hidden ARN or merge systems from an unverified account scope.
+- Service ARNs are opaque identities. Resource-name validation does not define the suffix grammar of an existing ARN.
+
+## Implementation boundary
+
+The mock implements constrained memberships and distinct-service rollups using fully addressable fixtures. Partial cross-account visibility and unresolved summary reconciliation remain collector work. The diagram states the logical identity requirement; it does not imply those integration cases are fully implemented. See the [traceability matrix](../report.md#1-implementation-traceability).
 
 The SVG uses navy for AWS-backed identities and values, and teal for local relationships, captures or observations. These colors describe ownership of the model element, not operational status.
 

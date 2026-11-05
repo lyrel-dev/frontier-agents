@@ -1,8 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1320 1130" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1320 1160" role="img" aria-labelledby="title desc">
 <title id="title">Dependency discovery and captured topology</title>
 <desc id="desc">Entity relationship diagram. Navy entities are AWS-backed; teal entities are local records. Cardinalities are printed on relationship lines. See the accompanying Mermaid source and report for constraints.</desc>
 <style>text{font-family:Inter,Arial,sans-serif}.entity{font-size:17px;font-weight:700}.field{font-size:16px}.meta{font-size:13px}.link{font-size:14px}.note{font-size:16px}</style>
-<rect width="1320" height="1130" rx="18" fill="#f8fbfd"/>
+<rect width="1320" height="1160" rx="18" fill="#f8fbfd"/>
 <text font-family="sans-serif" x="32" y="42" fill="#16304a" font-size="25" font-weight="700">Dependency discovery and captured topology</text>
 <text font-family="sans-serif" x="32" y="69" fill="#53677c" font-size="16">DNS dependencies, discovery coverage and graph relationships remain distinct kinds of evidence.</text>
 <polyline points="480,195 395,195" fill="none" stroke="#6e8397" stroke-width="1.8"/>
@@ -21,10 +21,10 @@
 <text font-family="sans-serif" x="457" y="537" text-anchor="middle" class="link" font-size="14" fill="#53677c">1</text>
 <text font-family="sans-serif" x="196" y="736" text-anchor="middle" class="link" font-size="14" fill="#53677c">0..*</text>
 <text font-family="sans-serif" x="315" y="541" text-anchor="middle" class="link" font-size="14" fill="#53677c">contains</text>
-<polyline points="840,550 1105,550 1105,755" fill="none" stroke="#6e8397" stroke-width="1.8"/>
+<polyline points="840,550 885,550 885,715 1105,715 1105,755" fill="none" stroke="#6e8397" stroke-width="1.8"/>
 <text font-family="sans-serif" x="860" y="537" text-anchor="middle" class="link" font-size="14" fill="#53677c">1</text>
 <text font-family="sans-serif" x="1125" y="736" text-anchor="middle" class="link" font-size="14" fill="#53677c">0..*</text>
-<text font-family="sans-serif" x="997" y="541" text-anchor="middle" class="link" font-size="14" fill="#53677c">contains</text>
+<text font-family="sans-serif" x="997" y="706" text-anchor="middle" class="link" font-size="14" fill="#53677c">contains</text>
 <polyline points="395,830 925,830" fill="none" stroke="#6e8397" stroke-width="1.8"/>
 <text font-family="sans-serif" x="418" y="817" text-anchor="middle" class="link" font-size="14" fill="#53677c">1</text>
 <text font-family="sans-serif" x="900" y="817" text-anchor="middle" class="link" font-size="14" fill="#53677c">0..*</text>
@@ -33,6 +33,10 @@
 <text font-family="sans-serif" x="418" y="924" text-anchor="middle" class="link" font-size="14" fill="#53677c">1</text>
 <text font-family="sans-serif" x="900" y="924" text-anchor="middle" class="link" font-size="14" fill="#53677c">0..*</text>
 <text font-family="sans-serif" x="660" y="924" text-anchor="middle" class="link" font-size="14" fill="#53677c">destination endpoint</text>
+<polyline points="1105,370 1105,450" fill="none" stroke="#6e8397" stroke-width="1.8"/>
+<text font-family="sans-serif" x="1085" y="391" text-anchor="middle" class="link" font-size="14" fill="#53677c">1</text>
+<text font-family="sans-serif" x="1077" y="432" text-anchor="middle" class="link" font-size="14" fill="#53677c">0..1</text>
+<text font-family="sans-serif" x="1190" y="416" text-anchor="middle" class="link" font-size="14" fill="#53677c">local governance</text>
 <rect x="480" y="125" width="360" height="125" rx="9" fill="white" stroke="#cbd8e3"/>
 <path d="M489,125 H831 Q840,125 840,134 V168 H480 V134 Q480,125 489,125 Z" fill="#183750"/>
 <text font-family="sans-serif" x="495" y="153" fill="white" class="entity" font-size="17" font-weight="700">SERVICE</text>
@@ -62,7 +66,7 @@
 <text font-family="sans-serif" x="495" y="508" fill="#53677c" class="meta" font-size="13">Local capture identity</text>
 <text font-family="sans-serif" x="495" y="528" fill="#16304a" class="field" font-size="16">serviceArn  [FK]</text>
 <text font-family="sans-serif" x="495" y="550" fill="#16304a" class="field" font-size="16">captureStartedAt</text>
-<text font-family="sans-serif" x="495" y="572" fill="#16304a" class="field" font-size="16">captureCompletedAt</text>
+<text font-family="sans-serif" x="495" y="572" fill="#16304a" class="field" font-size="16">captureEndedAt</text>
 <text font-family="sans-serif" x="495" y="594" fill="#16304a" class="field" font-size="16">collectionStatus</text>
 <text font-family="sans-serif" x="495" y="616" fill="#16304a" class="field" font-size="16">queryScope</text>
 <rect x="35" y="755" width="360" height="200" rx="9" fill="white" stroke="#cbd8e3"/>
@@ -82,8 +86,18 @@
 <text font-family="sans-serif" x="940" y="907" fill="#16304a" class="field" font-size="16">destinationNodeId  [FK]</text>
 <text font-family="sans-serif" x="940" y="927" fill="#53677c" class="meta" font-size="13">Endpoint must share topologyId</text>
 <text font-family="sans-serif" x="940" y="947" fill="#16304a" class="field" font-size="16">properties</text>
+<rect x="925" y="450" width="360" height="230" rx="9" fill="white" stroke="#cbd8e3"/>
+<path d="M934,450 H1276 Q1285,450 1285,459 V493 H925 V459 Q925,450 934,450 Z" fill="#087f83"/>
+<text font-family="sans-serif" x="940" y="478" fill="white" class="entity" font-size="17" font-weight="700">DEPENDENCY_GOVERNANCE</text>
+<text font-family="sans-serif" x="940" y="518" fill="#16304a" class="field" font-size="16">serviceArn  [PK, FK]</text>
+<text font-family="sans-serif" x="940" y="540" fill="#16304a" class="field" font-size="16">dependencyId  [PK, FK]</text>
+<text font-family="sans-serif" x="940" y="562" fill="#16304a" class="field" font-size="16">version</text>
+<text font-family="sans-serif" x="940" y="584" fill="#16304a" class="field" font-size="16">allowedStatus</text>
+<text font-family="sans-serif" x="940" y="606" fill="#16304a" class="field" font-size="16">source</text>
+<text font-family="sans-serif" x="940" y="628" fill="#16304a" class="field" font-size="16">observedAt</text>
 <rect x="32" y="1028" width="13" height="13" rx="3" fill="#183750"/><text font-family="sans-serif" x="54" y="1040" fill="#53677c" class="link" font-size="14">AWS-backed identity or value</text>
 <rect x="335" y="1028" width="13" height="13" rx="3" fill="#087f83"/><text font-family="sans-serif" x="357" y="1040" fill="#53677c" class="link" font-size="14">Local normalization or evidence</text>
 <text font-family="sans-serif" x="32" y="1072" fill="#53677c" class="note" font-size="16">Both endpoint foreign keys include topologyId; unresolved endpoints remain snapshot-scoped stubs.</text>
 <text font-family="sans-serif" x="32" y="1096" fill="#53677c" class="note" font-size="16">No native dependency-to-topology foreign key exists. COMPLETE is collector completion, not an atomic graph.</text>
+<text font-family="sans-serif" x="32" y="1120" fill="#53677c" class="note" font-size="16">Governance is independently versioned and cannot change observed DNS evidence or grant access.</text>
 </svg>

@@ -16,6 +16,7 @@ aliases:
 related:
   - "../report.md"
   - "../review.md"
+  - "../quality-review.md"
   - "../api/index.md"
 ---
 
@@ -66,11 +67,21 @@ erDiagram
         string policyName "Returned label; not a policy identity"
         string ownershipSource "SELF or CROSS_ACCOUNT"
     }
+    POLICY_CONTEXT_CAPTURE {
+        string policyContextCaptureId PK
+        string serviceArn FK
+        string effectiveTargetObservationId FK "Optional same-service observation"
+        datetime observedAt
+        json membershipEvidence "Observed associations and policy references"
+        json policyContentEvidence "Hashes or payload references when captured"
+    }
     POLICY o|--o{ USER_JOURNEY : directly_assigned
     POLICY o|--o{ SERVICE : directly_assigned
     POLICY ||--o{ POLICY_COMPONENT : has
     SERVICE ||--o{ EFFECTIVE_TARGET_OBSERVATION : observed_as
     EFFECTIVE_TARGET_OBSERVATION ||--o{ EFFECTIVE_TARGET : contains
+    SERVICE ||--o{ POLICY_CONTEXT_CAPTURE : captures_context
+    EFFECTIVE_TARGET_OBSERVATION o|--o{ POLICY_CONTEXT_CAPTURE : target_evidence
 ```
 
 ## Relationship constraints
@@ -78,6 +89,12 @@ erDiagram
 - Inherited applicability follows journey membership; it is not encoded by ownershipSource.
 - policyName is a returned label. Any policy identity match must be verified and remain optional.
 - A captured context is not proof of the policy revision that AWS evaluated.
+- A context's effective-target observation must have the same service ARN. Captured membership and policy-content evidence describe what was observed; they do not establish a provider effective time.
+- Policy-content hashes or payload references are optional evidence. The current mock captures associations and policy references; a complete historical provider collector remains separate implementation work.
+
+## Implementation boundary
+
+`GetService` and `GetServiceStatus` expose the target observation and policy-context capture through `effectivePolicyEvidence`. The DTO's `associations` and `applicablePolicies` represent the diagram's membership evidence. Full historical policy payload capture and proof of the evaluated provider revision remain outside the mock. Current coverage derives expected components from the context captured with the posture, never from a subsequently edited policy. See the [traceability matrix](../report.md#1-implementation-traceability).
 
 The SVG uses navy for AWS-backed identities and values, and teal for local relationships, captures or observations. These colors describe ownership of the model element, not operational status.
 

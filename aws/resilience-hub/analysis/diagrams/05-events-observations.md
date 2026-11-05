@@ -16,6 +16,7 @@ aliases:
 related:
   - "../report.md"
   - "../review.md"
+  - "../quality-review.md"
   - "../api/index.md"
 ---
 
@@ -41,7 +42,7 @@ erDiagram
         string providerKey
         string visibilityState "Includes tombstones and unresolved refs"
     }
-    EVENT_ENTITY {
+    EVENT_SUBJECT {
         string eventKey PK, FK
         string entityKey PK, FK
         string role
@@ -52,8 +53,10 @@ erDiagram
         string sourceChannel
         string streamScope
         string sourceEventId
+        string eventType
         datetime occurredAt
         datetime receivedAt
+        json rawEvent "Original channel envelope and detail"
     }
     POSTURE_OBSERVATION {
         string observationId PK
@@ -81,8 +84,8 @@ erDiagram
         datetime computedAt
         json freshnessAndCoverage
     }
-    ENTITY_REF ||--o{ EVENT_ENTITY : linked_by
-    EVENT ||--o{ EVENT_ENTITY : subjects
+    ENTITY_REF ||--o{ EVENT_SUBJECT : linked_by
+    EVENT ||--o{ EVENT_SUBJECT : subjects
     ENTITY_REF ||--o{ POSTURE_OBSERVATION : observed_as
     ENTITY_REF ||--o{ HEALTH_OBSERVATION : observed_as
     ENTITY_REF ||--o{ CURRENT_PROJECTION : projects
@@ -95,6 +98,12 @@ erDiagram
 - Event uniqueness: (sourceChannel, streamScope, sourceEventId). Subjects retain type, provider scope and key.
 - Aggregate attention summaries retain distinct contributor identities, membership context and rule version.
 - computedAt belongs to the projection. occurredAt, receivedAt and observation timestamps remain separate.
+- Preserve the original channel payload and typed scoped subjects together. Local create events reference the generated entity identity; request IDs are supplementary correlation data.
+- A configuration version changes with editable configuration; the projection revision can advance independently when evidence arrives.
+
+## Implementation boundary
+
+The mock exposes typed event subjects and retained envelopes, mutation timelines, selected health/posture observations, and separately expiring projections. The logical Event maps to the API's EventEntity envelope; EventSubject maps to its nested `subjects[]`, and `sourceChannel`/`streamScope` map to `channel`/`streamOwner`. Generalized historical entity references, complete membership replay, live provider hydration and durable storage remain the broader temporal design. `GetServiceStatus.selectedObservations` makes the selected evidence retrievable inline; an accepted event is still not proof that an asynchronous provider workflow completed. See the [traceability matrix](../report.md#1-implementation-traceability).
 
 The SVG uses navy for AWS-backed identities and values, and teal for local relationships, captures or observations. These colors describe ownership of the model element, not operational status.
 

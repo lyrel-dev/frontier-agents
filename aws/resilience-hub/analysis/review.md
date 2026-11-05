@@ -16,6 +16,8 @@ aliases:
 related:
   - "report.md"
   - "api/index.md"
+  - "quality-review.md"
+  - "validation.md"
 ---
 
 # Model review and implementation decisions
@@ -24,13 +26,13 @@ related:
 
 **Scope:** the original AWS Resilience Hub operator UI data-model report, all five ER diagrams, the 44-operation workspace RPC extension, and the mapping to the detailed `resiliencehubv2` contracts.
 
-**Disposition:** approved for the fictional UI prototype with the corrections below. Account-specific integration behavior remains to be verified before connecting a production UI.
+**Disposition:** the initial prototype review below is retained as an engineering record. The subsequent [adversarial quality review](quality-review.md) supersedes its broad approval: it reproduced substantive semantic defects despite the original passing tests, corrected the implemented slice, and makes the remaining delivery gaps explicit. The package is a reviewed mock and design reference, not a production integration approval.
 
 The reviewed analysis is [report.md](report.md), with [API operations](api/index.md) and five linked diagram notes. The original report's detailed API analysis and all 48 official source URLs have been retained. This review does not claim live-account validation.
 
 ## RPC extension review
 
-The implemented extension contains 44 operations: 30 native-backed adapters, nine composed reads, three local commands and two ingestion operations. Each operation has an Obsidian Markdown note with YAML properties, exact schemas, executable examples, roles, errors and lifecycle effects. The [AWS mapping](api/aws-mapping.md) records 34 official sources for the adapter review. The [protocol](api/protocol.md) explicitly owns the RPC namespace, local revisions, replay window, signed snapshot pagination and guarded deletion rules.
+The implemented extension contains 44 operations: 30 native-backed adapters, nine composed reads, three local commands and two ingestion operations. Each operation has an Obsidian Markdown note with YAML properties, exact schemas, executable examples, roles, errors and lifecycle effects. The [AWS mapping](api/aws-mapping.md) retains the original 34 official sources and now has 38 after the follow-up review. The [protocol](api/protocol.md) explicitly owns the RPC namespace, local revisions, replay window, signed snapshot pagination and guarded deletion rules.
 
 | Review finding | Correction or explicit boundary |
 | --- | --- |
@@ -43,7 +45,7 @@ The implemented extension contains 44 operations: 30 native-backed adapters, nin
 | Current detail DTOs do not represent every partial native summary. | Identify the required-ARN System DTO as the complete mock case. A production adapter needs a partial reference/coverage representation for limited-visibility native system summaries. |
 | HTTP errors, default role and diagram messages needed exact implementation alignment. | Document the HTTP 405 transport variant, default `demo` role, and response routing through the API. |
 
-All 44 generated examples execute on isolated runtimes, and the HTTP suite exercises every operation through the real local server. The complete package has 39 passing tests. The [validation record](validation.md) contains the commands, documentation checks and limits. The browser and RPC server remain separate mock states; no live AWS integration, background reconciliation worker or production authentication is implied.
+The original extension passed 39 tests and exercised all 44 generated examples and HTTP handlers. That established execution and structural checks; it did not establish correct operator meaning. The later review found missing attention reasons, stale evidence counted as current coverage, missing evidence DTOs, manufactured timestamps, unsafe timestamp ordering and a disposition-dependent assessment simulator. Current corrections and test totals are in [quality-review.md](quality-review.md) and [validation.md](validation.md). The browser and RPC server remain separate mock states; live integration, a background reconciliation worker and production authentication remain delivery work.
 
 ## Corrections made before implementation
 
@@ -65,7 +67,7 @@ All 44 generated examples execute on isolated runtimes, and the HTTP suite exerc
 The following conclusions in the original report were correct and remain central to the UI:
 
 - **Use the next-generation contract.** The requested conceptual `*Entity` names map to v2 shapes and operations. Do not mix in the older application-centric API. Detailed operation and SDK contracts take precedence over overview naming. [Official SDK inventory](https://docs.aws.amazon.com/aws-sdk-php/v3/api/api-resiliencehubv2-2026-02-17.html)
-- **Four policy components.** The current shape has availability SLO, backup interval, Multi-AZ recovery and Multi-Region recovery targets. It has no native performance component for latency or error-rate objectives. Effective targets expose eight metrics. [GetPolicy](https://docs.aws.amazon.com/resilience-hub/v2/APIReference/API_GetPolicy.html) · [EffectivePolicyValues](https://docs.aws.amazon.com/resilience-hub/v2/APIReference/API_EffectivePolicyValues.html)
+- **Four optional policy component types.** The current shape supports availability SLO, backup interval, Multi-AZ recovery and Multi-Region recovery targets; a policy need not configure every component. Coverage must compare results with captured applicable targets. The shape has no native performance component for latency or error-rate objectives. Effective targets expose eight metrics. [GetPolicy](https://docs.aws.amazon.com/resilience-hub/v2/APIReference/API_GetPolicy.html) · [EffectivePolicyValues](https://docs.aws.amazon.com/resilience-hub/v2/APIReference/API_EffectivePolicyValues.html)
 - **Ownership is not inheritance.** `SELF` and `CROSS_ACCOUNT` describe account ownership; a returned policy name is not a policy ARN. Identity resolution must be evidenced and optional. [SloSource](https://docs.aws.amazon.com/resilience-hub/v2/APIReference/API_SloSource.html)
 - **No mandatory Assessment-to-Finding foreign key.** Current findings are service-scoped; the list operation has no assessment ID filter. Local captures can be correlated to a run without claiming exact historical run membership. [ListFailureModeFindings](https://docs.aws.amazon.com/resilience-hub/v2/APIReference/API_ListFailureModeFindings.html) · [GetFailureModeFinding](https://docs.aws.amazon.com/resilience-hub/v2/APIReference/API_GetFailureModeFinding.html)
 - **Recommendations are nested suggested-change groups.** They do not provide native identity, implementation cost, complexity or a standalone mutation lifecycle. Those UI values are local enrichment, with provenance. Assessment execution cost is a different concept. [Finding](https://docs.aws.amazon.com/resilience-hub/v2/APIReference/API_Finding.html) · [InfrastructureAndCodeRecommendation](https://docs.aws.amazon.com/resilience-hub/v2/APIReference/API_InfrastructureAndCodeRecommendation.html)
@@ -84,6 +86,8 @@ The prototype should label all data as fictional. It may simulate event arrival,
 6. Expired telemetry becomes unknown or stale according to the labelled local rule.
 7. A partial capture keeps earlier evidence with its original timestamp and communicates the gap.
 8. A service failing its strict combined objective does not establish that every looser journey policy failed.
+9. A subsequent assessment completion cannot infer remediation or achievability from operator finding dispositions. It needs independent result evidence.
+10. The current coverage denominator uses distinct services and captured expected policy components; retained, stale, incomplete and inaccessible evidence remain explicit.
 
 ## Validation performed on the report package
 
@@ -94,3 +98,5 @@ The prototype should label all data as fictional. It may simulate event arrival,
 - Checked that native `failureCategory`, policy component names, observation identity and `computedAt` terminology remain consistent across the package.
 
 These checks establish internal consistency of the documentation package. They are not live AWS integration tests. Exact association-array replacement, detachment, clearing, authorization, pagination and concurrent-edit behavior must be verified with the chosen SDK and controlled account responses before production editing is enabled.
+
+The follow-up review also makes `PolicyContextCapture`, `RecommendationEnrichment` and `DependencyGovernance` explicit in the ER diagrams, adds event-envelope preservation, and connects diagram concepts to the implemented API. Refer to [quality-review.md](quality-review.md) for the corrected acceptance bar and the baseline reproductions that motivated it.

@@ -19,6 +19,7 @@ related:
   - "shapes.md"
   - "errors.md"
   - "workflows.md"
+  - "../quality-review.md"
 ---
 
 # Resilience Workspace RPC protocol
@@ -35,7 +36,7 @@ This is the application-owned API for the proposed operator workspace. It presen
 | API version | `2026-11-05` |
 | Operation names | PascalCase, for example `GetService` |
 | JSON members | lowerCamelCase, for example `serviceArn` |
-| Timestamps | Finite numbers containing seconds since the Unix epoch; fractional seconds are allowed |
+| Timestamps | Finite epoch seconds with at most millisecond precision; sub-millisecond input is rejected before ordering or storage |
 | Successful response | HTTP `200` and the operation-specific JSON response |
 | Failed response | Non-2xx HTTP status, a typed JSON error, `x-amzn-ErrorType` and `x-amzn-RequestId` |
 | Correlation | A fresh server request ID for each HTTP attempt; idempotency tokens identify a logical mutation |
@@ -69,7 +70,7 @@ Reusing a native operation name does not mean the request and response are byte-
 
 ## Identities, references and field presence
 
-Provider ARNs and scoped provider IDs are the primary external keys. A user journey is addressed by `(systemArn, userJourneyId)`. Assessments, findings, input sources and dependencies are addressed within their service scope. A topology edge can reference only nodes in its own capture. Friendly names, browser fixture IDs and list ordinals are never substitutes for these identities.
+Provider ARNs and scoped provider IDs are the primary external keys. A user journey is addressed by `(systemArn, userJourneyId)`. Assessments, findings, input sources and dependencies are addressed within their service scope. A topology edge can reference only nodes in its own capture. Friendly names, browser fixture IDs and list ordinals are never substitutes for these identities. The resource portion of a provider ARN remains opaque: a valid service ARN can contain a name and identifier separated by a colon. Validation checks the resource kind and scope without rewriting that suffix. See the ARN in the official [assessment-completed event example](https://docs.aws.amazon.com/resilience-hub/latest/userguide/next-gen-eventbridge-assessment-completed.html).
 
 `displayName`, local entity `version`, recommendation identity, cost estimates, governance decisions, captures, health observations and derived attention are product data. They must not be forwarded unmodified to AWS. Provider names for systems, services and policies are constrained identifiers; a separate local display name preserves human-friendly labels. User journey names have their own native constraints and may contain spaces. The [entity mapping](entities.md) distinguishes native fields from local additions.
 
@@ -77,9 +78,29 @@ Inputs accept only the writable properties defined by the schema. A read-only re
 
 Names, timestamps, enums and resource configuration unions are validated before mutation. `CreateInputSource.resourceConfiguration` has exactly one configuration member, matching the native tagged-union model. A discovery request sets `ENABLED` or `DISABLED`; `INITIALIZING` is provider-managed output. Permission models use `crossAccountRoleArn` within `crossAccountRoles`. See [CreateInputSource](https://docs.aws.amazon.com/botocore/latest/reference/services/resiliencehubv2/client/create_input_source.html) and [CreateService](https://docs.aws.amazon.com/resilience-hub/v2/APIReference/API_CreateService.html).
 
+Read normalization has different obligations from write validation. Unknown provider enum values retain their raw value in normalization diagnostics and project an unknown state; they do not make the entire response fail or become a known safe value. Missing native dependency-discovery configuration becomes an explicit `UNKNOWN` observation with `rawStatus: null` and missing-source diagnostics. A missing provider `createdAt` or `updatedAt` stays null; the product's observation or local edit time must not fill it. The permission read shape permits provider-reported null role details that the write shape must reject. The [AWS mapping](aws-mapping.md) records the source-backed input limits and read/write differences.
+
+## Evidence behind a status
+
+`GetService` and `ListServices` return `effectivePolicyEvidence` for the current stored service configuration context. `GetServiceStatus.effectivePolicyEvidence` instead resolves the context referenced by the retained posture. In each case the effective-target observation is selected through that context's `effectiveTargetObservationId`, in the same service scope. This prevents a newer target observation from being paired with an older posture context. The inline evidence includes source time, ownership and assignment context; it is not proof of the exact policy revision AWS evaluated. `GetServiceStatus.selectedObservations` returns the selected health and posture evidence, alongside coverage and explicit attention reasons. It preserves native `rerunAssessment` separately from the product's refresh and reassessment flags.
+
+A finding response contains its current `findingCapture`, `findingObservation`, representation, field-presence metadata and recommendation-presence state. `recommendationIds: null` means that the current detail is unavailable or incomplete; an empty array is used only when the relevant collection is known to be empty. A reference to retained detail does not make a newer summary complete. These inline bundles address current evidence inspection. The mock does not expose a general historical policy/capture query API or implement a native collector; those remain explicit integration work in [the quality review](../quality-review.md).
+
 ## Mutation lifecycle
 
 Every mutation is explicit about its scope and writable fields. Local versions let the client detect a concurrent edit before replacing the product's current record. An update or guarded delete supplies the current `expectedVersion`; a mismatch returns a conflict and leaves the state unchanged. The client should fetch again, show the intervening changes and obtain a new user decision before retrying a different write.
+
+Version ownership is specific to the edited record:
+
+| Command or read | Revision to use | Meaning |
+| --- | --- | --- |
+| Update/DeleteService | `service.version` | Direct service configuration and input-source membership edits; health, event, finding and assessment observations do not consume this revision. |
+| GetServiceStatus | `projectionVersion` | Local observation/projection revision; not an edit token for service configuration. |
+| UpdateRecommendationEnrichment | `recommendation.enrichment.version` | The local estimate/workflow record, independently of immutable recommendation evidence. |
+| UpdateDependencyGovernance | `dependency.governance.version` | The local governance decision, independently of provider-backed classification. |
+| Other guarded entity edits/deletes | That entity's `version` | The record named by the operation and its parent scope. |
+
+`localUpdatedAt` records a local edit. A nullable provider `updatedAt` retains its provider meaning. Applicable policy or membership changes set `policyContextRefreshRequired`; material resource, Region, permission or discovery changes set `reassessmentRequired`. A finding newly marked resolved also requests reassessment without proving remediation. Incoming inherited-policy observations change the service projection without consuming its direct configuration revision. Editing only a description or display label does not invalidate assessment evidence. These local flags are not a fabricated value for native `rerunAssessment`.
 
 The version is an application revision, not an AWS revision or ETag. A successful local comparison cannot prevent an administrator from changing AWS directly. A production adapter needs reconciliation and a durable command record around the remote call; it must not claim transactional compare-and-swap across AWS and the product database.
 
@@ -109,16 +130,28 @@ The runnable demo binds to loopback and uses an explicitly configured mock princ
 
 ## Event processing and freshness
 
-`IngestEvent` records an event envelope and produces a refresh intent. It does not apply an event body as an authoritative patch to a service or complete an AWS refresh. Dedupe uses channel, stream owner and source event ID so identifiers from different delivery surfaces do not collide. Event occurrence time, ingestion time and entity observation time remain separate.
+`IngestEvent` records an event envelope and produces a refresh intent. It does not apply an event body as an authoritative patch to a service or complete an AWS refresh. Dedupe uses channel, stream owner and source event ID so identifiers from different delivery surfaces do not collide. Event occurrence time, ingestion time and entity observation time remain separate. Bounded `rawEvent`, `correlationIds` and typed `subjects` retain the supplied source envelope and linkage. Raw content remains evidence only, including when it contains fields that resemble a desired state change.
 
-`PutHealthObservation` accepts a monitoring observation with its own source, measured time and expiry. Older evidence is retained without replacing a newer current health projection. Expired evidence becomes unknown according to the local rule, while its last raw state remains inspectable. A health signal does not rewrite resilience achievability.
+Local command events identify the affected entity from both the command and its result. A create event must be retrievable in the new entity's scoped timeline, not only in the workspace timeline. `ListEvents` can filter on typed entity subjects, including the parent scope needed for a child ID. A deleted entity's historical event remains meaningful because the subject identity is retained.
+
+`PutHealthObservation` accepts a monitoring observation with its own source, measured time and expiry. Only strictly newer evidence can replace the current health observation; equal-time and older observations remain historical. Timestamps are validated at the declared millisecond precision before comparison and serialization. This avoids an earlier defect in which truncation to milliseconds allowed two sub-millisecond observations to reverse the display. Expired evidence becomes unknown according to the local rule, while its last raw state remains inspectable. A health signal does not rewrite resilience achievability.
 
 `CaptureTopologySnapshot` freezes a copy of the available mock graph. It records the local capture time while retaining the source observation time and partial coverage. Capturing an old graph cannot turn it into fresh provider evidence. A production collector must reconcile `ListResources` and `ListServiceTopologyEdges` and document missing or unresolved endpoints.
 
 The [event workflow](workflows.md) describes the production refresh sequence. AWS documents native EventBridge notifications as best effort, so periodic reconciliation is needed even when a stream appears quiet. See [EventBridge notifications](https://docs.aws.amazon.com/resilience-hub/latest/userguide/next-gen-eventbridge-notifications.html). The demo's event store, health projection and aggregate rule are application-owned.
 
+## Attention and assessment coverage
+
+`GetWorkspaceSummary` and `GetServiceStatus` use the same model selectors as the browser. Attention is a distinct-service union of named reasons across runtime health, assessed posture, assessment execution, open findings, resource/dependency discovery and evidence gaps. Multiple reasons do not increase the service denominator. `attentionReasons` explains why a service was included, and `membershipContext` records the selected service set and scope. The rule version is part of the result.
+
+Current assessment coverage and retained assessment history are separate measures. Current coverage requires a retained successful assessment, usable posture, captured policy context, results for the components expected by those captured targets, freshness within the local 24-hour review cadence and adequate discovery evidence. A valid availability-only policy does not require three unconfigured components. A missing captured context or an unknown result for an expected component is partial evidence. Failed newer work does not erase a prior successful observation, while staleness or relevant configuration changes can disqualify it from current coverage.
+
+The initial mock has six of eight services with current coverage (75%) and seven with retained evidence (88%, rounded). At 48 hours without refreshed evidence, current coverage is zero while retained evidence remains seven. Empty service scope has no percentage denominator and returns null. These are transparent product rules, not an AWS compliance score. `findingCoverage` and the summary's incomplete-finding count also prevent a zero observed-open count from being interpreted as a proven absence of findings.
+
 ## Versioning and implementation scope
 
 The namespace makes the initial API revision explicit. Adding optional response properties can be compatible for tolerant clients. Renaming a field, changing identity scope, redefining status meaning or making a formerly optional request member mandatory requires a new contract revision. Input validation is intentionally strict, so new writable members also need a coordinated client/server release.
+
+This review corrects the same unreleased prototype namespace. Some corrections are deliberately not backward-compatible with assumptions in the first draft: provider dates can be null, absent discovery remains unknown, timestamp precision is bounded, and assessment coverage now means current usable evidence. A deployed client would need a coordinated contract revision and migration; retaining this experimental namespace does not establish backward compatibility.
 
 The machine-readable [contract](contract.cjs), [runtime](runtime.cjs) and [HTTP server](server.cjs) are executable source code. Their corresponding Markdown notes are generated by [generate_api_docs.cjs](../scripts/generate_api_docs.cjs). Run the generator's check mode after contract changes to detect documentation drift. The [validation record](../validation.md) distinguishes executable mock tests from the production integration work that remains.

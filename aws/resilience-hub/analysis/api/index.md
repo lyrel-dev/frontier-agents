@@ -21,6 +21,7 @@ related:
   - "errors.md"
   - "workflows.md"
   - "../report.md"
+  - "../quality-review.md"
   - "../validation.md"
 ---
 
@@ -43,6 +44,7 @@ An executable mock API for the reviewed AWS Resilience Hub operator model. **44 
 | [Errors](errors.md) | Typed errors, status codes and client recovery behavior. |
 | [Workflows](workflows.md) | UI tasks, command lifecycle, event reconciliation and sequence diagrams. |
 | [Reviewed model](../report.md) | Source-backed analysis and the five ER diagram notes. |
+| [Adversarial review](../quality-review.md) | Reproduced semantic failures, corrective changes and remaining delivery gaps. |
 | [Validation](../validation.md) | Checks completed and explicit integration boundaries. |
 
 ## Run locally
@@ -63,7 +65,7 @@ curl --silent --show-error http://127.0.0.1:8787/ \
   --data '{"maxResults":20}'
 ```
 
-Successful responses use HTTP 200 and operation-specific JSON. See [protocol](protocol.md) for the full envelope and [errors](errors.md) for non-2xx responses. Timestamps on the wire are numeric epoch seconds. The fixture clock starts at 2026-11-05T10:24:00Z and advances with elapsed process time; generated examples and tests inject a fixed clock.
+Successful responses use HTTP 200 and operation-specific JSON. See [protocol](protocol.md) for the full envelope and [errors](errors.md) for non-2xx responses. Timestamps on the wire are numeric epoch seconds with at most millisecond precision; sub-millisecond inputs are rejected before ordering or storage. The fixture clock starts at 2026-11-05T10:24:00Z and advances with elapsed process time; generated examples and tests inject a fixed clock.
 
 The included [Node client](client.cjs) handles the RPC headers and exposes the server request ID. With the server running:
 
@@ -176,14 +178,14 @@ The provenance column refers to the facade implementation. Native-backed operati
 
 | Operation | Mode | Provenance | Purpose |
 | --- | --- | --- | --- |
-| [ListEvents](operations/ListEvents.md) | Read | `COMPOSED_READ` | Lists retained event envelopes across distinct source channels with stable pagination. |
+| [ListEvents](operations/ListEvents.md) | Read | `COMPOSED_READ` | Lists retained event envelopes and typed subjects across distinct source channels with stable pagination. |
 
 ### Ingestion
 
 | Operation | Mode | Provenance | Purpose |
 | --- | --- | --- | --- |
 | [PutHealthObservation](operations/PutHealthObservation.md) | Mutation | `INGEST` | Ingests a source-keyed health observation; late observations stay historical and expiry makes current health unknown. |
-| [IngestEvent](operations/IngestEvent.md) | Mutation | `INGEST` | Records a source event and refresh intent; untrusted payload content cannot replace service state. |
+| [IngestEvent](operations/IngestEvent.md) | Mutation | `INGEST` | Retains the raw event, typed subjects and correlation IDs as evidence and requests a refresh; no event body patches authoritative state. |
 
 ## Maintain the contract and notes
 

@@ -21,6 +21,33 @@
   function after(minutes) { return new Date(Date.parse(NOW) + minutes * 60000).toISOString(); }
   function copy(value) { return JSON.parse(JSON.stringify(value)); }
 
+  // Independent assessment responses for the unchanged fictional architecture.
+  // These outcomes do not read mutable finding dispositions or operator comments.
+  // A simulator completion is new mock evidence, never proof that a triage edit
+  // repaired a resource. Notifications deliberately has incomplete evidence.
+  var ASSESSMENT_OUTCOMES = {
+    edge: ['ACHIEVABLE', 'ACHIEVABLE', 'ACHIEVABLE', 'ACHIEVABLE'],
+    catalog: ['ACHIEVABLE', 'ACHIEVABLE', 'NOT_ACHIEVABLE', 'ACHIEVABLE'],
+    checkout: ['NOT_ACHIEVABLE', 'NOT_ACHIEVABLE', 'ACHIEVABLE', 'ACHIEVABLE'],
+    payments: ['ACHIEVABLE', 'NOT_ACHIEVABLE', 'ACHIEVABLE', 'NOT_ACHIEVABLE'],
+    orders: ['ACHIEVABLE', 'ACHIEVABLE', 'ACHIEVABLE', 'ACHIEVABLE'],
+    identity: ['ACHIEVABLE', 'ACHIEVABLE', 'ACHIEVABLE', 'ACHIEVABLE'],
+    notifications: [null, null, null, null],
+    fulfillment: ['ACHIEVABLE', 'ACHIEVABLE', 'ACHIEVABLE', 'ACHIEVABLE']
+  };
+  function assessmentResponse(serviceId) {
+    if (!Object.prototype.hasOwnProperty.call(ASSESSMENT_OUTCOMES, serviceId)) return null;
+    var values = ASSESSMENT_OUTCOMES[serviceId];
+    return {
+      fixtureId: 'northstar-' + serviceId + '-assessment-response-v1',
+      configurationScenario: 'UNCHANGED_NORTHSTAR_ARCHITECTURE',
+      provenance: 'INDEPENDENT_MOCK_ASSESSMENT_RESPONSE',
+      components: { availabilitySlo: values[0], multiAz: values[1], multiRegion: values[2], dataRecovery: values[3] },
+      collectionStatus: serviceId === 'notifications' ? 'PARTIAL' : 'COMPLETE',
+      message: serviceId === 'notifications' ? 'The mock assessment completed without usable component outcomes.' : 'Explicit mock outcomes for unchanged architecture; finding disposition is not an evaluation input.'
+    };
+  }
+
   var scenarios = [
     { id: 'payment-latency', name: 'Payment latency rises', description: 'A fresh monitoring signal degrades Payments health; resilience posture is unchanged.', icon: 'activity' },
     { id: 'assessment-failed', name: 'Assessment fails', description: 'Payments receives an assessment failure. Its last successful posture remains visible.', icon: 'alert' },
@@ -252,7 +279,7 @@
     ];
     events.forEach(function (event) { event.eventKey = event.channel + '|' + event.streamOwner + '|' + event.sourceEventId; event.source = event.channel === 'EVENTBRIDGE' ? 'aws.resiliencehub' : event.channel === 'TELEMETRY' ? 'northstar.mock.monitoring' : 'resiliencehubv2 entity timeline'; event.mock = true; });
     return {
-      schemaVersion: 1, now: NOW, organization: { name: 'Northstar Commerce', description: 'European digital commerce and fulfillment', environment: 'Production', mock: true },
+      schemaVersion: 2, now: NOW, organization: { name: 'Northstar Commerce', description: 'European digital commerce and fulfillment', environment: 'Production', mock: true },
       systems: systems, journeys: journeys, services: services, policies: policies, assessments: assessments, findings: findings,
       findingCaptures: findingCaptures, findingObservations: findingObservations, recommendations: findings.reduce(function (all, finding) { return all.concat(copy(finding.recommendations)); }, []), observations: observations, effectiveTargetObservations: effectiveTargetObservations, policyContexts: policyContexts,
       dependencies: dependencies, topologies: topologies, events: events,
@@ -260,5 +287,5 @@
       sequence: 2000, scenarioHistory: [], notes: { fixture: 'Fictional data; no AWS connection', topology: 'Representative subgraphs, not complete production resource inventories', estimates: 'All recommendation estimates are local Northstar examples' }
     };
   }
-  return { createState: createState, scenarios: scenarios, initialTime: NOW };
+  return { createState: createState, scenarios: scenarios, initialTime: NOW, assessmentResponse: assessmentResponse };
 });

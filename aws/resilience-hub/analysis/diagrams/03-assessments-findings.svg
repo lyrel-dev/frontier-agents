@@ -1,8 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1320 970" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1320 1380" role="img" aria-labelledby="title desc">
 <title id="title">Assessments, finding captures and recommendations</title>
 <desc id="desc">Entity relationship diagram. Navy entities are AWS-backed; teal entities are local records. Cardinalities are printed on relationship lines. See the accompanying Mermaid source and report for constraints.</desc>
 <style>text{font-family:Inter,Arial,sans-serif}.entity{font-size:17px;font-weight:700}.field{font-size:16px}.meta{font-size:13px}.link{font-size:14px}.note{font-size:16px}</style>
-<rect width="1320" height="970" rx="18" fill="#f8fbfd"/>
+<rect width="1320" height="1380" rx="18" fill="#f8fbfd"/>
 <text font-family="sans-serif" x="32" y="42" fill="#16304a" font-size="25" font-weight="700">Assessments, finding captures and recommendations</text>
 <text font-family="sans-serif" x="32" y="69" fill="#53677c" font-size="16">Findings are service-scoped. Captures preserve observation history without inventing run ownership.</text>
 <polyline points="395,195 480,195" fill="none" stroke="#6e8397" stroke-width="1.8"/>
@@ -33,6 +33,10 @@
 <text font-family="sans-serif" x="858" y="611" text-anchor="middle" class="link" font-size="14" fill="#53677c">1</text>
 <text font-family="sans-serif" x="903" y="611" text-anchor="middle" class="link" font-size="14" fill="#53677c">0..*</text>
 <text font-family="sans-serif" x="882" y="651" text-anchor="middle" class="link" font-size="14" fill="#53677c">owns</text>
+<polyline points="1105,775 1105,900" fill="none" stroke="#6e8397" stroke-width="1.8"/>
+<text font-family="sans-serif" x="1086" y="797" text-anchor="middle" class="link" font-size="14" fill="#53677c">1</text>
+<text font-family="sans-serif" x="1078" y="881" text-anchor="middle" class="link" font-size="14" fill="#53677c">0..1</text>
+<text font-family="sans-serif" x="1180" y="844" text-anchor="middle" class="link" font-size="14" fill="#53677c">local enrichment</text>
 <rect x="35" y="125" width="360" height="225" rx="9" fill="white" stroke="#cbd8e3"/>
 <path d="M44,125 H386 Q395,125 395,134 V168 H35 V134 Q35,125 44,125 Z" fill="#183750"/>
 <text font-family="sans-serif" x="50" y="153" fill="white" class="entity" font-size="17" font-weight="700">SERVICE</text>
@@ -59,7 +63,7 @@
 <text font-family="sans-serif" x="50" y="563" fill="#16304a" class="field" font-size="16">captureId  [PK]</text>
 <text font-family="sans-serif" x="50" y="585" fill="#16304a" class="field" font-size="16">serviceArn  [FK]</text>
 <text font-family="sans-serif" x="50" y="607" fill="#16304a" class="field" font-size="16">captureStartedAt</text>
-<text font-family="sans-serif" x="50" y="629" fill="#16304a" class="field" font-size="16">captureCompletedAt</text>
+<text font-family="sans-serif" x="50" y="629" fill="#16304a" class="field" font-size="16">captureEndedAt</text>
 <text font-family="sans-serif" x="50" y="651" fill="#16304a" class="field" font-size="16">listCoverage</text>
 <text font-family="sans-serif" x="50" y="673" fill="#16304a" class="field" font-size="16">detailCoverage</text>
 <text font-family="sans-serif" x="50" y="695" fill="#16304a" class="field" font-size="16">relatedAssessmentId  [FK]</text>
@@ -87,9 +91,20 @@
 <text font-family="sans-serif" x="940" y="663" fill="#53677c" class="meta" font-size="13">Source recommendation array</text>
 <text font-family="sans-serif" x="940" y="683" fill="#16304a" class="field" font-size="16">sourceArrayOrdinal</text>
 <text font-family="sans-serif" x="940" y="705" fill="#16304a" class="field" font-size="16">suggestedChanges</text>
-<rect x="32" y="841" width="13" height="13" rx="3" fill="#183750"/><text font-family="sans-serif" x="54" y="853" fill="#53677c" class="link" font-size="14">AWS-backed identity or value</text>
-<rect x="335" y="841" width="13" height="13" rx="3" fill="#087f83"/><text font-family="sans-serif" x="357" y="853" fill="#53677c" class="link" font-size="14">Local normalization or evidence</text>
-<text font-family="sans-serif" x="32" y="885" fill="#53677c" class="note" font-size="16">Observation uniqueness: (captureId, serviceArn, findingId, representation). Recommendations require DETAIL.</text>
-<text font-family="sans-serif" x="32" y="909" fill="#53677c" class="note" font-size="16">relatedAssessmentId joins with the capture serviceArn. It records correlation, not an authoritative result set.</text>
-<text font-family="sans-serif" x="32" y="933" fill="#53677c" class="note" font-size="16">List coverage and detail hydration coverage are independent. Missing recommendation data is not an empty set.</text>
+<rect x="890" y="900" width="395" height="270" rx="9" fill="white" stroke="#cbd8e3"/>
+<path d="M899,900 H1276 Q1285,900 1285,909 V943 H890 V909 Q890,900 899,900 Z" fill="#087f83"/>
+<text font-family="sans-serif" x="905" y="928" fill="white" class="entity" font-size="17" font-weight="700">RECOMMENDATION_ENRICHMENT</text>
+<text font-family="sans-serif" x="905" y="968" fill="#16304a" class="field" font-size="16">recommendationId  [PK, FK]</text>
+<text font-family="sans-serif" x="905" y="990" fill="#16304a" class="field" font-size="16">version</text>
+<text font-family="sans-serif" x="905" y="1012" fill="#16304a" class="field" font-size="16">title</text>
+<text font-family="sans-serif" x="905" y="1034" fill="#16304a" class="field" font-size="16">estimate</text>
+<text font-family="sans-serif" x="905" y="1054" fill="#53677c" class="meta" font-size="13">Local cost and complexity provenance</text>
+<text font-family="sans-serif" x="905" y="1074" fill="#16304a" class="field" font-size="16">updatedAt</text>
+<text font-family="sans-serif" x="905" y="1094" fill="#53677c" class="meta" font-size="13">Local enrichment timestamp</text>
+<rect x="32" y="1233" width="13" height="13" rx="3" fill="#183750"/><text font-family="sans-serif" x="54" y="1245" fill="#53677c" class="link" font-size="14">AWS-backed identity or value</text>
+<rect x="335" y="1233" width="13" height="13" rx="3" fill="#087f83"/><text font-family="sans-serif" x="357" y="1245" fill="#53677c" class="link" font-size="14">Local normalization or evidence</text>
+<text font-family="sans-serif" x="32" y="1277" fill="#53677c" class="note" font-size="16">Observation uniqueness: (captureId, serviceArn, findingId, representation). Recommendations require DETAIL.</text>
+<text font-family="sans-serif" x="32" y="1301" fill="#53677c" class="note" font-size="16">relatedAssessmentId joins with the capture serviceArn. It records correlation, not an authoritative result set.</text>
+<text font-family="sans-serif" x="32" y="1325" fill="#53677c" class="note" font-size="16">List coverage and detail hydration coverage are independent. Missing recommendation data is not an empty set.</text>
+<text font-family="sans-serif" x="32" y="1349" fill="#53677c" class="note" font-size="16">Enrichment has its own version and provenance; it cannot mutate source recommendation evidence.</text>
 </svg>

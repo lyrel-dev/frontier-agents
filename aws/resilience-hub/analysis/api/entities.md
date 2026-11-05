@@ -18,6 +18,7 @@ related:
   - "shapes.md"
   - "aws-mapping.md"
   - "../report.md"
+  - "../quality-review.md"
   - "../diagrams/01-business-structure.md"
   - "../diagrams/03-assessments-findings.md"
 ---
@@ -33,11 +34,11 @@ The ten requested entity concepts remain the conceptual model. The API uses reso
 | `SystemEntity` | `systemArn`; contains journeys and is associated with services | Create/Get/List/Update/DeleteSystem | Native-backed structure; local version and display label supplement provider fields. |
 | `UserJourneyEntity` | `(systemArn, userJourneyId)`; optional policy; service membership is derived from service associations | Create/Get/List/Update/DeleteUserJourney | Native-backed journey. A projected service list is not a second writable membership authority. |
 | `ServiceEntity` | `serviceArn`; many-to-many system/journey associations; input sources, assessments, findings and dependencies are service-scoped | Create/Get/List/Update/DeleteService; GetServiceStatus | Native-backed configuration plus a separate application status projection. |
-| `ResiliencePolicyEntity` | `policyArn`; reusable direct service or journey assignments | Create/Get/List/Update/DeletePolicy | Availability SLO, data recovery, Multi-AZ and Multi-Region components. Latency/performance is monitoring evidence or a future local objective, not an invented native policy component. |
+| `ResiliencePolicyEntity` | `policyArn`; reusable direct service or journey assignments | Create/Get/List/Update/DeletePolicy | Optional availability SLO, data recovery, Multi-AZ and Multi-Region components. Captured effective targets determine the components expected in a coverage check. Latency/performance is monitoring evidence or a future local objective, not an invented native policy component. |
 | `AssessmentEntity` | `(serviceArn, assessmentId)` | Start/Get/ListFailureModeAssessment(s) | Start and list are native-backed. Get is a composed lookup. Completion is separate from the resulting posture. |
 | `FindingEntity` | `(serviceArn, findingId)`; observations record current summary/detail evidence | Get/List/UpdateFailureModeFinding(s) | A finding is service-scoped. Its disposition is mutable; provider severity and suggested changes are observed evidence. No mandatory assessment foreign key is introduced. |
 | `RecommendationEntity` | Local `recommendationId` anchored to a finding detail observation and recommendation group/ordinal | GetRecommendation; ListRecommendations; UpdateRecommendationEnrichment | Native suggested-change content is normalized into an immutable observation-scoped record. Title, estimate, complexity and local workflow are enrichment. |
-| `DependencyDiscoveryConfig` | Embedded in a service response; no standalone resource ID | GetService; ListServices; UpdateService | The write request is `dependencyDiscovery: ENABLED or DISABLED`. Returned status, eligible count, message and update time are observations. |
+| `DependencyDiscoveryConfig` | Embedded service observation; no standalone resource ID | GetService; ListServices; UpdateService | The write request is `dependencyDiscovery: ENABLED or DISABLED`. Returned status, eligible count, message and update time are observations. Missing native configuration normalizes to `UNKNOWN` with presence diagnostics, not disabled. |
 | `DependencyEntity` | `(serviceArn, dependencyId)` | GetDependency; ListDependencies; UpdateDependency; UpdateDependencyGovernance | Native classification updates and local allow/deny governance have distinct operations and provenance. |
 | `TopologyEntity` | Local `topologyId`; service scope; nodes and edges belong to one capture | Capture/Get/ListTopologySnapshot(s) | Product capture of resource and edge observations. Resource count and collector coverage describe that capture, not guaranteed complete AWS visibility. |
 
@@ -51,9 +52,13 @@ The implemented `SystemEntity` DTO covers ARN-addressable systems in the complet
 | --- | --- | --- |
 | Input source | Specifies how a service's resources are discovered; scoped to one service | CreateInputSource, ListInputSources, DeleteInputSource |
 | Health observation | Immutable measured evidence with source, observation time and expiry | PutHealthObservation; projected through GetServiceStatus |
-| Event envelope | Keeps delivery identity, source time, receipt time and linkage; does not replace an authoritative entity read | IngestEvent, ListEvents |
-| Service status projection | Presents assessment execution, architecture posture, runtime health, discovery coverage and attention separately | GetServiceStatus |
-| Workspace summary | Deduplicated counts for a selected system/journey service set, with evidence and rule context | GetWorkspaceSummary |
+| Effective-target observation and policy-context capture | Makes targets and assignment context inspectable without combining observations from different captures | GetService/ListServices `effectivePolicyEvidence` for current service context; GetServiceStatus for retained posture context |
+| Finding capture and observation | Exposes list/detail coverage, representation and presence of recommendation fields | Get/ListFailureModeFinding(s), inline capture and observation |
+| Recommendation enrichment | Independently versioned local estimates and workflow attached to observation-scoped recommendation evidence | Get/ListRecommendations, UpdateRecommendationEnrichment |
+| Dependency governance | Independently versioned local allow/deny/review decision in a service/dependency scope | Get/ListDependencies, UpdateDependencyGovernance |
+| Event envelope and subjects | Keeps delivery identity, bounded raw content, source/receipt times, correlation IDs and typed scoped subjects | IngestEvent, ListEvents |
+| Service status projection | Separate assessment execution, posture, runtime health, discovery, finding coverage, current assessment coverage and explicit attention reasons | GetServiceStatus, including selected health/posture observations |
+| Workspace summary | Deduplicated counts with current versus retained evidence, membership context and rule version | GetWorkspaceSummary |
 | Local revision and tombstone | Supports concurrent-edit detection and history retention in the mock store | Mutation responses and runtime history |
 
 ## Relationship invariants
@@ -64,6 +69,9 @@ The implemented `SystemEntity` DTO covers ARN-addressable systems in the complet
 4. An assessment ID on a local capture is a labelled correlation. Current findings can change independently of a run. Assessment cost is the cost of execution; recommendation cost is a local estimate of a proposed change.
 5. A topology edge cannot cross snapshot identities. An unresolved node remains an explicit stub. Repeated captures preserve the observation times of copied data.
 6. Event receipt order does not define the order of evidence. Older health observations remain in history and cannot roll the current projection backward.
+7. Coverage compares posture with the policy context captured for that evidence. Mutating the current policy does not rewrite a historical target bundle. Unknown applicability cannot become complete coverage.
+8. Finding disposition is an operator decision. It cannot synthesize achievable posture, remove immutable finding evidence or confirm its own remediation merely because another assessment was started or completed.
+9. Every current capture reference exposed by the facade has inspectable inline evidence or an explicit null/coverage gap. The broader target model's arbitrary historical policy and capture reads are outside this mock's implemented API.
 
 These are implementation and modeling decisions. Their native evidence is documented in the [reviewed report](../report.md); the local behavior is exercised by the RPC and domain tests listed in the [validation record](../validation.md).
 
@@ -73,8 +81,15 @@ The facade separates concerns by explicit DTO shape and operation provenance. In
 
 - Provider `name` remains the provider identifier for systems, services and policies. `displayName` is the user-facing product label. A display-label edit must not be translated into an unsupported AWS resource rename.
 - The permission structure uses `crossAccountRoles[].crossAccountRoleArn`. Authorization to use a role is not established merely by receiving its ARN in a request.
+- Permission observations and permission write requests use separate shapes. A provider-reported null role ARN can be represented in a read without making null a valid create/update credential.
 - Native achievability uses `availabilitySlo`, `dataRecoveryTimeBetweenBackups`, `multiAzRtoRpo` and `multiRegionRtoRpo`. The existing browser model's shorter component keys are presentation normalization; the RPC DTO maps them deliberately.
 - Discovery status and discovery eligibility describe the evidence pipeline. Runtime health comes from monitoring. Policy achievability comes from an assessment-derived provider observation. The three dimensions can disagree without the data being invalid.
-- A local version, current UI edit time or observed policy hash is not an AWS evaluated policy revision. Provenance and source observation times survive normalization.
+- Native `rerunAssessment` is preserved as a nullable provider signal. Local `refreshRequired`, `policyContextRefreshRequired` and `reassessmentRequired` describe different product obligations and do not replace it.
+- A local version, current UI edit time or observed policy hash is not an AWS evaluated policy revision. Service configuration `version` is independent of `projectionVersion`; `localUpdatedAt` is independent of nullable provider `updatedAt`. Missing provider times are never synthesized from observation time.
+- Unknown provider enum values are retained through normalization diagnostics. Writable enum values remain strict. Omitted recommendation arrays, explicit null arrays, known empty arrays and known zero measurements retain different meanings.
 
 The [shared schemas](shapes.md) specify which fields are required, nullable or optional. Operation inputs are intentionally narrower than output entities, making writable ownership reviewable before a command is submitted.
+
+## Model coverage and unresolved delivery scope
+
+The diagrams describe the logical target model, not a claim that every historical entity has a public query operation. This version implements inspectable current evidence, scoped recommendation history, captured topology, independent local enrichment/governance and explainable status/coverage. A production native collector, complete policy-content history, ARN-less partial system references, asynchronous RPC assessment completion and browser-to-HTTP wiring remain partial or deferred. The report's implementation coverage matrix and [adversarial review](../quality-review.md) give the precise boundary. Those limits must remain visible when this package is used as an implementation specification.

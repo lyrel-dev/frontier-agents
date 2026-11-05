@@ -19,6 +19,7 @@ related:
   - "index.md"
   - "../report.md"
   - "../review.md"
+  - "../quality-review.md"
   - "../diagrams/01-business-structure.md"
   - "../diagrams/03-assessments-findings.md"
   - "../diagrams/04-dependencies-topology.md"
@@ -27,7 +28,7 @@ related:
 
 # AWS Resilience Hub — Native API and workspace RPC mapping
 
-**Reviewed on 5 November 2026.** This note maps the proposed operator-facing API to the current next-generation AWS Resilience Hub contracts. It describes integration boundaries and documented provider behavior. It does not certify an AWS connection or production implementation. Read it with the [API index](index.md), [data model](../report.md) and [review decisions](../review.md).
+**Reviewed on 5 November 2026.** This note maps the operator-facing mock API to the current next-generation AWS Resilience Hub contracts. The follow-up review corrected ARN acceptance, read/write optionality, provider reassessment signals, event naming and several input constraints. It describes documented provider behavior and explicit application choices; it does not certify an AWS connection. Read it with the [API index](index.md), [implementation traceability](../report.md#1-implementation-traceability), [review decisions](../review.md) and [quality findings](../quality-review.md).
 
 ## 1. Protocol and ownership
 
@@ -125,6 +126,8 @@ System, service and policy `name` is a provider resource name used in an ARN. Se
 
 Journey `name` is an entity label, permits spaces and has pattern `[A-Za-z0-9][A-Za-z0-9 _\-]{1,59}`. `UpdateUserJourney` supports renaming. `UpdateSystem`, `UpdateService` and `UpdatePolicy` do not expose `name`; local display-name editing must not be represented as a provider rename. [P08] [P09] [P06] [P13] [P18]
 
+Create-name constraints do not define the grammar of an existing ARN's resource suffix. The official event example uses `arn:aws:resiliencehub:us-east-1:111122223333:service/my-service:abc123`, and the GetService ARN pattern accepts that colon. Preserve full opaque provider identifiers, including supported path and punctuation characters; a UUID-only or name-only suffix validator rejects valid native identifiers. [P02] [P37]
+
 ### Membership and parent scope
 
 A native service can contain multiple `associatedSystems` entries, each with `systemArn`, optional `systemName` and `userJourneyIds`. Journey service lists should be derived from these associations. A user-journey create/update result omits its parent `systemArn`; preserve the validated request scope rather than inventing an unscoped global journey key. `GetSystem` requires the ARN even though the returned entity also has a `systemId`. [P01] [P04] [P08] [P09]
@@ -133,14 +136,31 @@ A native service can contain multiple `associatedSystems` entries, each with `sy
 
 `resourceConfiguration` accepts exactly one of `resourceTags`, `cfnStackArn`, `tfStateFileUrl`, `eks` and `designFileS3Url`. EKS requires `clusterArn` and `namespaces`; `labelSelector` is optional. A native `type` discriminator is not a create-input member. `MONITORING` appears in the read/filter enum but has no corresponding create union member. No native update operation was found; changing source configuration therefore needs an explicit replacement workflow or a clearly local command. [P21] [P22] [P33] [P00]
 
+### Reviewed input bounds
+
+The current AWS CLI documents these limits for the nested input shapes. They are provider constraints, rather than arbitrary UI limits; the local schemas and boundary checks should match them for supported inputs. [P35] [P36]
+
+| Input | Provider constraint | Modeling implication |
+| --- | --- | --- |
+| `resourceTags` | 1–10 tag selectors; each selector permits 0–10 values | An empty `values` list is valid input and must not be rejected by a minimum-one rule. |
+| Resource tag key/value | Key length 1–128; value length 0–256; neither permits control characters U+0000–U+001F or a double quote | Preserve empty tag values distinctly from an absent values list. |
+| EKS namespaces | 1–10 namespaces; each 1–63 lowercase letters, digits or hyphens, beginning and ending in a letter/digit | A generic unrestricted string array misses the actual native boundary. |
+| Kubernetes label selectors | At most 20 `matchLabels` keys and 20 `matchExpressions`; expression values at most 20 | Label keys, including expression keys, use the native key pattern and length 1–317. Values use the native label-value pattern and length 0–63. |
+| Report outputs | Exactly one output in `reportConfiguration.reportOutputs` | The current shape does not allow a list of arbitrary destinations. |
+| S3 report destination | `bucketPath` length 3–512, optional `s3://` prefix, native bucket-name/path pattern; `bucketOwner` is 12 digits | Treat this as the report destination's shape; do not reuse a different input-source URL schema. |
+
+The exact patterns are in the linked primary references and the executable [contract](contract.cjs). Native union evolution also affects reads: the SDK documents `SDK_UNKNOWN_MEMBER` for an unrecognized returned union member. A live adapter must preserve that name/raw payload for diagnosis. The mock implements a bounded set of source configurations; it is not a complete future-version union adapter. [P34] [P35]
+
 ## 4. Exact field corrections and enrichment boundaries
 
 | Concern | Verified provider contract | Adapter or product decision |
 | --- | --- | --- |
-| Permission model | `invokerRoleName` is required when a permission model is supplied. Each cross-account role uses **`crossAccountRoleArn`**, with optional `externalId`. The same key appears in requests and responses. | Do not forward the earlier fixture key `arn`. [P01] [P02] [P13] |
+| Permission model | Write configuration requires `invokerRoleName`; role entries use **`crossAccountRoleArn`** and optional `externalId`. The SDK read documentation allows a null role ARN for the Admin profile. Service reads may omit permission metadata. | Separate strict command inputs from nullable observation shapes. Never invent an invoker role or substitute the earlier fixture key `arn`. [P01] [P02] [P13] [P34] |
 | Achievability | `availabilitySlo`, `multiAzRtoRpo`, `multiRegionRtoRpo`, `dataRecoveryTimeBetweenBackups`. | A UI component key such as `multiAz` needs an explicit mapping; it is not the native achievability field. [P02] [P25] |
 | Resource discovery | `status`, `lastRunAt`, `errorCode`, **`errorMessage`**. | Do not send or imply a native `error` field. [P02] |
 | Dependency discovery | Read object contains `status`, `eligibleResourceCount`, `message`, `updatedAt`; service writes accept the configuration string `ENABLED` or `DISABLED`. | `INITIALIZING` is provider-managed; returned counters/timestamps are not write inputs. [P01] [P02] [P13] |
+| Reassessment signal | Service detail exposes optional boolean `rerunAssessment`, meaning the assessment should be rerun. | Preserve the nullable provider signal separately from local `refreshRequired`, `policyContextRefreshRequired` and `reassessmentRequired`. A local refresh does not manufacture a provider decision. [P02] [P34] |
+| Effective policy targets | `effectivePolicyValues` contains up to eight optional target entries, each with value and optional policy-name/ownership provenance. | `effectivePolicyEvidence` is the facade's inline target/context observation. `SELF`/`CROSS_ACCOUNT` describes ownership; it cannot establish direct/inherited assignment or resolve a policy ARN by name alone. [P02] [P34] |
 | Native policy components | Top-level `availabilitySlo`, `multiAz`, `multiRegion`, `dataRecovery`; no `components` wrapper. | A `components` wrapper in the abstract model must be unpacked by the adapter. Performance/latency/error objectives are local extensions. [P15] [P18] |
 | Recommendations | Finding detail contains three recommendation groups with `suggestedChanges`. | Stable recommendation IDs, names, descriptions, cost and complexity are local normalization/enrichment. [P26] |
 | Dependency write | `serviceArn`, `dependencyId`, optional `criticality` and `comment`; response is a flat dependency record. | A `{dependency: ...}` response wrapper and allowed-status governance are facade-owned. [P29] |
@@ -153,6 +173,8 @@ The four policy components are optional in the create shape; `name` is the only 
 The executable facade uses the provider's objective and configuration field names while applying a bounded local input surface. Its Terraform and design-file source URLs currently accept only `s3://` URIs; AWS also documents virtual-hosted S3 URLs. Recovery-minute fields have a local upper bound of 5,256,000, and finding/dependency comments have a local 2,048-character cap. These are mock-contract limits, not claims about AWS limits. The native-compatible create/update description limits are 500 characters for systems/journeys and 615 for services/policies; the facade's `clientToken` is limited to 63 characters. [P01] [P06] [P08] [P15] [P33]
 
 Native achievability values in the reviewed shape are `ACHIEVABLE` and `NOT_ACHIEVABLE`. The facade also permits explicit `null` or local `UNKNOWN` to preserve missing observations; those values do not invent a third provider assessment result. An unresolved topology endpoint may similarly have `null` Region or account metadata. Keep those gaps visible rather than inferring a known provider location. See the generated [shape reference](shapes.md) for exact local requiredness and nullability. [P02] [P25] [P31]
+
+Missing discovery data is unknown, not `DISABLED`; a missing eligible count is not zero. Likewise, absent `createdAt`/`updatedAt` cannot be filled with collection time or another provider timestamp. The facade retains nullable source timestamps and separate `observedAt`/`localUpdatedAt` metadata. Unknown observed enums require retained raw values and normalization diagnostics; command inputs remain restricted to supported write values. These are read-tolerance requirements, not permission to send unsupported values back to AWS.
 
 ### Documentation discrepancy: policy sharing
 
@@ -172,6 +194,8 @@ The direct `UpdatePolicy` API-reference page retrieved for this review omits `sh
 
 A missing detail field on a list response is not evidence that the field was deleted. Hydrate deliberately and record partial coverage. Do not overwrite a known detail with absence from a summary. A local `items` list envelope is acceptable only as a documented normalization of these provider result members.
 
+The facade returns evidence needed to interpret its normalized view: service/status reads include captured effective policy context; status reads include selected health/posture observations and finding collection coverage; finding reads include their capture/observation and recommendation field presence. These are local envelopes around source evidence. An exact finding count requires a completed collection for the stated scope; incomplete results carry observed counts with qualified meaning rather than an exact zero. Inline evidence resolves the IDs used by the projection, but it does not implement the broader live collection and history service described in the model.
+
 ## 6. Mutation and consistency rules owned by the facade
 
 ### Null, omission and arrays
@@ -188,7 +212,7 @@ The delete request/response schemas above do not specify all cascade or referent
 
 The reviewed create operations and assessment-start operation expose `clientToken`; the SDK documents automatic token population when omitted. Their operation pages do not specify a retention interval, exact scope or payload-mismatch guarantee. A durable facade should define those guarantees independently, bind a token to caller/operation/target and canonical request, and retain the result needed for safe replay. A local mock's in-memory replay behavior must not be presented as AWS's retention contract. [P03] [P21] [P24] [P33]
 
-The reviewed update/delete schemas do not expose a generic expected-revision condition. Any `expectedRevision`, local entity revision or conflict check is facade-owned and cannot by itself prevent an out-of-band AWS edit. A production adapter needs read/reconcile behavior and must describe the remaining race. Native tokens must also not be invented for operations that lack a `clientToken` member. [P06] [P09] [P13] [P18]
+The reviewed update/delete schemas do not expose a generic expected-revision condition. Any `expectedVersion` or local entity conflict check is facade-owned and cannot by itself prevent an out-of-band AWS edit. The mock separates configuration `version` from evidence-driven `projectionVersion`, so a telemetry receipt does not pretend that the editable service configuration changed. A production adapter needs read/reconcile behavior and must describe the remaining race. Native tokens must also not be invented for operations that lack a `clientToken` member. [P06] [P09] [P13] [P18]
 
 ### Pagination and collection consistency
 
@@ -201,6 +225,10 @@ A facade cursor may have stronger operation/filter/revision binding and expiry r
 Native create operations document `ServiceQuotaExceededException` with **HTTP 402**. Keep it distinct from throttling and from any local rate-limit decision. `ThrottlingException` is separately present in the official client and on assessment start. The native operation references also identify validation 400, access 403, missing resource 404, conflict 409 and internal failure 500 where applicable; not every operation lists every error. If the workspace chooses a different status or envelope, document the translation rather than describing it as the native wire result. [P15] [P21] [P00] [P24]
 
 Native EventBridge notifications exist for assessment completion/failure/queueing, finding disposition and new dependency discovery. Delivery is best effort and may be delayed or missed. `IngestEvent` therefore belongs to the trusted application integration boundary; receiving an event is not proof that every affected detail has been refreshed. Reconciliation reads, event identity, ordering decisions and freshness indicators remain necessary application responsibilities. [P32]
+
+Use the exact native `detail-type`: **`Failure Mode Assessment Completed`**, with source **`aws.resiliencehub`**. Adding a `Resilience Hub` prefix changes the event type. Preserve the original envelope, account, Region, resources and detail alongside typed service/assessment/finding/dependency references. The event's `findingsCount` and `highSeverityCount` are event evidence, not an immutable finding set or the current backlog. [P37]
+
+Local mutation audit events must use the affected identity, including the newly generated ARN/ID on create, and preserve actor/request provenance independently. Event receipt can advance a projection revision or request hydration without changing the configuration version. A late event remains visible in history while newer qualified source evidence remains selected. The initial mock has no live EventBridge consumer or background hydration worker; accepted ingestion is not a promise that those integrations ran.
 
 `PutHealthObservation`, topology history, recommendation enrichment, dependency allowed status and workspace aggregates are local model features. Keep operational health, assessment execution state, resilience achievability, finding disposition, discovery progress and observation freshness separate. A successful assessment start, a resolved finding or enabled discovery does not alone establish current workload health.
 
@@ -244,6 +272,10 @@ All sources are official AWS documentation, reviewed on 2026-11-05. Operation av
 | P31 | [ListServiceTopologyEdges](https://docs.aws.amazon.com/resilience-hub/v2/APIReference/API_ListServiceTopologyEdges.html) |
 | P32 | [EventBridge notification types and delivery](https://docs.aws.amazon.com/resilience-hub/latest/userguide/next-gen-eventbridge-notifications.html) |
 | P33 | [CreateInputSource union details — official SDK](https://docs.aws.amazon.com/botocore/latest/reference/services/resiliencehubv2/client/create_input_source.html) |
+| P34 | [GetService read semantics — official SDK](https://docs.aws.amazon.com/botocore/latest/reference/services/resiliencehubv2/client/get_service.html) |
+| P35 | [CreateInputSource nested constraints — AWS CLI](https://docs.aws.amazon.com/cli/latest/reference/resiliencehubv2/create-input-source.html) |
+| P36 | [UpdateService report destination constraints — AWS CLI](https://docs.aws.amazon.com/cli/latest/reference/resiliencehubv2/update-service.html) |
+| P37 | [Assessment completed EventBridge envelope and ARN example](https://docs.aws.amazon.com/resilience-hub/latest/userguide/next-gen-eventbridge-assessment-completed.html) |
 
 [P00]: https://docs.aws.amazon.com/botocore/latest/reference/services/resiliencehubv2.html
 [P01]: https://docs.aws.amazon.com/resilience-hub/v2/APIReference/API_CreateService.html
@@ -279,6 +311,10 @@ All sources are official AWS documentation, reviewed on 2026-11-05. Operation av
 [P31]: https://docs.aws.amazon.com/resilience-hub/v2/APIReference/API_ListServiceTopologyEdges.html
 [P32]: https://docs.aws.amazon.com/resilience-hub/latest/userguide/next-gen-eventbridge-notifications.html
 [P33]: https://docs.aws.amazon.com/botocore/latest/reference/services/resiliencehubv2/client/create_input_source.html
+[P34]: https://docs.aws.amazon.com/botocore/latest/reference/services/resiliencehubv2/client/get_service.html
+[P35]: https://docs.aws.amazon.com/cli/latest/reference/resiliencehubv2/create-input-source.html
+[P36]: https://docs.aws.amazon.com/cli/latest/reference/resiliencehubv2/update-service.html
+[P37]: https://docs.aws.amazon.com/resilience-hub/latest/userguide/next-gen-eventbridge-assessment-completed.html
 
 ## Related notes
 

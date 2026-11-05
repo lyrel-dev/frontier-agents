@@ -180,7 +180,7 @@
     "subtitle": "Current provider assignments and locally captured target evidence have separate identities.",
     "size": [
       1300,
-      1190
+      1540
     ],
     "boxes": {
       "POLICY": [
@@ -218,12 +218,19 @@
         725,
         650,
         300
+      ],
+      "POLICY_CONTEXT_CAPTURE": [
+        40,
+        1080,
+        650,
+        300
       ]
     },
     "local": [
       "POLICY_COMPONENT",
       "EFFECTIVE_TARGET_OBSERVATION",
-      "EFFECTIVE_TARGET"
+      "EFFECTIVE_TARGET",
+      "POLICY_CONTEXT_CAPTURE"
     ],
     "routes": [
       {
@@ -358,13 +365,83 @@
           854
         ],
         "label": "0..8 targets"
+      },
+      {
+        "points": [
+          [
+            990,
+            605
+          ],
+          [
+            990,
+            660
+          ],
+          [
+            20,
+            660
+          ],
+          [
+            20,
+            1050
+          ],
+          [
+            215,
+            1050
+          ],
+          [
+            215,
+            1080
+          ]
+        ],
+        "a": [
+          971,
+          626
+        ],
+        "b": [
+          195,
+          1070
+        ],
+        "labelAt": [
+          545,
+          650
+        ],
+        "label": "captures context"
+      },
+      {
+        "points": [
+          [
+            1025,
+            925
+          ],
+          [
+            1025,
+            1230
+          ],
+          [
+            690,
+            1230
+          ]
+        ],
+        "a": [
+          1007,
+          948
+        ],
+        "b": [
+          712,
+          1216
+        ],
+        "labelAt": [
+          1025,
+          1055
+        ],
+        "label": "target evidence"
       }
     ],
-    "legendY": 1080,
+    "legendY": 1435,
     "notes": [
       "Inherited applicability follows journey membership; it is not encoded by ownershipSource.",
-      "policyName is a returned label. Any policy identity match must be verified and remain optional.",
-      "A captured context is not proof of the policy revision that AWS evaluated."
+      "Policy names require verified identity resolution. Context and target evidence must share a service ARN.",
+      "Captured membership and policy content are observed context, not the provider-evaluated policy revision."
     ]
   },
   "03-assessments-findings": {
@@ -372,7 +449,7 @@
     "subtitle": "Findings are service-scoped. Captures preserve observation history without inventing run ownership.",
     "size": [
       1320,
-      970
+      1380
     ],
     "boxes": {
       "SERVICE": [
@@ -410,12 +487,19 @@
         495,
         360,
         280
+      ],
+      "RECOMMENDATION_ENRICHMENT": [
+        890,
+        900,
+        395,
+        270
       ]
     },
     "local": [
       "FINDING_CAPTURE",
       "FINDING_OBSERVATION",
-      "RECOMMENDATION"
+      "RECOMMENDATION",
+      "RECOMMENDATION_ENRICHMENT"
     ],
     "routes": [
       {
@@ -616,13 +700,39 @@
           651
         ],
         "label": "owns"
+      },
+      {
+        "points": [
+          [
+            1105,
+            775
+          ],
+          [
+            1105,
+            900
+          ]
+        ],
+        "a": [
+          1086,
+          797
+        ],
+        "b": [
+          1078,
+          881
+        ],
+        "labelAt": [
+          1180,
+          844
+        ],
+        "label": "local enrichment"
       }
     ],
-    "legendY": 853,
+    "legendY": 1245,
     "notes": [
       "Observation uniqueness: (captureId, serviceArn, findingId, representation). Recommendations require DETAIL.",
       "relatedAssessmentId joins with the capture serviceArn. It records correlation, not an authoritative result set.",
-      "List coverage and detail hydration coverage are independent. Missing recommendation data is not an empty set."
+      "List coverage and detail hydration coverage are independent. Missing recommendation data is not an empty set.",
+      "Enrichment has its own version and provenance; it cannot mutate source recommendation evidence."
     ]
   },
   "04-dependencies-topology": {
@@ -630,7 +740,7 @@
     "subtitle": "DNS dependencies, discovery coverage and graph relationships remain distinct kinds of evidence.",
     "size": [
       1320,
-      1130
+      1160
     ],
     "boxes": {
       "SERVICE": [
@@ -668,12 +778,19 @@
         755,
         360,
         245
+      ],
+      "DEPENDENCY_GOVERNANCE": [
+        925,
+        450,
+        360,
+        230
       ]
     },
     "local": [
       "TOPOLOGY_SNAPSHOT",
       "TOPOLOGY_NODE",
-      "TOPOLOGY_EDGE"
+      "TOPOLOGY_EDGE",
+      "DEPENDENCY_GOVERNANCE"
     ],
     "routes": [
       {
@@ -787,8 +904,16 @@
             550
           ],
           [
-            1105,
+            885,
             550
+          ],
+          [
+            885,
+            715
+          ],
+          [
+            1105,
+            715
           ],
           [
             1105,
@@ -805,7 +930,7 @@
         ],
         "labelAt": [
           997,
-          541
+          706
         ],
         "label": "contains"
       },
@@ -858,12 +983,38 @@
           924
         ],
         "label": "destination endpoint"
+      },
+      {
+        "points": [
+          [
+            1105,
+            370
+          ],
+          [
+            1105,
+            450
+          ]
+        ],
+        "a": [
+          1085,
+          391
+        ],
+        "b": [
+          1077,
+          432
+        ],
+        "labelAt": [
+          1190,
+          416
+        ],
+        "label": "local governance"
       }
     ],
     "legendY": 1040,
     "notes": [
       "Both endpoint foreign keys include topologyId; unresolved endpoints remain snapshot-scoped stubs.",
-      "No native dependency-to-topology foreign key exists. COMPLETE is collector completion, not an atomic graph."
+      "No native dependency-to-topology foreign key exists. COMPLETE is collector completion, not an atomic graph.",
+      "Governance is independently versioned and cannot change observed DNS evidence or grant access."
     ]
   },
   "05-events-observations": {
@@ -880,7 +1031,7 @@
         390,
         230
       ],
-      "EVENT_ENTITY": [
+      "EVENT_SUBJECT": [
         480,
         125,
         390,
@@ -890,7 +1041,7 @@
         925,
         125,
         390,
-        230
+        300
       ],
       "POSTURE_OBSERVATION": [
         35,
@@ -913,7 +1064,7 @@
     },
     "local": [
       "ENTITY_REF",
-      "EVENT_ENTITY",
+      "EVENT_SUBJECT",
       "EVENT",
       "POSTURE_OBSERVATION",
       "HEALTH_OBSERVATION",
@@ -1122,7 +1273,7 @@
     ],
     "legendY": 1030,
     "notes": [
-      "Event uniqueness: (sourceChannel, streamScope, sourceEventId). Subjects retain type, provider scope and key.",
+      "Event uniqueness: (sourceChannel, streamScope, sourceEventId). Preserve typed subjects and original envelopes.",
       "Aggregate attention summaries retain distinct contributor identities, membership context and rule version.",
       "computedAt belongs to the projection. occurredAt, receivedAt and observation timestamps remain separate."
     ]

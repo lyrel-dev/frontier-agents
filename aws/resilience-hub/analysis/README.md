@@ -18,6 +18,7 @@ related:
   - "review.md"
   - "validation.md"
   - "api/index.md"
+  - "quality-review.md"
 ---
 
 # AWS Resilience Hub — reviewed model and operator prototype
@@ -28,7 +29,7 @@ The browser application is a static HTML/CSS/JavaScript page with no build step,
 
 All documentation is maintained as Obsidian-compatible Markdown with YAML properties. Each of the five diagram notes includes editable fenced Mermaid source; SVG assets provide the stable layout used by the browser.
 
-![Northstar Resilience workspace overview](assets/overview.jpg)
+The [adversarial quality review](quality-review.md) records the defects found in the first delivered version and the corrected evidence rules. The previous overview image was removed because it displayed superseded coverage and attention totals; current verification results and the visual-review limitation are recorded in [validation.md](validation.md).
 
 ## Open the application
 
@@ -75,7 +76,7 @@ The RPC namespace is a proposed product facade. It resembles AWS JSON RPC conven
 
 | Workspace | Working behavior |
 | --- | --- |
-| Overview | Independent health, posture, open-finding and assessment-coverage cards; scoped service watchlist; attention priorities; business context; recent events. |
+| Overview | Independent health, posture and open-finding cards; current versus retained assessment coverage; scoped watchlist with explicit attention reasons; business context and recent events. |
 | Systems & journeys | Three systems and five user journeys, their policies, shared member services and deduplicated attention counts. |
 | Services | Search and system/journey filters; service identity; permission model; input sources; associations; discovery configuration. |
 | Findings | Status/severity filters, all three recommendation categories, local estimates and editable operator disposition/comments. |
@@ -91,24 +92,27 @@ Each service has six detail tabs: overview, findings, policy and posture, depend
 2. Open **Systems & journeys**. Order ledger and Customer notifications belong to three systems. Portfolio totals count each service once; the same service may appear in several business contexts.
 3. Select **Simulate event → Payment latency rises**. Payments health becomes degraded while its resilience posture and findings stay unchanged.
 4. Select **Dependency discovered**, then inspect the new fraud-screening dependency. Edit its consumer criticality and comment. Its local allow-list review and runtime health remain separate.
-5. Open Checkout orchestration → **Assessments → Start assessment**. Use the simulator inside that service dialog and select **Assessment completes**. The new Checkout run completes; the unrelated active Orders run is untouched.
-6. Open a finding, mark it resolved and record a comment. The UI explicitly says verification is pending. Triage does not directly make runtime health or posture green.
+5. Open Checkout orchestration → **Assessments → Start assessment**. Use the simulator inside that service dialog and select **Assessment completes**. The new Checkout run completes using an independent response fixture; the unrelated active Orders run is untouched.
+6. Open a finding, mark it resolved and record a comment. The UI explicitly says verification is pending. Complete another assessment: the operator disposition still cannot manufacture better posture or confirm its own remediation.
 7. Simulate **Duplicate and delayed events**, then inspect the event stream. Older evidence remains historical and cannot replace a newer current observation. **Telemetry goes stale** advances the clock beyond signal expiry and makes affected health unknown.
 
 ## Mock portfolio
 
 The initial dataset contains **3 systems, 5 journeys, 8 services, 4 policies, 9 assessments, 14 findings, 25 recommendation instances, 9 dependencies and 8 topology captures**. It also includes scoped finding captures/observations, effective-target observations, policy context, health/posture history and provenance-bearing events.
 
-Initial displayed totals are **5 healthy, 2 degraded and 1 unknown service; 3 services with at-risk posture; 10 open findings, including 4 high severity; and 7 services with assessment evidence**. One assessment is active. The broader attention rule identifies six services because it also includes failed assessment execution, stale/missing evidence and discovery gaps.
+Initial displayed totals are **5 healthy, 2 degraded and 1 unknown service; 3 services with at-risk posture; and 10 observed open findings, including 4 high severity**. Findings coverage remains incomplete for the unassessed notification service, so the observed count is not a certified portfolio total. One assessment is active. **Six of eight services have current assessment coverage (75%); seven retain assessment evidence (88%, rounded).** The local 24-hour freshness rule, captured policy context and discovery coverage determine which evidence is current.
+
+The reviewed attention rule identifies **all eight services**, with inspectable reasons across health, posture, findings, failed assessment work and evidence/discovery gaps. Pending work remains a separate execution state. A healthy service with an open finding is still in the attention set. Multiple reasons count once per service. An empty service scope returns no coverage percentage, and old retained evidence cannot keep current coverage artificially high.
 
 Each topology intentionally shows a **six-resource representative mock subgraph**, with its scope and the broader mock inventory count displayed. A completed collection is not presented as a complete real-world service graph or an atomic provider snapshot.
 
 ## Model decisions embodied in the UI
 
-The detailed rationale and official API references are in [report.md](report.md); the review corrections are recorded in [review.md](review.md).
+The detailed rationale and official API references are in [report.md](report.md); the initial review is in [review.md](review.md), and the deeper defect reproductions, corrections and remaining gaps are in [quality-review.md](quality-review.md).
 
 - **Shared ownership:** systems and journeys associate with services through scoped many-to-many relationships. Membership does not imply a request sequence.
 - **Separate dimensions:** assessment execution, component achievability, live health, finding disposition, discovery coverage and evidence age are independent.
+- **Explainable coverage:** current usable assessment evidence is separate from retained history. Expected components come from the captured target context, including valid policies that specify only availability.
 - **Conservative business summaries:** a journey's member services can need attention without proving that the journey failed its own potentially looser objectives. Aggregates retain distinct contributors and membership context.
 - **Historical evidence:** findings belong to a service. A local capture may correlate them with an assessment without inventing a native assessment-to-finding foreign key. Recommendations belong to immutable detail observations.
 - **Optional fields:** missing, null, zero, empty, unknown and stale have different meanings. Unestimated remediation cost is not zero. Summary refreshes preserve omitted detail.
@@ -125,8 +129,9 @@ The fixture generator chooses effective targets from fictional policy inputs to 
 | [index.html](index.html), [app.css](app.css), [app.js](app.js) | Single-page user interface and accessible interactions. |
 | [data.js](data.js) | Deterministic Northstar fixtures and mock clock. |
 | [model.js](model.js) | Scoped selectors, evidence projections, event ingestion and local mutation scenarios. |
-| [report.md](report.md) | Reviewed analysis, logical model, operation mapping and 48 official AWS references. |
+| [report.md](report.md) | Reviewed analysis, logical model, operation mapping and 49 official AWS references. |
 | [review.md](review.md) | Review findings, applied corrections and integration boundaries. |
+| [quality-review.md](quality-review.md) | Adversarial review with reproduced failures, before/after evidence and residual delivery gaps. |
 | [validation.md](validation.md) | Automated and browser verification record. |
 | [api/index.md](api/index.md) | Proposed AWS-style RPC operation reference and runnable local mock server. |
 | [diagrams/](diagrams/) | Five Obsidian Markdown notes with Mermaid blocks, matching SVGs and deterministic presentation layouts. |
@@ -146,7 +151,7 @@ node scripts/generate_api_docs.cjs --check
 python3 scripts/check_notes.py
 ```
 
-The complete suite contains 39 passing tests. Browser-model checks cover scoped keys, shared-service counts, policy provenance, independent health/posture, failed-run preservation, triage, selected-service assessment completion, immutable recommendation history, omitted/empty detail, expiry, duplicate/delayed events, discovery/governance separation, partial summary hydration, rendering, safe comment escaping and Markdown diagram assets. The RPC tests exercise all 44 operations, including through the HTTP server, along with scope validation, concurrency, idempotency, signed pagination and trusted-role enforcement. In-memory UI contract checks complement the earlier browser checks documented in [validation.md](validation.md). The [API reference](api/index.md) documents its runtime and generation commands.
+The current test totals and exact results are recorded in [validation.md](validation.md). Checks cover scoped identities, business deduplication, independent assessment-response evidence, current versus retained coverage, captured optional policy components, unknown/null normalization, immutable recommendation history, timestamps, event subjects, configuration concurrency, pagination, authorization and HTTP execution of all 44 operations. Regressions reproduce the substantive defects in [quality-review.md](quality-review.md), rather than relying only on generated example validity. Browser rendering and command dispatch are checked with an in-memory DOM; fresh visual layout verification is explicitly unverified because the available browser could not access this workspace preview.
 
 ## Maintain the documentation
 
@@ -162,4 +167,4 @@ The renderer uses only the Python standard library. It extracts each note's Merm
 
 ## Integration scope
 
-This prototype demonstrates the model, operator interactions and a corresponding mock RPC contract. It does not connect to an AWS account, authenticate real users, synchronize browser and server state, run real telemetry subscriptions or validate production IAM permissions. Before enabling live writes, verify association replacement/removal, clearing semantics, authorization, pagination and concurrent edits against the selected SDK and controlled account responses, as detailed in the report.
+This prototype demonstrates the model, operator interactions and a corresponding mock RPC contract. The report marks each logical capability as implemented, partial or deferred. The remaining delivery work includes browser-to-HTTP wiring, an authoritative asynchronous assessment/reconciliation worker, native partial-visibility collectors, complete historical policy/capture reads, production identity and persistence, and live-account validation. The mock cannot certify production readiness. Before enabling live writes, verify association replacement/removal, clearing semantics, authorization, pagination and concurrent edits against the selected SDK and controlled account responses.

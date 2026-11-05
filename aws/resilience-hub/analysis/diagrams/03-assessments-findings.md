@@ -16,6 +16,7 @@ aliases:
 related:
   - "../report.md"
   - "../review.md"
+  - "../quality-review.md"
   - "../api/index.md"
 ---
 
@@ -54,7 +55,7 @@ erDiagram
         string captureId PK
         string serviceArn FK
         datetime captureStartedAt
-        datetime captureCompletedAt
+        datetime captureEndedAt
         json listCoverage
         json detailCoverage
         string relatedAssessmentId FK "Optional same-service correlation"
@@ -75,6 +76,13 @@ erDiagram
         int sourceArrayOrdinal
         json suggestedChanges
     }
+    RECOMMENDATION_ENRICHMENT {
+        string recommendationId PK, FK
+        int version
+        string title
+        json estimate "Local cost and complexity provenance"
+        datetime updatedAt "Local enrichment timestamp"
+    }
     SERVICE ||--o{ ASSESSMENT : owns
     SERVICE ||--o{ FINDING : contains
     SERVICE ||--o{ FINDING_CAPTURE : scopes
@@ -82,6 +90,7 @@ erDiagram
     FINDING ||--o{ FINDING_OBSERVATION : observed_as
     FINDING_CAPTURE ||--o{ FINDING_OBSERVATION : collects
     FINDING_OBSERVATION ||--o{ RECOMMENDATION : owns
+    RECOMMENDATION ||--o| RECOMMENDATION_ENRICHMENT : enriched_by
 ```
 
 ## Relationship constraints
@@ -89,8 +98,13 @@ erDiagram
 - Observation uniqueness: (captureId, serviceArn, findingId, representation). Recommendations require DETAIL.
 - relatedAssessmentId joins with the capture serviceArn. It records correlation, not an authoritative result set.
 - List coverage and detail hydration coverage are independent. Missing recommendation data is not an empty set.
+- Recommendation enrichment is an independently versioned local overlay. Editing a title, cost estimate or complexity does not mutate the captured suggested changes or establish identity across later recommendation generations.
 
 The SVG uses navy for AWS-backed identities and values, and teal for local relationships, captures or observations. These colors describe ownership of the model element, not operational status.
+
+## Implementation boundary
+
+Finding reads return selected immutable observation fields and their capture inline, including separate list/detail coverage and recommendation presence. Enrichment is independently versioned. Browser assessment completion uses an independent response fixture; operator suppression or resolution cannot manufacture an achievable assessment or verified fix. RPC assessment starts have no provider completion worker. The full raw-detail archive and live list/hydrate/capture loop remain integration work. See the [traceability matrix](../report.md#1-implementation-traceability).
 
 ## Related notes
 

@@ -25,7 +25,7 @@ related:
 
 Generated from [contract.cjs](contract.cjs). These JSON Schema definitions describe the implemented mock facade, including local enrichments and projections. They are not a transcription of AWS service models. See [AWS mapping](aws-mapping.md) for provider field ownership and [entity mapping](entities.md) for relationship constraints.
 
-The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is resolved by attaching `contract.shapes` as `$defs`. Fields listed in `required` must be present even when their value may be null. Unknown object properties are rejected unless explicitly permitted. Timestamp fields contain numeric epoch seconds. The runtime validator covers the keywords used by this contract; it is not a general-purpose JSON Schema implementation.
+The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is resolved by attaching `contract.shapes` as `$defs`. Fields listed in `required` must be present even when their value may be null. Unknown object properties are rejected unless explicitly permitted. Timestamp fields contain numeric epoch seconds with at most millisecond precision. The `x-precision` extension is an assertion enforced by the runtime; a generic JSON Schema validator treats it as an annotation, so structural schema validation alone does not verify timestamp ordering. The runtime validator covers the keywords used by this contract; it is not a general-purpose JSON Schema implementation.
 
 ## Definitions
 
@@ -63,6 +63,25 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
 - [WorkspaceSummary](#workspacesummary)
 - [PageSnapshot](#pagesnapshot)
 - [DeletionReceipt](#deletionreceipt)
+- [NormalizationDiagnostic](#normalizationdiagnostic)
+- [PermissionModelObservation](#permissionmodelobservation)
+- [DisasterRecoveryObservation](#disasterrecoveryobservation)
+- [DataRecoveryObservation](#datarecoveryobservation)
+- [AttentionReason](#attentionreason)
+- [AssessmentCoverage](#assessmentcoverage)
+- [EffectiveTarget](#effectivetarget)
+- [EffectiveTargetObservation](#effectivetargetobservation)
+- [CapturedAssociation](#capturedassociation)
+- [PolicyAssignmentEvidence](#policyassignmentevidence)
+- [PolicyContextCapture](#policycontextcapture)
+- [EffectivePolicyEvidence](#effectivepolicyevidence)
+- [FindingCapture](#findingcapture)
+- [FindingObservation](#findingobservation)
+- [FindingCoverage](#findingcoverage)
+- [HealthObservation](#healthobservation)
+- [PostureObservation](#postureobservation)
+- [SelectedObservations](#selectedobservations)
+- [EventSubject](#eventsubject)
 
 ## PermissionModel
 
@@ -119,7 +138,7 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
 
 | Member | Required | Type | Constraints |
 | --- | --- | --- | --- |
-| `systemArn` | Yes | `string` | Length 20–2048; Pattern `^arn:aws[a-z-]*:resiliencehub:[a-z0-9-]+:[0-9]{12}:(system\|service\|policy)/[A-Za-z0-9_-]+$` |
+| `systemArn` | Yes | `string` | Length 31–2048; Pattern `^arn:(aws\|aws-cn\|aws-iso\|aws-iso-[a-z]\|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system\|service\|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$` |
 | `userJourneyIds` | No | Array of `string` | Items 0–20 |
 
 ```json
@@ -128,9 +147,9 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
   "properties": {
     "systemArn": {
       "type": "string",
-      "minLength": 20,
+      "minLength": 31,
       "maxLength": 2048,
-      "pattern": "^arn:aws[a-z-]*:resiliencehub:[a-z0-9-]+:[0-9]{12}:(system|service|policy)/[A-Za-z0-9_-]+$"
+      "pattern": "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system|service|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$"
     },
     "userJourneyIds": {
       "type": "array",
@@ -238,7 +257,7 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
 
 | Member | Required | Type | Constraints |
 | --- | --- | --- | --- |
-| `reportOutputs` | Yes | Array of `object` | Items 1–20 |
+| `reportOutputs` | Yes | Array of `object` | Items 1–1 |
 
 ```json
 {
@@ -255,7 +274,8 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
               "bucketPath": {
                 "type": "string",
                 "minLength": 3,
-                "maxLength": 2048
+                "maxLength": 512,
+                "pattern": "^(s3://)?[a-z0-9][a-z0-9.-]{1,61}[a-z0-9](/.*)?$"
               },
               "bucketOwner": {
                 "type": "string",
@@ -277,7 +297,7 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
         "additionalProperties": false
       },
       "minItems": 1,
-      "maxItems": 20,
+      "maxItems": 1,
       "uniqueItems": false
     }
   },
@@ -316,7 +336,7 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
 | Member | Required | Type | Constraints |
 | --- | --- | --- | --- |
 | `clusterArn` | Yes | `string` | Length 20–2048; Pattern `^arn:aws[a-z-]*:eks:.+:cluster/.+$` |
-| `namespaces` | Yes | Array of `string` | Items 1–100 |
+| `namespaces` | Yes | Array of `string` | Items 1–10 |
 | `labelSelector` | No | `object` | Unknown members rejected |
 
 ```json
@@ -334,10 +354,11 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
       "items": {
         "type": "string",
         "minLength": 1,
-        "maxLength": 63
+        "maxLength": 63,
+        "pattern": "^[a-z0-9]([-a-z0-9]*[a-z0-9])?$"
       },
       "minItems": 1,
-      "maxItems": 100,
+      "maxItems": 10,
       "uniqueItems": false
     },
     "labelSelector": {
@@ -348,14 +369,16 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
           "propertyNames": {
             "type": "string",
             "minLength": 1,
-            "maxLength": 128
+            "maxLength": 317,
+            "pattern": "^([a-z0-9]([-a-z0-9.]*[a-z0-9])?/)?[A-Za-z0-9]([-A-Za-z0-9_.]*[A-Za-z0-9])?$"
           },
           "additionalProperties": {
             "type": "string",
             "minLength": 0,
-            "maxLength": 256
+            "maxLength": 63,
+            "pattern": "^([A-Za-z0-9]([-A-Za-z0-9_.]*[A-Za-z0-9])?)?$"
           },
-          "maxProperties": 50
+          "maxProperties": 20
         },
         "matchExpressions": {
           "type": "array",
@@ -365,7 +388,8 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
               "key": {
                 "type": "string",
                 "minLength": 1,
-                "maxLength": 128
+                "maxLength": 317,
+                "pattern": "^([a-z0-9]([-a-z0-9.]*[a-z0-9])?/)?[A-Za-z0-9]([-A-Za-z0-9_.]*[A-Za-z0-9])?$"
               },
               "operator": {
                 "type": "string",
@@ -381,10 +405,11 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
                 "items": {
                   "type": "string",
                   "minLength": 0,
-                  "maxLength": 256
+                  "maxLength": 63,
+                  "pattern": "^([A-Za-z0-9]([-A-Za-z0-9_.]*[A-Za-z0-9])?)?$"
                 },
                 "minItems": 0,
-                "maxItems": 100,
+                "maxItems": 20,
                 "uniqueItems": false
               }
             },
@@ -395,7 +420,7 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
             "additionalProperties": false
           },
           "minItems": 0,
-          "maxItems": 100,
+          "maxItems": 20,
           "uniqueItems": false
         }
       },
@@ -415,7 +440,7 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
 
 | Member | Required | Type | Constraints |
 | --- | --- | --- | --- |
-| `resourceTags` | No | Array of `object` | Items 1–50 |
+| `resourceTags` | No | Array of `object` | Items 1–10 |
 | `cfnStackArn` | No | `string` | Length 20–2048; Pattern `^arn:aws[a-z-]*:cloudformation:.+:stack/.+$` |
 | `tfStateFileUrl` | No | `string` | Length 5–2048; Pattern `^s3://.+` |
 | `eks` | No | [EksConfiguration](shapes.md#eksconfiguration) | See shared shape or field semantics. |
@@ -433,17 +458,19 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
           "key": {
             "type": "string",
             "minLength": 1,
-            "maxLength": 128
+            "maxLength": 128,
+            "pattern": "^[^\\x00-\\x1f\\x22]+$"
           },
           "values": {
             "type": "array",
             "items": {
               "type": "string",
               "minLength": 0,
-              "maxLength": 256
+              "maxLength": 256,
+              "pattern": "^[^\\x00-\\x1f\\x22]*$"
             },
-            "minItems": 1,
-            "maxItems": 100,
+            "minItems": 0,
+            "maxItems": 10,
             "uniqueItems": false
           }
         },
@@ -454,7 +481,7 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
         "additionalProperties": false
       },
       "minItems": 1,
-      "maxItems": 50,
+      "maxItems": 10,
       "uniqueItems": false
     },
     "cfnStackArn": {
@@ -490,11 +517,13 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
 
 | Member | Required | Type | Constraints |
 | --- | --- | --- | --- |
-| `status` | Yes | `string` | `ENABLED`, `DISABLED`, `INITIALIZING` |
+| `status` | Yes | `string` | `ENABLED`, `DISABLED`, `INITIALIZING`, `UNKNOWN` |
 | `eligibleResourceCount` | Yes | `integer` or `null` | See full schema |
 | `message` | Yes | `string` or `null` | See full schema |
 | `updatedAt` | Yes | `number` or `null` | See full schema |
 | `requestedStatus` | No | `string` | `ENABLED`, `DISABLED` |
+| `rawStatus` | Yes | `string` or `null` | See full schema |
+| `normalizationDiagnostics` | Yes | Array of [NormalizationDiagnostic](shapes.md#normalizationdiagnostic) | Items 0–1000 |
 
 ```json
 {
@@ -505,7 +534,8 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
       "enum": [
         "ENABLED",
         "DISABLED",
-        "INITIALIZING"
+        "INITIALIZING",
+        "UNKNOWN"
       ]
     },
     "eligibleResourceCount": {
@@ -536,7 +566,9 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
         {
           "type": "number",
           "minimum": 0,
-          "maximum": 253402300799
+          "maximum": 253402300799,
+          "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+          "x-precision": "milliseconds"
         },
         {
           "type": "null"
@@ -549,13 +581,36 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
         "ENABLED",
         "DISABLED"
       ]
+    },
+    "rawStatus": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2048
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "normalizationDiagnostics": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/NormalizationDiagnostic"
+      },
+      "minItems": 0,
+      "maxItems": 1000,
+      "uniqueItems": false
     }
   },
   "required": [
     "status",
     "eligibleResourceCount",
     "message",
-    "updatedAt"
+    "updatedAt",
+    "rawStatus",
+    "normalizationDiagnostics"
   ],
   "additionalProperties": false
 }
@@ -569,6 +624,8 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
 | `lastRunAt` | Yes | `number` or `null` | See full schema |
 | `errorCode` | Yes | `string` or `null` | See full schema |
 | `errorMessage` | Yes | `string` or `null` | See full schema |
+| `rawStatus` | Yes | `string` or `null` | See full schema |
+| `normalizationDiagnostics` | Yes | Array of [NormalizationDiagnostic](shapes.md#normalizationdiagnostic) | Items 0–1000 |
 
 ```json
 {
@@ -584,7 +641,9 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
         {
           "type": "number",
           "minimum": 0,
-          "maximum": 253402300799
+          "maximum": 253402300799,
+          "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+          "x-precision": "milliseconds"
         },
         {
           "type": "null"
@@ -614,13 +673,36 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
           "type": "null"
         }
       ]
+    },
+    "rawStatus": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2048
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "normalizationDiagnostics": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/NormalizationDiagnostic"
+      },
+      "minItems": 0,
+      "maxItems": 1000,
+      "uniqueItems": false
     }
   },
   "required": [
     "status",
     "lastRunAt",
     "errorCode",
-    "errorMessage"
+    "errorMessage",
+    "rawStatus",
+    "normalizationDiagnostics"
   ],
   "additionalProperties": false
 }
@@ -710,8 +792,8 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
 | Member | Required | Type | Constraints |
 | --- | --- | --- | --- |
 | `state` | Yes | `string` | `HEALTHY`, `DEGRADED`, `UNAVAILABLE`, `UNKNOWN` |
-| `observedAt` | Yes | `number` | Minimum 0; Maximum 253402300799 |
-| `expiresAt` | Yes | `number` | Minimum 0; Maximum 253402300799 |
+| `observedAt` | Yes | `number` | Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.; Minimum 0; Maximum 253402300799; Runtime precision assertion: `milliseconds` |
+| `expiresAt` | Yes | `number` | Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.; Minimum 0; Maximum 253402300799; Runtime precision assertion: `milliseconds` |
 | `source` | Yes | `string` | Length 1–256 |
 | `reason` | Yes | `string` | Length 0–2048 |
 | `latencyMs` | No | `number` | Minimum 0 |
@@ -735,12 +817,16 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
     "observedAt": {
       "type": "number",
       "minimum": 0,
-      "maximum": 253402300799
+      "maximum": 253402300799,
+      "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+      "x-precision": "milliseconds"
     },
     "expiresAt": {
       "type": "number",
       "minimum": 0,
-      "maximum": 253402300799
+      "maximum": 253402300799,
+      "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+      "x-precision": "milliseconds"
     },
     "source": {
       "type": "string",
@@ -789,7 +875,7 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
 | Member | Required | Type | Constraints |
 | --- | --- | --- | --- |
 | `state` | Yes | `string` | `HEALTHY`, `DEGRADED`, `UNAVAILABLE`, `UNKNOWN` |
-| `rawState` | Yes | `string` | `HEALTHY`, `DEGRADED`, `UNAVAILABLE`, `UNKNOWN` |
+| `rawState` | Yes | `string` or `null` | See full schema |
 | `observedAt` | Yes | `number` or `null` | See full schema |
 | `expiresAt` | Yes | `number` or `null` | See full schema |
 | `stale` | Yes | `boolean` | See shared shape or field semantics. |
@@ -817,12 +903,15 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
       ]
     },
     "rawState": {
-      "type": "string",
-      "enum": [
-        "HEALTHY",
-        "DEGRADED",
-        "UNAVAILABLE",
-        "UNKNOWN"
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2048
+        },
+        {
+          "type": "null"
+        }
       ]
     },
     "observedAt": {
@@ -830,7 +919,9 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
         {
           "type": "number",
           "minimum": 0,
-          "maximum": 253402300799
+          "maximum": 253402300799,
+          "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+          "x-precision": "milliseconds"
         },
         {
           "type": "null"
@@ -842,7 +933,9 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
         {
           "type": "number",
           "minimum": 0,
-          "maximum": 253402300799
+          "maximum": 253402300799,
+          "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+          "x-precision": "milliseconds"
         },
         {
           "type": "null"
@@ -965,6 +1058,7 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
 | `provenance` | Yes | `string` | Length 1–2048 |
 | `evaluatedProviderRevision` | Yes | `string` or `null` | See full schema |
 | `policyContextCaptureId` | Yes | `string` or `null` | See full schema |
+| `rawState` | Yes | `string` or `null` | See full schema |
 
 ```json
 {
@@ -986,7 +1080,9 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
         {
           "type": "number",
           "minimum": 0,
-          "maximum": 253402300799
+          "maximum": 253402300799,
+          "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+          "x-precision": "milliseconds"
         },
         {
           "type": "null"
@@ -1056,6 +1152,18 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
           "type": "null"
         }
       ]
+    },
+    "rawState": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2048
+        },
+        {
+          "type": "null"
+        }
+      ]
     }
   },
   "required": [
@@ -1068,7 +1176,8 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
     "ruleVersion",
     "provenance",
     "evaluatedProviderRevision",
-    "policyContextCaptureId"
+    "policyContextCaptureId",
+    "rawState"
   ],
   "additionalProperties": false
 }
@@ -1078,9 +1187,9 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
 
 | Member | Required | Type | Constraints |
 | --- | --- | --- | --- |
-| `serviceArn` | Yes | `string` | Length 20–2048; Pattern `^arn:aws[a-z-]*:resiliencehub:[a-z0-9-]+:[0-9]{12}:(system\|service\|policy)/[A-Za-z0-9_-]+$` |
+| `serviceArn` | Yes | `string` | Length 31–2048; Pattern `^arn:(aws\|aws-cn\|aws-iso\|aws-iso-[a-z]\|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system\|service\|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$` |
 | `inputSourceId` | Yes | `string` | Length 1–256; Pattern `^[A-Za-z0-9][A-Za-z0-9._:-]*$` |
-| `type` | Yes | `string` | `CFN_STACK`, `TAGS`, `TERRAFORM`, `EKS`, `DESIGN_FILE`, `MONITORING` |
+| `type` | Yes | `string` | `CFN_STACK`, `TAGS`, `TERRAFORM`, `EKS`, `DESIGN_FILE`, `MONITORING`, `UNKNOWN` |
 | `createdAt` | Yes | `number` or `null` | See full schema |
 | `resourceConfiguration` | Yes | [ResourceConfiguration](shapes.md#resourceconfiguration) or `null` | See full schema |
 | `displayName` | Yes | `string` | Length 0–256 |
@@ -1088,6 +1197,10 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
 | `version` | Yes | `integer` | Minimum 1 |
 | `observedAt` | Yes | `number` or `null` | See full schema |
 | `provenance` | Yes | `string` | Length 1–2048 |
+| `rawType` | Yes | `string` or `null` | See full schema |
+| `localCreatedAt` | Yes | `number` or `null` | See full schema |
+| `localUpdatedAt` | Yes | `number` or `null` | See full schema |
+| `normalizationDiagnostics` | Yes | Array of [NormalizationDiagnostic](shapes.md#normalizationdiagnostic) | Items 0–1000 |
 
 ```json
 {
@@ -1095,9 +1208,9 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
   "properties": {
     "serviceArn": {
       "type": "string",
-      "minLength": 20,
+      "minLength": 31,
       "maxLength": 2048,
-      "pattern": "^arn:aws[a-z-]*:resiliencehub:[a-z0-9-]+:[0-9]{12}:(system|service|policy)/[A-Za-z0-9_-]+$"
+      "pattern": "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system|service|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$"
     },
     "inputSourceId": {
       "type": "string",
@@ -1113,7 +1226,8 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
         "TERRAFORM",
         "EKS",
         "DESIGN_FILE",
-        "MONITORING"
+        "MONITORING",
+        "UNKNOWN"
       ]
     },
     "createdAt": {
@@ -1121,7 +1235,9 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
         {
           "type": "number",
           "minimum": 0,
-          "maximum": 253402300799
+          "maximum": 253402300799,
+          "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+          "x-precision": "milliseconds"
         },
         {
           "type": "null"
@@ -1157,7 +1273,9 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
         {
           "type": "number",
           "minimum": 0,
-          "maximum": 253402300799
+          "maximum": 253402300799,
+          "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+          "x-precision": "milliseconds"
         },
         {
           "type": "null"
@@ -1168,6 +1286,55 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
       "type": "string",
       "minLength": 1,
       "maxLength": 2048
+    },
+    "rawType": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2048
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "localCreatedAt": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 253402300799,
+          "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+          "x-precision": "milliseconds"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "localUpdatedAt": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 253402300799,
+          "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+          "x-precision": "milliseconds"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "normalizationDiagnostics": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/NormalizationDiagnostic"
+      },
+      "minItems": 0,
+      "maxItems": 1000,
+      "uniqueItems": false
     }
   },
   "required": [
@@ -1180,7 +1347,11 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
     "status",
     "version",
     "observedAt",
-    "provenance"
+    "provenance",
+    "rawType",
+    "localCreatedAt",
+    "localUpdatedAt",
+    "normalizationDiagnostics"
   ],
   "additionalProperties": false
 }
@@ -1190,18 +1361,20 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
 
 | Member | Required | Type | Constraints |
 | --- | --- | --- | --- |
-| `systemArn` | Yes | `string` | Length 20–2048; Pattern `^arn:aws[a-z-]*:resiliencehub:[a-z0-9-]+:[0-9]{12}:(system\|service\|policy)/[A-Za-z0-9_-]+$` |
+| `systemArn` | Yes | `string` | Length 31–2048; Pattern `^arn:(aws\|aws-cn\|aws-iso\|aws-iso-[a-z]\|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system\|service\|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$` |
 | `systemId` | Yes | `string` | Length 1–256; Pattern `^[A-Za-z0-9][A-Za-z0-9._:-]*$` |
 | `name` | Yes | `string` | Length 2–60; Pattern `^[A-Za-z0-9][A-Za-z0-9_-]{1,59}$` |
 | `description` | Yes | `string` | Length 0–2048 |
-| `createdAt` | Yes | `number` | Minimum 0; Maximum 253402300799 |
-| `updatedAt` | Yes | `number` | Minimum 0; Maximum 253402300799 |
-| `sharingEnabled` | Yes | `boolean` | See shared shape or field semantics. |
+| `createdAt` | Yes | `number` or `null` | See full schema |
+| `updatedAt` | Yes | `number` or `null` | See full schema |
+| `sharingEnabled` | Yes | `boolean` or `null` | See full schema |
 | `kmsKeyId` | Yes | `string` or `null` | See full schema |
-| `tags` | Yes | Map of `string` | Properties 0–50 |
+| `tags` | Yes | Map of `string` or `null` | See full schema |
 | `displayName` | Yes | `string` | Length 0–256 |
 | `version` | Yes | `integer` | Minimum 1 |
 | `provenance` | Yes | `string` | Length 1–2048 |
+| `localUpdatedAt` | Yes | `number` or `null` | See full schema |
+| `normalizationDiagnostics` | Yes | Array of [NormalizationDiagnostic](shapes.md#normalizationdiagnostic) | Items 0–1000 |
 
 ```json
 {
@@ -1209,9 +1382,9 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
   "properties": {
     "systemArn": {
       "type": "string",
-      "minLength": 20,
+      "minLength": 31,
       "maxLength": 2048,
-      "pattern": "^arn:aws[a-z-]*:resiliencehub:[a-z0-9-]+:[0-9]{12}:(system|service|policy)/[A-Za-z0-9_-]+$"
+      "pattern": "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system|service|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$"
     },
     "systemId": {
       "type": "string",
@@ -1231,17 +1404,42 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
       "maxLength": 2048
     },
     "createdAt": {
-      "type": "number",
-      "minimum": 0,
-      "maximum": 253402300799
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 253402300799,
+          "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+          "x-precision": "milliseconds"
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "updatedAt": {
-      "type": "number",
-      "minimum": 0,
-      "maximum": 253402300799
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 253402300799,
+          "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+          "x-precision": "milliseconds"
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "sharingEnabled": {
-      "type": "boolean"
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "kmsKeyId": {
       "anyOf": [
@@ -1256,18 +1454,27 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
       ]
     },
     "tags": {
-      "type": "object",
-      "propertyNames": {
-        "type": "string",
-        "minLength": 1,
-        "maxLength": 128
-      },
-      "additionalProperties": {
-        "type": "string",
-        "minLength": 0,
-        "maxLength": 256
-      },
-      "maxProperties": 50
+      "anyOf": [
+        {
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[^\\x00-\\x1f\\x22]+$"
+          },
+          "additionalProperties": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 256,
+            "pattern": "^[^\\x00-\\x1f\\x22]*$"
+          },
+          "maxProperties": 50
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "displayName": {
       "type": "string",
@@ -1282,6 +1489,29 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
       "type": "string",
       "minLength": 1,
       "maxLength": 2048
+    },
+    "localUpdatedAt": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 253402300799,
+          "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+          "x-precision": "milliseconds"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "normalizationDiagnostics": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/NormalizationDiagnostic"
+      },
+      "minItems": 0,
+      "maxItems": 1000,
+      "uniqueItems": false
     }
   },
   "required": [
@@ -1296,7 +1526,9 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
     "tags",
     "displayName",
     "version",
-    "provenance"
+    "provenance",
+    "localUpdatedAt",
+    "normalizationDiagnostics"
   ],
   "additionalProperties": false
 }
@@ -1306,16 +1538,18 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
 
 | Member | Required | Type | Constraints |
 | --- | --- | --- | --- |
-| `systemArn` | Yes | `string` | Length 20–2048; Pattern `^arn:aws[a-z-]*:resiliencehub:[a-z0-9-]+:[0-9]{12}:(system\|service\|policy)/[A-Za-z0-9_-]+$` |
+| `systemArn` | Yes | `string` | Length 31–2048; Pattern `^arn:(aws\|aws-cn\|aws-iso\|aws-iso-[a-z]\|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system\|service\|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$` |
 | `userJourneyId` | Yes | `string` | Length 1–256; Pattern `^[A-Za-z0-9][A-Za-z0-9._:-]*$` |
 | `name` | Yes | `string` | Length 2–60; Pattern `^[A-Za-z0-9][A-Za-z0-9 _-]{1,59}$` |
 | `description` | Yes | `string` | Length 0–2048 |
 | `policyArn` | Yes | `string` or `null` | See full schema |
-| `serviceArns` | Yes | Array of `string` | Items 0–1000 |
-| `createdAt` | Yes | `number` | Minimum 0; Maximum 253402300799 |
-| `updatedAt` | Yes | `number` | Minimum 0; Maximum 253402300799 |
+| `serviceArns` | Yes | Array of `string` | Items 0–unbounded |
+| `createdAt` | Yes | `number` or `null` | See full schema |
+| `updatedAt` | Yes | `number` or `null` | See full schema |
 | `version` | Yes | `integer` | Minimum 1 |
 | `provenance` | Yes | `string` | Length 1–2048 |
+| `localUpdatedAt` | Yes | `number` or `null` | See full schema |
+| `normalizationDiagnostics` | Yes | Array of [NormalizationDiagnostic](shapes.md#normalizationdiagnostic) | Items 0–1000 |
 
 ```json
 {
@@ -1323,9 +1557,9 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
   "properties": {
     "systemArn": {
       "type": "string",
-      "minLength": 20,
+      "minLength": 31,
       "maxLength": 2048,
-      "pattern": "^arn:aws[a-z-]*:resiliencehub:[a-z0-9-]+:[0-9]{12}:(system|service|policy)/[A-Za-z0-9_-]+$"
+      "pattern": "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system|service|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$"
     },
     "userJourneyId": {
       "type": "string",
@@ -1348,9 +1582,9 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
       "anyOf": [
         {
           "type": "string",
-          "minLength": 20,
+          "minLength": 31,
           "maxLength": 2048,
-          "pattern": "^arn:aws[a-z-]*:resiliencehub:[a-z0-9-]+:[0-9]{12}:(system|service|policy)/[A-Za-z0-9_-]+$"
+          "pattern": "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system|service|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$"
         },
         {
           "type": "null"
@@ -1361,23 +1595,40 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
       "type": "array",
       "items": {
         "type": "string",
-        "minLength": 20,
+        "minLength": 31,
         "maxLength": 2048,
-        "pattern": "^arn:aws[a-z-]*:resiliencehub:[a-z0-9-]+:[0-9]{12}:(system|service|policy)/[A-Za-z0-9_-]+$"
+        "pattern": "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system|service|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$"
       },
       "minItems": 0,
-      "maxItems": 1000,
       "uniqueItems": false
     },
     "createdAt": {
-      "type": "number",
-      "minimum": 0,
-      "maximum": 253402300799
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 253402300799,
+          "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+          "x-precision": "milliseconds"
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "updatedAt": {
-      "type": "number",
-      "minimum": 0,
-      "maximum": 253402300799
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 253402300799,
+          "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+          "x-precision": "milliseconds"
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "version": {
       "type": "integer",
@@ -1387,6 +1638,29 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
       "type": "string",
       "minLength": 1,
       "maxLength": 2048
+    },
+    "localUpdatedAt": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 253402300799,
+          "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+          "x-precision": "milliseconds"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "normalizationDiagnostics": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/NormalizationDiagnostic"
+      },
+      "minItems": 0,
+      "maxItems": 1000,
+      "uniqueItems": false
     }
   },
   "required": [
@@ -1399,7 +1673,9 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
     "createdAt",
     "updatedAt",
     "version",
-    "provenance"
+    "provenance",
+    "localUpdatedAt",
+    "normalizationDiagnostics"
   ],
   "additionalProperties": false
 }
@@ -1409,30 +1685,38 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
 
 | Member | Required | Type | Constraints |
 | --- | --- | --- | --- |
-| `serviceArn` | Yes | `string` | Length 20–2048; Pattern `^arn:aws[a-z-]*:resiliencehub:[a-z0-9-]+:[0-9]{12}:(system\|service\|policy)/[A-Za-z0-9_-]+$` |
+| `serviceArn` | Yes | `string` | Length 31–2048; Pattern `^arn:(aws\|aws-cn\|aws-iso\|aws-iso-[a-z]\|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system\|service\|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$` |
 | `name` | Yes | `string` | Length 2–60; Pattern `^[A-Za-z0-9][A-Za-z0-9_-]{1,59}$` |
 | `description` | Yes | `string` | Length 0–2048 |
 | `displayName` | Yes | `string` | Length 0–256 |
-| `createdAt` | Yes | `number` | Minimum 0; Maximum 253402300799 |
-| `updatedAt` | Yes | `number` | Minimum 0; Maximum 253402300799 |
-| `observedAt` | Yes | `number` | Minimum 0; Maximum 253402300799 |
+| `createdAt` | Yes | `number` or `null` | See full schema |
+| `updatedAt` | Yes | `number` or `null` | See full schema |
+| `observedAt` | Yes | `number` or `null` | See full schema |
 | `associatedSystems` | Yes | Array of [AssociatedSystem](shapes.md#associatedsystem) | Items 0–20 |
 | `policyArn` | Yes | `string` or `null` | See full schema |
-| `regions` | Yes | Array of `string` | Items 1–5 |
-| `permissionModel` | Yes | [PermissionModel](shapes.md#permissionmodel) | See shared shape or field semantics. |
+| `regions` | Yes | Array of `string` or `null` | See full schema |
+| `permissionModel` | Yes | [PermissionModelObservation](shapes.md#permissionmodelobservation) or `null` | See full schema |
 | `dependencyDiscovery` | Yes | [DependencyDiscoveryConfig](shapes.md#dependencydiscoveryconfig) | See shared shape or field semantics. |
 | `resourceDiscovery` | Yes | [ResourceDiscovery](shapes.md#resourcediscovery) | See shared shape or field semantics. |
 | `achievability` | Yes | [Achievability](shapes.md#achievability) | See shared shape or field semantics. |
-| `assessmentStatus` | Yes | `string` | Length 1–2048 |
-| `inputSourceIds` | Yes | Array of `string` | Items 0–1000 |
+| `assessmentStatus` | Yes | `string` | `NOT_STARTED`, `PENDING`, `IN_PROGRESS`, `SUCCESS`, `FAILED`, `UNKNOWN` |
+| `inputSourceIds` | Yes | Array of `string` | Items 0–unbounded |
 | `resourceCount` | Yes | `integer` or `null` | See full schema |
 | `reportConfiguration` | Yes | [ReportConfiguration](shapes.md#reportconfiguration) or `null` | See full schema |
 | `devOpsAgentConfiguration` | Yes | [DevOpsAgentConfiguration](shapes.md#devopsagentconfiguration) or `null` | See full schema |
-| `tags` | Yes | Map of `string` | Properties 0–50 |
+| `tags` | Yes | Map of `string` or `null` | See full schema |
 | `kmsKeyId` | Yes | `string` or `null` | See full schema |
 | `version` | Yes | `integer` | Minimum 1 |
 | `refreshRequired` | Yes | `boolean` | See shared shape or field semantics. |
 | `provenance` | Yes | `string` | Length 1–2048 |
+| `localUpdatedAt` | Yes | `number` or `null` | See full schema |
+| `normalizationDiagnostics` | Yes | Array of [NormalizationDiagnostic](shapes.md#normalizationdiagnostic) | Items 0–1000 |
+| `rawAssessmentStatus` | Yes | `string` or `null` | See full schema |
+| `projectionVersion` | Yes | `integer` | Minimum 1 |
+| `policyContextRefreshRequired` | Yes | `boolean` | See shared shape or field semantics. |
+| `reassessmentRequired` | Yes | `boolean` | See shared shape or field semantics. |
+| `rerunAssessment` | Yes | `boolean` or `null` | See full schema |
+| `effectivePolicyEvidence` | Yes | [EffectivePolicyEvidence](shapes.md#effectivepolicyevidence) | See shared shape or field semantics. |
 
 ```json
 {
@@ -1440,9 +1724,9 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
   "properties": {
     "serviceArn": {
       "type": "string",
-      "minLength": 20,
+      "minLength": 31,
       "maxLength": 2048,
-      "pattern": "^arn:aws[a-z-]*:resiliencehub:[a-z0-9-]+:[0-9]{12}:(system|service|policy)/[A-Za-z0-9_-]+$"
+      "pattern": "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system|service|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$"
     },
     "name": {
       "type": "string",
@@ -1461,19 +1745,46 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
       "maxLength": 256
     },
     "createdAt": {
-      "type": "number",
-      "minimum": 0,
-      "maximum": 253402300799
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 253402300799,
+          "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+          "x-precision": "milliseconds"
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "updatedAt": {
-      "type": "number",
-      "minimum": 0,
-      "maximum": 253402300799
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 253402300799,
+          "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+          "x-precision": "milliseconds"
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "observedAt": {
-      "type": "number",
-      "minimum": 0,
-      "maximum": 253402300799
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 253402300799,
+          "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+          "x-precision": "milliseconds"
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "associatedSystems": {
       "type": "array",
@@ -1488,9 +1799,9 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
       "anyOf": [
         {
           "type": "string",
-          "minLength": 20,
+          "minLength": 31,
           "maxLength": 2048,
-          "pattern": "^arn:aws[a-z-]*:resiliencehub:[a-z0-9-]+:[0-9]{12}:(system|service|policy)/[A-Za-z0-9_-]+$"
+          "pattern": "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system|service|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$"
         },
         {
           "type": "null"
@@ -1498,18 +1809,32 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
       ]
     },
     "regions": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "minLength": 1,
-        "maxLength": 64
-      },
-      "minItems": 1,
-      "maxItems": 5,
-      "uniqueItems": false
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "minItems": 0,
+          "maxItems": 5,
+          "uniqueItems": false
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "permissionModel": {
-      "$ref": "#/$defs/PermissionModel"
+      "anyOf": [
+        {
+          "$ref": "#/$defs/PermissionModelObservation"
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "dependencyDiscovery": {
       "$ref": "#/$defs/DependencyDiscoveryConfig"
@@ -1522,8 +1847,14 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
     },
     "assessmentStatus": {
       "type": "string",
-      "minLength": 1,
-      "maxLength": 2048
+      "enum": [
+        "NOT_STARTED",
+        "PENDING",
+        "IN_PROGRESS",
+        "SUCCESS",
+        "FAILED",
+        "UNKNOWN"
+      ]
     },
     "inputSourceIds": {
       "type": "array",
@@ -1534,7 +1865,6 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
         "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
       },
       "minItems": 0,
-      "maxItems": 1000,
       "uniqueItems": false
     },
     "resourceCount": {
@@ -1569,18 +1899,27 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
       ]
     },
     "tags": {
-      "type": "object",
-      "propertyNames": {
-        "type": "string",
-        "minLength": 1,
-        "maxLength": 128
-      },
-      "additionalProperties": {
-        "type": "string",
-        "minLength": 0,
-        "maxLength": 256
-      },
-      "maxProperties": 50
+      "anyOf": [
+        {
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[^\\x00-\\x1f\\x22]+$"
+          },
+          "additionalProperties": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 256,
+            "pattern": "^[^\\x00-\\x1f\\x22]*$"
+          },
+          "maxProperties": 50
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "kmsKeyId": {
       "anyOf": [
@@ -1605,6 +1944,64 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
       "type": "string",
       "minLength": 1,
       "maxLength": 2048
+    },
+    "localUpdatedAt": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 253402300799,
+          "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+          "x-precision": "milliseconds"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "normalizationDiagnostics": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/NormalizationDiagnostic"
+      },
+      "minItems": 0,
+      "maxItems": 1000,
+      "uniqueItems": false
+    },
+    "rawAssessmentStatus": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2048
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "projectionVersion": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "policyContextRefreshRequired": {
+      "type": "boolean"
+    },
+    "reassessmentRequired": {
+      "type": "boolean"
+    },
+    "rerunAssessment": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "effectivePolicyEvidence": {
+      "$ref": "#/$defs/EffectivePolicyEvidence"
     }
   },
   "required": [
@@ -1631,7 +2028,15 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
     "kmsKeyId",
     "version",
     "refreshRequired",
-    "provenance"
+    "provenance",
+    "localUpdatedAt",
+    "normalizationDiagnostics",
+    "rawAssessmentStatus",
+    "projectionVersion",
+    "policyContextRefreshRequired",
+    "reassessmentRequired",
+    "rerunAssessment",
+    "effectivePolicyEvidence"
   ],
   "additionalProperties": false
 }
@@ -1641,21 +2046,23 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
 
 | Member | Required | Type | Constraints |
 | --- | --- | --- | --- |
-| `policyArn` | Yes | `string` | Length 20–2048; Pattern `^arn:aws[a-z-]*:resiliencehub:[a-z0-9-]+:[0-9]{12}:(system\|service\|policy)/[A-Za-z0-9_-]+$` |
+| `policyArn` | Yes | `string` | Length 31–2048; Pattern `^arn:(aws\|aws-cn\|aws-iso\|aws-iso-[a-z]\|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system\|service\|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$` |
 | `name` | Yes | `string` | Length 2–60; Pattern `^[A-Za-z0-9][A-Za-z0-9_-]{1,59}$` |
 | `displayName` | Yes | `string` | Length 0–256 |
 | `description` | Yes | `string` | Length 0–2048 |
-| `availabilitySlo` | No | [AvailabilitySlo](shapes.md#availabilityslo) | See shared shape or field semantics. |
-| `multiAz` | No | [DisasterRecovery](shapes.md#disasterrecovery) | See shared shape or field semantics. |
-| `multiRegion` | No | [DisasterRecovery](shapes.md#disasterrecovery) | See shared shape or field semantics. |
-| `dataRecovery` | No | [DataRecovery](shapes.md#datarecovery) | See shared shape or field semantics. |
-| `createdAt` | Yes | `number` | Minimum 0; Maximum 253402300799 |
-| `updatedAt` | Yes | `number` | Minimum 0; Maximum 253402300799 |
-| `sharingEnabled` | Yes | `boolean` | See shared shape or field semantics. |
+| `availabilitySlo` | No | [AvailabilitySlo](shapes.md#availabilityslo) or `null` | See full schema |
+| `multiAz` | No | [DisasterRecoveryObservation](shapes.md#disasterrecoveryobservation) or `null` | See full schema |
+| `multiRegion` | No | [DisasterRecoveryObservation](shapes.md#disasterrecoveryobservation) or `null` | See full schema |
+| `dataRecovery` | No | [DataRecoveryObservation](shapes.md#datarecoveryobservation) or `null` | See full schema |
+| `createdAt` | Yes | `number` or `null` | See full schema |
+| `updatedAt` | Yes | `number` or `null` | See full schema |
+| `sharingEnabled` | Yes | `boolean` or `null` | See full schema |
 | `kmsKeyId` | Yes | `string` or `null` | See full schema |
-| `tags` | Yes | Map of `string` | Properties 0–50 |
+| `tags` | Yes | Map of `string` or `null` | See full schema |
 | `version` | Yes | `integer` | Minimum 1 |
 | `provenance` | Yes | `string` | Length 1–2048 |
+| `localUpdatedAt` | Yes | `number` or `null` | See full schema |
+| `normalizationDiagnostics` | Yes | Array of [NormalizationDiagnostic](shapes.md#normalizationdiagnostic) | Items 0–1000 |
 
 ```json
 {
@@ -1663,9 +2070,9 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
   "properties": {
     "policyArn": {
       "type": "string",
-      "minLength": 20,
+      "minLength": 31,
       "maxLength": 2048,
-      "pattern": "^arn:aws[a-z-]*:resiliencehub:[a-z0-9-]+:[0-9]{12}:(system|service|policy)/[A-Za-z0-9_-]+$"
+      "pattern": "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system|service|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$"
     },
     "name": {
       "type": "string",
@@ -1684,29 +2091,82 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
       "maxLength": 2048
     },
     "availabilitySlo": {
-      "$ref": "#/$defs/AvailabilitySlo"
+      "anyOf": [
+        {
+          "$ref": "#/$defs/AvailabilitySlo"
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "multiAz": {
-      "$ref": "#/$defs/DisasterRecovery"
+      "anyOf": [
+        {
+          "$ref": "#/$defs/DisasterRecoveryObservation"
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "multiRegion": {
-      "$ref": "#/$defs/DisasterRecovery"
+      "anyOf": [
+        {
+          "$ref": "#/$defs/DisasterRecoveryObservation"
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "dataRecovery": {
-      "$ref": "#/$defs/DataRecovery"
+      "anyOf": [
+        {
+          "$ref": "#/$defs/DataRecoveryObservation"
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "createdAt": {
-      "type": "number",
-      "minimum": 0,
-      "maximum": 253402300799
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 253402300799,
+          "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+          "x-precision": "milliseconds"
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "updatedAt": {
-      "type": "number",
-      "minimum": 0,
-      "maximum": 253402300799
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 253402300799,
+          "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+          "x-precision": "milliseconds"
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "sharingEnabled": {
-      "type": "boolean"
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "kmsKeyId": {
       "anyOf": [
@@ -1721,18 +2181,27 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
       ]
     },
     "tags": {
-      "type": "object",
-      "propertyNames": {
-        "type": "string",
-        "minLength": 1,
-        "maxLength": 128
-      },
-      "additionalProperties": {
-        "type": "string",
-        "minLength": 0,
-        "maxLength": 256
-      },
-      "maxProperties": 50
+      "anyOf": [
+        {
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[^\\x00-\\x1f\\x22]+$"
+          },
+          "additionalProperties": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 256,
+            "pattern": "^[^\\x00-\\x1f\\x22]*$"
+          },
+          "maxProperties": 50
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "version": {
       "type": "integer",
@@ -1742,6 +2211,29 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
       "type": "string",
       "minLength": 1,
       "maxLength": 2048
+    },
+    "localUpdatedAt": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 253402300799,
+          "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+          "x-precision": "milliseconds"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "normalizationDiagnostics": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/NormalizationDiagnostic"
+      },
+      "minItems": 0,
+      "maxItems": 1000,
+      "uniqueItems": false
     }
   },
   "required": [
@@ -1755,7 +2247,9 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
     "kmsKeyId",
     "tags",
     "version",
-    "provenance"
+    "provenance",
+    "localUpdatedAt",
+    "normalizationDiagnostics"
   ],
   "additionalProperties": false
 }
@@ -1765,18 +2259,22 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
 
 | Member | Required | Type | Constraints |
 | --- | --- | --- | --- |
-| `serviceArn` | Yes | `string` | Length 20–2048; Pattern `^arn:aws[a-z-]*:resiliencehub:[a-z0-9-]+:[0-9]{12}:(system\|service\|policy)/[A-Za-z0-9_-]+$` |
+| `serviceArn` | Yes | `string` | Length 31–2048; Pattern `^arn:(aws\|aws-cn\|aws-iso\|aws-iso-[a-z]\|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system\|service\|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$` |
 | `assessmentId` | Yes | `string` | Length 1–256; Pattern `^[A-Za-z0-9][A-Za-z0-9._:-]*$` |
-| `status` | Yes | `string` | `NOT_STARTED`, `PENDING`, `IN_PROGRESS`, `SUCCESS`, `FAILED` |
-| `startedAt` | Yes | `number` | Minimum 0; Maximum 253402300799 |
+| `status` | Yes | `string` | `NOT_STARTED`, `PENDING`, `IN_PROGRESS`, `SUCCESS`, `FAILED`, `UNKNOWN` |
+| `startedAt` | Yes | `number` or `null` | See full schema |
 | `endedAt` | Yes | `number` or `null` | See full schema |
-| `observedAt` | Yes | `number` | Minimum 0; Maximum 253402300799 |
+| `observedAt` | Yes | `number` or `null` | See full schema |
 | `failureModeFindingsCount` | Yes | `integer` or `null` | See full schema |
 | `achievability` | Yes | [Achievability](shapes.md#achievability) | See shared shape or field semantics. |
 | `errorCode` | Yes | `string` or `null` | See full schema |
 | `errorMessage` | Yes | `string` or `null` | See full schema |
 | `version` | Yes | `integer` | Minimum 1 |
 | `provenance` | Yes | `string` | Length 1–2048 |
+| `rawStatus` | Yes | `string` or `null` | See full schema |
+| `assessmentCost` | Yes | `object` or `null` | See full schema |
+| `assessmentStep` | Yes | `string` or `null` | See full schema |
+| `normalizationDiagnostics` | Yes | Array of [NormalizationDiagnostic](shapes.md#normalizationdiagnostic) | Items 0–1000 |
 
 ```json
 {
@@ -1784,9 +2282,9 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
   "properties": {
     "serviceArn": {
       "type": "string",
-      "minLength": 20,
+      "minLength": 31,
       "maxLength": 2048,
-      "pattern": "^arn:aws[a-z-]*:resiliencehub:[a-z0-9-]+:[0-9]{12}:(system|service|policy)/[A-Za-z0-9_-]+$"
+      "pattern": "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system|service|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$"
     },
     "assessmentId": {
       "type": "string",
@@ -1801,20 +2299,32 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
         "PENDING",
         "IN_PROGRESS",
         "SUCCESS",
-        "FAILED"
+        "FAILED",
+        "UNKNOWN"
       ]
     },
     "startedAt": {
-      "type": "number",
-      "minimum": 0,
-      "maximum": 253402300799
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 253402300799,
+          "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+          "x-precision": "milliseconds"
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "endedAt": {
       "anyOf": [
         {
           "type": "number",
           "minimum": 0,
-          "maximum": 253402300799
+          "maximum": 253402300799,
+          "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+          "x-precision": "milliseconds"
         },
         {
           "type": "null"
@@ -1822,9 +2332,18 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
       ]
     },
     "observedAt": {
-      "type": "number",
-      "minimum": 0,
-      "maximum": 253402300799
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 253402300799,
+          "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+          "x-precision": "milliseconds"
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "failureModeFindingsCount": {
       "anyOf": [
@@ -1872,6 +2391,65 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
       "type": "string",
       "minLength": 1,
       "maxLength": 2048
+    },
+    "rawStatus": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2048
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "assessmentCost": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "amount": {
+              "type": "number",
+              "minimum": 0
+            },
+            "currency": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 3
+            }
+          },
+          "required": [
+            "amount",
+            "currency"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "assessmentStep": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2048
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "normalizationDiagnostics": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/NormalizationDiagnostic"
+      },
+      "minItems": 0,
+      "maxItems": 1000,
+      "uniqueItems": false
     }
   },
   "required": [
@@ -1886,7 +2464,11 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
     "errorCode",
     "errorMessage",
     "version",
-    "provenance"
+    "provenance",
+    "rawStatus",
+    "assessmentCost",
+    "assessmentStep",
+    "normalizationDiagnostics"
   ],
   "additionalProperties": false
 }
@@ -1896,26 +2478,34 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
 
 | Member | Required | Type | Constraints |
 | --- | --- | --- | --- |
-| `serviceArn` | Yes | `string` | Length 20–2048; Pattern `^arn:aws[a-z-]*:resiliencehub:[a-z0-9-]+:[0-9]{12}:(system\|service\|policy)/[A-Za-z0-9_-]+$` |
+| `serviceArn` | Yes | `string` | Length 31–2048; Pattern `^arn:(aws\|aws-cn\|aws-iso\|aws-iso-[a-z]\|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system\|service\|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$` |
 | `findingId` | Yes | `string` | Length 1–256; Pattern `^[A-Za-z0-9][A-Za-z0-9._:-]*$` |
 | `name` | Yes | `string` | Length 1–2048 |
 | `description` | Yes | `string` | Length 0–2048 |
 | `reasoning` | Yes | `string` | Length 0–2048 |
-| `severity` | Yes | `string` | `HIGH`, `MEDIUM`, `LOW` |
-| `status` | Yes | `string` | `OPEN`, `RESOLVED`, `IRRELEVANT` |
+| `severity` | Yes | `string` | `HIGH`, `MEDIUM`, `LOW`, `UNKNOWN` |
+| `status` | Yes | `string` | `OPEN`, `RESOLVED`, `IRRELEVANT`, `UNKNOWN` |
 | `failureCategory` | Yes | `string` | Length 1–2048 |
 | `policyComponent` | Yes | `string` | Length 1–2048 |
 | `serviceFunctions` | Yes | Array of `string` | Items 0–1000 |
 | `comment` | Yes | `string` | Length 0–2048 |
-| `updatedAt` | Yes | `number` | Minimum 0; Maximum 253402300799 |
+| `updatedAt` | Yes | `number` or `null` | See full schema |
 | `detailObservedAt` | Yes | `number` or `null` | See full schema |
-| `observationId` | Yes | `string` | Length 1–256; Pattern `^[A-Za-z0-9][A-Za-z0-9._:-]*$` |
-| `captureId` | Yes | `string` | Length 1–256; Pattern `^[A-Za-z0-9][A-Za-z0-9._:-]*$` |
-| `representation` | Yes | `string` | `DETAIL`, `SUMMARY` |
-| `recommendationIds` | Yes | Array of `string` | Items 0–1000 |
+| `observationId` | Yes | `string` or `null` | See full schema |
+| `captureId` | Yes | `string` or `null` | See full schema |
+| `representation` | Yes | `string` | `DETAIL`, `SUMMARY`, `UNKNOWN` |
+| `recommendationIds` | Yes | Array of `string` or `null` | See full schema |
 | `verification` | Yes | `string` | Length 1–2048 |
 | `version` | Yes | `integer` | Minimum 1 |
 | `provenance` | Yes | `string` | Length 1–2048 |
+| `rawSeverity` | Yes | `string` or `null` | See full schema |
+| `rawStatus` | Yes | `string` or `null` | See full schema |
+| `localUpdatedAt` | Yes | `number` or `null` | See full schema |
+| `recommendationPresence` | Yes | `string` | `PRESENT`, `EMPTY`, `OMITTED`, `NULL`, `NOT_FETCHED`, `UNKNOWN` |
+| `recommendationFields` | Yes | `object` or `null` | See full schema |
+| `findingCapture` | Yes | [FindingCapture](shapes.md#findingcapture) or `null` | See full schema |
+| `findingObservation` | Yes | [FindingObservation](shapes.md#findingobservation) or `null` | See full schema |
+| `normalizationDiagnostics` | Yes | Array of [NormalizationDiagnostic](shapes.md#normalizationdiagnostic) | Items 0–1000 |
 
 ```json
 {
@@ -1923,9 +2513,9 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
   "properties": {
     "serviceArn": {
       "type": "string",
-      "minLength": 20,
+      "minLength": 31,
       "maxLength": 2048,
-      "pattern": "^arn:aws[a-z-]*:resiliencehub:[a-z0-9-]+:[0-9]{12}:(system|service|policy)/[A-Za-z0-9_-]+$"
+      "pattern": "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system|service|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$"
     },
     "findingId": {
       "type": "string",
@@ -1953,7 +2543,8 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
       "enum": [
         "HIGH",
         "MEDIUM",
-        "LOW"
+        "LOW",
+        "UNKNOWN"
       ]
     },
     "status": {
@@ -1961,7 +2552,8 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
       "enum": [
         "OPEN",
         "RESOLVED",
-        "IRRELEVANT"
+        "IRRELEVANT",
+        "UNKNOWN"
       ]
     },
     "failureCategory": {
@@ -1991,16 +2583,27 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
       "maxLength": 2048
     },
     "updatedAt": {
-      "type": "number",
-      "minimum": 0,
-      "maximum": 253402300799
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 253402300799,
+          "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+          "x-precision": "milliseconds"
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "detailObservedAt": {
       "anyOf": [
         {
           "type": "number",
           "minimum": 0,
-          "maximum": 253402300799
+          "maximum": 253402300799,
+          "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+          "x-precision": "milliseconds"
         },
         {
           "type": "null"
@@ -2008,35 +2611,57 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
       ]
     },
     "observationId": {
-      "type": "string",
-      "minLength": 1,
-      "maxLength": 256,
-      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "captureId": {
-      "type": "string",
-      "minLength": 1,
-      "maxLength": 256,
-      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "representation": {
       "type": "string",
       "enum": [
         "DETAIL",
-        "SUMMARY"
+        "SUMMARY",
+        "UNKNOWN"
       ]
     },
     "recommendationIds": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "minLength": 1,
-        "maxLength": 256,
-        "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
-      },
-      "minItems": 0,
-      "maxItems": 1000,
-      "uniqueItems": false
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+          },
+          "minItems": 0,
+          "maxItems": 1000,
+          "uniqueItems": false
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "verification": {
       "type": "string",
@@ -2051,6 +2676,135 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
       "type": "string",
       "minLength": 1,
       "maxLength": 2048
+    },
+    "rawSeverity": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2048
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "rawStatus": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2048
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "localUpdatedAt": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 253402300799,
+          "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+          "x-precision": "milliseconds"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "recommendationPresence": {
+      "type": "string",
+      "enum": [
+        "PRESENT",
+        "EMPTY",
+        "OMITTED",
+        "NULL",
+        "NOT_FETCHED",
+        "UNKNOWN"
+      ]
+    },
+    "recommendationFields": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "infrastructureAndCodeRecommendations": {
+              "type": "string",
+              "enum": [
+                "PRESENT",
+                "EMPTY",
+                "OMITTED",
+                "NULL",
+                "NOT_FETCHED",
+                "UNKNOWN"
+              ]
+            },
+            "observabilityRecommendations": {
+              "type": "string",
+              "enum": [
+                "PRESENT",
+                "EMPTY",
+                "OMITTED",
+                "NULL",
+                "NOT_FETCHED",
+                "UNKNOWN"
+              ]
+            },
+            "testingRecommendations": {
+              "type": "string",
+              "enum": [
+                "PRESENT",
+                "EMPTY",
+                "OMITTED",
+                "NULL",
+                "NOT_FETCHED",
+                "UNKNOWN"
+              ]
+            }
+          },
+          "required": [
+            "infrastructureAndCodeRecommendations",
+            "observabilityRecommendations",
+            "testingRecommendations"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "findingCapture": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/FindingCapture"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "findingObservation": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/FindingObservation"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "normalizationDiagnostics": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/NormalizationDiagnostic"
+      },
+      "minItems": 0,
+      "maxItems": 1000,
+      "uniqueItems": false
     }
   },
   "required": [
@@ -2073,7 +2827,15 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
     "recommendationIds",
     "verification",
     "version",
-    "provenance"
+    "provenance",
+    "rawSeverity",
+    "rawStatus",
+    "localUpdatedAt",
+    "recommendationPresence",
+    "recommendationFields",
+    "findingCapture",
+    "findingObservation",
+    "normalizationDiagnostics"
   ],
   "additionalProperties": false
 }
@@ -2088,7 +2850,7 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
 | `basis` | Yes | `string` | Length 1–2048 |
 | `complexity` | Yes | `string` | `LOW`, `MEDIUM`, `HIGH`, `UNKNOWN` |
 | `source` | Yes | `string` | Length 1–2048 |
-| `estimatedAt` | Yes | `number` | Minimum 0; Maximum 253402300799 |
+| `estimatedAt` | Yes | `number` | Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.; Minimum 0; Maximum 253402300799; Runtime precision assertion: `milliseconds` |
 | `confidence` | Yes | `string` | Length 1–2048 |
 
 ```json
@@ -2133,7 +2895,9 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
     "estimatedAt": {
       "type": "number",
       "minimum": 0,
-      "maximum": 253402300799
+      "maximum": 253402300799,
+      "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+      "x-precision": "milliseconds"
     },
     "confidence": {
       "type": "string",
@@ -2162,7 +2926,7 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
 | `description` | Yes | `string` | Length 0–2048 |
 | `estimate` | Yes | [RecommendationEstimate](shapes.md#recommendationestimate) or `null` | See full schema |
 | `version` | Yes | `integer` | Minimum 1 |
-| `updatedAt` | Yes | `number` | Minimum 0; Maximum 253402300799 |
+| `updatedAt` | Yes | `number` | Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.; Minimum 0; Maximum 253402300799; Runtime precision assertion: `milliseconds` |
 | `provenance` | Yes | `string` | Length 1–2048 |
 
 ```json
@@ -2196,7 +2960,9 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
     "updatedAt": {
       "type": "number",
       "minimum": 0,
-      "maximum": 253402300799
+      "maximum": 253402300799,
+      "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+      "x-precision": "milliseconds"
     },
     "provenance": {
       "type": "string",
@@ -2221,13 +2987,13 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
 | Member | Required | Type | Constraints |
 | --- | --- | --- | --- |
 | `recommendationId` | Yes | `string` | Length 1–256; Pattern `^[A-Za-z0-9][A-Za-z0-9._:-]*$` |
-| `serviceArn` | Yes | `string` | Length 20–2048; Pattern `^arn:aws[a-z-]*:resiliencehub:[a-z0-9-]+:[0-9]{12}:(system\|service\|policy)/[A-Za-z0-9_-]+$` |
+| `serviceArn` | Yes | `string` | Length 31–2048; Pattern `^arn:(aws\|aws-cn\|aws-iso\|aws-iso-[a-z]\|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system\|service\|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$` |
 | `findingId` | Yes | `string` | Length 1–256; Pattern `^[A-Za-z0-9][A-Za-z0-9._:-]*$` |
 | `findingObservationId` | Yes | `string` | Length 1–256; Pattern `^[A-Za-z0-9][A-Za-z0-9._:-]*$` |
 | `category` | Yes | `string` | `INFRASTRUCTURE_AND_CODE`, `OBSERVABILITY`, `TESTING` |
 | `sourceArrayOrdinal` | Yes | `integer` | Minimum 0 |
 | `suggestedChanges` | Yes | Array of `string` | Items 0–1000 |
-| `capturedAt` | Yes | `number` | Minimum 0; Maximum 253402300799 |
+| `capturedAt` | Yes | `number` | Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.; Minimum 0; Maximum 253402300799; Runtime precision assertion: `milliseconds` |
 | `enrichment` | Yes | [RecommendationEnrichment](shapes.md#recommendationenrichment) | See shared shape or field semantics. |
 | `provenance` | Yes | `string` | Length 1–2048 |
 
@@ -2243,9 +3009,9 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
     },
     "serviceArn": {
       "type": "string",
-      "minLength": 20,
+      "minLength": 31,
       "maxLength": 2048,
-      "pattern": "^arn:aws[a-z-]*:resiliencehub:[a-z0-9-]+:[0-9]{12}:(system|service|policy)/[A-Za-z0-9_-]+$"
+      "pattern": "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system|service|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$"
     },
     "findingId": {
       "type": "string",
@@ -2285,7 +3051,9 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
     "capturedAt": {
       "type": "number",
       "minimum": 0,
-      "maximum": 253402300799
+      "maximum": 253402300799,
+      "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+      "x-precision": "milliseconds"
     },
     "enrichment": {
       "$ref": "#/$defs/RecommendationEnrichment"
@@ -2316,7 +3084,7 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
 
 | Member | Required | Type | Constraints |
 | --- | --- | --- | --- |
-| `serviceArn` | Yes | `string` | Length 20–2048; Pattern `^arn:aws[a-z-]*:resiliencehub:[a-z0-9-]+:[0-9]{12}:(system\|service\|policy)/[A-Za-z0-9_-]+$` |
+| `serviceArn` | Yes | `string` | Length 31–2048; Pattern `^arn:(aws\|aws-cn\|aws-iso\|aws-iso-[a-z]\|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system\|service\|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$` |
 | `dependencyId` | Yes | `string` | Length 1–256; Pattern `^[A-Za-z0-9][A-Za-z0-9._:-]*$` |
 | `dependencyName` | Yes | `string` | Length 1–2048 |
 | `dnsName` | Yes | `string` or `null` | See full schema |
@@ -2326,11 +3094,14 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
 | `provider` | Yes | `string` | Length 1–2048 |
 | `sourceRegions` | Yes | Array of `string` | Items 0–1000 |
 | `lastDetectedTime` | Yes | `number` or `null` | See full schema |
-| `updatedAt` | Yes | `number` | Minimum 0; Maximum 253402300799 |
+| `updatedAt` | Yes | `number` or `null` | See full schema |
 | `governance` | Yes | `object` | Unknown members rejected |
 | `resolvedServiceArn` | Yes | `string` or `null` | See full schema |
 | `version` | Yes | `integer` | Minimum 1 |
 | `provenance` | Yes | `string` | Length 1–2048 |
+| `localUpdatedAt` | Yes | `number` or `null` | See full schema |
+| `rawCriticality` | Yes | `string` or `null` | See full schema |
+| `normalizationDiagnostics` | Yes | Array of [NormalizationDiagnostic](shapes.md#normalizationdiagnostic) | Items 0–1000 |
 
 ```json
 {
@@ -2338,9 +3109,9 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
   "properties": {
     "serviceArn": {
       "type": "string",
-      "minLength": 20,
+      "minLength": 31,
       "maxLength": 2048,
-      "pattern": "^arn:aws[a-z-]*:resiliencehub:[a-z0-9-]+:[0-9]{12}:(system|service|policy)/[A-Za-z0-9_-]+$"
+      "pattern": "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system|service|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$"
     },
     "dependencyId": {
       "type": "string",
@@ -2404,7 +3175,9 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
         {
           "type": "number",
           "minimum": 0,
-          "maximum": 253402300799
+          "maximum": 253402300799,
+          "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+          "x-precision": "milliseconds"
         },
         {
           "type": "null"
@@ -2412,9 +3185,18 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
       ]
     },
     "updatedAt": {
-      "type": "number",
-      "minimum": 0,
-      "maximum": 253402300799
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 253402300799,
+          "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+          "x-precision": "milliseconds"
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "governance": {
       "type": "object",
@@ -2435,7 +3217,9 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
         "observedAt": {
           "type": "number",
           "minimum": 0,
-          "maximum": 253402300799
+          "maximum": 253402300799,
+          "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+          "x-precision": "milliseconds"
         },
         "version": {
           "type": "integer",
@@ -2454,9 +3238,9 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
       "anyOf": [
         {
           "type": "string",
-          "minLength": 20,
+          "minLength": 31,
           "maxLength": 2048,
-          "pattern": "^arn:aws[a-z-]*:resiliencehub:[a-z0-9-]+:[0-9]{12}:(system|service|policy)/[A-Za-z0-9_-]+$"
+          "pattern": "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system|service|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$"
         },
         {
           "type": "null"
@@ -2471,6 +3255,41 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
       "type": "string",
       "minLength": 1,
       "maxLength": 2048
+    },
+    "localUpdatedAt": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 253402300799,
+          "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+          "x-precision": "milliseconds"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "rawCriticality": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2048
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "normalizationDiagnostics": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/NormalizationDiagnostic"
+      },
+      "minItems": 0,
+      "maxItems": 1000,
+      "uniqueItems": false
     }
   },
   "required": [
@@ -2488,7 +3307,10 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
     "governance",
     "resolvedServiceArn",
     "version",
-    "provenance"
+    "provenance",
+    "localUpdatedAt",
+    "rawCriticality",
+    "normalizationDiagnostics"
   ],
   "additionalProperties": false
 }
@@ -2641,12 +3463,12 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
 
 | Member | Required | Type | Constraints |
 | --- | --- | --- | --- |
-| `serviceArn` | Yes | `string` | Length 20–2048; Pattern `^arn:aws[a-z-]*:resiliencehub:[a-z0-9-]+:[0-9]{12}:(system\|service\|policy)/[A-Za-z0-9_-]+$` |
+| `serviceArn` | Yes | `string` | Length 31–2048; Pattern `^arn:(aws\|aws-cn\|aws-iso\|aws-iso-[a-z]\|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system\|service\|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$` |
 | `topologyId` | Yes | `string` | Length 1–256; Pattern `^[A-Za-z0-9][A-Za-z0-9._:-]*$` |
-| `capturedAt` | Yes | `number` | Minimum 0; Maximum 253402300799 |
-| `captureStartedAt` | Yes | `number` | Minimum 0; Maximum 253402300799 |
-| `captureEndedAt` | Yes | `number` | Minimum 0; Maximum 253402300799 |
-| `sourceObservedAt` | Yes | `number` | Minimum 0; Maximum 253402300799 |
+| `capturedAt` | Yes | `number` | Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.; Minimum 0; Maximum 253402300799; Runtime precision assertion: `milliseconds` |
+| `captureStartedAt` | Yes | `number` | Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.; Minimum 0; Maximum 253402300799; Runtime precision assertion: `milliseconds` |
+| `captureEndedAt` | Yes | `number` | Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.; Minimum 0; Maximum 253402300799; Runtime precision assertion: `milliseconds` |
+| `sourceObservedAt` | Yes | `number` | Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.; Minimum 0; Maximum 253402300799; Runtime precision assertion: `milliseconds` |
 | `collectionStatus` | Yes | `string` | `COMPLETE`, `PARTIAL` |
 | `queryScope` | Yes | `object` | See shared shape or field semantics. |
 | `resourceCount` | Yes | `integer` | Minimum 0 |
@@ -2667,9 +3489,9 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
   "properties": {
     "serviceArn": {
       "type": "string",
-      "minLength": 20,
+      "minLength": 31,
       "maxLength": 2048,
-      "pattern": "^arn:aws[a-z-]*:resiliencehub:[a-z0-9-]+:[0-9]{12}:(system|service|policy)/[A-Za-z0-9_-]+$"
+      "pattern": "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system|service|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$"
     },
     "topologyId": {
       "type": "string",
@@ -2680,22 +3502,30 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
     "capturedAt": {
       "type": "number",
       "minimum": 0,
-      "maximum": 253402300799
+      "maximum": 253402300799,
+      "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+      "x-precision": "milliseconds"
     },
     "captureStartedAt": {
       "type": "number",
       "minimum": 0,
-      "maximum": 253402300799
+      "maximum": 253402300799,
+      "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+      "x-precision": "milliseconds"
     },
     "captureEndedAt": {
       "type": "number",
       "minimum": 0,
-      "maximum": 253402300799
+      "maximum": 253402300799,
+      "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+      "x-precision": "milliseconds"
     },
     "sourceObservedAt": {
       "type": "number",
       "minimum": 0,
-      "maximum": 253402300799
+      "maximum": 253402300799,
+      "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+      "x-precision": "milliseconds"
     },
     "collectionStatus": {
       "type": "string",
@@ -2816,14 +3646,17 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
 | `serviceArn` | Yes | `string` or `null` | See full schema |
 | `entityType` | Yes | `string` | Length 1–2048 |
 | `entityId` | Yes | `string` | Length 1–2048 |
-| `occurredAt` | Yes | `number` | Minimum 0; Maximum 253402300799 |
-| `receivedAt` | Yes | `number` | Minimum 0; Maximum 253402300799 |
+| `occurredAt` | Yes | `number` | Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.; Minimum 0; Maximum 253402300799; Runtime precision assertion: `milliseconds` |
+| `receivedAt` | Yes | `number` | Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.; Minimum 0; Maximum 253402300799; Runtime precision assertion: `milliseconds` |
 | `linkage` | Yes | `string` | `ASSERTED`, `INFERRED` |
 | `refreshStatus` | Yes | `string` | Length 1–2048 |
 | `sequence` | Yes | `integer` | Minimum 1 |
 | `mock` | Yes | `boolean` | See shared shape or field semantics. |
 | `producerPrincipalId` | Yes | `string` or `null` | See full schema |
 | `trustedSource` | Yes | `boolean` | See shared shape or field semantics. |
+| `subjects` | Yes | Array of [EventSubject](shapes.md#eventsubject) | Items 0–unbounded |
+| `rawEvent` | Yes | `object` or `null` | See full schema |
+| `correlationIds` | Yes | Array of `string` | Items 0–32 |
 
 ```json
 {
@@ -2892,9 +3725,9 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
       "anyOf": [
         {
           "type": "string",
-          "minLength": 20,
+          "minLength": 31,
           "maxLength": 2048,
-          "pattern": "^arn:aws[a-z-]*:resiliencehub:[a-z0-9-]+:[0-9]{12}:(system|service|policy)/[A-Za-z0-9_-]+$"
+          "pattern": "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system|service|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$"
         },
         {
           "type": "null"
@@ -2914,12 +3747,16 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
     "occurredAt": {
       "type": "number",
       "minimum": 0,
-      "maximum": 253402300799
+      "maximum": 253402300799,
+      "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+      "x-precision": "milliseconds"
     },
     "receivedAt": {
       "type": "number",
       "minimum": 0,
-      "maximum": 253402300799
+      "maximum": 253402300799,
+      "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+      "x-precision": "milliseconds"
     },
     "linkage": {
       "type": "string",
@@ -2954,6 +3791,36 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
     },
     "trustedSource": {
       "type": "boolean"
+    },
+    "subjects": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/EventSubject"
+      },
+      "minItems": 0,
+      "uniqueItems": false
+    },
+    "rawEvent": {
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": true
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "correlationIds": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 256
+      },
+      "minItems": 0,
+      "maxItems": 32,
+      "uniqueItems": false
     }
   },
   "required": [
@@ -2977,7 +3844,10 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
     "sequence",
     "mock",
     "producerPrincipalId",
-    "trustedSource"
+    "trustedSource",
+    "subjects",
+    "rawEvent",
+    "correlationIds"
   ],
   "additionalProperties": false
 }
@@ -2987,18 +3857,29 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
 
 | Member | Required | Type | Constraints |
 | --- | --- | --- | --- |
-| `serviceArn` | Yes | `string` | Length 20–2048; Pattern `^arn:aws[a-z-]*:resiliencehub:[a-z0-9-]+:[0-9]{12}:(system\|service\|policy)/[A-Za-z0-9_-]+$` |
+| `serviceArn` | Yes | `string` | Length 31–2048; Pattern `^arn:(aws\|aws-cn\|aws-iso\|aws-iso-[a-z]\|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system\|service\|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$` |
 | `health` | Yes | [HealthProjection](shapes.md#healthprojection) | See shared shape or field semantics. |
 | `posture` | Yes | [PostureProjection](shapes.md#postureprojection) | See shared shape or field semantics. |
-| `assessmentStatus` | Yes | `string` | Length 1–2048 |
+| `assessmentStatus` | Yes | `string` | `NOT_STARTED`, `PENDING`, `IN_PROGRESS`, `SUCCESS`, `FAILED`, `UNKNOWN` |
 | `dependencyDiscovery` | Yes | [DependencyDiscoveryConfig](shapes.md#dependencydiscoveryconfig) | See shared shape or field semantics. |
 | `resourceDiscovery` | Yes | [ResourceDiscovery](shapes.md#resourcediscovery) | See shared shape or field semantics. |
 | `needsAttention` | Yes | `boolean` | See shared shape or field semantics. |
-| `openFindingsCount` | Yes | `integer` | Minimum 0 |
-| `computedAt` | Yes | `number` | Minimum 0; Maximum 253402300799 |
+| `openFindingsCount` | Yes | `integer` or `null` | See full schema |
+| `computedAt` | Yes | `number` | Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.; Minimum 0; Maximum 253402300799; Runtime precision assertion: `milliseconds` |
 | `version` | Yes | `integer` | Minimum 1 |
 | `refreshRequired` | Yes | `boolean` | See shared shape or field semantics. |
 | `provenance` | Yes | `string` | Length 1–2048 |
+| `rawAssessmentStatus` | Yes | `string` or `null` | See full schema |
+| `projectionVersion` | Yes | `integer` | Minimum 1 |
+| `policyContextRefreshRequired` | Yes | `boolean` | See shared shape or field semantics. |
+| `reassessmentRequired` | Yes | `boolean` | See shared shape or field semantics. |
+| `rerunAssessment` | Yes | `boolean` or `null` | See full schema |
+| `effectivePolicyEvidence` | Yes | [EffectivePolicyEvidence](shapes.md#effectivepolicyevidence) | See shared shape or field semantics. |
+| `findingCoverage` | Yes | [FindingCoverage](shapes.md#findingcoverage) | See shared shape or field semantics. |
+| `assessmentCoverage` | Yes | [AssessmentCoverage](shapes.md#assessmentcoverage) | See shared shape or field semantics. |
+| `attentionReasons` | Yes | Array of [AttentionReason](shapes.md#attentionreason) | Items 0–1000 |
+| `selectedObservations` | Yes | [SelectedObservations](shapes.md#selectedobservations) | See shared shape or field semantics. |
+| `normalizationDiagnostics` | Yes | Array of [NormalizationDiagnostic](shapes.md#normalizationdiagnostic) | Items 0–1000 |
 
 ```json
 {
@@ -3006,9 +3887,9 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
   "properties": {
     "serviceArn": {
       "type": "string",
-      "minLength": 20,
+      "minLength": 31,
       "maxLength": 2048,
-      "pattern": "^arn:aws[a-z-]*:resiliencehub:[a-z0-9-]+:[0-9]{12}:(system|service|policy)/[A-Za-z0-9_-]+$"
+      "pattern": "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system|service|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$"
     },
     "health": {
       "$ref": "#/$defs/HealthProjection"
@@ -3018,8 +3899,14 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
     },
     "assessmentStatus": {
       "type": "string",
-      "minLength": 1,
-      "maxLength": 2048
+      "enum": [
+        "NOT_STARTED",
+        "PENDING",
+        "IN_PROGRESS",
+        "SUCCESS",
+        "FAILED",
+        "UNKNOWN"
+      ]
     },
     "dependencyDiscovery": {
       "$ref": "#/$defs/DependencyDiscoveryConfig"
@@ -3031,13 +3918,22 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
       "type": "boolean"
     },
     "openFindingsCount": {
-      "type": "integer",
-      "minimum": 0
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 0
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "computedAt": {
       "type": "number",
       "minimum": 0,
-      "maximum": 253402300799
+      "maximum": 253402300799,
+      "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+      "x-precision": "milliseconds"
     },
     "version": {
       "type": "integer",
@@ -3050,6 +3946,68 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
       "type": "string",
       "minLength": 1,
       "maxLength": 2048
+    },
+    "rawAssessmentStatus": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2048
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "projectionVersion": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "policyContextRefreshRequired": {
+      "type": "boolean"
+    },
+    "reassessmentRequired": {
+      "type": "boolean"
+    },
+    "rerunAssessment": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "effectivePolicyEvidence": {
+      "$ref": "#/$defs/EffectivePolicyEvidence"
+    },
+    "findingCoverage": {
+      "$ref": "#/$defs/FindingCoverage"
+    },
+    "assessmentCoverage": {
+      "$ref": "#/$defs/AssessmentCoverage"
+    },
+    "attentionReasons": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/AttentionReason"
+      },
+      "minItems": 0,
+      "maxItems": 1000,
+      "uniqueItems": false
+    },
+    "selectedObservations": {
+      "$ref": "#/$defs/SelectedObservations"
+    },
+    "normalizationDiagnostics": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/NormalizationDiagnostic"
+      },
+      "minItems": 0,
+      "maxItems": 1000,
+      "uniqueItems": false
     }
   },
   "required": [
@@ -3064,7 +4022,18 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
     "computedAt",
     "version",
     "refreshRequired",
-    "provenance"
+    "provenance",
+    "rawAssessmentStatus",
+    "projectionVersion",
+    "policyContextRefreshRequired",
+    "reassessmentRequired",
+    "rerunAssessment",
+    "effectivePolicyEvidence",
+    "findingCoverage",
+    "assessmentCoverage",
+    "attentionReasons",
+    "selectedObservations",
+    "normalizationDiagnostics"
   ],
   "additionalProperties": false
 }
@@ -3084,11 +4053,24 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
 | `unknownPostureCount` | Yes | `integer` | Minimum 0 |
 | `stalePostureCount` | Yes | `integer` | Minimum 0 |
 | `attentionCount` | Yes | `integer` | Minimum 0 |
-| `openFindingCount` | Yes | `integer` | Minimum 0 |
-| `contributorServiceArns` | Yes | Array of `string` | Items 0–1000 |
-| `computedAt` | Yes | `number` | Minimum 0; Maximum 253402300799 |
+| `openFindingCount` | Yes | `integer` or `null` | See full schema |
+| `contributorServiceArns` | Yes | Array of `string` | Items 0–unbounded |
+| `computedAt` | Yes | `number` | Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.; Minimum 0; Maximum 253402300799; Runtime precision assertion: `milliseconds` |
 | `aggregationRule` | Yes | `string` | Length 1–2048 |
 | `interpretation` | Yes | `string` | Length 1–2048 |
+| `projectionVersion` | Yes | `integer` | Minimum 1 |
+| `currentAssessedCount` | Yes | `integer` | Minimum 0 |
+| `lastKnownAssessedCount` | Yes | `integer` | Minimum 0 |
+| `currentAssessmentCoverage` | Yes | `number` or `null` | See full schema |
+| `lastKnownAssessmentCoverage` | Yes | `number` or `null` | See full schema |
+| `partialAssessmentCount` | Yes | `integer` | Minimum 0 |
+| `inaccessibleAssessmentCount` | Yes | `integer` | Minimum 0 |
+| `unassessedCount` | Yes | `integer` | Minimum 0 |
+| `observedOpenFindingCount` | Yes | `integer` | Minimum 0 |
+| `incompleteFindingServiceCount` | Yes | `integer` | Minimum 0 |
+| `attentionByDimension` | Yes | Map of `integer` | See shared shape or field semantics. |
+| `membershipContext` | Yes | Array of `object` | Items 0–unbounded |
+| `evidenceRuleVersion` | Yes | `string` | Length 1–2048 |
 
 ```json
 {
@@ -3135,25 +4117,33 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
       "minimum": 0
     },
     "openFindingCount": {
-      "type": "integer",
-      "minimum": 0
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 0
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "contributorServiceArns": {
       "type": "array",
       "items": {
         "type": "string",
-        "minLength": 20,
+        "minLength": 31,
         "maxLength": 2048,
-        "pattern": "^arn:aws[a-z-]*:resiliencehub:[a-z0-9-]+:[0-9]{12}:(system|service|policy)/[A-Za-z0-9_-]+$"
+        "pattern": "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system|service|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$"
       },
       "minItems": 0,
-      "maxItems": 1000,
       "uniqueItems": false
     },
     "computedAt": {
       "type": "number",
       "minimum": 0,
-      "maximum": 253402300799
+      "maximum": 253402300799,
+      "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+      "x-precision": "milliseconds"
     },
     "aggregationRule": {
       "type": "string",
@@ -3161,6 +4151,104 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
       "maxLength": 2048
     },
     "interpretation": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048
+    },
+    "projectionVersion": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "currentAssessedCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "lastKnownAssessedCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "currentAssessmentCoverage": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "lastKnownAssessmentCoverage": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "partialAssessmentCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "inaccessibleAssessmentCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "unassessedCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "observedOpenFindingCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "incompleteFindingServiceCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "attentionByDimension": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "integer",
+        "minimum": 0
+      }
+    },
+    "membershipContext": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "serviceArn": {
+            "type": "string",
+            "minLength": 31,
+            "maxLength": 2048,
+            "pattern": "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system|service|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$"
+          },
+          "associatedSystems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/AssociatedSystem"
+            },
+            "minItems": 0,
+            "maxItems": 20,
+            "uniqueItems": false
+          }
+        },
+        "required": [
+          "serviceArn",
+          "associatedSystems"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0,
+      "uniqueItems": false
+    },
+    "evidenceRuleVersion": {
       "type": "string",
       "minLength": 1,
       "maxLength": 2048
@@ -3181,7 +4269,20 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
     "contributorServiceArns",
     "computedAt",
     "aggregationRule",
-    "interpretation"
+    "interpretation",
+    "projectionVersion",
+    "currentAssessedCount",
+    "lastKnownAssessedCount",
+    "currentAssessmentCoverage",
+    "lastKnownAssessmentCoverage",
+    "partialAssessmentCount",
+    "inaccessibleAssessmentCount",
+    "unassessedCount",
+    "observedOpenFindingCount",
+    "incompleteFindingServiceCount",
+    "attentionByDimension",
+    "membershipContext",
+    "evidenceRuleVersion"
   ],
   "additionalProperties": false
 }
@@ -3192,8 +4293,8 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
 | Member | Required | Type | Constraints |
 | --- | --- | --- | --- |
 | `snapshotId` | Yes | `string` | Length 1–256; Pattern `^[A-Za-z0-9][A-Za-z0-9._:-]*$` |
-| `createdAt` | Yes | `number` | Minimum 0; Maximum 253402300799 |
-| `expiresAt` | Yes | `number` | Minimum 0; Maximum 253402300799 |
+| `createdAt` | Yes | `number` | Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.; Minimum 0; Maximum 253402300799; Runtime precision assertion: `milliseconds` |
+| `expiresAt` | Yes | `number` | Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.; Minimum 0; Maximum 253402300799; Runtime precision assertion: `milliseconds` |
 | `totalResults` | Yes | `integer` | Minimum 0 |
 
 ```json
@@ -3209,12 +4310,16 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
     "createdAt": {
       "type": "number",
       "minimum": 0,
-      "maximum": 253402300799
+      "maximum": 253402300799,
+      "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+      "x-precision": "milliseconds"
     },
     "expiresAt": {
       "type": "number",
       "minimum": 0,
-      "maximum": 253402300799
+      "maximum": 253402300799,
+      "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+      "x-precision": "milliseconds"
     },
     "totalResults": {
       "type": "integer",
@@ -3237,7 +4342,7 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
 | --- | --- | --- | --- |
 | `resourceId` | Yes | `string` | Length 1–2048 |
 | `deleted` | Yes | `boolean` | Exactly `true` |
-| `deletedAt` | Yes | `number` | Minimum 0; Maximum 253402300799 |
+| `deletedAt` | Yes | `number` | Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.; Minimum 0; Maximum 253402300799; Runtime precision assertion: `milliseconds` |
 | `version` | Yes | `integer` | Minimum 1 |
 | `historyRetained` | Yes | `boolean` | Exactly `true` |
 
@@ -3257,7 +4362,9 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
     "deletedAt": {
       "type": "number",
       "minimum": 0,
-      "maximum": 253402300799
+      "maximum": 253402300799,
+      "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+      "x-precision": "milliseconds"
     },
     "version": {
       "type": "integer",
@@ -3274,6 +4381,1977 @@ The schema dialect is JSON Schema 2020-12. A schema containing `#/$defs/Name` is
     "deletedAt",
     "version",
     "historyRetained"
+  ],
+  "additionalProperties": false
+}
+```
+
+## NormalizationDiagnostic
+
+| Member | Required | Type | Constraints |
+| --- | --- | --- | --- |
+| `path` | Yes | `string` | Length 1–2048 |
+| `rawValue` | Yes | `string` or `null` | See full schema |
+| `normalizedValue` | Yes | `string` or `null` | See full schema |
+| `reason` | Yes | `string` | `MISSING`, `UNKNOWN_ENUM`, `INVALID_VALUE` |
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "path": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048
+    },
+    "rawValue": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "normalizedValue": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2048
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "reason": {
+      "type": "string",
+      "enum": [
+        "MISSING",
+        "UNKNOWN_ENUM",
+        "INVALID_VALUE"
+      ]
+    }
+  },
+  "required": [
+    "path",
+    "rawValue",
+    "normalizedValue",
+    "reason"
+  ],
+  "additionalProperties": false
+}
+```
+
+## PermissionModelObservation
+
+| Member | Required | Type | Constraints |
+| --- | --- | --- | --- |
+| `invokerRoleName` | Yes | `string` or `null` | See full schema |
+| `crossAccountRoles` | Yes | Array of `object` or `null` | See full schema |
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "invokerRoleName": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 64
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "crossAccountRoles": {
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "crossAccountRoleArn": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 2048
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "externalId": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 2048
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "crossAccountRoleArn",
+              "externalId"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 0,
+          "maxItems": 5,
+          "uniqueItems": false
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "invokerRoleName",
+    "crossAccountRoles"
+  ],
+  "additionalProperties": false
+}
+```
+
+## DisasterRecoveryObservation
+
+| Member | Required | Type | Constraints |
+| --- | --- | --- | --- |
+| `rtoInMinutes` | Yes | `integer` or `null` | See full schema |
+| `rpoInMinutes` | Yes | `integer` or `null` | See full schema |
+| `disasterRecoveryApproach` | Yes | `string` or `null` | See full schema |
+| `rawDisasterRecoveryApproach` | Yes | `string` or `null` | See full schema |
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "rtoInMinutes": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 0
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "rpoInMinutes": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 0
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "disasterRecoveryApproach": {
+      "anyOf": [
+        {
+          "type": "string",
+          "enum": [
+            "ACTIVE_ACTIVE",
+            "HOT_STANDBY",
+            "WARM_STANDBY",
+            "PILOT_LIGHT",
+            "BACKUP_AND_RESTORE",
+            "UNKNOWN"
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "rawDisasterRecoveryApproach": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2048
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "rtoInMinutes",
+    "rpoInMinutes",
+    "disasterRecoveryApproach",
+    "rawDisasterRecoveryApproach"
+  ],
+  "additionalProperties": false
+}
+```
+
+## DataRecoveryObservation
+
+| Member | Required | Type | Constraints |
+| --- | --- | --- | --- |
+| `timeBetweenBackupsInMinutes` | Yes | `integer` or `null` | See full schema |
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "timeBetweenBackupsInMinutes": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 0
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "timeBetweenBackupsInMinutes"
+  ],
+  "additionalProperties": false
+}
+```
+
+## AttentionReason
+
+| Member | Required | Type | Constraints |
+| --- | --- | --- | --- |
+| `code` | Yes | `string` | Length 1–128 |
+| `dimension` | Yes | `string` | Length 1–64 |
+| `severity` | Yes | `string` | `INFO`, `WARNING`, `ERROR` |
+| `message` | Yes | `string` | Length 0–2048 |
+| `observedAt` | Yes | `number` or `null` | See full schema |
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "code": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "dimension": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "INFO",
+        "WARNING",
+        "ERROR"
+      ]
+    },
+    "message": {
+      "type": "string",
+      "minLength": 0,
+      "maxLength": 2048
+    },
+    "observedAt": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 253402300799,
+          "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+          "x-precision": "milliseconds"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "code",
+    "dimension",
+    "severity",
+    "message",
+    "observedAt"
+  ],
+  "additionalProperties": false
+}
+```
+
+## AssessmentCoverage
+
+| Member | Required | Type | Constraints |
+| --- | --- | --- | --- |
+| `status` | Yes | `string` | `CURRENT`, `STALE`, `PARTIAL`, `UNASSESSED`, `INACCESSIBLE` |
+| `lastKnown` | Yes | `boolean` | See shared shape or field semantics. |
+| `current` | Yes | `boolean` | See shared shape or field semantics. |
+| `observedAt` | Yes | `number` or `null` | See full schema |
+| `stale` | Yes | `boolean` | See shared shape or field semantics. |
+| `partial` | Yes | `boolean` | See shared shape or field semantics. |
+| `inaccessible` | Yes | `boolean` | See shared shape or field semantics. |
+| `contextRefreshRequired` | Yes | `boolean` | See shared shape or field semantics. |
+| `policyContextKnown` | Yes | `boolean` | See shared shape or field semantics. |
+| `expectedComponents` | Yes | Array of `string` or `null` | See full schema |
+| `ruleVersion` | Yes | `string` | Length 1–2048 |
+| `reason` | Yes | `string` | Length 0–2048 |
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "status": {
+      "type": "string",
+      "enum": [
+        "CURRENT",
+        "STALE",
+        "PARTIAL",
+        "UNASSESSED",
+        "INACCESSIBLE"
+      ]
+    },
+    "lastKnown": {
+      "type": "boolean"
+    },
+    "current": {
+      "type": "boolean"
+    },
+    "observedAt": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 253402300799,
+          "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+          "x-precision": "milliseconds"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "stale": {
+      "type": "boolean"
+    },
+    "partial": {
+      "type": "boolean"
+    },
+    "inaccessible": {
+      "type": "boolean"
+    },
+    "contextRefreshRequired": {
+      "type": "boolean"
+    },
+    "policyContextKnown": {
+      "type": "boolean"
+    },
+    "expectedComponents": {
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "minItems": 0,
+          "maxItems": 1000,
+          "uniqueItems": false
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "ruleVersion": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 0,
+      "maxLength": 2048
+    }
+  },
+  "required": [
+    "status",
+    "lastKnown",
+    "current",
+    "observedAt",
+    "stale",
+    "partial",
+    "inaccessible",
+    "contextRefreshRequired",
+    "policyContextKnown",
+    "expectedComponents",
+    "ruleVersion",
+    "reason"
+  ],
+  "additionalProperties": false
+}
+```
+
+## EffectiveTarget
+
+| Member | Required | Type | Constraints |
+| --- | --- | --- | --- |
+| `metric` | Yes | `string` | Length 1–128 |
+| `label` | Yes | `string` | Length 0–256 |
+| `value` | Yes | `number` or `string` or `null` | See full schema |
+| `unit` | Yes | `string` | Length 0–64 |
+| `policyName` | Yes | `string` or `null` | See full schema |
+| `ownership` | Yes | `string` | `SELF`, `CROSS_ACCOUNT`, `UNKNOWN` |
+| `rawOwnership` | Yes | `string` or `null` | See full schema |
+| `assignment` | Yes | `string` | `DIRECT`, `INHERITED`, `UNKNOWN` |
+| `systemArn` | Yes | `string` or `null` | See full schema |
+| `userJourneyId` | Yes | `string` or `null` | See full schema |
+| `resolvedPolicyArn` | Yes | `string` or `null` | See full schema |
+| `resolutionEvidence` | Yes | `string` or `null` | See full schema |
+| `provenance` | Yes | `string` | Length 1–2048 |
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "metric": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "label": {
+      "type": "string",
+      "minLength": 0,
+      "maxLength": 256
+    },
+    "value": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2048
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "unit": {
+      "type": "string",
+      "minLength": 0,
+      "maxLength": 64
+    },
+    "policyName": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2048
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "ownership": {
+      "type": "string",
+      "enum": [
+        "SELF",
+        "CROSS_ACCOUNT",
+        "UNKNOWN"
+      ]
+    },
+    "rawOwnership": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2048
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "assignment": {
+      "type": "string",
+      "enum": [
+        "DIRECT",
+        "INHERITED",
+        "UNKNOWN"
+      ]
+    },
+    "systemArn": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 31,
+          "maxLength": 2048,
+          "pattern": "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system|service|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "userJourneyId": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "resolvedPolicyArn": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 31,
+          "maxLength": 2048,
+          "pattern": "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system|service|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "resolutionEvidence": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2048
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "provenance": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048
+    }
+  },
+  "required": [
+    "metric",
+    "label",
+    "value",
+    "unit",
+    "policyName",
+    "ownership",
+    "rawOwnership",
+    "assignment",
+    "systemArn",
+    "userJourneyId",
+    "resolvedPolicyArn",
+    "resolutionEvidence",
+    "provenance"
+  ],
+  "additionalProperties": false
+}
+```
+
+## EffectiveTargetObservation
+
+| Member | Required | Type | Constraints |
+| --- | --- | --- | --- |
+| `effectiveTargetObservationId` | Yes | `string` | Length 1–256; Pattern `^[A-Za-z0-9][A-Za-z0-9._:-]*$` |
+| `serviceArn` | Yes | `string` | Length 31–2048; Pattern `^arn:(aws\|aws-cn\|aws-iso\|aws-iso-[a-z]\|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system\|service\|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$` |
+| `observedAt` | Yes | `number` or `null` | See full schema |
+| `targets` | Yes | Array of [EffectiveTarget](shapes.md#effectivetarget) | Items 0–1000 |
+| `evaluatedProviderRevision` | Yes | `string` or `null` | See full schema |
+| `provenance` | Yes | `string` | Length 1–2048 |
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "effectiveTargetObservationId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "serviceArn": {
+      "type": "string",
+      "minLength": 31,
+      "maxLength": 2048,
+      "pattern": "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system|service|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$"
+    },
+    "observedAt": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 253402300799,
+          "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+          "x-precision": "milliseconds"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "targets": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/EffectiveTarget"
+      },
+      "minItems": 0,
+      "maxItems": 1000,
+      "uniqueItems": false
+    },
+    "evaluatedProviderRevision": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2048
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "provenance": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048
+    }
+  },
+  "required": [
+    "effectiveTargetObservationId",
+    "serviceArn",
+    "observedAt",
+    "targets",
+    "evaluatedProviderRevision",
+    "provenance"
+  ],
+  "additionalProperties": false
+}
+```
+
+## CapturedAssociation
+
+| Member | Required | Type | Constraints |
+| --- | --- | --- | --- |
+| `systemArn` | Yes | `string` or `null` | See full schema |
+| `userJourneyIds` | Yes | Array of `string` | Items 0–1000 |
+| `localSystemReference` | Yes | `string` | Length 1–2048 |
+| `identityResolution` | Yes | `string` | `LOCAL_REFERENCE`, `UNRESOLVED` |
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "systemArn": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 31,
+          "maxLength": 2048,
+          "pattern": "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system|service|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "userJourneyIds": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 256,
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+      },
+      "minItems": 0,
+      "maxItems": 1000,
+      "uniqueItems": false
+    },
+    "localSystemReference": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048
+    },
+    "identityResolution": {
+      "type": "string",
+      "enum": [
+        "LOCAL_REFERENCE",
+        "UNRESOLVED"
+      ]
+    }
+  },
+  "required": [
+    "systemArn",
+    "userJourneyIds",
+    "localSystemReference",
+    "identityResolution"
+  ],
+  "additionalProperties": false
+}
+```
+
+## PolicyAssignmentEvidence
+
+| Member | Required | Type | Constraints |
+| --- | --- | --- | --- |
+| `policyArn` | Yes | `string` or `null` | See full schema |
+| `assignment` | Yes | `string` | `DIRECT`, `INHERITED`, `UNKNOWN` |
+| `systemArn` | Yes | `string` or `null` | See full schema |
+| `userJourneyId` | Yes | `string` or `null` | See full schema |
+| `localPolicyReference` | Yes | `string` or `null` | See full schema |
+| `identityResolution` | Yes | `string` | `LOCAL_REFERENCE`, `UNRESOLVED` |
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "policyArn": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 31,
+          "maxLength": 2048,
+          "pattern": "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system|service|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "assignment": {
+      "type": "string",
+      "enum": [
+        "DIRECT",
+        "INHERITED",
+        "UNKNOWN"
+      ]
+    },
+    "systemArn": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 31,
+          "maxLength": 2048,
+          "pattern": "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system|service|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "userJourneyId": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "localPolicyReference": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2048
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "identityResolution": {
+      "type": "string",
+      "enum": [
+        "LOCAL_REFERENCE",
+        "UNRESOLVED"
+      ]
+    }
+  },
+  "required": [
+    "policyArn",
+    "assignment",
+    "systemArn",
+    "userJourneyId",
+    "localPolicyReference",
+    "identityResolution"
+  ],
+  "additionalProperties": false
+}
+```
+
+## PolicyContextCapture
+
+| Member | Required | Type | Constraints |
+| --- | --- | --- | --- |
+| `policyContextCaptureId` | Yes | `string` | Length 1–256; Pattern `^[A-Za-z0-9][A-Za-z0-9._:-]*$` |
+| `serviceArn` | Yes | `string` | Length 31–2048; Pattern `^arn:(aws\|aws-cn\|aws-iso\|aws-iso-[a-z]\|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system\|service\|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$` |
+| `observedAt` | Yes | `number` or `null` | See full schema |
+| `associations` | Yes | Array of [CapturedAssociation](shapes.md#capturedassociation) | Items 0–1000 |
+| `applicablePolicies` | Yes | Array of [PolicyAssignmentEvidence](shapes.md#policyassignmentevidence) | Items 0–1000 |
+| `effectiveTargetObservationId` | Yes | `string` or `null` | See full schema |
+| `assessedProviderRevision` | Yes | `string` or `null` | See full schema |
+| `provenance` | Yes | `string` | Length 1–2048 |
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "policyContextCaptureId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "serviceArn": {
+      "type": "string",
+      "minLength": 31,
+      "maxLength": 2048,
+      "pattern": "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system|service|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$"
+    },
+    "observedAt": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 253402300799,
+          "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+          "x-precision": "milliseconds"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "associations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/CapturedAssociation"
+      },
+      "minItems": 0,
+      "maxItems": 1000,
+      "uniqueItems": false
+    },
+    "applicablePolicies": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/PolicyAssignmentEvidence"
+      },
+      "minItems": 0,
+      "maxItems": 1000,
+      "uniqueItems": false
+    },
+    "effectiveTargetObservationId": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "assessedProviderRevision": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2048
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "provenance": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048
+    }
+  },
+  "required": [
+    "policyContextCaptureId",
+    "serviceArn",
+    "observedAt",
+    "associations",
+    "applicablePolicies",
+    "effectiveTargetObservationId",
+    "assessedProviderRevision",
+    "provenance"
+  ],
+  "additionalProperties": false
+}
+```
+
+## EffectivePolicyEvidence
+
+| Member | Required | Type | Constraints |
+| --- | --- | --- | --- |
+| `effectiveTargetObservation` | Yes | [EffectiveTargetObservation](shapes.md#effectivetargetobservation) or `null` | See full schema |
+| `policyContextCapture` | Yes | [PolicyContextCapture](shapes.md#policycontextcapture) or `null` | See full schema |
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "effectiveTargetObservation": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/EffectiveTargetObservation"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "policyContextCapture": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/PolicyContextCapture"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "effectiveTargetObservation",
+    "policyContextCapture"
+  ],
+  "additionalProperties": false
+}
+```
+
+## FindingCapture
+
+| Member | Required | Type | Constraints |
+| --- | --- | --- | --- |
+| `captureId` | Yes | `string` | Length 1–256; Pattern `^[A-Za-z0-9][A-Za-z0-9._:-]*$` |
+| `serviceArn` | Yes | `string` | Length 31–2048; Pattern `^arn:(aws\|aws-cn\|aws-iso\|aws-iso-[a-z]\|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system\|service\|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$` |
+| `captureStartedAt` | Yes | `number` or `null` | See full schema |
+| `captureEndedAt` | Yes | `number` or `null` | See full schema |
+| `collectionStatus` | Yes | `string` | `COMPLETE`, `PARTIAL`, `FAILED`, `UNKNOWN` |
+| `listCoverage` | Yes | `object` | Unknown members rejected |
+| `detailCoverage` | Yes | `object` | Unknown members rejected |
+| `relatedAssessmentId` | Yes | `string` or `null` | See full schema |
+| `correlationBasis` | Yes | `string` or `null` | See full schema |
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "captureId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "serviceArn": {
+      "type": "string",
+      "minLength": 31,
+      "maxLength": 2048,
+      "pattern": "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system|service|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$"
+    },
+    "captureStartedAt": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 253402300799,
+          "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+          "x-precision": "milliseconds"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "captureEndedAt": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 253402300799,
+          "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+          "x-precision": "milliseconds"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "collectionStatus": {
+      "type": "string",
+      "enum": [
+        "COMPLETE",
+        "PARTIAL",
+        "FAILED",
+        "UNKNOWN"
+      ]
+    },
+    "listCoverage": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "COMPLETE",
+            "PARTIAL",
+            "FAILED",
+            "UNKNOWN"
+          ]
+        },
+        "pages": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "filters": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "findingsReturned": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "status",
+        "pages",
+        "filters",
+        "findingsReturned"
+      ],
+      "additionalProperties": false
+    },
+    "detailCoverage": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "COMPLETE",
+            "PARTIAL",
+            "FAILED",
+            "UNKNOWN"
+          ]
+        },
+        "requested": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "hydrated": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "failed": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "status",
+        "requested",
+        "hydrated",
+        "failed"
+      ],
+      "additionalProperties": false
+    },
+    "relatedAssessmentId": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "correlationBasis": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2048
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "captureId",
+    "serviceArn",
+    "captureStartedAt",
+    "captureEndedAt",
+    "collectionStatus",
+    "listCoverage",
+    "detailCoverage",
+    "relatedAssessmentId",
+    "correlationBasis"
+  ],
+  "additionalProperties": false
+}
+```
+
+## FindingObservation
+
+| Member | Required | Type | Constraints |
+| --- | --- | --- | --- |
+| `observationId` | Yes | `string` | Length 1–256; Pattern `^[A-Za-z0-9][A-Za-z0-9._:-]*$` |
+| `captureId` | Yes | `string` or `null` | See full schema |
+| `serviceArn` | Yes | `string` | Length 31–2048; Pattern `^arn:(aws\|aws-cn\|aws-iso\|aws-iso-[a-z]\|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system\|service\|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$` |
+| `findingId` | Yes | `string` | Length 1–256; Pattern `^[A-Za-z0-9][A-Za-z0-9._:-]*$` |
+| `representation` | Yes | `string` | `DETAIL`, `SUMMARY`, `UNKNOWN` |
+| `observedAt` | Yes | `number` or `null` | See full schema |
+| `name` | Yes | `string` or `null` | See full schema |
+| `severity` | Yes | `string` | `HIGH`, `MEDIUM`, `LOW`, `UNKNOWN` |
+| `status` | Yes | `string` | `OPEN`, `RESOLVED`, `IRRELEVANT`, `UNKNOWN` |
+| `recommendationPresence` | Yes | `string` | `PRESENT`, `EMPTY`, `OMITTED`, `NULL`, `NOT_FETCHED`, `UNKNOWN` |
+| `recommendationFields` | Yes | `object` or `null` | See full schema |
+| `recommendationIds` | Yes | Array of `string` or `null` | See full schema |
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "observationId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "captureId": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "serviceArn": {
+      "type": "string",
+      "minLength": 31,
+      "maxLength": 2048,
+      "pattern": "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system|service|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$"
+    },
+    "findingId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "representation": {
+      "type": "string",
+      "enum": [
+        "DETAIL",
+        "SUMMARY",
+        "UNKNOWN"
+      ]
+    },
+    "observedAt": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 253402300799,
+          "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+          "x-precision": "milliseconds"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "name": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2048
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "HIGH",
+        "MEDIUM",
+        "LOW",
+        "UNKNOWN"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "OPEN",
+        "RESOLVED",
+        "IRRELEVANT",
+        "UNKNOWN"
+      ]
+    },
+    "recommendationPresence": {
+      "type": "string",
+      "enum": [
+        "PRESENT",
+        "EMPTY",
+        "OMITTED",
+        "NULL",
+        "NOT_FETCHED",
+        "UNKNOWN"
+      ]
+    },
+    "recommendationFields": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "infrastructureAndCodeRecommendations": {
+              "type": "string",
+              "enum": [
+                "PRESENT",
+                "EMPTY",
+                "OMITTED",
+                "NULL",
+                "NOT_FETCHED",
+                "UNKNOWN"
+              ]
+            },
+            "observabilityRecommendations": {
+              "type": "string",
+              "enum": [
+                "PRESENT",
+                "EMPTY",
+                "OMITTED",
+                "NULL",
+                "NOT_FETCHED",
+                "UNKNOWN"
+              ]
+            },
+            "testingRecommendations": {
+              "type": "string",
+              "enum": [
+                "PRESENT",
+                "EMPTY",
+                "OMITTED",
+                "NULL",
+                "NOT_FETCHED",
+                "UNKNOWN"
+              ]
+            }
+          },
+          "required": [
+            "infrastructureAndCodeRecommendations",
+            "observabilityRecommendations",
+            "testingRecommendations"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "recommendationIds": {
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+          },
+          "minItems": 0,
+          "maxItems": 1000,
+          "uniqueItems": false
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "observationId",
+    "captureId",
+    "serviceArn",
+    "findingId",
+    "representation",
+    "observedAt",
+    "name",
+    "severity",
+    "status",
+    "recommendationPresence",
+    "recommendationFields",
+    "recommendationIds"
+  ],
+  "additionalProperties": false
+}
+```
+
+## FindingCoverage
+
+| Member | Required | Type | Constraints |
+| --- | --- | --- | --- |
+| `status` | Yes | `string` | `COMPLETE`, `PARTIAL`, `STALE`, `UNASSESSED`, `UNKNOWN` |
+| `observedCount` | Yes | `integer` | Minimum 0 |
+| `observedOpenCount` | Yes | `integer` | Minimum 0 |
+| `unknownStatusCount` | Yes | `integer` | Minimum 0 |
+| `exactOpenCount` | Yes | `integer` or `null` | See full schema |
+| `countMeaning` | Yes | `string` | `COMPLETE_CAPTURE`, `OBSERVED_SUBSET`, `STALE_CAPTURE`, `NO_CAPTURE` |
+| `observedAt` | Yes | `number` or `null` | See full schema |
+| `latestCapture` | Yes | [FindingCapture](shapes.md#findingcapture) or `null` | See full schema |
+| `stale` | Yes | `boolean` | See shared shape or field semantics. |
+| `reason` | Yes | `string` | Length 0–2048 |
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "status": {
+      "type": "string",
+      "enum": [
+        "COMPLETE",
+        "PARTIAL",
+        "STALE",
+        "UNASSESSED",
+        "UNKNOWN"
+      ]
+    },
+    "observedCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "observedOpenCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "unknownStatusCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "exactOpenCount": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 0
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "countMeaning": {
+      "type": "string",
+      "enum": [
+        "COMPLETE_CAPTURE",
+        "OBSERVED_SUBSET",
+        "STALE_CAPTURE",
+        "NO_CAPTURE"
+      ]
+    },
+    "observedAt": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 253402300799,
+          "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+          "x-precision": "milliseconds"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "latestCapture": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/FindingCapture"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "stale": {
+      "type": "boolean"
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 0,
+      "maxLength": 2048
+    }
+  },
+  "required": [
+    "status",
+    "observedCount",
+    "observedOpenCount",
+    "unknownStatusCount",
+    "exactOpenCount",
+    "countMeaning",
+    "observedAt",
+    "latestCapture",
+    "stale",
+    "reason"
+  ],
+  "additionalProperties": false
+}
+```
+
+## HealthObservation
+
+| Member | Required | Type | Constraints |
+| --- | --- | --- | --- |
+| `observationId` | Yes | `string` or `null` | See full schema |
+| `serviceArn` | Yes | `string` | Length 31–2048; Pattern `^arn:(aws\|aws-cn\|aws-iso\|aws-iso-[a-z]\|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system\|service\|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$` |
+| `state` | Yes | `string` | `HEALTHY`, `DEGRADED`, `UNAVAILABLE`, `UNKNOWN` |
+| `rawState` | Yes | `string` or `null` | See full schema |
+| `observedAt` | Yes | `number` or `null` | See full schema |
+| `expiresAt` | Yes | `number` or `null` | See full schema |
+| `source` | Yes | `string` or `null` | See full schema |
+| `reason` | Yes | `string` or `null` | See full schema |
+| `ruleVersion` | Yes | `string` or `null` | See full schema |
+| `provenance` | Yes | `string` | Length 1–2048 |
+| `latencyMs` | Yes | `number` or `null` | See full schema |
+| `errorRate` | Yes | `number` or `null` | See full schema |
+| `windowMinutes` | Yes | `number` or `null` | See full schema |
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "observationId": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "serviceArn": {
+      "type": "string",
+      "minLength": 31,
+      "maxLength": 2048,
+      "pattern": "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system|service|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$"
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "HEALTHY",
+        "DEGRADED",
+        "UNAVAILABLE",
+        "UNKNOWN"
+      ]
+    },
+    "rawState": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2048
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "observedAt": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 253402300799,
+          "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+          "x-precision": "milliseconds"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "expiresAt": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 253402300799,
+          "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+          "x-precision": "milliseconds"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "source": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2048
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "reason": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2048
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "ruleVersion": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2048
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "provenance": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048
+    },
+    "latencyMs": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "errorRate": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "windowMinutes": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "observationId",
+    "serviceArn",
+    "state",
+    "rawState",
+    "observedAt",
+    "expiresAt",
+    "source",
+    "reason",
+    "ruleVersion",
+    "provenance",
+    "latencyMs",
+    "errorRate",
+    "windowMinutes"
+  ],
+  "additionalProperties": false
+}
+```
+
+## PostureObservation
+
+| Member | Required | Type | Constraints |
+| --- | --- | --- | --- |
+| `observationId` | Yes | `string` or `null` | See full schema |
+| `serviceArn` | Yes | `string` | Length 31–2048; Pattern `^arn:(aws\|aws-cn\|aws-iso\|aws-iso-[a-z]\|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system\|service\|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$` |
+| `state` | Yes | `string` | `ACHIEVABLE`, `NOT_ACHIEVABLE`, `UNKNOWN` |
+| `rawState` | Yes | `string` or `null` | See full schema |
+| `achievability` | Yes | [Achievability](shapes.md#achievability) | See shared shape or field semantics. |
+| `observedAt` | Yes | `number` or `null` | See full schema |
+| `source` | Yes | `string` or `null` | See full schema |
+| `ruleVersion` | Yes | `string` or `null` | See full schema |
+| `provenance` | Yes | `string` | Length 1–2048 |
+| `assessmentId` | Yes | `string` or `null` | See full schema |
+| `assessmentLinkage` | Yes | `string` | Length 1–2048 |
+| `assessmentCorrelationBasis` | Yes | `string` or `null` | See full schema |
+| `policyContextCaptureId` | Yes | `string` or `null` | See full schema |
+| `evaluatedProviderRevision` | Yes | `string` or `null` | See full schema |
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "observationId": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "serviceArn": {
+      "type": "string",
+      "minLength": 31,
+      "maxLength": 2048,
+      "pattern": "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system|service|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$"
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "ACHIEVABLE",
+        "NOT_ACHIEVABLE",
+        "UNKNOWN"
+      ]
+    },
+    "rawState": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2048
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "achievability": {
+      "$ref": "#/$defs/Achievability"
+    },
+    "observedAt": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 253402300799,
+          "description": "Unix epoch seconds with at most millisecond precision. Sub-millisecond inputs are rejected before ordering or storage.",
+          "x-precision": "milliseconds"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "source": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2048
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "ruleVersion": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2048
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "provenance": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048
+    },
+    "assessmentId": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "assessmentLinkage": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048
+    },
+    "assessmentCorrelationBasis": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2048
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "policyContextCaptureId": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "evaluatedProviderRevision": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2048
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "observationId",
+    "serviceArn",
+    "state",
+    "rawState",
+    "achievability",
+    "observedAt",
+    "source",
+    "ruleVersion",
+    "provenance",
+    "assessmentId",
+    "assessmentLinkage",
+    "assessmentCorrelationBasis",
+    "policyContextCaptureId",
+    "evaluatedProviderRevision"
+  ],
+  "additionalProperties": false
+}
+```
+
+## SelectedObservations
+
+| Member | Required | Type | Constraints |
+| --- | --- | --- | --- |
+| `health` | Yes | [HealthObservation](shapes.md#healthobservation) or `null` | See full schema |
+| `posture` | Yes | [PostureObservation](shapes.md#postureobservation) or `null` | See full schema |
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "health": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/HealthObservation"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "posture": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/PostureObservation"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "health",
+    "posture"
+  ],
+  "additionalProperties": false
+}
+```
+
+## EventSubject
+
+| Member | Required | Type | Constraints |
+| --- | --- | --- | --- |
+| `entityType` | Yes | `string` | `System`, `UserJourney`, `Service`, `Policy`, `Assessment`, `Finding`, `InputSource`, `Dependency`, `Recommendation`, `TopologySnapshot`, `UNKNOWN` |
+| `entityId` | Yes | `string` | Length 1–2048 |
+| `serviceArn` | No | `string` | Length 31–2048; Pattern `^arn:(aws\|aws-cn\|aws-iso\|aws-iso-[a-z]\|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system\|service\|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$` |
+| `systemArn` | No | `string` | Length 31–2048; Pattern `^arn:(aws\|aws-cn\|aws-iso\|aws-iso-[a-z]\|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system\|service\|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$` |
+| `findingId` | No | `string` | Length 1–256; Pattern `^[A-Za-z0-9][A-Za-z0-9._:-]*$` |
+| `relationship` | Yes | `string` | `SUBJECT`, `RELATED` |
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "entityType": {
+      "type": "string",
+      "enum": [
+        "System",
+        "UserJourney",
+        "Service",
+        "Policy",
+        "Assessment",
+        "Finding",
+        "InputSource",
+        "Dependency",
+        "Recommendation",
+        "TopologySnapshot",
+        "UNKNOWN"
+      ]
+    },
+    "entityId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048
+    },
+    "serviceArn": {
+      "type": "string",
+      "minLength": 31,
+      "maxLength": 2048,
+      "pattern": "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system|service|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$"
+    },
+    "systemArn": {
+      "type": "string",
+      "minLength": 31,
+      "maxLength": 2048,
+      "pattern": "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]|aws-us-gov):resiliencehub:[a-z0-9-]+:[0-9]{12}:(system|service|policy)/[A-Za-z0-9][A-Za-z0-9:_/+.-]{0,1023}$"
+    },
+    "findingId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "relationship": {
+      "type": "string",
+      "enum": [
+        "SUBJECT",
+        "RELATED"
+      ]
+    }
+  },
+  "required": [
+    "entityType",
+    "entityId",
+    "relationship"
   ],
   "additionalProperties": false
 }

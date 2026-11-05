@@ -52,6 +52,7 @@ function typeText(schema, relative = '') {
 
 function constraints(schema) {
   const rows = [];
+  if (schema.description) rows.push(schema.description);
   if (schema.enum) rows.push(schema.enum.map(code).join(', '));
   if (Object.hasOwn(schema, 'const')) rows.push('Exactly ' + code(json(schema.const)));
   if (schema.minLength !== undefined || schema.maxLength !== undefined) rows.push('Length ' + (schema.minLength ?? 0) + '–' + (schema.maxLength ?? 'unbounded'));
@@ -60,6 +61,7 @@ function constraints(schema) {
   if (schema.minItems !== undefined || schema.maxItems !== undefined) rows.push('Items ' + (schema.minItems ?? 0) + '–' + (schema.maxItems ?? 'unbounded'));
   if (schema.minProperties !== undefined || schema.maxProperties !== undefined) rows.push('Properties ' + (schema.minProperties ?? 0) + '–' + (schema.maxProperties ?? 'unbounded'));
   if (schema.pattern) rows.push('Pattern ' + code(schema.pattern));
+  if (schema['x-precision']) rows.push('Runtime precision assertion: ' + code(schema['x-precision']));
   if (schema.additionalProperties === false) rows.push('Unknown members rejected');
   if (schema.anyOf || schema.oneOf) rows.push('See full schema');
   return rows.join('; ') || 'See shared shape or field semantics.';
@@ -70,7 +72,7 @@ function fieldTable(schema, relative = '') {
 }
 
 const families = [...new Set(contract.operations.map(operation => operation.family))];
-const index = [frontMatter('resilience-workspace-api-index', 'Resilience Workspace API reference', 'api-reference', ['protocol.md', 'aws-mapping.md', 'entities.md', 'shapes.md', 'errors.md', 'workflows.md', '../report.md', '../validation.md']),
+const index = [frontMatter('resilience-workspace-api-index', 'Resilience Workspace API reference', 'api-reference', ['protocol.md', 'aws-mapping.md', 'entities.md', 'shapes.md', 'errors.md', 'workflows.md', '../report.md', '../quality-review.md', '../validation.md']),
   '# Resilience Workspace API reference',
   'An executable mock API for the reviewed AWS Resilience Hub operator model. **' + contract.operations.length + ' operations** cover the ten requested entities, input sources, status projections and event ingestion. Every operation has an Obsidian Markdown note with YAML properties, request and response schemas, generated examples, access roles, errors and lifecycle effects.',
   '> This is a product-owned RPC facade. The mock makes no AWS calls. Its AWS-shaped transport is a design choice; native Resilience Hub v2 has its own HTTP routes and SDK contract. The existing browser UI and this HTTP server currently maintain separate local mock states.',
@@ -83,6 +85,7 @@ const index = [frontMatter('resilience-workspace-api-index', 'Resilience Workspa
     ['[Errors](errors.md)', 'Typed errors, status codes and client recovery behavior.'],
     ['[Workflows](workflows.md)', 'UI tasks, command lifecycle, event reconciliation and sequence diagrams.'],
     ['[Reviewed model](../report.md)', 'Source-backed analysis and the five ER diagram notes.'],
+    ['[Adversarial review](../quality-review.md)', 'Reproduced semantic failures, corrective changes and remaining delivery gaps.'],
     ['[Validation](../validation.md)', 'Checks completed and explicit integration boundaries.']
   ]),
   '## Run locally',
@@ -90,7 +93,7 @@ const index = [frontMatter('resilience-workspace-api-index', 'Resilience Workspa
   fence('bash', 'node api/server.cjs\n# Optional: node api/server.cjs --port 8788 --role reader'),
   'The default endpoint is ' + code('http://127.0.0.1:8787/') + '. The server binds to loopback, stores mutations only in memory, and uses a trusted demo principal configured at startup. Restarting resets its state. The default ' + code('demo') + ' context includes all four application roles; read-only mode uses ' + code('--role reader') + '. No AWS credentials are required.',
   fence('bash', "curl --silent --show-error http://127.0.0.1:8787/ \\\n  -H 'Content-Type: application/x-amz-json-1.1' \\\n  -H 'X-Amz-Target: " + contract.namespace + ".ListSystems' \\\n  --data '{\"maxResults\":20}'"),
-  'Successful responses use HTTP 200 and operation-specific JSON. See [protocol](protocol.md) for the full envelope and [errors](errors.md) for non-2xx responses. Timestamps on the wire are numeric epoch seconds. The fixture clock starts at 2026-11-05T10:24:00Z and advances with elapsed process time; generated examples and tests inject a fixed clock.',
+  'Successful responses use HTTP 200 and operation-specific JSON. See [protocol](protocol.md) for the full envelope and [errors](errors.md) for non-2xx responses. Timestamps on the wire are numeric epoch seconds with at most millisecond precision; sub-millisecond inputs are rejected before ordering or storage. The fixture clock starts at 2026-11-05T10:24:00Z and advances with elapsed process time; generated examples and tests inject a fixed clock.',
   'The included [Node client](client.cjs) handles the RPC headers and exposes the server request ID. With the server running:',
   fence('bash', "node api/client.cjs ListSystems '{\"maxResults\":20}'\nnode api/client.cjs GetWorkspaceSummary '{}'"),
   '## Operation catalogue',
@@ -109,7 +112,7 @@ outputs.set('api/index.md', index.join('\n\n') + '\n');
 const shapeSections = [frontMatter('resilience-workspace-api-shapes', 'Shared API schemas', 'api-reference', ['index.md', 'entities.md', 'protocol.md']),
   '# Shared API schemas',
   'Generated from [contract.cjs](contract.cjs). These JSON Schema definitions describe the implemented mock facade, including local enrichments and projections. They are not a transcription of AWS service models. See [AWS mapping](aws-mapping.md) for provider field ownership and [entity mapping](entities.md) for relationship constraints.',
-  'The schema dialect is JSON Schema 2020-12. A schema containing ' + code('#/$defs/Name') + ' is resolved by attaching ' + code('contract.shapes') + ' as ' + code('$defs') + '. Fields listed in ' + code('required') + ' must be present even when their value may be null. Unknown object properties are rejected unless explicitly permitted. Timestamp fields contain numeric epoch seconds. The runtime validator covers the keywords used by this contract; it is not a general-purpose JSON Schema implementation.',
+  'The schema dialect is JSON Schema 2020-12. A schema containing ' + code('#/$defs/Name') + ' is resolved by attaching ' + code('contract.shapes') + ' as ' + code('$defs') + '. Fields listed in ' + code('required') + ' must be present even when their value may be null. Unknown object properties are rejected unless explicitly permitted. Timestamp fields contain numeric epoch seconds with at most millisecond precision. The ' + code('x-precision') + ' extension is an assertion enforced by the runtime; a generic JSON Schema validator treats it as an annotation, so structural schema validation alone does not verify timestamp ordering. The runtime validator covers the keywords used by this contract; it is not a general-purpose JSON Schema implementation.',
   '## Definitions',
   Object.keys(contract.shapes).map(name => '- [' + name + '](#' + anchor(name) + ')').join('\n')
 ];
@@ -176,7 +179,10 @@ if (!catalogueOnly) {
       '## Consistency and lifecycle');
     if (operation.mutating) {
       sections.push('Supply one stable ' + code('clientToken') + ' for the logical command. Identical retries return the prior result within the local idempotency window; a changed body with the same token conflicts. Authorization uses trusted server-side context. No request makes a real AWS mutation.');
-      if (operation.inputSchema.properties.expectedVersion) sections.push('Use the latest local ' + code('version') + ' as ' + code('expectedVersion') + '. A conflict requires a fresh read and a decision about the intervening change. The revision belongs to the product store; it is not an AWS conditional-write token.');
+      if (operation.inputSchema.properties.expectedVersion) {
+        const versionPath = operation.name === 'UpdateDependencyGovernance' ? 'dependency.governance.version' : operation.name === 'UpdateRecommendationEnrichment' ? 'recommendation.enrichment.version' : ['UpdateService', 'DeleteService'].includes(operation.name) ? 'service.version' : 'version';
+        sections.push('Use the latest ' + code(versionPath) + ' as ' + code('expectedVersion') + '. ' + (versionPath === 'service.version' ? 'This is the service configuration revision; telemetry and observation refreshes use a separate projection revision. ' : '') + 'A conflict requires a fresh read and a decision about the intervening change. The revision belongs to the product store; it is not an AWS conditional-write token.');
+      }
       sections.push((operation.sideEffects || []).map(effect => '- ' + effect).join('\n'));
     } else {
       sections.push('This operation reads the local observation store. Its response can contain provider-like fields and application-owned metadata. Observation age, representation and provenance must remain visible to callers.');

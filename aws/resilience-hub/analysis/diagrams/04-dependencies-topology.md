@@ -16,6 +16,7 @@ aliases:
 related:
   - "../report.md"
   - "../review.md"
+  - "../quality-review.md"
   - "../api/index.md"
 ---
 
@@ -54,7 +55,7 @@ erDiagram
         string topologyId PK "Local capture identity"
         string serviceArn FK
         datetime captureStartedAt
-        datetime captureCompletedAt
+        datetime captureEndedAt
         string collectionStatus
         json queryScope
     }
@@ -71,6 +72,14 @@ erDiagram
         string destinationNodeId FK "Endpoint must share topologyId"
         json properties
     }
+    DEPENDENCY_GOVERNANCE {
+        string serviceArn PK, FK
+        string dependencyId PK, FK
+        int version
+        string allowedStatus
+        string source
+        datetime observedAt
+    }
     SERVICE ||--o| DEPENDENCY_DISCOVERY_CONFIG : has
     SERVICE ||--o{ DEPENDENCY : discovers
     SERVICE ||--o{ TOPOLOGY_SNAPSHOT : captured_as
@@ -78,14 +87,20 @@ erDiagram
     TOPOLOGY_SNAPSHOT ||--o{ TOPOLOGY_EDGE : contains
     TOPOLOGY_NODE ||--o{ TOPOLOGY_EDGE : source_role
     TOPOLOGY_NODE ||--o{ TOPOLOGY_EDGE : destination_role
+    DEPENDENCY ||--o| DEPENDENCY_GOVERNANCE : governed_by
 ```
 
 ## Relationship constraints
 
 - Both endpoint foreign keys include topologyId; unresolved endpoints remain snapshot-scoped stubs.
 - No native dependency-to-topology foreign key exists. COMPLETE is collector completion, not an atomic graph.
+- Governance belongs to the same scoped dependency and has its own version. Its allowed status is a product decision; it neither changes observed DNS evidence nor grants network access.
 
 The SVG uses navy for AWS-backed identities and values, and teal for local relationships, captures or observations. These colors describe ownership of the model element, not operational status.
+
+## Implementation boundary
+
+The mock implements discovery state, criticality, local governance and topology captures from retained inventory. Native dependency `queryRange` belongs to this abstract model; the initial DTO/UI omits the full timestamped DNS series. Topology edge DTOs project one type/label; the native `properties[]` and full resource descriptors need a richer adapter mapping. The enclosing topology ID scopes the DTOs' node/edge IDs. The mock does not call AWS to collect resources or edges, and no DNS-to-service match establishes outage propagation. See the [traceability matrix](../report.md#1-implementation-traceability).
 
 ## Related notes
 

@@ -17,103 +17,96 @@ related:
   - "README.md"
   - "report.md"
   - "review.md"
+  - "quality-review.md"
   - "api/index.md"
 ---
 
 # Validation record
 
-Reviewed 5 November 2026. The application uses synthetic data throughout. This record describes checks of the prototype, model, RPC implementation and documentation; it does not claim a live AWS integration or production readiness.
+Reviewed 5 November 2026. All data and operations are synthetic. This record separates executable verification, independent schema review, documentation/diagram checks and browser visual verification. Passing the mock checks does not establish live AWS integration or production readiness.
 
-## Complete package result
+## Current review result
 
-**39 tests passed, zero failed:** 13 domain tests, six UI contract tests, 16 RPC runtime tests and four HTTP integration tests. The HTTP catalogue test invokes all 44 operations through a real loopback server. The runtime catalogue test executes all 44 documented examples against fresh fixture states.
+**61 tests passed, zero failed:** 20 model tests, nine UI contract tests, 25 RPC runtime/regression tests, four HTTP integration tests and three cross-surface evidence tests. The runtime and HTTP catalogue checks each execute all 44 operations. The three JavaScript syntax checks passed.
 
-Run the reproducible package checks from this directory:
+| Gate | Result |
+| --- | --- |
+| Independent JSON Schema 2020-12 validation | 53 reusable shapes, 88 operation request/response schemas and 88 executed examples passed. |
+| Generated API documentation | All 47 notes match the executable contract and fixed-clock runtime examples. |
+| Obsidian documentation | 61 notes, unique YAML IDs, valid required properties and closed fences; 1,282 links/properties checked at the final gate. |
+| Diagrams | All five ER SVGs regenerate from the maintained Mermaid/layout sources; seven Mermaid blocks are present across the package. |
+| Diff hygiene | `git diff --check` passed. All task changes are confined to `aws/resilience-hub/analysis`. |
+| Fresh browser visual QA | Unverified; access was blocked as described below. |
+
+The earlier 39-test result belongs to baseline commit `973685d8f45e0321f5bf87912f6693e217f2a26b`. It did not detect the semantic failures reproduced in [quality-review.md](quality-review.md) and is not the acceptance result for this revision.
+
+Run the maintained checks from this directory:
 
 ```sh
+node --check app.js
+node --check data.js
+node --check model.js
 node --test tests/*.test.cjs
 node scripts/generate_api_docs.cjs --check
 python3 scripts/check_notes.py
 python3 scripts/render_diagrams.py
 ```
 
-The checked documentation contains **60 Markdown notes**, each with a unique YAML ID and all ten standard properties. The note checker validates relative links, related-note references, local heading anchors and closed fences. There are five ER diagram notes and two API workflow Mermaid blocks. The generated API reference contains 44 operation notes plus its index, schema reference and error reference; its examples are generated from executable handlers rather than copied by hand.
-
-## RPC implementation checks
-
-| Area | Evidence |
-| --- | --- |
-| Catalogue and schemas | All 44 operation examples execute and validate against the contract. An independent JSON Schema 2020-12 review validated 34 reusable shape definitions, all 88 input/output schemas, and the corresponding executed request/response examples. |
-| HTTP transport | All 44 operations return their expected response through `POST /`; tests cover media type, target namespace, path, method, malformed/non-object JSON, body limits with declared length and chunking, request IDs, typed errors and safe unexpected-error responses. |
-| Mutations and relationships | CRUD lifecycle, same-system journey associations, failed-command atomicity, provider field names, input-source unions, EKS selector constraints, active-assessment/deletion guards and retained historical reads. |
-| Concurrency and retries | Version conflicts; identical retries before version checking; changed-body token conflicts; no repeated mutation or audit effect on replay. |
-| Pagination | Stable local traversal across mutations; signed tokens scoped to principal, operation and filters; tampering, mismatched scope and expiry rejected. |
-| Authorization | Trusted server-side roles and tenant context; reader write rejection; client-supplied role/tenant fields and headers cannot grant privileges. |
-| Health and events | Old and equal-time observations retained without rollback; independent expiry; duplicate and seeded event-key collision handling; events request a refresh without claiming refreshed posture or completed assessment. |
-| Evidence ownership | Immutable recommendation source content and observation scope; separate enrichment/governance versions; finding disposition independent of health and assessed posture. |
-| Topology | Captures retain source observation time, scoped graph identity and partial/unresolved coverage; no provider read or atomic AWS snapshot is asserted. |
-
-The runtime uses a small validator for the schema keywords in this contract. The independent schema review used a separate JSON Schema implementation during this review; no third-party runtime dependency is required to run the server or its tests. Documentation regeneration uses a fixed clock and signing secret for stable examples. A normally started server advances the demo clock with elapsed process time and generates its own cursor secret.
-
-## Browser-model automated checks
-
-Run from this directory:
+An additional, independently implemented schema check is reproducible with Python's `jsonschema` package installed:
 
 ```sh
-node --check app.js
-node --check data.js
-node --check model.js
-node --test tests/model.test.cjs tests/ui-contract.test.cjs
+python3 scripts/check_api_schemas.py
 ```
 
-**Result: all three JavaScript syntax checks passed; 19 tests passed, 0 failed.**
+That optional review dependency is not required by the browser, server, Node tests or documentation generator. The check loads the canonical contract and executed examples, then validates their structure using JSON Schema 2020-12 independently of the runtime's own validator. It cannot establish domain correctness or enforce the custom `x-precision` annotation; focused runtime regressions cover those obligations.
 
-The 13 domain tests cover scoped keys and relationships, shared-service and finding deduplication, independent policy ownership and assignment, separation of health from posture, preservation of posture after a failed assessment, unverified operator triage, scoped assessment completion, immutable recommendation history across captures, omitted versus empty recommendation details, telemetry expiry, duplicate and delayed events, discovery coverage and local governance, and preservation of hydrated details when merging summaries.
+## What the regression suite establishes
 
-The six UI contract tests execute the actual browser scripts against a small in-memory DOM surface. They verify that all seven workspace views, all six tabs for every service, and all finding/dependency/event inspectors render; that system/journey selections display their distinct member services; that unestimated costs stay unknown; that a run started in a service modal is completed for that service; that triage persists escaped comments while retaining health and posture; and that local entrypoint/model links resolve, the documentation has YAML properties, and all five diagram notes contain Mermaid source and matching SVG assets.
-
-These contract tests exercise render functions and command dispatch. They do **not** substitute for a browser's layout, focus, accessibility or download behavior.
-
-## Review corrections carried into the implementation
-
-| Concern | Implemented behavior |
+| Area | Evidence and purpose |
 | --- | --- |
-| Undefined recommendation observation reference | Explicit observation primary keys and recommendation foreign keys; historical instances remain available after later captures. |
-| Summary/detail ambiguity | Finding captures distinguish list collection from detail hydration and omitted recommendation arrays from known empty arrays. |
-| Shared-service counts | Service membership is deduplicated, and business attention uses the common model rule. |
-| Unknown recommendation cost | A null estimate renders as **Not estimated**, rather than zero. |
-| Assessment completion target | The simulator is reachable within the service modal and receives the selected service context. |
-| Event severity presentation | Warning/error events have matching semantic styles; dependency events use a dependency marker. |
-| Topology coverage | The UI identifies representative subgraphs, capture completeness, unresolved resources and the broader synthetic inventory. |
-| Keyboard interactions | Tab lists support arrow/Home/End navigation, and selected tab/node focus is restored after rendering. |
-| User-entered comments | Comments are rendered as escaped text. No credentials or AWS requests are used. |
-| Cross-account permission field | Fresh fixtures use the native `permissionModel.crossAccountRoles[].crossAccountRoleArn` field, consistent with the reviewed source mapping. |
-| Editable documentation | The report, review and diagram notes use Markdown with YAML properties; UI links point to these notes and the API reference. |
+| Independent assessment evidence | Paired workflows produce the same simulated assessment response before and after changing operator dispositions. Resolving or suppressing findings cannot synthesize green posture or verified remediation. |
+| Coverage and applicability | Current evidence is distinct from retained history. Tests advance the clock, remove captured context, omit an expected outcome and use an availability-only policy. Current mutable policy content cannot rewrite a historical coverage result. |
+| Explainable attention | Open findings, health/posture conditions, failed work, discovery gaps, incomplete finding/assessment evidence and relevant configuration changes produce named reasons. The service union is deduplicated. |
+| Browser/API agreement | Cross-surface tests assert six current assessments, seven retained observations and eight services needing attention at baseline; zero current coverage after 48 hours; and null percentages for an empty denominator. They compare per-service reasons and expected components. |
+| Read-model evidence | Current target/context, selected health/posture observations and finding capture/detail coverage can be inspected through public responses rather than private server state. Unknown provider fields retain explicit normalization information. |
+| Timestamp integrity | Sub-millisecond inputs are rejected before storage. Equal-time and older health observations are retained without replacing the current observation. Missing provider timestamps remain null. |
+| Mutation ownership | Telemetry, finding dispositions and assessment observations do not consume service configuration versions. Recommendation enrichment and dependency governance use their own nested edit versions. Relevant configuration changes invalidate evidence separately from metadata edits. |
+| Events and audit subjects | Create/update/delete events retain the affected typed entity scope. Bounded raw envelopes and correlation IDs survive ingestion without becoming authoritative state patches. Scoped duplicate delivery cannot create a second side effect. |
+| Native-shaped boundaries | Documented opaque ARNs, nullable permission observations, bounded report/tag/EKS inputs and strict writable enums are exercised beyond the happy-path fixtures. |
+| HTTP and operation catalogue | All 44 operations execute through a real loopback HTTP server. Tests cover transport headers/routes, body limits, malformed JSON, request IDs, typed errors, authorization, idempotency and signed pagination. |
+| History and relationship scopes | Shared-service deduplication, same-system journey membership, service-scoped child identities, immutable recommendation evidence, topology endpoint scope and deletion guards remain covered. |
+| UI behavior | In-memory DOM tests execute actual browser scripts for all views, service tabs and inspectors; command dispatch, escaped comments, absent recommendation/query data, coverage labels and legacy cache handling are checked. |
 
-## Documentation conversion checks
+The tests intentionally include independent expected outcomes and multi-step workflows. Generated examples still serve a useful contract-drift role, but agreement between a handler and its own schema is insufficient to prove the operator interpretation correct.
 
-The documentation conversion preserves all 48 official source definitions in the report and the exact Mermaid content of all five diagrams. Every analysis and diagram note has flat YAML properties. Regenerating the SVGs with `python3 scripts/render_diagrams.py` produces the same diagram assets as the reviewed implementation, and the renderer validates the extracted Mermaid relationships against their presentation layouts.
+## Documentation and diagram checks
 
-The obsolete PDF artifact and its PDF-only build dependencies were removed because Markdown is now the maintained document format. The browser continues to display the existing SVG diagrams and provides links to their editable Markdown notes.
+The package contains **61 Markdown notes**, including the new adversarial review. Every note has a unique YAML ID and all ten standard properties. The note checker verifies relative links, related-note references, local heading anchors and closed code fences. All maintained prose documents use Obsidian-compatible Markdown with YAML headers.
 
-## Verification boundaries
+The API generator maintains **47 notes**: 44 operation notes plus index, schemas and errors. Each operation's example response comes from an isolated fixed-clock runtime. The generator's check mode detects stale generated notes, including changes in nullable fields, evidence bundles, timestamp precision and nested mutation versions.
 
-AWS-shaped records are manually authored mock fixtures. EventBridge delivery, production IAM permissions, native AWS pagination, provider-side mutation semantics, live telemetry adapters, and reconciliation against a real account are outside this prototype. A production implementation must preserve the report's source and observation distinctions when those adapters are added.
+There are **five ER diagram notes** and **two workflow Mermaid blocks**. Each ER note contains editable Mermaid source and a deterministic SVG representation. The renderer checks entity declarations, fields, relationship routes and bounds against its presentation layouts. This review adds explicit policy-context capture, recommendation enrichment, dependency governance and event-subject relationships. Capture terminology is consistently `captureEndedAt`; `EventSubject` is the event-to-entity junction and does not collide with the API's `EventEntity` envelope.
 
-The [RPC API package](api/index.md) is a separate local mock implementation with its own in-memory state. The browser tests above exercise the existing browser state and do not establish RPC transport or operation correctness. Browser actions do not issue HTTP requests to that server.
+The report retains its original 48 official AWS source definitions and adds one current SDK source. The native adapter mapping retains its original sources and adds the current source material used to challenge ARN syntax, permission observations, input bounds and event details. The report's implementation matrix distinguishes implemented, partial and deferred capabilities.
 
-## Previously completed browser verification
+## Current visual verification limit
 
-Before the Markdown and RPC extension, the application was exercised in the managed Chrome preview with its actual DOM and controls. The following checks passed. The current extension preserves those browser interactions; its documentation-link and fixture-field changes are covered by the rerun automated checks above.
+**Fresh browser layout and accessibility verification is unverified for this revision.** The managed cloud browser could not reach the local preview server. Its URL policy also rejected a local-file preview. No alternate route was used to bypass that restriction. The current scripts were exercised through the in-memory DOM tests, but those do not test CSS layout, browser focus behavior, downloads, physical-device interaction or accessibility conformance.
 
-- The desktop overview displayed all eight services and the expected independent health, posture, finding and assessment totals.
-- A new Checkout orchestration assessment moved to queued, then completed through the simulator inside that service's dialog. The existing Orders assessment remained active.
-- A high-severity Checkout finding was marked resolved with an operator comment. The inspector displayed **verification pending** and kept service health and posture unchanged.
-- A topology resource could be selected and inspected. The view showed the representative six-resource scope, broader 34-resource inventory, capture time and completeness. Resource labels fit their nodes.
-- The model view loaded and displayed the business-structure and assessment/finding SVG diagrams, including the corrected observation key and qualified assessment correlation.
-- Overview search for **identity** retained the failed-run attention card despite healthy runtime evidence and achievable retained posture. This also verified the corrected attention empty state.
-- The 390-pixel responsive frame displayed two-column summary cards and working mobile navigation. After correcting the visually hidden label's positioning, document scroll width equaled client width; wide tables and diagrams scroll inside their own containers.
-- Finding triage persisted across reload. Reset restored the original dataset and counts.
-- **Export snapshot** produced a nonempty, parseable JSON file containing `SYNTHETIC_DEMO_SNAPSHOT`, eight services, fourteen findings and the baseline mock clock after reset.
+The prior overview image was removed because it displayed superseded attention and assessment-coverage totals. No older screenshot is presented as evidence of this revision. Updated SVG diagram artifacts were visually inspected separately as rendered static images, and their deterministic source checks pass.
 
-The responsive check used a same-origin 390 × 844 iframe to exercise CSS viewport behavior; it was not physical-device or touch testing. Temporary preview files were removed before committing. Browser checks do not establish WCAG conformance or replace live AWS adapter tests.
+Before treating the revised interface as visually accepted, open it in a browser that can access the local HTTP preview and verify desktop/mobile layout, the new evidence explanation panel, legacy-cache notice, keyboard focus and snapshot export. That is a remaining visual gate, not a completed check.
+
+## Historical browser checks
+
+Before this quality revision, the actual Chrome preview exercised the initial overview, service assessment scenario, finding triage, topology inspection, diagram display, search, a 390-pixel responsive frame, reload/reset and JSON export. Those results remain historical. In particular, the earlier immediate triage check did not continue through the later assessment completion that manufactured verified remediation; this review reproduced that missed failure and added the multi-step regression.
+
+The previous responsive check used a same-origin iframe rather than a physical device. It never established WCAG conformance. These earlier results must not be carried forward as proof that the changed layout and new evidence messages have been visually verified.
+
+## Delivery boundaries
+
+The browser and RPC process still have separate mock stores. Browser controls do not send HTTP requests to the server. The RPC process has no native AWS collector, durable persistence, production authentication, asynchronous completion worker or real EventBridge/telemetry subscriptions. Starting an assessment through the RPC API queues a mock run; the browser's separate completion scenario is not a working HTTP completion pipeline.
+
+Full native partial-visibility references, arbitrary historical policy-content/capture queries, complete native topology descriptors and provider-side write/clearing/concurrency behavior remain partial or deferred as stated in [report.md](report.md). Validating all 44 local operations cannot close those integration gaps.
+
+The corrected package can support design and API review within that explicit mock scope. The [adversarial review](quality-review.md) records the defect evidence and acceptance decision; this validation record states exactly which checks support it and which remain open.

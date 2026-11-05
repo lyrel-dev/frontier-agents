@@ -6,8 +6,8 @@ const model = require('../model.js');
 const contract = require('./contract.cjs');
 const clone = value => structuredClone(value);
 const own = (value, key) => Object.prototype.hasOwnProperty.call(value, key);
-const epoch = value => value == null ? null : typeof value === 'number' ? value : Date.parse(value) / 1000;
-const iso = value => new Date(value * 1000).toISOString();
+const epoch = value => { const parsed = value == null ? null : typeof value === 'number' ? value : Date.parse(value) / 1000; return Number.isFinite(parsed) ? parsed : null; };
+const iso = value => new Date(Math.round(value * 1000)).toISOString();
 const canonical = value => value === null || typeof value !== 'object' ? JSON.stringify(value) : Array.isArray(value) ? '[' + value.map(canonical).join(',') + ']' : '{' + Object.keys(value).sort().map(key => JSON.stringify(key) + ':' + canonical(value[key])).join(',') + '}';
 const digest = value => crypto.createHash('sha256').update(canonical(value)).digest('hex');
 
@@ -18,6 +18,15 @@ class RpcError extends Error {
 const fail = (type, message) => { throw new RpcError(type, message); };
 const invalid = message => fail('ValidationException', message);
 const conflict = message => fail('ConflictException', message);
+
+function assertJson(value, path = '$', visited = new Set()) {
+  if (value === null || typeof value === 'string' || typeof value === 'boolean') return;
+  if (typeof value === 'number') { if (!Number.isFinite(value)) invalid(path + ' must contain finite JSON numbers.'); return; }
+  if (!value || typeof value !== 'object' || visited.has(value)) invalid(path + ' must contain acyclic JSON data.');
+  visited.add(value);
+  for (const [key, child] of Object.entries(value)) assertJson(child, path + '.' + key, visited);
+  visited.delete(value);
+}
 
 /** The deliberately small validator covers every keyword used by contract.cjs. */
 function validate(schema, value, path = '$') {
@@ -36,6 +45,7 @@ function validate(schema, value, path = '$') {
   } else if (schema.type === 'number' || schema.type === 'integer') {
     if (typeof value !== 'number' || !Number.isFinite(value) || (schema.type === 'integer' && !Number.isInteger(value))) invalid(path + ' must be a finite ' + schema.type + '.');
     if (value < (schema.minimum ?? -Infinity) || value > (schema.maximum ?? Infinity)) invalid(path + ' is outside the allowed range.');
+    if (schema['x-precision'] === 'milliseconds' && Math.round(value * 1000) / 1000 !== value) invalid(path + ' must have at most millisecond precision.');
   } else if (schema.type === 'boolean') {
     if (typeof value !== 'boolean') invalid(path + ' must be a boolean.');
   } else if (schema.type === 'array') {
@@ -79,6 +89,7 @@ function createRuntime(options = {}) {
     for (const item of state[collection]) item.version ||= 1;
   }
   for (const service of state.services) for (const input of service.inputSources || []) input.version ||= 1;
+  for (const service of state.services) service.projectionVersion ||= 1;
   for (const dependency of state.dependencies) dependency.governance.version ||= 1;
   for (const event of [...state.events].reverse()) { event.sequence ||= ++state.rpc.eventSequence; event.producerPrincipalId ??= null; event.trustedSource ??= false; }
   for (const recommendation of state.recommendations) {
@@ -112,7 +123,8 @@ function createRuntime(options = {}) {
     return item;
   }
   function assertVersion(item, expectedVersion) { if ((item.version || 1) !== expectedVersion) conflict('expectedVersion does not match the current local version. Read the entity and retry with a new clientToken.'); }
-  function bump(s, item) { item.version = (item.version || 1) + 1; item.updatedAt = s.now; }
+  function bump(s, item) { item.version = (item.version || 1) + 1; item.localUpdatedAt = s.now; }
+  function bumpProjection(s, item) { item.projectionVersion = (item.projectionVersion || 1) + 1; item.projectionComputedAt = s.now; }
   function assertChange(p, names) { if (!names.some(key => own(p, key))) invalid('At least one mutable field must be present.'); }
   function assertUniqueName(s, collection, name, within = () => true, except = null) {
     if (active(s[collection]).some(item => item !== except && within(item) && (item.providerName || item.id) === name)) conflict('An active entity with this name already exists in this scope.');
@@ -134,7 +146,12 @@ function createRuntime(options = {}) {
     const j = p.userJourneyId ? journey(s, p.systemArn, p.userJourneyId) : null;
     return active(s.services).filter(item => (!parent || item.associations.some(a => a.systemId === parent.id && (!j || a.journeyIds.includes(j.id)))) && (!p.query || (item.name + ' ' + item.id + ' ' + item.description).toLowerCase().includes(p.query.toLowerCase())));
   }
-  function refresh(s, item) { item.refreshRequired = true; item.policyContextRefreshRequestedAt = s.now; }
+  function refresh(s, item, { policyContext = false, reassessment = false } = {}) {
+    item.refreshRequired = true;
+    item.refreshRequestedAt = s.now;
+    if (policyContext) { item.policyContextRefreshRequired = true; item.policyContextRefreshRequestedAt = s.now; }
+    if (reassessment) item.reassessmentRequired = true;
+  }
   function stampEvents(s, principal) {
     for (const event of [...s.events].reverse()) {
       if (!event.sequence) event.sequence = ++s.rpc.eventSequence;
@@ -142,10 +159,39 @@ function createRuntime(options = {}) {
       if (!own(event, 'trustedSource')) event.trustedSource = false;
     }
   }
-  function audit(s, name, p, principal) {
-    const owner = p.serviceArn || p.systemArn || p.policyArn || tenantId;
-    const svc = p.serviceArn ? s.services.find(item => item.arn === p.serviceArn) : null;
-    model.recordEvent(s, { streamOwner: owner, type: name, title: name + ' committed', message: 'Local mock command committed; no AWS request was made.', serviceId: svc?.id || null, entityType: 'LocalCommand', entityId: owner, producerPrincipalId: principal.id, trustedSource: true, source: 'resilience.workspace.mock', refreshStatus: 'LOCAL_ONLY' });
+  function subject(entityType, entityId, context = {}, relationship = 'SUBJECT') {
+    const item = { entityType, entityId, relationship };
+    for (const key of ['serviceArn', 'systemArn', 'findingId']) if (context[key]) item[key] = context[key];
+    return item;
+  }
+  function audit(s, name, p, response, principal) {
+    const definitions = [
+      ['system', 'System', 'systemArn'], ['userJourney', 'UserJourney', 'userJourneyId'],
+      ['service', 'Service', 'serviceArn'], ['policy', 'Policy', 'policyArn'],
+      ['inputSource', 'InputSource', 'inputSourceId'], ['assessment', 'Assessment', 'assessmentId'],
+      ['finding', 'Finding', 'findingId'], ['recommendation', 'Recommendation', 'recommendationId'],
+      ['dependency', 'Dependency', 'dependencyId'], ['topologySnapshot', 'TopologySnapshot', 'topologyId']
+    ];
+    const definition = definitions.find(([field]) => response[field]);
+    const entity = definition ? response[definition[0]] : response.deletion;
+    const type = definition ? definition[1] : name.replace(/^Delete/, '');
+    const entityId = definition ? entity[definition[2]] : entity.resourceId;
+    const context = { ...p, ...entity };
+    if (type === 'Service') context.serviceArn = entityId;
+    const subjects = [subject(type, entityId, context)];
+    const add = item => { if (!subjects.some(existing => existing.entityType === item.entityType && existing.entityId === item.entityId && existing.serviceArn === item.serviceArn && existing.systemArn === item.systemArn)) subjects.push(item); };
+    if (context.serviceArn && type !== 'Service') add(subject('Service', context.serviceArn, { serviceArn: context.serviceArn }, 'RELATED'));
+    if (context.systemArn && type !== 'System') add(subject('System', context.systemArn, {}, 'RELATED'));
+    if (type === 'Policy' || type === 'UserJourney') {
+      for (const svc of active(s.services)) {
+        const related = type === 'Policy'
+          ? svc.policyArn === entityId || svc.associations.some(a => a.journeyIds.some(jid => s.journeys.some(j => j.id === jid && j.policyArn === entityId)))
+          : svc.associations.some(a => a.journeyIds.some(jid => s.journeys.some(j => j.id === jid && j.userJourneyId === entityId && s.systems.some(system => system.id === j.systemId && system.arn === context.systemArn))));
+        if (related) add(subject('Service', svc.arn, { serviceArn: svc.arn }, 'RELATED'));
+      }
+    }
+    const svc = context.serviceArn ? s.services.find(item => item.arn === context.serviceArn) : null;
+    model.recordEvent(s, { streamOwner: entityId, type: name, title: name + ' committed', message: 'Local mock command committed; no AWS request was made.', serviceId: svc?.id || null, serviceArn: context.serviceArn || null, entityType: type, entityId, subjects, rawEvent: null, correlationIds: [], producerPrincipalId: principal.id, trustedSource: true, source: 'resilience.workspace.mock', refreshStatus: 'LOCAL_ONLY' });
     stampEvents(s, principal);
   }
   function remove(s, collection, item, resourceId) {
@@ -155,27 +201,137 @@ function createRuntime(options = {}) {
     return { deletion: receipt };
   }
 
-  function achievability(value = {}) {
-    return Object.fromEntries([['availabilitySlo', 'availabilitySlo'], ['multiAzRtoRpo', 'multiAz'], ['multiRegionRtoRpo', 'multiRegion'], ['dataRecoveryTimeBetweenBackups', 'dataRecovery']].filter(([key, localKey]) => value[key] !== undefined || value[localKey] !== undefined).map(([key, localKey]) => [key, value[key] ?? value[localKey]]));
+  function normalized(value, allowed, diagnostics, path, fallback = 'UNKNOWN') {
+    if (allowed.includes(value)) return value;
+    diagnostics.push({ path, rawValue: value == null ? null : typeof value === 'string' ? value : JSON.stringify(value), normalizedValue: fallback, reason: value == null ? 'MISSING' : 'UNKNOWN_ENUM' });
+    return fallback;
   }
-  function discoveryDto(d = {}) { return { status: d.status || 'DISABLED', eligibleResourceCount: d.eligibleResourceCount ?? null, message: d.message ?? null, updatedAt: epoch(d.updatedAt), ...(d.requestedStatus ? { requestedStatus: d.requestedStatus } : {}) }; }
-  function resourceDiscoveryDto(d = {}) { return { status: d.status || 'NOT_STARTED', lastRunAt: epoch(d.lastRunAt), errorCode: d.errorCode ?? null, errorMessage: d.errorMessage ?? d.error ?? null }; }
-  function permissionDto(p) { return { invokerRoleName: p.invokerRoleName, ...(p.crossAccountRoles ? { crossAccountRoles: p.crossAccountRoles.map(role => ({ crossAccountRoleArn: role.crossAccountRoleArn || role.arn, ...(role.externalId ? { externalId: role.externalId } : {}) })) } : {}) }; }
-  function systemDto(s, item) { return { systemArn: item.arn, systemId: item.systemId || item.id, name: item.providerName || item.id, description: item.description || '', createdAt: epoch(item.createdAt), updatedAt: epoch(item.updatedAt || item.createdAt), sharingEnabled: !!item.sharingEnabled, kmsKeyId: item.kmsKeyId || null, tags: item.tags || {}, displayName: item.displayName || item.name, version: item.version, provenance: 'MOCK_NATIVE_FIELDS_WITH_LOCAL_METADATA' }; }
+  const assessmentStates = ['NOT_STARTED', 'PENDING', 'IN_PROGRESS', 'SUCCESS', 'FAILED'];
+  const findingStates = ['OPEN', 'RESOLVED', 'IRRELEVANT'];
+  const findingSeverities = ['HIGH', 'MEDIUM', 'LOW'];
+  function achievability(value = {}, diagnostics = []) {
+    value ||= {};
+    return Object.fromEntries([['availabilitySlo', 'availabilitySlo'], ['multiAzRtoRpo', 'multiAz'], ['multiRegionRtoRpo', 'multiRegion'], ['dataRecoveryTimeBetweenBackups', 'dataRecovery']]
+      .filter(([key, localKey]) => own(value, key) || own(value, localKey))
+      .map(([key, localKey]) => { const raw = own(value, key) ? value[key] : value[localKey]; return [key, raw == null ? null : normalized(raw, ['ACHIEVABLE', 'NOT_ACHIEVABLE', 'UNKNOWN'], diagnostics, 'achievability.' + key)]; }));
+  }
+  function discoveryDto(value, parentDiagnostics = []) {
+    const d = value || {}, normalizationDiagnostics = [];
+    const status = normalized(d.status, ['ENABLED', 'DISABLED', 'INITIALIZING'], normalizationDiagnostics, 'dependencyDiscovery.status');
+    parentDiagnostics.push(...normalizationDiagnostics);
+    return { status, rawStatus: d.status ?? null, eligibleResourceCount: d.eligibleResourceCount ?? null, message: d.message ?? null, updatedAt: epoch(d.updatedAt), ...(['ENABLED', 'DISABLED'].includes(d.requestedStatus) ? { requestedStatus: d.requestedStatus } : {}), normalizationDiagnostics };
+  }
+  function resourceDiscoveryDto(value, parentDiagnostics = []) {
+    const d = value || {}, normalizationDiagnostics = [];
+    const status = normalized(d.status, ['NOT_STARTED', 'PENDING', 'RUNNING', 'IN_PROGRESS', 'SUCCEEDED', 'FAILED', 'COMPLETED_WITH_FAILURES'], normalizationDiagnostics, 'resourceDiscovery.status');
+    parentDiagnostics.push(...normalizationDiagnostics);
+    return { status, rawStatus: d.status ?? null, lastRunAt: epoch(d.lastRunAt), errorCode: d.errorCode ?? null, errorMessage: d.errorMessage ?? d.error ?? null, normalizationDiagnostics };
+  }
+  function permissionDto(p) {
+    if (!p) return null;
+    return { invokerRoleName: p.invokerRoleName ?? null, crossAccountRoles: Array.isArray(p.crossAccountRoles) ? p.crossAccountRoles.map(role => ({ crossAccountRoleArn: role.crossAccountRoleArn ?? role.arn ?? null, externalId: role.externalId ?? null })) : null };
+  }
+  function resolvedJourney(s, localId) { return localId ? s.journeys.find(item => item.id === localId || item.userJourneyId === localId) : null; }
+  function journeyScope(s, localId) {
+    const j = resolvedJourney(s, localId), parent = j && s.systems.find(item => item.id === j.systemId);
+    return { systemArn: parent?.arn || null, userJourneyId: j?.userJourneyId || null };
+  }
+  function policyEvidenceDto(s, svc, diagnostics = [], usePostureContext = true) {
+    const contextId = usePostureContext ? svc.posture?.policyContextCaptureId || svc.policyContextCaptureId : svc.policyContextCaptureId;
+    const context = s.policyContexts.find(item => item.policyContextCaptureId === contextId && item.serviceArn === svc.arn);
+    const targetId = context ? context.effectiveTargetObservationId : contextId ? null : svc.effectiveTargetObservationId;
+    const target = s.effectiveTargetObservations.find(item => item.effectiveTargetObservationId === targetId && item.serviceArn === svc.arn);
+    const effectiveTargetObservation = target ? {
+      effectiveTargetObservationId: target.effectiveTargetObservationId, serviceArn: svc.arn, observedAt: epoch(target.observedAt),
+      targets: (target.targets || []).map(t => ({ metric: t.metric, label: t.label || '', value: t.value ?? null, unit: t.unit || '', policyName: t.policyName ?? null, ownership: normalized(t.ownership ?? t.source, ['SELF', 'CROSS_ACCOUNT'], diagnostics, 'effectivePolicyEvidence.targets.' + t.metric + '.ownership'), rawOwnership: t.ownership ?? t.source ?? null, assignment: normalized(t.assignment, ['DIRECT', 'INHERITED'], diagnostics, 'effectivePolicyEvidence.targets.' + t.metric + '.assignment'), ...journeyScope(s, t.journeyId), resolvedPolicyArn: t.resolvedPolicyArn || null, resolutionEvidence: t.resolutionEvidence || null, provenance: t.provenance || 'LOCAL_CAPTURE' })),
+      evaluatedProviderRevision: target.evaluatedProviderRevision ?? null, provenance: target.provenance || 'LOCAL_CAPTURE_OF_EFFECTIVE_TARGETS'
+    } : null;
+    const policyContextCapture = context ? {
+      policyContextCaptureId: context.policyContextCaptureId, serviceArn: svc.arn, observedAt: epoch(context.observedAt),
+      associations: (context.associations || []).map(a => {
+        const parent = s.systems.find(item => item.id === a.systemId || item.arn === a.systemArn);
+        return { systemArn: parent?.arn || a.systemArn || null, userJourneyIds: a.userJourneyIds || (a.journeyIds || []).map(jid => resolvedJourney(s, jid)?.userJourneyId).filter(Boolean), localSystemReference: a.systemId || a.systemArn || 'unresolved', identityResolution: parent ? 'LOCAL_REFERENCE' : 'UNRESOLVED' };
+      }),
+      applicablePolicies: (context.applicablePolicies || []).map(a => {
+        const referenced = s.policies.find(item => item.id === a.policyId || item.arn === a.policyArn);
+        return { policyArn: referenced?.arn || a.policyArn || null, assignment: normalized(a.assignment, ['DIRECT', 'INHERITED'], diagnostics, 'effectivePolicyEvidence.policyAssignment'), ...journeyScope(s, a.journeyId), localPolicyReference: a.policyId || a.policyArn || null, identityResolution: referenced ? 'LOCAL_REFERENCE' : 'UNRESOLVED' };
+      }),
+      effectiveTargetObservationId: context.effectiveTargetObservationId || null, assessedProviderRevision: context.assessedProviderRevision ?? null, provenance: context.provenance || 'LOCAL_CAPTURE'
+    } : null;
+    return { effectiveTargetObservation, policyContextCapture };
+  }
+  function findingCaptureDto(capture, diagnostics = []) {
+    if (!capture) return null;
+    const list = capture.listCoverage || {}, detail = capture.detailCoverage || {};
+    return { captureId: capture.captureId, serviceArn: capture.serviceArn, captureStartedAt: epoch(capture.captureStartedAt), captureEndedAt: epoch(capture.captureEndedAt), collectionStatus: normalized(capture.collectionStatus, ['COMPLETE', 'PARTIAL', 'FAILED'], diagnostics, 'findingCapture.collectionStatus'), listCoverage: { status: normalized(list.status, ['COMPLETE', 'PARTIAL', 'FAILED'], diagnostics, 'findingCapture.listCoverage.status'), pages: list.pages ?? null, filters: clone(list.filters || {}), findingsReturned: list.findingsReturned ?? null }, detailCoverage: { status: normalized(detail.status, ['COMPLETE', 'PARTIAL', 'FAILED'], diagnostics, 'findingCapture.detailCoverage.status'), requested: detail.requested ?? null, hydrated: detail.hydrated ?? null, failed: detail.failed ?? null }, relatedAssessmentId: capture.relatedAssessmentId || null, correlationBasis: capture.correlationBasis || null };
+  }
+  function recommendationPresence(item) {
+    if (item.representation === 'SUMMARY') return 'NOT_FETCHED';
+    if (!own(item, 'recommendations') || item.recommendations === undefined) return 'OMITTED';
+    if (item.recommendations === null) return 'NULL';
+    return Array.isArray(item.recommendations) ? item.recommendations.length ? 'PRESENT' : 'EMPTY' : 'UNKNOWN';
+  }
+  function recommendationFieldDto(fields) {
+    if (!fields) return null;
+    return Object.fromEntries(['infrastructureAndCodeRecommendations', 'observabilityRecommendations', 'testingRecommendations'].map(key => [key, ['PRESENT', 'EMPTY', 'OMITTED', 'NULL', 'NOT_FETCHED'].includes(fields[key]) ? fields[key] : 'UNKNOWN']));
+  }
+  function findingObservationDto(observation, diagnostics = []) {
+    if (!observation) return null;
+    return { observationId: observation.observationId, captureId: observation.captureId || null, serviceArn: observation.serviceArn, findingId: observation.findingId, representation: normalized(observation.representation, ['SUMMARY', 'DETAIL'], diagnostics, 'findingObservation.representation'), observedAt: epoch(observation.observedAt), name: observation.name ?? null, severity: normalized(observation.severity, findingSeverities, diagnostics, 'findingObservation.severity'), status: normalized(observation.status, findingStates, diagnostics, 'findingObservation.status'), recommendationPresence: observation.recommendationPresence || 'UNKNOWN', recommendationFields: recommendationFieldDto(observation.recommendationFields), recommendationIds: Array.isArray(observation.recommendationIds) ? clone(observation.recommendationIds) : null };
+  }
+  function findingCoverageDto(s, svc) {
+    const coverage = model.findingCoverage(s, svc);
+    return { ...coverage, observedAt: epoch(coverage.observedAt), latestCapture: findingCaptureDto(coverage.latestCapture) };
+  }
+  function selectedObservationsDto(s, svc, diagnostics = []) {
+    const h = svc.health, p = svc.posture;
+    return {
+      health: h ? { observationId: h.observationId || null, serviceArn: svc.arn, state: normalized(h.state, ['HEALTHY', 'DEGRADED', 'UNAVAILABLE', 'UNKNOWN'], diagnostics, 'selectedObservations.health.state'), rawState: h.state ?? null, observedAt: epoch(h.observedAt), expiresAt: epoch(h.expiresAt), source: h.source ?? null, reason: h.reason ?? null, ruleVersion: h.ruleVersion ?? null, provenance: h.provenance || 'LOCAL_MONITORING_AGGREGATE', latencyMs: h.latencyMs ?? null, errorRate: h.errorRate ?? null, windowMinutes: h.windowMinutes ?? null } : null,
+      posture: p ? { observationId: p.observationId || null, serviceArn: svc.arn, state: normalized(p.state, ['ACHIEVABLE', 'NOT_ACHIEVABLE', 'UNKNOWN'], diagnostics, 'selectedObservations.posture.state'), rawState: p.state ?? null, achievability: achievability(p.components, diagnostics), observedAt: epoch(p.observedAt), source: p.source ?? null, ruleVersion: p.ruleVersion ?? null, provenance: p.provenance || 'LOCAL_CAPTURE', assessmentId: p.assessmentId || null, assessmentLinkage: p.assessmentLinkage || 'UNRESOLVED_CORRELATION', assessmentCorrelationBasis: p.assessmentCorrelationBasis || null, policyContextCaptureId: p.policyContextCaptureId || null, evaluatedProviderRevision: p.evaluatedProviderRevision ?? null } : null
+    };
+  }
+  function systemDto(s, item) { return { systemArn: item.arn, systemId: item.systemId || item.id, name: item.providerName || item.id, description: item.description || '', createdAt: epoch(item.createdAt), updatedAt: epoch(item.updatedAt), localUpdatedAt: epoch(item.localUpdatedAt), sharingEnabled: item.sharingEnabled ?? null, kmsKeyId: item.kmsKeyId || null, tags: item.tags ?? null, displayName: item.displayName || item.name, version: item.version, normalizationDiagnostics: [], provenance: 'MOCK_NATIVE_FIELDS_WITH_LOCAL_METADATA' }; }
   function journeyDto(s, item) {
     const parent = s.systems.find(parent => parent.id === item.systemId);
-    return { systemArn: parent.arn, userJourneyId: item.userJourneyId, name: item.name, description: item.description || '', policyArn: item.policyArn || null, serviceArns: active(s.services).filter(service => service.associations.some(a => a.systemId === item.systemId && a.journeyIds.includes(item.id))).map(service => service.arn), createdAt: epoch(item.createdAt), updatedAt: epoch(item.updatedAt || item.createdAt), version: item.version, provenance: 'MOCK_NATIVE_JOURNEY_WITH_LOCAL_MEMBERSHIP_PROJECTION' };
+    return { systemArn: parent.arn, userJourneyId: item.userJourneyId, name: item.name, description: item.description || '', policyArn: item.policyArn || null, serviceArns: active(s.services).filter(service => service.associations.some(a => a.systemId === item.systemId && a.journeyIds.includes(item.id))).map(service => service.arn), createdAt: epoch(item.createdAt), updatedAt: epoch(item.updatedAt), localUpdatedAt: epoch(item.localUpdatedAt), version: item.version, normalizationDiagnostics: [], provenance: 'MOCK_NATIVE_JOURNEY_WITH_LOCAL_MEMBERSHIP_PROJECTION' };
   }
-  function policyDto(s, item) { return { policyArn: item.arn, name: item.providerName || item.id, displayName: item.displayName || item.name, description: item.description || '', ...clone(item.components), createdAt: epoch(item.createdAt), updatedAt: epoch(item.updatedAt || item.createdAt), sharingEnabled: !!item.sharingEnabled, kmsKeyId: item.kmsKeyId || null, tags: item.tags || {}, version: item.version, provenance: 'MOCK_NATIVE_POLICY_WITH_LOCAL_METADATA' }; }
+  function observedShape(value, schema, diagnostics, path) {
+    if (value == null) return null;
+    try { validate(schema, value); return clone(value); }
+    catch (error) {
+      if (!(error instanceof RpcError)) throw error;
+      diagnostics.push({ path, rawValue: JSON.stringify(value), normalizedValue: null, reason: 'INVALID_VALUE' });
+      return null;
+    }
+  }
+  function policyDto(s, item) {
+    const normalizationDiagnostics = [], components = {};
+    for (const key of ['availabilitySlo', 'multiAz', 'multiRegion', 'dataRecovery']) {
+      if (!own(item.components || {}, key)) continue;
+      const component = item.components[key];
+      if (component == null) { components[key] = null; continue; }
+      if (key === 'multiAz' || key === 'multiRegion') components[key] = { rtoInMinutes: component.rtoInMinutes ?? null, rpoInMinutes: component.rpoInMinutes ?? null, disasterRecoveryApproach: component.disasterRecoveryApproach == null ? null : normalized(component.disasterRecoveryApproach, ['ACTIVE_ACTIVE', 'HOT_STANDBY', 'WARM_STANDBY', 'PILOT_LIGHT', 'BACKUP_AND_RESTORE'], normalizationDiagnostics, key + '.disasterRecoveryApproach'), rawDisasterRecoveryApproach: component.disasterRecoveryApproach ?? null };
+      else if (key === 'dataRecovery') components[key] = { timeBetweenBackupsInMinutes: component.timeBetweenBackupsInMinutes ?? null };
+      else components[key] = observedShape(component, contract.shapes.AvailabilitySlo, normalizationDiagnostics, key);
+    }
+    return { policyArn: item.arn, name: item.providerName || item.id, displayName: item.displayName || item.name, description: item.description || '', ...components, createdAt: epoch(item.createdAt), updatedAt: epoch(item.updatedAt), localUpdatedAt: epoch(item.localUpdatedAt), sharingEnabled: item.sharingEnabled ?? null, kmsKeyId: item.kmsKeyId || null, tags: item.tags ?? null, version: item.version, normalizationDiagnostics, provenance: 'MOCK_NATIVE_POLICY_WITH_LOCAL_METADATA' };
+  }
   function sourceDto(s, item, svc) {
     const configuration = item.resourceConfiguration || (item.sourceArn ? { cfnStackArn: item.sourceArn } : null);
-    return { serviceArn: svc.arn, inputSourceId: item.inputSourceId, type: item.type, createdAt: epoch(item.createdAt || item.observedAt), resourceConfiguration: clone(configuration), displayName: item.name || item.inputSourceId, status: item.status || 'REGISTERED', version: item.version, observedAt: epoch(item.observedAt), provenance: configuration ? 'MOCK_INPUT_SOURCE_CONFIGURATION' : 'MOCK_SOURCE_CONFIGURATION_NOT_CAPTURED' };
+    const normalizationDiagnostics = [];
+    return { serviceArn: svc.arn, inputSourceId: item.inputSourceId, type: normalized(item.type, ['CFN_STACK', 'TAGS', 'TERRAFORM', 'EKS', 'DESIGN_FILE', 'MONITORING'], normalizationDiagnostics, 'inputSource.type'), rawType: item.type ?? null, createdAt: epoch(item.createdAt), localCreatedAt: epoch(item.localCreatedAt), localUpdatedAt: epoch(item.localUpdatedAt), resourceConfiguration: observedShape(configuration, contract.shapes.ResourceConfiguration, normalizationDiagnostics, 'inputSource.resourceConfiguration'), displayName: item.name || item.inputSourceId, status: item.status || 'UNKNOWN', version: item.version, observedAt: epoch(item.observedAt), normalizationDiagnostics, provenance: configuration ? 'MOCK_INPUT_SOURCE_CONFIGURATION' : 'MOCK_SOURCE_CONFIGURATION_NOT_CAPTURED' };
   }
   function serviceDto(s, item) {
-    return { serviceArn: item.arn, name: item.providerName || item.id, displayName: item.displayName || item.name, description: item.description || '', createdAt: epoch(item.createdAt), updatedAt: epoch(item.updatedAt || item.createdAt), observedAt: epoch(item.observedAt || item.createdAt), associatedSystems: item.associations.map(a => ({ systemArn: s.systems.find(parent => parent.id === a.systemId).arn, userJourneyIds: a.journeyIds.map(journeyId => s.journeys.find(j => j.id === journeyId)?.userJourneyId).filter(Boolean) })), policyArn: item.policyArn || null, regions: clone(item.regions), permissionModel: permissionDto(item.permissionModel), dependencyDiscovery: discoveryDto(item.dependencyDiscovery), resourceDiscovery: resourceDiscoveryDto(item.resourceDiscovery), achievability: achievability(item.posture?.components), assessmentStatus: item.assessmentStatus, inputSourceIds: active(item.inputSources || []).map(source => source.inputSourceId), resourceCount: item.resourceCount ?? null, reportConfiguration: item.reportConfiguration || null, devOpsAgentConfiguration: item.devOpsAgentConfiguration || null, tags: item.tags || {}, kmsKeyId: item.kmsKeyId || null, version: item.version, refreshRequired: !!item.refreshRequired, provenance: 'MOCK_NATIVE_SERVICE_WITH_LOCAL_METADATA' };
+    const normalizationDiagnostics = [];
+    return { serviceArn: item.arn, name: item.providerName || item.id, displayName: item.displayName || item.name, description: item.description || '', createdAt: epoch(item.createdAt), updatedAt: epoch(item.updatedAt), localUpdatedAt: epoch(item.localUpdatedAt), observedAt: epoch(item.observedAt), associatedSystems: item.associations.map(a => ({ systemArn: s.systems.find(parent => parent.id === a.systemId).arn, userJourneyIds: a.journeyIds.map(journeyId => s.journeys.find(j => j.id === journeyId)?.userJourneyId).filter(Boolean) })), policyArn: item.policyArn || null, regions: item.regions ? clone(item.regions) : null, permissionModel: permissionDto(item.permissionModel), dependencyDiscovery: discoveryDto(item.dependencyDiscovery, normalizationDiagnostics), resourceDiscovery: resourceDiscoveryDto(item.resourceDiscovery, normalizationDiagnostics), achievability: achievability(item.posture?.components, normalizationDiagnostics), assessmentStatus: normalized(item.assessmentStatus, assessmentStates, normalizationDiagnostics, 'assessmentStatus'), rawAssessmentStatus: item.assessmentStatus ?? null, inputSourceIds: active(item.inputSources || []).map(source => source.inputSourceId), resourceCount: item.resourceCount ?? null, reportConfiguration: observedShape(item.reportConfiguration, contract.shapes.ReportConfiguration, normalizationDiagnostics, 'reportConfiguration'), devOpsAgentConfiguration: observedShape(item.devOpsAgentConfiguration, contract.shapes.DevOpsAgentConfiguration, normalizationDiagnostics, 'devOpsAgentConfiguration'), tags: item.tags ?? null, kmsKeyId: item.kmsKeyId || null, version: item.version, projectionVersion: item.projectionVersion || 1, refreshRequired: !!item.refreshRequired, policyContextRefreshRequired: !!item.policyContextRefreshRequired, reassessmentRequired: !!item.reassessmentRequired, rerunAssessment: typeof item.rerunAssessment === 'boolean' ? item.rerunAssessment : null, effectivePolicyEvidence: policyEvidenceDto(s, item, normalizationDiagnostics, false), normalizationDiagnostics, provenance: 'MOCK_NATIVE_SERVICE_WITH_LOCAL_METADATA' };
   }
-  function assessmentDto(s, item) { return { serviceArn: item.serviceArn, assessmentId: item.assessmentId, status: item.status, startedAt: epoch(item.startedAt), endedAt: epoch(item.endedAt), observedAt: epoch(item.observedAt || item.startedAt), failureModeFindingsCount: item.totalFindings ?? null, achievability: achievability(item.achievability), errorCode: item.errorCode ?? null, errorMessage: item.errorMessage ?? item.error ?? null, version: item.version || 1, provenance: 'LOCAL_RETAINED_MOCK_ASSESSMENT_OBSERVATION' }; }
-  function findingDto(s, item) { return { serviceArn: item.serviceArn, findingId: item.findingId, name: item.name, description: item.description || '', reasoning: item.reasoning || '', severity: item.severity, status: item.status, failureCategory: item.failureCategory, policyComponent: item.policyComponent, serviceFunctions: item.serviceFunctions || [], comment: item.comment || '', updatedAt: epoch(item.updatedAt), detailObservedAt: epoch(item.detailObservedAt), observationId: item.observationId, captureId: item.captureId, representation: item.representation || 'DETAIL', recommendationIds: (item.recommendations || []).map(rec => rec.id), verification: item.verification || 'UNVERIFIED', version: item.version, provenance: 'MOCK_PROVIDER_FINDING_WITH_LOCAL_CAPTURE_AND_DISPOSITION' }; }
+  function assessmentDto(s, item) { const normalizationDiagnostics = []; return { serviceArn: item.serviceArn, assessmentId: item.assessmentId, status: normalized(item.status, assessmentStates, normalizationDiagnostics, 'assessment.status'), rawStatus: item.status ?? null, startedAt: epoch(item.startedAt), endedAt: epoch(item.endedAt), observedAt: epoch(item.observedAt), failureModeFindingsCount: item.totalFindings ?? null, achievability: achievability(item.achievability, normalizationDiagnostics), assessmentCost: item.assessmentCost || item.cost || null, assessmentStep: item.assessmentStep || item.stepLabel || null, errorCode: item.errorCode ?? null, errorMessage: item.errorMessage ?? item.error ?? null, version: item.version || 1, normalizationDiagnostics, provenance: 'LOCAL_RETAINED_MOCK_ASSESSMENT_OBSERVATION' }; }
+  function findingDto(s, item) {
+    const normalizationDiagnostics = [], presence = recommendationPresence(item);
+    const capture = s.findingCaptures.find(c => c.captureId === item.captureId && c.serviceArn === item.serviceArn);
+    const observation = s.findingObservations.find(o => o.observationId === item.observationId && o.serviceArn === item.serviceArn && o.findingId === item.findingId);
+    return { serviceArn: item.serviceArn, findingId: item.findingId, name: item.name, description: item.description || '', reasoning: item.reasoning || '', severity: normalized(item.severity, findingSeverities, normalizationDiagnostics, 'finding.severity'), rawSeverity: item.severity ?? null, status: normalized(item.status, findingStates, normalizationDiagnostics, 'finding.status'), rawStatus: item.status ?? null, failureCategory: item.failureCategory, policyComponent: item.policyComponent, serviceFunctions: item.serviceFunctions || [], comment: item.comment || '', updatedAt: epoch(item.updatedAt), localUpdatedAt: epoch(item.localUpdatedAt), detailObservedAt: epoch(item.detailObservedAt), observationId: item.observationId || null, captureId: item.captureId || null, representation: normalized(item.representation, ['DETAIL', 'SUMMARY'], normalizationDiagnostics, 'finding.representation'), recommendationIds: ['PRESENT', 'EMPTY'].includes(presence) ? item.recommendations.map(rec => rec.id) : null, recommendationPresence: presence, recommendationFields: recommendationFieldDto(item.recommendationFields), findingCapture: findingCaptureDto(capture, normalizationDiagnostics), findingObservation: findingObservationDto(observation, normalizationDiagnostics), verification: item.verification || 'UNVERIFIED', version: item.version, normalizationDiagnostics, provenance: 'MOCK_PROVIDER_FINDING_WITH_LOCAL_CAPTURE_AND_DISPOSITION' };
+  }
   function recommendationOwner(s, rec) { return s.findingObservations.find(observation => observation.observationId === rec.observationId && observation.representation === 'DETAIL'); }
   function recommendation(s, p) {
     service(s, p.serviceArn, true);
@@ -187,16 +343,38 @@ function createRuntime(options = {}) {
   function recommendationDto(s, item) {
     const owner = recommendationOwner(s, item), enrichment = s.rpc.recommendationEnrichments[item.id];
     const estimate = enrichment.estimate ? { ...clone(enrichment.estimate), estimatedAt: epoch(enrichment.estimate.estimatedAt) } : null;
-    return { recommendationId: item.id, serviceArn: owner.serviceArn, findingId: owner.findingId, findingObservationId: item.observationId, category: item.category, sourceArrayOrdinal: item.sourceArrayOrdinal, suggestedChanges: clone(item.suggestedChanges || []), capturedAt: epoch(item.capturedAt), enrichment: { ...clone(enrichment), estimate, updatedAt: epoch(enrichment.updatedAt) }, provenance: 'IMMUTABLE_MOCK_FINDING_RECOMMENDATION_OBSERVATION' };
+    return { recommendationId: item.id, serviceArn: owner.serviceArn, findingId: owner.findingId, findingObservationId: item.observationId, category: item.category, sourceArrayOrdinal: item.sourceArrayOrdinal, suggestedChanges: clone(item.suggestedChanges || []), capturedAt: epoch(item.capturedAt), enrichment: { title: enrichment.title, description: enrichment.description, estimate, version: enrichment.version, updatedAt: epoch(enrichment.localUpdatedAt || enrichment.updatedAt), provenance: enrichment.provenance }, provenance: 'IMMUTABLE_MOCK_FINDING_RECOMMENDATION_OBSERVATION' };
   }
-  function dependencyDto(s, item) { return { serviceArn: item.serviceArn, dependencyId: item.dependencyId, dependencyName: item.dependencyName || item.name, dnsName: item.dnsName || null, location: item.location, criticality: item.criticality, comment: item.comment || '', provider: item.provider || '', sourceRegions: item.sourceRegions || [], lastDetectedTime: epoch(item.lastDetectedTime), updatedAt: epoch(item.updatedAt || item.observedAt || item.lastDetectedTime), governance: { ...clone(item.governance), observedAt: epoch(item.governance.observedAt), version: item.governance.version || 1 }, resolvedServiceArn: item.resolution ? s.services.find(service => service.id === item.resolution.serviceId)?.arn || null : null, version: item.version, provenance: 'MOCK_DEPENDENCY_WITH_LOCAL_LOCATION_LABEL_AND_GOVERNANCE' }; }
+  function dependencyDto(s, item) { const normalizationDiagnostics = []; return { serviceArn: item.serviceArn, dependencyId: item.dependencyId, dependencyName: item.dependencyName || item.name, dnsName: item.dnsName || null, location: item.location, criticality: normalized(item.criticality, ['HARD', 'SOFT', 'UNKNOWN'], normalizationDiagnostics, 'dependency.criticality'), rawCriticality: item.criticality ?? null, comment: item.comment || '', provider: item.provider || '', sourceRegions: item.sourceRegions || [], lastDetectedTime: epoch(item.lastDetectedTime), updatedAt: epoch(item.updatedAt), localUpdatedAt: epoch(item.localUpdatedAt), governance: { ...clone(item.governance), observedAt: epoch(item.governance.observedAt), version: item.governance.version || 1 }, resolvedServiceArn: item.resolution ? s.services.find(service => service.id === item.resolution.serviceId)?.arn || null : null, version: item.version, normalizationDiagnostics, provenance: 'MOCK_DEPENDENCY_WITH_LOCAL_LOCATION_LABEL_AND_GOVERNANCE' }; }
   function topologyDto(s, item) { return { serviceArn: item.serviceArn, topologyId: item.topologyId, capturedAt: epoch(item.capturedAt), captureStartedAt: epoch(item.captureStartedAt), captureEndedAt: epoch(item.captureEndedAt), sourceObservedAt: epoch(item.sourceObservedAt || item.captureEndedAt), collectionStatus: item.collectionStatus, queryScope: clone(item.queryScope), resourceCount: item.resourceCount, totalServiceResourceCount: item.totalServiceResourceCount ?? null, edgeCount: item.edgeCount, unresolvedCount: item.unresolvedCount, nodes: item.nodes.map(n => ({ id: n.id, resourceIdentifier: n.resourceIdentifier, name: n.name, type: n.type, region: n.region, accountId: n.accountId, status: n.status })), edges: item.edges.map(e => ({ id: e.id, source: e.source, target: e.target, type: e.type, label: e.label || '', provenance: e.provenance })), atomicSnapshot: false, provenance: item.provenance, coverageMessage: item.coverageMessage, captureMode: item.captureMode || 'FIXTURE_CAPTURE', version: item.version || 1 }; }
-  function eventDto(s, item) { return { eventId: item.id, sourceEventId: item.sourceEventId, eventKey: item.eventKey, channel: item.channel, streamOwner: item.streamOwner, source: item.source || 'resilience.workspace.mock', type: item.type, title: item.title || item.type, message: item.message || '', severity: item.severity || 'INFO', serviceArn: item.serviceArn || s.services.find(service => service.id === item.serviceId)?.arn || null, entityType: item.entityType || 'Service', entityId: item.entityId || item.serviceId || '', occurredAt: epoch(item.occurredAt), receivedAt: epoch(item.receivedAt), linkage: item.linkage || 'ASSERTED', refreshStatus: item.refreshStatus || 'REFRESH_REQUIRED', sequence: item.sequence, mock: true, producerPrincipalId: item.producerPrincipalId || null, trustedSource: !!item.trustedSource }; }
+  function eventDto(s, item) {
+    const serviceArn = item.serviceArn || s.services.find(service => service.id === item.serviceId)?.arn || null;
+    let subjects = item.subjects ? clone(item.subjects) : null;
+    if (!subjects) {
+      const rawType = item.entityType || 'Service', allowed = contract.shapes.EventSubject.properties.entityType.enum;
+      const entityType = allowed.includes(rawType) ? rawType : 'UNKNOWN';
+      let entityId = item.entityId || item.serviceId || 'unresolved', context = serviceArn ? { serviceArn } : {};
+      if (entityType === 'Service' && serviceArn) entityId = serviceArn;
+      if (entityType === 'Finding') entityId = s.findings.find(f => f.serviceArn === serviceArn && (f.id === entityId || f.findingId === entityId))?.findingId || entityId;
+      if (entityType === 'Dependency') entityId = s.dependencies.find(d => d.serviceArn === serviceArn && (d.id === entityId || d.dependencyId === entityId))?.dependencyId || entityId;
+      if (entityType === 'Assessment') entityId = s.assessments.find(a => a.serviceArn === serviceArn && (a.id === entityId || a.assessmentId === entityId))?.assessmentId || entityId;
+      subjects = [subject(entityType, entityId, context)];
+      if (serviceArn && entityType !== 'Service') subjects.push(subject('Service', serviceArn, { serviceArn }, 'RELATED'));
+    }
+    const primary = subjects.find(entry => entry.relationship === 'SUBJECT') || subjects[0];
+    return { eventId: item.id, sourceEventId: item.sourceEventId, eventKey: item.eventKey, channel: item.channel, streamOwner: item.streamOwner, source: item.source || 'resilience.workspace.mock', type: item.type, title: item.title || item.type, message: item.message || '', severity: item.severity || 'INFO', serviceArn, entityType: primary?.entityType || item.entityType || 'UNKNOWN', entityId: primary?.entityId || item.entityId || 'unresolved', subjects, rawEvent: item.rawEvent ? clone(item.rawEvent) : null, correlationIds: clone(item.correlationIds || []), occurredAt: epoch(item.occurredAt), receivedAt: epoch(item.receivedAt), linkage: item.linkage || 'ASSERTED', refreshStatus: item.refreshStatus || 'REFRESH_REQUIRED', sequence: item.sequence, mock: true, producerPrincipalId: item.producerPrincipalId || null, trustedSource: !!item.trustedSource };
+  }
   function statusDto(s, item) {
-    const h = model.serviceHealth(s, item), p = model.servicePosture(s, item);
-    const health = { state: h.state, rawState: h.rawState || 'UNKNOWN', observedAt: epoch(h.observedAt), expiresAt: epoch(h.expiresAt), stale: h.stale, source: h.source || '', reason: h.reason || '', observationId: h.observationId || null, provenance: h.provenance || 'LOCAL_MONITORING_AGGREGATE', ruleVersion: h.ruleVersion || '', ageMinutes: h.ageMinutes == null ? null : Math.max(0, h.ageMinutes), latencyMs: h.latencyMs ?? null, errorRate: h.errorRate ?? null, windowMinutes: h.windowMinutes ?? null };
-    const posture = { state: p.state, achievability: achievability(p.components), observedAt: epoch(p.observedAt), stale: p.stale, assessmentId: p.assessmentId || null, observationId: p.observationId || null, ruleVersion: p.ruleVersion || 'unknown', provenance: p.provenance || 'NO_ASSESSED_EVIDENCE', evaluatedProviderRevision: p.evaluatedProviderRevision || null, policyContextCaptureId: p.policyContextCaptureId || null };
-    return { serviceArn: item.arn, health, posture, assessmentStatus: item.assessmentStatus, dependencyDiscovery: discoveryDto(item.dependencyDiscovery), resourceDiscovery: resourceDiscoveryDto(item.resourceDiscovery), needsAttention: model.needsAttention(s, item), openFindingsCount: model.serviceFindings(s, item.id).filter(f => f.status === 'OPEN').length, computedAt: epoch(s.now), version: item.version, refreshRequired: !!item.refreshRequired, provenance: 'LOCAL_OPERATOR_PROJECTION' };
+    const h = model.serviceHealth(s, item), p = model.servicePosture(s, item), normalizationDiagnostics = [];
+    const health = { state: normalized(h.state, ['HEALTHY', 'DEGRADED', 'UNAVAILABLE', 'UNKNOWN'], normalizationDiagnostics, 'health.state'), rawState: h.rawState ?? null, observedAt: epoch(h.observedAt), expiresAt: epoch(h.expiresAt), stale: h.stale, source: h.source || '', reason: h.reason || '', observationId: h.observationId || null, provenance: h.provenance || 'LOCAL_MONITORING_AGGREGATE', ruleVersion: h.ruleVersion || '', ageMinutes: h.ageMinutes == null ? null : Math.max(0, h.ageMinutes), latencyMs: h.latencyMs ?? null, errorRate: h.errorRate ?? null, windowMinutes: h.windowMinutes ?? null };
+    const posture = { state: normalized(p.state, ['ACHIEVABLE', 'NOT_ACHIEVABLE', 'UNKNOWN'], normalizationDiagnostics, 'posture.state'), rawState: item.posture?.state ?? null, achievability: achievability(p.components, normalizationDiagnostics), observedAt: epoch(p.observedAt), stale: p.stale, assessmentId: p.assessmentId || null, observationId: p.observationId || null, ruleVersion: p.ruleVersion || 'unknown', provenance: p.provenance || 'NO_ASSESSED_EVIDENCE', evaluatedProviderRevision: p.evaluatedProviderRevision || null, policyContextCaptureId: p.policyContextCaptureId || null };
+    const findingCoverage = findingCoverageDto(s, item), coverage = model.assessmentCoverage(s, item);
+    const assessmentCoverage = { ...coverage, observedAt: epoch(coverage.observedAt) };
+    const dependencyDiscovery = discoveryDto(item.dependencyDiscovery, normalizationDiagnostics), resourceDiscovery = resourceDiscoveryDto(item.resourceDiscovery, normalizationDiagnostics);
+    const effectivePolicyEvidence = policyEvidenceDto(s, item, normalizationDiagnostics), selectedObservations = selectedObservationsDto(s, item, normalizationDiagnostics);
+    const assessmentStatus = normalized(item.assessmentStatus, assessmentStates, normalizationDiagnostics, 'assessmentStatus');
+    const attentionReasons = model.attentionReasons(s, item).map(reason => ({ ...reason, observedAt: epoch(reason.observedAt) }));
+    return { serviceArn: item.arn, health, posture, assessmentStatus, rawAssessmentStatus: item.assessmentStatus ?? null, dependencyDiscovery, resourceDiscovery, needsAttention: attentionReasons.length > 0, attentionReasons, findingCoverage, openFindingsCount: findingCoverage.exactOpenCount, assessmentCoverage, effectivePolicyEvidence, selectedObservations, computedAt: epoch(s.now), version: item.version, projectionVersion: item.projectionVersion || 1, refreshRequired: !!item.refreshRequired, policyContextRefreshRequired: !!item.policyContextRefreshRequired, reassessmentRequired: !!item.reassessmentRequired, rerunAssessment: typeof item.rerunAssessment === 'boolean' ? item.rerunAssessment : null, normalizationDiagnostics, provenance: 'LOCAL_OPERATOR_PROJECTION' };
   }
 
   function paginate(name, p, principal, field, rows) {
@@ -253,7 +431,7 @@ function createRuntime(options = {}) {
     const item = journey(s, p.systemArn, p.userJourneyId); assertVersion(item, p.expectedVersion); assertChange(p, ['name', 'description', 'policyArn']);
     if (own(p, 'name') && active(s.journeys).some(j => j !== item && j.systemId === item.systemId && j.name === p.name)) conflict('A user journey with this name already exists in the system.');
     for (const key of ['name', 'description']) if (own(p, key)) item[key] = p[key];
-    if (own(p, 'policyArn')) { const assigned = p.policyArn ? policy(s, p.policyArn) : null; item.policyId = assigned?.id || null; item.policyArn = assigned?.arn || null; for (const svc of active(s.services)) if (svc.associations.some(a => a.journeyIds.includes(item.id))) { refresh(s, svc); bump(s, svc); } }
+    if (own(p, 'policyArn')) { const assigned = p.policyArn ? policy(s, p.policyArn) : null; const changedPolicy = item.policyArn !== (assigned?.arn || null); item.policyId = assigned?.id || null; item.policyArn = assigned?.arn || null; if (changedPolicy) for (const svc of active(s.services)) if (svc.associations.some(a => a.journeyIds.includes(item.id))) { refresh(s, svc, { policyContext: true, reassessment: true }); bumpProjection(s, svc); } }
     bump(s, item); return { userJourney: journeyDto(s, item) };
   };
   handlers.DeleteUserJourney = (s, p) => { const item = journey(s, p.systemArn, p.userJourneyId); assertVersion(item, p.expectedVersion); if (active(s.services).some(svc => svc.associations.some(a => a.journeyIds.includes(item.id)))) conflict('Detach the user journey from services before deleting it.'); return remove(s, 'journeys', item, item.userJourneyId); };
@@ -269,12 +447,14 @@ function createRuntime(options = {}) {
   handlers.ListServices = (s, p, principal) => paginate('ListServices', p, principal, 'services', scopeServices(s, p).map(item => serviceDto(s, item)));
   handlers.UpdateService = (s, p) => {
     const item = service(s, p.serviceArn); assertVersion(item, p.expectedVersion); const keys = ['description', 'associatedSystems', 'policyArn', 'regions', 'permissionModel', 'dependencyDiscovery', 'reportConfiguration', 'devOpsAgentConfiguration']; assertChange(p, keys);
-    if (own(p, 'associatedSystems')) item.associations = associationRecords(s, p.associatedSystems);
-    if (own(p, 'policyArn')) { const assigned = p.policyArn ? policy(s, p.policyArn) : null; item.policyId = assigned?.id || null; item.policyArn = assigned?.arn || null; }
+    let contextChanged = false;
+    const materialChanged = ['regions', 'permissionModel'].some(key => own(p, key) && canonical(item[key]) !== canonical(p[key])) || (own(p, 'dependencyDiscovery') && (item.dependencyDiscovery?.requestedStatus || item.dependencyDiscovery?.status) !== p.dependencyDiscovery);
+    if (own(p, 'associatedSystems')) { const associations = associationRecords(s, p.associatedSystems); contextChanged ||= canonical(item.associations) !== canonical(associations); item.associations = associations; }
+    if (own(p, 'policyArn')) { const assigned = p.policyArn ? policy(s, p.policyArn) : null; contextChanged ||= item.policyArn !== (assigned?.arn || null); item.policyId = assigned?.id || null; item.policyArn = assigned?.arn || null; }
     if (p.regions && new Set(p.regions).size !== p.regions.length) invalid('regions contains duplicates.');
     for (const key of ['description', 'regions', 'permissionModel', 'reportConfiguration', 'devOpsAgentConfiguration']) if (own(p, key)) item[key] = clone(p[key]);
-    if (own(p, 'dependencyDiscovery')) item.dependencyDiscovery = { ...item.dependencyDiscovery, status: p.dependencyDiscovery === 'ENABLED' ? 'INITIALIZING' : 'DISABLED', requestedStatus: p.dependencyDiscovery, eligibleResourceCount: p.dependencyDiscovery === 'ENABLED' ? null : item.dependencyDiscovery.eligibleResourceCount, message: p.dependencyDiscovery === 'ENABLED' ? 'Initialization is pending a future discovery refresh.' : 'Discovery disabled; historical dependencies are retained.', updatedAt: s.now };
-    refresh(s, item); bump(s, item); return { service: serviceDto(s, item) };
+    if (own(p, 'dependencyDiscovery') && (item.dependencyDiscovery?.requestedStatus || item.dependencyDiscovery?.status) !== p.dependencyDiscovery) item.dependencyDiscovery = { ...item.dependencyDiscovery, status: p.dependencyDiscovery === 'ENABLED' ? 'INITIALIZING' : 'DISABLED', requestedStatus: p.dependencyDiscovery, eligibleResourceCount: p.dependencyDiscovery === 'ENABLED' ? null : item.dependencyDiscovery?.eligibleResourceCount ?? null, message: p.dependencyDiscovery === 'ENABLED' ? 'Initialization is pending a future discovery refresh.' : 'Discovery disabled; historical dependencies are retained.', updatedAt: s.now };
+    refresh(s, item, { policyContext: contextChanged, reassessment: contextChanged || materialChanged }); bump(s, item); bumpProjection(s, item); return { service: serviceDto(s, item) };
   };
   handlers.DeleteService = (s, p) => { const item = service(s, p.serviceArn); assertVersion(item, p.expectedVersion); if (s.assessments.some(a => a.serviceArn === item.arn && ['PENDING', 'IN_PROGRESS'].includes(a.status))) conflict('A service with an active assessment cannot be deleted.'); return remove(s, 'services', item, item.arn); };
   handlers.CreatePolicy = (s, p) => {
@@ -287,9 +467,10 @@ function createRuntime(options = {}) {
   handlers.ListPolicies = (s, p, principal) => paginate('ListPolicies', p, principal, 'policies', active(s.policies).map(item => policyDto(s, item)));
   handlers.UpdatePolicy = (s, p) => {
     const item = policy(s, p.policyArn); assertVersion(item, p.expectedVersion); assertChange(p, ['description', 'sharingEnabled', 'availabilitySlo', 'multiAz', 'multiRegion', 'dataRecovery']);
+    const objectivesChanged = ['availabilitySlo', 'multiAz', 'multiRegion', 'dataRecovery'].some(key => own(p, key) && canonical(item.components[key]) !== canonical(p[key]));
     for (const key of ['description', 'sharingEnabled']) if (own(p, key)) item[key] = p[key];
     for (const key of ['availabilitySlo', 'multiAz', 'multiRegion', 'dataRecovery']) if (own(p, key)) item.components[key] = clone(p[key]);
-    for (const svc of active(s.services)) if (svc.policyArn === item.arn || svc.associations.some(a => a.journeyIds.some(jid => active(s.journeys).some(j => j.id === jid && j.policyArn === item.arn)))) { refresh(s, svc); bump(s, svc); }
+    if (objectivesChanged) for (const svc of active(s.services)) if (svc.policyArn === item.arn || svc.associations.some(a => a.journeyIds.some(jid => active(s.journeys).some(j => j.id === jid && j.policyArn === item.arn)))) { refresh(s, svc, { policyContext: true, reassessment: true }); bumpProjection(s, svc); }
     bump(s, item); return { policy: policyDto(s, item) };
   };
   handlers.DeletePolicy = (s, p) => { const item = policy(s, p.policyArn); assertVersion(item, p.expectedVersion); if (active(s.services).some(svc => svc.policyArn === item.arn) || active(s.journeys).some(j => j.policyArn === item.arn)) conflict('Detach this policy from all services and journeys before deleting it.'); return remove(s, 'policies', item, item.arn); };
@@ -301,16 +482,16 @@ function createRuntime(options = {}) {
     }
     if (active(svc.inputSources).some(source => canonical(source.resourceConfiguration || (source.sourceArn ? { cfnStackArn: source.sourceArn } : null)) === canonical(p.resourceConfiguration))) conflict('This resource configuration is already registered for the service.');
     const type = { resourceTags: 'TAGS', cfnStackArn: 'CFN_STACK', tfStateFileUrl: 'TERRAFORM', eks: 'EKS', designFileS3Url: 'DESIGN_FILE' }[Object.keys(p.resourceConfiguration)[0]];
-    const inputSourceId = nextUuid(s), item = { id: inputSourceId, inputSourceId, type, resourceConfiguration: clone(p.resourceConfiguration), name: type + ' source', status: 'REGISTERED', createdAt: s.now, observedAt: s.now, version: 1 };
-    svc.inputSources.push(item); refresh(s, svc); bump(s, svc); return { inputSource: sourceDto(s, item, svc) };
+    const inputSourceId = nextUuid(s), item = { id: inputSourceId, inputSourceId, type, resourceConfiguration: clone(p.resourceConfiguration), name: type + ' source', status: 'REGISTERED', localCreatedAt: s.now, observedAt: s.now, version: 1 };
+    svc.inputSources.push(item); refresh(s, svc, { reassessment: true }); bump(s, svc); bumpProjection(s, svc); return { inputSource: sourceDto(s, item, svc) };
   };
   handlers.ListInputSources = (s, p, principal) => { const svc = service(s, p.serviceArn, true); return paginate('ListInputSources', p, principal, 'inputSources', active(svc.inputSources).filter(input => !p.type || input.type === p.type).map(input => sourceDto(s, input, svc))); };
-  handlers.DeleteInputSource = (s, p) => { const svc = service(s, p.serviceArn), item = active(svc.inputSources).find(input => input.inputSourceId === p.inputSourceId); if (!item) fail('ResourceNotFoundException', 'Input source was not found in the requested service.'); assertVersion(item, p.expectedVersion); refresh(s, svc); bump(s, svc); return remove(s, 'inputSources', item, item.inputSourceId); };
+  handlers.DeleteInputSource = (s, p) => { const svc = service(s, p.serviceArn), item = active(svc.inputSources).find(input => input.inputSourceId === p.inputSourceId); if (!item) fail('ResourceNotFoundException', 'Input source was not found in the requested service.'); assertVersion(item, p.expectedVersion); refresh(s, svc, { reassessment: true }); bump(s, svc); bumpProjection(s, svc); return remove(s, 'inputSources', item, item.inputSourceId); };
   handlers.StartFailureModeAssessment = (s, p) => {
     const svc = service(s, p.serviceArn);
     if (s.assessments.some(a => a.serviceArn === svc.arn && ['PENDING', 'IN_PROGRESS'].includes(a.status))) conflict('An assessment is already active for this service.');
     const assessmentId = nextUuid(s), item = { id: assessmentId, assessmentId, serviceId: svc.id, serviceArn: svc.arn, status: 'PENDING', startedAt: s.now, endedAt: null, observedAt: s.now, totalFindings: null, version: 1 };
-    s.assessments.push(item); svc.assessmentStatus = 'PENDING'; bump(s, svc); return { assessment: assessmentDto(s, item) };
+    s.assessments.push(item); svc.assessmentStatus = 'PENDING'; bumpProjection(s, svc); return { assessment: assessmentDto(s, item) };
   };
   handlers.GetFailureModeAssessment = (s, p) => ({ assessment: assessmentDto(s, scoped(s, 'assessments', p, 'assessmentId')) });
   handlers.ListFailureModeAssessments = (s, p, principal) => { service(s, p.serviceArn, true); return paginate('ListFailureModeAssessments', p, principal, 'assessments', s.assessments.filter(item => item.serviceArn === p.serviceArn && (!p.status || item.status === p.status)).sort((a, b) => b.startedAt.localeCompare(a.startedAt)).map(item => assessmentDto(s, item))); };
@@ -321,7 +502,7 @@ function createRuntime(options = {}) {
     const previousStatus = item.status; item.status = p.status; if (own(p, 'comment')) item.comment = p.comment;
     if (previousStatus !== p.status) item.verification = p.status === 'RESOLVED' ? 'UNVERIFIED' : p.status === 'IRRELEVANT' ? 'SUPPRESSED' : 'OPEN';
     (item.dispositionHistory ||= []).push({ previousStatus, status: p.status, comment: item.comment, observedAt: s.now, provenance: 'LOCAL_MOCK_COMMAND' });
-    item.statusObservedAt = s.now; bump(s, item); const svc = service(s, p.serviceArn); bump(s, svc); return { finding: findingDto(s, item) };
+    item.statusObservedAt = s.now; bump(s, item); const svc = service(s, p.serviceArn); if (previousStatus !== p.status && p.status === 'RESOLVED') svc.reassessmentRequired = true; bumpProjection(s, svc); return { finding: findingDto(s, item) };
   };
   handlers.GetRecommendation = (s, p) => ({ recommendation: recommendationDto(s, recommendation(s, p)) });
   handlers.ListRecommendations = (s, p, principal) => {
@@ -338,7 +519,7 @@ function createRuntime(options = {}) {
   };
   handlers.GetDependency = (s, p) => ({ dependency: dependencyDto(s, scoped(s, 'dependencies', p, 'dependencyId')) });
   handlers.ListDependencies = (s, p, principal) => { service(s, p.serviceArn, true); return paginate('ListDependencies', p, principal, 'dependencies', s.dependencies.filter(item => item.serviceArn === p.serviceArn && (!p.criticality || item.criticality === p.criticality)).map(item => dependencyDto(s, item))); };
-  handlers.UpdateDependency = (s, p) => { const item = scoped(s, 'dependencies', p, 'dependencyId', false); assertVersion(item, p.expectedVersion); assertChange(p, ['criticality', 'comment']); for (const key of ['criticality', 'comment']) if (own(p, key)) item[key] = p[key]; bump(s, item); return { dependency: dependencyDto(s, item) }; };
+  handlers.UpdateDependency = (s, p) => { const item = scoped(s, 'dependencies', p, 'dependencyId', false); assertVersion(item, p.expectedVersion); assertChange(p, ['criticality', 'comment']); const changedCriticality = own(p, 'criticality') && item.criticality !== p.criticality; for (const key of ['criticality', 'comment']) if (own(p, key)) item[key] = p[key]; bump(s, item); const svc = service(s, p.serviceArn); refresh(s, svc, { reassessment: changedCriticality }); bumpProjection(s, svc); return { dependency: dependencyDto(s, item) }; };
   handlers.UpdateDependencyGovernance = (s, p) => { const item = scoped(s, 'dependencies', p, 'dependencyId', false); assertVersion(item.governance, p.expectedVersion); item.governance.allowedStatus = p.allowedStatus; item.governance.source = p.source; item.governance.observedAt = s.now; item.governance.version += 1; return { dependency: dependencyDto(s, item) }; };
   handlers.CaptureTopologySnapshot = (s, p) => {
     const svc = service(s, p.serviceArn), previous = s.topologies.filter(t => t.serviceArn === svc.arn).sort((a, b) => b.capturedAt.localeCompare(a.capturedAt))[0];
@@ -352,9 +533,34 @@ function createRuntime(options = {}) {
   handlers.GetServiceStatus = (s, p) => ({ serviceStatus: statusDto(s, service(s, p.serviceArn)) });
   handlers.GetWorkspaceSummary = (s, p) => {
     const services = scopeServices(s, p), statuses = services.map(svc => statusDto(s, svc)), count = predicate => statuses.filter(predicate).length;
-    return { summary: { serviceCount: services.length, healthyCount: count(s => s.health.state === 'HEALTHY'), degradedCount: count(s => s.health.state === 'DEGRADED'), unavailableCount: count(s => s.health.state === 'UNAVAILABLE'), unknownHealthCount: count(s => s.health.state === 'UNKNOWN'), achievableCount: count(s => s.posture.state === 'ACHIEVABLE'), atRiskCount: count(s => s.posture.state === 'NOT_ACHIEVABLE'), unknownPostureCount: count(s => s.posture.state === 'UNKNOWN'), stalePostureCount: count(s => s.posture.stale), attentionCount: count(s => s.needsAttention), openFindingCount: statuses.reduce((n, s) => n + s.openFindingsCount, 0), contributorServiceArns: services.map(s => s.arn), computedAt: epoch(s.now), aggregationRule: 'COUNT_DISTINCT_SERVICE_ARN_IN_SCOPE', interpretation: 'Operator attention and evidence coverage; this is not certification of end-to-end user journey compliance.' } };
+    const currentAssessedCount = count(status => status.assessmentCoverage.current), lastKnownAssessedCount = count(status => status.assessmentCoverage.lastKnown);
+    const incompleteFindingServiceCount = count(status => status.findingCoverage.status !== 'COMPLETE');
+    const observedOpenFindingCount = statuses.reduce((total, status) => total + status.findingCoverage.observedOpenCount, 0);
+    const attentionByDimension = {};
+    for (const status of statuses) for (const dimension of new Set(status.attentionReasons.map(reason => reason.dimension))) attentionByDimension[dimension] = (attentionByDimension[dimension] || 0) + 1;
+    return { summary: {
+      serviceCount: services.length,
+      healthyCount: count(status => status.health.state === 'HEALTHY'), degradedCount: count(status => status.health.state === 'DEGRADED'),
+      unavailableCount: count(status => status.health.state === 'UNAVAILABLE'), unknownHealthCount: count(status => status.health.state === 'UNKNOWN'),
+      achievableCount: count(status => status.posture.state === 'ACHIEVABLE'), atRiskCount: count(status => status.posture.state === 'NOT_ACHIEVABLE'),
+      unknownPostureCount: count(status => status.posture.state === 'UNKNOWN'), stalePostureCount: count(status => status.posture.stale),
+      attentionCount: count(status => status.needsAttention), attentionByDimension,
+      openFindingCount: incompleteFindingServiceCount ? null : observedOpenFindingCount, observedOpenFindingCount, incompleteFindingServiceCount,
+      currentAssessedCount, lastKnownAssessedCount,
+      currentAssessmentCoverage: services.length ? Math.round(currentAssessedCount * 100 / services.length) : null,
+      lastKnownAssessmentCoverage: services.length ? Math.round(lastKnownAssessedCount * 100 / services.length) : null,
+      partialAssessmentCount: count(status => status.assessmentCoverage.status === 'PARTIAL'), inaccessibleAssessmentCount: count(status => status.assessmentCoverage.status === 'INACCESSIBLE'), unassessedCount: count(status => status.assessmentCoverage.status === 'UNASSESSED'),
+      contributorServiceArns: services.map(svc => svc.arn), membershipContext: services.map(svc => ({ serviceArn: svc.arn, associatedSystems: serviceDto(s, svc).associatedSystems })),
+      projectionVersion: s.rpc.projectionVersion, computedAt: epoch(s.now), aggregationRule: 'COUNT_DISTINCT_SERVICE_ARN_IN_SCOPE', evidenceRuleVersion: 'assessment-evidence-24h-v2',
+      interpretation: 'Operator attention and evidence coverage; this is not certification of end-to-end user journey compliance.'
+    } };
   };
-  handlers.ListEvents = (s, p, principal) => { if (p.serviceArn) service(s, p.serviceArn, true); return paginate('ListEvents', p, principal, 'events', s.events.map(e => eventDto(s, e)).filter(e => (!p.serviceArn || e.serviceArn === p.serviceArn) && (!p.channel || e.channel === p.channel) && (p.afterSequence === undefined || e.sequence > p.afterSequence)).sort((a, b) => b.sequence - a.sequence)); };
+  handlers.ListEvents = (s, p, principal) => {
+    if (p.serviceArn) service(s, p.serviceArn, true);
+    if (p.entityId && !p.entityType) invalid('entityType is required when entityId is specified.');
+    const events = s.events.map(e => eventDto(s, e)).filter(e => (!p.serviceArn || e.serviceArn === p.serviceArn || e.subjects.some(subject => subject.serviceArn === p.serviceArn)) && (!p.entityType || e.subjects.some(subject => subject.entityType === p.entityType && (!p.entityId || subject.entityId === p.entityId))) && (!p.channel || e.channel === p.channel) && (p.afterSequence === undefined || e.sequence > p.afterSequence)).sort((a, b) => b.sequence - a.sequence);
+    return paginate('ListEvents', p, principal, 'events', events);
+  };
   function sourceDedupe(s, key, payload) {
     const existing = s.rpc.ingestedKeys[key];
     if (!existing) return null;
@@ -372,7 +578,7 @@ function createRuntime(options = {}) {
     const observationId = nextId(s, 'health'), record = { ...clone(observation), observedAt: iso(observation.observedAt), expiresAt: iso(observation.expiresAt), observationId, entityId: svc.id, serviceArn: svc.arn, dimension: 'HEALTH', provenance: 'LOCAL_MONITORING_AGGREGATE', producerPrincipalId: principal.id };
     const selectedAsCurrent = !svc.health || observation.observedAt > epoch(svc.health.observedAt);
     s.observations.push(record);
-    if (selectedAsCurrent) { svc.health = clone(record); bump(s, svc); }
+    if (selectedAsCurrent) { svc.health = clone(record); bumpProjection(s, svc); }
     model.recordEvent(s, { channel: 'TELEMETRY', streamOwner: p.streamOwner, sourceEventId: p.sourceEventId, source: observation.source, type: 'RUNTIME_HEALTH_OBSERVATION', title: 'Monitoring observation received', message: observation.reason, serviceId: svc.id, entityType: 'Service', entityId: svc.id, occurredAt: record.observedAt, receivedAt: s.now, producerPrincipalId: principal.id, trustedSource: false, refreshStatus: selectedAsCurrent ? 'REFRESHED' : 'OLDER_OR_EQUAL_EVIDENCE' });
     stampEvents(s, principal);
     s.rpc.ingestedKeys[eventKey] = { fingerprint: digest(sourcePayload), observationId };
@@ -381,14 +587,21 @@ function createRuntime(options = {}) {
   handlers.IngestEvent = (s, p, principal) => {
     const svc = service(s, p.serviceArn);
     if (p.occurredAt > epoch(s.now) + 300) invalid('occurredAt is more than five minutes ahead of the local clock.');
+    for (const linked of p.subjects || []) {
+      if (linked.serviceArn && linked.serviceArn !== p.serviceArn) invalid('An event subject must remain in the ingested service scope.');
+      if (linked.entityType === 'Service' && linked.entityId !== p.serviceArn) invalid('A Service subject entityId must equal the ingested serviceArn.');
+      if (['Assessment', 'Finding', 'InputSource', 'Dependency', 'Recommendation', 'TopologySnapshot'].includes(linked.entityType) && linked.serviceArn !== p.serviceArn) invalid('A service-scoped child event subject requires the matching serviceArn.');
+    }
     const eventKey = p.channel + '|' + p.streamOwner + '|' + p.sourceEventId;
     const sourcePayload = { ...p }; delete sourcePayload.clientToken;
     const duplicate = sourceDedupe(s, eventKey, sourcePayload);
     if (duplicate) return { event: eventDto(s, s.events.find(e => e.id === duplicate.eventId)), duplicate: true, refreshRequired: !!svc.refreshRequired, refreshOperations: ['GetService', 'ListFailureModeAssessments', 'ListFailureModeFindings', 'ListDependencies'] };
     const existing = s.events.find(event => event.eventKey === eventKey);
     if (existing) conflict('This source event key is already retained from the seed history.');
-    const recorded = model.recordEvent(s, { channel: p.channel, streamOwner: p.streamOwner, sourceEventId: p.sourceEventId, source: p.source, type: p.type, title: p.title, message: p.message, severity: p.severity || 'INFO', serviceId: svc.id, entityType: 'Service', entityId: svc.id, occurredAt: iso(p.occurredAt), receivedAt: s.now, producerPrincipalId: principal.id, trustedSource: false, linkage: 'ASSERTED', refreshStatus: 'REFRESH_REQUIRED' });
-    stampEvents(s, principal); refresh(s, svc); bump(s, svc);
+    const subjects = p.subjects?.length ? clone(p.subjects) : [subject('Service', svc.arn, { serviceArn: svc.arn })];
+    const primary = subjects.find(linked => linked.relationship === 'SUBJECT') || subjects[0];
+    const recorded = model.recordEvent(s, { channel: p.channel, streamOwner: p.streamOwner, sourceEventId: p.sourceEventId, source: p.source, type: p.type, title: p.title, message: p.message, severity: p.severity || 'INFO', serviceId: svc.id, serviceArn: svc.arn, entityType: primary.entityType, entityId: primary.entityId, subjects, rawEvent: clone(p.rawEvent || null), correlationIds: clone(p.correlationIds || []), occurredAt: iso(p.occurredAt), receivedAt: s.now, producerPrincipalId: principal.id, trustedSource: false, linkage: 'ASSERTED', refreshStatus: 'REFRESH_REQUIRED' });
+    stampEvents(s, principal); refresh(s, svc); bumpProjection(s, svc);
     s.rpc.ingestedKeys[eventKey] = { fingerprint: digest(sourcePayload), eventId: recorded.event.id };
     return { event: eventDto(s, recorded.event), duplicate: false, refreshRequired: true, refreshOperations: ['GetService', 'ListFailureModeAssessments', 'ListFailureModeFindings', 'ListDependencies'] };
   };
@@ -398,6 +611,7 @@ function createRuntime(options = {}) {
     if (!operation) invalid('Unknown operation: ' + String(name));
     const principal = context.principal || defaultPrincipal;
     if (!principal || principal.tenantId !== tenantId || typeof principal.id !== 'string' || !Array.isArray(principal.roles) || !operation.roles.some(role => principal.roles.includes(role))) fail('AccessDeniedException', 'The trusted principal is not authorized for this operation and workspace.');
+    assertJson(input);
     validate(operation.inputSchema, input);
     const key = operation.mutating ? tenantId + '|' + principal.id + '|' + name + '|' + input.clientToken : null;
     const fingerprint = operation.mutating ? digest(input) : null;
@@ -413,7 +627,7 @@ function createRuntime(options = {}) {
     const duplicate = operation.mutating && response.duplicate;
     if (operation.mutating && !duplicate) {
       working.rpc.projectionVersion += 1;
-      if (!['PutHealthObservation', 'IngestEvent'].includes(name)) audit(working, name, input, principal);
+      if (!['PutHealthObservation', 'IngestEvent'].includes(name)) audit(working, name, input, response, principal);
     }
     try { validate(operation.outputSchema, response); } catch (error) { if (error instanceof RpcError) throw new Error(name + ' produced invalid output: ' + error.message); throw error; }
     if (operation.mutating) {

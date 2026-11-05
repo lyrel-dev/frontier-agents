@@ -16,6 +16,7 @@ aliases:
   - "Resilience Hub operator model"
 related:
   - "review.md"
+  - "quality-review.md"
   - "api/index.md"
   - "diagrams/01-business-structure.md"
   - "diagrams/02-policy-context.md"
@@ -28,7 +29,9 @@ related:
 
 Official API analysis and logical entity relationship model — Reviewed 5 November 2026
 
-**Review status:** reviewed against the detailed v2 operation contracts and corrected before the UI prototype. This revision repairs observation identity, makes service and snapshot foreign-key scopes explicit, separates summary collection from detail hydration, and defines aggregate evidence rules. See [review.md](review.md) for the decision log. The five diagrams are maintained as Obsidian Markdown notes with fenced Mermaid source and portable SVG assets. The [API operation reference](api/index.md) applies this model to the proposed operator API.
+**Review status:** the conceptual model and the executable mock were reviewed separately against the detailed v2 contracts. The follow-up review found material gaps between the original report, API and UI: lost policy evidence, incomplete attention rules, stale evidence counted as current, unsupported identity restrictions, and missing mutation subjects in the timeline. See [quality-review.md](quality-review.md) for findings and closure evidence, and [review.md](review.md) for the design decisions. The implementation traceability table below states the remaining boundaries. A reviewed design does not imply that every proposed collector or historical view is implemented.
+
+The five diagrams are maintained as Obsidian Markdown notes with fenced Mermaid source and portable SVG assets. The [API operation reference](api/index.md) applies this model to a locally executable RPC-style facade; it is not the native AWS wire protocol.
 
 
 > **Recommended design:** use the next-generation Resilience Hub API as the source for architecture, assessment, findings and dependency information. Add a temporal application layer for history and event processing, and use monitoring evidence for live operational health.
@@ -50,6 +53,27 @@ This report maps the ten requested entity concepts to current AWS response and m
 
 The guide uses the requested Entity names, while current generated contracts use the formal shapes above. The official SDK identifies service resiliencehubv2, API version 2026-02-17. This analysis does not mix in the older application-centric API. [S01] [S02]
 
+## 1. Implementation traceability
+
+**Implemented** means that the stated behavior is executable with the fictional fixtures, not that it has been validated in an AWS account. **Partial** identifies an implemented subset and the missing evidence or integration. **Deferred** identifies a deliberate design boundary. The [contract](api/contract.cjs), [runtime](api/runtime.cjs), [shared UI model](model.js), and [review evidence](quality-review.md) are the implementation references; operation counts alone do not establish model coverage.
+
+| Model concern | Status | Executable evidence and remaining boundary |
+| --- | --- | --- |
+| Systems, journeys and shared service membership | Implemented | Entity CRUD and constrained `associatedSystems` in the RPC mock; portfolio and journey views deduplicate service identities. A service may belong to a system without a journey. Figure 1 records both required membership constraints. |
+| Partial, cross-account system visibility | Partial | The logical `systemKey` and nullable ARN accommodate limited summaries; the demonstration primarily uses fully addressable system fixtures. Account-specific authorization, unresolved cross-account reference reconciliation and complete summary-to-detail collection are not implemented. |
+| Native policies and effective target evidence | Implemented | Policy CRUD, four native component types, and eight typed target values. `GetService` and `GetServiceStatus` expose captured target and policy-context evidence, including ownership and qualified identity resolution. Figure 2 includes the context capture; names are not policy foreign keys. |
+| Historical policy and membership evaluation | Partial | Captured associations, applicable policy references and target observations are retained. The mock does not collect full policy payload histories or reconstruct a provider-evaluated policy revision. Exact historical membership replay and independently evaluated journey policies remain unimplemented. |
+| Assessment execution and posture | Partial | List/get/start operations, independent completion fixtures in the browser, retained prior posture after a failed run, and nullable progress/cost observations. The RPC server accepts assessment starts but has no provider polling worker that completes them. Execution success and operator disposition never generate a resilience conclusion. |
+| Findings, recommendation evidence and counts | Partial | Service-scoped findings, immutable captured projections, separate list/detail coverage, inline evidence on finding/status reads and independently versioned recommendation enrichment are implemented. Unknown recommendation content differs from an observed empty array; exact counts require complete coverage. A complete archive of native detail bodies and a live pagination/hydration collector remain design work. |
+| Dependency discovery and governance | Partial | The RPC and UI expose discovery state, eligibility, explanation, dependency criticality and separate local allowed-status governance. Native DNS usage `queryRange` is part of the abstract model; the initial DTO/UI does not expose its full timestamped series. Figure 4 distinguishes governance from observation. |
+| Topology captures | Partial | Local capture/get/list operations implement snapshot-scoped endpoints, unresolved stubs and completeness from retained inventory. The initial edge DTO projects one type/label; the native `properties[]` array and full resource descriptors require a richer adapter mapping. The capture is not atomic AWS evidence and edge direction does not prove failure propagation. |
+| Operational health, attention and evidence coverage | Implemented | Independently expiring health observations; shared selectors for attention, current assessment coverage and finding collection coverage; reason lists and separate current versus last-known counts. Policy-context changes, local reassessment obligations and native rerun requests remain separate reasons. Section 13 defines their precise local meaning. |
+| Event evidence and local timeline | Implemented | Typed scoped subjects, event envelope retention, duplicate detection, late-event preservation and generated-identity subjects for create-command events. Selected current health/posture evidence is retrievable inline rather than through orphan IDs. |
+| Live event ingestion and durable temporal history | Deferred | The recommended receive/hydrate/capture/project/reconcile loop is a design for an AWS adapter. No EventBridge subscription, live hydration, persistent event store, worker, streaming client transport or authenticated AWS connector is supplied. |
+| Browser-to-RPC integration | Deferred | The standalone page and RPC server execute the same fixture/model concepts through separate adapters. The browser does not call the RPC endpoint; transport integration is a separate implementation step. |
+
+The ERDs express relational identities; the API sometimes nests the corresponding records. In topology DTOs, the enclosing `topologyId` scopes each node/edge `id`; the diagrams spell out both parts of that key. The logical `Event` maps to the facade's `EventEntity`, and logical `EventSubject` links map to its `subjects[]`. Diagram terms `sourceChannel`/`streamScope` correspond to facade `channel`/`streamOwner`. These mappings do not make a local record a new AWS resource.
+
 ## 2. Contract boundaries and identity
 
 ### Use detailed operation schemas as the integration contract
@@ -67,9 +91,13 @@ AWS overview pages and detailed schemas are not completely aligned. Performance 
 
 The System/SystemSummary distinction is material for organization views: systemId is exposed for cross-account use, whereas organization and OU metadata can depend on access. Keep partially visible references rather than deleting or fabricating their attributes. [S03] [S04]
 
+An ARN's resource portion is opaque. Do not validate it as a UUID or as only a resource name: the official assessment-completed example uses `arn:aws:resiliencehub:us-east-1:111122223333:service/my-service:abc123`. The native GetService pattern permits the colon in that suffix. Validate the supported ARN envelope while preserving the full resource identifier. [S06] [S33]
+
 ### Common observation metadata
 
 For every ingested object retain source account and Region or connection scope, API family/version, retrieval operation, observedAt, providerUpdatedAt when present, raw payload or payload reference, field presence, and a local projection revision. A timestamp that the API does not return must remain unknown. Normalize timestamps to UTC internally and localize display.
+
+In particular, an input-source observation time is not its creation time, and a policy's creation time is not its last-update time. Keep absent provider timestamps nullable. `localUpdatedAt` records an application mutation; `observedAt` records evidence receipt; a configuration `version` is independent of `projectionVersion`, which can change when new evidence arrives without a configuration edit.
 
 Preserve separate states for an omitted property, an explicit null, an empty collection, zero, disabled, inaccessible and stale. A lightweight list response must not erase fields previously obtained from a detailed Get. Incoming unknown enum strings should remain visible and diagnosable rather than crashing the projection.
 
@@ -87,7 +115,7 @@ Preserve separate states for an omitted property, an explicit null, an empty col
 | --- | --- |
 | SystemEntity | name; description; createdAt; updatedAt; organizationId; ouId; sharingEnabled; kmsKeyId; tags. Summary counts are projections. |
 | UserJourneyEntity | name; description; policyArn; createdAt; updatedAt. The body has no embedded service list or parent system ARN. [S47] |
-| ServiceEntity | name; description; accountId; organizationId; ouId; createdAt; updatedAt; regions; permissionModel; policyArn; reportConfiguration; tags; kmsKeyId; optional DevOps Agent integration. |
+| ServiceEntity | name; description; accountId; organizationId; ouId; createdAt; updatedAt; regions; permissionModel; policyArn; reportConfiguration; tags; kmsKeyId; optional DevOps Agent integration; optional native rerunAssessment. |
 
 A system has zero or more journeys. A service can participate in zero or more systems and zero or more journeys within each associated system. A system association with an empty journey list is valid. The source currently limits associatedSystems to 20 entries, and each association to 20 journey IDs. [S05] [S06]
 
@@ -125,7 +153,9 @@ A service failing a stricter combined target does not establish that every loose
 
 `EffectiveTargetObservation(effectiveTargetObservationId, serviceArn, observedAt, sourceEvidence)` owns zero to eight `EffectiveTarget` rows keyed by `(effectiveTargetObservationId, metric)`. A missing metric remains absent; it is not a zero value. `PolicyComponent` is unique by `(policyArn, componentType)` and has at most four rows: `availabilitySlo`, `dataRecovery`, `multiAz`, and `multiRegion`. These are normalized forms of the returned value objects, not new AWS resource types.
 
-If the application retains a `PolicyContextCapture`, give it its own local ID and record membership observations, observed policy content hashes, effective-target observation IDs, capture intervals and visibility. Keep `resolvedPolicyArn` nullable, together with the evidence used to resolve it. A matching name alone is insufficient, especially with cross-account policies. Store a separately evidenced direct/inherited assignment classification when needed; do not derive it from `SELF` or `CROSS_ACCOUNT`. [S08] [S11] [S12] [S13]
+`PolicyContextCapture` has its own local ID, `serviceArn`, observation time, membership evidence and optional effective-target observation reference. Enforce the same service scope on that reference. Policy content hashes or raw payload references, capture intervals and visibility belong in the broader collector model when available; the current fixtures capture associations and applicable policy references. Keep `resolvedPolicyArn` nullable, together with the evidence used to resolve it. A matching name alone is insufficient, especially with cross-account policies. Store a separately evidenced direct/inherited assignment classification when needed; do not derive it from `SELF` or `CROSS_ACCOUNT`. [S08] [S11] [S12] [S13]
+
+The facade returns `effectivePolicyEvidence` inline from service and status reads. Its `effectiveTargetObservation` and `policyContextCapture` objects let a client inspect the values and associations behind a displayed posture. A policy update must invalidate current context without rewriting the evidence captured for an earlier assessment.
 
 Any assessment-to-context association is a **local temporal correlation**. Neither the observation ID nor a payload hash is an AWS policy revision or proof of the exact context evaluated in that assessment.
 
@@ -135,11 +165,11 @@ Any assessment-to-context association is a **local temporal correlation**. Neith
 
 [Editable diagram note](diagrams/02-policy-context.md) · [SVG](diagrams/02-policy-context.svg)
 
-**Figure 2.** Native policy assignment is separate from locally retained EffectiveTargetObservation records. Each consumer has at most one direct policy; inherited applicability follows journey membership. Effective target policy names are retained without an unverified foreign key. [S08] [S11] [S12] [S13]
+**Figure 2.** Native policy assignment is separate from locally retained EffectiveTargetObservation and PolicyContextCapture records. Each consumer has at most one direct policy; inherited applicability follows journey membership. Context and target evidence share the same service scope. Effective target policy names are retained without an unverified foreign key. [S08] [S11] [S12] [S13]
 
 ### Supporting service configuration
 
-**PermissionModel** is an execution/access configuration: invokerRoleName and optional crossAccountRoles, whose entries hold crossAccountRoleArn and optional externalId. It is not the new UI's authorization model. Store it as a subordinate value object and apply the application's normal access controls. [S14]
+**PermissionModel** is an execution/access configuration: invokerRoleName and optional crossAccountRoles, whose entries hold crossAccountRoleArn and optional externalId. It is not the new UI's authorization model. Writes require the documented invoker role and valid role entries; reads must tolerate missing permission configuration and the SDK-documented null crossAccountRoleArn for the Admin profile. Use separate input and observation shapes so an incomplete read cannot be mistaken for a valid create request. [S07] [S14] [S49]
 
 **InputSourceEntity** is service-scoped and separately listed. Retain inputSourceId, type, createdAt and the appropriate configuration: CloudFormation stack ARN, resource tags, EKS configuration, Terraform state file URL or design-file S3 URL. The read enum also contains MONITORING. Do not assume every read discriminator has a corresponding CreateInputSource union member. [S15]
 
@@ -170,13 +200,15 @@ The assessment current-step field supports progress explanation but does not def
 
 Finding disposition and evidence of remediation are different facts. AWS explains that the next assessment verifies a resolved fix, while an irrelevant finding stays suppressed across subsequent assessments. Keep both statuses visible in history and do not count suppression as validated repair. [S21]
 
+A later successful run is not, by itself, finding-specific verification. The mock's completion scenario supplies independent assessment outcomes and preserves the original finding evidence; it does not infer achievability or verified remediation from an operator marking findings `RESOLVED` or `IRRELEVANT`. A production reconciliation needs fresh provider evidence about the finding before displaying a verified outcome.
+
 ## 7. Finding history and recommendations
 
 ![Assessments, finding captures and recommendations](diagrams/03-assessments-findings.svg)
 
 [Editable diagram note](diagrams/03-assessments-findings.md) · [SVG](diagrams/03-assessments-findings.svg)
 
-**Figure 3.** A finding capture is a local collection interval. Its optional association with an assessment records when and why the collection occurred; it does not assert that AWS supplied an immutable finding set for that assessment.
+**Figure 3.** A finding capture is a local collection interval. Its optional association with an assessment records when and why the collection occurred; it does not assert that AWS supplied an immutable finding set for that assessment. RecommendationEnrichment is a separately versioned overlay on an observation-scoped recommendation.
 
 ### RecommendationEntity as an owned value
 
@@ -186,7 +218,7 @@ Normalize each nested item as recommendationId, observationId, category, sourceA
 
 If the UI needs title, implementation cost, effort, complexity, owner, work item or completion tracking, add RecommendationEnrichment or a separate RemediationTask. Retain estimate provenance, units/currency, cost basis, confidence and estimation time. Several recommendation instances can link to one local remediation task without falsely merging provider entities.
 
-FindingCapture should retain captureStartedAt, captureCompletedAt, filters, page coverage, collection outcome and optional relatedAssessmentId plus correlationBasis. Keep FindingObservation immutable within that capture, including updatedAt and raw source content. Do not infer first occurrence, resolution, or run ownership from a missing item or from a capture taken after a particular run.
+FindingCapture should retain captureStartedAt, captureEndedAt, filters, page coverage, collection outcome and optional relatedAssessmentId plus correlationBasis. Keep FindingObservation immutable within that capture, including updatedAt and raw source content in the full collector model. The mock retains selected observation fields and recommendation instances. Do not infer first occurrence, resolution, or run ownership from a missing item or from a capture taken after a particular run.
 
 
 ### Reviewed capture identity and detail coverage
@@ -202,6 +234,8 @@ FindingCapture should retain captureStartedAt, captureCompletedAt, filters, page
 `ListFailureModeFindings` and `GetFailureModeFinding` are separate reads. A fully paginated list does not mean all detail bodies have been fetched. Capture `sourceOperation`, `observedAt`, optional `sourceUpdatedAt`, field presence and the raw response for each representation. A failed detail hydration must not erase previously observed recommendations or become a known empty array. Recommendation completeness is known only for the detailed category fields actually returned. [S17] [S19] [S20]
 
 Recommendation `category` identifies the source array: `INFRASTRUCTURE_AND_CODE`, `OBSERVABILITY`, or `TESTING`. It is distinct from `Finding.failureCategory`. Cost, complexity, estimated effort and display titles remain separately sourced application enrichment. Position and payload equality are useful change signals but do not prove that a future generated recommendation is the same provider entity.
+
+The initial facade exposes `findingCapture` and `findingObservation` on a finding read, and collection scope/count meaning through `ServiceStatus.findingCoverage`. A summary, a failed detail fetch or an incomplete collection cannot establish an exact zero. Recommendation field presence remains explicit; a nullable recommendation-ID collection means content is not yet known, while an empty collection means the relevant detail fields were observed empty.
 
 ## 8. Dependency configuration and discovery
 
@@ -238,11 +272,11 @@ The UI should display discovery readiness, observed dependency inventory and evi
 
 [Editable diagram note](diagrams/04-dependencies-topology.md) · [SVG](diagrams/04-dependencies-topology.svg)
 
-**Figure 4.** Discovery and dependency records are AWS-backed. TopologySnapshot, TopologyNode and TopologyEdge are locally captured representations. There is no required relationship from a DNS dependency to a topology node or another managed service.
+**Figure 4.** Discovery and dependency records are AWS-backed. DependencyGovernance is an independently versioned local decision; TopologySnapshot, TopologyNode and TopologyEdge are locally captured representations. There is no required relationship from a DNS dependency to a topology node or another managed service.
 
 **DependencyEntity** uses (serviceArn, dependencyId), and retains dependencyName, dnsName, location, lastDetectedTime, sourceRegions[], criticality, provider?, comment? and queryRange. Criticality is HARD, SOFT or UNKNOWN. queryRange contains startTime, endTime, HOURLY/DAILY granularity and timestamped query counts. Store usage buckets with their query-window context. [S26]
 
-UpdateDependency changes criticality and/or comment. Its response is smaller than DependencySummary; merge returned fields without discarding DNS or usage data. The current contract has no allowedStatus and no first-detection timestamp. If needed, model product-owned DependencyGovernance(allowedStatus, actor, reason, effective interval), and label firstObservedAt as the collector's first observation. [S28]
+UpdateDependency changes criticality and/or comment. Its response is smaller than DependencySummary; merge returned fields without discarding DNS or usage data. The current contract has no allowedStatus and no first-detection timestamp. The local DependencyGovernance overlay has key `(serviceArn, dependencyId)`, its own version, allowedStatus and decision provenance. Actor, rationale and effective interval should be retained when captured. An allowed-status change neither alters observed DNS evidence nor changes network permissions. Label firstObservedAt as the collector's first observation. [S28]
 
 Do not equate DNS query counts with request success, latency or availability. Criticality represents the consequences of losing a dependency, not its current condition. Any relationship between a discovered DNS name and a Resource or Service must have explicit matching evidence and a nullable resolution. [S29]
 
@@ -250,7 +284,7 @@ Do not equate DNS query counts with request success, latency or availability. Cr
 
 | Object | Proposed fields and constraints |
 | --- | --- |
-| TopologyEntity / TopologySnapshot | local topologyId; serviceArn; captureStartedAt; captureCompletedAt; collectionStatus; queryScope; resourceDiscoveryLastRunAt?; resourceCount; unresolvedEndpointCount; edgeCount; contentHash? |
+| TopologyEntity / TopologySnapshot | local topologyId; serviceArn; captureStartedAt; captureEndedAt; collectionStatus; queryScope; resourceDiscoveryLastRunAt?; resourceCount; unresolvedCount; edgeCount; contentHash? |
 | TopologyNode | (topologyId, localNodeId); source resourceIdentifier; resource descriptor; optional resolved global resource key; resolution status and evidence |
 | TopologyEdge | (topologyId, localEdgeId); sourceNodeId; destinationNodeId; raw endpoint identifiers/account/Region; properties[] |
 | EdgeProperty | topologyType?; label?; preserve each returned property without treating a missing type as data flow |
@@ -275,7 +309,7 @@ These are native topologyType values. AWS documents the optional label as presen
 
 The node primary key is `(topologyId, localNodeId)` and the edge primary key is `(topologyId, localEdgeId)`. An edge must reference `(topologyId, sourceNodeId)` and `(topologyId, destinationNodeId)` in that **same** snapshot. Do not connect an edge to a current inventory node from another capture simply because its display name matches. Store endpoint raw account, Region and resource identifier evidence before resolution.
 
-`resourceCount` counts unique inventory nodes within the recorded query scope; `unresolvedEndpointCount` counts separate stubs. Neither is the service's eligible-compute-resource count. `DependencyGovernance`, if introduced, and any DNS-to-resource matching are local overlays with their own provenance; they do not create an AWS foreign key or a live-health signal.
+`resourceCount` counts unique inventory nodes within the recorded query scope; `unresolvedCount` counts separate stubs. Neither is the service's eligible-compute-resource count. `DependencyGovernance` and any DNS-to-resource matching are local overlays with their own provenance; they do not create an AWS foreign key or a live-health signal.
 
 ## 11. Events available from AWS
 
@@ -303,17 +337,19 @@ Keep these channels distinct in storage. The same logical change can appear in m
 
 [Editable diagram note](diagrams/05-events-observations.md) · [SVG](diagrams/05-events-observations.svg)
 
-**Figure 5.** Proposed local model for history, evidence and current UI state. EventEntity provides a many-to-many connection between events and typed subjects. Posture and health remain independently sourced.
+**Figure 5.** Proposed local model for history, evidence and current UI state. EventSubject provides a many-to-many connection between events and typed subjects. The facade nests these links in the EventEntity envelope's `subjects[]`; the envelope and relationship are different records. Posture and health remain independently sourced.
 
 | Record | Essential fields |
 | --- | --- |
 | Event | eventKey; sourceChannel; streamOwner/scope; sourceEventId; eventType; occurredAt; receivedAt; actor?; raw payload; schema version |
-| EventEntity | eventKey; entityKey; role; asserted/inferred relationship; linkage evidence |
+| EventSubject | eventKey; entityKey; role; asserted/inferred relationship; linkage evidence |
 | PostureObservation | entityKey; observationKind; native service achievability OR derived aggregate attention measures; scoped assessment correlation when known; observed policy-context reference; finding counts with scope; capture interval; completeness; provenance |
 | HealthObservation | subject; telemetry source and signal ID; observation window; measuredAt; receivedAt; expiresAt; health state; reason; evidence; aggregation-rule version |
 | CurrentProjection | entityKey + dimension; typed selected evidence references; projectionRevision; freshness and coverage; computedAt |
 
 Uniqueness for provider events should include channel, stream namespace/owner and provider event ID. Keep occurredAt separate from receivedAt; arrival order is not event order. Deletions create tombstones so old observations still have resolvable subjects. Retain provenance for inferred links and preserve raw events for reprocessing.
+
+Keep the original channel envelope, including event detail, account, Region and resources, alongside normalized typed subjects. A create-command event uses the generated entity identity, so the new entity's own timeline includes its creation. A correlation or request ID is supplementary evidence, not a substitute for the affected entity's key.
 
 Version membership and policy observations so a historical screen does not use today's topology or associations to explain yesterday's posture. Use observed validity intervals when that is all the evidence supports. Do not invent a provider effective time or evaluated policy version.
 
@@ -356,11 +392,28 @@ When the latest assessment fails, show that execution failure next to the previo
 1. **System service set:** take the union of service ARNs directly associated with the selected system, including services with no journey membership. Do not obtain the total by summing journey totals.
 2. **Journey service set:** use the distinct service ARNs in that journey's constrained membership rows.
 3. **Findings:** deduplicate by `(serviceArn, findingId)` before counting open severity. A shared service's finding can appear in each relevant journey view, but appears once in the enclosing system or portfolio total.
-4. **Assessment coverage:** use distinct visible in-scope services as the denominator, and state how many have a successful assessment with sufficiently recent evidence. Distinguish not assessed, stale, inaccessible, and partial evidence; an unavailable denominator is not a zero denominator.
-5. **Attention:** show the separate counts of services with unmet effective objectives, open findings, stale evidence, discovery gaps, or degraded telemetry. A combined attention total is the union of qualifying service identities, not the sum of those overlapping categories.
+4. **Assessment coverage:** use distinct visible in-scope services as the denominator. Report current qualified evidence separately from retained last-known assessed evidence. Determine expected result components from the policy context captured with the posture; optional, unconfigured components are not automatic gaps. Distinguish not assessed, stale, inaccessible, and partial evidence; an unavailable denominator is not a zero denominator.
+5. **Attention:** show separate reasons for unmet/unknown posture, partial/unassessed assessment evidence, open findings of any severity, incomplete finding collection, stale evidence, assessment failure, discovery gaps, changed policy or service configuration, a provider request to rerun assessment, and nonhealthy/expired telemetry. A combined attention total is the union of qualifying service identities, not the sum of those overlapping categories. A healthy service can require attention because of unresolved resilience evidence.
 6. **Health:** compose system/journey health only under a named, versioned product rule with telemetry evidence and a validity window. Until a business composition model is defined, report impacted or unknown member services rather than a claimed end-to-end availability measurement.
 
 A policy edit, association edit, or newer discovery observation can make a previous assessment's context less representative. Preserve the original observation and its age, record the current configuration separately, and expose the need for reassessment when supported by the returned state or an explicitly labelled local rule.
+
+### Executable evidence rules
+
+The mock's shared selectors implement named product rules. The 24-hour posture age limit is a demonstration decision, not an AWS guarantee or a universal operating threshold.
+
+| Rule | Exact local meaning |
+| --- | --- |
+| `assessment-evidence-24h-v2` | Current coverage requires usable posture, a retained successful assessment, a same-service captured policy context that identifies the expected components, known outcomes for those components, non-partial posture collection, successful resource discovery, no current policy-context invalidation, local reassessment requirement or native rerun request, and evidence age at most 24 hours. A missing/empty target context cannot prove sufficient coverage. A policy with only an availability objective does not require three unconfigured DR outcomes. |
+| Coverage status | `INACCESSIBLE`, `UNASSESSED`, `PARTIAL`, `STALE`, or `CURRENT`, in that precedence order. `stale` and `partial` flags remain independently visible: an old partial capture has status `PARTIAL` and can also be stale. A recent failed assessment does not erase a still-qualified previous successful observation. |
+| `distinct-service-attention-v2` | Union of service identities with nonhealthy/expired health, unmet/unknown/stale posture, partial/unassessed assessment evidence, any open finding, incomplete/stale/missing finding collection, failed latest assessment, resource discovery other than `SUCCEEDED`, dependency discovery disabled/initializing or eligible count unknown/zero, a local policy-context invalidation, a local reassessment requirement, or native `rerunAssessment=true`. `ASSESSMENT_EVIDENCE_GAP` and `FINDING_COLLECTION_INCOMPLETE` ensure that absent evidence requires attention even when retained posture says achievable and all known findings are closed. Each reason retains its dimension, severity, explanation and evidence time. |
+| Finding collection coverage | Exact open counts require a complete unfiltered list, complete detail coverage, recognized dispositions and a valid, sufficiently recent capture end time. Otherwise expose observed counts and qualified coverage; unknown time or an empty local store cannot establish an exact zero. A newer incomplete attempt must qualify the view even if an older complete capture remains available. Local disposition changes are included in the count but do not prove remediation. |
+| Discovery explanation | A returned message is diagnostic text. Nonempty text alone is not a failure classifier; state, eligibility and resource-discovery outcomes determine the coverage condition. |
+| Assessment refresh signals | Native nullable `rerunAssessment` preserves the provider's boolean indication that an assessment should be rerun. Local `policyContextRefreshRequired` records policy/membership invalidation; local `reassessmentRequired` records material service changes such as resources, Regions, permissions or discovery, or a claimed remediation that needs assessment evidence; broader `refreshRequired` requests a projection refresh. A subsequent run alone does not verify a particular fix. Neither missing native data nor a generic detail-refresh request means that AWS reported `rerunAssessment=false` or `true`. [S06] [S21] [S49] |
+
+At the fixture's initial time, six of eight services have current qualifying assessment evidence (**75%**). Seven retain last-known assessed evidence (**88%**, rounded); the older Fulfillment evidence is also partial, and one service is unassessed. All eight require attention for at least one reason, including low-severity findings on otherwise healthy services. Advancing the fixture clock by 48 hours leaves zero current assessments while preserving the seven last-known observations. These are reproducible fixture expectations, not AWS portfolio measurements. [Implementation evidence](quality-review.md)
+
+An operational badge must resolve to its evidence. `GetServiceStatus.selectedObservations` returns the selected health and posture records inline; `effectivePolicyEvidence` and `findingCoverage` explain target context and finding counts. The UI shows current coverage and last-known history separately so old successful execution cannot remain a green coverage statistic indefinitely.
 
 ## 14. API read and mutation map
 
@@ -420,7 +473,7 @@ Separate confirmed provider values from pending edits. For association arrays, p
 
 ## 16. Official sources
 
-All 48 sources below are AWS primary documentation. Reviewed on **5 November 2026**. The generated v2 operation and shape contracts take precedence over inconsistent overview terminology. Sources document the API; the local identities, temporal records and composition rules are the design proposed in this report.
+All sources below are AWS primary documentation. Reviewed on **5 November 2026**. The original 48 references are retained; S49 records the SDK read-shape clarification added in the follow-up review. The generated v2 operation and shape contracts take precedence over inconsistent overview terminology. Sources document the API; the local identities, temporal records and composition rules are the design proposed in this report.
 
 | ID | Official source |
 | --- | --- |
@@ -472,6 +525,7 @@ All 48 sources below are AWS primary documentation. Reviewed on **5 November 202
 | S46 | [UpdateFailureModeFinding](https://docs.aws.amazon.com/resilience-hub/v2/APIReference/API_UpdateFailureModeFinding.html) |
 | S47 | [UserJourney](https://docs.aws.amazon.com/resilience-hub/v2/APIReference/API_UserJourney.html) |
 | S48 | [ListFailureModeAssessments](https://docs.aws.amazon.com/resilience-hub/v2/APIReference/API_ListFailureModeAssessments.html) |
+| S49 | [GetService — SDK read semantics, permission nullability and rerunAssessment](https://docs.aws.amazon.com/botocore/latest/reference/services/resiliencehubv2/client/get_service.html) |
 
 ### Implementation decisions to verify
 
@@ -479,7 +533,7 @@ Validate association-array replacement, policy and component detachment, account
 
 ### Scope and evidence limits
 
-This is a documentation-based design analysis, not a validation of a particular AWS account. No account-specific API responses or permissions were supplied. Proposed local keys, captures, governance fields, health states, rollups and ingestion rules are distinguished from provider fields throughout. The model should be verified against the SDK version and controlled payloads used during implementation. The accompanying application uses fictional operational data; it does not connect to AWS or establish actual runtime health.
+This is a documentation-based design and an executable fictional-data demonstration, not validation of a particular AWS account. No account-specific API responses or permissions were supplied. Local keys, captures, governance fields, health states, rollups and ingestion rules are distinguished from provider fields throughout. Section 1 separates implemented behavior from partial or deferred integration. The full native adapter still needs payload/SDK compatibility checks, read-shape forward compatibility, account-specific visibility handling, hydration and periodic reconciliation. The accompanying application does not connect to AWS or establish actual workload health.
 
 ### Diagram maintenance
 
@@ -533,3 +587,4 @@ The five diagram `.md` notes are the editable semantic sources. Each has YAML fr
 [S46]: https://docs.aws.amazon.com/resilience-hub/v2/APIReference/API_UpdateFailureModeFinding.html "UpdateFailureModeFinding"
 [S47]: https://docs.aws.amazon.com/resilience-hub/v2/APIReference/API_UserJourney.html "UserJourney"
 [S48]: https://docs.aws.amazon.com/resilience-hub/v2/APIReference/API_ListFailureModeAssessments.html "ListFailureModeAssessments"
+[S49]: https://docs.aws.amazon.com/botocore/latest/reference/services/resiliencehubv2/client/get_service.html "GetService SDK read semantics and nullable permission metadata"

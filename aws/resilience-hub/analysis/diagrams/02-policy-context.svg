@@ -1,8 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1300 1190" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1300 1540" role="img" aria-labelledby="title desc">
 <title id="title">Policies, assignments and effective targets</title>
 <desc id="desc">Entity relationship diagram. Navy entities are AWS-backed; teal entities are local records. Cardinalities are printed on relationship lines. See the accompanying Mermaid source and report for constraints.</desc>
 <style>text{font-family:Inter,Arial,sans-serif}.entity{font-size:17px;font-weight:700}.field{font-size:16px}.meta{font-size:13px}.link{font-size:14px}.note{font-size:16px}</style>
-<rect width="1300" height="1190" rx="18" fill="#f8fbfd"/>
+<rect width="1300" height="1540" rx="18" fill="#f8fbfd"/>
 <text font-family="sans-serif" x="32" y="42" fill="#16304a" font-size="25" font-weight="700">Policies, assignments and effective targets</text>
 <text font-family="sans-serif" x="32" y="69" fill="#53677c" font-size="16">Current provider assignments and locally captured target evidence have separate identities.</text>
 <polyline points="450,200 215,200 215,410" fill="none" stroke="#6e8397" stroke-width="1.8"/>
@@ -25,6 +25,14 @@
 <text font-family="sans-serif" x="770" y="811" text-anchor="middle" class="link" font-size="14" fill="#53677c">1</text>
 <text font-family="sans-serif" x="712" y="811" text-anchor="middle" class="link" font-size="14" fill="#53677c">0..*</text>
 <text font-family="sans-serif" x="740" y="854" text-anchor="middle" class="link" font-size="14" fill="#53677c">0..8 targets</text>
+<polyline points="990,605 990,660 20,660 20,1050 215,1050 215,1080" fill="none" stroke="#6e8397" stroke-width="1.8"/>
+<text font-family="sans-serif" x="971" y="626" text-anchor="middle" class="link" font-size="14" fill="#53677c">1</text>
+<text font-family="sans-serif" x="195" y="1070" text-anchor="middle" class="link" font-size="14" fill="#53677c">0..*</text>
+<text font-family="sans-serif" x="545" y="650" text-anchor="middle" class="link" font-size="14" fill="#53677c">captures context</text>
+<polyline points="1025,925 1025,1230 690,1230" fill="none" stroke="#6e8397" stroke-width="1.8"/>
+<text font-family="sans-serif" x="1007" y="948" text-anchor="middle" class="link" font-size="14" fill="#53677c">0..1</text>
+<text font-family="sans-serif" x="712" y="1216" text-anchor="middle" class="link" font-size="14" fill="#53677c">0..*</text>
+<text font-family="sans-serif" x="1025" y="1055" text-anchor="middle" class="link" font-size="14" fill="#53677c">target evidence</text>
 <rect x="450" y="115" width="400" height="185" rx="9" fill="white" stroke="#cbd8e3"/>
 <path d="M459,115 H841 Q850,115 850,124 V158 H450 V124 Q450,115 459,115 Z" fill="#183750"/>
 <text font-family="sans-serif" x="465" y="143" fill="white" class="entity" font-size="17" font-weight="700">POLICY</text>
@@ -71,9 +79,21 @@
 <text font-family="sans-serif" x="55" y="915" fill="#53677c" class="meta" font-size="13">Returned label; not a policy identity</text>
 <text font-family="sans-serif" x="55" y="935" fill="#16304a" class="field" font-size="16">ownershipSource</text>
 <text font-family="sans-serif" x="55" y="955" fill="#53677c" class="meta" font-size="13">SELF or CROSS_ACCOUNT</text>
-<rect x="32" y="1068" width="13" height="13" rx="3" fill="#183750"/><text font-family="sans-serif" x="54" y="1080" fill="#53677c" class="link" font-size="14">AWS-backed identity or value</text>
-<rect x="335" y="1068" width="13" height="13" rx="3" fill="#087f83"/><text font-family="sans-serif" x="357" y="1080" fill="#53677c" class="link" font-size="14">Local normalization or evidence</text>
-<text font-family="sans-serif" x="32" y="1112" fill="#53677c" class="note" font-size="16">Inherited applicability follows journey membership; it is not encoded by ownershipSource.</text>
-<text font-family="sans-serif" x="32" y="1136" fill="#53677c" class="note" font-size="16">policyName is a returned label. Any policy identity match must be verified and remain optional.</text>
-<text font-family="sans-serif" x="32" y="1160" fill="#53677c" class="note" font-size="16">A captured context is not proof of the policy revision that AWS evaluated.</text>
+<rect x="40" y="1080" width="650" height="300" rx="9" fill="white" stroke="#cbd8e3"/>
+<path d="M49,1080 H681 Q690,1080 690,1089 V1123 H40 V1089 Q40,1080 49,1080 Z" fill="#087f83"/>
+<text font-family="sans-serif" x="55" y="1108" fill="white" class="entity" font-size="17" font-weight="700">POLICY_CONTEXT_CAPTURE</text>
+<text font-family="sans-serif" x="55" y="1148" fill="#16304a" class="field" font-size="16">policyContextCaptureId  [PK]</text>
+<text font-family="sans-serif" x="55" y="1170" fill="#16304a" class="field" font-size="16">serviceArn  [FK]</text>
+<text font-family="sans-serif" x="55" y="1192" fill="#16304a" class="field" font-size="16">effectiveTargetObservationId  [FK]</text>
+<text font-family="sans-serif" x="55" y="1212" fill="#53677c" class="meta" font-size="13">Optional same-service observation</text>
+<text font-family="sans-serif" x="55" y="1232" fill="#16304a" class="field" font-size="16">observedAt</text>
+<text font-family="sans-serif" x="55" y="1254" fill="#16304a" class="field" font-size="16">membershipEvidence</text>
+<text font-family="sans-serif" x="55" y="1274" fill="#53677c" class="meta" font-size="13">Observed associations and policy references</text>
+<text font-family="sans-serif" x="55" y="1294" fill="#16304a" class="field" font-size="16">policyContentEvidence</text>
+<text font-family="sans-serif" x="55" y="1314" fill="#53677c" class="meta" font-size="13">Hashes or payload references when captured</text>
+<rect x="32" y="1423" width="13" height="13" rx="3" fill="#183750"/><text font-family="sans-serif" x="54" y="1435" fill="#53677c" class="link" font-size="14">AWS-backed identity or value</text>
+<rect x="335" y="1423" width="13" height="13" rx="3" fill="#087f83"/><text font-family="sans-serif" x="357" y="1435" fill="#53677c" class="link" font-size="14">Local normalization or evidence</text>
+<text font-family="sans-serif" x="32" y="1467" fill="#53677c" class="note" font-size="16">Inherited applicability follows journey membership; it is not encoded by ownershipSource.</text>
+<text font-family="sans-serif" x="32" y="1491" fill="#53677c" class="note" font-size="16">Policy names require verified identity resolution. Context and target evidence must share a service ARN.</text>
+<text font-family="sans-serif" x="32" y="1515" fill="#53677c" class="note" font-size="16">Captured membership and policy content are observed context, not the provider-evaluated policy revision.</text>
 </svg>

@@ -108,9 +108,14 @@ test('triage is a mutable disposition, not verified remediation or changed healt
   const payment = service(state, 'payments');
   const posture = sameBytes(payment.posture), health = sameBytes(payment.health);
   const finding = state.findings.find(item => item.id === 'payments-db');
+  assert.equal(M.assessmentCoverage(state, payment).current, true);
   assert.equal(M.updateFinding(state, finding.id, 'RESOLVED', 'Standby configured; awaiting reassessment.').ok, true);
   assert.equal(finding.status, 'RESOLVED');
   assert.equal(finding.verification, 'UNVERIFIED');
+  assert.equal(payment.reassessmentRequired, true, 'A newly claimed repair creates the same local reassessment obligation as the RPC command');
+  assert.equal(M.assessmentCoverage(state, payment).current, false);
+  assert.equal(M.assessmentCoverage(state, payment).lastKnown, true);
+  assert.match(M.attentionReasons(state, payment).find(reason => reason.code === 'LOCAL_REASSESSMENT_REQUIRED').message, /claimed repair/);
   assert.equal(sameBytes(payment.posture), posture);
   assert.equal(sameBytes(payment.health), health);
   assert.equal(M.updateFinding(state, finding.id, 'IRRELEVANT', 'Temporary demo suppression.').ok, true);
@@ -118,6 +123,12 @@ test('triage is a mutable disposition, not verified remediation or changed healt
   assert.equal(M.metrics(state).suppressedFindings, 2);
   assert.equal(M.updateFinding(state, finding.id, 'CLOSED', '').ok, false);
   assert.equal(M.updateFinding(state, finding.id, 'OPEN', 'x'.repeat(2049)).ok, false);
+  const original = M.createState();
+  const priorResolved = original.findings.find(item => item.status === 'RESOLVED');
+  const priorService = service(original, priorResolved.serviceId);
+  assert.notEqual(priorService.reassessmentRequired, true, 'Initial resolved fixture records do not create a new obligation');
+  M.updateFinding(original, priorResolved.id, 'RESOLVED', 'Comment-only update.');
+  assert.notEqual(priorService.reassessmentRequired, true, 'A comment-only update does not assert a new repair');
 });
 
 test('assessment workflow completes only an active scoped run and captures observations separately', () => {
@@ -141,6 +152,184 @@ test('assessment workflow completes only an active scoped run and captures obser
   assert.equal(capture.detailCoverage.status, 'COMPLETE');
   assert.match(capture.correlationBasis, /no native/);
   assert.equal(M.serviceFindings(state, 'checkout').some(finding => 'assessmentId' in finding), false);
+});
+
+test('assessment outcomes are independent of finding disposition and completion does not verify repair', () => {
+  const results = ['OPEN', 'RESOLVED', 'IRRELEVANT'].map(status => {
+    const state = M.createState();
+    const checkout = service(state, 'checkout');
+    const beforeHealth = sameBytes(checkout.health);
+    const findings = state.findings.filter(finding => finding.serviceId === 'checkout' && finding.severity === 'HIGH');
+    if (status !== 'OPEN') findings.forEach(finding => M.updateFinding(state, finding.id, status, 'Disposition only; the architecture is unchanged.'));
+    assert.equal(M.startAssessment(state, 'checkout').ok, true);
+    assert.equal(M.completeAssessment(state, 'checkout').ok, true);
+    assert.equal(sameBytes(checkout.health), beforeHealth);
+    assert.equal(checkout.posture.state, 'NOT_ACHIEVABLE');
+    assert.equal(checkout.posture.configurationScenario, 'UNCHANGED_NORTHSTAR_ARCHITECTURE');
+    findings.forEach(finding => {
+      assert.equal(finding.status, status);
+      assert.notEqual(finding.verification, 'CONFIRMED_AFTER_REASSESSMENT');
+      if (status === 'RESOLVED') assert.equal(finding.verification, 'UNVERIFIED');
+      if (status === 'IRRELEVANT') assert.equal(finding.verification, 'SUPPRESSED');
+    });
+    return { components: checkout.posture.components, fixtureId: checkout.posture.responseFixtureId };
+  });
+  assert.deepEqual(results[0], results[1]);
+  assert.deepEqual(results[0], results[2]);
+  const incomplete = M.createState();
+  M.startAssessment(incomplete, 'notifications');
+  M.completeAssessment(incomplete, 'notifications');
+  assert.equal(service(incomplete, 'notifications').assessmentStatus, 'SUCCESS');
+  assert.equal(M.servicePosture(incomplete, 'notifications').state, 'UNKNOWN');
+  assert.equal(M.assessmentCoverage(incomplete, 'notifications').current, false);
+});
+
+test('attention is an explainable union including findings, resource coverage and changed assessment context', () => {
+  const state = M.createState();
+  assert.equal(M.metrics(state).attention, 8);
+  for (const id of ['edge', 'orders']) assert.ok(M.attentionReasons(state, id).some(reason => reason.code === 'OPEN_FINDINGS'));
+  const edge = service(state, 'edge');
+  state.findings.filter(finding => finding.serviceId === edge.id).forEach(finding => { finding.status = 'IRRELEVANT'; });
+  edge.dependencyDiscovery.message = 'Discovery completed successfully.';
+  assert.equal(M.needsAttention(state, edge), false, 'An informational discovery message is not a coverage failure');
+  edge.resourceDiscovery = { status: 'FAILED', lastRunAt: state.now, errorCode: 'ACCESS_DENIED', errorMessage: 'Recovery account cannot be read.' };
+  assert.ok(M.attentionReasons(state, edge).some(reason => reason.code === 'RESOURCE_DISCOVERY_GAP' && reason.message.includes('Recovery account')));
+  assert.equal(M.assessmentCoverage(state, edge).status, 'INACCESSIBLE');
+  edge.resourceDiscovery = { status: 'SUCCEEDED', lastRunAt: state.now };
+  edge.policyContextRefreshRequired = true;
+  assert.ok(M.attentionReasons(state, edge).some(reason => reason.code === 'POLICY_CONTEXT_REFRESH_REQUIRED'));
+  assert.equal(M.assessmentCoverage(state, edge).current, false);
+  const metrics = M.metrics(M.createState());
+  assert.ok(Object.values(metrics.attentionByDimension).reduce((total, count) => total + count, 0) > metrics.attention, 'Overlapping reasons do not sum into the distinct service total');
+});
+
+test('current assessment coverage expires while retained history and partial evidence remain explicit', () => {
+  const state = M.createState();
+  const baseline = M.metrics(state);
+  assert.equal(baseline.currentAssessed, 6);
+  assert.equal(baseline.currentAssessmentCoverage, 75);
+  assert.equal(baseline.lastKnownAssessed, 7);
+  assert.equal(baseline.lastKnownAssessmentCoverage, 88);
+  assert.equal(M.assessmentCoverage(state, 'identity').current, true, 'A failed newer run does not erase current evidence from a previous successful run');
+  assert.equal(M.assessmentCoverage(state, 'fulfillment').status, 'PARTIAL');
+  assert.equal(M.assessmentCoverage(state, 'fulfillment').stale, true);
+  assert.equal(M.assessmentCoverage(state, 'notifications').status, 'UNASSESSED');
+  state.now = new Date(Date.parse(state.now) + 48 * 60 * 60 * 1000).toISOString();
+  const later = M.metrics(state);
+  assert.equal(later.currentAssessed, 0);
+  assert.equal(later.currentAssessmentCoverage, 0);
+  assert.equal(later.lastKnownAssessed, 7);
+  assert.equal(later.staleAssessmentEvidence, 7);
+  assert.equal(M.metrics(state, { query: 'no-such-service' }).currentAssessmentCoverage, null, 'An empty denominator is not 0% coverage');
+});
+
+test('finding coverage qualifies observed zero, unknown statuses, incomplete collection and freshness', () => {
+  const state = M.createState();
+  const edge = service(state, 'edge');
+  const finding = state.findings.find(item => item.serviceId === edge.id);
+  finding.status = 'IRRELEVANT';
+  assert.equal(M.findingCoverage(state, edge).exactOpenCount, 0);
+  assert.equal(M.needsAttention(state, edge), false);
+  const capture = state.findingCaptures.find(item => item.serviceArn === edge.arn);
+  const incomplete = { captureId: 'newer-incomplete-attempt', serviceArn: edge.arn, captureStartedAt: state.now, captureEndedAt: null, collectionStatus: 'PARTIAL', listCoverage: { status: 'PARTIAL', filters: {} }, detailCoverage: { status: 'PARTIAL' } };
+  state.findingCaptures.push(incomplete);
+  assert.equal(M.findingCoverage(state, edge).latestCapture.captureId, incomplete.captureId, 'A newer incomplete attempt is not hidden by an older complete capture');
+  assert.equal(M.findingCoverage(state, edge).status, 'PARTIAL');
+  assert.equal(M.findingCoverage(state, edge).exactOpenCount, null);
+  assert.equal(M.needsAttention(state, edge), true);
+  state.findingCaptures = state.findingCaptures.filter(item => item.serviceArn !== edge.arn);
+  assert.equal(M.findingCoverage(state, edge).observedOpenCount, 0);
+  assert.equal(M.findingCoverage(state, edge).exactOpenCount, null);
+  assert.equal(M.findingCoverage(state, edge).status, 'UNASSESSED');
+  assert.ok(M.attentionReasons(state, edge).some(reason => reason.code === 'FINDING_COLLECTION_INCOMPLETE'), 'Missing finding coverage needs attention even when health and posture are good and all observed findings are closed');
+  state.findingCaptures.push(capture);
+  const observedAt = capture.captureEndedAt;
+  delete capture.captureEndedAt;
+  assert.equal(M.findingCoverage(state, edge).status, 'PARTIAL');
+  assert.equal(M.findingCoverage(state, edge).observedAt, null);
+  assert.equal(M.findingCoverage(state, edge).exactOpenCount, null);
+  capture.captureEndedAt = observedAt;
+  capture.listCoverage.filters = { severity: 'HIGH' };
+  assert.equal(M.findingCoverage(state, edge).status, 'PARTIAL', 'A filtered list is only an observed subset');
+  capture.listCoverage.filters = {};
+  finding.status = 'FUTURE_PROVIDER_STATUS';
+  assert.equal(M.findingCoverage(state, edge).unknownStatusCount, 1);
+  assert.equal(M.findingCoverage(state, edge).exactOpenCount, null);
+  finding.status = 'IRRELEVANT';
+  state.now = new Date(Date.parse(state.now) + 25 * 60 * 60 * 1000).toISOString();
+  assert.equal(M.findingCoverage(state, edge).status, 'STALE');
+  assert.equal(M.findingCoverage(state, edge).stale, true);
+  assert.equal(M.findingCoverage(state, edge).exactOpenCount, null);
+});
+
+test('coverage follows captured optional objectives and qualifies unknown context or native reassessment requests', () => {
+  const state = M.createState();
+  const edge = service(state, 'edge');
+  const context = state.policyContexts.find(item => item.policyContextCaptureId === edge.posture.policyContextCaptureId);
+  const capturedTargets = state.effectiveTargetObservations.find(item => item.effectiveTargetObservationId === context.effectiveTargetObservationId);
+  capturedTargets.targets = capturedTargets.targets.filter(target => target.metric === 'availabilitySlo');
+  edge.posture.components = { availabilitySlo: 'ACHIEVABLE' };
+  assert.deepEqual(M.assessmentCoverage(state, edge).expectedComponents, ['availabilitySlo']);
+  assert.equal(M.assessmentCoverage(state, edge).status, 'CURRENT', 'An availability-only captured policy does not require unconfigured recovery components');
+  edge.effectiveTargets = [{ metric: 'multiAzRto', value: 15 }];
+  state.policies.find(policy => policy.id === edge.policyId).components = { multiAz: { rtoInMinutes: 15 } };
+  assert.equal(M.assessmentCoverage(state, edge).status, 'CURRENT', 'Current mutable policy data does not rewrite captured component applicability');
+  edge.posture.components.availabilitySlo = null;
+  assert.equal(M.assessmentCoverage(state, edge).status, 'PARTIAL');
+  edge.posture.components.availabilitySlo = 'ACHIEVABLE';
+  edge.posture.policyContextCaptureId = 'unavailable-context';
+  assert.equal(M.assessmentCoverage(state, edge).status, 'PARTIAL');
+  assert.equal(M.assessmentCoverage(state, edge).policyContextKnown, false);
+  assert.equal(M.assessmentCoverage(state, edge).expectedComponents, null);
+  edge.posture.policyContextCaptureId = context.policyContextCaptureId;
+  capturedTargets.targets.push(null);
+  assert.equal(M.assessmentCoverage(state, edge).status, 'PARTIAL', 'A null captured target is unknown evidence, not a crash or an omitted objective');
+  assert.equal(M.assessmentCoverage(state, edge).policyContextKnown, false);
+  capturedTargets.targets.pop();
+  edge.reassessmentRequired = true;
+  assert.equal(M.assessmentCoverage(state, edge).current, false);
+  assert.equal(M.assessmentCoverage(state, edge).contextRefreshRequired, false, 'Material service changes are distinct from policy context invalidation');
+  assert.ok(M.attentionReasons(state, edge).some(reason => reason.code === 'LOCAL_REASSESSMENT_REQUIRED'));
+  delete edge.reassessmentRequired;
+  edge.rerunAssessment = true;
+  assert.equal(M.assessmentCoverage(state, edge).current, false);
+  assert.ok(M.attentionReasons(state, edge).some(reason => reason.code === 'NATIVE_REASSESSMENT_REQUIRED'));
+  delete edge.rerunAssessment;
+  assert.equal(M.attentionReasons(state, edge).some(reason => reason.code === 'NATIVE_REASSESSMENT_REQUIRED'), false, 'An omitted provider flag is not invented');
+});
+
+test('unknown posture or unqualified captured evidence still requires attention', () => {
+  for (const missing of ['capturedContext', 'successfulRun', 'unrecognizedPosture']) {
+    const state = M.createState();
+    const edge = service(state, 'edge');
+    state.findings.filter(finding => finding.serviceId === edge.id).forEach(finding => { finding.status = 'IRRELEVANT'; });
+    assert.equal(M.needsAttention(state, edge), false);
+    if (missing === 'capturedContext') edge.posture.policyContextCaptureId = null;
+    else if (missing === 'successfulRun') state.assessments = state.assessments.filter(run => run.serviceArn !== edge.arn);
+    else {
+      edge.posture.state = 'FUTURE_PROVIDER_STATE';
+      assert.equal(M.servicePosture(state, edge).state, 'UNKNOWN');
+      assert.equal(M.servicePosture(state, edge).rawState, 'FUTURE_PROVIDER_STATE');
+    }
+    assert.equal(M.assessmentCoverage(state, edge).current, false);
+    const reasons = M.attentionReasons(state, edge);
+    assert.deepEqual(reasons.map(reason => reason.code), [missing === 'unrecognizedPosture' ? 'POSTURE_UNKNOWN' : 'ASSESSMENT_EVIDENCE_GAP']);
+    assert.equal(M.needsAttention(state, edge), true);
+  }
+});
+
+test('equal-time health evidence remains historical and invalid observation windows are rejected before changes', () => {
+  const state = M.createState();
+  const payment = service(state, 'payments');
+  const original = sameBytes(payment.health), count = state.observations.length;
+  const tie = { ...structuredClone(payment.health), state: 'UNAVAILABLE', reason: 'An independent equal-time observation' };
+  const result = M.applyHealthObservation(state, payment.id, tie, { sourceEventId: 'equal-time-observation' });
+  assert.equal(result.stale, true);
+  assert.equal(sameBytes(payment.health), original);
+  assert.equal(state.observations.length, count + 1);
+  const before = sameBytes(state);
+  assert.equal(M.applyHealthObservation(state, payment.id, { ...tie, expiresAt: tie.observedAt }).ok, false);
+  assert.equal(sameBytes(state), before);
 });
 
 test('multiple captures retain immutable recommendation instances with valid historical observation references', () => {
