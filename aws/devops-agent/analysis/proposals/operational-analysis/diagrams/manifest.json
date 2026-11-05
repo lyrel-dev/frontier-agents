@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "kind": "proposal-diagram-registry",
+  "proposal": "operational-analysis",
+  "entities": [
+    "Subject",
+    "Analysis",
+    "Assertion",
+    "QueryRun",
+    "Evidence",
+    "Assessment",
+    "Review"
+  ],
+  "renderer": {
+    "name": "Draw.io SVG engine",
+    "version": "32.6.10",
+    "sourceRepository": "https://github.com/jgraph/drawio",
+    "sourceCommit": "c72c9a98b7a6ce392556ed04c05e0ff19f43f5c3",
+    "runtime": "JSDOM 26.1.0; @napi-rs/canvas 0.1.100",
+    "entryPoint": "export.js render + Graph.getSvg",
+    "network": "No network used during rendering"
+  },
+  "rasterizer": "Inkscape 1.4 (e7c3feb100, 2024-10-09)",
+  "drawio": {
+    "path": "diagrams/OA01-domain-classes.drawio",
+    "sha256": "06f787a351c875fc5205d9f771727ba75bc0c53880d8b031ef4413750483d5c2",
+    "bytes": 29812
+  },
+  "svg": {
+    "path": "diagrams/OA01-domain-classes.svg",
+    "sha256": "5de3c19f0d653ef5edc5344c68000c817f2cfb6480f46cdd2f632d4f0961ee87",
+    "bytes": 29388
+  },
+  "png": {
+    "path": "diagrams/OA01-domain-classes.png",
+    "sha256": "611dc055b15533f6588182c2f0f62d24be35bc7edd0e7b5bd7aa8475c8e9f060",
+    "bytes": 250134
+  },
+  "renderReport": {
+    "path": "diagrams/render-report.json",
+    "sha256": "b6b35109530a7ef2866f5b0f47185815e6f6d1da14ec60c1db25fd9eaa410706",
+    "bytes": 6632
+  },
+  "renderBindings": {
+    "wrapperSha256": "806b5b3c324833f25ec2665fda8ddb5a2d994335b3e7d4b52ddca90b76b6a5df",
+    "rendererSha256": "b4d1f409559709529b954e47f46051d9b1e287a61e98248c8ce39bf2a741de94",
+    "runtimePinSha256": "4aa868b234bc804548145af92110071a4c55857f6cc8a8fae8a8703266a4e460"
+  },
+  "diagrams": [
+    {
+      "id": "OA01",
+      "title": "Seven entities for operational analysis",
+      "filename": "diagrams/OA01-domain-classes.drawio",
+      "rendered": "diagrams/OA01-domain-classes.svg",
+      "source": "README.md",
+      "type": "class",
+      "format": "drawio"
+    }
+  ]
+}

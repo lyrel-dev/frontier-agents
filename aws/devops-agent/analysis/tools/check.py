@@ -101,22 +101,64 @@ def mask_markdown_code(text):
 
 def main():
     manifest = json.loads((ROOT / "diagrams/manifest.json").read_text(encoding="utf-8"))
-    figures = manifest["diagrams"]
+    gallery_figures = manifest["diagrams"]
+    figures = list(gallery_figures)
+    records = {d["id"]: d for d in json.loads((ROOT / "qa/diagram-render.json").read_text(encoding="utf-8"))["diagrams"]}
+    # Proposals have their own registries and evidence; they are checked without
+    # being presented as implemented native-model figures in the application.
+    for registry_path in sorted((ROOT / "proposals").glob("*/diagrams/manifest.json")):
+        proposal_root = registry_path.parent.parent
+        prefix = proposal_root.relative_to(ROOT)
+        proposal = json.loads(registry_path.read_text(encoding="utf-8"))
+        assert proposal.get("kind") == "proposal-diagram-registry", f"Unknown proposal registry: {registry_path}"
+        if all(d.get("format") == "drawio" for d in proposal["diagrams"]):
+            report_path = (proposal_root / proposal["renderReport"]["path"]).resolve()
+            assert report_path.is_relative_to(proposal_root), "Proposal render report leaves its package"
+            report = json.loads(report_path.read_text(encoding="utf-8"))
+            pages = {p["id"]: p for p in report["pages"]}
+            proposal_records = [{"id": d["id"], "sourceSha256": report["sourceSha256"],
+                                 "svgSha256": pages[Path(d["rendered"]).stem.lower()]["svgSha256"]}
+                                for d in proposal["diagrams"]]
+        else:
+            proposal_records = json.loads((proposal_root / "qa/diagram-review.json").read_text(encoding="utf-8"))["diagrams"]
+        assert {d["id"] for d in proposal_records} == {d["id"] for d in proposal["diagrams"]}, "Proposal render inventory mismatch"
+        for record in proposal_records:
+            assert record["id"] not in records, "Duplicate diagram ID across registries"
+            records[record["id"]] = record
+        for item in proposal["diagrams"]:
+            diagram = dict(item)
+            for key in ("filename", "rendered", "source"):
+                relative = prefix / item[key]
+                assert (ROOT / relative).resolve().is_relative_to(ROOT), "Proposal diagram path leaves package"
+                diagram[key] = relative.as_posix()
+            assert not diagram.get("origin_document"), "Proposal publications must use explicit source paths"
+            figures.append(diagram)
     assert figures, "The reviewed model must declare its diagrams"
     assert len({d["id"] for d in figures}) == len(figures), "Duplicate diagram ID"
     assert len({d["filename"] for d in figures}) == len(figures), "Duplicate diagram source path"
     assert len({d["rendered"] for d in figures}) == len(figures), "Duplicate diagram SVG path"
     normalized = lambda s: "\n".join(line.rstrip() for line in s.strip().splitlines())
-    records = {d["id"]: d for d in json.loads((ROOT / "qa/diagram-render.json").read_text(encoding="utf-8"))["diagrams"]}
     assert set(records) == {d["id"] for d in figures}, "Render manifest does not match the diagram registry"
     source_texts = {}
     publications = {}
+    checked_drawio_publications = 0
     for diagram in figures:
         source = (ROOT / diagram["filename"]).read_text(encoding="utf-8")
-        source_texts[diagram["id"]] = normalized(source)
-        publications.setdefault(Path(diagram.get("source", "report.md")), []).append(diagram["id"])
-        if diagram.get("origin_document"):
-            publications.setdefault(Path("annexes") / Path(diagram["origin_document"]).name, []).append(diagram["id"])
+        if diagram.get("format", "mermaid") == "mermaid":
+            source_texts[diagram["id"]] = normalized(source)
+            publications.setdefault(Path(diagram.get("source", "report.md")), []).append(diagram["id"])
+            if diagram.get("origin_document"):
+                publications.setdefault(Path("annexes") / Path(diagram["origin_document"]).name, []).append(diagram["id"])
+        else:
+            assert diagram["format"] == "drawio", "Unsupported registered diagram format"
+            assert ET.fromstring(source).tag == "mxfile", "Expected editable Draw.io source"
+            publication = ROOT / diagram["source"]
+            image_target = (ROOT / diagram["rendered"]).relative_to(publication.parent).as_posix()
+            source_target = (ROOT / diagram["filename"]).relative_to(publication.parent).as_posix()
+            published_text = publication.read_text(encoding="utf-8")
+            assert re.search(r"!\[[^\]]+\]\(" + re.escape(image_target) + r"\)", published_text), "Missing Draw.io SVG publication"
+            assert "](" + source_target + ")" in published_text, "Missing editable Draw.io link"
+            checked_drawio_publications += 1
         svg = (ROOT / diagram["rendered"]).read_bytes()
         root = ET.fromstring(svg)
         assert root.tag.endswith("svg"), diagram["rendered"]
@@ -164,7 +206,7 @@ def main():
     build_spec.loader.exec_module(build)
     expected_html, embedded_count = build.render_page()
     assert (ROOT / "index.html").read_bytes() == expected_html.encode("utf-8"), "Stale application bundle: run python3 app/build.py"
-    assert embedded_count == len(figures), "Application does not embed every declared diagram"
+    assert embedded_count == len(gallery_figures), "Application does not embed every declared gallery diagram"
     html = expected_html
     page = Page()
     page.feed(html)
@@ -174,7 +216,7 @@ def main():
     assert "/*__" not in html, "Unfilled build placeholder"
     assert "globalThis.LensDiagrams" in html, "Missing embedded diagrams"
     assert "Mock data" in html, "Missing fictional-data disclosure"
-    print(f"PASS: {len(figures)} source/SVG pairs and {checked_diagram_copies} matching Markdown copies; {checked_links} local Markdown links; parsed YAML metadata; current deterministic offline HTML bundle.")
+    print(f"PASS: {len(figures)} source/SVG pairs ({len(gallery_figures)} gallery, {len(figures) - len(gallery_figures)} proposal); {checked_diagram_copies} matching Mermaid copies and {checked_drawio_publications} Draw.io publications; {checked_links} local Markdown links; parsed YAML metadata; current deterministic offline HTML bundle.")
 
 
 if __name__ == "__main__":

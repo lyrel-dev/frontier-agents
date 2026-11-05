@@ -1,0 +1,291 @@
+{
+  "renderer": {
+    "name": "Draw.io SVG engine",
+    "version": "32.6.10",
+    "sourceRepository": "https://github.com/jgraph/drawio",
+    "sourceCommit": "c72c9a98b7a6ce392556ed04c05e0ff19f43f5c3",
+    "runtime": "JSDOM 26.1.0; @napi-rs/canvas 0.1.100",
+    "entryPoint": "export.js render + Graph.getSvg",
+    "network": "No network used during rendering"
+  },
+  "pages": [
+    {
+      "id": "oa01-domain-classes",
+      "title": "Operational analysis: all seven entities",
+      "kind": "class",
+      "pageSize": {
+        "width": 1200,
+        "height": 1410
+      },
+      "nodes": [
+        {
+          "id": "class-Subject",
+          "entity": "Subject",
+          "boundary": false,
+          "x": 40,
+          "y": 220,
+          "width": 310,
+          "height": 280
+        },
+        {
+          "id": "class-Analysis",
+          "entity": "Analysis",
+          "boundary": false,
+          "x": 445,
+          "y": 220,
+          "width": 310,
+          "height": 280
+        },
+        {
+          "id": "class-Assertion",
+          "entity": "Assertion",
+          "boundary": false,
+          "x": 40,
+          "y": 650,
+          "width": 310,
+          "height": 280
+        },
+        {
+          "id": "class-QueryRun",
+          "entity": "QueryRun",
+          "boundary": false,
+          "x": 850,
+          "y": 220,
+          "width": 310,
+          "height": 280
+        },
+        {
+          "id": "class-Evidence",
+          "entity": "Evidence",
+          "boundary": false,
+          "x": 850,
+          "y": 650,
+          "width": 310,
+          "height": 280
+        },
+        {
+          "id": "class-Assessment",
+          "entity": "Assessment",
+          "boundary": false,
+          "x": 445,
+          "y": 650,
+          "width": 310,
+          "height": 280
+        },
+        {
+          "id": "class-Review",
+          "entity": "Review",
+          "boundary": false,
+          "x": 445,
+          "y": 1070,
+          "width": 310,
+          "height": 280
+        }
+      ],
+      "edges": [
+        {
+          "id": "edge-0",
+          "relationshipIndex": 0,
+          "from": "class-Analysis",
+          "to": "class-Subject",
+          "points": [
+            {
+              "x": 445,
+              "y": 332
+            },
+            {
+              "x": 350,
+              "y": 332
+            }
+          ],
+          "label": {
+            "x": 371,
+            "y": 305,
+            "width": 52,
+            "height": 13
+          }
+        },
+        {
+          "id": "edge-1",
+          "relationshipIndex": 1,
+          "from": "class-Analysis",
+          "to": "class-Assertion",
+          "points": [
+            {
+              "x": 482.2,
+              "y": 500
+            },
+            {
+              "x": 482.2,
+              "y": 565
+            },
+            {
+              "x": 195,
+              "y": 565
+            },
+            {
+              "x": 195,
+              "y": 650
+            }
+          ],
+          "label": {
+            "x": 309,
+            "y": 541,
+            "width": 39,
+            "height": 11
+          }
+        },
+        {
+          "id": "edge-2",
+          "relationshipIndex": 2,
+          "from": "class-Analysis",
+          "to": "class-QueryRun",
+          "points": [
+            {
+              "x": 755,
+              "y": 332
+            },
+            {
+              "x": 850,
+              "y": 332
+            }
+          ],
+          "label": {
+            "x": 783,
+            "y": 307,
+            "width": 39,
+            "height": 11
+          }
+        },
+        {
+          "id": "edge-3",
+          "relationshipIndex": 3,
+          "from": "class-Analysis",
+          "to": "class-Assessment",
+          "points": [
+            {
+              "x": 600,
+              "y": 500
+            },
+            {
+              "x": 600,
+              "y": 650
+            }
+          ],
+          "label": {
+            "x": 619,
+            "y": 570,
+            "width": 51,
+            "height": 14
+          }
+        },
+        {
+          "id": "edge-4",
+          "relationshipIndex": 4,
+          "from": "class-QueryRun",
+          "to": "class-Evidence",
+          "points": [
+            {
+              "x": 1005,
+              "y": 500
+            },
+            {
+              "x": 1005,
+              "y": 650
+            }
+          ],
+          "label": {
+            "x": 1023,
+            "y": 570,
+            "width": 62,
+            "height": 14
+          }
+        },
+        {
+          "id": "edge-5",
+          "relationshipIndex": 5,
+          "from": "class-Assessment",
+          "to": "class-Assertion",
+          "points": [
+            {
+              "x": 445,
+              "y": 762
+            },
+            {
+              "x": 350,
+              "y": 762
+            }
+          ],
+          "label": {
+            "x": 381,
+            "y": 734,
+            "width": 31,
+            "height": 14
+          }
+        },
+        {
+          "id": "edge-6",
+          "relationshipIndex": 6,
+          "from": "class-Assessment",
+          "to": "class-Evidence",
+          "points": [
+            {
+              "x": 755,
+              "y": 762
+            },
+            {
+              "x": 850,
+              "y": 762
+            }
+          ],
+          "label": {
+            "x": 785,
+            "y": 734,
+            "width": 35,
+            "height": 14
+          }
+        },
+        {
+          "id": "edge-7",
+          "relationshipIndex": 7,
+          "from": "class-Review",
+          "to": "class-Assessment",
+          "points": [
+            {
+              "x": 600,
+              "y": 1070
+            },
+            {
+              "x": 600,
+              "y": 930
+            }
+          ],
+          "label": {
+            "x": 619,
+            "y": 995,
+            "width": 56,
+            "height": 14
+          }
+        }
+      ],
+      "classOverlaps": [],
+      "connectorIntrusions": [],
+      "labelIntrusions": [],
+      "textOverflows": [],
+      "nativeCodecRoundTrip": {
+        "entities": 7,
+        "relationships": 8,
+        "metadataPreserved": true
+      },
+      "svgSha256": "5de3c19f0d653ef5edc5344c68000c817f2cfb6480f46cdd2f632d4f0961ee87",
+      "svgBytes": 29388
+    }
+  ],
+  "geometryControls": {
+    "overlappingClassesRejected": true,
+    "connectorThroughClassRejected": true,
+    "separatedGeometryAccepted": true
+  },
+  "svgMetadataNormalization": "Root width and height are numeric pixels; geometry is unchanged.",
+  "sourceSha256": "06f787a351c875fc5205d9f771727ba75bc0c53880d8b031ef4413750483d5c2"
+}

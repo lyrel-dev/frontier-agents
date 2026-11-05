@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" agent="Operational analysis proposal" version="32.6.10" type="device" compressed="false">
+  <diagram id="oa01-domain-classes" name="Operational analysis: all seven entities" alt="Seven entity classes share id, version, createdAt and updatedAt. Analysis targets Subject and owns Assertion, QueryRun and Assessment. QueryRun acquires Evidence. Assessment pins Assertion versions and cites Evidence versions. Review records a decision on an exact Assessment. Evidence, Assessment and Review are immutable at version 1." kind="class" entities="Subject,Analysis,Assertion,QueryRun,Evidence,Assessment,Review" relationshipIds="0,1,2,3,4,5,6,7">
+    <mxGraphModel dx="1200" dy="1410" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="0" page="1" pageScale="1" pageWidth="1200" pageHeight="1410" math="0" shadow="0" background="#F8FAFC">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="page-background" value="" style="rounded=0;html=0;whiteSpace=nowrap;fillColor=#F8FAFC;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="0" y="0" width="1200" height="1410" />
+        </mxCell>
+        <mxCell id="page-kicker" value="OPERATIONAL ANALYSIS · MODEL PROPOSAL" style="text;html=0;whiteSpace=nowrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=DejaVu Sans;fontSize=13;fontColor=#41667C;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="40" y="28" width="1100" height="24" />
+        </mxCell>
+        <mxCell id="page-title" value="Seven entities, one version contract" style="text;html=0;whiteSpace=nowrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=DejaVu Sans;fontSize=32;fontColor=#172D43;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="40" y="65" width="1120" height="44" />
+        </mxCell>
+        <mxCell id="page-subtitle" value="All identities are workspace scoped. Every retained version is immutable." style="text;html=0;whiteSpace=nowrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=DejaVu Sans;fontSize=15;fontColor=#52687D;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="40" y="119" width="1120" height="26" />
+        </mxCell>
+        <mxCell id="page-reference" value="Exact historical reference: EntityRef {kind, id, version} · an owned value" style="text;html=0;whiteSpace=nowrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=DejaVu Sans;fontSize=14;fontColor=#52687D;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="40" y="151" width="1120" height="24" />
+        </mxCell>
+        <object id="class-Subject" label="Subject" entity="Subject" boundary="0" displayFields="id,version,createdAt,updatedAt,kind,identities" versionPolicy="append-only-versions">
+          <mxCell style="swimlane;html=0;whiteSpace=nowrap;startSize=44;horizontal=1;rounded=0;fillColor=#E8F2F8;swimlaneFillColor=#FFFFFF;strokeColor=#286783;strokeWidth=1.5;align=left;verticalAlign=middle;spacingLeft=16;fontColor=#203B53;fontFamily=DejaVu Sans;fontSize=21;fontStyle=1;collapsible=0;container=1;" vertex="1" parent="1">
+            <mxGeometry as="geometry" x="40" y="220" width="310" height="280" />
+          </mxCell>
+        </object>
+        <mxCell id="class-Subject-fields" value="id: Id&#10;version: Integer&#10;createdAt: Instant&#10;updatedAt: Instant&#10;&#10;kind: SubjectKind&#10;identities: ResourceRef[]" style="text;html=0;whiteSpace=nowrap;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacing=0;fontFamily=DejaVu Sans;fontSize=14;fontColor=#30485D;fontStyle=0;" vertex="1" parent="class-Subject">
+          <mxGeometry as="geometry" x="16" y="58" width="278" height="180" />
+        </mxCell>
+        <mxCell id="class-Subject-policy" value="Changes publish a new version" style="text;html=0;whiteSpace=nowrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=DejaVu Sans;fontSize=12;fontColor=#286783;fontStyle=0;" vertex="1" parent="class-Subject">
+          <mxGeometry as="geometry" x="16" y="249" width="278" height="20" />
+        </mxCell>
+        <object id="class-Analysis" label="Analysis" entity="Analysis" boundary="0" displayFields="id,version,createdAt,updatedAt,purpose,lifecycle,definition" versionPolicy="append-only-versions">
+          <mxCell style="swimlane;html=0;whiteSpace=nowrap;startSize=44;horizontal=1;rounded=0;fillColor=#E8F2F8;swimlaneFillColor=#FFFFFF;strokeColor=#286783;strokeWidth=1.5;align=left;verticalAlign=middle;spacingLeft=16;fontColor=#203B53;fontFamily=DejaVu Sans;fontSize=21;fontStyle=1;collapsible=0;container=1;" vertex="1" parent="1">
+            <mxGeometry as="geometry" x="445" y="220" width="310" height="280" />
+          </mxCell>
+        </object>
+        <mxCell id="class-Analysis-fields" value="id: Id&#10;version: Integer&#10;createdAt: Instant&#10;updatedAt: Instant&#10;&#10;purpose: Purpose&#10;lifecycle: Lifecycle&#10;definition: AnalysisDefinition" style="text;html=0;whiteSpace=nowrap;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacing=0;fontFamily=DejaVu Sans;fontSize=14;fontColor=#30485D;fontStyle=0;" vertex="1" parent="class-Analysis">
+          <mxGeometry as="geometry" x="16" y="58" width="278" height="180" />
+        </mxCell>
+        <mxCell id="class-Analysis-policy" value="Changes publish a new version" style="text;html=0;whiteSpace=nowrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=DejaVu Sans;fontSize=12;fontColor=#286783;fontStyle=0;" vertex="1" parent="class-Analysis">
+          <mxGeometry as="geometry" x="16" y="249" width="278" height="20" />
+        </mxCell>
+        <object id="class-Assertion" label="Assertion" entity="Assertion" boundary="0" displayFields="id,version,createdAt,updatedAt,statement,evaluation" versionPolicy="append-only-versions">
+          <mxCell style="swimlane;html=0;whiteSpace=nowrap;startSize=44;horizontal=1;rounded=0;fillColor=#E8F2F8;swimlaneFillColor=#FFFFFF;strokeColor=#286783;strokeWidth=1.5;align=left;verticalAlign=middle;spacingLeft=16;fontColor=#203B53;fontFamily=DejaVu Sans;fontSize=21;fontStyle=1;collapsible=0;container=1;" vertex="1" parent="1">
+            <mxGeometry as="geometry" x="40" y="650" width="310" height="280" />
+          </mxCell>
+        </object>
+        <mxCell id="class-Assertion-fields" value="id: Id&#10;version: Integer&#10;createdAt: Instant&#10;updatedAt: Instant&#10;&#10;statement: String&#10;evaluation: EvaluationSpec" style="text;html=0;whiteSpace=nowrap;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacing=0;fontFamily=DejaVu Sans;fontSize=14;fontColor=#30485D;fontStyle=0;" vertex="1" parent="class-Assertion">
+          <mxGeometry as="geometry" x="16" y="58" width="278" height="180" />
+        </mxCell>
+        <mxCell id="class-Assertion-policy" value="Changes publish a new version" style="text;html=0;whiteSpace=nowrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=DejaVu Sans;fontSize=12;fontColor=#286783;fontStyle=0;" vertex="1" parent="class-Assertion">
+          <mxGeometry as="geometry" x="16" y="249" width="278" height="20" />
+        </mxCell>
+        <object id="class-QueryRun" label="QueryRun" entity="QueryRun" boundary="0" displayFields="id,version,createdAt,updatedAt,specification,state,provider,receipts" versionPolicy="append-only-versions">
+          <mxCell style="swimlane;html=0;whiteSpace=nowrap;startSize=44;horizontal=1;rounded=0;fillColor=#E7F3EE;swimlaneFillColor=#FFFFFF;strokeColor=#31725B;strokeWidth=1.5;align=left;verticalAlign=middle;spacingLeft=16;fontColor=#203B53;fontFamily=DejaVu Sans;fontSize=21;fontStyle=1;collapsible=0;container=1;" vertex="1" parent="1">
+            <mxGeometry as="geometry" x="850" y="220" width="310" height="280" />
+          </mxCell>
+        </object>
+        <mxCell id="class-QueryRun-fields" value="id: Id&#10;version: Integer&#10;createdAt: Instant&#10;updatedAt: Instant&#10;&#10;specification: QuerySpec&#10;state: RunState&#10;provider: ProviderHandle&#10;receipts: RunReceipt[]" style="text;html=0;whiteSpace=nowrap;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacing=0;fontFamily=DejaVu Sans;fontSize=14;fontColor=#30485D;fontStyle=0;" vertex="1" parent="class-QueryRun">
+          <mxGeometry as="geometry" x="16" y="58" width="278" height="180" />
+        </mxCell>
+        <mxCell id="class-QueryRun-policy" value="Progress publishes a new version" style="text;html=0;whiteSpace=nowrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=DejaVu Sans;fontSize=12;fontColor=#31725B;fontStyle=0;" vertex="1" parent="class-QueryRun">
+          <mxGeometry as="geometry" x="16" y="249" width="278" height="20" />
+        </mxCell>
+        <object id="class-Evidence" label="Evidence" entity="Evidence" boundary="0" displayFields="id,version,createdAt,updatedAt,origin,capturedAt,scope,payload" versionPolicy="immutable-version-1">
+          <mxCell style="swimlane;html=0;whiteSpace=nowrap;startSize=44;horizontal=1;rounded=0;fillColor=#E7F3EE;swimlaneFillColor=#FFFFFF;strokeColor=#31725B;strokeWidth=1.5;align=left;verticalAlign=middle;spacingLeft=16;fontColor=#203B53;fontFamily=DejaVu Sans;fontSize=21;fontStyle=1;collapsible=0;container=1;" vertex="1" parent="1">
+            <mxGeometry as="geometry" x="850" y="650" width="310" height="280" />
+          </mxCell>
+        </object>
+        <mxCell id="class-Evidence-fields" value="id: Id&#10;version: Integer&#10;createdAt: Instant&#10;updatedAt: Instant&#10;&#10;origin: EvidenceOrigin&#10;capturedAt: Instant&#10;scope: ResolvedScope&#10;payload: PayloadRef" style="text;html=0;whiteSpace=nowrap;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacing=0;fontFamily=DejaVu Sans;fontSize=14;fontColor=#30485D;fontStyle=0;" vertex="1" parent="class-Evidence">
+          <mxGeometry as="geometry" x="16" y="58" width="278" height="180" />
+        </mxCell>
+        <mxCell id="class-Evidence-policy" value="Immutable · version 1" style="text;html=0;whiteSpace=nowrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=DejaVu Sans;fontSize=12;fontColor=#31725B;fontStyle=0;" vertex="1" parent="class-Evidence">
+          <mxGeometry as="geometry" x="16" y="249" width="278" height="20" />
+        </mxCell>
+        <object id="class-Assessment" label="Assessment" entity="Assessment" boundary="0" displayFields="id,version,createdAt,updatedAt,basis,results" versionPolicy="immutable-version-1">
+          <mxCell style="swimlane;html=0;whiteSpace=nowrap;startSize=44;horizontal=1;rounded=0;fillColor=#F2EAF8;swimlaneFillColor=#FFFFFF;strokeColor=#755589;strokeWidth=1.5;align=left;verticalAlign=middle;spacingLeft=16;fontColor=#203B53;fontFamily=DejaVu Sans;fontSize=21;fontStyle=1;collapsible=0;container=1;" vertex="1" parent="1">
+            <mxGeometry as="geometry" x="445" y="650" width="310" height="280" />
+          </mxCell>
+        </object>
+        <mxCell id="class-Assessment-fields" value="id: Id&#10;version: Integer&#10;createdAt: Instant&#10;updatedAt: Instant&#10;&#10;basis: AssessmentBasis&#10;results: AssertionResult[]" style="text;html=0;whiteSpace=nowrap;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacing=0;fontFamily=DejaVu Sans;fontSize=14;fontColor=#30485D;fontStyle=0;" vertex="1" parent="class-Assessment">
+          <mxGeometry as="geometry" x="16" y="58" width="278" height="180" />
+        </mxCell>
+        <mxCell id="class-Assessment-policy" value="Immutable · version 1" style="text;html=0;whiteSpace=nowrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=DejaVu Sans;fontSize=12;fontColor=#755589;fontStyle=0;" vertex="1" parent="class-Assessment">
+          <mxGeometry as="geometry" x="16" y="249" width="278" height="20" />
+        </mxCell>
+        <object id="class-Review" label="Review" entity="Review" boundary="0" displayFields="id,version,createdAt,updatedAt,decision,reviewer,rationale,recordedAt" versionPolicy="immutable-version-1">
+          <mxCell style="swimlane;html=0;whiteSpace=nowrap;startSize=44;horizontal=1;rounded=0;fillColor=#F2EAF8;swimlaneFillColor=#FFFFFF;strokeColor=#755589;strokeWidth=1.5;align=left;verticalAlign=middle;spacingLeft=16;fontColor=#203B53;fontFamily=DejaVu Sans;fontSize=21;fontStyle=1;collapsible=0;container=1;" vertex="1" parent="1">
+            <mxGeometry as="geometry" x="445" y="1070" width="310" height="280" />
+          </mxCell>
+        </object>
+        <mxCell id="class-Review-fields" value="id: Id&#10;version: Integer&#10;createdAt: Instant&#10;updatedAt: Instant&#10;&#10;decision: ReviewDecision&#10;reviewer: ActorRef&#10;rationale: String&#10;recordedAt: Instant" style="text;html=0;whiteSpace=nowrap;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacing=0;fontFamily=DejaVu Sans;fontSize=14;fontColor=#30485D;fontStyle=0;" vertex="1" parent="class-Review">
+          <mxGeometry as="geometry" x="16" y="58" width="278" height="180" />
+        </mxCell>
+        <mxCell id="class-Review-policy" value="Immutable · version 1" style="text;html=0;whiteSpace=nowrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=DejaVu Sans;fontSize=12;fontColor=#755589;fontStyle=0;" vertex="1" parent="class-Review">
+          <mxGeometry as="geometry" x="16" y="249" width="278" height="20" />
+        </mxCell>
+        <object id="edge-0" label="targets" relationshipIndex="0" fromEntity="Analysis" toEntity="Subject" fromCardinality="0..*" toCardinality="1..*" tooltip="Analysis 0..* → Subject 1..*: targets">
+          <mxCell style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=0;html=0;whiteSpace=nowrap;strokeColor=#677F93;strokeWidth=1.5;endArrow=open;endFill=0;endSize=8;startArrow=none;fontColor=#365269;fontFamily=DejaVu Sans;fontSize=14;labelBorderColor=none;labelBackgroundColor=#F8FAFC;exitX=0;exitY=0.4;exitDx=0;exitDy=0;entryX=1;entryY=0.4;entryDx=0;entryDy=0;" edge="1" parent="1" source="class-Analysis" target="class-Subject">
+            <mxGeometry as="geometry" x="0" y="0" relative="1">
+              <mxPoint as="offset" x="0" y="-23" />
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <mxCell id="edge-0-from" value="0..*" cardinality="from" style="edgeLabel;html=0;whiteSpace=nowrap;align=left;verticalAlign=middle;spacing=0;resizable=0;fontFamily=DejaVu Sans;fontSize=12;fontColor=#52687D;" vertex="1" connectable="0" parent="edge-0">
+          <mxGeometry as="geometry" x="-1" y="0" relative="1" width="40" height="18">
+            <mxPoint as="offset" x="-43" y="14" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge-0-to" value="1..*" cardinality="to" style="edgeLabel;html=0;whiteSpace=nowrap;align=left;verticalAlign=middle;spacing=0;resizable=0;fontFamily=DejaVu Sans;fontSize=12;fontColor=#52687D;" vertex="1" connectable="0" parent="edge-0">
+          <mxGeometry as="geometry" x="1" y="0" relative="1" width="40" height="18">
+            <mxPoint as="offset" x="10" y="14" />
+          </mxGeometry>
+        </mxCell>
+        <object id="edge-1" label="owns" relationshipIndex="1" fromEntity="Analysis" toEntity="Assertion" fromCardinality="1" toCardinality="0..*" tooltip="Analysis 1 → Assertion 0..*: owns">
+          <mxCell style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=0;html=0;whiteSpace=nowrap;strokeColor=#677F93;strokeWidth=1.5;endArrow=open;endFill=0;endSize=8;startArrow=none;fontColor=#365269;fontFamily=DejaVu Sans;fontSize=14;labelBorderColor=none;labelBackgroundColor=#F8FAFC;exitX=0.12;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="class-Analysis" target="class-Assertion">
+            <mxGeometry as="geometry" x="0" y="0" relative="1">
+              <mxPoint as="offset" x="0" y="-22" />
+              <Array as="points">
+                <mxPoint x="482.2" y="565" />
+                <mxPoint x="195" y="565" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <mxCell id="edge-1-from" value="1" cardinality="from" style="edgeLabel;html=0;whiteSpace=nowrap;align=left;verticalAlign=middle;spacing=0;resizable=0;fontFamily=DejaVu Sans;fontSize=12;fontColor=#52687D;" vertex="1" connectable="0" parent="edge-1">
+          <mxGeometry as="geometry" x="-1" y="0" relative="1" width="40" height="18">
+            <mxPoint as="offset" x="12" y="16" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge-1-to" value="0..*" cardinality="to" style="edgeLabel;html=0;whiteSpace=nowrap;align=left;verticalAlign=middle;spacing=0;resizable=0;fontFamily=DejaVu Sans;fontSize=12;fontColor=#52687D;" vertex="1" connectable="0" parent="edge-1">
+          <mxGeometry as="geometry" x="1" y="0" relative="1" width="40" height="18">
+            <mxPoint as="offset" x="12" y="-22" />
+          </mxGeometry>
+        </mxCell>
+        <object id="edge-2" label="owns" relationshipIndex="2" fromEntity="Analysis" toEntity="QueryRun" fromCardinality="1" toCardinality="0..*" tooltip="Analysis 1 → QueryRun 0..*: owns">
+          <mxCell style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=0;html=0;whiteSpace=nowrap;strokeColor=#677F93;strokeWidth=1.5;endArrow=open;endFill=0;endSize=8;startArrow=none;fontColor=#365269;fontFamily=DejaVu Sans;fontSize=14;labelBorderColor=none;labelBackgroundColor=#F8FAFC;exitX=1;exitY=0.4;exitDx=0;exitDy=0;entryX=0;entryY=0.4;entryDx=0;entryDy=0;" edge="1" parent="1" source="class-Analysis" target="class-QueryRun">
+            <mxGeometry as="geometry" x="0" y="0" relative="1">
+              <mxPoint as="offset" x="0" y="-23" />
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <mxCell id="edge-2-from" value="1" cardinality="from" style="edgeLabel;html=0;whiteSpace=nowrap;align=left;verticalAlign=middle;spacing=0;resizable=0;fontFamily=DejaVu Sans;fontSize=12;fontColor=#52687D;" vertex="1" connectable="0" parent="edge-2">
+          <mxGeometry as="geometry" x="-1" y="0" relative="1" width="40" height="18">
+            <mxPoint as="offset" x="10" y="14" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge-2-to" value="0..*" cardinality="to" style="edgeLabel;html=0;whiteSpace=nowrap;align=left;verticalAlign=middle;spacing=0;resizable=0;fontFamily=DejaVu Sans;fontSize=12;fontColor=#52687D;" vertex="1" connectable="0" parent="edge-2">
+          <mxGeometry as="geometry" x="1" y="0" relative="1" width="40" height="18">
+            <mxPoint as="offset" x="-42" y="14" />
+          </mxGeometry>
+        </mxCell>
+        <object id="edge-3" label="retains" relationshipIndex="3" fromEntity="Analysis" toEntity="Assessment" fromCardinality="1" toCardinality="0..*" tooltip="Analysis 1 → Assessment 0..*: retains">
+          <mxCell style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=0;html=0;whiteSpace=nowrap;strokeColor=#677F93;strokeWidth=1.5;endArrow=open;endFill=0;endSize=8;startArrow=none;fontColor=#365269;fontFamily=DejaVu Sans;fontSize=14;labelBorderColor=none;labelBackgroundColor=#F8FAFC;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="class-Analysis" target="class-Assessment">
+            <mxGeometry as="geometry" x="0" y="0" relative="1">
+              <mxPoint as="offset" x="45" y="0" />
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <mxCell id="edge-3-from" value="1" cardinality="from" style="edgeLabel;html=0;whiteSpace=nowrap;align=left;verticalAlign=middle;spacing=0;resizable=0;fontFamily=DejaVu Sans;fontSize=12;fontColor=#52687D;" vertex="1" connectable="0" parent="edge-3">
+          <mxGeometry as="geometry" x="-1" y="0" relative="1" width="40" height="18">
+            <mxPoint as="offset" x="12" y="16" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge-3-to" value="0..*" cardinality="to" style="edgeLabel;html=0;whiteSpace=nowrap;align=left;verticalAlign=middle;spacing=0;resizable=0;fontFamily=DejaVu Sans;fontSize=12;fontColor=#52687D;" vertex="1" connectable="0" parent="edge-3">
+          <mxGeometry as="geometry" x="1" y="0" relative="1" width="40" height="18">
+            <mxPoint as="offset" x="12" y="-22" />
+          </mxGeometry>
+        </mxCell>
+        <object id="edge-4" label="acquires" relationshipIndex="4" fromEntity="QueryRun" toEntity="Evidence" fromCardinality="0..1" toCardinality="0..*" tooltip="QueryRun 0..1 → Evidence 0..*: acquires">
+          <mxCell style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=0;html=0;whiteSpace=nowrap;strokeColor=#677F93;strokeWidth=1.5;endArrow=open;endFill=0;endSize=8;startArrow=none;fontColor=#365269;fontFamily=DejaVu Sans;fontSize=14;labelBorderColor=none;labelBackgroundColor=#F8FAFC;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="class-QueryRun" target="class-Evidence">
+            <mxGeometry as="geometry" x="0" y="0" relative="1">
+              <mxPoint as="offset" x="49" y="0" />
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <mxCell id="edge-4-from" value="0..1" cardinality="from" style="edgeLabel;html=0;whiteSpace=nowrap;align=left;verticalAlign=middle;spacing=0;resizable=0;fontFamily=DejaVu Sans;fontSize=12;fontColor=#52687D;" vertex="1" connectable="0" parent="edge-4">
+          <mxGeometry as="geometry" x="-1" y="0" relative="1" width="40" height="18">
+            <mxPoint as="offset" x="12" y="16" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge-4-to" value="0..*" cardinality="to" style="edgeLabel;html=0;whiteSpace=nowrap;align=left;verticalAlign=middle;spacing=0;resizable=0;fontFamily=DejaVu Sans;fontSize=12;fontColor=#52687D;" vertex="1" connectable="0" parent="edge-4">
+          <mxGeometry as="geometry" x="1" y="0" relative="1" width="40" height="18">
+            <mxPoint as="offset" x="12" y="-22" />
+          </mxGeometry>
+        </mxCell>
+        <object id="edge-5" label="pins" relationshipIndex="5" fromEntity="Assessment" toEntity="Assertion" fromCardinality="0..*" toCardinality="1..*" tooltip="Assessment 0..* → Assertion 1..*: pins exact versions">
+          <mxCell style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=0;html=0;whiteSpace=nowrap;strokeColor=#677F93;strokeWidth=1.5;endArrow=open;endFill=0;endSize=8;startArrow=none;fontColor=#365269;fontFamily=DejaVu Sans;fontSize=14;labelBorderColor=none;labelBackgroundColor=#F8FAFC;exitX=0;exitY=0.4;exitDx=0;exitDy=0;entryX=1;entryY=0.4;entryDx=0;entryDy=0;" edge="1" parent="1" source="class-Assessment" target="class-Assertion">
+            <mxGeometry as="geometry" x="0" y="0" relative="1">
+              <mxPoint as="offset" x="0" y="-23" />
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <mxCell id="edge-5-from" value="0..*" cardinality="from" style="edgeLabel;html=0;whiteSpace=nowrap;align=left;verticalAlign=middle;spacing=0;resizable=0;fontFamily=DejaVu Sans;fontSize=12;fontColor=#52687D;" vertex="1" connectable="0" parent="edge-5">
+          <mxGeometry as="geometry" x="-1" y="0" relative="1" width="40" height="18">
+            <mxPoint as="offset" x="-43" y="14" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge-5-to" value="1..*" cardinality="to" style="edgeLabel;html=0;whiteSpace=nowrap;align=left;verticalAlign=middle;spacing=0;resizable=0;fontFamily=DejaVu Sans;fontSize=12;fontColor=#52687D;" vertex="1" connectable="0" parent="edge-5">
+          <mxGeometry as="geometry" x="1" y="0" relative="1" width="40" height="18">
+            <mxPoint as="offset" x="10" y="14" />
+          </mxGeometry>
+        </mxCell>
+        <object id="edge-6" label="cites" relationshipIndex="6" fromEntity="Assessment" toEntity="Evidence" fromCardinality="0..*" toCardinality="0..*" tooltip="Assessment 0..* → Evidence 0..*: cites">
+          <mxCell style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=0;html=0;whiteSpace=nowrap;strokeColor=#677F93;strokeWidth=1.5;endArrow=open;endFill=0;endSize=8;startArrow=none;fontColor=#365269;fontFamily=DejaVu Sans;fontSize=14;labelBorderColor=none;labelBackgroundColor=#F8FAFC;exitX=1;exitY=0.4;exitDx=0;exitDy=0;entryX=0;entryY=0.4;entryDx=0;entryDy=0;" edge="1" parent="1" source="class-Assessment" target="class-Evidence">
+            <mxGeometry as="geometry" x="0" y="0" relative="1">
+              <mxPoint as="offset" x="0" y="-23" />
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <mxCell id="edge-6-from" value="0..*" cardinality="from" style="edgeLabel;html=0;whiteSpace=nowrap;align=left;verticalAlign=middle;spacing=0;resizable=0;fontFamily=DejaVu Sans;fontSize=12;fontColor=#52687D;" vertex="1" connectable="0" parent="edge-6">
+          <mxGeometry as="geometry" x="-1" y="0" relative="1" width="40" height="18">
+            <mxPoint as="offset" x="10" y="14" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge-6-to" value="0..*" cardinality="to" style="edgeLabel;html=0;whiteSpace=nowrap;align=left;verticalAlign=middle;spacing=0;resizable=0;fontFamily=DejaVu Sans;fontSize=12;fontColor=#52687D;" vertex="1" connectable="0" parent="edge-6">
+          <mxGeometry as="geometry" x="1" y="0" relative="1" width="40" height="18">
+            <mxPoint as="offset" x="-42" y="14" />
+          </mxGeometry>
+        </mxCell>
+        <object id="edge-7" label="reviews" relationshipIndex="7" fromEntity="Review" toEntity="Assessment" fromCardinality="0..*" toCardinality="1" tooltip="Review 0..* → Assessment 1: reviews">
+          <mxCell style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=0;html=0;whiteSpace=nowrap;strokeColor=#677F93;strokeWidth=1.5;endArrow=open;endFill=0;endSize=8;startArrow=none;fontColor=#365269;fontFamily=DejaVu Sans;fontSize=14;labelBorderColor=none;labelBackgroundColor=#F8FAFC;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="class-Review" target="class-Assessment">
+            <mxGeometry as="geometry" x="0" y="0" relative="1">
+              <mxPoint as="offset" x="47" y="0" />
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <mxCell id="edge-7-from" value="0..*" cardinality="from" style="edgeLabel;html=0;whiteSpace=nowrap;align=left;verticalAlign=middle;spacing=0;resizable=0;fontFamily=DejaVu Sans;fontSize=12;fontColor=#52687D;" vertex="1" connectable="0" parent="edge-7">
+          <mxGeometry as="geometry" x="-1" y="0" relative="1" width="40" height="18">
+            <mxPoint as="offset" x="12" y="-22" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge-7-to" value="1" cardinality="to" style="edgeLabel;html=0;whiteSpace=nowrap;align=left;verticalAlign=middle;spacing=0;resizable=0;fontFamily=DejaVu Sans;fontSize=12;fontColor=#52687D;" vertex="1" connectable="0" parent="edge-7">
+          <mxGeometry as="geometry" x="1" y="0" relative="1" width="40" height="18">
+            <mxPoint as="offset" x="12" y="16" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="inputs-note-title" value="EXACT INPUTS" style="text;html=0;whiteSpace=nowrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=DejaVu Sans;fontSize=13;fontColor=#41667C;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="40" y="1080" width="310" height="25" />
+        </mxCell>
+        <mxCell id="inputs-note" value="EntityRef {kind, id, version}&#10;selects one retained version.&#10;&#10;QuerySpec, RunReceipt and&#10;AssessmentBasis are owned values." style="text;html=0;whiteSpace=nowrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=DejaVu Sans;fontSize=14;fontColor=#52687D;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="40" y="1120" width="310" height="130" />
+        </mxCell>
+        <mxCell id="history-note-title" value="REPRODUCIBLE DECISIONS" style="text;html=0;whiteSpace=nowrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=DejaVu Sans;fontSize=13;fontColor=#41667C;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="850" y="1080" width="310" height="25" />
+        </mxCell>
+        <mxCell id="history-note" value="A selected QueryRun version&#10;pins its acquisition receipts.&#10;&#10;Assessment pins exact inputs;&#10;Review pins an Assessment.&#10;&#10;Evidence, Assessment and Review&#10;have no generic update command." style="text;html=0;whiteSpace=nowrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=DejaVu Sans;fontSize=14;fontColor=#52687D;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="850" y="1120" width="310" height="195" />
+        </mxCell>
+        <mxCell id="page-footer" value="Selected attributes · all eight associations · arrows show references and ownership, not delete cascades" style="text;html=0;whiteSpace=nowrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacing=0;fontFamily=DejaVu Sans;fontSize=12;fontColor=#52687D;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="40" y="1370" width="1120" height="24" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

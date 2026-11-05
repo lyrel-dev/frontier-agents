@@ -30,8 +30,11 @@ The application demonstrates the central conclusion of the reviewed API model: a
 | [Source register](annexes/Investigation_API_Sources.md) | Official references, pinned model commits/hashes, source reconciliation, and verification scope |
 | [Prototype model contract](app/MODEL_CONTRACT.md) | Fixture/read-model interfaces and replay semantics |
 | [Validation record](VALIDATION.md) | Executed semantic, package, diagram, and browser checks |
+| [Generalized operational analysis proposal](proposals/operational-analysis/README.md) | Separate seven-entity model for assertions, queries, evidence, assessments and operator reviews, with a complete class diagram |
 
 The source review is dated **5 November 2026** and uses the native API version **2026-01-01**. The mock observations demonstrate that contract; they are not captured AWS responses. Open record types prefixed `demo.` and their payload profiles belong to this fixture. Diagram and API source verification does not establish live account behavior.
+
+The generalized proposal is a separate design. Its class diagram is validated through its own registry and is not presented as an implemented feature of the ten-diagram native-model application.
 
 ## Presentation walkthrough
 
